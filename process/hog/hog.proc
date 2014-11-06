@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<process name="HOG" categ="descriptor" description="Descriptor which output a HOG from image flow">
+	<params>
+		<param name="rowNumber" id="3" />
+	</params>
+	<svg width="160" height="110">
+		<rect width="150" height="100" x="0" y="10" fill="lightgray"/>
+		<g stroke="gray" stroke-width="10" transform="translate(5,10)">
+			<line x1="10" y1="95" x2="10" y2="70"/>
+			<line x1="30" y1="95" x2="30" y2="35"/>
+			<line x1="50" y1="95" x2="50" y2="10"/>
+			<line x1="70" y1="95" x2="70" y2="85"/>
+			<line x1="90" y1="95" x2="90" y2="70"/>
+			<line x1="110" y1="95" x2="110" y2="35"/>
+			<line x1="130" y1="95" x2="130" y2="10"/>
+		</g>
+		<text x="70" y="10">HOG</text>
+		<flow name="in1" x="0" y="50"/>
+	</svg>
+	<flows>
+		<flow name="in1" type="in" desc="input of HOG"/>
+		<flow name="out1" type="out" desc="output of HOG"/>
+	</flows>
+</process>
