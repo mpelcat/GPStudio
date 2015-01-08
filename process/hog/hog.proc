@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <process name="HOG" categ="descriptor" description="Descriptor which output a HOG from image flow">
-	<params>
-		<param name="rowNumber" id="3" />
-	</params>
 	<svg width="160" height="110">
 		<rect width="150" height="100" x="0" y="10" fill="lightgray"/>
 		<g stroke="gray" stroke-width="10" transform="translate(5,10)">
@@ -21,4 +18,13 @@
 		<flow name="in1" type="in" desc="input of HOG"/>
 		<flow name="out1" type="out" desc="output of HOG"/>
 	</flows>
+	<params>
+		<param name="rowNumber" type="int" reg_addr="0" default="3" desc="Number of rows" hard="false"/>
+		<param name="intBusSize" type="int" default="3" desc="Number of rows" hard="true"/>
+	</params>
+	<files>
+		<file name="hog.vhd" path="hdl/hog.vhd" type="toplevel" desc=""/>
+	</files>
+	<clocks>
+	</clocks>
 </process>

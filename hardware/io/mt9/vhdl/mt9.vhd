@@ -34,14 +34,14 @@ architecture rtl of mt9 is
   
   -- stream : std_logic;
 -- end record;
-constant IMAGE_WIDTH  : natural := 1024;
+constant IMAGE_WIDTH  : natural := 320;
 --constant IMAGE_WIDTH  : natural := 1280;
 constant X_ADDR_START : natural := 0;
 constant X_ADDR_END   : natural := X_ADDR_START+IMAGE_WIDTH-1;
 
-constant IMAGE_HEIGHT : natural := 500;
+constant IMAGE_HEIGHT : natural := 240;
 --constant IMAGE_HEIGHT : natural := 960;
-constant Y_ADDR_START : natural := 2;
+constant Y_ADDR_START : natural := 0;
 constant Y_ADDR_END   : natural := Y_ADDR_START+ IMAGE_HEIGHT-1;
 
 signal p0_cnt1 : integer range 1 to 200000 := 1;
@@ -138,8 +138,8 @@ begin
 --	int_reg_start_addr(8) <= x"30B0";	-- Embedded data
 --	int_reg_start_data(8) <= x"0000"; 	-- 0: CFA color 
 
-   int_reg_start_addr(8) <= x"30B0";	
-   int_reg_start_data(8) <= x"0000"; 
+   int_reg_start_addr(8) <= x"3030";	
+   int_reg_start_data(8) <= x"0010"; 
 		
 	
 	p0_boot_sequence: process(mt9_extclk)

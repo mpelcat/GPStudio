@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<device name="dreamcam_c3" description="DreamCam Cyclone 3 with USB/Eth communication and MT9/E2V image sensor">
+	<svg width="200" height="100">
+		<rect width="150" height="100" x="0" y="0" fill="green"/>
+		<text x="35" y="53">DreamCam_C3</text>
+		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
+	</svg>
+	<toolchain name="altera_quartus_cyclone3" type="EP3C120F780C7"/>
+	<global>
+		<pins>
+			<pin name="clk_50M" mapto="PIN_J28"/>
+		</pins>
+		<clocks>
+			<clock name="clk_50M" group="clk_proc" size="1" desc=""/>
+		</clocks>
+	</global>
+	<ios>
+		<io name="led" type="visual_output" driver="leds" optional="true" description="Top blue led">
+			<pins>
+				<pin name="led_o" mapto="PIN_AE6"/>
+			</pins>
+		</io>
+		<io name="mt9bricolage" type="image-sensor" driver="mt9" optional="true" optionalgroup="1" description="MT9 image sensor">
+			<pins>
+				<pin name="mt9_data_i[0]" mapto="PIN_C3"/>
+				<pin name="mt9_data_i[1]" mapto="PIN_F10"/>
+				<pin name="mt9_data_i[2]" mapto="PIN_J10"/>
+				<pin name="mt9_data_i[3]" mapto="PIN_B10"/>
+				<pin name="mt9_data_i[4]" mapto="PIN_G11"/>
+				<pin name="mt9_data_i[5]" mapto="PIN_G13"/>
+				<pin name="mt9_data_i[6]" mapto="PIN_C9"/>
+				<pin name="mt9_data_i[7]" mapto="PIN_F11"/>
+				<pin name="mt9_data_i[8]" mapto="PIN_B12"/>
+				<pin name="mt9_data_i[9]" mapto="PIN_E12"/>
+				<pin name="mt9_data_i[10]" mapto="PIN_C11"/>
+				<pin name="mt9_data_i[11]" mapto="PIN_A14"/>
+				<pin name="mt9_extclk_o" mapto="PIN_D5"/>
+				<pin name="mt9_fval_i" mapto="PIN_A10"/>
+				<pin name="mt9_lval_i" mapto="PIN_H10"/>
+				<pin name="mt9_oe_n_o" mapto="PIN_D12"/>
+				<pin name="mt9_pixclk_i" mapto="PIN_B14"/>
+				<pin name="mt9_reset_n_o" mapto="PIN_J13"/>
+				<pin name="mt9_saddr_o" mapto="PIN_F12"/>
+				<pin name="mt9_sclk_o" mapto="PIN_C5"/>
+				<pin name="mt9_sdata_io" mapto="PIN_D11"/>
+				<pin name="mt9_standby_o" mapto="PIN_A11"/>
+				<pin name="mt9_trigger_o" mapto="PIN_H12"/>
+			</pins>
+		</io>
+		<io name="e2v" type="image-sensor" driver="e2v" optional="true" optionalgroup="1" description="E2V image sensor">
+			<pins>
+				<pin name="clk_ref_o" mapto="PIN_D5"/>
+				<pin name="csn_o[0]" mapto="PIN_H10"/>
+				<pin name="data_clk_i" mapto="PIN_B14"/>
+				<pin name="data_i[0]" mapto="PIN_E5"/>
+				<pin name="data_i[1]" mapto="PIN_A3"/>
+				<pin name="data_i[2]" mapto="PIN_A4"/>
+				<pin name="data_i[3]" mapto="PIN_A6"/>
+				<pin name="data_i[4]" mapto="PIN_C4"/>
+				<pin name="data_i[5]" mapto="PIN_G7"/>
+				<pin name="data_i[6]" mapto="PIN_E7"/>
+				<pin name="data_i[7]" mapto="PIN_H8"/>
+				<pin name="data_i[8]" mapto="PIN_E8"/>
+				<pin name="data_i[9]" mapto="PIN_D7"/>
+				<pin name="fen_i" mapto="PIN_B8"/>
+				<pin name="flo_i" mapto="PIN_A10"/>
+				<pin name="len_i" mapto="PIN_A7"/>
+				<pin name="miso_i" mapto="PIN_G10"/>
+				<pin name="mosi_o" mapto="PIN_C8"/>
+				<pin name="reset_n_o" mapto="PIN_H12"/>
+				<pin name="sck_o" mapto="PIN_C5"/>
+				<pin name="trig_o" mapto="PIN_H13"/>
+				<pin name="clk_fix_o" mapto="PIN_A11"/>
+				<pin name="cs_var_no" mapto="PIN_D14"/>
+				<pin name="sck_var_o" mapto="PIN_C13"/>
+				<pin name="si_var_o" mapto="PIN_F14"/>
+			</pins>
+		</io>
+		<io name="usb" type="communication" driver="usb_cypress_CY7C68014A" optional="false" optionalgroup="2" description="">
+			<pins>
+				<pin name="usb_addr[0]" mapto="PIN_AD11"/>
+				<pin name="usb_addr[1]" mapto="PIN_AH12"/>
+				<pin name="usb_fd_io[0]" mapto="PIN_AE7"/>
+				<pin name="usb_fd_io[1]" mapto="PIN_AC7"/>
+				<pin name="usb_fd_io[2]" mapto="PIN_AG7"/>
+				<pin name="usb_fd_io[3]" mapto="PIN_AG6"/>
+				<pin name="usb_fd_io[4]" mapto="PIN_AF9"/>
+				<pin name="usb_fd_io[5]" mapto="PIN_AB9"/>
+				<pin name="usb_fd_io[6]" mapto="PIN_AG10"/>
+				<pin name="usb_fd_io[7]" mapto="PIN_AF10"/>
+				<pin name="usb_fd_io[8]" mapto="PIN_AF13"/>
+				<pin name="usb_fd_io[9]" mapto="PIN_Y15"/>
+				<pin name="usb_fd_io[10]" mapto="PIN_AB14"/>
+				<pin name="usb_fd_io[11]" mapto="PIN_Y14"/>
+				<pin name="usb_fd_io[12]" mapto="PIN_AE14"/>
+				<pin name="usb_fd_io[13]" mapto="PIN_AC14"/>
+				<pin name="usb_fd_io[14]" mapto="PIN_AD14"/>
+				<pin name="usb_fd_io[15]" mapto="PIN_AF14"/>
+				<pin name="usb_flaga" mapto="PIN_AD10"/>
+				<pin name="usb_flagb" mapto="PIN_AA10"/>
+				<pin name="usb_flagc" mapto="PIN_AH11"/>
+				<pin name="usb_flagd" mapto="PIN_AD12"/>
+				<pin name="usb_ifclk" mapto="PIN_AH14"/>
+				<pin name="usb_sloe" mapto="PIN_AF11"/>
+				<pin name="usb_slrd" mapto="PIN_AD8"/>
+				<pin name="usb_slwr" mapto="PIN_AE8"/>
+				<pin name="usb_pktend" mapto="PIN_AF12"/>
+				<pin name="usb_rst" mapto="PIN_AB12"/>
+			</pins>
+		</io>
+		<io name="ethernet_gmii" type="communication" driver="eth_marvell_88e1111_gmii" optional="false" optionalgroup="2" description="Marvell 88e1111 ethernet controler in GMII mode">
+			<pins>
+				<pin name="eth_reset_n_o" mapto="PIN_Y14"/>
+				<pin name="eth_mdc_o" mapto="PIN_AB14"/>
+				<pin name="eth_mdio_io" mapto="PIN_Y15"/>
+				<pin name="gmii_i.tx_clk" mapto="PIN_AE5"/>
+				<pin name="gmii_i.rx_clk" mapto="PIN_AE5"/>
+				<pin name="gmii_i.rx_dv" mapto="PIN_AF9"/>
+				<pin name="gmii_i.rx_er" mapto="PIN_AG10"/>
+				<pin name="gmii_i.rx_data[0]" mapto="PIN_AB9"/>
+				<pin name="gmii_i.rx_data[1]" mapto="PIN_AD8"/>
+				<pin name="gmii_i.rx_data[2]" mapto="PIN_AB8"/>
+				<pin name="gmii_i.rx_data[3]" mapto="PIN_AE8"/>
+				<pin name="gmii_i.rx_data[4]" mapto="PIN_AG8"/>
+				<pin name="gmii_i.rx_data[5]" mapto="PIN_AE7"/>
+				<pin name="gmii_i.rx_data[6]" mapto="PIN_AC7"/>
+				<pin name="gmii_i.rx_data[7]" mapto="PIN_AG7"/>
+				<pin name="gmii_i.crs_clk" mapto="PIN_AH3"/>
+				<pin name="gmii_i.col_clk" mapto="PIN_AE4"/>
+				<pin name="gmii_o.gtx_clk" mapto="PIN_AF5"/>
+				<pin name="gmii_o.tx_en" mapto="PIN_AD10"/>
+				<pin name="gmii_o.tx_er" mapto="PIN_AF10"/>
+				<pin name="gmii_o.tx_data[0]" mapto="PIN_AA10"/>
+				<pin name="gmii_o.tx_data[1]" mapto="PIN_AH11"/>
+				<pin name="gmii_o.tx_data[2]" mapto="PIN_AF11"/>
+				<pin name="gmii_o.tx_data[3]" mapto="PIN_AD11"/>
+				<pin name="gmii_o.tx_data[4]" mapto="PIN_AH12"/>
+				<pin name="gmii_o.tx_data[5]" mapto="PIN_AF12"/>
+				<pin name="gmii_o.tx_data[6]" mapto="PIN_AD12"/>
+				<pin name="gmii_o.tx_data[7]" mapto="PIN_AF13"/>
+			</pins>
+		</io>
+		<io name="ethernet_rgmii" type="communication" driver="eth_marvell_88e1111_rgmii" optional="false" optionalgroup="2" description="Marvell 88e1111 ethernet controler in RGMII mode">
+			<pins>
+				<pin name="eth_reset_n_o" mapto="PIN_Y14"/>
+				<pin name="eth_mdc_o" mapto="PIN_AB14"/>
+				<pin name="eth_mdio_io" mapto="PIN_Y15"/>
+				<pin name="rgmii_i.rx_clk" mapto="PIN_AE5"/>
+				<pin name="rgmii_i.rx_ctrl" mapto="PIN_AF9"/>
+				<pin name="rgmii_i.rx_data[0]" mapto="PIN_AB9"/>
+				<pin name="rgmii_i.rx_data[1]" mapto="PIN_AD8"/>
+				<pin name="rgmii_i.rx_data[2]" mapto="PIN_AB8"/>
+				<pin name="rgmii_i.rx_data[3]" mapto="PIN_AE8"/>
+				<pin name="rgmii_o.gtx_clk" mapto="PIN_AF5"/>
+				<pin name="rgmii_o.tx_ctrl" mapto="PIN_AD10"/>
+				<pin name="rgmii_o.tx_data[0]" mapto="PIN_AA10"/>
+				<pin name="rgmii_o.tx_data[1]" mapto="PIN_AH11"/>
+				<pin name="rgmii_o.tx_data[2]" mapto="PIN_AF11"/>
+				<pin name="rgmii_o.tx_data[3]" mapto="PIN_AD11"/>
+			</pins>
+		</io>
+		<io name="sram_bank0" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 0">
+			<pins>
+				<pin name="mem1_ce_n_o" mapto="PIN_E18"/>
+				<pin name="mem1_oe_n_o" mapto="PIN_F21"/>
+				<pin name="mem1_we_n_o" mapto="PIN_H16"/>
+				<pin name="mem1_addr_o[0]" mapto="PIN_D18"/>
+				<pin name="mem1_addr_o[1]" mapto="PIN_J19"/>
+				<pin name="mem1_addr_o[2]" mapto="PIN_H19"/>
+				<pin name="mem1_addr_o[3]" mapto="PIN_G19"/>
+				<pin name="mem1_addr_o[4]" mapto="PIN_F19"/>
+				<pin name="mem1_addr_o[5]" mapto="PIN_G20"/>
+				<pin name="mem1_addr_o[6]" mapto="PIN_D20"/>
+				<pin name="mem1_addr_o[7]" mapto="PIN_C20"/>
+				<pin name="mem1_addr_o[8]" mapto="PIN_G21"/>
+				<pin name="mem1_addr_o[9]" mapto="PIN_E24"/>
+				<pin name="mem1_addr_o[10]" mapto="PIN_D24"/>
+				<pin name="mem1_addr_o[11]" mapto="PIN_C24"/>
+				<pin name="mem1_addr_o[12]" mapto="PIN_E25"/>
+				<pin name="mem1_addr_o[13]" mapto="PIN_D25"/>
+				<pin name="mem1_addr_o[14]" mapto="PIN_C25"/>
+				<pin name="mem1_addr_o[15]" mapto="PIN_J15"/>
+				<pin name="mem1_addr_o[16]" mapto="PIN_H15"/>
+				<pin name="mem1_addr_o[17]" mapto="PIN_F15"/>
+				<pin name="mem1_addr_o[18]" mapto="PIN_E15"/>
+				<pin name="mem1_addr_o[19]" mapto="PIN_J16"/>
+				<pin name="mem1_data_io[0]" mapto="PIN_F18"/>
+				<pin name="mem1_data_io[1]" mapto="PIN_G18"/>
+				<pin name="mem1_data_io[2]" mapto="PIN_E17"/>
+				<pin name="mem1_data_io[3]" mapto="PIN_F17"/>
+				<pin name="mem1_data_io[4]" mapto="PIN_H17"/>
+				<pin name="mem1_data_io[5]" mapto="PIN_J17"/>
+				<pin name="mem1_data_io[6]" mapto="PIN_D16"/>
+				<pin name="mem1_data_io[7]" mapto="PIN_G16"/>
+				<pin name="mem1_data_io[8]" mapto="PIN_A23"/>
+				<pin name="mem1_data_io[9]" mapto="PIN_B23"/>
+				<pin name="mem1_data_io[10]" mapto="PIN_C22"/>
+				<pin name="mem1_data_io[11]" mapto="PIN_D22"/>
+				<pin name="mem1_data_io[12]" mapto="PIN_E22"/>
+				<pin name="mem1_data_io[13]" mapto="PIN_G22"/>
+				<pin name="mem1_data_io[14]" mapto="PIN_D21"/>
+				<pin name="mem1_data_io[15]" mapto="PIN_E21"/>
+			</pins>
+		</io>
+		<io name="sram_bank1" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 1">
+			<pins>
+				<pin name="mem4_ce_n_o" mapto="PIN_Y4"/>
+				<pin name="mem4_oe_n_o" mapto="PIN_AB2"/>
+				<pin name="mem4_we_n_o" mapto="PIN_V1"/>
+				<pin name="mem4_addr_o[0]" mapto="PIN_AE3"/>
+				<pin name="mem4_addr_o[1]" mapto="PIN_AE2"/>
+				<pin name="mem4_addr_o[2]" mapto="PIN_AC4"/>
+				<pin name="mem4_addr_o[3]" mapto="PIN_AD2"/>
+				<pin name="mem4_addr_o[4]" mapto="PIN_AF2"/>
+				<pin name="mem4_addr_o[5]" mapto="PIN_AA4"/>
+				<pin name="mem4_addr_o[6]" mapto="PIN_AC2"/>
+				<pin name="mem4_addr_o[7]" mapto="PIN_AD3"/>
+				<pin name="mem4_addr_o[8]" mapto="PIN_AE1"/>
+				<pin name="mem4_addr_o[9]" mapto="PIN_R3"/>
+				<pin name="mem4_addr_o[10]" mapto="PIN_U5"/>
+				<pin name="mem4_addr_o[11]" mapto="PIN_R1"/>
+				<pin name="mem4_addr_o[12]" mapto="PIN_R4"/>
+				<pin name="mem4_addr_o[13]" mapto="PIN_R5"/>
+				<pin name="mem4_addr_o[14]" mapto="PIN_R2"/>
+				<pin name="mem4_addr_o[15]" mapto="PIN_U1"/>
+				<pin name="mem4_addr_o[16]" mapto="PIN_V3"/>
+				<pin name="mem4_addr_o[17]" mapto="PIN_T3"/>
+				<pin name="mem4_addr_o[18]" mapto="PIN_V5"/>
+				<pin name="mem4_addr_o[19]" mapto="PIN_W3"/>
+				<pin name="mem4_data_io[0]" mapto="PIN_AD1"/>
+				<pin name="mem4_data_io[1]" mapto="PIN_AC3"/>
+				<pin name="mem4_data_io[2]" mapto="PIN_W4"/>
+				<pin name="mem4_data_io[3]" mapto="PIN_W2"/>
+				<pin name="mem4_data_io[4]" mapto="PIN_AB1"/>
+				<pin name="mem4_data_io[5]" mapto="PIN_AA3"/>
+				<pin name="mem4_data_io[6]" mapto="PIN_U4"/>
+				<pin name="mem4_data_io[7]" mapto="PIN_U3"/>
+				<pin name="mem4_data_io[8]" mapto="PIN_T4"/>
+				<pin name="mem4_data_io[9]" mapto="PIN_U2"/>
+				<pin name="mem4_data_io[10]" mapto="PIN_W1"/>
+				<pin name="mem4_data_io[11]" mapto="PIN_Y3"/>
+				<pin name="mem4_data_io[12]" mapto="PIN_V4"/>
+				<pin name="mem4_data_io[13]" mapto="PIN_V2"/>
+				<pin name="mem4_data_io[14]" mapto="PIN_AC1"/>
+				<pin name="mem4_data_io[15]" mapto="PIN_AB3"/>
+			</pins>
+		</io>
+		<io name="sram_bank2" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 2">
+			<pins>
+				<pin name="mem2_ce_n_o" mapto="PIN_G2"/>
+				<pin name="mem2_oe_n_o" mapto="PIN_M1"/>
+				<pin name="mem2_we_n_o" mapto="PIN_G4"/>
+				<pin name="mem2_addr_o[0]" mapto="PIN_M2"/>
+				<pin name="mem2_addr_o[1]" mapto="PIN_L6"/>
+				<pin name="mem2_addr_o[2]" mapto="PIN_K2"/>
+				<pin name="mem2_addr_o[3]" mapto="PIN_P1"/>
+				<pin name="mem2_addr_o[4]" mapto="PIN_P2"/>
+				<pin name="mem2_addr_o[5]" mapto="PIN_M7"/>
+				<pin name="mem2_addr_o[6]" mapto="PIN_L4"/>
+				<pin name="mem2_addr_o[7]" mapto="PIN_G3"/>
+				<pin name="mem2_addr_o[8]" mapto="PIN_N4"/>
+				<pin name="mem2_addr_o[9]" mapto="PIN_E1"/>
+				<pin name="mem2_addr_o[10]" mapto="PIN_C2"/>
+				<pin name="mem2_addr_o[11]" mapto="PIN_G5"/>
+				<pin name="mem2_addr_o[12]" mapto="PIN_D1"/>
+				<pin name="mem2_addr_o[13]" mapto="PIN_H3"/>
+				<pin name="mem2_addr_o[14]" mapto="PIN_F5"/>
+				<pin name="mem2_addr_o[15]" mapto="PIN_J3"/>
+				<pin name="mem2_addr_o[16]" mapto="PIN_D3"/>
+				<pin name="mem2_addr_o[17]" mapto="PIN_H5"/>
+				<pin name="mem2_addr_o[18]" mapto="PIN_K3"/>
+				<pin name="mem2_addr_o[19]" mapto="PIN_F1"/>
+				<pin name="mem2_data_io[0]" mapto="PIN_K4"/>
+				<pin name="mem2_data_io[1]" mapto="PIN_L2"/>
+				<pin name="mem2_data_io[2]" mapto="PIN_M4"/>
+				<pin name="mem2_data_io[3]" mapto="PIN_J5"/>
+				<pin name="mem2_data_io[4]" mapto="PIN_J4"/>
+				<pin name="mem2_data_io[5]" mapto="PIN_K1"/>
+				<pin name="mem2_data_io[6]" mapto="PIN_M3"/>
+				<pin name="mem2_data_io[7]" mapto="PIN_H4"/>
+				<pin name="mem2_data_io[8]" mapto="PIN_D2"/>
+				<pin name="mem2_data_io[9]" mapto="PIN_G1"/>
+				<pin name="mem2_data_io[10]" mapto="PIN_L3"/>
+				<pin name="mem2_data_io[11]" mapto="PIN_E3"/>
+				<pin name="mem2_data_io[12]" mapto="PIN_F3"/>
+				<pin name="mem2_data_io[13]" mapto="PIN_L1"/>
+				<pin name="mem2_data_io[14]" mapto="PIN_N3"/>
+				<pin name="mem2_data_io[15]" mapto="PIN_F2"/>
+			</pins>
+		</io>
+		<io name="sram_bank3" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 3">
+			<pins>
+				<pin name="mem3_ce_n_o" mapto="PIN_AF15"/>
+				<pin name="mem3_oe_n_o" mapto="PIN_AF18"/>
+				<pin name="mem3_we_n_o" mapto="PIN_AD21"/>
+				<pin name="mem3_addr_o[0]" mapto="PIN_AH17"/>
+				<pin name="mem3_addr_o[1]" mapto="PIN_AH19"/>
+				<pin name="mem3_addr_o[2]" mapto="PIN_AD15"/>
+				<pin name="mem3_addr_o[3]" mapto="PIN_AH18"/>
+				<pin name="mem3_addr_o[4]" mapto="PIN_AG19"/>
+				<pin name="mem3_addr_o[5]" mapto="PIN_AE15"/>
+				<pin name="mem3_addr_o[6]" mapto="PIN_AG18"/>
+				<pin name="mem3_addr_o[7]" mapto="PIN_AG17"/>
+				<pin name="mem3_addr_o[8]" mapto="PIN_AF19"/>
+				<pin name="mem3_addr_o[9]" mapto="PIN_AA19"/>
+				<pin name="mem3_addr_o[10]" mapto="PIN_AA16"/>
+				<pin name="mem3_addr_o[11]" mapto="PIN_AB21"/>
+				<pin name="mem3_addr_o[12]" mapto="PIN_Y17"/>
+				<pin name="mem3_addr_o[13]" mapto="PIN_Y16"/>
+				<pin name="mem3_addr_o[14]" mapto="PIN_Y19"/>
+				<pin name="mem3_addr_o[15]" mapto="PIN_AC21"/>
+				<pin name="mem3_addr_o[16]" mapto="PIN_AA17"/>
+				<pin name="mem3_addr_o[17]" mapto="PIN_AB19"/>
+				<pin name="mem3_addr_o[18]" mapto="PIN_AB16"/>
+				<pin name="mem3_addr_o[19]" mapto="PIN_AB17"/>
+				<pin name="mem3_data_io[0]" mapto="PIN_AE19"/>
+				<pin name="mem3_data_io[1]" mapto="PIN_AF17"/>
+				<pin name="mem3_data_io[2]" mapto="PIN_AF16"/>
+				<pin name="mem3_data_io[3]" mapto="PIN_AE18"/>
+				<pin name="mem3_data_io[4]" mapto="PIN_AE20"/>
+				<pin name="mem3_data_io[5]" mapto="PIN_AD17"/>
+				<pin name="mem3_data_io[6]" mapto="PIN_AC15"/>
+				<pin name="mem3_data_io[7]" mapto="PIN_AB18"/>
+				<pin name="mem3_data_io[8]" mapto="PIN_AB15"/>
+				<pin name="mem3_data_io[9]" mapto="PIN_AC19"/>
+				<pin name="mem3_data_io[10]" mapto="PIN_AD19"/>
+				<pin name="mem3_data_io[11]" mapto="PIN_AC17"/>
+				<pin name="mem3_data_io[12]" mapto="PIN_AE16"/>
+				<pin name="mem3_data_io[13]" mapto="PIN_AD18"/>
+				<pin name="mem3_data_io[14]" mapto="PIN_AF20"/>
+				<pin name="mem3_data_io[15]" mapto="PIN_AE17"/>
+			</pins>
+		</io>
+		<io name="sram_bank4" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 4">
+			<pins>
+				<pin name="mem5_ce_n_o" mapto="PIN_L27"/>
+				<pin name="mem5_oe_n_o" mapto="PIN_P25"/>
+				<pin name="mem5_we_n_o" mapto="PIN_G26"/>
+				<pin name="mem5_addr_o[0]" mapto="PIN_L21"/>
+				<pin name="mem5_addr_o[1]" mapto="PIN_N26"/>
+				<pin name="mem5_addr_o[2]" mapto="PIN_P27"/>
+				<pin name="mem5_addr_o[3]" mapto="PIN_M23"/>
+				<pin name="mem5_addr_o[4]" mapto="PIN_P26"/>
+				<pin name="mem5_addr_o[5]" mapto="PIN_M27"/>
+				<pin name="mem5_addr_o[6]" mapto="PIN_M24"/>
+				<pin name="mem5_addr_o[7]" mapto="PIN_K21"/>
+				<pin name="mem5_addr_o[8]" mapto="PIN_M26"/>
+				<pin name="mem5_addr_o[9]" mapto="PIN_H23"/>
+				<pin name="mem5_addr_o[10]" mapto="PIN_E28"/>
+				<pin name="mem5_addr_o[11]" mapto="PIN_J25"/>
+				<pin name="mem5_addr_o[12]" mapto="PIN_H22"/>
+				<pin name="mem5_addr_o[13]" mapto="PIN_F26"/>
+				<pin name="mem5_addr_o[14]" mapto="PIN_H25"/>
+				<pin name="mem5_addr_o[15]" mapto="PIN_G25"/>
+				<pin name="mem5_addr_o[16]" mapto="PIN_C27"/>
+				<pin name="mem5_addr_o[17]" mapto="PIN_G23"/>
+				<pin name="mem5_addr_o[18]" mapto="PIN_E26"/>
+				<pin name="mem5_addr_o[19]" mapto="PIN_D27"/>
+				<pin name="mem5_data_io[0]" mapto="PIN_L26"/>
+				<pin name="mem5_data_io[1]" mapto="PIN_L22"/>
+				<pin name="mem5_data_io[2]" mapto="PIN_K27"/>
+				<pin name="mem5_data_io[3]" mapto="PIN_N25"/>
+				<pin name="mem5_data_io[4]" mapto="PIN_J26"/>
+				<pin name="mem5_data_io[5]" mapto="PIN_L23"/>
+				<pin name="mem5_data_io[6]" mapto="PIN_F27"/>
+				<pin name="mem5_data_io[7]" mapto="PIN_L25"/>
+				<pin name="mem5_data_io[8]" mapto="PIN_E27"/>
+				<pin name="mem5_data_io[9]" mapto="PIN_K25"/>
+				<pin name="mem5_data_io[10]" mapto="PIN_H26"/>
+				<pin name="mem5_data_io[11]" mapto="PIN_J23"/>
+				<pin name="mem5_data_io[12]" mapto="PIN_G27"/>
+				<pin name="mem5_data_io[13]" mapto="PIN_M25"/>
+				<pin name="mem5_data_io[14]" mapto="PIN_K26"/>
+				<pin name="mem5_data_io[15]" mapto="PIN_K22"/>
+			</pins>
+		</io>
+		<io name="sram_bank5" type="memory" driver="sram_is61wv102416bll" optional="true" description="External SRAM bank number 5">
+			<pins>
+				<pin name="mem6_ce_n_o" mapto="PIN_E18"/>
+				<pin name="mem6_oe_n_o" mapto="PIN_F21"/>
+				<pin name="mem6_we_n_o" mapto="PIN_H16"/>
+				<pin name="mem6_addr_o[0]" mapto="PIN_D18"/>
+				<pin name="mem6_addr_o[1]" mapto="PIN_J19"/>
+				<pin name="mem6_addr_o[2]" mapto="PIN_H19"/>
+				<pin name="mem6_addr_o[3]" mapto="PIN_G19"/>
+				<pin name="mem6_addr_o[4]" mapto="PIN_F19"/>
+				<pin name="mem6_addr_o[5]" mapto="PIN_G20"/>
+				<pin name="mem6_addr_o[6]" mapto="PIN_D20"/>
+				<pin name="mem6_addr_o[7]" mapto="PIN_C20"/>
+				<pin name="mem6_addr_o[8]" mapto="PIN_G21"/>
+				<pin name="mem6_addr_o[9]" mapto="PIN_E24"/>
+				<pin name="mem6_addr_o[10]" mapto="PIN_D24"/>
+				<pin name="mem6_addr_o[11]" mapto="PIN_C24"/>
+				<pin name="mem6_addr_o[12]" mapto="PIN_E25"/>
+				<pin name="mem6_addr_o[13]" mapto="PIN_D25"/>
+				<pin name="mem6_addr_o[14]" mapto="PIN_C25"/>
+				<pin name="mem6_addr_o[15]" mapto="PIN_J15"/>
+				<pin name="mem6_addr_o[16]" mapto="PIN_H15"/>
+				<pin name="mem6_addr_o[17]" mapto="PIN_F15"/>
+				<pin name="mem6_addr_o[18]" mapto="PIN_E15"/>
+				<pin name="mem6_addr_o[19]" mapto="PIN_J16"/>
+				<pin name="mem6_data_io[0]" mapto="PIN_F18"/>
+				<pin name="mem6_data_io[1]" mapto="PIN_G18"/>
+				<pin name="mem6_data_io[2]" mapto="PIN_E17"/>
+				<pin name="mem6_data_io[3]" mapto="PIN_F17"/>
+				<pin name="mem6_data_io[4]" mapto="PIN_H17"/>
+				<pin name="mem6_data_io[5]" mapto="PIN_J17"/>
+				<pin name="mem6_data_io[6]" mapto="PIN_D16"/>
+				<pin name="mem6_data_io[7]" mapto="PIN_G16"/>
+				<pin name="mem6_data_io[8]" mapto="PIN_A23"/>
+				<pin name="mem6_data_io[9]" mapto="PIN_B23"/>
+				<pin name="mem6_data_io[10]" mapto="PIN_C22"/>
+				<pin name="mem6_data_io[11]" mapto="PIN_D22"/>
+				<pin name="mem6_data_io[12]" mapto="PIN_E22"/>
+				<pin name="mem6_data_io[13]" mapto="PIN_G22"/>
+				<pin name="mem6_data_io[14]" mapto="PIN_D21"/>
+				<pin name="mem6_data_io[15]" mapto="PIN_E21"/>
+			</pins>
+		</io>
+	</ios>
+</device>
