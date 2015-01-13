@@ -1,6 +1,0 @@
-[submodule "hardware/io/mt9"]
-	path = hardware/io/mt9
-	url = ssh://git@git.noes-dream.eu:2032/home/git/GPStudio/io/mt9_driver
-[submodule "hardware/io/usb_cypress_CY7C68014A"]
-	path = hardware/io/usb_cypress_CY7C68014A
-	url = ssh://git@git.noes-dream.eu:2032/home/git/GPStudio/io/usb_cypress_driver
