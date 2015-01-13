@@ -11,7 +11,7 @@ class IO extends Block
 		$this->name = $io_name;
 		$io_driver = (string)$io_device_element['driver'];
 		
-		$this->path = LIB_PATH . "hardware" . DIRECTORY_SEPARATOR . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
+		$this->path = LIB_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
 		$this->in_lib=true;
 		$io_file = $this->path . $io_driver . ".io";
 		if (!file_exists($io_file)){echo "File $io_file doesn't exist\n";return;}

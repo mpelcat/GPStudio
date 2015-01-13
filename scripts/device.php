@@ -23,7 +23,7 @@ class Device
 		$device_name = $device_element['name'];
 		
 		// open device define file (.dev)
-		$this->device_file = LIB_PATH . "hardware" . DIRECTORY_SEPARATOR . "board" . DIRECTORY_SEPARATOR . $device_name . DIRECTORY_SEPARATOR . $device_name . ".dev";
+		$this->device_file = LIB_PATH . "board" . DIRECTORY_SEPARATOR . $device_name . DIRECTORY_SEPARATOR . $device_name . ".dev";
 		if (!file_exists($this->device_file)){echo "File $this->device_file doesn't exist\n";return;}
 		if (!($this->xml = simplexml_load_file($this->device_file))){echo "Error when parsing $this->device_file \n";return;}
 		
