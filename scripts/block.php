@@ -57,6 +57,16 @@ class Block
 		array_push($this->resets, $reset);*/
 	}
 	
+	function configure($node, $block)
+	{
+		// nothing to do for global block
+	}
+	
+	function generate($node, $block, $path, $language)
+	{
+		// nothing to do for global block
+	}
+	
 	function getFlow($name)
 	{
 		foreach($this->flows as $flow)

@@ -1,18 +1,18 @@
 <?php
 
-require_once("generator/vhdl_generator.php");
+require_once("vhdl_generator.php");
 
 function generate_top_level($node, $path)
 {
 	$generator = new VHDL_generator('top');
 	
 	// clocks
-	foreach($node->device->clocks as $clock)
+	foreach($node->board->clocks as $clock)
 	{
 		$generator->addPort($clock->name, 1, 'in');
 	}
 	// resets
-	foreach($node->device->resets as $reset)
+	foreach($node->board->resets as $reset)
 	{
 		$generator->addPort($reset->name, 1, $reset->direction);
 	}
@@ -107,7 +107,7 @@ function generate_top_level($node, $path)
 	$generator->blocks = $node->blocks;
 	
 	$code = "";
-	foreach($node->device->clocks as $clock)
+	foreach($node->board->clocks as $clock)
 	{
 		$code.='	'.$clock->group.'	<=	'.$clock->name.";\n";
 	}

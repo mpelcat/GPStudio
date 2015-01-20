@@ -17,6 +17,12 @@ class IO extends Block
 		if (!file_exists($io_file)){echo "File $io_file doesn't exist\n";return;}
 		if (!($this->xml = simplexml_load_file($io_file))){echo "Error when parsing $io_file \n";return;}
 		
+		// add io file to the list of files
+		$file_config = new File();
+		$file_config->name = $io_driver . ".io";
+		$file_config->path = $io_driver . ".io";
+		array_push($this->files, $file_config);
+		
 		$this->parse_xml($io_device_element, $io_node_element);
 		unset($this->xml);
 	}

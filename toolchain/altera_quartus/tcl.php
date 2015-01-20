@@ -5,10 +5,10 @@ function generate_tcl($node, $path)
 	$content='';
 	
 	$content.='set_global_assignment -name FAMILY "Cyclone III"'."\n";
-	$content.='set_global_assignment -name DEVICE '.$node->device->type."\n";
+	$content.='set_global_assignment -name DEVICE '.$node->board->type."\n";
 	$content.='set_global_assignment -name TOP_LEVEL_ENTITY top'."\n";
 	$content.='set_global_assignment -name ORIGINAL_QUARTUS_VERSION 13.1'."\n";
-	$content.='set_global_assignment -name PROJECT_CREATION_TIME_DATE "'.date("H:i:s  F d, Y").'"'."\n";
+	//$content.='set_global_assignment -name PROJECT_CREATION_TIME_DATE "'.date("H:i:s  F d, Y").'"'."\n";
 	$content.='set_global_assignment -name LAST_QUARTUS_VERSION 13.1'."\n";
 	$content.='set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files'."\n";
 	$content.='set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0'."\n";
@@ -23,7 +23,7 @@ function generate_tcl($node, $path)
 	
 	// pins assignement
 	$content.="# ================ pins assignement ================\n";
-	foreach($node->device->pins as $pin)
+	foreach($node->board->pins as $pin)
 	{
 		$content.='set_location_assignment '.$pin->mapto.' -to '.$pin->name."\n";
 	}

@@ -5,7 +5,7 @@
 		<text x="35" y="53">DreamCam_C3</text>
 		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
 	</svg>
-	<toolchain name="altera_quartus_cyclone3" type="EP3C120F780C7"/>
+	<toolchain name="altera_quartus" type="EP3C120F780C7" family="Cyclone III"/>
 	<global>
 		<pins>
 			<pin name="clk_50M" mapto="PIN_J28"/>

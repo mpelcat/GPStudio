@@ -22,9 +22,23 @@
 		<param name="rowNumber" type="int" reg_addr="0" default="3" desc="Number of rows" hard="false"/>
 		<param name="intBusSize" type="int" default="3" desc="Number of rows" hard="true"/>
 	</params>
-	<files>
-		<file name="hog.vhd" path="hdl/hog.vhd" type="toplevel" desc=""/>
-	</files>
+	<implementations>
+		<implementation name="" type="hdl">
+			<files>
+				<file name="hog.vhd" path="hdl/hog.vhd" desc=""/>
+			</files>
+		</implementation>
+		<implementation name="" type="caph">
+			<files>
+				<file name="hog.cph" path="caph/hog.cph" desc=""/>
+			</files>
+		</implementation>
+		<implementation name="" type="soft">
+			<files>
+				<file name="hog.c" path="soft/hog.c" desc=""/>
+			</files>
+		</implementation>
+	</implementations>
 	<clocks>
 	</clocks>
 </process>

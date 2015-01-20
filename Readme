@@ -1,0 +1,6 @@
+
+# dependancies
+- php5-cli
+- git
+
+sudo apt-get install php5-cli git

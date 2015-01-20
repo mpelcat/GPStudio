@@ -2,11 +2,11 @@
 
 require_once("io.php");
 
-class Device
+class Board
 {
 	private $xml;
 	
-	public $device_file;
+	public $board_file;
 	public $name;
 	public $type;
 	
@@ -14,29 +14,29 @@ class Device
 	public $clocks;
 	public $resets;
 
-	function __construct($device_element, $node)
+	function __construct($board_element, $node)
 	{
 		$this->pins = array();
 		$this->clocks = array();
 		$this->resets = array();
 		
-		$device_name = $device_element['name'];
+		$board_name = $board_element['name'];
 		
 		// open device define file (.dev)
-		$this->device_file = LIB_PATH . "board" . DIRECTORY_SEPARATOR . $device_name . DIRECTORY_SEPARATOR . $device_name . ".dev";
-		if (!file_exists($this->device_file)){echo "File $this->device_file doesn't exist\n";return;}
-		if (!($this->xml = simplexml_load_file($this->device_file))){echo "Error when parsing $this->device_file \n";return;}
+		$this->board_file = LIB_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
+		if (!file_exists($this->board_file)){echo "File $this->board_file doesn't exist\n";return;}
+		if (!($this->xml = simplexml_load_file($this->board_file))){echo "Error when parsing $this->board_file \n";return;}
 		
-		$this->parse_xml($device_element, $node);
+		$this->parse_xml($board_element, $node);
 		unset($this->xml);
 	}
 	
-	private function parse_xml($device_element, $node)
+	private function parse_xml($board_element, $node)
 	{
 		$this->name = (string)$this->xml['name'];
 		$this->type = (string)$this->xml->toolchain['type'];
 		
-		$this->parse_ios($device_element, $node);
+		$this->parse_ios($board_element, $node);
 		
 		// clocks
 		if(isset($this->xml->global->clocks))
@@ -66,12 +66,12 @@ class Device
 		}
 	}
 	
-	private function parse_ios($device_element, $node)
+	private function parse_ios($board_element, $node)
 	{
 		$used_ios = array();
 		
 		// add all used ios
-		foreach($device_element->ios->io as $io)
+		foreach($board_element->ios->io as $io)
 		{
 			$io_name = (string)$io['name'];
 			$used_ios[$io_name] = $io;

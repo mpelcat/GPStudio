@@ -16,6 +16,7 @@ function generate_project_file($node, $path)
 			{
 				if(!file_exists($block->path.$file->path))
 				{
+					echo $block->path.$file->path."\n";
 					echo "$file->name doesn't exists\n";
 				}
 				else
