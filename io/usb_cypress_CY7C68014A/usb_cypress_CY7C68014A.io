@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <io driver="usb_cypress_CY7C68014A" size_addr_rel="4" master_count="1">
 	<files>
-		<file name="MT9 datasheet" path="doc/CY7C68013A_14A_15A_16A_38-08032.pdf" type="doc" group="doc" desc=""/>
+		<file name="USB datasheet" path="doc/CY7C68013A_14A_15A_16A_38-08032.pdf" type="doc" group="doc" desc=""/>
+		<file name="usb.sdc" path="usb.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="usb.vhd" path="hdl/usb/src/usb.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="usb_sm.vhd" path="hdl/usb/src/usb_sm.vhd" type="vhdl" group="hdl" desc=""/>
 		
