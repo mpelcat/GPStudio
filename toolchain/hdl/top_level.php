@@ -107,10 +107,12 @@ function generate_top_level($node, $path)
 	$generator->blocks = $node->blocks;
 	
 	$code = "";
-	foreach($node->board->clocks as $clock)
+	/*foreach($node->board->clocks as $clock)
 	{
 		$code.='	'.$clock->group.'	<=	'.$clock->name.";\n";
-	}
+	}*/
+	$code.="	-- WARNING!! static code only for usb project, TODO to be modified --\n";
+	$code.="	clk_proc	<=	usb_ifclk;\n";
 	
 	$generator->code=$code;
 	$generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.'top.vhd');

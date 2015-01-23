@@ -101,7 +101,10 @@ set_clock_groups -asynchronous \
     -min 0.000 \
     [get_ports usb_fd_io[*]]      
 
-	set_max_delay \
+	 # peut etre a verifier .. 
+#	set_max_delay \
 		-from {usb_sm:USB_SM_INST|usb_fd_io[*]~en} \
 		-to [get_ports {usb_fd_io[*]}] 14.000		
 		
+	set_input_delay -clock usb_ifclk -max 0.000  [get_ports usb_rst]
+	set_max_delay -from [get_ports {usb_rst}] -to {*} 14
