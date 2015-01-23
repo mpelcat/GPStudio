@@ -4,25 +4,34 @@ require_once("block.php");
 
 class IO extends Block
 {
-	function __construct($io_device_element, $io_node_element)
+	function __construct($io_device_element, $io_node_element=null)
 	{
 		parent::__construct();
-		$io_name = (string)$io_device_element['name'];
-		$this->name = $io_name;
-		$io_driver = (string)$io_device_element['driver'];
+		if(get_class($io_device_element)==='SimpleXMLElement')
+		{
+			$io_name = (string)$io_device_element['name'];
+			$this->name = $io_name;
+			$io_driver = (string)$io_device_element['driver'];
 		
-		$this->path = LIB_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
-		$this->in_lib=true;
-		$io_file = $this->path . $io_driver . ".io";
+			// add io file to the list of files
+			$file_config = new File();
+			$file_config->name = $io_driver . ".io";
+			$file_config->path = $io_driver . ".io";
+			array_push($this->files, $file_config);
+		
+			$this->path = LIB_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
+			$this->in_lib=true;
+			$io_file = $this->path . $io_driver . ".io";
+			
+		}
+		else
+		{
+			$io_file = $io_device_element;
+		}
+		
 		if (!file_exists($io_file)){echo "File $io_file doesn't exist\n";return;}
 		if (!($this->xml = simplexml_load_file($io_file))){echo "Error when parsing $io_file \n";return;}
-		
-		// add io file to the list of files
-		$file_config = new File();
-		$file_config->name = $io_driver . ".io";
-		$file_config->path = $io_driver . ".io";
-		array_push($this->files, $file_config);
-		
+	
 		$this->parse_xml($io_device_element, $io_node_element);
 		unset($this->xml);
 	}
