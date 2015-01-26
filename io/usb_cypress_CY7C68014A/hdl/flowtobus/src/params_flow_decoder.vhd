@@ -26,7 +26,7 @@ entity params_flow_decoder is
 	-- signaux pour wishbone
 	-- Addr must be < 16^2
 	param_addr_o: buffer std_logic_vector(MASTER_ADDR_WIDTH-1 DOWNTO 0);
-	param_data_o : out std_logic_vector(15 downto 0);
+	param_data_o : out std_logic_vector(31 downto 0);
 	param_wr_o : out std_logic;
 	update_port_o: out std_logic;
 	
@@ -39,11 +39,12 @@ architecture rtl of params_flow_decoder is
 ---------------------------------------------------------
 --	SIGNALS
 ---------------------------------------------------------
+	signal param_addr_s : std_logic_vector(31 DOWNTO 0);
 
 -------------
 -- FSM Signal
 -------------
-	type fsm_state_t is (Idle, Waiting_one_cycle, DecodeFlag, ReadAddr,ReadData);
+	type fsm_state_t is (Idle, Waiting_one_cycle, DecodeFlag, ReadAddrMSB, ReadAddrLSB, ReadDataMSB, ReadDataLSB);
 	signal fsm_state : fsm_state_t := Idle;
 	signal f_empty_r : std_logic:='0';
 	signal flow_rdy_r : std_logic:='0';
@@ -85,11 +86,11 @@ begin
 
 			-- one cycle delay between read_data request and data presence as input
 			when Waiting_one_cycle =>	
-				fsm_state <= ReadAddr;
+				fsm_state <= ReadAddrMSB;
 							
 				
-			when ReadAddr =>
-				param_addr_o <= data_i( MASTER_ADDR_WIDTH-1 downto 0);
+			when ReadAddrMSB =>
+				param_addr_s(31 downto 16) <= data_i;
 				param_wr_o <= '0';
 		
 				-- escape if case of bad trame
@@ -98,12 +99,37 @@ begin
 					fsm_state <= Idle;
 					update_port_o<='1';
 				else
-					fsm_state <= ReadData;
+					fsm_state <= ReadAddrLSB;
+				end if;
+			when ReadAddrLSB =>
+				param_addr_s(15 downto 0) <= data_i;
+				param_wr_o <= '0';
+		
+				-- escape if case of bad trame
+				if (f_empty_r='0' and f_empty_i='1' ) then
+					read_data_o <='0';
+					fsm_state <= Idle;
+					update_port_o<='1';
+				else
+					fsm_state <= ReadDataMSB;
 				end if;
 		
-			when ReadData =>	
+			when ReadDataMSB =>	
+				param_data_o(31 downto 16) <= data_i;
+				param_wr_o <= '0';
+				param_addr_o <= param_addr_s(MASTER_ADDR_WIDTH-1 downto 0);
+				
+				if (f_empty_r='0' and f_empty_i='1' ) then
+					read_data_o <='0';
+					fsm_state <= Idle;
+					update_port_o<='1';
+				end if;
+				
+				fsm_state <= ReadDataLSB;
+		
+			when ReadDataLSB =>	
 			
-				param_data_o <= data_i;
+				param_data_o(15 downto 0) <= data_i;
 				param_wr_o <= '1';
 				
 				if (f_empty_r='0' and f_empty_i='1' ) then
@@ -112,10 +138,10 @@ begin
 					update_port_o<='1';
 					
 				elsif (flag_i = BURSTMODE) then
-					fsm_state <= ReadData;
+					fsm_state <= ReadDataMSB;
 					param_addr_o <= std_logic_vector( unsigned(param_addr_o) + "1");
 				else
-					fsm_state <= ReadAddr;
+					fsm_state <= ReadAddrMSB;
 				end if;
 				
 		end case;

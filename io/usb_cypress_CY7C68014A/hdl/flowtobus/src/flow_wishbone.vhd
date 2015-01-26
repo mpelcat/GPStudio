@@ -117,7 +117,7 @@ component params_flow_decoder
 	read_data_o : out std_logic;
 	-- signaux pour wishbone
 	param_addr_o: out std_logic_vector(MASTER_ADDR_WIDTH-1 DOWNTO 0);
-	param_data_o : out std_logic_vector(15 downto 0);
+	param_data_o : out std_logic_vector(31 downto 0);
 	param_wr_o : out std_logic;
 	update_port_o: out std_logic;
 
@@ -136,7 +136,7 @@ end component;
 	signal flag_s :  std_logic_vector(7 downto 0);
 	signal rdreq_s:std_logic:='0';
 	
-	signal param_data_s:std_logic_vector(15 downto 0);
+	signal param_data_s:std_logic_vector(31 downto 0);
 begin
 
 -- MAP COM_FLOW_FIFO_RX
@@ -191,7 +191,7 @@ decoder_inst :component params_flow_decoder
 	rst_n_i => rst_n_i
     );
 
-param_data_o <= X"0000" & param_data_s;
+param_data_o <= param_data_s;
 
 end rtl;
 
