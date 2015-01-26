@@ -33,6 +33,7 @@ else
 }
 
 $block->name=basename($config_block_file);
+if($block->size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
 
 $generator = new VHDL_generator($block->name);
 $generator->fromBlock($block);
