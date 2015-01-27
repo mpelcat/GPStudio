@@ -56,6 +56,7 @@ function generate_tcl($node, $path)
 					elseif($file->type=="vhdl") {$type='VHDL_FILE';}
 					elseif($file->type=="qip") {$type='QIP_FILE';}
 					elseif($file->type=="sdc") {$type='SDC_FILE';}
+					elseif($file->type=="hex") {$type='HEX_FILE';}
 					
 					if($block->in_lib)
 					{
