@@ -20,7 +20,7 @@
 				<pin name="led_o" mapto="PIN_AE6"/>
 			</pins>
 		</io>
-		<io name="mt9bricolage" type="image-sensor" driver="mt9" optional="true" optionalgroup="1" description="MT9 image sensor">
+		<io name="mt9" type="image-sensor" driver="mt9" optional="true" optionalgroup="1" description="MT9 image sensor">
 			<pins>
 				<pin name="mt9_data_i[0]" mapto="PIN_C3"/>
 				<pin name="mt9_data_i[1]" mapto="PIN_F10"/>

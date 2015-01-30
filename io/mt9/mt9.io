@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <io driver="mt9" size_addr_rel="3">
 	<files>
-		<file name="mt9bricolage.v" path="verilog/mt9bricolage.v" type="verilog" group="hdl" desc=""/>
-		<file name="mt9.sdc" path="mt9.sdc" type="sdc" group="hdl" desc=""/>
-		<file name="VideoSampler.v" path="verilog/VideoSampler.v" type="verilog" group="hdl" desc=""/>
-		<file name="pll.vhd" path="vhdl/pll.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="pll.qip" path="vhdl/pll.qip" type="qip" group="hdl" desc=""/>
-		<file name="mt9.vhd" path="vhdl/mt9.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
+		<file name="video_sampler.v" path="hdl/video_sampler.v" type="verilog" group="hdl" desc=""/>
+		
+		<file name="mt9.vhd" path="hdl/mt9.vhd" type="vhdl" group="hdl" desc=""/>
+		<!--<file name="mt9bricolage.v" path="hdl/mt9bricolage.v" type="verilog" group="hdl" desc=""/>-->
+		
+		<file name="pll.vhd" path="hdl/pll.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="pll.qip" path="hdl/pll.qip" type="qip" group="hdl" desc=""/>
+		<file name="mt9_config_slave.vhd" path="hdl/mt9_config_slave.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="mt9_config_i2c.vhd" path="hdl/mt9_config_i2c.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="MT9 datasheet" path="doc/MT9M031_DS_Rev. A 1009 EN.pdf" type="doc" group="doc" desc=""/>
 	</files>
 	<flows>
@@ -28,11 +32,16 @@
 	</ports>
 	<params>
 		<param name="ENABLE" regaddr="0"/>
+		<param name="FLOWLENGHT" regaddr="1"/>
+		<param name="XSTART" regaddr="2"/>
+		<param name="YSTART" regaddr="3"/>
+		<param name="XEND" regaddr="4"/>
+		<param name="YEND" regaddr="5"/>
+		<param name="AUTOEXP" regaddr="6"/>
+		<param name="INTEGTIME" regaddr="7"/>
+		
 		<param name="DATA_WIDTH" hard="1" value="32"/>
 		<param name="PIXEL_WIDTH" hard="1" value="8"/>
-		<param name="FIFO_DEPTH" hard="1" value="2048"/>
-		<param name="DEFAULT_SCR" hard="1" value="0"/>
-		<param name="DEFAULT_FLOWLENGHT" hard="1" value="320*240"/>
 	</params>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
