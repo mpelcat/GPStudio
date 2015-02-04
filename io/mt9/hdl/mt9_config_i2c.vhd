@@ -88,7 +88,7 @@ begin
 
 	-- Reset register & i/o configuration
 	int_reg_start_addr(0) <= RESET_REGISTER_I2CREG;	-- reset register
-	int_reg_start_data(0) <= x"01D8";	-- 
+	int_reg_start_data(0) <= x"01DC";	-- 
 
 	-- Y address start
 	int_reg_start_addr(1) <= Y_ADDR_START_I2CREG;
@@ -124,7 +124,11 @@ begin
 										-- 1982: enabled embeded data (default)
 
 	int_reg_start_addr(8) <= PLL_MULTIPLIER_I2CREG;	-- pll_multiplier
-	int_reg_start_data(8) <= x"0010";	-- multiplier set to 16
+	int_reg_start_data(8) <= x"002C";	-- multiplier set to 44
+
+	-- Reset register & i/o configuration
+	--int_reg_start_addr(9) <= RESET_REGISTER_I2CREG;	-- reset register
+	--int_reg_start_data(9) <= x"01DC";	-- pass image sensor in streaming mode (video mode)
 
 	timer_start_proc : process(reset_n, mt9_extclk)
 	begin
