@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>643</height>
+    <height>818</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QPushButton" name="refreshButton">
       <property name="text">
-       <string>Refresh</string>
+       <string>Refresh Cams</string>
       </property>
      </widget>
     </item>
@@ -31,36 +31,6 @@
        </size>
       </property>
      </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QPushButton" name="sendButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Send</string>
-        </property>
-        <property name="autoRepeat">
-         <bool>true</bool>
-        </property>
-        <property name="autoRepeatInterval">
-         <number>50</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="statusButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Status</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
     <item>
      <widget class="ImageView" name="imageView"/>
@@ -86,7 +56,10 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="paramsDock">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="windowTitle">
     <string>Params</string>
    </property>
@@ -96,14 +69,21 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QCheckBox" name="flowEnableBox">
        <property name="text">
-        <string>Threshold :</string>
+        <string>Flow enable</string>
        </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Threshold :</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QSlider" name="thresholdSlider">
          <property name="maximum">
@@ -122,13 +102,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="flowEnableBox">
-       <property name="text">
-        <string>Flow enable</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QGroupBox" name="groupBox_2">
@@ -160,8 +133,11 @@
             <property name="maximum">
              <number>2000</number>
             </property>
+            <property name="singleStep">
+             <number>2</number>
+            </property>
             <property name="value">
-             <number>320</number>
+             <number>900</number>
             </property>
            </widget>
           </item>
@@ -177,8 +153,11 @@
             <property name="maximum">
              <number>2000</number>
             </property>
+            <property name="singleStep">
+             <number>2</number>
+            </property>
             <property name="value">
-             <number>240</number>
+             <number>960</number>
             </property>
            </widget>
           </item>
@@ -195,7 +174,7 @@
              <number>2000</number>
             </property>
             <property name="value">
-             <number>480</number>
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -212,17 +191,7 @@
              <number>2000</number>
             </property>
             <property name="value">
-             <number>320</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="2">
-           <widget class="QSlider" name="integtimeMT9">
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -230,6 +199,39 @@
            <widget class="QCheckBox" name="aemt9_box">
             <property name="text">
              <string>Auto exposure</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QSlider" name="integtimeMT9">
+            <property name="maximum">
+             <number>5000</number>
+            </property>
+            <property name="value">
+             <number>150</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="integTimeLabel">
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>50</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -270,7 +272,7 @@
         <item>
          <widget class="QPushButton" name="sendMT9Config">
           <property name="text">
-           <string>Send</string>
+           <string>Send all params to MT9</string>
           </property>
          </widget>
         </item>
@@ -316,7 +318,7 @@
      <item>
       <widget class="QGroupBox" name="groupBox_3">
        <property name="title">
-        <string>Image</string>
+        <string>Image from USB</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <property name="leftMargin">
@@ -376,7 +378,30 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="sendButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Send image</string>
+            </property>
+            <property name="autoRepeat">
+             <bool>true</bool>
+            </property>
+            <property name="autoRepeatInterval">
+             <number>50</number>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="fpsLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -420,12 +445,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>124</y>
+     <x>143</x>
+     <y>111</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>124</y>
+     <x>302</x>
+     <y>111</y>
     </hint>
    </hints>
   </connection>

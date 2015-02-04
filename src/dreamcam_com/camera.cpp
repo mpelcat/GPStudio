@@ -27,7 +27,7 @@ Camera::Camera(const CameraInfo &cameraInfo)
     _inputFlow.append(new Flow(0x81));
 
     _start=true;
-    start(QThread::HighestPriority);
+    start(QThread::NormalPriority);
 }
 
 Camera::~Camera()
@@ -59,17 +59,27 @@ QVector<CameraInfo> Camera::avaibleCams()
 
 void Camera::run()
 {
+    int prev_numpacket=-1;
+    bool succes;
+
     while(_start)
     {
-        const QByteArray &received = _cameraIO->read(10);
-        int prev_numpacket;
-        if(received.size()>0)
-        {
-            emit packetArrived(received);
+        const QByteArray &received = _cameraIO->read(512*128, 10, &succes);
 
-            unsigned char idFlow = received[0];
-            unsigned char flagFlow = received[1];
-            unsigned short numpacket = ((unsigned short)((unsigned char)received[2])*256)+(unsigned char)received[3];
+        if(!succes)
+        {
+            qDebug()<<"fail";
+            terminate();
+        }
+
+        int start=0;
+        while(start<received.size())
+        {
+            const QByteArray &packet = received.mid(start, 512);
+
+            unsigned char idFlow = packet[0];
+            unsigned char flagFlow = packet[1];
+            unsigned short numpacket = ((unsigned short)((unsigned char)packet[2])*256)+(unsigned char)packet[3];
 
             for(int i=0; i<_inputFlow.size(); i++)
             {
@@ -81,11 +91,10 @@ void Camera::run()
                         qDebug()<<"miss"<<miss_packet<<numpacket;
                         for(int j=0; j<miss_packet; j++) _inputFlow[i]->appendData(QByteArray(512,0));
                     }
-                    _inputFlow[i]->appendData(received);
+                    _inputFlow[i]->appendData(packet);
                     prev_numpacket = numpacket;
 
-                   //if(_inputFlow[i]->getSize()>=320*240*2)
-                    if(flagFlow==0xBA)
+                    if(flagFlow==0xBA)      // end of flow
                     {
                         prev_numpacket=-1;
                         _inputFlow[i]->validate();
@@ -97,6 +106,8 @@ void Camera::run()
             {
                 //emit flowReadyToRead(received);
             }
+
+            start+=512;
         }
         for(int i=0; i<_outputFlow.size(); i++)
         {
@@ -118,33 +129,52 @@ CameraIO *Camera::cameraIO() const
 
 void Camera::writeParam(const unsigned int addr, const unsigned int value)
 {
-    QByteArray byte;
+    QByteArray paramFlow;
 
     // addr
-    byte.append((char)(addr >> 24));
-    byte.append((char)(addr >> 16));
-    byte.append((char)(addr >> 8));
-    byte.append((char)addr);
+    paramFlow.append((char)(addr >> 24));
+    paramFlow.append((char)(addr >> 16));
+    paramFlow.append((char)(addr >> 8));
+    paramFlow.append((char)addr);
     // data
-    byte.append((char)(value >> 24));
-    byte.append((char)(value >> 16));
-    byte.append((char)(value >> 8));
-    byte.append((char)value);
+    paramFlow.append((char)(value >> 24));
+    paramFlow.append((char)(value >> 16));
+    paramFlow.append((char)(value >> 8));
+    paramFlow.append((char)value);
 
-    _paramFlow->send(byte);
-    //_cameraIO->write(byte,5);
-    qDebug() << "param_trame: "<< byte.toHex();
+    _paramFlow->send(paramFlow);
+    //qDebug() << "param_trame: "<< byte.toHex();
 }
 
-void Camera::writeParam(const unsigned short addr, const char *data, const unsigned size)
+void Camera::writeParam(const unsigned int addr, const unsigned int *data, const unsigned size)
 {
-    Q_UNUSED(addr);
-    Q_UNUSED(data);
-    Q_UNUSED(size);
+    QByteArray paramFlow;
+    unsigned int addrCurrent = addr;
+
+    for(unsigned int i=0; i<size; i++)
+    {
+        unsigned int valueCurrent = data[i];
+
+        // addr
+        paramFlow.append((char)(addrCurrent >> 24));
+        paramFlow.append((char)(addrCurrent >> 16));
+        paramFlow.append((char)(addrCurrent >> 8));
+        paramFlow.append((char)addrCurrent);
+        // data
+        paramFlow.append((char)(valueCurrent >> 24));
+        paramFlow.append((char)(valueCurrent >> 16));
+        paramFlow.append((char)(valueCurrent >> 8));
+        paramFlow.append((char)valueCurrent);
+
+        addrCurrent++;
+    }
+
+    _paramFlow->send(paramFlow);
 }
 
 void Camera::askStatus()
 {
+    // TODO to be removed
     QByteArray byte;
     byte.append((char)0x00);
     byte.append((char)0xFD);

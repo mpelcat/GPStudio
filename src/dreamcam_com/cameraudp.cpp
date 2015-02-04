@@ -24,7 +24,7 @@ bool CameraUDP::isConnected() const
     return true;
 }
 
-QByteArray CameraUDP::read(const int timeOut)
+QByteArray CameraUDP::read(const unsigned maxSize, const int timeOut, bool *state)
 {
     return QByteArray();
 }

@@ -18,7 +18,7 @@ public:
     virtual bool resetDevice() =0;
     virtual bool isConnected() const =0;
 
-    virtual QByteArray read(const int timeOut=1000) =0;
+    virtual QByteArray read(const unsigned maxSize=512, const int timeOut=1000, bool *state=NULL) =0;
     virtual bool write(const QByteArray &array, const int timeOut=1000) =0;
 
     virtual int sizePacket() const =0;

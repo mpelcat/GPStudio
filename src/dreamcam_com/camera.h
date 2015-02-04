@@ -34,13 +34,12 @@ public:
     CameraIO *cameraIO() const;
 
     void writeParam(const unsigned int addr, const unsigned int value);
-    void writeParam(const unsigned short addr, const char * data, const unsigned size);
+    void writeParam(const unsigned int addr, const unsigned int * data, const unsigned size);
 
     void askStatus();
 
 signals:
     void flowReadyToRead(int flow);
-    void packetArrived(QByteArray data);
 
 protected:
     void run();

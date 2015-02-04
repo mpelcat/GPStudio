@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _cam = NULL;//new Camera("USB");
     connect(ui->camTreeView, SIGNAL(cameraSelected(CameraInfo)), this, SLOT(cameraChanged(CameraInfo)));
     //ui->in->setReadOnly(false);
-    const QVector<CameraInfo> &cams = Camera::avaibleCams();
-    //if(!cams.empty()) cameraChanged(cams.first());
+    //const QVector<CameraInfo> &cams = Camera::avaibleCams();
+    //if(cams.count()==1) cameraChanged(cams.first());
 
     connect(ui->flowEnableBox, SIGNAL(toggled(bool)), this, SLOT(usbEnable()));
 
@@ -28,7 +28,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->usbinComboBox->addItem("USB",(int)FI_USB_IN0_USB_OUT0);
     ui->usbinComboBox->addItem("CAPH",(int)FI_USB_IN0_CAPH_TOPLEVEL_OUT);
 
+    connect(ui->widthMT9SpinBox, SIGNAL(valueChanged(int)), this, SLOT(send_mt9_config()));
+    connect(ui->heightMT9SpinBox, SIGNAL(valueChanged(int)), this, SLOT(send_mt9_config()));
+
     _sizeViewer = QSize(320,240);
+
+    connect(&fpsTimer, SIGNAL(timeout()), this, SLOT(fpsUpdate()));
+    fpsTimer.start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -68,24 +74,6 @@ void MainWindow::on_refreshButton_clicked()
     ui->camTreeView->refreshCams();
 }
 
-void MainWindow::on_statusButton_clicked()
-{
-    if(!_cam) return;
-    _cam->askStatus();
-}
-
-void MainWindow::dataReceive(QByteArray data)
-{
-    //ui->out->setData(data);
-    //qDebug() << data.mid(0,2).toHex();
-    unsigned short numpacket = ((unsigned short)((unsigned char)data[2])*256)+(unsigned char)data[3];
-    unsigned char flagFlow = data[1];
-    if(flagFlow==0xBA)
-    qDebug()<<numpacket << data.mid(1,1).toHex() <<  data.size() << "status"<<_cam->cameraIO()->status();
-    //qDebug()<<((unsigned short)((unsigned char)data[2])*256)+(unsigned char)data[3] << data.mid(1,10).toHex();
-    //qDebug() << QDateTime::currentDateTime().msecsTo(_time);
-}
-
 void MainWindow::flowReceive(int flow)
 {
     //qDebug()<<"flow rec in" << -QDateTime::currentDateTime().msecsTo(_time) << "ms";
@@ -94,7 +82,8 @@ void MainWindow::flowReceive(int flow)
     {
         const QImage &image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer, 16);
         ui->imageView->showImage(image);
-        image.save("image/" + QDateTime::currentDateTime().toString() + ".jpg");
+        //image.save("image/" + QDateTime::currentDateTime().toString() + ".jpg");
+        fpsCount++;
     }
     else
     {
@@ -109,13 +98,11 @@ void MainWindow::cameraChanged(CameraInfo info)
 {
     delete _cam;
     _cam = new Camera(info);
-    connect(_cam, SIGNAL(packetArrived(QByteArray)), this, SLOT(dataReceive(QByteArray)));
 
     connect(_cam, SIGNAL(flowReadyToRead(int)), this, SLOT(flowReceive(int)));
     if(_cam->isConnected())
     {
-        ui->sendButton->setEnabled(true);
-        ui->statusButton->setEnabled(true);
+        ui->paramsDock->setEnabled(true);
     }
 }
 
@@ -142,6 +129,7 @@ void MainWindow::usbEnable()
 void MainWindow::on_mt9EnableBox_clicked()
 {
     if(!_cam) return;
+    send_mt9_config();
     _cam->writeParam(MT9_ENABLE, (ui->mt9EnableBox->isChecked()));
 }
 
@@ -230,9 +218,32 @@ void MainWindow::send_mt9_config()
 void MainWindow::on_integtimeMT9_valueChanged(int value)
 {
     send_mt9_config();
+    ui->integTimeLabel->setText(QString("%1 * 1/pixClk").arg(value));
 }
 
 void MainWindow::on_aemt9_box_toggled(bool checked)
 {
     send_mt9_config();
+}
+
+void MainWindow::fpsUpdate()
+{
+    const float line_length_pck = 1650; // R300C
+    float clkIn = 48.0/50.0*9.0*1000000;
+    float pixClk = clkIn/2*20/6;
+    float rowTime = line_length_pck/pixClk;
+    float rows_per_frame = 990; //300A
+    float integration_time = ui->integtimeMT9->value();
+    float frame_time = rows_per_frame * rowTime;
+    float exposure_time = integration_time * rowTime;
+    float ttfTffv = (8.21+18.21) * rowTime;
+    float fpsTh = 1.0/((frame_time+exposure_time+ttfTffv));
+    QString text = QString("%1 fps (theorical %2)").arg((int)fpsCount).arg(fpsTh);
+    text.append(QString("\npixClk=%1 MHz").arg(pixClk/1000000));
+    text.append(QString("\nrowTime=%1 us").arg(rowTime*1000000));
+    text.append(QString("\nframe_time=%1 ms").arg(frame_time*1000));
+    text.append(QString("\nexposure_time=%1 ms").arg(exposure_time*1000));
+    text.append(QString("\ncomplete time=%1 ms").arg((frame_time+exposure_time+ttfTffv)*1000));
+    ui->fpsLabel->setText(text);
+    fpsCount = 0;
 }

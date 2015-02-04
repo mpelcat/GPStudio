@@ -6,6 +6,7 @@
 #include "camera.h"
 
 #include <QDateTime>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -21,10 +22,8 @@ public:
 
 private slots:
     void on_refreshButton_clicked();
-    void on_statusButton_clicked();
     void on_sendButton_clicked();
 
-    void dataReceive(QByteArray data);
     void flowReceive(int flow);
 
     void cameraChanged(CameraInfo info);
@@ -47,8 +46,9 @@ private slots:
     void send_mt9_config();
 
     void on_integtimeMT9_valueChanged(int value);
-
     void on_aemt9_box_toggled(bool checked);
+
+    void fpsUpdate();
 
 protected:
     bool event(QEvent *event);
@@ -62,6 +62,10 @@ private:
     QSize _sizeViewer;
 
     QDateTime _time;
+
+    // fps
+    QTimer fpsTimer;
+    unsigned fpsCount;
 };
 
 #endif // MAINWINDOW_H
