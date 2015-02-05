@@ -126,7 +126,7 @@ class VHDL_generator
 				if($slavecount++==0) $this->addPortComment(str_pad(' Slaves ',55,'=',STR_PAD_BOTH));
 				$this->addPortComment(str_pad(' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
 
-				$this->addPort('addr_rel_i', $interface->size_addr, 'in', 'std_logic_vector');
+				$this->addPort('addr_rel_i', $interface->size_addr, 'in');
 				$this->addPort('wr_i', 1, 'in');
 				$this->addPort('rd_i', 1, 'in');
 				$this->addPort('datawr_i', 32, 'in');
@@ -137,7 +137,7 @@ class VHDL_generator
 				if($slavecount++==0) $this->addPortComment(str_pad(' Slaves ',55,'=',STR_PAD_BOTH));
 				$this->addPortComment(str_pad(' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
 
-				$this->addPort($interface->blockname.'_addr_rel_o', $interface->size_addr, 'out', 'std_logic_vector');
+				$this->addPort($interface->blockname.'_addr_rel_o', $interface->size_addr, 'out');
 				$this->addPort($interface->blockname.'_wr_o', 1, 'out');
 				$this->addPort($interface->blockname.'_rd_o', 1, 'out');
 				$this->addPort($interface->blockname.'_datawr_o', 32, 'out');
