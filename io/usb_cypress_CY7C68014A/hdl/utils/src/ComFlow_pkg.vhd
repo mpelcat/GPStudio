@@ -147,11 +147,12 @@ package ComFlow_pkg is
 		MASTER_ADDR_WIDTH : integer
 		);
 	  port(
-		-- USB driver connexion
+			-- USB driver connexion
 		data_wr_i : in std_logic;
 		data_i : in std_logic_vector(15 downto 0);
 		-- rdreq_i : in std_logic;
 		pktend_i : in std_logic;
+		fifo_full_o : out std_logic;
 		
 		-- signaux pour wishbone
 		param_addr_o: out std_logic_vector(MASTER_ADDR_WIDTH-1 DOWNTO 0);
@@ -168,14 +169,9 @@ package ComFlow_pkg is
 		);
 	end component;
 	
+
+	
 	component usb_sm 
-	 generic (
-		FLOW_STATUS_ID : integer;
-		NB_FLOW : integer := 2 ; 
-		IDFLOW : IDFLOW_t -- array (0 to 255) of integer range 0 to 255;
-		-- CDC : integer := 1; -- activate CDC
-		-- CDC_SYNC_FF_CHAIN_DEPTH: integer := 2 -- CDC Flip flop Chain depth
-		);
 	  port(
 		usb_ifclk    : in    std_logic;
 		usb_flaga    : in    std_logic;
@@ -233,6 +229,33 @@ package ComFlow_pkg is
 		source_sel_o : out std_logic
 		);
 	end component;
+
+component flow_out_arb 
+
+  port(
+	-- fv 0 signals
+	rdreq_0_o : out std_logic;
+	data_0_i : in std_logic_vector(15 downto 0);
+	flow_rdy_0_i: in std_logic;	
+	f_empty_0_i : in std_logic;
+	
+	-- fv 1signals
+	rdreq_1_o : out std_logic;
+	data_1_i : in std_logic_vector(15 downto 0);
+	flow_rdy_1_i: in std_logic;	
+	f_empty_1_i : in std_logic;
+	
+	-- fv usb signals
+	rdreq_usb_i : in std_logic;
+	data_usb_o : out std_logic_vector(15 downto 0);
+	flow_rdy_usb_o: out std_logic;	
+	f_empty_usb_o: out std_logic;
+	
+	clk_i :in std_logic;
+	rst_n_i :in std_logic
+	
+    );
+end component;
 
 end package ComFlow_pkg;
 

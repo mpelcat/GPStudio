@@ -26,6 +26,7 @@ entity flow_wishbone is
     data_i : in std_logic_vector(15 downto 0);
 	-- rdreq_i : in std_logic;
 	pktend_i : in std_logic;
+	fifo_full_o : out std_logic;
 	
 	-- signaux pour wishbone
 	param_addr_o: out std_logic_vector(MASTER_ADDR_WIDTH-1 DOWNTO 0);
@@ -132,7 +133,6 @@ end component;
 	signal flow_rdy_s:  std_logic:='0';
 	signal flow_rdy_resync_s: std_logic :='0';
 	signal f_empty_s :  std_logic:='0';
-	signal fifos_f_s :  std_logic:='0';
 	signal flag_s :  std_logic_vector(7 downto 0);
 	signal rdreq_s:std_logic:='0';
 	
@@ -154,7 +154,7 @@ COM_RX_PARAMS: component  com_flow_fifo_rx
 	data_o => data_s,
 	flow_rdy_o => flow_rdy_s,
 	f_empty_o => f_empty_s,
-	fifos_f_o => fifos_f_s,
+	fifos_f_o => fifo_full_o,
 	flag_o => flag_s,
 
 	clk_in_i => clk_in_i,

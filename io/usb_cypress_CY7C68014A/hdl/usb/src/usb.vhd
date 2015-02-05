@@ -30,11 +30,21 @@ entity usb is
 		in0_data : in std_logic_vector(15 downto 0);
 		in0_fv : in std_logic;
 		in0_dv : in std_logic;
+		------ in1 flow ------
+		in1_data : in std_logic_vector(15 downto 0);
+		in1_fv : in std_logic;
+		in1_dv : in std_logic;
+
 
 		------ out0 flow ------
 		out0_data : out std_logic_vector(15 downto 0);
 		out0_fv : out std_logic;
 		out0_dv : out std_logic;
+
+		------ out1 flow ------
+		out1_data : out std_logic_vector(15 downto 0);
+		out1_fv : out std_logic;
+		out1_dv : out std_logic;
 
 		---- ===== Masters =====
 
@@ -80,6 +90,17 @@ signal source_sel_s:std_logic:='0';
 	signal flow_out_empty_s : std_logic:='0';
 	signal flow_out_rd_s : std_logic:='0';
 	signal flow_out_rdy_s : std_logic:='0';
+	
+	signal flow_out_data_0_s : std_logic_vector(15 downto 0):=(others=>'0');
+	signal flow_out_empty_0_s : std_logic:='0';
+	signal flow_out_rd_0_s : std_logic:='0';
+	signal flow_out_rdy_0_s : std_logic:='0';
+	
+	signal flow_out_data_1_s : std_logic_vector(15 downto 0):=(others=>'0');
+	signal flow_out_empty_1_s : std_logic:='0';
+	signal flow_out_rd_1_s : std_logic:='0';
+	signal flow_out_rdy_1_s : std_logic:='0';
+	
 
 -- FLOW_PARAMS
 	signal update_port_s : std_logic:='0';
@@ -92,11 +113,11 @@ begin
 reset <= usb_rst;
 		
 USB_SM_INST : usb_sm
-    generic map (
-	  FLOW_STATUS_ID => 253,
-	  NB_FLOW => 2, -- NBFLOW is declared in ComFlow_pkg package
-	  IDFLOW =>  (1, 128)
-	  )
+    -- generic map (
+	  -- FLOW_STATUS_ID => 253,
+	  -- NB_FLOW => 2, -- NBFLOW is declared in ComFlow_pkg package
+	  -- IDFLOW =>  (1, 128)
+	  -- )
     port map (
 		usb_ifclk    => usb_ifclk,
 		usb_flaga    => usb_flaga,
@@ -147,8 +168,8 @@ ENABLE_SYNC_FV: component fv_synchro_signal
 	rst_n_i => usb_rst
 );
 
---FLOW_IN
-USBFLOW_IN: component flow_in
+--FLOW_IN 1
+USBFLOW_IN0: component flow_in
   generic map(
 	FIFO_DEPTH => 1024,
 	FLOW_ID => 1,
@@ -163,20 +184,41 @@ USBFLOW_IN: component flow_in
 	data_o => out0_data,
 	fv_o => out0_fv,
 	dv_o => out0_dv,
-	flow_full_o => flow_in1_full_s,
+	flow_full_o => open,
 		
 	clk_in_i =>usb_ifclk,
-	clk_out_i =>usb_ifclk,
+	clk_out_i => clk_proc,
 	rst_n_i =>usb_rst
     );
 
+--FLOW_IN 2
+USBFLOW_IN1: component flow_in
+  generic map(
+	FIFO_DEPTH => 1024,
+	FLOW_ID => 2,
+	FLAGS_CODES => InitFlagCodes
+    )
+  port map(
+	data_wr_i =>flow_in1_wr_s,
+	data_i => flow_in1_data_s,
+	pktend_i => flow_in1_pktend_s,
+	enable_i => enable_s_fvsync,
 
---FLOW OUT
-USBFLOW_OUT: component flow_out 
+	data_o => out1_data,
+	fv_o => out1_fv,
+	dv_o => out1_dv,
+	flow_full_o => open,
+		
+	clk_in_i =>usb_ifclk,
+	clk_out_i =>clk_proc,
+	rst_n_i =>usb_rst
+    );
+
+--FLOW OUT 0
+USBFLOW_OUT0: component flow_out 
   generic map (
 	FIFO_DEPTH => 512*64,
 	FLOW_ID => 128,
-	--PACKET_SIZE => TX_PACKET_SIZE,
 	PACKET_SIZE => 256, -- header inclus
 	FLAGS_CODES => InitFlagCodes
     )
@@ -184,16 +226,68 @@ USBFLOW_OUT: component flow_out
 	data_i => in0_data,
 	fv_i => in0_fv,
 	dv_i => in0_dv,
-	rdreq_i => flow_out_rd_s,
+	rdreq_i => flow_out_rd_0_s,-- to arb
 	enable_i => enable_s_fvsync,
-	data_o => flow_out_data_s,
-	flow_rdy_o=> flow_out_rdy_s,
-	f_empty_o => flow_out_empty_s,
+	data_o => flow_out_data_0_s,-- to arb
+	flow_rdy_o=> flow_out_rdy_0_s,-- to arb
+	f_empty_o => flow_out_empty_0_s,-- to arb
 	
 	clk_in_i => clk_proc, 
 	clk_out_i => usb_ifclk,
 	rst_n_i=> usb_rst
 );
+
+--FLOW OUT 1
+USBFLOW_OUT1: component flow_out 
+  generic map (
+	FIFO_DEPTH => 512*64,
+	FLOW_ID => 129,
+	PACKET_SIZE => 256, -- header inclus
+	FLAGS_CODES => InitFlagCodes
+    )
+  port map(
+	data_i => in1_data,
+	fv_i => in1_fv,
+	dv_i => in1_dv,
+
+	rdreq_i => flow_out_rd_1_s, -- to arb
+	enable_i => enable_s_fvsync,
+	data_o => flow_out_data_1_s, -- to arb
+	flow_rdy_o=> flow_out_rdy_1_s, -- to arb
+	f_empty_o => flow_out_empty_1_s, -- to arb
+	
+	clk_in_i => clk_proc, 
+	clk_out_i => usb_ifclk,
+	rst_n_i=> usb_rst
+);
+
+
+-- component flow_out_arbiter 
+	
+USBFLOW_ARB : component flow_out_arb
+ port map(
+		-- fv 0 signals
+		rdreq_0_o => flow_out_rd_0_s,
+		data_0_i => flow_out_data_0_s,
+		flow_rdy_0_i => flow_out_rdy_0_s,
+		f_empty_0_i  => flow_out_empty_0_s,
+	
+		-- fv 0 signals
+		rdreq_1_o => flow_out_rd_1_s,
+		data_1_i => flow_out_data_1_s,
+		flow_rdy_1_i=> flow_out_rdy_1_s,
+		f_empty_1_i => flow_out_empty_1_s,
+
+		-- fv usb signals
+		rdreq_usb_i => flow_out_rd_s,
+		data_usb_o => flow_out_data_s,
+		flow_rdy_usb_o =>flow_out_rdy_s,
+		f_empty_usb_o =>flow_out_empty_s,
+		
+		clk_i => usb_ifclk,
+		rst_n_i => usb_rst);
+
+
 
 --  FLOW_PARAMS module --> Bus Interconnect Master
 FLOW_PARAMS: component flow_wishbone 
@@ -206,6 +300,7 @@ FLOW_PARAMS: component flow_wishbone
 			data_wr_i => flow_in1_wr_s,
 			data_i => flow_in1_data_s,
 			pktend_i => flow_in1_pktend_s,
+			fifo_full_o => flow_in1_full_s,
 			
 			param_addr_o => master_addr_o,
 			param_data_o => master_datawr_o,

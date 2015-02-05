@@ -97,18 +97,7 @@ end process;
 	data_wr_o <= dv_i and enable_i and not(fifo_f_i);
 	data_o <= data_i;
 
-		-- if(data_wr_i='1') then
-			-- cpt:=cpt+1;
-		-- end if;
-		
-		-- if(cpt=(PACKET_SIZE-2) or pktend_i='1') then
-			-- fifo_pkt_wr_s <='1';
-			-- fifo_pkt_data_s <= std_logic_vector(to_unsigned(cpt,16));
-			-- cpt :=0;
-		-- end if;
-		
-	-- end if;
--- end process;
+
 	
 	
 end rtl;

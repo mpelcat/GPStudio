@@ -23,11 +23,14 @@
 		<file name="synchronizer.vhd" path="hdl/utils/src/synchronizer.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="enable_gen.vhd" path="hdl/utils/src/enable_gen.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="fv_synchro_signal.vhd" path="hdl/utils/src/fv_synchro_signal.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="flow_out_arb.vhd" path="hdl/utils/src/flow_out_arb.vhd" type="vhdl" group="hdl" desc=""/>
 		
 	</files>
 	<flows>
 		<flow name="in0" type="in" desc="flow 0 return for supervise results of process"/>
 		<flow name="out0" type="out" desc="flow 0 return for supervise results of process"/>
+		<flow name="in1" type="in" desc="flow 1 return for supervise results of process"/>
+		<flow name="out1" type="out" desc="flow 1 return for supervise results of process"/> 
 	</flows>
 	<params>
 		<param name="ENABLE" regaddr="0"/>

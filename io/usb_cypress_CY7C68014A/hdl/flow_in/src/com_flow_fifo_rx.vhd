@@ -169,8 +169,8 @@ flow_rdy_o <= fifo_1_readable or fifo_2_readable;
 	);
 	
 
-fifo_1_aclr_s <= not(rst_n_i);
-fifo_2_aclr_s <= not(rst_n_i);
+fifo_1_aclr_s <= not(rst_n_i) or not(enable_i);
+fifo_2_aclr_s <= not(rst_n_i) or not(enable_i);
 	
 FSM:process (clk_in_i, rst_n_i) 
 begin

@@ -177,7 +177,7 @@ ComFlowFifoTX_inst : component com_flow_fifo_tx
 	fifos_f_o => fifo_f_s,  
 	clk_in_i => clk_in_i,
 	clk_out_i =>clk_out_i,
-	rst_n_i  => rst_n_i  
+	rst_n_i  => rst_n_i or not(enable_i)
     );
 
 end rtl;
