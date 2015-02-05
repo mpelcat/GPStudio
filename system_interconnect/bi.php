@@ -91,7 +91,7 @@ class BusInterconnect extends Block
 				$count=0;
 				foreach($block->params as $param)
 				{
-					if($param->hard!='1')
+					if($param->hard==false)
 					{
 						if($count++==0) $content.='// '.str_pad(' '.$block->name.' ',55,'=',STR_PAD_BOTH)."\n";
 						$paramname = strtoupper($block->name.'_'.$param->name);
@@ -174,7 +174,14 @@ class BusInterconnect extends Block
 				// cs slave
 				$code.=$name_wr.' <= '.$name_cs.' and '.$name_master.'_master_wr_i;'."\n";
 				// addr relative slave
-				$code.=$name_addr_rel.' <= '.$name_addr_master.'('.($interface->size_addr-1).' downto 0);'."\n";
+				if($interface->size_addr==1)
+				{
+					$code.=$name_addr_rel.' <= '.$name_addr_master.'(0);'."\n";
+				}
+				else
+				{
+					$code.=$name_addr_rel.' <= '.$name_addr_master.'('.($interface->size_addr-1).' downto 0);'."\n";
+				}
 				// write slave
 				$code.=$name_datawr.' <= '.$name_master.'_master_datawr_i;'."\n";
 			

@@ -85,7 +85,14 @@ function generate_top_level($node, $path)
 				if($interface->type=='bi_slave')
 				{
 					$generator->addSignalComment(str_pad(' '.$block->name.' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
-					$generator->addSignal($block->name.'_addr_rel_s', $interface->size_addr, 'std_logic_vector');
+					if($interface->size_addr==1)
+					{
+						$generator->addSignal($block->name.'_addr_rel_s', $interface->size_addr, 'std_logic');
+					}
+					else
+					{
+						$generator->addSignal($block->name.'_addr_rel_s', $interface->size_addr, 'std_logic_vector');
+					}
 					$generator->addSignal($block->name.'_wr_s', 1, 'std_logic');
 					$generator->addSignal($block->name.'_rd_s', 1, 'std_logic');
 					$generator->addSignal($block->name.'_datawr_s', 32, 'std_logic_vector');
@@ -94,7 +101,14 @@ function generate_top_level($node, $path)
 				if($interface->type=='bi_master')
 				{
 					$generator->addSignalComment(str_pad(' '.$block->name.' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
-					$generator->addSignal($block->name.'_master_addr_s', $interface->size_addr, 'std_logic_vector');
+					if($interface->size_addr==1)
+					{
+						$generator->addSignal($block->name.'_master_addr_s', $interface->size_addr, 'std_logic');
+					}
+					else
+					{
+						$generator->addSignal($block->name.'_master_addr_s', $interface->size_addr, 'std_logic_vector');
+					}
 					$generator->addSignal($block->name.'_master_wr_s', 1, 'std_logic');
 					$generator->addSignal($block->name.'_master_rd_s', 1, 'std_logic');
 					$generator->addSignal($block->name.'_master_datawr_s', 32, 'std_logic_vector');

@@ -67,22 +67,25 @@ class FlowInterconnect extends Block
 		$count_param=0;
 		foreach($this->tree_connects as $in_connect => $out_connects)
 		{
-			$param = new Param();
-			$param->name = $in_connect;
-			$param->regaddr = $count_param;
-			$param->default = 0;
-			$param->hard = false;
-			
-			foreach($out_connects as $key => $out_connect)
+			if(count($out_connects)-1>1)
 			{
-				if(is_numeric($key))
+				$param = new Param();
+				$param->name = $in_connect;
+				$param->regaddr = $count_param;
+				$param->default = 0;
+				$param->hard = false;
+				
+				foreach($out_connects as $key => $out_connect)
 				{
-					$param->enum[$key] = $out_connect['name'];
+					if(is_numeric($key))
+					{
+						$param->enum[$key] = $out_connect['name'];
+					}
 				}
+				
+				array_push($this->params, $param);
+				$count_param++;
 			}
-			
-			array_push($this->params, $param);
-			$count_param++;
 		}
 		
 		if($count_param==1) $this->size_addr_rel=1;
@@ -128,7 +131,7 @@ class FlowInterconnect extends Block
 					echo "== WARNING (FI) == Size of flow $in_connect > size of flow ".$out_connects[0]['name']."\n";
 				}
 				$code.='	'.$in_connect.'_fv <=  '.$out_connects[0]['name'].'_fv;'."\n";
-				$code.='	'.$in_connect.'_dv <=  '.$out_connects[0]['name'].'_dv'."\n"."\n";
+				$code.='	'.$in_connect.'_dv <=  '.$out_connects[0]['name'].'_dv;'."\n"."\n";
 			}
 			else
 			{
@@ -191,7 +194,7 @@ class FlowInterconnect extends Block
 		$count_reg=0;
 		foreach($fi->tree_connects as $in_connect => $out_connects)
 		{
-			if(count($out_connects)>1)
+			if(count($out_connects)-1>1)
 			{
 				$name_reg = 'mux_'.$in_connect.'_reg';
 				$code.='	slave_'.$in_connect.' : process (clk_proc, reset)'."\n";
@@ -200,8 +203,15 @@ class FlowInterconnect extends Block
 				$code.='			'.$name_reg.' <= (others => \'0\');'."\n";	// TODO modify default value
 			
 				$code.='		elsif(rising_edge(clk_proc)) then'."\n";
-			
-				$code.='			if(wr_i=\'1\' and addr_rel_i=std_logic_vector(to_unsigned('.$count_reg.', '.$fi->size_addr_rel.'))) then'."\n";
+				
+				if($fi->size_addr_rel==1)
+				{
+					$code.='			if(wr_i=\'1\' and addr_rel_i=\''.$count_reg.'\') then'."\n";
+				}
+				else
+				{
+					$code.='			if(wr_i=\'1\' and addr_rel_i=std_logic_vector(to_unsigned('.$count_reg.', '.$fi->size_addr_rel.'))) then'."\n";
+				}
 				$code.='				'.$name_reg.' <= datawr_i;'."\n";
 				$code.='			end if;'."\n";
 				$code.='		end if;'."\n";

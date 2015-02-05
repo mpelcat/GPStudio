@@ -20,11 +20,10 @@ $block = null;
 if(substr($config_block_file, -2)==="io")
 {
 	$block = new IO($config_block_file);
-	print_r($block);
 }
 elseif(substr($config_block_file, -4)==="proc")
 {
-	
+	$block = new Process($config_block_file);
 }
 else
 {
@@ -38,5 +37,7 @@ if($block->size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus
 $generator = new VHDL_generator($block->name);
 $generator->fromBlock($block);
 $generator->save_as(getcwd().DIRECTORY_SEPARATOR.$block->name.'.vhd');
+
+echo $block->name.'.vhd'.' generated'."\n";
 
 ?>
