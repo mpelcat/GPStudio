@@ -28,8 +28,18 @@ class Param
 		$this->default	= (string)$xml['default'];
 		$this->min		= (string)$xml['min'];
 		$this->max		= (string)$xml['max'];
-		$this->hard		= (string)$xml['hard'];
 		$this->desc		= (string)$xml['desc'];
+		
+		if((string)$xml['hard']=="1" or (string)$xml['hard']=="true") $this->hard=true; else $this->hard=false;
+		
+		// ports
+		if(isset($xml->enums))
+		{
+			/*foreach($this->xml->ports->port as $port)
+			{
+				array_push($this->ext_ports, new Port($port));
+			}*/
+		}
 	}
 }
 
