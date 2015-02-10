@@ -59,8 +59,8 @@ class FlowInterconnect extends Block
 			}
 		}
 		
-		echo "\n" . '// =============== Flow connections ===============' . "\n";
-		print_r($tree_connects);
+		/*echo "\n" . '// =============== Flow connections ===============' . "\n";
+		print_r($tree_connects);*/
 		$this->tree_connects = $tree_connects;
 		
 		// create params for each mux
@@ -74,14 +74,30 @@ class FlowInterconnect extends Block
 				$param->regaddr = $count_param;
 				$param->default = 0;
 				$param->hard = false;
+				$param->desc = 'Mux control for '.$in_connect.' flow input';
+				
+				$parambitfield = new ParamBitfield();
+				$parambitfield->name = 'Muxdir';
+				$parambitfield->default = 0;
 				
 				foreach($out_connects as $key => $out_connect)
 				{
 					if(is_numeric($key))
 					{
-						$param->enum[$key] = $out_connect['name'];
+						$paramenum = new ParamEnum();
+						$paramenum->name = $out_connect['name'];
+						$paramenum->value = $key;
+						$paramenum->desc = $out_connect['name'].' as input of '.$in_connect;
+						
+						array_push($parambitfield->paramenums, $paramenum);
 					}
 				}
+				
+				$bitcountenum = ceil(log(count($parambitfield->paramenums),2));
+				for($i=0; $i<$bitcountenum; $i++) array_push($parambitfield->bitfieldlist, $i);
+				$parambitfield->bitfield = "$bitcountenum-0";
+				
+				array_push($param->parambitfields, $parambitfield);
 				
 				array_push($this->params, $param);
 				$count_param++;
@@ -90,6 +106,85 @@ class FlowInterconnect extends Block
 		
 		if($count_param==1) $this->size_addr_rel=1;
 		else $this->size_addr_rel = ceil(log($count_param, 2));
+	}
+	
+	function create_dot_file($node, $filename)
+	{
+		$content='';
+		
+		$content.='digraph G {'."\n";
+		foreach($node->blocks as $block)
+		{
+			if($block->name!="fi" and $block->name!="bi")
+			{
+				$ins=array();
+				$outs=array();
+				foreach($block->flows as $flow)
+				{
+					if($flow->type=='in') array_push($ins, $flow->name);
+					if($flow->type=='out') array_push($outs, $flow->name);
+				}
+				
+				$content.="\t".$block->name.'[shape = record,label = "';
+				$content.='{{';
+				$count=0;
+				foreach($ins as $in)
+				{
+					$content.='<'.$in.'> '.$in;
+					if(++$count<count($ins)) $content.='|';
+				}
+				$content.='}|'.$block->name.'|{';
+				$count=0;
+				foreach($outs as $out)
+				{
+					$content.='<'.$out.'> '.$out;
+					if(++$count<count($outs)) $content.='|';
+				}
+				
+				$content.='}}"];'."\n";
+			}
+		}
+	
+		foreach($this->tree_connects as $in_connect => $out_connects)
+		{
+			foreach($out_connects as $key => $out_connect)
+			{
+				if(is_numeric($key))
+				{
+					$from=$out_connect['name'];
+					$from_block=substr($from,0,strrpos($from,'_',-1));
+					$from_flow=substr($from,strrpos($from,'_',-1)+1);
+					$to=$in_connect;
+					$to_block=substr($to,0,strrpos($to,'_',-1));
+					$to_flow=substr($to,strrpos($to,'_',-1)+1);
+					$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow.';'."\n";
+				}
+			}
+		}
+		$content.='}'."\n";
+	
+		// save file if it's different
+		$needToReplace = false;
+	
+		if(file_exists($filename))
+		{
+			$handle = fopen($filename, 'r');
+			$actualContent = fread($handle, filesize($filename));
+			fclose($handle);
+			if($actualContent != $content) $needToReplace = true;
+		}
+		else $needToReplace = true;
+	
+		if($needToReplace)
+		{
+			if (!$handle = fopen($filename, 'w'))
+			{
+				 echo "$filename cannot be openned\n";
+				 exit;
+			}
+			if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
+			fclose($handle);
+		}
 	}
 	
 	function generate($node, $block, $path, $language)
@@ -232,6 +327,17 @@ class FlowInterconnect extends Block
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
 		array_push($fi->files, $file);
+		
+		$this->create_dot_file($node, $path.DIRECTORY_SEPARATOR.'fi.dot');
+	}
+	
+	public function type() {return 'fi';}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = parent::getXmlElement($xml);
+		
+		return $xml_element;
 	}
 }
 

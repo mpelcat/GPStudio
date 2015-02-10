@@ -61,6 +61,15 @@ class Process extends Block
 		$this->xml = $process_node_element;
 		parent::parse_xml();
 	}
+	
+	public function type() {return 'process';}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = parent::getXmlElement($xml);
+		
+		return $xml_element;
+	}
 }
 
 ?>

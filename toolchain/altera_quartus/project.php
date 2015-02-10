@@ -39,6 +39,7 @@ function generate_project_file($node, $path)
 					{
 						$needToCopy = true;
 					}
+					$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 					
 					// copy if need
 					if($needToCopy)

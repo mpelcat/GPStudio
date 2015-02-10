@@ -14,6 +14,11 @@ class BusInterconnect extends Block
 		$this->name="bi";
 	}
 	
+	static function hex($value, $width)
+	{
+		return '0x'.str_pad(strtoupper(dechex($value)),ceil($width/4.0),'0',STR_PAD_LEFT);
+	}
+	
 	function configure($node, $block)
 	{
 		$reset = new Reset();
@@ -70,14 +75,14 @@ class BusInterconnect extends Block
 			}
 		}
 		
-		echo "\n" . '// =============== Slaves addr ===============' . "\n";
+		/*echo "\n" . '// =============== Slaves addr ===============' . "\n";
 		foreach($node->blocks as $block)
 		{
 			if($block->size_addr_rel>0)
 			{
 				echo $block->name . ' : ' . $block->addr_abs . "\n";
 			}
-		}
+		}*/
 	}
 	
 	function create_header_file($node, $filename)
@@ -93,16 +98,34 @@ class BusInterconnect extends Block
 				{
 					if($param->hard==false)
 					{
-						if($count++==0) $content.='// '.str_pad(' '.$block->name.' ',55,'=',STR_PAD_BOTH)."\n";
+						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' ',55,'-',STR_PAD_BOTH)."\n";
 						$paramname = strtoupper($block->name.'_'.$param->name);
 						$value = $block->addr_abs+$param->regaddr;
-						$content.="#define ".str_pad($paramname,25)."\t".$value."\n";
-					
-						foreach($param->enum as $value => $name)
-						{
-							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$name),40)."\t".$value."\n";
-						}
+						$content.="#define ".str_pad($paramname,25)."\t".BusInterconnect::hex($value,$this->addr_bus_width);
+						if(!empty($param->desc)) $content.="\t// ".$param->desc;
 						$content.="\n";
+					
+						foreach($param->parambitfields as $parambitfield)
+						{
+							$mask=0;
+							foreach($parambitfield->bitfieldlist as $bitfield) $mask += pow(2, $bitfield);
+							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$parambitfield->name.'_MASK'),40)."\t".BusInterconnect::hex($mask,32)."\n";
+							
+							foreach($parambitfield->paramenums as $paramenum)
+							{
+								$content.="		#define ".str_pad(strtoupper($paramname.'_'.$paramenum->name),40)."\t".BusInterconnect::hex($paramenum->value,32);
+								if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
+								$content.="\n";
+							}
+						}
+						
+						foreach($param->paramenums as $paramenum)
+						{
+							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$paramenum->name),40)."\t".BusInterconnect::hex($paramenum->value,32);
+							if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
+							$content.="\n";
+						}
+						if(!empty($param->parambitfields)) $content.="\n";
 					}
 				}
 			}
@@ -111,14 +134,14 @@ class BusInterconnect extends Block
 		// save file if it's different
 		$needToReplace = false;
 	
-		/*if(file_exists($filename))
+		if(file_exists($filename))
 		{
 			$handle = fopen($filename, 'r');
 			$actualContent = fread($handle, filesize($filename));
 			fclose($handle);
 			if($actualContent != $content) $needToReplace = true;
 		}
-		else*/ $needToReplace = true;
+		else $needToReplace = true;
 	
 		if($needToReplace)
 		{
@@ -212,6 +235,15 @@ class BusInterconnect extends Block
 		array_push($bi->files, $file);
 	
 		$this->create_header_file($node, $path.DIRECTORY_SEPARATOR.'params.h');
+	}
+	
+	public function type() {return 'bi';}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = parent::getXmlElement($xml);
+		
+		return $xml_element;
 	}
 }
 

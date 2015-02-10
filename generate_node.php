@@ -21,4 +21,6 @@ $toolchain = Toolchain::load('altera_quartus');
 $toolchain->configure_project($node);
 $toolchain->generate_project($node, getcwd());
 
+$node->saveXml("node_generated.xml");
+
 ?>

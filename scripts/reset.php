@@ -17,6 +17,28 @@ class Reset
 		$this->group	= (string)$xml['group'];
 		$this->direction= (string)$xml['direction'];
 	}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = $xml->createElement("reset");
+		
+		// name
+		$att = $xml->createAttribute('name');
+		$att->value = $this->name;
+		$xml_element->appendChild($att);
+		
+		// group
+		$att = $xml->createAttribute('group');
+		$att->value = $this->group;
+		$xml_element->appendChild($att);
+		
+		// direction
+		$att = $xml->createAttribute('direction');
+		$att->value = $this->direction;
+		$xml_element->appendChild($att);
+		
+		return $xml_element;
+	}
 }
 
 ?>

@@ -124,6 +124,86 @@ class Block
 			}
 		}
 	}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = $xml->createElement("block");
+		
+		// name
+		$att = $xml->createAttribute('name');
+		$att->value = $this->name;
+		$xml_element->appendChild($att);
+		
+		// type
+		$att = $xml->createAttribute('type');
+		$att->value = $this->type();
+		$xml_element->appendChild($att);
+		
+		// in_lib
+		$att = $xml->createAttribute('in_lib');
+		$att->value = $this->in_lib;
+		$xml_element->appendChild($att);
+		
+		// addr_abs
+		$att = $xml->createAttribute('addr_abs');
+		$att->value = $this->addr_abs;
+		$xml_element->appendChild($att);
+		
+		// size_addr_rel
+		$att = $xml->createAttribute('size_addr_rel');
+		$att->value = $this->size_addr_rel;
+		$xml_element->appendChild($att);
+		
+		// master_count
+		$att = $xml->createAttribute('master_count');
+		$att->value = $this->master_count;
+		$xml_element->appendChild($att);
+		
+		// files
+		$xml_files = $xml->createElement("files");
+		foreach($this->files as $file)
+		{
+			$xml_files->appendChild($file->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_files);
+		
+		// params
+		$xml_params = $xml->createElement("params");
+		foreach($this->params as $param)
+		{
+			$xml_params->appendChild($param->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_params);
+		
+		// flows
+		$xml_flows = $xml->createElement("flows");
+		foreach($this->flows as $flow)
+		{
+			if($flow->type=="in" or $flow->type=="out")
+			{
+				$xml_flows->appendChild($flow->getXmlElement($xml));
+			}
+		}
+		$xml_element->appendChild($xml_flows);
+		
+		// clocks
+		$xml_clocks = $xml->createElement("clocks");
+		foreach($this->clocks as $clock)
+		{
+			$xml_clocks->appendChild($clock->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_clocks);
+		
+		// resets
+		$xml_resets = $xml->createElement("resets");
+		foreach($this->resets as $reset)
+		{
+			$xml_resets->appendChild($reset->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_resets);
+		
+		return $xml_element;
+	}
 }
 
 ?>

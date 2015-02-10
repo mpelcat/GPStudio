@@ -19,6 +19,33 @@ class Port
 		$this->size		= (int)$xml['size'];
 		$this->desc		= (string)$xml['desc'];
 	}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = $xml->createElement("port");
+		
+		// name
+		$att = $xml->createAttribute('name');
+		$att->value = $this->name;
+		$xml_element->appendChild($att);
+		
+		// type
+		$att = $xml->createAttribute('type');
+		$att->value = $this->type;
+		$xml_element->appendChild($att);
+		
+		// size
+		$att = $xml->createAttribute('size');
+		$att->value = $this->size;
+		$xml_element->appendChild($att);
+		
+		// desc
+		$att = $xml->createAttribute('desc');
+		$att->value = $this->desc;
+		$xml_element->appendChild($att);
+		
+		return $xml_element;
+	}
 }
 
 ?>

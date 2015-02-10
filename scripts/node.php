@@ -8,8 +8,11 @@ require_once("flow_connect.php");
 class Node
 {
 	public $node_file;
+	
 	public $name;
+	
 	public $board;
+	
 	public $blocks;
 	public $flow_connects;
 
@@ -62,6 +65,38 @@ class Node
 		
 		unset($xml);
 	}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = $xml->createElement("node");
+		
+		// name
+		$att = $xml->createAttribute('name');
+		$att->value = $this->name;
+		$xml_element->appendChild($att);
+		
+		// blocks
+		$xml_blocks = $xml->createElement("blocks");
+		foreach($this->blocks as $block)
+		{
+			$xml_blocks->appendChild($block->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_blocks);
+		
+		return $xml_element;
+	}
+	
+	function saveXml($file)
+	{
+		$xml = new DOMDocument();
+		$xml->preserveWhiteSpace = false;
+		$xml->formatOutput = true;
+		
+		$xml->appendChild($this->getXmlElement($xml));
+		
+		$xml->save($file);
+	}
+
 }
 
 ?>
