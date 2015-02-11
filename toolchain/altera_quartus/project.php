@@ -39,7 +39,6 @@ function generate_project_file($node, $path)
 					{
 						$needToCopy = true;
 					}
-					$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 					
 					// copy if need
 					if($needToCopy)
@@ -49,6 +48,9 @@ function generate_project_file($node, $path)
 							echo "failed to copy $file->name\n";
 						}
 					}
+					
+					// update the path file to the new copy path relative to project
+					$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 				}
 			}
 		}
