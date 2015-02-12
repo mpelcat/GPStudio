@@ -11,23 +11,99 @@ require_once("interface.php");
 
 class Block
 {
+	/**
+	* Name of the block
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Path where the root of files and define of the block is putted
+	* @var string $path
+	*/
 	public $path;
+
+	/**
+	* Specify if the block is defined in the library or not
+	* @var bool $in_lib
+	*/
 	public $in_lib;
+
+	/**
+	* Specify the name of the driver for the block
+	* @var string $driver
+	*/
+	public $driver;
+
 	
+	/**
+	* The absolute adress of the block on BI
+	* @var int $addr_abs
+	*/
 	public $addr_abs;
+
+	/**
+	* Size of relative adress bus
+	* @var int $size_addr_rel
+	*/
 	public $size_addr_rel;
+
+	/**
+	* Number of master in the block on BI
+	* @var int $master_count
+	*/
 	public $master_count;
 
+
+	/**
+	* Array of parameters class (can be Generic or dynamics parameter on BI)
+	* @var array|Param $params
+	*/
 	public $params;
+
+	/**
+	* Array of files whith define the implementation of the block
+	* @var array|File $files
+	*/
 	public $files;
+
+	
+	/**
+    * Array of flows in the block can be input flow or output
+    * @var array|Flow $flows
+    */
 	public $flows;
+
+	/**
+	* Array of clocks to drive the block
+	* @var array|Clock $clocks
+	*/
 	public $clocks;
+
+	/**
+	* Array of resets, can be different type of resets
+	* @var array|Reset $resets
+	*/
 	public $resets;
-	public $driver;
+
+	/**
+	* External pins mapping for blocks abble to comunicate with the output
+	* @var array|Pin $pins
+	*/
 	public $pins;
+
+	/**
+	* Array of port abble to comunicate with the output
+	* @var array|Port $ext_ports
+	*/
 	public $ext_ports;
+
+	/**
+	* Array of interfaces of the block
+	* @var array|InterfaceBus $interfaces
+	*/
 	public $interfaces;
+
 	
 	protected $xml;
 	

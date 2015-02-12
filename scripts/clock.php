@@ -2,12 +2,47 @@
 
 class Clock
 {
+	/**
+	* Name of the clock
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Name of the group clock
+	* @var string $group
+	*/
 	public $group;
+
+	/**
+	* Phase shift of the clock (future use)
+	* @var int $shift
+	*/
 	public $shift;
+
+	/**
+	* Minimal value for this clock in MHz
+	* @var float $min
+	*/
 	public $min;
+
+	/**
+	* Maximal value for this clock in MHz
+	* @var float $max
+	*/
 	public $max;
+
+	/**
+	* Typical value for this clock in MHz
+	* @var float $typical
+	*/
 	public $typical;
+
+	/**
+	* Description of the clock (optional)
+	* @var string $desc
+	*/
+	public $desc;
 	
 	function __construct($xml=null)
 	{
@@ -22,6 +57,7 @@ class Clock
 		$this->min		= (int)$xml['min'];
 		$this->max		= (int)$xml['max'];
 		$this->typical	= (string)$xml['typical'];
+		$this->desc		= (string)$xml['desc'];
 	}
 	
 	public function getXmlElement($xml)
@@ -56,6 +92,11 @@ class Clock
 		// typical
 		$att = $xml->createAttribute('typical');
 		$att->value = $this->typical;
+		$xml_element->appendChild($att);
+		
+		// desc
+		$att = $xml->createAttribute('desc');
+		$att->value = $this->desc;
 		$xml_element->appendChild($att);
 		
 		return $xml_element;

@@ -7,13 +7,34 @@ require_once("flow_connect.php");
 
 class Node
 {
+	/**
+	* The complete path of the file of the input definition
+	* @var string $node_file
+	*/
 	public $node_file;
-	
+
+	/**
+	* Name of the node
+	* @var string $name
+	*/
 	public $name;
-	
+
+	/**
+	* Name of the board/camera/device of the node
+	* @var string $board
+	*/
 	public $board;
-	
+
+	/**
+	* Array of al the blocks (process or io) contain in the node
+	* @var array|Block $blocks
+	*/
 	public $blocks;
+
+	/**
+	* Flow connections between blocks
+	* @var array|FlowConnect $flow_connects
+	*/
 	public $flow_connects;
 
 	function __construct($node_file)

@@ -2,10 +2,29 @@
 
 class Flow
 {
+	/**
+	* Name of the flow
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Type of the flow, can be "in" or "out"
+	* @var string $type
+	*/
 	public $type;
-	public $desc;
+
+	/**
+	* Size in bit of the flow
+	* @var int $size
+	*/
 	public $size;
+
+	/**
+	* Description of the flow (optional)
+	* @var string $desc
+	*/
+	public $desc;
 	
 	function __construct($xml=null)
 	{
@@ -17,7 +36,7 @@ class Flow
 		$this->name = (string)$xml['name'];
 		$this->type = (string)$xml['type'];
 		$this->desc = (string)$xml['desc'];
-		if(!empty($xml['size'])) $this->size = (int)$xml['size']; else $this->size = 16;
+		if(!empty($xml['size'])) $this->size = (int)$xml['size']; else $this->size = 16; // TODO change this hard coded default value
 	}
 	
 	public function getXmlElement($xml)

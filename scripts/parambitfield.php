@@ -4,16 +4,49 @@ require_once("paramenum.php");
 
 class ParamBitfield
 {
+	/**
+	* Name of the bitfield
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Type of the value
+	* @var string $type
+	*/
 	public $type;
+
+	/**
+	* Current value of the bitfield
+	* @var string $value
+	*/
 	public $value;
-	public $default;
+
+	/**
+	* Bitfield in text format
+	* @var string $bitfield
+	* @exemple "2-0" "2,6,1" "15-4,0"
+	*/
 	public $bitfield;
+
+	/**
+	* Description of the bitfield (optional)
+	* @var string $desc
+	*/
 	public $desc;
-	
+
+	/**
+	* Array of int for concerned bit in the param
+	* @var array|int $bitfieldlist
+	*/
 	public $bitfieldlist;
-	
+
+	/**
+	* Array of enums if param contain different enum (optional)
+	* @var array|ParamEnum $paramenums
+	*/
 	public $paramenums;
+
 	
 	function __construct($xml=null)
 	{
@@ -27,7 +60,6 @@ class ParamBitfield
 		$this->name		= (string)$xml['name'];
 		$this->type		= (string)$xml['type'];
 		$this->value	= (string)$xml['value'];
-		$this->default	= (string)$xml['default'];
 		$this->desc		= (string)$xml['desc'];
 		
 		// bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
@@ -92,11 +124,6 @@ class ParamBitfield
 		// value
 		$att = $xml->createAttribute('value');
 		$att->value = $this->value;
-		$xml_element->appendChild($att);
-		
-		// default
-		$att = $xml->createAttribute('default');
-		$att->value = $this->default;
 		$xml_element->appendChild($att);
 		
 		// desc

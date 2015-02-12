@@ -6,13 +6,42 @@ class Board
 {
 	private $xml;
 	
+	/**
+	* Complete path of the board definition
+	* @var string $board_file
+	*/
 	public $board_file;
+
+	/**
+	* Name of the board
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Type of the computing board TODO move this field in toolchain
+	* @var string $type
+	*/
 	public $type;
-	
+
+	/**
+	* Array of pin mapping of the board
+	* @var array|Pin $pins
+	*/
 	public $pins;
+
+	/**
+	* Array of input clocks of the board
+	* @var array|Clock $clocks
+	*/
 	public $clocks;
+
+	/**
+	* Array of input resets of the board
+	* @var array|Reset $resets
+	*/
 	public $resets;
+
 
 	function __construct($board_element, $node)
 	{

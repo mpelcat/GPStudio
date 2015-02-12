@@ -2,10 +2,34 @@
 
 class File
 {
+	/**
+	* Name of the file
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* File type can be : ['', 'verilog', 'vhdl', 'qip', 'sdc', 'hex']
+	* @var string $type
+	*/
 	public $type;
+
+	/**
+	* Group can be : ['', 'hdl', ...]
+	* @var string $group
+	*/
 	public $group;
+
+	/**
+	* Sub path of the file
+	* @var string $path
+	*/
 	public $path;
+
+	/**
+	* Description of the file (optional)
+	* @var string $desc
+	*/
 	public $desc;
 	
 	function __construct($xml=null)

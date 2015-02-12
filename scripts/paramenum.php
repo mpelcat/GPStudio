@@ -2,9 +2,24 @@
 
 class ParamEnum
 {
+	/**
+	* Name of the enum
+	* @var string $name
+	*/
 	public $name;
+
+	/**
+	* Coresponding value of the enum when this enum is chosen
+	* @var string $value
+	*/
 	public $value;
+
+	/**
+	* Description of the enum (optional)
+	* @var string $desc
+	*/
 	public $desc;
+
 	
 	function __construct($xml=null)
 	{

@@ -2,7 +2,16 @@
 
 class Pin
 {
+	/**
+	* Pin name to map
+	* @var string $name
+	*/
 	public $name;
+	
+	/**
+	* Name of the external pin to map
+	* @var string $mapto
+	*/
 	public $mapto;
 	
 	function __construct($xml=null)

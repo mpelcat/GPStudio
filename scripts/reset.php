@@ -2,9 +2,29 @@
 
 class Reset
 {
+	/**
+	* Name of the reset
+	* @var string $name
+	*/
 	public $name;
+	
+	/**
+	* Name of the group reset
+	* @var string $group
+	*/
 	public $group;
+	
+	/**
+	* Direction of the reset to specify if it's a source reset ('out') or an input reset ('in')
+	* @var string $direction
+	*/
 	public $direction;
+
+	/**
+	* Description of the reset (optional)
+	* @var string $desc
+	*/
+	public $desc;
 	
 	function __construct($xml=null)
 	{
@@ -16,6 +36,7 @@ class Reset
 		$this->name		= (string)$xml['name'];
 		$this->group	= (string)$xml['group'];
 		$this->direction= (string)$xml['direction'];
+		$this->desc		= (string)$xml['desc'];
 	}
 	
 	public function getXmlElement($xml)
@@ -35,6 +56,11 @@ class Reset
 		// direction
 		$att = $xml->createAttribute('direction');
 		$att->value = $this->direction;
+		$xml_element->appendChild($att);
+		
+		// desc
+		$att = $xml->createAttribute('desc');
+		$att->value = $this->desc;
 		$xml_element->appendChild($att);
 		
 		return $xml_element;
