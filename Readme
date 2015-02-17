@@ -1,0 +1,7 @@
+How to build ??
+
+# in the root of repo
+mkdir build
+cd build
+qmake ../src
+make -j9

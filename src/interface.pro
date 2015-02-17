@@ -1,5 +1,18 @@
 TEMPLATE = subdirs
 
-SUBDIRS = dreamcam_com \
-          dreamcam_gui \
-          interface
+SUBDIRS = gpstudio_lib \
+          gpstudio_com \
+          gpstudio_gui \
+          interface_debug \
+          node
+
+# SUBDIRS += ../thirdparts
+
+# doxygen rules
+dox.target = doc
+dox.commands = doxygen $$PWD/Doxyfile
+doxclean.target = doc-clean
+doxclean.commands = rm -rf $$PWD/../doc/*
+QMAKE_EXTRA_TARGETS += dox doxclean
+
+QMAKE_CLEAN += $(shell find ../doc/ -type f)
