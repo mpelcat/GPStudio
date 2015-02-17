@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>897</width>
-    <height>818</height>
+    <height>864</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,14 @@
      </widget>
     </item>
     <item>
-     <widget class="ImageView" name="imageView"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="ImageView" name="imageView"/>
+      </item>
+      <item>
+       <widget class="ImageView" name="imageView_2"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -137,7 +144,7 @@
              <number>2</number>
             </property>
             <property name="value">
-             <number>900</number>
+             <number>400</number>
             </property>
            </widget>
           </item>
@@ -157,7 +164,7 @@
              <number>2</number>
             </property>
             <property name="value">
-             <number>960</number>
+             <number>400</number>
             </property>
            </widget>
           </item>
@@ -271,9 +278,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="sendMT9Config">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Send all params to MT9</string>
           </property>
@@ -383,9 +387,6 @@
           </item>
           <item row="2" column="1">
            <widget class="QPushButton" name="sendButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Send image</string>
             </property>

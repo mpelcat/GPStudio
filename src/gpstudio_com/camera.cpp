@@ -22,6 +22,7 @@ Camera::Camera(const CameraInfo &cameraInfo)
     _paramFlow = _outputFlow[0];
 
     _outputFlow.append(new Flow(1));
+    _outputFlow.append(new Flow(2));
 
     _inputFlow.append(new Flow(0x80));
     _inputFlow.append(new Flow(0x81));

@@ -87,8 +87,8 @@ void MainWindow::flowReceive(int flow)
     }
     else
     {
-        qDebug()<<"toto size:"<<_size;
-        ui->imageView->showImage(_cam->inputFlow()[flow]->getData().toImage(_size, 16));
+        const QImage &image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer, 16);
+        ui->imageView_2->showImage(image);
     }
 
     _cam->inputFlow()[flow]->getData();
@@ -130,6 +130,7 @@ void MainWindow::on_mt9EnableBox_clicked()
 {
     if(!_cam) return;
     send_mt9_config();
+    _cam->writeParam(USB_ENABLE, (ui->mt9EnableBox->isChecked()));
     _cam->writeParam(MT9_ENABLE, (ui->mt9EnableBox->isChecked()));
 }
 
