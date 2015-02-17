@@ -22,14 +22,14 @@ entity  com_flow_fifo_tx is
   port(
 
 	data_wr_i : in std_logic;
-    data_i : in std_logic_vector(15 downto 0);
+	data_i : in std_logic_vector(15 downto 0);
 	rdreq_i : in std_logic;
-	pktend_i : in std_logic;
 	flag_wr_i : in std_logic;
 	flag_i : in std_logic_vector(7 downto 0);
 	
-	-- TODO
-	pkt_size_i : in std_logic_vector(15 downto 0);
+	-- fifo pkt inputs
+	fifo_pkt_wr_i : in std_logic;
+	fifo_pkt_data_i : in std_logic_vector(15 downto 0);
 	
 	data_o : out std_logic_vector(15 downto 0);
 	flow_rdy_o: out std_logic;
@@ -89,7 +89,6 @@ END component;
 
 -- registers
 	signal fifo_1_rdempty_r : std_logic:= '0';
-	--signal flag_fifo1 : std_logic_vector(7 downto 0):=(others=>'0');
 	signal flag_s: std_logic_vector(15 downto 0):=(others=>'0');
 	
 	signal fifo_1_q_s: std_logic_vector(15 downto 0):=(others=>'0');
@@ -123,12 +122,10 @@ END component;
 	signal fifo_pkt_data_s : std_logic_vector(15 downto 0):=(others=>'0'); 
 	signal fifo_pkt_q_s : std_logic_vector(15 downto 0):=(others=>'0'); 
 	
-	
 	signal aclr : std_logic :='0';
 	signal packet_counter : unsigned(15 downto 0):=(others=>'0');
 	signal data_s : std_logic_vector(15 downto 0):=(others=>'0');
 	
-	signal pktend_r:std_logic:='0';
 	
 begin
 
@@ -181,11 +178,11 @@ begin
 	GENERIC MAP(DEPTH => 512)
 	PORT map 
 	(
-		data		=> fifo_pkt_data_s,
+		data		=> fifo_pkt_data_i,
 		rdclk		=> clk_out_i,
 		rdreq		=> fifo_pkt_rdreq_s,
 		wrclk		=> clk_in_i,
-		wrreq		=> fifo_pkt_wr_s,
+		wrreq		=> fifo_pkt_wr_i,
 		aclr 		=> aclr,
 		q			=> fifo_pkt_q_s,
 		rdempty => fifo_pkt_rdempty_s,
@@ -194,29 +191,6 @@ begin
 		wrfull	=> fifo_pkt_wrfull_s
 	);
 
--- Ce process gere la taille de paquet dynamique
-PKTSIZE : process (clk_in_i, rst_n_i) 
-variable cpt : integer range 0 to PACKET_SIZE:=0;
-begin
-	if (rst_n_i = '0') then	
-		fifo_pkt_wr_s <='0';
-		fifo_pkt_data_s <= (others=>'0');
-		cpt:=0;
-	elsif rising_edge(clk_in_i) then
-		fifo_pkt_wr_s <='0';
-		
-		if(data_wr_i='1') then
-			cpt:=cpt+1;
-		end if;
-		
-		if(cpt=(PACKET_SIZE-2) or pktend_i='1') then
-			fifo_pkt_wr_s <='1';
-			fifo_pkt_data_s <= std_logic_vector(to_unsigned(cpt,16));
-			cpt :=0;
-		end if;
-	end if;
-end process;
-	
 --- Connexion au composant USB SM
 RDUSB : process (clk_out_i, rst_n_i) 
 variable cpt : integer range 0 to PACKET_SIZE:=0;
@@ -230,31 +204,23 @@ begin
 		data_s <= (others=>'0');
 		fifo_flag_rdreq_s <= '0';
 		fifo_pkt_rdreq_s <= '0';
-		pktend_r <='0';
 		pkt_cpt := (others=>'0');
 		counter:= 0;
 	elsif rising_edge(clk_out_i) then
-		pktend_r <= pktend_i;
 		case RDUSB_state is
 			when Idle =>
 				flow_rdy_o <= '0';
 				fifo_flag_rdreq_s <= '0';
 				fifo_pkt_rdreq_s <= '0';
-				
-				if ( fifo_1_rdusedw_s >= std_logic_vector(to_unsigned(PACKET_SIZE-2,widthu)) ) then
-					RDUSB_state <= WaitoneClk;
-					fifo_flag_rdreq_s <= '1';
-					fifo_pkt_rdreq_s <= '1';
-				elsif (pktend_r='1') then
+				if ( fifo_flag_rdusedw_s > std_logic_vector(to_unsigned(0,widthu)) ) then
 					RDUSB_state <= WaitSyncPktSize;
-					fifo_flag_rdreq_s <= '1';
-					counter:= 0;
 				end if;
 				
 			when WaitSyncPktSize =>
 				fifo_flag_rdreq_s <= '0';
 				counter := counter + 1;
 				if(counter = 4 ) then
+					fifo_flag_rdreq_s <= '1';
 					fifo_pkt_rdreq_s <= '1';
 					RDUSB_state <= WaitoneClk;
 				end if;
@@ -311,9 +277,7 @@ begin
 					--fifo_1_rdreq_s <= '0';
 					RDUSB_state <= Idle;
 				end if;
-				
 		end case;
-		
 	end if;
 end process;
 

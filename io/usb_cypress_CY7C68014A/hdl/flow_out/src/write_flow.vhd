@@ -17,7 +17,7 @@ use work.ComFlow_pkg.all;
 
 entity write_flow is
   generic (
-  	PACKET_SIZE : integer := 256; 
+  	PACKET_SIZE : integer := 255; 
 	FLAGS_CODES : my_array_t := InitFlagCodes
     );
   port(
@@ -29,10 +29,12 @@ entity write_flow is
 	fifo_f_i : in std_logic;
 
 	data_wr_o : out std_logic;
-    data_o : out std_logic_vector(15 downto 0);
-	pktend_o : out std_logic;
+	data_o : out std_logic_vector(15 downto 0);
 	flag_wr_o :out std_logic;
 	flag_o :out  std_logic_vector(7 downto 0);
+
+	fifo_pkt_wr_o: out std_logic;
+	fifo_pkt_data_o : out std_logic_vector(15 downto 0);
 	
 	clk_i :in std_logic;
 	rst_n_i :in std_logic
@@ -47,6 +49,12 @@ architecture rtl of write_flow is
 	signal dv_r : std_logic:='0';
 	signal skip : std_logic := '0'; 
 	
+	signal flag_wr_cpt_s: std_logic :='0';
+	signal flag_wr_cpt_s_r: std_logic :='0';
+	signal flag_wr_fv_s: std_logic :='0';
+
+	signal	fifo_pkt_data_s:std_logic_vector(15 downto 0) := (others=>'0');
+
 begin
 
 FSM:process (clk_i, rst_n_i) 
@@ -56,16 +64,18 @@ begin
 		fv_r <='0';
 		dv_r <='0';	
 		flag_o <= (others=>'0');
-		pktend_o <='0';
 		skip <= '0';
 		cpt:=0;
+		flag_wr_fv_s<='0';
+		flag_wr_cpt_s<='0';
+		flag_wr_cpt_s_r <='0';
 		
 	elsif rising_edge(clk_i) then	
 		fv_r <= fv_i;
 		dv_r <= dv_i;
-
-		pktend_o <='0';
-		flag_wr_o <='0';
+		flag_wr_fv_s<='0';
+		flag_wr_cpt_s<='0';
+		flag_wr_cpt_s_r <= flag_wr_cpt_s;
 		
 		if(enable_i='1') then
 		
@@ -74,31 +84,33 @@ begin
 			end if;
 		
 			if( fv_r ='1' and fv_i='0' ) then
-				flag_wr_o <='1';
+				flag_wr_fv_s<='1';
 				flag_o <= FLAGS_CODES(EoF);
-				pktend_o <='1';
 				skip <='0';
+				fifo_pkt_data_s <= std_logic_vector(to_unsigned(cpt,16));
 				cpt := 0;
-			elsif (cpt=(PACKET_SIZE-2) and skip='1') then -- peut retarder de un clk le test
-				flag_wr_o <='1';
+			elsif (cpt=(PACKET_SIZE-2) and skip='1') then
+				flag_wr_cpt_s<='1';
 				flag_o <= FLAGS_CODES(EoL);
+				fifo_pkt_data_s <= std_logic_vector(to_unsigned(cpt,16));
 				cpt := 0;
 			elsif (cpt=(PACKET_SIZE-2) and skip='0') then
 				skip <='1';
-				flag_wr_o <='1';
+				flag_wr_cpt_s<='1';
 				flag_o <= FLAGS_CODES(SoF);
+				fifo_pkt_data_s <= std_logic_vector(to_unsigned(cpt,16));
 				cpt := 0;
 			end if;
-			
 		end if;
 	end if;
 end process;
 
 	data_wr_o <= dv_i and enable_i and not(fifo_f_i);
 	data_o <= data_i;
-
-
 	
-	
+	flag_wr_o <= flag_wr_fv_s or (flag_wr_cpt_s_r and fv_i);
+	fifo_pkt_wr_o <= flag_wr_fv_s or (flag_wr_cpt_s_r and fv_i);
+
+	fifo_pkt_data_o <= fifo_pkt_data_s;	
 end rtl;
 
