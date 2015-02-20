@@ -102,10 +102,12 @@ begin
 	case (sel) is 
 		when '0' =>
 			rdreq_0_o <= rdreq_usb_i;
+			rdreq_1_o <= '0';
 			data_usb_o <= data_0_i;
 			flow_rdy_usb_o <= flow_rdy_0_i;
 			f_empty_usb_o <= f_empty_0_i;
 		when '1' =>
+			rdreq_0_o <= '0';
 			rdreq_1_o <= rdreq_usb_i;
 			data_usb_o <= data_1_i;
 			flow_rdy_usb_o <= flow_rdy_1_i;
