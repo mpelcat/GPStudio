@@ -1,14 +1,16 @@
 #include "lib.h"
 
 #include <QDebug>
+#include <QDir>
 
 #include "processlibreader.h"
 
-Lib::Lib(const QString &path)
+Lib::Lib(const QString &libPath)
 {
-    qDebug()<<path;
+    QDir dir(QDir::currentPath()+'/'+libPath);
+    qDebug()<<dir.absolutePath();
 
-    ProcessLibReader::readFromPath(path, *this);
+    ProcessLibReader::readFromPath(dir.absolutePath()+"/process", *this);
 }
 
 Lib::~Lib()

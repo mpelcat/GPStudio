@@ -20,7 +20,7 @@ void ProcessLibReader::readFromPath(const QString &path, Lib &lib)
     }
 }
 
-void ProcessLibReader::readProcessLib(const QString &configFile, ProcessLib &processType)
+void ProcessLibReader::readProcessLib(const QString &configFile, ProcessLib &processLib)
 {
     QDomDocument doc;
     QFile file(configFile);
@@ -31,9 +31,9 @@ void ProcessLibReader::readProcessLib(const QString &configFile, ProcessLib &pro
         else
         {
             QDomElement root=doc.documentElement();
-            processType.setName(root.attribute("name","no_name"));
-            processType.setCateg(root.attribute("categ",""));
-            processType.setDescription(root.attribute("description",""));
+            processLib.setName(root.attribute("name","no_name"));
+            processLib.setCateg(root.attribute("categ",""));
+            processLib.setDescription(root.attribute("description",""));
 
             const QDomNodeList &nodesSvg = doc.elementsByTagName("svg");
             if(nodesSvg.size()>0)
@@ -41,17 +41,16 @@ void ProcessLibReader::readProcessLib(const QString &configFile, ProcessLib &pro
                 QString svg;
                 QTextStream streamSvg(&svg);
                 streamSvg << nodesSvg.at(0);
-                processType.setDraw(svg);
+                processLib.setDraw(svg);
             }
 
+            qDebug()<<processLib.name();
+
             QFileInfo info(configFile);
-            processType.setConfigFile(configFile);
-            processType.setPath(info.absolutePath());
+            processLib.setConfigFile(configFile);
+            processLib.setPath(info.absolutePath());
 
         }
         file.close();
     }
-
-
-
 }

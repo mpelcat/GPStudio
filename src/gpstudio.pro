@@ -4,7 +4,7 @@ SUBDIRS = gpstudio_lib \
           gpstudio_com \
           gpstudio_gui \
           interface_debug \
-          node
+          gpnode
 
 # SUBDIRS += ../thirdparts
 

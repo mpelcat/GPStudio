@@ -25,4 +25,6 @@ HEADERS  += \
     flowdata.h \
     gpstudio_com_common.h
 
-LIBS += -L$$PWD/../gpstudio_com -lusb-1.0
+win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
+
+LIBS += -lusb-1.0
