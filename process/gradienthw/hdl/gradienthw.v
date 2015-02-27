@@ -97,7 +97,7 @@ parameter DATA_WIDTH = 8;
 parameter COEF_WIDTH = 9; 
 parameter NORM_FACTOR = 8;
 
-parameter DEFAULT_SCR = 32'd33;
+parameter DEFAULT_SCR = 32'd41;
 parameter DEFAULT_TH  = 32'd50;
 
 /* Internal parameters */
