@@ -14,8 +14,16 @@ class Pin
 	*/
 	public $mapto;
 	
+	/**
+	* Array of attributes of the pin (optional)
+	* @var array|Attribute $attributes
+	*/
+	public $attributes;
+	
 	function __construct($xml=null)
 	{
+		$this->attributes = array();
+		
 		if($xml) $this->parse_xml($xml);
 	}
 	
@@ -23,6 +31,15 @@ class Pin
 	{
 		$this->name		= (string)$xml['name'];
 		$this->mapto	= (string)$xml['mapto'];
+		
+		// attributes
+		if(isset($xml->attributes))
+		{
+			foreach($xml->attributes->attribute as $attribute)
+			{
+				array_push($this->attributes, new Attribute($attribute));
+			}
+		}
 	}
 	
 	public function getXmlElement($xml)
@@ -38,6 +55,17 @@ class Pin
 		$att = $xml->createAttribute('mapto');
 		$att->value = $this->mapto;
 		$xml_element->appendChild($att);
+		
+		// attributes
+		if(!empty($this->attributes))
+		{
+			$xml_attributes = $xml->createElement("attributes");
+			foreach($this->attributes as $attribute)
+			{
+				$xml_attributes->appendChild($attribute->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_attributes);
+		}
 		
 		return $xml_element;
 	}

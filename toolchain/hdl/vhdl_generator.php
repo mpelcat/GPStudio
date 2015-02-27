@@ -248,18 +248,23 @@ class VHDL_generator
 		$content.='architecture rtl of '.$this->name.' is'."\n";
 		
 		// components declaration
+		$used_drivers = array();
 		if(!empty($this->blocks))
 		{
 			foreach($this->blocks as $block)
 			{
-				$modgenerator = new VHDL_generator();
-				$modgenerator->fromBlock($block);
-		
-				$content.='component '.$block->name."\n";
-				$content.=$modgenerator->get_ports_and_generic();
-				$content.='end component;'."\n\n";
-		
-				unset($modgenerator);
+				if(!in_array($block->driver, $used_drivers))
+				{
+					$modgenerator = new VHDL_generator();
+					$modgenerator->fromBlock($block);
+			
+					$content.='component '.$block->driver."\n";
+					$content.=$modgenerator->get_ports_and_generic();
+					$content.='end component;'."\n\n";
+			
+					unset($modgenerator);
+					array_push($used_drivers, $block->driver);
+				}
 			}
 		}
 	
@@ -292,7 +297,10 @@ class VHDL_generator
 			{
 			// generic map
 				$first=true;
-				$content.='	'.$block->name.'_inst : '.$block->name."\n";
+				
+				$name = $block->name;
+				if($name==$block->driver) $name=$name.'_inst';
+				$content.='	'.$name.' : '.$block->driver."\n";
 				
 				foreach($block->params as $param)
 				{
@@ -323,7 +331,7 @@ class VHDL_generator
 				foreach($block->ext_ports as $port)
 				{
 					if(!$first) $content.=','."\n"; else $first=false;
-					$content.='    	'.$port->name.'	=>	'.$port->name;
+					$content.='    	'.$port->name.'	=>	'.$block->name.'_'.$port->name;
 				}
 				// flows mapping
 				foreach($block->flows as $flow)

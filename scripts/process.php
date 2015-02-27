@@ -16,11 +16,8 @@ class Process extends Block
 			{
 				if($process_node_element['inlib']=='false') $inlib=false;
 			}
-			if(isset($process_node_element['type']))
-			{
-				$inlib=true;
-				$this->driver = (string)$process_node_element['type'];
-			}
+			if(isset($process_node_element['driver'])) $this->driver = (string)$process_node_element['driver'];
+			else $this->driver = (string)$process_node_element['name'];
 			
 			if(!isset($process_node_element['name'])) $this->name = $this->driver;
 			else $this->name = (string)$process_node_element['name'];

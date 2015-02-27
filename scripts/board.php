@@ -19,10 +19,10 @@ class Board
 	public $name;
 
 	/**
-	* Type of the computing board TODO move this field in toolchain
-	* @var string $type
+	* Toolchain structure of board
+	* @var Toolchain $toolchain
 	*/
-	public $type;
+	public $toolchain;
 
 	/**
 	* Array of pin mapping of the board
@@ -63,7 +63,8 @@ class Board
 	private function parse_xml($board_element, $node)
 	{
 		$this->name = (string)$this->xml['name'];
-		$this->type = (string)$this->xml->toolchain['type'];
+		
+		$this->toolchain = new Toolchain($this->xml->toolchain);
 		
 		$this->parse_ios($board_element, $node);
 		
