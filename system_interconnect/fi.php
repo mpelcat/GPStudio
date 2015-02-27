@@ -13,6 +13,7 @@ class FlowInterconnect extends Block
 	{
 		parent::__construct();
 		$this->name="fi";
+		$this->driver="fi";
 	}
 	
 	function configure($node, $block)

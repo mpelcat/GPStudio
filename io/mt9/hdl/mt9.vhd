@@ -13,18 +13,18 @@ entity mt9 is
 		reset_n : in std_logic;
 
 		--------------------- external ports --------------------
-		mt9_data_i : in std_logic_vector(11 downto 0);
-		mt9_fval_i : in std_logic;
-		mt9_lval_i : in std_logic;
-		mt9_pixclk_i : in std_logic;
-		mt9_extclk_o : out std_logic;
-		mt9_reset_n_o : out std_logic;
-		mt9_standby_o : out std_logic;
-		mt9_oe_n_o : out std_logic;
-		mt9_trigger_o : out std_logic;
-		mt9_saddr_o : out std_logic;
-		mt9_sdata_io : inout std_logic;
-		mt9_sclk_o : out std_logic;
+		data_i : in std_logic_vector(11 downto 0);
+		fval_i : in std_logic;
+		lval_i : in std_logic;
+		pixclk_i : in std_logic;
+		extclk_o : out std_logic;
+		reset_n_o : out std_logic;
+		standby_o : out std_logic;
+		oe_n_o : out std_logic;
+		trigger_o : out std_logic;
+		saddr_o : out std_logic;
+		sdata_io : inout std_logic;
+		sclk_o : out std_logic;
 
 		------------------------ out flow -----------------------
 		out_data : out std_logic_vector(7 downto 0);
@@ -197,14 +197,14 @@ begin
 		mt9_sclk		=>	sclk_50k_s,
 		mt9_sclkdouble	=>	sclk_100k_s,
 
-		mt9_extclk_o	=>	mt9_extclk_o,
-		mt9_reset_n_o	=>	mt9_reset_n_o,
-		mt9_standby_o	=>	mt9_standby_o,
-		mt9_oe_n_o		=>	mt9_oe_n_o,
-		mt9_trigger_o	=>	mt9_trigger_o,
-		mt9_saddr_o		=>	mt9_saddr_o,
-		mt9_sdata_io	=>	mt9_sdata_io,
-		mt9_sclk_o		=>	mt9_sclk_o,
+		mt9_extclk_o	=>	extclk_o,
+		mt9_reset_n_o	=>	reset_n_o,
+		mt9_standby_o	=>	standby_o,
+		mt9_oe_n_o		=>	oe_n_o,
+		mt9_trigger_o	=>	trigger_o,
+		mt9_saddr_o		=>	saddr_o,
+		mt9_sdata_io	=>	sdata_io,
+		mt9_sclk_o		=>	sclk_o,
 
 		-- connections from mt9_config_i2c
 		xstart_i		=>	xstart_s,
@@ -231,10 +231,10 @@ begin
     port map (
     	reset_n_i	=>	reset_n,
     	clk_i	=>	clk_proc,
-    	pclk_i	=>	mt9_pixclk_i,
-    	href_i	=>	mt9_lval_i,
-    	vsync_i	=>	mt9_fval_i,
-    	pixel_i	=>	mt9_data_i(11 downto 4),
+    	pclk_i	=>	pixclk_i,
+    	href_i	=>	lval_i,
+    	vsync_i	=>	fval_i,
+    	pixel_i	=>	data_i(11 downto 4),
 
     	enable_i	=>	enable_s,
     	flowlength_i	=>	flowlength_s,

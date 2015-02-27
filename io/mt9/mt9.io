@@ -17,18 +17,18 @@
 		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor"/>
 	</flows>
 	<ports>
-		<port name="mt9_data_i" type="in" size="12" desc=""/>
-		<port name="mt9_fval_i" type="in" size="1" desc=""/>
-		<port name="mt9_lval_i" type="in" size="1" desc=""/>
-		<port name="mt9_pixclk_i" type="in" size="1" desc=""/>
-		<port name="mt9_extclk_o" type="out" size="1" desc=""/>
-		<port name="mt9_reset_n_o" type="out" size="1" desc=""/>
-		<port name="mt9_standby_o" type="out" size="1" desc=""/>
-		<port name="mt9_oe_n_o" type="out" size="1" desc=""/>
-		<port name="mt9_trigger_o" type="out" size="1" desc=""/>
-		<port name="mt9_saddr_o" type="out" size="1" desc=""/>
-		<port name="mt9_sdata_io" type="inout" size="1" desc=""/>
-		<port name="mt9_sclk_o" type="out" size="1" desc=""/>
+		<port name="data_i" type="in" size="12" desc=""/>
+		<port name="fval_i" type="in" size="1" desc=""/>
+		<port name="lval_i" type="in" size="1" desc=""/>
+		<port name="pixclk_i" type="in" size="1" desc=""/>
+		<port name="extclk_o" type="out" size="1" desc=""/>
+		<port name="reset_n_o" type="out" size="1" desc=""/>
+		<port name="standby_o" type="out" size="1" desc=""/>
+		<port name="oe_n_o" type="out" size="1" desc=""/>
+		<port name="trigger_o" type="out" size="1" desc=""/>
+		<port name="saddr_o" type="out" size="1" desc=""/>
+		<port name="sdata_io" type="inout" size="1" desc=""/>
+		<port name="sclk_o" type="out" size="1" desc=""/>
 	</ports>
 	<params>
 		<param name="ENABLE" regaddr="0"/>

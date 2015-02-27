@@ -20,8 +20,8 @@ class Node
 	public $name;
 
 	/**
-	* Name of the board/camera/device of the node
-	* @var string $board
+	* Board structure of the node
+	* @var Board $board
 	*/
 	public $board;
 
@@ -37,12 +37,12 @@ class Node
 	*/
 	public $flow_connects;
 
-	function __construct($node_file)
+	function __construct($node_file=null)
 	{
 		$this->blocks = array();
 		$this->connects = array();
 		
-		$this->parse_config_xml($node_file);
+		if($node_file) $this->parse_config_xml($node_file);
 	}
 	
 	function getBlock($name)
@@ -95,6 +95,9 @@ class Node
 		$att = $xml->createAttribute('name');
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
+		
+		// toolchain
+		$xml_element->appendChild($this->board->toolchain->getXmlElement($xml));
 		
 		// blocks
 		$xml_blocks = $xml->createElement("blocks");

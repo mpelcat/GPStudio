@@ -25,7 +25,7 @@ function generate_top_level($node, $path)
 			$generator->addPortComment(str_pad(' '.$block->name.' flow ',55,'-',STR_PAD_BOTH));
 			foreach($block->ext_ports as $port)
 			{
-				$generator->addPort($port->name, $port->size, $port->type);
+				$generator->addPort($block->name.'_'.$port->name, $port->size, $port->type);
 			}
 		}
 	}

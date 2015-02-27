@@ -8,122 +8,122 @@
 	<toochain name="altera_quartus_cyclone5" type="EP5CSXFC6D6F31"/>
 	<global>
 		<pins>
-			<!--<pin name="clk_50M" map="PIN_J28"/>-->
+			<!--<pin name="PIN_J28" mapto="clk_50M"/>-->
 		</pins>
 	</global>
 	<ios>
 		<io name="led" type="him_output" driver="leds" optional="true" description="4 blue leds">
 			<pins>
-				<pin name="led0" map="PIN_AF10"/>
-				<pin name="led1" map="PIN_AD10"/>
-				<pin name="led2" map="PIN_AE11"/>
-				<pin name="led3" map="PIN_AD7"/>
+				<pin name="PIN_AF10" mapto="led0"/>
+				<pin name="PIN_AD10" mapto="led1"/>
+				<pin name="PIN_AE11" mapto="led2"/>
+				<pin name="PIN_AD7" mapto="led3"/>
 			</pins>
 		</io>
 		<io name="buttons" type="him_input" driver="buttons" optional="true" description="4 push buttons and 4 switch buttons">
 			<pins>
-				<pin name="key0" map="PIN_AE9"/>
-				<pin name="key1" map="PIN_AE12"/>
-				<pin name="key2" map="PIN_AD9"/>
-				<pin name="key3" map="PIN_AD11"/>
-				<pin name="SW0" map="PIN_W25"/>
-				<pin name="SW1" map="PIN_V25"/>
-				<pin name="SW2" map="PIN_AC28"/>
-				<pin name="SW3" map="PIN_AC29"/>
+				<pin name="PIN_AE9" mapto="key0"/>
+				<pin name="PIN_AE12" mapto="key1"/>
+				<pin name="PIN_AD9" mapto="key2"/>
+				<pin name="PIN_AD11" mapto="key3"/>
+				<pin name="PIN_W25" mapto="SW0"/>
+				<pin name="PIN_V25" mapto="SW1"/>
+				<pin name="PIN_AC28" mapto="SW2"/>
+				<pin name="PIN_AC29" mapto="SW3"/>
 			</pins>
 		</io>
 		<io name="mt9" type="image-sensor" driver="mt9" optional="false" optionalgroup="1" description="MT9 image sensor">
 			<pins>
-				<pin name="mt9_data_i[0]" map="PIN_C3"/>
-				<pin name="mt9_data_i[1]" map="PIN_F10"/>
-				<pin name="mt9_data_i[2]" map="PIN_J10"/>
-				<pin name="mt9_data_i[3]" map="PIN_B10"/>
-				<pin name="mt9_data_i[4]" map="PIN_G11"/>
-				<pin name="mt9_data_i[5]" map="PIN_G13"/>
-				<pin name="mt9_data_i[6]" map="PIN_C9"/>
-				<pin name="mt9_data_i[7]" map="PIN_F11"/>
-				<pin name="mt9_data_i[8]" map="PIN_B12"/>
-				<pin name="mt9_data_i[9]" map="PIN_E12"/>
-				<pin name="mt9_data_i[10]" map="PIN_C11"/>
-				<pin name="mt9_data_i[11]" map="PIN_A14"/>
-				<pin name="mt9_extclk_o" map="PIN_D5"/>
-				<pin name="mt9_fval_i" map="PIN_A10"/>
-				<pin name="mt9_lval_i" map="PIN_H10"/>
-				<pin name="mt9_oe_n_o" map="PIN_D12"/>
-				<pin name="mt9_pixclk_i" map="PIN_B14"/>
-				<pin name="mt9_reset_n_o" map="PIN_J13"/>
-				<pin name="mt9_saddr_o" map="PIN_F12"/>
-				<pin name="mt9_sclk_o" map="PIN_C5"/>
-				<pin name="mt9_sdata_io" map="PIN_D11"/>
-				<pin name="mt9_standby_o" map="PIN_A11"/>
-				<pin name="mt9_trigger_o" map="PIN_H12"/>
+				<pin name="PIN_C3" mapto="mt9_data_i[0]"/>
+				<pin name="PIN_F10" mapto="mt9_data_i[1]"/>
+				<pin name="PIN_J10" mapto="mt9_data_i[2]"/>
+				<pin name="PIN_B10" mapto="mt9_data_i[3]"/>
+				<pin name="PIN_G11" mapto="mt9_data_i[4]"/>
+				<pin name="PIN_G13" mapto="mt9_data_i[5]"/>
+				<pin name="PIN_C9" mapto="mt9_data_i[6]"/>
+				<pin name="PIN_F11" mapto="mt9_data_i[7]"/>
+				<pin name="PIN_B12" mapto="mt9_data_i[8]"/>
+				<pin name="PIN_E12" mapto="mt9_data_i[9]"/>
+				<pin name="PIN_C11" mapto="mt9_data_i[10]"/>
+				<pin name="PIN_A14" mapto="mt9_data_i[11]"/>
+				<pin name="PIN_D5" mapto="mt9_extclk_o"/>
+				<pin name="PIN_A10" mapto="mt9_fval_i"/>
+				<pin name="PIN_H10" mapto="mt9_lval_i"/>
+				<pin name="PIN_D12" mapto="mt9_oe_n_o"/>
+				<pin name="PIN_B14" mapto="mt9_pixclk_i"/>
+				<pin name="PIN_J13" mapto="mt9_reset_n_o"/>
+				<pin name="PIN_F12" mapto="mt9_saddr_o"/>
+				<pin name="PIN_C5" mapto="mt9_sclk_o"/>
+				<pin name="PIN_D11" mapto="mt9_sdata_io"/>
+				<pin name="PIN_A11" mapto="mt9_standby_o"/>
+				<pin name="PIN_H12" mapto="mt9_trigger_o"/>
 			</pins>
 		</io>
 		<io name="e2v" type="image-sensor" driver="e2v" optional="false" optionalgroup="1" description="E2V image sensor">
 			<pins>
-				<pin name="clk_ref_o" map="PIN_D5"/>
-				<pin name="csn_o[0]" map="PIN_H10"/>
-				<pin name="data_clk_i" map="PIN_B14"/>
-				<pin name="data_i[0]" map="PIN_E5"/>
-				<pin name="data_i[1]" map="PIN_A3"/>
-				<pin name="data_i[2]" map="PIN_A4"/>
-				<pin name="data_i[3]" map="PIN_A6"/>
-				<pin name="data_i[4]" map="PIN_C4"/>
-				<pin name="data_i[5]" map="PIN_G7"/>
-				<pin name="data_i[6]" map="PIN_E7"/>
-				<pin name="data_i[7]" map="PIN_H8"/>
-				<pin name="data_i[8]" map="PIN_E8"/>
-				<pin name="data_i[9]" map="PIN_D7"/>
-				<pin name="fen_i" map="PIN_B8"/>
-				<pin name="flo_i" map="PIN_A10"/>
-				<pin name="len_i" map="PIN_A7"/>
-				<pin name="miso_i" map="PIN_G10"/>
-				<pin name="mosi_o" map="PIN_C8"/>
-				<pin name="reset_n_o" map="PIN_H12"/>
-				<pin name="sck_o" map="PIN_C5"/>
-				<pin name="trig_o" map="PIN_H13"/>
-				<pin name="clk_fix_o" map="PIN_A11"/>
-				<pin name="cs_var_no" map="PIN_D14"/>
-				<pin name="sck_var_o" map="PIN_C13"/>
-				<pin name="si_var_o" map="PIN_F14"/>
+				<pin name="PIN_D5" mapto="clk_ref_o"/>
+				<pin name="PIN_H10" mapto="csn_o[0]"/>
+				<pin name="PIN_B14" mapto="data_clk_i"/>
+				<pin name="PIN_E5" mapto="data_i[0]"/>
+				<pin name="PIN_A3" mapto="data_i[1]"/>
+				<pin name="PIN_A4" mapto="data_i[2]"/>
+				<pin name="PIN_A6" mapto="data_i[3]"/>
+				<pin name="PIN_C4" mapto="data_i[4]"/>
+				<pin name="PIN_G7" mapto="data_i[5]"/>
+				<pin name="PIN_E7" mapto="data_i[6]"/>
+				<pin name="PIN_H8" mapto="data_i[7]"/>
+				<pin name="PIN_E8" mapto="data_i[8]"/>
+				<pin name="PIN_D7" mapto="data_i[9]"/>
+				<pin name="PIN_B8" mapto="fen_i"/>
+				<pin name="PIN_A10" mapto="flo_i"/>
+				<pin name="PIN_A7" mapto="len_i"/>
+				<pin name="PIN_G10" mapto="miso_i"/>
+				<pin name="PIN_C8" mapto="mosi_o"/>
+				<pin name="PIN_H12" mapto="reset_n_o"/>
+				<pin name="PIN_C5" mapto="sck_o"/>
+				<pin name="PIN_H13" mapto="trig_o"/>
+				<pin name="PIN_A11" mapto="clk_fix_o"/>
+				<pin name="PIN_D14" mapto="cs_var_no"/>
+				<pin name="PIN_C13" mapto="sck_var_o"/>
+				<pin name="PIN_F14" mapto="si_var_o"/>
 			</pins>
 		</io>
 		<io name="usb" type="communication" driver="usb_cypress_CY7C68014A" optional="false" optionalgroup="2" description="">
 			<pins>
-				<pin name="usb_addr[0]" map="PIN_AD11"/>
-				<pin name="usb_addr[1]" map="PIN_AH12"/>
-				<pin name="usb_fd_io[0]" map="PIN_AE7"/>
-				<pin name="usb_fd_io[1]" map="PIN_AC7"/>
-				<pin name="usb_fd_io[2]" map="PIN_AG7"/>
-				<pin name="usb_fd_io[3]" map="PIN_AG6"/>
-				<pin name="usb_fd_io[4]" map="PIN_AF9"/>
-				<pin name="usb_fd_io[5]" map="PIN_AB9"/>
-				<pin name="usb_fd_io[6]" map="PIN_AG10"/>
-				<pin name="usb_fd_io[7]" map="PIN_AF10"/>
-				<pin name="usb_fd_io[8]" map="PIN_AF13"/>
-				<pin name="usb_fd_io[9]" map="PIN_Y15"/>
-				<pin name="usb_fd_io[10]" map="PIN_AB14"/>
-				<pin name="usb_fd_io[11]" map="PIN_Y14"/>
-				<pin name="usb_fd_io[12]" map="PIN_AE14"/>
-				<pin name="usb_fd_io[13]" map="PIN_AC14"/>
-				<pin name="usb_fd_io[14]" map="PIN_AD14"/>
-				<pin name="usb_fd_io[15]" map="PIN_AF14"/>
-				<pin name="usb_flaga" map="PIN_AD10"/>
-				<pin name="usb_flagb" map="PIN_AA10"/>
-				<pin name="usb_flagc" map="PIN_AH11"/>
-				<pin name="usb_flagd" map="PIN_AD12"/>
-				<pin name="usb_ifclk" map="PIN_AH14"/>
-				<pin name="usb_sloe" map="PIN_AF11"/>
-				<pin name="usb_slrd" map="PIN_AD8"/>
-				<pin name="usb_slwr" map="PIN_AE8"/>
-				<pin name="usb_pktend" map="PIN_AF12"/>
+				<pin name="PIN_AD11" mapto="usb_addr[0]"/>
+				<pin name="PIN_AH12" mapto="usb_addr[1]"/>
+				<pin name="PIN_AE7" mapto="usb_fd_io[0]"/>
+				<pin name="PIN_AC7" mapto="usb_fd_io[1]"/>
+				<pin name="PIN_AG7" mapto="usb_fd_io[2]"/>
+				<pin name="PIN_AG6" mapto="usb_fd_io[3]"/>
+				<pin name="PIN_AF9" mapto="usb_fd_io[4]"/>
+				<pin name="PIN_AB9" mapto="usb_fd_io[5]"/>
+				<pin name="PIN_AG10" mapto="usb_fd_io[6]"/>
+				<pin name="PIN_AF10" mapto="usb_fd_io[7]"/>
+				<pin name="PIN_AF13" mapto="usb_fd_io[8]"/>
+				<pin name="PIN_Y15" mapto="usb_fd_io[9]"/>
+				<pin name="PIN_AB14" mapto="usb_fd_io[10]"/>
+				<pin name="PIN_Y14" mapto="usb_fd_io[11]"/>
+				<pin name="PIN_AE14" mapto="usb_fd_io[12]"/>
+				<pin name="PIN_AC14" mapto="usb_fd_io[13]"/>
+				<pin name="PIN_AD14" mapto="usb_fd_io[14]"/>
+				<pin name="PIN_AF14" mapto="usb_fd_io[15]"/>
+				<pin name="PIN_AD10" mapto="usb_flaga"/>
+				<pin name="PIN_AA10" mapto="usb_flagb"/>
+				<pin name="PIN_AH11" mapto="usb_flagc"/>
+				<pin name="PIN_AD12" mapto="usb_flagd"/>
+				<pin name="PIN_AH14" mapto="usb_ifclk"/>
+				<pin name="PIN_AF11" mapto="usb_sloe"/>
+				<pin name="PIN_AD8" mapto="usb_slrd"/>
+				<pin name="PIN_AE8" mapto="usb_slwr"/>
+				<pin name="PIN_AF12" mapto="usb_pktend"/>
 			</pins>
 		</io>
 		<io name="ethernet" type="communication" driver="eth_marvell_88e1111_gmii" optional="false" optionalgroup="2" description="Marvell 88e1111 ethernet controler in GMII mode">
 			<pins>
-				<pin name="eth_reset_n_o" map="PIN_Y14"/>
-				<pin name="eth_mdc_o" map="PIN_AB14"/>
-				<pin name="eth_mdio_io" map="PIN_Y15"/>
+				<pin name="PIN_Y14" mapto="eth_reset_n_o"/>
+				<pin name="PIN_AB14" mapto="eth_mdc_o"/>
+				<pin name="PIN_Y15" mapto="eth_mdio_io"/>
 				<pin name="gmii_i.tx_clk" map="PIN_AE5"/>
 				<pin name="gmii_i.rx_clk" map="PIN_AE5"/>
 				<pin name="gmii_i.rx_dv" map="PIN_AF9"/>
@@ -153,9 +153,9 @@
 		</io>
 		<io name="ethernet" type="communication" driver="eth_marvell_88e1111_rgmii" optional="false" optionalgroup="2" description="Marvell 88e1111 ethernet controler in RGMII mode">
 			<pins>
-				<pin name="eth_reset_n_o" map="PIN_Y14"/>
-				<pin name="eth_mdc_o" map="PIN_AB14"/>
-				<pin name="eth_mdio_io" map="PIN_Y15"/>
+				<pin name="PIN_Y14" mapto="eth_reset_n_o"/>
+				<pin name="PIN_AB14" mapto="eth_mdc_o"/>
+				<pin name="PIN_Y15" mapto="eth_mdio_io"/>
 				<pin name="rgmii_i.rx_clk" map="PIN_AE5"/>
 				<pin name="rgmii_i.rx_ctrl" map="PIN_AF9"/>
 				<pin name="rgmii_i.rx_data[0]" map="PIN_AB9"/>

@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 use work.ComFlow_pkg.all;
 
-entity usb is
+entity usb_cypress_CY7C68014A is
 	generic(
 		MASTER_ADDR_WIDTH : integer
 	);
@@ -13,18 +13,18 @@ entity usb is
 		reset : out std_logic;
 
 		------ external ports ------
-		usb_rst : in std_logic;
-		usb_ifclk : in std_logic;
-		usb_flaga : in std_logic;
-		usb_flagb : in std_logic;
-		usb_flagc : in std_logic;
-		usb_flagd : in std_logic;
-		usb_fd_io : inout std_logic_vector(15 downto 0);
-		usb_sloe : out std_logic;
-		usb_slrd : out std_logic;
-		usb_slwr : out std_logic;
-		usb_pktend : out std_logic;
-		usb_addr : out std_logic_vector(1 downto 0);
+		rst : in std_logic;
+		ifclk : in std_logic;
+		flaga : in std_logic;
+		flagb : in std_logic;
+		flagc : in std_logic;
+		flagd : in std_logic;
+		fd_io : inout std_logic_vector(15 downto 0);
+		sloe : out std_logic;
+		slrd : out std_logic;
+		slwr : out std_logic;
+		pktend : out std_logic;
+		addr : out std_logic_vector(1 downto 0);
 
 		------ in0 flow ------
 		in0_data : in std_logic_vector(15 downto 0);
@@ -67,7 +67,7 @@ entity usb is
 end entity;
 
 
-architecture rtl of usb is
+architecture rtl of usb_cypress_CY7C68014A is
 
 -- SIGNAUX INTERNES NON CONNECTE
 signal flow_out_sel_s : std_logic:='0';
@@ -110,7 +110,7 @@ signal source_sel_s:std_logic:='0';
 	
 begin
 
-reset <= usb_rst;
+reset <= rst;
 		
 USB_SM_INST : usb_sm
     -- generic map (
@@ -119,18 +119,18 @@ USB_SM_INST : usb_sm
 	  -- IDFLOW =>  (1, 128)
 	  -- )
     port map (
-		usb_ifclk    => usb_ifclk,
-		usb_flaga    => usb_flaga,
-		usb_flagb    => usb_flagb,
-		usb_flagc    => usb_flagc,
-		usb_flagd    => usb_flagd,
-		usb_fd_io    => usb_fd_io,
-		usb_sloe     => usb_sloe,
-		usb_slrd     => usb_slrd,
-		usb_slwr     => usb_slwr,
-		usb_pktend   => usb_pktend,
-		usb_rst		 => usb_rst,
-		usb_addr     => usb_addr,
+		usb_ifclk    => ifclk,
+		usb_flaga    => flaga,
+		usb_flagb    => flagb,
+		usb_flagc    => flagc,
+		usb_flagd    => flagd,
+		usb_fd_io    => fd_io,
+		usb_sloe     => sloe,
+		usb_slrd     => slrd,
+		usb_slwr     => slwr,
+		usb_pktend   => pktend,
+		usb_rst		 => rst,
+		usb_addr     => addr,
 
 		flow_in_data_o  => flow_in1_data_s,
 		flow_in_wr_o => flow_in1_wr_s,
@@ -150,7 +150,7 @@ SLAVE_BUS_INST: component enable_gen
 		)
 		port map (
 			clk_i => clk_proc,
-			rst_n_i => usb_rst,	
+			rst_n_i => rst,	
 			addr_i => addr_rel_i,		--(addr_rel_0_o),
 			wr_i => wr_i,				--(wr_0_o),
 			datawr_i => datawr_i, 		--(data_wr_0_o)	
@@ -165,7 +165,7 @@ ENABLE_SYNC_FV: component fv_synchro_signal
 	signal_i => enable_s,
 	signal_o => enable_s_fvsync,
 	clk_i => clk_proc,
-	rst_n_i => usb_rst
+	rst_n_i => rst
 );
 
 --FLOW_IN 1
@@ -186,9 +186,9 @@ USBFLOW_IN0: component flow_in
 	dv_o => out0_dv,
 	flow_full_o => open,
 		
-	clk_in_i =>usb_ifclk,
+	clk_in_i =>ifclk,
 	clk_out_i => clk_proc,
-	rst_n_i =>usb_rst
+	rst_n_i =>rst
     );
 
 --FLOW_IN 2
@@ -209,9 +209,9 @@ USBFLOW_IN1: component flow_in
 	dv_o => out1_dv,
 	flow_full_o => open,
 		
-	clk_in_i =>usb_ifclk,
+	clk_in_i =>ifclk,
 	clk_out_i =>clk_proc,
-	rst_n_i =>usb_rst
+	rst_n_i =>rst
     );
 
 --FLOW OUT 0
@@ -233,8 +233,8 @@ USBFLOW_OUT0: component flow_out
 	f_empty_o => flow_out_empty_0_s,-- to arb
 	
 	clk_in_i => clk_proc, 
-	clk_out_i => usb_ifclk,
-	rst_n_i=> usb_rst
+	clk_out_i => ifclk,
+	rst_n_i=> rst
 );
 
 --FLOW OUT 1
@@ -257,8 +257,8 @@ USBFLOW_OUT1: component flow_out
 	f_empty_o => flow_out_empty_1_s, -- to arb
 	
 	clk_in_i => clk_proc, 
-	clk_out_i => usb_ifclk,
-	rst_n_i=> usb_rst
+	clk_out_i => ifclk,
+	rst_n_i=> rst
 );
 
 
@@ -284,8 +284,8 @@ USBFLOW_ARB : component flow_out_arb
 		flow_rdy_usb_o =>flow_out_rdy_s,
 		f_empty_usb_o =>flow_out_empty_s,
 		
-		clk_i => usb_ifclk,
-		rst_n_i => usb_rst);
+		clk_i => ifclk,
+		rst_n_i => rst);
 
 
 
@@ -308,8 +308,8 @@ FLOW_PARAMS: component flow_wishbone
 			
 			-- rajouter fin d'ecriture dans la memoire...
 			tmp_update_port_o => update_port_s,
-			clk_in_i => usb_ifclk,
+			clk_in_i => ifclk,
 			clk_out_i => clk_proc, 
-			rst_n_i => usb_rst
+			rst_n_i => rst
 		);
 end rtl;

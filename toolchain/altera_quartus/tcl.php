@@ -4,28 +4,25 @@ function generate_tcl($node, $path)
 {
 	$content='';
 	
-	$content.='set_global_assignment -name FAMILY "Cyclone III"'."\n";
-	$content.='set_global_assignment -name DEVICE '.$node->board->type."\n";
-	$content.='set_global_assignment -name TOP_LEVEL_ENTITY top'."\n";
-	$content.='set_global_assignment -name ORIGINAL_QUARTUS_VERSION 13.1'."\n";
-	//$content.='set_global_assignment -name PROJECT_CREATION_TIME_DATE "'.date("H:i:s  F d, Y").'"'."\n";
-	$content.='set_global_assignment -name LAST_QUARTUS_VERSION 13.1'."\n";
-	$content.='set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files'."\n";
-	$content.='set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0'."\n";
-	$content.='set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85'."\n";
-	$content.='set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1'."\n";
-	$content.='set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V'."\n";
-	$content.='set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top'."\n";
-	$content.='set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top'."\n";
-	$content.='set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top'."\n";
-	$content.='set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"'."\n";
-	$content.='set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top'."\n";
+	// global board attributes
+	foreach($node->board->toolchain->attributes as $attribute)
+	{
+		$value = $attribute->value;
+		if(strpos($value,' ')!==false and strpos($value,'-section_id')===false) $value = '"'.$value.'"';
+		$content.='set_'.$attribute->type.'_assignment -name '.$attribute->name.' '.$value."\n";
+	}
 	
 	// pins assignement
 	$content.="# ================ pins assignement ================\n";
 	foreach($node->board->pins as $pin)
 	{
-		$content.='set_location_assignment '.$pin->mapto.' -to '.$pin->name."\n";
+		if(!empty($pin->mapto)) $content.='set_location_assignment '.$pin->name.' -to '.$pin->mapto."\n";
+		foreach($pin->attributes as $attribute)
+		{
+			$value = $attribute->value;
+			if(strpos($value,' ')!==false and strpos($value,'-section_id')===false) $value = '"'.$value.'"';
+			$content.='set_'.$attribute->type.'_assignment -name '.$attribute->name.' '.$value.' -to '.$pin->name."\n";
+		}
 	}
 	foreach($node->blocks as $block)
 	{
@@ -34,7 +31,13 @@ function generate_tcl($node, $path)
 			$content.="# ----- $block->name -----\n";
 			foreach($block->pins as $pin)
 			{
-				$content.='set_location_assignment '.$pin->mapto.' -to '.$pin->name."\n";
+				if(!empty($pin->mapto)) $content.='set_location_assignment '.$pin->name.' -to '.$block->name.'_'.$pin->mapto."\n";
+				foreach($pin->attributes as $attribute)
+				{
+					$value = $attribute->value;
+					if(strpos($value,' ')!==false and strpos($value,'-section_id')===false) $value = '"'.$value.'"';
+					$content.='set_'.$attribute->type.'_assignment -name '.$attribute->name.' '.$value.' -to '.$pin->name."\n";
+				}
 			}
 			$content.="\n";
 		}

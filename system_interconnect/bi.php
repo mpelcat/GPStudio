@@ -12,6 +12,7 @@ class BusInterconnect extends Block
 	{
 		parent::__construct();
 		$this->name="bi";
+		$this->driver="bi";
 	}
 	
 	static function hex($value, $width)

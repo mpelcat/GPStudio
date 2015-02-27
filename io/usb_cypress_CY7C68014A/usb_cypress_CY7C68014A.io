@@ -3,7 +3,7 @@
 	<files>
 		<file name="USB datasheet" path="doc/CY7C68013A_14A_15A_16A_38-08032.pdf" type="doc" group="doc" desc=""/>
 		<file name="usb.sdc" path="usb.sdc" type="sdc" group="hdl" desc=""/>
-		<file name="usb.vhd" path="hdl/usb/src/usb.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="usb.vhd" path="hdl/usb/src/usb_cypress_CY7C68014A.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="usb_sm.vhd" path="hdl/usb/src/usb_sm.vhd" type="vhdl" group="hdl" desc=""/>
 		
 		<file name="fifo_com_rx.vhd" path="hdl/flow_in/src/fifo_com_rx.vhd" type="vhdl" group="hdl" desc=""/>
@@ -36,18 +36,18 @@
 		<param name="ENABLE" regaddr="0"/>
 	</params>
 	<ports>
-		<port name="usb_rst" type="in" size="1" desc=""/>
-		<port name="usb_ifclk" type="in" size="1" desc=""/>
-		<port name="usb_flaga" type="in" size="1" desc=""/>
-		<port name="usb_flagb" type="in" size="1" desc=""/>
-		<port name="usb_flagc" type="in" size="1" desc=""/>
-		<port name="usb_flagd" type="in" size="1" desc=""/>
-		<port name="usb_fd_io" type="inout" size="16" desc=""/>
-		<port name="usb_sloe" type="out" size="1" desc=""/>
-		<port name="usb_slrd" type="out" size="1" desc=""/>
-		<port name="usb_slwr" type="out" size="1" desc=""/>
-		<port name="usb_pktend" type="out" size="1" desc=""/>
-		<port name="usb_addr" type="out" size="2" desc=""/>
+		<port name="rst" type="in" size="1" desc=""/>
+		<port name="ifclk" type="in" size="1" desc=""/>
+		<port name="flaga" type="in" size="1" desc=""/>
+		<port name="flagb" type="in" size="1" desc=""/>
+		<port name="flagc" type="in" size="1" desc=""/>
+		<port name="flagd" type="in" size="1" desc=""/>
+		<port name="fd_io" type="inout" size="16" desc=""/>
+		<port name="sloe" type="out" size="1" desc=""/>
+		<port name="slrd" type="out" size="1" desc=""/>
+		<port name="slwr" type="out" size="1" desc=""/>
+		<port name="pktend" type="out" size="1" desc=""/>
+		<port name="addr" type="out" size="2" desc=""/>
 	</ports>
 	<resets>
 		<reset name="reset" group="reset_n" direction="out" desc=""/>
