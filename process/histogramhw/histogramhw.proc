@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<process name="histogramhw" categ="histogram" description="Software reconfigurable histogram core" size_addr_rel="2">
+	<svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">histogramhw</text>
+	</svg>
+	<flows>
+		<flow name="inc" type="in" desc="increment value"/>
+		<flow name="index" type="in" desc="memory addressing index"/>
+		<flow name="hist" type="out" desc="histogram output"/>
+	</flows>	
+	<params>
+		<param name="HISTMEM_WORD" type="int" value="2048" desc="HISTMEM_WORD: M9K memory footprint" hard="true"/>
+		<param name="INC_WIDTH" type="int" value="16" desc="INC_WIDTH: input inc flow width" hard="true"/>
+		<param name="INDEX_WIDTH" type="int" value="8" desc="INDEX_WIDTH: input index flow width" hard="true"/>
+		<param name="HISTOGRAM_WIDTH" type="int" value="16" desc="HISTOGRAM_WIDTH: output flow width" hard="true"/>
+		
+		
+		<param name="scr" type="int" regaddr="0" default="0" desc="Status Control Register" hard="false">
+			<bitfields>
+				<bitfield name="enable" type="int" regaddr="0" bitfield="0" default="0" desc="On/Off bit">
+					<enums>
+						<enum name="disable" value="0" desc="Disable module" />
+						<enum name="enable" value="1" desc="Enable module" />
+					</enums>
+				</bitfield>
+				<bitfield name="mode" type="int" regaddr="0" bitfield="1" default="0" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
+			</bitfields>
+		</param>
+		
+		<param name="cellcontrol" type="int" regaddr="1" default="1799" desc="Cell size control" hard="false">
+			<bitfields>
+				<bitfield name="cellwidth" type="int" regaddr="0" bitfield="9-0" default="7" desc="Histogram cell width minus one"/>
+				<bitfield name="cellheight" type="int" regaddr="0" bitfield="25-16" default="7" desc="Histogram cell height minus one"/>
+			</bitfields>
+		</param>
+		<param name="imagecontrol" type="int" regaddr="2" default="39" desc="Image size divided by cell width" hard="false"/>
+		<param name="storecycles" type="int" regaddr="3" default="640" desc="Memory locations each cell row" hard="false"/>
+		
+	</params>
+	<files>
+		<file name="histogramhw.v" path="hdl/histogramhw.v" type="verilog" group="hdl" desc=""/>
+		<file name="ram_cell.v" path="hdl/ram_cell.v" type="verilog" group="hdl" desc=""/>
+		<file name="ram_subcell.v" path="hdl/ram_subcell.v" type="verilog" group="hdl" desc=""/>	
+	</files>
+	<resets>
+		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
+	</resets>
+</process>
