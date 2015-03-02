@@ -6,10 +6,12 @@
 #include <QString>
 #include <QDomElement>
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT Port
 {
 public:
-    Port();
+    Port(Block *parent=NULL);
     ~Port();
 
     QString name() const;
@@ -24,6 +26,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
+    Block *parent() const;
+    void setParent(Block *parent);
+
 public:
     static Port *fromNodeGenerated(const QDomElement &domElement);
 
@@ -32,6 +37,8 @@ protected:
     QString _type;
     quint8 _size;
     QString _description;
+
+    Block *_parent;
 };
 
 #endif // PORT_H

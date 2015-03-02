@@ -6,10 +6,12 @@
 #include <QString>
 #include <QDomElement>
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT Clock
 {
 public:
-    Clock();
+    Clock(Block *parent=NULL);
     ~Clock();
 
     QString name() const;
@@ -33,6 +35,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
+    Block *parent() const;
+    void setParent(Block *parent);
+
 public:
     static Clock *fromNodeGenerated(const QDomElement &domElement);
 
@@ -44,6 +49,8 @@ protected:
     qint32 _max;
     qint32 _typical;
     QString _description;
+
+    Block *_parent;
 };
 
 #endif // CLOCK_H

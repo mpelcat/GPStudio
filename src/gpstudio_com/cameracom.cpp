@@ -1,11 +1,11 @@
-#include "camera.h"
+#include "cameracom.h"
 
 // camera io driver
 #include "camerausb.h"
 
 #include <QDebug>
 
-Camera::Camera(const CameraInfo &cameraInfo)
+CameraCom::CameraCom(const CameraInfo &cameraInfo)
 {
     _cameraIO = NULL;
     qDebug()<<cameraInfo.driverType();
@@ -31,25 +31,25 @@ Camera::Camera(const CameraInfo &cameraInfo)
     start(QThread::NormalPriority);
 }
 
-Camera::~Camera()
+CameraCom::~CameraCom()
 {
     terminate();
     delete _cameraIO;
 }
 
-bool Camera::isConnected() const
+bool CameraCom::isConnected() const
 {
     if(_cameraIO) return _cameraIO->isConnected();
     else return false;
 }
 
-void Camera::stop()
+void CameraCom::stop()
 {
     _start=false;
     this->wait();
 }
 
-QVector<CameraInfo> Camera::avaibleCams()
+QVector<CameraInfo> CameraCom::avaibleCams()
 {
     QVector<CameraInfo> avaibleCams;
 
@@ -58,7 +58,7 @@ QVector<CameraInfo> Camera::avaibleCams()
     return avaibleCams;
 }
 
-void Camera::run()
+void CameraCom::run()
 {
     int prev_numpacket=-1;
     bool succes;
@@ -123,12 +123,12 @@ void Camera::run()
     }
 }
 
-CameraIO *Camera::cameraIO() const
+CameraIO *CameraCom::cameraIO() const
 {
     return _cameraIO;
 }
 
-void Camera::writeParam(const unsigned int addr, const unsigned int value)
+void CameraCom::writeParam(const unsigned int addr, const unsigned int value)
 {
     QByteArray paramFlow;
 
@@ -147,7 +147,7 @@ void Camera::writeParam(const unsigned int addr, const unsigned int value)
     //qDebug() << "param_trame: "<< byte.toHex();
 }
 
-void Camera::writeParam(const unsigned int addr, const unsigned int *data, const unsigned size)
+void CameraCom::writeParam(const unsigned int addr, const unsigned int *data, const unsigned size)
 {
     QByteArray paramFlow;
     unsigned int addrCurrent = addr;
@@ -173,7 +173,7 @@ void Camera::writeParam(const unsigned int addr, const unsigned int *data, const
     _paramFlow->send(paramFlow);
 }
 
-void Camera::askStatus()
+void CameraCom::askStatus()
 {
     // TODO to be removed
     QByteArray byte;
@@ -182,22 +182,22 @@ void Camera::askStatus()
     _cameraIO->write(byte);
 }
 
-const QList<Flow*> &Camera::outputFlow() const
+const QList<Flow*> &CameraCom::outputFlow() const
 {
     return _outputFlow;
 }
 
-QList<Flow*> &Camera::outputFlow()
+QList<Flow*> &CameraCom::outputFlow()
 {
     return _outputFlow;
 }
 
-const QList<Flow*> &Camera::inputFlow() const
+const QList<Flow*> &CameraCom::inputFlow() const
 {
     return _inputFlow;
 }
 
-QList<Flow*> &Camera::inputFlow()
+QList<Flow*> &CameraCom::inputFlow()
 {
     return _inputFlow;
 }

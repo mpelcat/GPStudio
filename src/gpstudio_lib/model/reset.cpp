@@ -1,6 +1,9 @@
 #include "reset.h"
 
-Reset::Reset()
+#include "block.h"
+
+Reset::Reset(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -46,6 +49,16 @@ QString Reset::description() const
 void Reset::setDescription(const QString &description)
 {
     _description = description;
+}
+
+Block *Reset::parent() const
+{
+    return _parent;
+}
+
+void Reset::setParent(Block *parent)
+{
+    _parent = parent;
 }
 
 Reset *Reset::fromNodeGenerated(const QDomElement &domElement)

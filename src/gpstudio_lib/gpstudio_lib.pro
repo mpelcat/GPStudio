@@ -25,7 +25,9 @@ HEADERS += gpstudio_lib_common.h \
     model/port.h \
     model/pin.h \
     model/parambitfield.h \
-    model/paramenum.h
+    model/paramenum.h \
+    model/attribute.h \
+    camera.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -43,4 +45,6 @@ SOURCES += \
     model/port.cpp \
     model/pin.cpp \
     model/parambitfield.cpp \
-    model/paramenum.cpp
+    model/paramenum.cpp \
+    model/attribute.cpp \
+    camera.cpp

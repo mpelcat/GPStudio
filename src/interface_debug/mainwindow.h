@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "camerausb.h"
-#include "camera.h"
+#include "cameracom.h"
 
 #include <QDateTime>
 #include <QTimer>
@@ -50,12 +50,14 @@ private slots:
 
     void fpsUpdate();
 
+    void on_lineLenghtSpinBox_editingFinished();
+
 protected:
     bool event(QEvent *event);
 
 private:
     Ui::MainWindow *ui;
-    Camera *_cam;
+    CameraCom *_cam;
     int pnb;
 
     QSize _size;

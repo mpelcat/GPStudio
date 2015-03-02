@@ -1,6 +1,9 @@
 #include "clock.h"
 
-Clock::Clock()
+#include "block.h"
+
+Clock::Clock(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -76,6 +79,16 @@ QString Clock::description() const
 void Clock::setDescription(const QString &desc)
 {
     _description = desc;
+}
+
+Block *Clock::parent() const
+{
+    return _parent;
+}
+
+void Clock::setParent(Block *parent)
+{
+    _parent = parent;
 }
 
 Clock *Clock::fromNodeGenerated(const QDomElement &domElement)

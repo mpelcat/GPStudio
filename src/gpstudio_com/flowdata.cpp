@@ -1,8 +1,16 @@
 #include "flowdata.h"
 
+#include <QDebug>
+
 FlowData::FlowData(const QByteArray &data)
     : _data(data)
 {
+}
+
+FlowData::FlowData(const FlowData &other)
+    : _data(other._data)
+{
+    qDebug()<<"copy FLOWDATA"<<other._data.size();
 }
 
 FlowData::FlowData(const QImage &image, const int bitCount, const FlowData::ImageMode imageMode)
@@ -53,16 +61,16 @@ void FlowData::appendData(QByteArray data)
     _data.append(data);
 }
 
-QImage FlowData::toImage(const int width, const int height, const int dataSize)
+QImage *FlowData::toImage(const int width, const int height, const int dataSize)
 {
     Q_UNUSED(dataSize);
 
-    QImage img(width, height, QImage::Format_Indexed8);
+    QImage *img = new QImage(width, height, QImage::Format_Indexed8);
     QVector<QRgb> colors;
     for(int i=0; i<256; i++) colors.append(qRgb(i,i,i));
-    img.setColorTable(colors);
+    img->setColorTable(colors);
 
-    for(int y=0; y<height; y++)
+    /*for(int y=0; y<height; y++)
     {
         for(int x=0; x<width; x++)
         {
@@ -74,12 +82,29 @@ QImage FlowData::toImage(const int width, const int height, const int dataSize)
                 img.setPixel(x,y,value);
             }
         }
+    }*/
+
+    char *ptr = _data.data();
+    char *ptrEnd = _data.data()+_data.size();
+    for(int y=0; y<height; y++)
+    {
+        for(int x=0; x<width; x++)
+        {
+            if(ptr<ptrEnd)
+            {
+                unsigned value = (unsigned char)(*(ptr+1));
+                ptr+=2;
+
+                //if(value==1) value = 255;
+                img->setPixel(x,y,value);
+            }
+        }
     }
 
     return img;
 }
 
-QImage FlowData::toImage(const QSize size, const int dataSize)
+QImage *FlowData::toImage(const QSize size, const int dataSize)
 {
     return toImage(size.width(), size.height(), dataSize);
 }

@@ -6,10 +6,12 @@
 #include <QString>
 #include <QDomElement>
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT File
 {
 public:
-    File();
+    File(Block *parent=NULL);
     ~File();
 
     QString name() const;
@@ -27,6 +29,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
+    Block *parent() const;
+    void setParent(Block *parent);
+
 public:
     static File *fromNodeGenerated(const QDomElement &domElement);
 
@@ -36,6 +41,8 @@ protected:
     QString _group;
     QString _path;
     QString _description;
+
+    Block *_parent;
 };
 
 #endif // FILE_H

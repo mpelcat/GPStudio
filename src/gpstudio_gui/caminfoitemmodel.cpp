@@ -1,6 +1,6 @@
 #include "caminfoitemmodel.h"
 
-#include "camera.h"
+#include "cameracom.h"
 
 CamInfoItemModel::CamInfoItemModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -84,7 +84,7 @@ void CamInfoItemModel::refreshCams()
     emit layoutAboutToBeChanged();
 
     _usbList.clear();
-    foreach(CameraInfo info, Camera::avaibleCams())
+    foreach(CameraInfo info, CameraCom::avaibleCams())
     {
         _usbList.append(info);
     }

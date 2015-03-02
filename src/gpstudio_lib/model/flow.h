@@ -6,10 +6,12 @@
 #include <QString>
 #include <QDomElement>
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT Flow
 {
 public:
-    Flow();
+    Flow(Block *parent=NULL);
     ~Flow();
 
     QString name() const;
@@ -24,6 +26,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
+    Block *parent() const;
+    void setParent(Block *parent);
+
 public:
     static Flow *fromNodeGenerated(const QDomElement &domElement);
 
@@ -32,6 +37,8 @@ protected:
     QString _type;
     quint8 _size;
     QString _description;
+
+    Block *_parent;
 };
 
 #endif // FLOW_H

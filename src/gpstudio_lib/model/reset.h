@@ -6,10 +6,12 @@
 #include <QString>
 #include <QDomElement>
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT Reset
 {
 public:
-    Reset();
+    Reset(Block *parent=NULL);
     ~Reset();
 
     enum Direction {DirUndef, DirIn, DirOut};
@@ -26,6 +28,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
+    Block *parent() const;
+    void setParent(Block *parent);
+
 public:
     static Reset *fromNodeGenerated(const QDomElement &domElement);
 
@@ -34,6 +39,8 @@ protected:
     QString _group;
     Direction _direction;
     QString _description;
+
+    Block *_parent;
 };
 
 #endif // RESET_H

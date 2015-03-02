@@ -1,6 +1,9 @@
 #include "port.h"
 
-Port::Port()
+#include "block.h"
+
+Port::Port(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -46,6 +49,16 @@ QString Port::description() const
 void Port::setDescription(const QString &description)
 {
     _description = description;
+}
+
+Block *Port::parent() const
+{
+    return _parent;
+}
+
+void Port::setParent(Block *parent)
+{
+    _parent = parent;
 }
 
 Port *Port::fromNodeGenerated(const QDomElement &domElement)

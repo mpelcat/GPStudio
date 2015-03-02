@@ -1,6 +1,9 @@
 #include "param.h"
 
-Param::Param()
+#include "block.h"
+
+Param::Param(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -38,6 +41,12 @@ qint32 Param::regAddr() const
 void Param::setRegAddr(const qint32 &regAddr)
 {
     _regAddr = regAddr;
+}
+
+qint32 Param::absoluteAddr() const
+{
+    if(_parent) return _parent->addrAbs()+_regAddr;
+    return _regAddr;
 }
 
 QVariant Param::value() const
@@ -100,6 +109,11 @@ void Param::setDescription(const QString &description)
     _description = description;
 }
 
+bool Param::isDynamicParam() const
+{
+    return (!_hard && _regAddr>=0);
+}
+
 QList<ParamBitField *> &Param::parambitfields()
 {
     return _parambitfields;
@@ -159,3 +173,13 @@ Param *Param::fromNodeGenerated(const QDomElement &domElement)
 
     return param;
 }
+Block *Param::parent() const
+{
+    return _parent;
+}
+
+void Param::setParent(Block *parent)
+{
+    _parent = parent;
+}
+

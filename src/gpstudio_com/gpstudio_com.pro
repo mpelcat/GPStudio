@@ -9,21 +9,21 @@ QMAKE_CFLAGS_RELEASE = -O2
 
 SOURCES += cameraio.cpp \
     camerausb.cpp \
-    camera.cpp \
     camerainfo.cpp \
     cameraudp.cpp \
     flow.cpp \
-    flowdata.cpp
+    flowdata.cpp \
+    cameracom.cpp
 
 HEADERS  += \
     cameraio.h \
     camerausb.h \
-    camera.h \
     camerainfo.h \
     cameraudp.h \
     flow.h \
     flowdata.h \
-    gpstudio_com_common.h
+    gpstudio_com_common.h \
+    cameracom.h
 
 win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
 

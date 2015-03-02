@@ -11,10 +11,12 @@
 #include "paramenum.h"
 #include "parambitfield.h"
 
+class Block;
+
 class GPSTUDIO_LIB_EXPORT Param
 {
 public:
-    Param();
+    Param(Block *parent=NULL);
     ~Param();
 
     QString name() const;
@@ -25,6 +27,7 @@ public:
 
     qint32 regAddr() const;
     void setRegAddr(const qint32 &regAddr);
+    qint32 absoluteAddr() const;
 
     QVariant value() const;
     void setValue(const QVariant &value);
@@ -43,6 +46,11 @@ public:
 
     QString description() const;
     void setDescription(const QString &description);
+
+    Block *parent() const;
+    void setParent(Block *parent);
+
+    bool isDynamicParam() const;
 
     QList<ParamBitField *> &parambitfields();
     const QList<ParamBitField *> &parambitfields() const;
@@ -65,6 +73,8 @@ protected:
     QVariant _max;
     bool _hard;
     QString _description;
+
+    Block *_parent;
 
     QList<ParamBitField *> _parambitfields;
     QList<ParamEnum *> _paramenums;

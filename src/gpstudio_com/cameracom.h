@@ -9,12 +9,12 @@
 #include "cameraio.h"
 #include "flow.h"
 
-class GPSTUDIO_COM_EXPORT Camera : public QThread
+class GPSTUDIO_COM_EXPORT CameraCom : public QThread
 {
     Q_OBJECT
 public:
-    Camera(const CameraInfo &cameraInfo);
-    ~Camera();
+    CameraCom(const CameraInfo &cameraInfo);
+    ~CameraCom();
 
     bool isConnected() const;
     void stop();

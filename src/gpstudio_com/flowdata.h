@@ -12,6 +12,7 @@ class GPSTUDIO_COM_EXPORT FlowData
 {
 public:
     FlowData(const QByteArray &data=QByteArray());
+    FlowData(const FlowData &other);
 
     enum ImageMode {ImageModeGray, ImageModeColor};
     FlowData(const QImage &image, const int bitCount=8, const ImageMode imageMode=ImageModeGray);
@@ -24,8 +25,8 @@ public:
 
     void appendData(QByteArray data);
 
-    QImage toImage(const int width, const int height, const int dataSize);
-    QImage toImage(const QSize size, const int dataSize);
+    QImage *toImage(const int width, const int height, const int dataSize);
+    QImage *toImage(const QSize size, const int dataSize);
 
 private:
     QByteArray _data;

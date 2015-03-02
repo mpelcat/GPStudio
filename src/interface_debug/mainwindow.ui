@@ -209,6 +209,23 @@
             </property>
            </widget>
           </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lineLenghtLabel">
+            <property name="text">
+             <string>line lenght</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="lineLenghtSpinBox">
+            <property name="minimum">
+             <number>1650</number>
+            </property>
+            <property name="maximum">
+             <number>3000</number>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>

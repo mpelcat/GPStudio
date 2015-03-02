@@ -2,7 +2,10 @@
 #define IMAGEVIEW_H
 
 #include <QGraphicsView>
+
+#ifdef __USE_OPEN_CV__
 #include <opencv2/core/core.hpp>
+#endif
 
 #include <vector>
 
@@ -20,7 +23,9 @@ public:
 
     enum ViewProperty {All              = 0xFF};
 
-    void showImage(const cv::Mat &image, const QString &title=QString());
+    #ifdef __USE_OPEN_CV__
+        void showImage(const cv::Mat &image, const QString &title=QString());
+    #endif
     void showImage(const QImage &image, const QString &title=QString());
     void showImage(const QPixmap &image, const QString &title=QString());
 

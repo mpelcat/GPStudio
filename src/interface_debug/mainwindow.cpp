@@ -80,15 +80,18 @@ void MainWindow::flowReceive(int flow)
     _time = QDateTime::currentDateTime();
     if(flow==0)
     {
-        const QImage &image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer, 16);
-        ui->imageView->showImage(image);
+        QImage *image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer.width(), _sizeViewer.height(), 16);
+        //_cam->inputFlow()[flow]->clear();
+        ui->imageView->showImage(*image);
         //image.save("image/" + QDateTime::currentDateTime().toString() + ".jpg");
         fpsCount++;
+        delete image;
     }
     else
     {
-        const QImage &image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer, 16);
-        ui->imageView_2->showImage(image);
+        QImage *image = _cam->inputFlow()[flow]->getData().toImage(_sizeViewer, 16);
+        ui->imageView_2->showImage(*image);
+        delete image;
     }
 
     _cam->inputFlow()[flow]->getData();
@@ -97,7 +100,7 @@ void MainWindow::flowReceive(int flow)
 void MainWindow::cameraChanged(CameraInfo info)
 {
     delete _cam;
-    _cam = new Camera(info);
+    _cam = new CameraCom(info);
 
     connect(_cam, SIGNAL(flowReadyToRead(int)), this, SLOT(flowReceive(int)));
     if(_cam->isConnected())
@@ -213,6 +216,7 @@ void MainWindow::send_mt9_config()
     _cam->writeParam(MT9_YEND, ystart+height-1);
     _cam->writeParam(MT9_AUTOEXP, ui->aemt9_box->isChecked());
     _cam->writeParam(MT9_INTEGTIME, ui->integtimeMT9->value());
+    _cam->writeParam(MT9_LINELENGHT, ui->lineLenghtSpinBox->value());
     _sizeViewer = QSize(width, height);
 }
 
@@ -247,4 +251,9 @@ void MainWindow::fpsUpdate()
     text.append(QString("\ncomplete time=%1 ms").arg((frame_time+exposure_time+ttfTffv)*1000));
     ui->fpsLabel->setText(text);
     fpsCount = 0;
+}
+
+void MainWindow::on_lineLenghtSpinBox_editingFinished()
+{
+    send_mt9_config();
 }

@@ -8,8 +8,6 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-using namespace cv;
-
 ImageView::ImageView(QWidget *parent) :
     QGraphicsView(parent)
 {
@@ -22,6 +20,8 @@ ImageView::ImageView(QWidget *parent) :
     _pixmapItem = _scene->addPixmap(QPixmap());
 }
 
+#ifdef __USE_OPEN_CV__
+using namespace cv;
 void ImageView::showImage(const Mat &image, const QString &title)
 {
 
@@ -59,6 +59,7 @@ void ImageView::showImage(const Mat &image, const QString &title)
         showImage(qimg, title);
     }
 }
+#endif
 
 void ImageView::showImage(const QImage &image, const QString &title)
 {

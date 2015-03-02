@@ -1,6 +1,9 @@
 #include "flow.h"
 
-Flow::Flow()
+#include "block.h"
+
+Flow::Flow(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -46,6 +49,16 @@ QString Flow::description() const
 void Flow::setDescription(const QString &description)
 {
     _description = description;
+}
+
+Block *Flow::parent() const
+{
+    return _parent;
+}
+
+void Flow::setParent(Block *parent)
+{
+    _parent = parent;
 }
 
 Flow *Flow::fromNodeGenerated(const QDomElement &domElement)

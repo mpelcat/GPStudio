@@ -67,11 +67,11 @@ Node *Node::fromNodeGenerated(const QDomElement &domElement)
     node->setName(domElement.attribute("name","no_name"));
 
     const QDomNodeList &blocksNodeList = domElement.elementsByTagName("blocks");
-    for(unsigned int i=0; i<blocksNodeList.length(); i++)
+    for(int i=0; i<blocksNodeList.length(); i++)
     {
         const QDomElement &blocksNode = blocksNodeList.at(i).toElement();
         const QDomNodeList &blockNodeList = blocksNode.elementsByTagName("block");
-        for(unsigned int j=0; j<blockNodeList.length(); j++)
+        for(int j=0; j<blockNodeList.length(); j++)
         {
             const QDomElement &blockNode = blockNodeList.at(j).toElement();
             Block *block = Block::fromNodeGenerated(blockNode);

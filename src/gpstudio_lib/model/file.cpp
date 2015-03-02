@@ -1,6 +1,9 @@
 #include "file.h"
 
-File::File()
+#include "block.h"
+
+File::File(Block *parent)
+    : _parent(parent)
 {
 }
 
@@ -56,6 +59,16 @@ QString File::description() const
 void File::setDescription(const QString &description)
 {
     _description = description;
+}
+
+Block *File::parent() const
+{
+    return _parent;
+}
+
+void File::setParent(Block *parent)
+{
+    _parent = parent;
 }
 
 File *File::fromNodeGenerated(const QDomElement &domElement)
