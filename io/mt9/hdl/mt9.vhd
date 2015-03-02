@@ -34,7 +34,7 @@ entity mt9 is
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i : in std_logic_vector(2 downto 0);
+		addr_rel_i : in std_logic_vector(3 downto 0);
 		wr_i : in std_logic;
 		rd_i : in std_logic;
 		datawr_i : in std_logic_vector(31 downto 0);
@@ -50,7 +50,7 @@ component mt9_config_slave
 		reset_n			: in std_logic;
 
 		-- bus_sl
-		addr_rel_i		: in std_logic_vector(2 downto 0);
+		addr_rel_i		: in std_logic_vector(3 downto 0);
 		wr_i			: in std_logic;
 		rd_i			: in std_logic;
 		datawr_i		: in std_logic_vector(31 downto 0);
@@ -67,6 +67,7 @@ component mt9_config_slave
 		yend_o			: out std_logic_vector(31 downto 0);
 		autoexp_o		: out std_logic_vector(31 downto 0);
 		integtime_o		: out std_logic_vector(31 downto 0);
+		linelenght_o	: out std_logic_vector(31 downto 0);
 		need_to_reconf_o : out std_logic
 	);
 end component;
@@ -94,6 +95,7 @@ component mt9_config_i2c
 		yend_i			: in std_logic_vector(31 downto 0);
 		autoexp_i		: in std_logic_vector(31 downto 0);
 		integtime_i		: in std_logic_vector(31 downto 0);
+		linelenght_i	: in std_logic_vector(31 downto 0);
 		send_reconf_i	: in std_logic;
 
 		mt9_conf_done_o : out std_logic
@@ -157,6 +159,7 @@ end component;
 	signal yend_s : std_logic_vector(31 downto 0);
 	signal autoexp_s : std_logic_vector(31 downto 0);
 	signal integtime_s : std_logic_vector(31 downto 0);
+	signal linelenght_s : std_logic_vector(31 downto 0);
 
 	signal need_to_reconf_s : std_logic;
 	signal send_reconf_s : std_logic;
@@ -187,6 +190,7 @@ begin
 		yend_o				=>	yend_s,
 		autoexp_o			=> autoexp_s,
 		integtime_o			=> integtime_s,
+		linelenght_o		=> linelenght_s,
 		need_to_reconf_o	=>	need_to_reconf_s
 	);
 
@@ -206,13 +210,14 @@ begin
 		mt9_sdata_io	=>	sdata_io,
 		mt9_sclk_o		=>	sclk_o,
 
-		-- connections from mt9_config_i2c
+		-- connections from mt9_config_slave
 		xstart_i		=>	xstart_s,
 		ystart_i		=>	ystart_s,
 		xend_i			=>	xend_s,
 		yend_i			=>	yend_s,
 		autoexp_i		=>	autoexp_s,
 		integtime_i		=> integtime_s,
+		linelenght_i	=>	linelenght_s,
 		send_reconf_i	=>	send_reconf_s,
 
 		mt9_conf_done_o => mt9_conf_done_s
@@ -222,7 +227,7 @@ begin
     generic map (
     	DATA_WIDTH	=>	DATA_WIDTH,
     	PIXEL_WIDTH	=>	PIXEL_WIDTH,
-    	FIFO_DEPTH	=>	4096,
+    	FIFO_DEPTH	=>	4096*4,
     	DEFAULT_SCR	=>	0,
     	DEFAULT_FLOWLENGHT	=>	254*254,
     	HREF_POLARITY => "high",

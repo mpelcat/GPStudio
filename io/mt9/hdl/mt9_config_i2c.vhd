@@ -27,6 +27,7 @@ entity mt9_config_i2c is
 		yend_i			: in std_logic_vector(31 downto 0);
 		autoexp_i		: in std_logic_vector(31 downto 0);
 		integtime_i		: in std_logic_vector(31 downto 0);
+		linelenght_i	: in std_logic_vector(31 downto 0);
 		send_reconf_i	: in std_logic;
 
 		mt9_conf_done_o : out std_logic
@@ -36,7 +37,7 @@ end mt9_config_i2c;
 
 architecture rtl of mt9_config_i2c is
 
-	constant GEN_NUM_REG : integer := 9;
+	constant GEN_NUM_REG : integer := 10;
 	
 	-- MT9 I2C constant for comunication
 	constant MT9_I2C_SLAVE_ADDR			: std_logic_vector(7 downto 0)	:= x"20";
@@ -50,6 +51,7 @@ architecture rtl of mt9_config_i2c is
 	constant AE_CTRL_REG_I2CREG			: std_logic_vector(15 downto 0) := x"3100";
 	constant EMBEDDED_DATA_CTRL_I2CREG	: std_logic_vector(15 downto 0) := x"3064";
 	constant PLL_MULTIPLIER_I2CREG		: std_logic_vector(15 downto 0) := x"3030";
+	constant LINE_LENGHT_PCK_I2CREG		: std_logic_vector(15 downto 0) := x"300C";
 
 	-- counter for power up timer and reset
 	signal p0_cnt1 : integer range 1 to 200000 := 1;
@@ -125,6 +127,9 @@ begin
 
 	int_reg_start_addr(8) <= PLL_MULTIPLIER_I2CREG;	-- pll_multiplier
 	int_reg_start_data(8) <= x"002C";	-- multiplier set to 44
+
+	int_reg_start_addr(9) <= LINE_LENGHT_PCK_I2CREG;	-- line lenght reg
+	int_reg_start_data(9) <= linelenght_i(15 downto 0);
 
 	-- Reset register & i/o configuration
 	--int_reg_start_addr(9) <= RESET_REGISTER_I2CREG;	-- reset register

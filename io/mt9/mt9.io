@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<io driver="mt9" size_addr_rel="3">
+<io driver="mt9" size_addr_rel="4">
 	<files>
 		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="video_sampler.v" path="hdl/video_sampler.v" type="verilog" group="hdl" desc=""/>
@@ -39,6 +39,7 @@
 		<param name="YEND" regaddr="5"/>
 		<param name="AUTOEXP" regaddr="6"/>
 		<param name="INTEGTIME" regaddr="7"/>
+		<param name="LINELENGHT" regaddr="8"/>
 		
 		<param name="DATA_WIDTH" hard="1" value="32"/>
 		<param name="PIXEL_WIDTH" hard="1" value="8"/>
