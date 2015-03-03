@@ -96,7 +96,8 @@ class FlowInterconnect extends Block
 				
 				$bitcountenum = ceil(log(count($parambitfield->paramenums),2));
 				for($i=0; $i<$bitcountenum; $i++) array_push($parambitfield->bitfieldlist, $i);
-				$parambitfield->bitfield = "$bitcountenum-0";
+				if($bitcountenum>1) $parambitfield->bitfield = ($bitcountenum-1)."-0";
+				else $parambitfield->bitfield = "0";
 				
 				array_push($param->parambitfields, $parambitfield);
 				
@@ -122,8 +123,8 @@ class FlowInterconnect extends Block
 				$outs=array();
 				foreach($block->flows as $flow)
 				{
-					if($flow->type=='in') array_push($ins, $flow->name);
-					if($flow->type=='out') array_push($outs, $flow->name);
+					if($flow->type=='in') array_push($ins, $flow);
+					if($flow->type=='out') array_push($outs, $flow);
 				}
 				
 				$content.="\t".$block->name.'[shape = record,label = "';
@@ -131,14 +132,14 @@ class FlowInterconnect extends Block
 				$count=0;
 				foreach($ins as $in)
 				{
-					$content.='<'.$in.'> '.$in;
+					$content.='<'.$in->name.'> '.$in->name.' ('.$flow->size.')';
 					if(++$count<count($ins)) $content.='|';
 				}
 				$content.='}|'.$block->name.'|{';
 				$count=0;
 				foreach($outs as $out)
 				{
-					$content.='<'.$out.'> '.$out;
+					$content.='<'.$out->name.'> '.$out->name.' ('.$flow->size.')';
 					if(++$count<count($outs)) $content.='|';
 				}
 				
