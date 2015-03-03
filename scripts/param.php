@@ -162,7 +162,7 @@ class Param
 		// parambitfields
 		if(!empty($this->parambitfields))
 		{
-			$xml_parambitfields = $xml->createElement("parambitfields");
+			$xml_parambitfields = $xml->createElement("bitfields");
 			foreach($this->parambitfields as $parambitfield)
 			{
 				$xml_parambitfields->appendChild($parambitfield->getXmlElement($xml));
@@ -173,7 +173,7 @@ class Param
 		// paramenums
 		if(!empty($this->paramenums))
 		{
-			$xml_paramenums = $xml->createElement("paramenums");
+			$xml_paramenums = $xml->createElement("enums");
 			foreach($this->paramenums as $paramenum)
 			{
 				$xml_paramenums->appendChild($paramenum->getXmlElement($xml));

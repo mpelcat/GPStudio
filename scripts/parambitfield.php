@@ -137,7 +137,7 @@ class ParamBitfield
 		$xml_element->appendChild($att);
 		
 		// paramenums
-		$xml_paramenums = $xml->createElement("paramenums");
+		$xml_paramenums = $xml->createElement("enums");
 		foreach($this->paramenums as $paramenum)
 		{
 			$xml_paramenums->appendChild($paramenum->getXmlElement($xml));
