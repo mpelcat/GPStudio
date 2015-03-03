@@ -3,7 +3,7 @@
 	<files>
 		<file name="USB datasheet" path="doc/CY7C68013A_14A_15A_16A_38-08032.pdf" type="doc" group="doc" desc=""/>
 		<file name="usb.sdc" path="usb.sdc" type="sdc" group="hdl" desc=""/>
-		<file name="usb.vhd" path="hdl/usb/src/usb_cypress_CY7C68014A.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="usb_cypress_CY7C68014A.vhd" path="hdl/usb/src/usb_cypress_CY7C68014A.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="usb_sm.vhd" path="hdl/usb/src/usb_sm.vhd" type="vhdl" group="hdl" desc=""/>
 		
 		<file name="fifo_com_rx.vhd" path="hdl/flow_in/src/fifo_com_rx.vhd" type="vhdl" group="hdl" desc=""/>
@@ -21,20 +21,50 @@
 		
 		<file name="ComFlow_pkg.vhd" path="hdl/utils/src/ComFlow_pkg.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="synchronizer.vhd" path="hdl/utils/src/synchronizer.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="enable_gen.vhd" path="hdl/utils/src/enable_gen.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="slave_usb.vhd" path="hdl/utils/src/slave_usb.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="fv_synchro_signal.vhd" path="hdl/utils/src/fv_synchro_signal.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="flow_out_arb.vhd" path="hdl/utils/src/flow_out_arb.vhd" type="vhdl" group="hdl" desc=""/>
-		
+		<file name="flow_out_arb4.vhd" path="hdl/utils/src/flow_out_arb4.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="usb8to16bits.vhd" path="hdl/utils/src/usb8to16bits.vhd" type="vhdl" group="hdl" desc=""/>		
 	</files>
+
 	<flows>
-		<flow name="in0" type="in" desc="flow 0 return for supervise results of process"/>
+		<flow name="in0" type="in" size="8" desc="flow 0 return for supervise results of process"/>
 		<flow name="out0" type="out" desc="flow 0 return for supervise results of process"/>
-		<flow name="in1" type="in" desc="flow 1 return for supervise results of process"/>
+		<flow name="in1" type="in" size="8" desc="flow 1 return for supervise results of process"/>
 		<flow name="out1" type="out" desc="flow 1 return for supervise results of process"/> 
+		<flow name="in2" type="in" size="8" desc="flow 2 return for supervise results of process"/>
+		<flow name="in3" type="in" size="8" desc="flow 3 return for supervise results of process"/>
+
 	</flows>
 	<params>
-		<param name="ENABLE" regaddr="0"/>
+		<param name="status" regaddr="0"> 
+			<bitfields> 
+				<bitfield name="enable" bitfield="0"/>
+			</bitfields>
+		</param>
+		<param name="flow_in0" regaddr="1">
+			<bitfields> 
+				<bitfield name="enable" bitfield="0"/>
+			</bitfields>
+		</param>
+		<param name="flow_in1" regaddr="2">
+			<bitfields> 
+				<bitfield name="enable" bitfield="0"/>
+			</bitfields>
+		</param>
+		<param name="flow_in2" regaddr="3">
+			<bitfields> 
+				<bitfield name="enable" bitfield="0"/>
+			</bitfields>
+		</param>
+		<param name="flow_in3" regaddr="4">
+			<bitfields> 
+				<bitfield name="enable" bitfield="0"/>
+			</bitfields>
+		</param>
 	</params>
+
 	<ports>
 		<port name="rst" type="in" size="1" desc=""/>
 		<port name="ifclk" type="in" size="1" desc=""/>

@@ -14,7 +14,6 @@ entity fv_synchro_signal is
 	fv_i: in std_logic;
 	signal_i : in std_logic;
 	signal_o: out std_logic;
-	
 	clk_i :in std_logic;
 	rst_n_i :in std_logic
 );

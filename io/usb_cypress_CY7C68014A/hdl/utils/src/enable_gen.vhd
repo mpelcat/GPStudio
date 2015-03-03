@@ -12,7 +12,7 @@ use ieee.math_real.all;
 -- entity "uses" the package   
 -- use work.ComFlow_pkg.all;
 
-entity enable_gen is
+entity  slave_usb is
   generic (
 	DATA_WIDTH : integer := 32;
 	N_WORDS : integer := 1024
@@ -30,9 +30,9 @@ entity enable_gen is
 	flow_out_sel_o: out std_logic;
 	source_sel_o : out std_logic
     );
-end enable_gen;
+end  slave_usb;
 
-architecture rtl of enable_gen is
+architecture rtl of  slave_usb is
 
 signal enable_reg : std_logic_vector(DATA_WIDTH-1 downto 0) := (others=>'0');
  

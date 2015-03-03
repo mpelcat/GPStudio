@@ -32,59 +32,7 @@ package ComFlow_pkg is
 											X"DB" -- End of Line
 			
 								);
-	-- a deplacer dans le package genere par GPStud								
-	component usb is
-		generic(
-			MASTER_ADDR_WIDTH : integer
-		);
-		port(
-			clk_proc : in std_logic;
-			reset : in std_logic;
-
-			------ external ports ------
-			usb_rst   : in std_logic;
-			usb_ifclk : in std_logic;
-			usb_flaga : in std_logic;
-			usb_flagb : in std_logic;
-			usb_flagc : in std_logic;
-			usb_flagd : in std_logic;
-			usb_fd_io : inout std_logic_vector(15 downto 0);
-			usb_sloe : out std_logic;
-			usb_slrd : out std_logic;
-			usb_slwr : out std_logic;
-			usb_pktend : out std_logic;
-			usb_addr : out std_logic_vector(1 downto 0);
-
-			------ in0 flow ------
-			in0_data : in std_logic_vector(11 downto 0);
-			in0_fv : in std_logic;
-			in0_dv : in std_logic;
-
-			------ out0 flow ------
-			out0_data : out std_logic_vector(11 downto 0);
-			out0_fv : out std_logic;
-			out0_dv : out std_logic;
-
-			---- ===== Masters =====
-
-			------ bus_master ------
-			master_addr_o : out std_logic_vector(5 downto 0);
-			master_wr_o : out std_logic;
-			master_rd_o : out std_logic;
-			master_datawr_o : out std_logic_vector(31 downto 0);
-			master_datard_i : in std_logic_vector(31 downto 0);
-
-			---- ===== Slaves =====
-
-			------ bus_sl ------
-			addr_rel_i : in std_logic_vector(2 downto 0);
-			wr_i : in std_logic;
-			rd_i : in std_logic;
-			datawr_i : in std_logic_vector(31 downto 0);
-			datard_o : out std_logic_vector(31 downto 0)
-		);
-	end component;
-
+	
 											
 	-- Component Declaration
 	component flow_in 
@@ -210,25 +158,25 @@ package ComFlow_pkg is
 		);
 	end component;
 
-	component enable_gen 
+	component  slave_usb is
 	  generic (
-		DATA_WIDTH : integer := 32;
-		N_WORDS : integer := 32
-		);
+		DATA_WIDTH : integer := 32
+	    );
 	  port(
 		clk_i : in std_logic;
 		rst_n_i : in std_logic;
-					
-		addr_i : in std_logic_vector(integer(ceil(log2(real(N_WORDS))))-1 DOWNTO 0);		--(addr_rel_0_o),
-		
+				
+		addr_i : in std_logic_vector(3 DOWNTO 0);		--(addr_rel_0_o),
 		wr_i : in std_logic;			--(wr_0_o),
 		datawr_i : in std_logic_vector(DATA_WIDTH-1 downto 0);
 
-		en_o : out std_logic;
-		flow_out_sel_o: out std_logic;
-		source_sel_o : out std_logic
-		);
-	end component;
+		enable_usb_o : out std_logic;
+		enable_in0_o : out std_logic;
+		enable_in1_o : out std_logic;
+		enable_in2_o : out std_logic;
+		enable_in3_o : out std_logic	
+	    );
+	end  component;
 
 component flow_out_arb 
 
@@ -255,6 +203,59 @@ component flow_out_arb
 	rst_n_i :in std_logic
 	
     );
+end component;
+
+
+component flow_out_arb4 is
+
+  port(
+	-- fv 0 signals
+	rdreq_0_o : out std_logic;
+	data_0_i : in std_logic_vector(15 downto 0);
+	flow_rdy_0_i: in std_logic;	
+	f_empty_0_i : in std_logic;
+	
+	-- fv 1signals
+	rdreq_1_o : out std_logic;
+	data_1_i : in std_logic_vector(15 downto 0);
+	flow_rdy_1_i: in std_logic;	
+	f_empty_1_i : in std_logic;
+
+	-- fv 2 signals
+	rdreq_2_o : out std_logic;
+	data_2_i : in std_logic_vector(15 downto 0);
+	flow_rdy_2_i: in std_logic;	
+	f_empty_2_i : in std_logic;
+	
+	-- fv 3 signals
+	rdreq_3_o : out std_logic;
+	data_3_i : in std_logic_vector(15 downto 0);
+	flow_rdy_3_i: in std_logic;	
+	f_empty_3_i : in std_logic;
+	
+	-- fv usb signals
+	rdreq_usb_i : in std_logic;
+	data_usb_o : out std_logic_vector(15 downto 0);
+	flow_rdy_usb_o: out std_logic;	
+	f_empty_usb_o: out std_logic;
+	
+	clk_i :in std_logic;
+	rst_n_i :in std_logic
+	
+    );
+end component;
+
+component usb8to16bits is
+		port ( 
+			rst_n_i  		: in  std_logic;
+			clk_i  			: in  std_logic;		
+			frame_valid_i	: in  std_logic;					
+			data_valid_i	: in  std_logic;					
+			data_i			: in  std_logic_vector(7 downto 0);
+			frame_valid_o	: out std_logic;
+			data_valid_o	: out std_logic;
+			data_o			: out std_logic_vector(15 downto 0) 
+		);
 end component;
 
 end package ComFlow_pkg;

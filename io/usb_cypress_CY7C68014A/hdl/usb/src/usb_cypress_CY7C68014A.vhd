@@ -27,13 +27,21 @@ entity usb_cypress_CY7C68014A is
 		addr : out std_logic_vector(1 downto 0);
 
 		------ in0 flow ------
-		in0_data : in std_logic_vector(15 downto 0);
+		in0_data : in std_logic_vector(7 downto 0);
 		in0_fv : in std_logic;
 		in0_dv : in std_logic;
 		------ in1 flow ------
-		in1_data : in std_logic_vector(15 downto 0);
+		in1_data : in std_logic_vector(7 downto 0);
 		in1_fv : in std_logic;
 		in1_dv : in std_logic;
+		------ in2 flow ------
+		in2_data : in std_logic_vector(7 downto 0);
+		in2_fv : in std_logic;
+		in2_dv : in std_logic;
+		------ in3 flow ------
+		in3_data : in std_logic_vector(7 downto 0);
+		in3_fv : in std_logic;
+		in3_dv : in std_logic;
 
 
 		------ out0 flow ------
@@ -69,12 +77,18 @@ end entity;
 
 architecture rtl of usb_cypress_CY7C68014A is
 
--- SIGNAUX INTERNES NON CONNECTE
-signal flow_out_sel_s : std_logic:='0';
-signal source_sel_s:std_logic:='0';
 
 -- SLAVE BUS 
 	signal enable_s : std_logic :='0';
+	signal enable_in0_s : std_logic :='0';
+	signal enable_in1_s : std_logic :='0';
+	signal enable_in2_s : std_logic :='0';
+	signal enable_in3_s : std_logic :='0';
+	
+	signal enable_in0_s_sync : std_logic :='0';
+	signal enable_in1_s_sync : std_logic :='0';
+	signal enable_in2_s_sync : std_logic :='0';
+	signal enable_in3_s_sync : std_logic :='0';
 
 -- SYNC BUS
 	signal enable_s_fvsync : std_logic:='0';
@@ -100,13 +114,37 @@ signal source_sel_s:std_logic:='0';
 	signal flow_out_empty_1_s : std_logic:='0';
 	signal flow_out_rd_1_s : std_logic:='0';
 	signal flow_out_rdy_1_s : std_logic:='0';
+
+	signal flow_out_data_2_s : std_logic_vector(15 downto 0):=(others=>'0');
+	signal flow_out_empty_2_s : std_logic:='0';
+	signal flow_out_rd_2_s : std_logic:='0';
+	signal flow_out_rdy_2_s : std_logic:='0';
+	
+	signal flow_out_data_3_s : std_logic_vector(15 downto 0):=(others=>'0');
+	signal flow_out_empty_3_s : std_logic:='0';
+	signal flow_out_rd_3_s : std_logic:='0';
+	signal flow_out_rdy_3_s : std_logic:='0';
 	
 
--- FLOW_PARAMS
-	signal update_port_s : std_logic:='0';
+	-- FLOW_PARAMS
+		signal update_port_s : std_logic:='0';
 
--- USB_SM_INST
+	-- USB_8TO16bits SIGNAUX
+	signal in0_fv_s: std_logic :='0';
+	signal in0_dv_s: std_logic :='0';
+	signal in0_data_s: std_logic_vector(15 downto 0):=(others=>'0');
 
+	signal in1_fv_s: std_logic :='0';
+	signal in1_dv_s: std_logic :='0';
+	signal in1_data_s: std_logic_vector(15 downto 0):=(others=>'0');
+
+	signal in2_fv_s: std_logic :='0';
+	signal in2_dv_s: std_logic :='0';
+	signal in2_data_s: std_logic_vector(15 downto 0):=(others=>'0');
+
+	signal in3_fv_s: std_logic :='0';
+	signal in3_dv_s: std_logic :='0';
+	signal in3_data_s: std_logic_vector(15 downto 0):=(others=>'0');
 	
 begin
 
@@ -143,10 +181,9 @@ USB_SM_INST : usb_sm
 		flow_out_rdy_i => flow_out_rdy_s
 		);
 		
-SLAVE_BUS_INST: component enable_gen	
+SLAVE_BUS_INST: component slave_usb
 		generic map(
-			DATA_WIDTH => 32,
-			N_WORDS => 16
+			DATA_WIDTH => 32
 		)
 		port map (
 			clk_i => clk_proc,
@@ -154,12 +191,16 @@ SLAVE_BUS_INST: component enable_gen
 			addr_i => addr_rel_i,		--(addr_rel_0_o),
 			wr_i => wr_i,				--(wr_0_o),
 			datawr_i => datawr_i, 		--(data_wr_0_o)	
-			en_o => enable_s,
-			flow_out_sel_o => flow_out_sel_s,
-			source_sel_o => source_sel_s
+			enable_usb_o => enable_s,
+			enable_in0_o => enable_in0_s,
+			enable_in1_o => enable_in1_s,
+			enable_in2_o => enable_in2_s,
+			enable_in3_o => enable_in3_s
 			);
 		
-ENABLE_SYNC_FV: component fv_synchro_signal
+-- SYNC SIGNALS FOR SLAVE REG WITH THE FLOW VALID
+---------------------------------------------
+ENABLE_S_INST: component fv_synchro_signal
   port map(
 	fv_i => in0_fv,
 	signal_i => enable_s,
@@ -167,8 +208,40 @@ ENABLE_SYNC_FV: component fv_synchro_signal
 	clk_i => clk_proc,
 	rst_n_i => rst
 );
+ENABLE_IN0_INST: component fv_synchro_signal
+  port map(
+	fv_i => in0_fv,
+	signal_i => enable_in0_s,
+	signal_o => enable_in0_s_sync,
+	clk_i => clk_proc,
+	rst_n_i => rst
+);
+ENABLE_IN1_INST: component fv_synchro_signal
+  port map(
+	fv_i => in0_fv,
+	signal_i => enable_in1_s,
+	signal_o => enable_in1_s_sync,
+	clk_i => clk_proc,
+	rst_n_i => rst
+);
+ENABLE_IN2_INST: component fv_synchro_signal
+  port map(
+	fv_i => in0_fv,
+	signal_i => enable_in2_s,
+	signal_o => enable_in2_s_sync,
+	clk_i => clk_proc,
+	rst_n_i => rst
+);
+ENABLE_IN3_INST: component fv_synchro_signal
+  port map(
+	fv_i => in0_fv,
+	signal_i => enable_in3_s,
+	signal_o => enable_in3_s_sync,
+	clk_i => clk_proc,
+	rst_n_i => rst
+);
 
---FLOW_IN 1
+--FLOW_IN 0
 USBFLOW_IN0: component flow_in
   generic map(
 	FIFO_DEPTH => 1024,
@@ -190,8 +263,8 @@ USBFLOW_IN0: component flow_in
 	clk_out_i => clk_proc,
 	rst_n_i =>rst
     );
-
---FLOW_IN 2
+ 
+--FLOW_IN 1
 USBFLOW_IN1: component flow_in
   generic map(
 	FIFO_DEPTH => 1024,
@@ -210,11 +283,24 @@ USBFLOW_IN1: component flow_in
 	flow_full_o => open,
 		
 	clk_in_i =>ifclk,
-	clk_out_i =>clk_proc,
+	clk_out_i => clk_proc,
 	rst_n_i =>rst
     );
 
+------------------------------------------------------------
 --FLOW OUT 0
+USB8TO16_FLOW0: component usb8to16bits 
+	port map( 
+		rst_n_i  		=> rst,
+		clk_i  			=> clk_proc,	
+		frame_valid_i	=> in0_fv,
+		data_valid_i	=> in0_dv,
+		data_i			=> in0_data,
+		frame_valid_o	=> in0_fv_s,
+		data_valid_o	=> in0_dv_s,
+		data_o			=> in0_data_s
+	);
+
 USBFLOW_OUT0: component flow_out 
   generic map (
 	FIFO_DEPTH => 512*64,
@@ -223,11 +309,11 @@ USBFLOW_OUT0: component flow_out
 	FLAGS_CODES => InitFlagCodes
     )
   port map(
-	data_i => in0_data,
-	fv_i => in0_fv,
-	dv_i => in0_dv,
+	data_i => in0_data_s,
+	fv_i => in0_fv_s,
+	dv_i => in0_dv_s,
 	rdreq_i => flow_out_rd_0_s,-- to arb
-	enable_i => enable_s_fvsync,
+	enable_i => enable_s_fvsync and enable_in0_s_sync,
 	data_o => flow_out_data_0_s,-- to arb
 	flow_rdy_o=> flow_out_rdy_0_s,-- to arb
 	f_empty_o => flow_out_empty_0_s,-- to arb
@@ -236,8 +322,22 @@ USBFLOW_OUT0: component flow_out
 	clk_out_i => ifclk,
 	rst_n_i=> rst
 );
+------------------------------------------------------------
 
+------------------------------------------------------------
 --FLOW OUT 1
+USB8TO16_FLOW1: component usb8to16bits 
+	port map( 
+		rst_n_i  		=> rst,
+		clk_i  			=> clk_proc,	
+		frame_valid_i	=> in1_fv,
+		data_valid_i	=> in1_dv,
+		data_i			=> in1_data,
+		frame_valid_o	=> in1_fv_s,
+		data_valid_o	=> in1_dv_s,
+		data_o			=> in1_data_s
+);
+
 USBFLOW_OUT1: component flow_out 
   generic map (
 	FIFO_DEPTH => 512*64,
@@ -246,12 +346,12 @@ USBFLOW_OUT1: component flow_out
 	FLAGS_CODES => InitFlagCodes
     )
   port map(
-	data_i => in1_data,
-	fv_i => in1_fv,
-	dv_i => in1_dv,
+	data_i => in1_data_s,
+	fv_i => in1_fv_s,
+	dv_i => in1_dv_s,
 
 	rdreq_i => flow_out_rd_1_s, -- to arb
-	enable_i => enable_s_fvsync,
+	enable_i => enable_s_fvsync and enable_in1_s_sync,
 	data_o => flow_out_data_1_s, -- to arb
 	flow_rdy_o=> flow_out_rdy_1_s, -- to arb
 	f_empty_o => flow_out_empty_1_s, -- to arb
@@ -260,11 +360,82 @@ USBFLOW_OUT1: component flow_out
 	clk_out_i => ifclk,
 	rst_n_i=> rst
 );
+------------------------------------------------------------
 
+------------------------------------------------------------
+--FLOW OUT 2
+USB8TO16_FLOW2: component usb8to16bits 
+	port map( 
+		rst_n_i  		=> rst,
+		clk_i  			=> clk_proc,	
+		frame_valid_i	=> in2_fv,
+		data_valid_i	=> in2_dv,
+		data_i			=> in2_data,
+		frame_valid_o	=> in2_fv_s,
+		data_valid_o	=> in2_dv_s,
+		data_o			=> in2_data_s
+);
+
+USBFLOW_OUT2: component flow_out 
+  generic map (
+	FIFO_DEPTH => 512*64,
+	FLOW_ID => 130,
+	PACKET_SIZE => 256, -- header inclus
+	FLAGS_CODES => InitFlagCodes
+    )
+  port map(
+	data_i => in2_data_s,
+	fv_i => in2_fv_s,
+	dv_i => in2_dv_s,
+	rdreq_i => flow_out_rd_2_s, -- to arb
+	enable_i => enable_s_fvsync and enable_in2_s_sync,
+	data_o => flow_out_data_2_s, -- to arb
+	flow_rdy_o=> flow_out_rdy_2_s, -- to arb
+	f_empty_o => flow_out_empty_2_s, -- to arb
+	clk_in_i => clk_proc, 
+	clk_out_i => ifclk,
+	rst_n_i=> rst
+);
+------------------------------------------------------------
+------------------------------------------------------------
+--FLOW OUT 3
+USB8TO16_FLOW3: component usb8to16bits 
+	port map( 
+		rst_n_i  		=> rst,
+		clk_i  			=> clk_proc,	
+		frame_valid_i	=> in3_fv,
+		data_valid_i	=> in3_dv,
+		data_i			=> in3_data,
+		frame_valid_o	=> in3_fv_s,
+		data_valid_o	=> in3_dv_s,
+		data_o			=> in3_data_s
+);
+
+USBFLOW_OUT3: component flow_out 
+  generic map (
+	FIFO_DEPTH => 512*64,
+	FLOW_ID => 131,
+	PACKET_SIZE => 256, -- header inclus
+	FLAGS_CODES => InitFlagCodes
+    )
+  port map(
+	data_i => in3_data_s,
+	fv_i => in3_fv_s,
+	dv_i => in3_dv_s,
+	rdreq_i => flow_out_rd_3_s, -- to arb
+	enable_i => enable_s_fvsync and enable_in3_s_sync,
+	data_o => flow_out_data_3_s, -- to arb
+	flow_rdy_o=> flow_out_rdy_3_s, -- to arb
+	f_empty_o => flow_out_empty_3_s, -- to arb
+	clk_in_i => clk_proc, 
+	clk_out_i => ifclk,
+	rst_n_i=> rst
+);
+------------------------------------------------------------
 
 -- component flow_out_arbiter 
 	
-USBFLOW_ARB : component flow_out_arb
+USBFLOW_ARB : component flow_out_arb4
  port map(
 		-- fv 0 signals
 		rdreq_0_o => flow_out_rd_0_s,
@@ -272,11 +443,23 @@ USBFLOW_ARB : component flow_out_arb
 		flow_rdy_0_i => flow_out_rdy_0_s,
 		f_empty_0_i  => flow_out_empty_0_s,
 	
-		-- fv 0 signals
+		-- fv 1 signals
 		rdreq_1_o => flow_out_rd_1_s,
 		data_1_i => flow_out_data_1_s,
 		flow_rdy_1_i=> flow_out_rdy_1_s,
 		f_empty_1_i => flow_out_empty_1_s,
+
+		-- fv 2 signals
+		rdreq_2_o => flow_out_rd_2_s,
+		data_2_i => flow_out_data_2_s,
+		flow_rdy_2_i => flow_out_rdy_2_s,
+		f_empty_2_i  => flow_out_empty_2_s,
+	
+		-- fv 3 signals
+		rdreq_3_o => flow_out_rd_3_s,
+		data_3_i => flow_out_data_3_s,
+		flow_rdy_3_i=> flow_out_rdy_3_s,
+		f_empty_3_i => flow_out_empty_3_s,
 
 		-- fv usb signals
 		rdreq_usb_i => flow_out_rd_s,
