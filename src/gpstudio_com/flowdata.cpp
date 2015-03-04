@@ -10,7 +10,7 @@ FlowData::FlowData(const QByteArray &data)
 FlowData::FlowData(const FlowData &other)
     : _data(other._data)
 {
-    qDebug()<<"copy FLOWDATA"<<other._data.size();
+   // qDebug()<<"copy FLOWDATA"<<other._data.size();
 }
 
 FlowData::FlowData(const QImage &image, const int bitCount, const FlowData::ImageMode imageMode)
@@ -92,8 +92,8 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
         {
             if(ptr<ptrEnd)
             {
-                unsigned value = (unsigned char)(*(ptr+1));
-                ptr+=2;
+                unsigned value = (unsigned char)(*(ptr++));
+                //ptr++;
 
                 //if(value==1) value = 255;
                 img->setPixel(x,y,value);

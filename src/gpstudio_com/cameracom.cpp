@@ -8,7 +8,7 @@
 CameraCom::CameraCom(const CameraInfo &cameraInfo)
 {
     _cameraIO = NULL;
-    qDebug()<<cameraInfo.driverType();
+
 
     //if(cameraInfo.driverType().contains("USB", Qt::CaseInsensitive))
     {
@@ -26,6 +26,8 @@ CameraCom::CameraCom(const CameraInfo &cameraInfo)
 
     _inputFlow.append(new Flow(0x80));
     _inputFlow.append(new Flow(0x81));
+    _inputFlow.append(new Flow(0x82));
+    _inputFlow.append(new Flow(0x83));
 
     _start=true;
     start(QThread::NormalPriority);
@@ -60,13 +62,18 @@ QVector<CameraInfo> CameraCom::avaibleCams()
 
 void CameraCom::run()
 {
-    int prev_numpacket=-1;
+    QMap<int,int> prev_numpacket;
+
+    for (int i=0;i<_inputFlow.size();i++)
+    prev_numpacket[_inputFlow[i]->idFlow()] = -1;
+
     bool succes;
 
     while(_start)
     {
         const QByteArray &received = _cameraIO->read(512*128, 10, &succes);
-
+//           const QByteArray &received = _cameraIO->read(512, 1, &succes);
+        //qDebug() <<received.mid(0,30).toHex();
         if(!succes)
         {
             qDebug()<<"fail";
@@ -86,18 +93,18 @@ void CameraCom::run()
             {
                 if(_inputFlow[i]->idFlow()==idFlow)
                 {
-                    if(prev_numpacket+1 != numpacket)
+                    if(prev_numpacket[idFlow]+1 != numpacket)
                     {
-                        int miss_packet = numpacket-prev_numpacket-1;
+                        int miss_packet = numpacket-prev_numpacket[idFlow]-1;
                         qDebug()<<"miss"<<miss_packet<<numpacket;
                         for(int j=0; j<miss_packet; j++) _inputFlow[i]->appendData(QByteArray(512,0));
                     }
                     _inputFlow[i]->appendData(packet);
-                    prev_numpacket = numpacket;
+                    prev_numpacket[idFlow] = numpacket;
 
                     if(flagFlow==0xBA)      // end of flow
                     {
-                        prev_numpacket=-1;
+                        prev_numpacket[idFlow]=-1;
                         _inputFlow[i]->validate();
                         emit flowReadyToRead(i);
                     }
