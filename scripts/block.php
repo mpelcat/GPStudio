@@ -2,6 +2,7 @@
 
 require_once("file.php");
 require_once("param.php");
+require_once("property.php");
 require_once("flow.php");
 require_once("clock.php");
 require_once("reset.php");
@@ -60,13 +61,18 @@ class Block
 	* @var array|Param $params
 	*/
 	public $params;
+	
+	/**
+	* Array of property class specify the hight level properties
+	* @var array|Property $properties
+	*/
+	public $properties;
 
 	/**
 	* Array of files whith define the implementation of the block
 	* @var array|File $files
 	*/
 	public $files;
-
 	
 	/**
     * Array of flows in the block can be input flow or output
@@ -110,6 +116,7 @@ class Block
 	function __construct()
 	{
 		$this->params = array();
+		$this->properties = array();
 		$this->files = array();
 		$this->flows = array();
 		$this->clocks = array();
@@ -161,6 +168,15 @@ class Block
 			foreach($this->xml->files->file as $file)
 			{
 				array_push($this->files, new File($file));
+			}
+		}
+		
+		// properties
+		if(isset($this->xml->properties))
+		{
+			foreach($this->xml->properties->property as $property)
+			{
+				array_push($this->properties, new Property($property));
 			}
 		}
 		
@@ -250,6 +266,14 @@ class Block
 			$xml_params->appendChild($param->getXmlElement($xml));
 		}
 		$xml_element->appendChild($xml_params);
+		
+		// properties
+		$xml_property = $xml->createElement("properties");
+		foreach($this->properties as $property)
+		{
+			$xml_property->appendChild($property->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_property);
 		
 		// flows
 		$xml_flows = $xml->createElement("flows");

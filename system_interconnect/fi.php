@@ -81,19 +81,6 @@ class FlowInterconnect extends Block
 				$parambitfield->name = 'Muxdir';
 				$parambitfield->default = 0;
 				
-				foreach($out_connects as $key => $out_connect)
-				{
-					if(is_numeric($key))
-					{
-						$paramenum = new ParamEnum();
-						$paramenum->name = $out_connect['name'];
-						$paramenum->value = $key;
-						$paramenum->desc = $out_connect['name'].' as input of '.$in_connect;
-						
-						array_push($parambitfield->paramenums, $paramenum);
-					}
-				}
-				
 				$bitcountenum = ceil(log(count($parambitfield->paramenums),2));
 				for($i=0; $i<$bitcountenum; $i++) array_push($parambitfield->bitfieldlist, $i);
 				if($bitcountenum>1) $parambitfield->bitfield = ($bitcountenum-1)."-0";
@@ -102,6 +89,26 @@ class FlowInterconnect extends Block
 				array_push($param->parambitfields, $parambitfield);
 				
 				array_push($this->params, $param);
+				
+				$property = new Property();
+				$property->name = $in_connect;
+				$property->type = 'enum';
+				
+				foreach($out_connects as $key => $out_connect)
+				{
+					if(is_numeric($key))
+					{
+						$propertyenum = new PropertyEnum();
+						$propertyenum->name = $out_connect['name'];
+						$propertyenum->value = $key;
+						$propertyenum->desc = $out_connect['name'].' as input of '.$in_connect;
+						
+						array_push($property->propertyenums, $propertyenum);
+					}
+				}
+				
+				array_push($this->properties, $property);
+				
 				$count_param++;
 			}
 		}

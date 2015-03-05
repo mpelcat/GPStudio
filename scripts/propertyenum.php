@@ -1,6 +1,6 @@
 <?php
 
-class ParamEnum
+class PropertyEnum
 {
 	/**
 	* Name of the enum

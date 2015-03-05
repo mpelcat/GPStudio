@@ -12,18 +12,23 @@
 	<params>
 		<param name="scr" type="int" regaddr="0" default="0" desc="Status Control Register" hard="false">
 			<bitfields>
-				<bitfield name="enable" type="int" regaddr="0" bitfield="0" default="0" desc="On/Off bit">
-					<enums>
-						<enum name="disable" value="0" desc="Disable module" />
-						<enum name="enable" value="1" desc="Enable module" />
-					</enums>
-				</bitfield>
-				<bitfield name="scr" type="int" regaddr="0" bitfield="6-3,1" default="0" desc="Status Control Register"/>
+				<bitfield name="enable" type="int" bitfield="0" default="0" desc="On/Off bit"/>
+				<bitfield name="scr" type="int" bitfield="1" default="0" desc="Status Control Register"/>
 			</bitfields>
 		</param>
 		
 		<param name="threshold" type="int" regaddr="1" default="50" desc="Threshold" hard="false"/>
 	</params>
+	<properties>
+		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
+		<property name="mode" caption="mode" desc="Histogram mode setup">
+          <enums>
+            <enum name="luminance" value="0" desc="Histogram of luminance"/>
+            <enum name="HOG" value="1" desc="Output for HOG"/>
+          </enums>
+        </property>
+		<property name="threshold" caption="threshold" type="sint" desc="Gradiant threshold" min="0" max="255"/>
+	</properties>
 	<files>
 		<file name="gradienthw.v" path="hdl/gradienthw.v" type="verilog" group="hdl" desc=""/>
 		<file name="eshift_reg.v" path="hdl/eshift_reg.v" type="verilog" group="hdl" desc=""/>

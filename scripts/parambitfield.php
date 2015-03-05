@@ -1,7 +1,5 @@
 <?php
 
-require_once("paramenum.php");
-
 class ParamBitfield
 {
 	/**
@@ -30,6 +28,12 @@ class ParamBitfield
 	public $bitfield;
 
 	/**
+	* Mapping to properties (optional)
+	* @var string $propertymap
+	*/
+	public $propertymap;
+
+	/**
 	* Description of the bitfield (optional)
 	* @var string $desc
 	*/
@@ -40,13 +44,6 @@ class ParamBitfield
 	* @var array|int $bitfieldlist
 	*/
 	public $bitfieldlist;
-
-	/**
-	* Array of enums if param contain different enum (optional)
-	* @var array|ParamEnum $paramenums
-	*/
-	public $paramenums;
-
 	
 	function __construct($xml=null)
 	{
@@ -57,10 +54,12 @@ class ParamBitfield
 	
 	protected function parse_xml($xml)
 	{
-		$this->name		= (string)$xml['name'];
-		$this->type		= (string)$xml['type'];
-		$this->value	= (string)$xml['value'];
-		$this->desc		= (string)$xml['desc'];
+		$this->name			= (string)$xml['name'];
+		$this->type			= (string)$xml['type'];
+		$this->value		= (string)$xml['value'];
+		$this->value		= (string)$xml['value'];
+		$this->propertymap	= (string)$xml['propertymap'];
+		$this->desc			= (string)$xml['desc'];
 		
 		// bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
 		if(isset($xml['bitfield']))
@@ -96,15 +95,6 @@ class ParamBitfield
 				if(($lastsymbole==',' or $lastsymbole=='') and $prev!=-1) array_push($this->bitfieldlist, $prev);
 			}
 		}
-		
-		// enums
-		if(isset($xml->enums))
-		{
-			foreach($xml->enums->enum as $enum)
-			{
-				array_push($this->paramenums, new ParamEnum($enum));
-			}
-		}
 	}
 	
 	public function getXmlElement($xml)
@@ -126,23 +116,20 @@ class ParamBitfield
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
-		
 		// bitfield
 		$att = $xml->createAttribute('bitfield');
 		$att->value = $this->bitfield;
 		$xml_element->appendChild($att);
 		
-		// paramenums
-		$xml_paramenums = $xml->createElement("enums");
-		foreach($this->paramenums as $paramenum)
-		{
-			$xml_paramenums->appendChild($paramenum->getXmlElement($xml));
-		}
-		$xml_element->appendChild($xml_paramenums);
+		// propertymap
+		$att = $xml->createAttribute('propertymap');
+		$att->value = $this->propertymap;
+		$xml_element->appendChild($att);
+		
+		// desc
+		$att = $xml->createAttribute('desc');
+		$att->value = $this->desc;
+		$xml_element->appendChild($att);
 		
 		return $xml_element;
 	}

@@ -53,6 +53,12 @@ class Param
 	public $hard;
 
 	/**
+	* Mapping to properties (optional)
+	* @var string $propertymap
+	*/
+	public $propertymap;
+
+	/**
 	* Description of the param (optional)
 	* @var string $desc
 	*/
@@ -64,12 +70,6 @@ class Param
 	* @var array|ParamBitfield $parambitfields
 	*/
 	public $parambitfields;
-
-	/**
-	* Array of enums if param contain different enum (optional)
-	* @var array|ParamEnum $paramenums
-	*/
-	public $paramenums;
 	
 	function __construct($xml=null)
 	{
@@ -80,14 +80,15 @@ class Param
 	
 	protected function parse_xml($xml)
 	{
-		$this->name		= (string)$xml['name'];
-		$this->type		= (string)$xml['type'];
-		$this->regaddr	= (string)$xml['regaddr'];
-		$this->value	= (string)$xml['value'];
-		$this->default	= (string)$xml['default'];
-		$this->min		= (string)$xml['min'];
-		$this->max		= (string)$xml['max'];
-		$this->desc		= (string)$xml['desc'];
+		$this->name			= (string)$xml['name'];
+		$this->type			= (string)$xml['type'];
+		$this->regaddr		= (string)$xml['regaddr'];
+		$this->value		= (string)$xml['value'];
+		$this->default		= (string)$xml['default'];
+		$this->min			= (string)$xml['min'];
+		$this->max			= (string)$xml['max'];
+		$this->propertymap	= (string)$xml['propertymap'];
+		$this->desc			= (string)$xml['desc'];
 		
 		if((string)$xml['hard']=="1" or (string)$xml['hard']=="true") $this->hard=true; else $this->hard=false;
 		
@@ -119,15 +120,30 @@ class Param
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// type
-		$att = $xml->createAttribute('type');
-		$att->value = $this->type;
-		$xml_element->appendChild($att);
+		if($this->hard)
+		{
+			// type
+			$att = $xml->createAttribute('type');
+			$att->value = $this->type;
+			$xml_element->appendChild($att);
 		
-		// regaddr
-		$att = $xml->createAttribute('regaddr');
-		$att->value = $this->regaddr;
-		$xml_element->appendChild($att);
+			// hard
+			$att = $xml->createAttribute('hard');
+			$att->value = $this->hard;
+			$xml_element->appendChild($att);
+		}
+		else
+		{
+			// regaddr
+			$att = $xml->createAttribute('regaddr');
+			$att->value = $this->regaddr;
+			$xml_element->appendChild($att);
+		
+			// propertymap
+			$att = $xml->createAttribute('propertymap');
+			$att->value = $this->propertymap;
+			$xml_element->appendChild($att);
+		}
 		
 		// value
 		$att = $xml->createAttribute('value');
@@ -149,11 +165,6 @@ class Param
 		$att->value = $this->max;
 		$xml_element->appendChild($att);
 		
-		// hard
-		$att = $xml->createAttribute('hard');
-		$att->value = $this->hard;
-		$xml_element->appendChild($att);
-		
 		// desc
 		$att = $xml->createAttribute('desc');
 		$att->value = $this->desc;
@@ -170,7 +181,7 @@ class Param
 			$xml_element->appendChild($xml_parambitfields);
 		}
 		
-		// paramenums
+		/*// paramenums
 		if(!empty($this->paramenums))
 		{
 			$xml_paramenums = $xml->createElement("enums");
@@ -179,7 +190,7 @@ class Param
 				$xml_paramenums->appendChild($paramenum->getXmlElement($xml));
 			}
 			$xml_element->appendChild($xml_paramenums);
-		}
+		}*/
 		
 		return $xml_element;
 	}
