@@ -7,8 +7,6 @@
 #include <QVariant>
 #include <QDomElement>
 
-#include "paramenum.h"
-
 class GPSTUDIO_LIB_EXPORT ParamBitField
 {
 public:
@@ -30,12 +28,9 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
-    QList<ParamEnum *> &paramenums();
-    const QList<ParamEnum *> &paramenums() const;
-    void addParamEnum(ParamEnum *paramenum);
-
 public:
     static ParamBitField *fromNodeGenerated(const QDomElement &domElement);
+    static QList<ParamBitField *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;
@@ -43,7 +38,6 @@ protected:
     QVariant _value;
     QString _bitfield;
     QString _description;
-    QList<ParamEnum *> _paramenums;
 };
 
 #endif // PARAMBITFIELD_H

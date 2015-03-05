@@ -8,7 +8,6 @@
 #include <QList>
 #include <QDomElement>
 
-#include "paramenum.h"
 #include "parambitfield.h"
 
 class Block;
@@ -29,20 +28,23 @@ public:
     void setRegAddr(const qint32 &regAddr);
     qint32 absoluteAddr() const;
 
-    QVariant value() const;
+    const QVariant &value() const;
     void setValue(const QVariant &value);
 
     QVariant defaultValue() const;
     void setDefaultValue(const QVariant &defaultValue);
 
-    QVariant min() const;
+    const QVariant &min() const;
     void setMin(const QVariant &min);
 
-    QVariant max() const;
+    const QVariant &max() const;
     void setMax(const QVariant &max);
 
     bool isHard() const;
     void setHard(bool hard);
+
+    QString propertyMap() const;
+    void setPropertyMap(const QString &propertyMap);
 
     QString description() const;
     void setDescription(const QString &description);
@@ -52,16 +54,13 @@ public:
 
     bool isDynamicParam() const;
 
-    QList<ParamBitField *> &parambitfields();
-    const QList<ParamBitField *> &parambitfields() const;
-    void addParamBitField(ParamBitField *parambitfield);
-
-    QList<ParamEnum *> &paramenums();
-    const QList<ParamEnum *> &paramenums() const;
-    void addParamEnum(ParamEnum *paramenum);
+    QList<ParamBitField *> &paramBitFields();
+    const QList<ParamBitField *> &paramBitFields() const;
+    void addParamBitField(ParamBitField *bitField);
 
 public:
     static Param *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Param *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;
@@ -73,11 +72,11 @@ protected:
     QVariant _max;
     bool _hard;
     QString _description;
+    QString _propertyMap;
 
     Block *_parent;
 
     QList<ParamBitField *> _parambitfields;
-    QList<ParamEnum *> _paramenums;
 };
 
 #endif // PARAM_H

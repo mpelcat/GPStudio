@@ -31,6 +31,7 @@ public:
 
 public:
     static Flow *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Flow *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

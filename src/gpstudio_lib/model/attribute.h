@@ -5,6 +5,7 @@
 
 #include <QString>
 #include <QDomElement>
+#include <QList>
 
 class Attribute
 {
@@ -22,6 +23,7 @@ public:
 
 public:
     static Attribute *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Attribute *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

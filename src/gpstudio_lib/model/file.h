@@ -34,6 +34,7 @@ public:
 
 public:
     static File *fromNodeGenerated(const QDomElement &domElement);
+    static QList<File *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

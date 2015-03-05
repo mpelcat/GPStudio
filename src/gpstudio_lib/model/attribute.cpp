@@ -44,3 +44,19 @@ Attribute *Attribute::fromNodeGenerated(const QDomElement &domElement)
 
     return attribute;
 }
+
+QList<Attribute *> Attribute::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Attribute *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="attribute") list.append(Attribute::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

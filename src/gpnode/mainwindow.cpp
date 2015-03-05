@@ -8,35 +8,41 @@
 
 #include <QScriptEngine>
 
+#include "propertywidgets/propertywidgets.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    _cam = NULL;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete _cam;
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     //Lib lib("../../../GPStudio_lib_std/");
 
-    const Node *node = Node::readFromFile("../../../std_project/node_generated.xml");
-    qDebug()<<node->name();
+    QString fileNameCam = "../../../std_project/node_generated.xml";
+#ifdef Q_WS_WIN
+    fileNameCam.prepend("../");
+#endif
+    _cam = new Camera(fileNameCam);
 
-    foreach (Block *block, node->blocks())
+    if(_cam)
     {
-        qDebug()<<block->name();
-        foreach (Param *param, block->params())
+        foreach (Property *property, _cam->paramsBlocks()->subProperties().properties())
         {
-            if(param->isDynamicParam()) qDebug()<<'\t'<<param->name()<<param->absoluteAddr();
+            PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
+            ui->blocksParamsLayout->addWidget(propertyWidget);
         }
     }
-
-    delete node;
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -48,5 +54,6 @@ void MainWindow::on_pushButton_2_clicked()
     QScriptValue objectValue = e.newQObject(someObject);
     e.globalObject().setProperty("myObject", objectValue);
     e.globalObject().setProperty("a", a);
-    qDebug()<<e.evaluate(ui->lineEdit_2->text()).toString();
+    const QScriptValue &result = e.evaluate(ui->lineEdit_2->text());
+    qDebug()<<result.toString()<<e.uncaughtExceptionBacktrace();
 }

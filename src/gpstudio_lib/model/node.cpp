@@ -66,17 +66,15 @@ Node *Node::fromNodeGenerated(const QDomElement &domElement)
     Node *node=new Node();
     node->setName(domElement.attribute("name","no_name"));
 
-    const QDomNodeList &blocksNodeList = domElement.elementsByTagName("blocks");
-    for(int i=0; i<blocksNodeList.length(); i++)
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
     {
-        const QDomElement &blocksNode = blocksNodeList.at(i).toElement();
-        const QDomNodeList &blockNodeList = blocksNode.elementsByTagName("block");
-        for(int j=0; j<blockNodeList.length(); j++)
+        QDomElement e = n.toElement();
+        if(!e.isNull())
         {
-            const QDomElement &blockNode = blockNodeList.at(j).toElement();
-            Block *block = Block::fromNodeGenerated(blockNode);
-            node->addBlock(block);
+            if(e.tagName()=="blocks") node->_blocks.append(Block::listFromNodeGenerated(e));
         }
+        n = n.nextSibling();
     }
 
     node->_valid=true;

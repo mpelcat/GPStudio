@@ -1,10 +1,11 @@
 #ifndef CAMINFOITEMMODEL_H
 #define CAMINFOITEMMODEL_H
 
+#include "gpstudio_gui_common.h"
+
 #include <QAbstractItemModel>
 #include <QList>
 
-#include "gpstudio_gui_common.h"
 #include "camerainfo.h"
 
 class GPSTUDIO_GUI_EXPORT CamInfoItemModel : public QAbstractItemModel

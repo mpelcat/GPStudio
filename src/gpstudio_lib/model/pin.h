@@ -32,6 +32,7 @@ public:
 
 public:
     static Pin *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Pin *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

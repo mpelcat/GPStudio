@@ -76,3 +76,19 @@ Flow *Flow::fromNodeGenerated(const QDomElement &domElement)
 
     return flow;
 }
+
+QList<Flow *> Flow::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Flow *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="flow") list.append(Flow::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

@@ -1,5 +1,5 @@
-#ifndef PARAMENUM_H
-#define PARAMENUM_H
+#ifndef BLOCKPROPERTYENUM_H
+#define BLOCKPROPERTYENUM_H
 
 #include "gpstudio_lib_common.h"
 
@@ -7,11 +7,11 @@
 #include <QVariant>
 #include <QDomElement>
 
-class GPSTUDIO_LIB_EXPORT ParamEnum
+class GPSTUDIO_LIB_EXPORT BlockPropertyEnum
 {
 public:
-    ParamEnum();
-    ~ParamEnum();
+    BlockPropertyEnum();
+    ~BlockPropertyEnum();
 
     QString name() const;
     void setName(const QString &name);
@@ -23,7 +23,8 @@ public:
     void setDescription(const QString &description);
 
 public:
-    static ParamEnum *fromNodeGenerated(const QDomElement &domElement);
+    static BlockPropertyEnum *fromNodeGenerated(const QDomElement &domElement);
+    static QList<BlockPropertyEnum *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;
@@ -31,4 +32,4 @@ protected:
     QString _description;
 };
 
-#endif // PARAMENUM_H
+#endif // BLOCKPROPERTYENUM_H

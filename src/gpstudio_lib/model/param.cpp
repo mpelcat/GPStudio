@@ -10,7 +10,6 @@ Param::Param(Block *parent)
 Param::~Param()
 {
     for(int i=0; i<_parambitfields.size(); i++) delete _parambitfields[i];
-    for(int i=0; i<_paramenums.size(); i++) delete _paramenums[i];
 }
 
 QString Param::name() const
@@ -49,7 +48,7 @@ qint32 Param::absoluteAddr() const
     return _regAddr;
 }
 
-QVariant Param::value() const
+const QVariant &Param::value() const
 {
     return _value;
 }
@@ -69,7 +68,7 @@ void Param::setDefaultValue(const QVariant &defaultValue)
     _defaultValue = defaultValue;
 }
 
-QVariant Param::min() const
+const QVariant &Param::min() const
 {
     return _min;
 }
@@ -79,7 +78,7 @@ void Param::setMin(const QVariant &min)
     _min = min;
 }
 
-QVariant Param::max() const
+const QVariant &Param::max() const
 {
     return _max;
 }
@@ -99,6 +98,16 @@ void Param::setHard(bool hard)
     _hard = hard;
 }
 
+QString Param::propertyMap() const
+{
+    return _propertyMap;
+}
+
+void Param::setPropertyMap(const QString &propertyMap)
+{
+    _propertyMap = propertyMap;
+}
+
 QString Param::description() const
 {
     return _description;
@@ -109,39 +118,34 @@ void Param::setDescription(const QString &description)
     _description = description;
 }
 
+Block *Param::parent() const
+{
+    return _parent;
+}
+
+void Param::setParent(Block *parent)
+{
+    _parent = parent;
+}
+
 bool Param::isDynamicParam() const
 {
     return (!_hard && _regAddr>=0);
 }
 
-QList<ParamBitField *> &Param::parambitfields()
+QList<ParamBitField *> &Param::paramBitFields()
 {
     return _parambitfields;
 }
 
-const QList<ParamBitField *> &Param::parambitfields() const
+const QList<ParamBitField *> &Param::paramBitFields() const
 {
     return _parambitfields;
 }
 
-void Param::addParamBitField(ParamBitField *bitfield)
+void Param::addParamBitField(ParamBitField *bitField)
 {
-    _parambitfields.append(bitfield);
-}
-
-QList<ParamEnum *> &Param::paramenums()
-{
-    return _paramenums;
-}
-
-const QList<ParamEnum *> &Param::paramenums() const
-{
-    return _paramenums;
-}
-
-void Param::addParamEnum(ParamEnum *paramenum)
-{
-    _paramenums.append(paramenum);
+    _parambitfields.append(bitField);
 }
 
 Param *Param::fromNodeGenerated(const QDomElement &domElement)
@@ -167,19 +171,38 @@ Param *Param::fromNodeGenerated(const QDomElement &domElement)
     int max = domElement.attribute("max","0").toInt(&ok);
     if(ok) param->setMax(max); else param->setMax(0);
 
+    param->setPropertyMap(domElement.attribute("propertymap",""));
+
     param->setHard((domElement.attribute("hard","")=="1" || domElement.attribute("hard","")=="true"));
 
     param->setDescription(domElement.attribute("desc",""));
 
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="bitfields") param->_parambitfields.append(ParamBitField::listFromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+
     return param;
 }
-Block *Param::parent() const
-{
-    return _parent;
-}
 
-void Param::setParent(Block *parent)
+QList<Param *> Param::listFromNodeGenerated(const QDomElement &domElement)
 {
-    _parent = parent;
+    QDomNode n = domElement.firstChild();
+    QList<Param *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="param") list.append(Param::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
 }
-

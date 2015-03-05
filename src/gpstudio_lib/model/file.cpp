@@ -83,3 +83,19 @@ File *File::fromNodeGenerated(const QDomElement &domElement)
 
     return file;
 }
+
+QList<File *> File::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<File *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="file") list.append(File::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

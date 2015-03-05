@@ -40,6 +40,7 @@ public:
 
 public:
     static Clock *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Clock *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

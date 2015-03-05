@@ -64,19 +64,32 @@ Pin *Pin::fromNodeGenerated(const QDomElement &domElement)
     pin->setName(domElement.attribute("name","no_name"));
     pin->setMapTo(domElement.attribute("mapto",""));
 
-    // attributes
-    const QDomNodeList &attributesNodeList = domElement.elementsByTagName("attributes");
-    for(int i=0; i<attributesNodeList.length(); i++)
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
     {
-        const QDomElement &attributesNode = attributesNodeList.at(i).toElement();
-        const QDomNodeList &attributeNodeList = attributesNode.elementsByTagName("attribute");
-        for(int j=0; j<attributeNodeList.length(); j++)
+        QDomElement e = n.toElement();
+        if(!e.isNull())
         {
-            const QDomElement &attributeNode = attributeNodeList.at(j).toElement();
-            Attribute *attribute = Attribute::fromNodeGenerated(attributeNode);
-            pin->addAttribute(attribute);
+            if(e.tagName()=="attributes") pin->_attributes.append(Attribute::listFromNodeGenerated(e));
         }
+        n = n.nextSibling();
     }
 
     return pin;
+}
+
+QList<Pin *> Pin::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Pin *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="pin") list.append(Pin::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
 }

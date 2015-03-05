@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "camera.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -22,6 +24,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    Camera *_cam;
 };
 
 #endif // MAINWINDOW_H

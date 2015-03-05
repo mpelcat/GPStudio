@@ -77,3 +77,19 @@ Reset *Reset::fromNodeGenerated(const QDomElement &domElement)
 
     return reset;
 }
+
+QList<Reset *> Reset::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Reset *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="reset") list.append(Reset::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

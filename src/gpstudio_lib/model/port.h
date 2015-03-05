@@ -31,6 +31,7 @@ public:
 
 public:
     static Port *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Port *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

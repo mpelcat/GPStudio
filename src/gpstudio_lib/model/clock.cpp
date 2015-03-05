@@ -115,3 +115,19 @@ Clock *Clock::fromNodeGenerated(const QDomElement &domElement)
 
     return clock;
 }
+
+QList<Clock *> Clock::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Clock *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="clock") list.append(Clock::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

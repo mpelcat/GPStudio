@@ -14,6 +14,7 @@ Block::~Block()
 {
     for(int i=0; i<_files.size(); i++) delete _files[i];
     for(int i=0; i<_params.size(); i++) delete _params[i];
+    for(int i=0; i<_properties.size(); i++) delete _properties[i];
     for(int i=0; i<_flows.size(); i++) delete _flows[i];
     for(int i=0; i<_clocks.size(); i++) delete _clocks[i];
     for(int i=0; i<_ports.size(); i++) delete _ports[i];
@@ -114,6 +115,21 @@ const QList<Param *> &Block::params() const
 void Block::addParam(Param *param)
 {
     _params.append(param);
+}
+
+QList<BlockProperty *> &Block::properties()
+{
+    return _properties;
+}
+
+const QList<BlockProperty *> &Block::properties() const
+{
+    return _properties;
+}
+
+void Block::addProperty(BlockProperty *propertyEnums)
+{
+    _properties.append(propertyEnums);
 }
 
 QList<Flow *> &Block::flows()
@@ -229,113 +245,42 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement)
 
         block->setDescription(domElement.attribute("desc",""));
 
-        // files
-        const QDomNodeList &filesNodeList = domElement.elementsByTagName("files");
-        for(int i=0; i<filesNodeList.length(); i++)
+        QDomNode n = domElement.firstChild();
+        while(!n.isNull())
         {
-            const QDomElement &filesNode = filesNodeList.at(i).toElement();
-            const QDomNodeList &fileNodeList = filesNode.elementsByTagName("file");
-            for(int j=0; j<fileNodeList.length(); j++)
+            QDomElement e = n.toElement();
+            if(!e.isNull())
             {
-                const QDomElement &fileNode = fileNodeList.at(j).toElement();
-                File *file = File::fromNodeGenerated(fileNode);
-                file->setParent(block);
-                block->addFile(file);
+                if(e.tagName()=="files") block->_files.append(File::listFromNodeGenerated(e));
+                if(e.tagName()=="params") block->_params.append(Param::listFromNodeGenerated(e));
+                if(e.tagName()=="properties") block->_properties.append(BlockProperty::listFromNodeGenerated(e));
+                if(e.tagName()=="flows") block->_flows.append(Flow::listFromNodeGenerated(e));
+                if(e.tagName()=="clocks") block->_clocks.append(Clock::listFromNodeGenerated(e));
+                if(e.tagName()=="ports") block->_ports.append(Port::listFromNodeGenerated(e));
+                if(e.tagName()=="pins") block->_pins.append(Pin::listFromNodeGenerated(e));
+                if(e.tagName()=="resets") block->_resets.append(Reset::listFromNodeGenerated(e));
             }
-        }
-
-        // params
-        const QDomNodeList &paramsNodeList = domElement.elementsByTagName("params");
-        for(int i=0; i<paramsNodeList.length(); i++)
-        {
-            const QDomElement &paramsNode = paramsNodeList.at(i).toElement();
-            const QDomNodeList &paramNodeList = paramsNode.elementsByTagName("param");
-            for(int j=0; j<paramNodeList.length(); j++)
-            {
-                const QDomElement &paramNode = paramNodeList.at(j).toElement();
-                Param *param = Param::fromNodeGenerated(paramNode);
-                param->setParent(block);
-                block->addParam(param);
-            }
-        }
-
-        // flows
-        const QDomNodeList &flowsNodeList = domElement.elementsByTagName("flows");
-        for(int i=0; i<flowsNodeList.length(); i++)
-        {
-            const QDomElement &flowsNode = flowsNodeList.at(i).toElement();
-            const QDomNodeList &flowNodeList = flowsNode.elementsByTagName("flow");
-            for(int j=0; j<flowNodeList.length(); j++)
-            {
-                const QDomElement &flowNode = flowNodeList.at(j).toElement();
-                Flow *flow = Flow::fromNodeGenerated(flowNode);
-                flow->setParent(block);
-                block->addFlow(flow);
-            }
-        }
-
-        // clocks
-        const QDomNodeList &clocksNodeList = domElement.elementsByTagName("clocks");
-        for(int i=0; i<clocksNodeList.length(); i++)
-        {
-            const QDomElement &clocksNode = clocksNodeList.at(i).toElement();
-            const QDomNodeList &clockNodeList = clocksNode.elementsByTagName("clock");
-            for(int j=0; j<clockNodeList.length(); j++)
-            {
-                const QDomElement &clockNode = clockNodeList.at(j).toElement();
-                Clock *clock = Clock::fromNodeGenerated(clockNode);
-                clock->setParent(block);
-                block->addClock(clock);
-            }
-        }
-
-        // ports
-        const QDomNodeList &portsNodeList = domElement.elementsByTagName("ports");
-        for(int i=0; i<portsNodeList.length(); i++)
-        {
-            const QDomElement &portsNode = portsNodeList.at(i).toElement();
-            const QDomNodeList &portNodeList = portsNode.elementsByTagName("port");
-            for(int j=0; j<portNodeList.length(); j++)
-            {
-                const QDomElement &portNode = portNodeList.at(j).toElement();
-                Port *port = Port::fromNodeGenerated(portNode);
-                port->setParent(block);
-                block->addPort(port);
-            }
-        }
-
-        // pins
-        const QDomNodeList &pinsNodeList = domElement.elementsByTagName("pins");
-        for(int i=0; i<pinsNodeList.length(); i++)
-        {
-            const QDomElement &pinsNode = pinsNodeList.at(i).toElement();
-            const QDomNodeList &pinNodeList = pinsNode.elementsByTagName("pin");
-            for(int j=0; j<pinNodeList.length(); j++)
-            {
-                const QDomElement &pinNode = pinNodeList.at(j).toElement();
-                Pin *pin = Pin::fromNodeGenerated(pinNode);
-                pin->setParent(block);
-                block->addPin(pin);
-            }
-        }
-
-        // resets
-        const QDomNodeList &resetsNodeList = domElement.elementsByTagName("resets");
-        for(int i=0; i<resetsNodeList.length(); i++)
-        {
-            const QDomElement &resetsNode = resetsNodeList.at(i).toElement();
-            const QDomNodeList &resetNodeList = resetsNode.elementsByTagName("reset");
-            for(int j=0; j<resetNodeList.length(); j++)
-            {
-                const QDomElement &resetNode = resetNodeList.at(j).toElement();
-                Reset *reset = Reset::fromNodeGenerated(resetNode);
-                reset->setParent(block);
-                block->addReset(reset);
-            }
+            n = n.nextSibling();
         }
     }
 
     // block specific part TODO
 
     return block;
+}
+
+QList<Block *> Block::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Block *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="block") list.append(Block::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
 }

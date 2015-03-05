@@ -9,6 +9,7 @@
 
 #include "file.h"
 #include "param.h"
+#include "blockproperty.h"
 #include "flow.h"
 #include "clock.h"
 #include "port.h"
@@ -51,6 +52,10 @@ public:
     const QList<Param *> &params() const;
     void addParam(Param *param);
 
+    QList<BlockProperty *> &properties();
+    const QList<BlockProperty *> &properties() const;
+    void addProperty(BlockProperty *propertyEnum);
+
     QList<Flow *> &flows();
     const QList<Flow *> &flows() const;
     void addFlow(Flow *flow);
@@ -73,6 +78,7 @@ public:
 
 public:
     static Block *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Block *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;
@@ -84,6 +90,7 @@ protected:
 
     QList<File *> _files;
     QList<Param *> _params;
+    QList<BlockProperty *> _properties;
     QList<Flow *> _flows;
     QList<Clock *> _clocks;
     QList<Port *> _ports;

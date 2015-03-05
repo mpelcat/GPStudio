@@ -33,6 +33,7 @@ public:
 
 public:
     static Reset *fromNodeGenerated(const QDomElement &domElement);
+    static QList<Reset *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:
     QString _name;

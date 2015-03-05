@@ -76,3 +76,19 @@ Port *Port::fromNodeGenerated(const QDomElement &domElement)
 
     return port;
 }
+
+QList<Port *> Port::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<Port *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="port") list.append(Port::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

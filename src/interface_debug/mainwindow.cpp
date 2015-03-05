@@ -21,12 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->flowEnableBox, SIGNAL(toggled(bool)), this, SLOT(usbEnable()));
 
-    ui->caphinComboBox->addItem("MT9",(int)FI_CAPH_TOPLEVEL_IN_MT9_OUT);
+    /*ui->caphinComboBox->addItem("MT9",(int)FI_CAPH_TOPLEVEL_IN_MT9_OUT);
     ui->caphinComboBox->addItem("USB",(int)FI_CAPH_TOPLEVEL_IN_USB_OUT0);
 
     ui->usbinComboBox->addItem("MT9",(int)FI_USB_IN0_MT9_OUT);
     ui->usbinComboBox->addItem("USB",(int)FI_USB_IN0_USB_OUT0);
-    ui->usbinComboBox->addItem("CAPH",(int)FI_USB_IN0_CAPH_TOPLEVEL_OUT);
+    ui->usbinComboBox->addItem("CAPH",(int)FI_USB_IN0_CAPH_TOPLEVEL_OUT);*/
 
     connect(ui->widthMT9SpinBox, SIGNAL(valueChanged(int)), this, SLOT(send_mt9_config()));
     connect(ui->heightMT9SpinBox, SIGNAL(valueChanged(int)), this, SLOT(send_mt9_config()));
@@ -125,7 +125,8 @@ void MainWindow::usbEnable()
 {
     if(!_cam) return;
     //_cam->writeParam(MT9_FLOWLENGHT, 321*241);
-    _cam->writeParam(USB_ENABLE, (ui->flowEnableBox->isChecked()));
+    /*_cam->writeParam(USB_STATUS, (ui->flowEnableBox->isChecked()));
+    _cam->writeParam(USB_FLOW_IN0, (ui->flowEnableBox->isChecked()));*/
     //_cam->writeParam(MT9_ENABLE, (ui->flowEnableBox->isChecked()));
 }
 
@@ -133,7 +134,6 @@ void MainWindow::on_mt9EnableBox_clicked()
 {
     if(!_cam) return;
     send_mt9_config();
-    _cam->writeParam(USB_ENABLE, (ui->mt9EnableBox->isChecked()));
     _cam->writeParam(MT9_ENABLE, (ui->mt9EnableBox->isChecked()));
 }
 
@@ -150,7 +150,7 @@ void MainWindow::on_caphinComboBox_currentIndexChanged(int index)
 {
     int val=ui->caphinComboBox->itemData(index, Qt::UserRole).toInt();
     if(!_cam) return;
-     _cam->writeParam(FI_CAPH_TOPLEVEL_IN,val);
+     //_cam->writeParam(FI_CAPH_TOPLEVEL_IN,val);
 
 }
 
@@ -158,7 +158,7 @@ void MainWindow::on_usbinComboBox_currentIndexChanged(int index)
 {
     int val=ui->usbinComboBox->itemData(index,Qt::UserRole).toInt();
     if(!_cam) return;
-    _cam->writeParam(FI_USB_IN0,val);
+    //_cam->writeParam(FI_USB_IN0,val);
 }
 
 void MainWindow::on_sendMT9Config_clicked()
@@ -209,14 +209,14 @@ void MainWindow::send_mt9_config()
     int ystart = ui->ystartMT9SpinBox->value();
     int width = ui->widthMT9SpinBox->value();
     int height = ui->heightMT9SpinBox->value();
-    _cam->writeParam(MT9_FLOWLENGHT, (width)*(height));
+    /*_cam->writeParam(MT9_FLOWLENGHT, (width)*(height));
     _cam->writeParam(MT9_XSTART, xstart);
     _cam->writeParam(MT9_YSTART, ystart);
     _cam->writeParam(MT9_XEND, xstart+width-1);
     _cam->writeParam(MT9_YEND, ystart+height-1);
     _cam->writeParam(MT9_AUTOEXP, ui->aemt9_box->isChecked());
     _cam->writeParam(MT9_INTEGTIME, ui->integtimeMT9->value());
-    _cam->writeParam(MT9_LINELENGHT, ui->lineLenghtSpinBox->value());
+    _cam->writeParam(MT9_LINELENGHT, ui->lineLenghtSpinBox->value());*/
     _sizeViewer = QSize(width, height);
 }
 
@@ -233,9 +233,9 @@ void MainWindow::on_aemt9_box_toggled(bool checked)
 
 void MainWindow::fpsUpdate()
 {
-    const float line_length_pck = 1650; // R300C
+    const float line_length_pck = ui->lineLenghtSpinBox->value(); // R300C
     float clkIn = 48.0/50.0*9.0*1000000;
-    float pixClk = clkIn/2*20/6;
+    float pixClk = clkIn/2/6*0X2C;
     float rowTime = line_length_pck/pixClk;
     float rows_per_frame = 990; //300A
     float integration_time = ui->integtimeMT9->value();

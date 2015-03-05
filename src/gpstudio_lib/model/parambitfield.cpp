@@ -6,7 +6,6 @@ ParamBitField::ParamBitField()
 
 ParamBitField::~ParamBitField()
 {
-    for(int i=0; i<_paramenums.size(); i++) delete _paramenums[i];
 }
 
 QString ParamBitField::name() const
@@ -59,21 +58,6 @@ void ParamBitField::setDescription(const QString &description)
     _description = description;
 }
 
-QList<ParamEnum *> &ParamBitField::paramenums()
-{
-    return _paramenums;
-}
-
-const QList<ParamEnum *> &ParamBitField::paramenums() const
-{
-    return _paramenums;
-}
-
-void ParamBitField::addParamEnum(ParamEnum *paramenum)
-{
-    _paramenums.append(paramenum);
-}
-
 ParamBitField *ParamBitField::fromNodeGenerated(const QDomElement &domElement)
 {
     ParamBitField *paramBitField=new ParamBitField();
@@ -88,4 +72,20 @@ ParamBitField *ParamBitField::fromNodeGenerated(const QDomElement &domElement)
     paramBitField->setDescription(domElement.attribute("desc",""));
 
     return paramBitField;
+}
+
+QList<ParamBitField *> ParamBitField::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<ParamBitField *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="bitfield") list.append(ParamBitField::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
 }
