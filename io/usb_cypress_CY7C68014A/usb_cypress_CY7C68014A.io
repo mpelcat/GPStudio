@@ -9,6 +9,7 @@
 		<file name="fifo_com_rx.vhd" path="hdl/flow_in/src/fifo_com_rx.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="com_flow_fifo_rx.vhd" path="hdl/flow_in/src/com_flow_fifo_rx.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="read_flow.vhd" path="hdl/flow_in/src/read_flow.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="read_flow_nbits.vhd" path="hdl/flow_in/src/read_flow_nbits.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="flow_in.vhd" path="hdl/flow_in/src/flow_in.vhd" type="vhdl" group="hdl" desc=""/>
 		
 		<file name="fifo_com_tx.vhd" path="hdl/flow_out/src/fifo_com_tx.vhd" type="vhdl" group="hdl" desc=""/>
@@ -32,39 +33,53 @@
 		<flow name="in0" type="in" size="8" desc="flow 0 return for supervise results of process"/>
 		<flow name="out0" type="out" desc="flow 0 return for supervise results of process"/>
 		<flow name="in1" type="in" size="8" desc="flow 1 return for supervise results of process"/>
-		<flow name="out1" type="out" desc="flow 1 return for supervise results of process"/> 
+		<flow name="out1" type="out" size="8" desc="flow 1 return for supervise results of process"/> 
 		<flow name="in2" type="in" size="8" desc="flow 2 return for supervise results of process"/>
 		<flow name="in3" type="in" size="8" desc="flow 3 return for supervise results of process"/>
 
 	</flows>
 	<params>
+		<param name="IN0_SIZE" hard="1" value="8"/> 
+		<param name="IN1_SIZE" hard="1" value="8"/> 
+		<param name="IN2_SIZE" hard="1" value="8"/> 
+		<param name="IN3_SIZE" hard="1" value="8"/> 
+		<param name="OUT0_SIZE" hard="1" value="16"/> 
+		<param name="OUT1_SIZE" hard="1" value="8"/> 
+		
 		<param name="status" regaddr="0"> 
 			<bitfields> 
-				<bitfield name="enable" bitfield="0"/>
+				<bitfield name="enable" bitfield="0" propertymap="enable"/>
 			</bitfields>
 		</param>
 		<param name="flow_in0" regaddr="1">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow1"/>
 			</bitfields>
 		</param>
 		<param name="flow_in1" regaddr="2">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow2"/>
 			</bitfields>
 		</param>
 		<param name="flow_in2" regaddr="3">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow3"/>
 			</bitfields>
 		</param>
 		<param name="flow_in3" regaddr="4">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow4" />
 			</bitfields>
 		</param>
 	</params>
 
+	<properties>
+		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
+		<property name="enableflow1" caption="Enable Flow 1" type="bool" desc=""/>
+		<property name="enableflow2" caption="Enable Flow 2" type="bool" desc=""/>
+		<property name="enableflow3" caption="Enable Flow 3" type="bool" desc=""/>
+		<property name="enableflow4" caption="Enable Flow 4" type="bool" desc=""/>		
+	</properties>
 	<ports>
 		<port name="rst" type="in" size="1" desc=""/>
 		<port name="ifclk" type="in" size="1" desc=""/>

@@ -6,7 +6,13 @@ use work.ComFlow_pkg.all;
 
 entity usb_cypress_CY7C68014A is
 	generic(
-		MASTER_ADDR_WIDTH : integer
+		MASTER_ADDR_WIDTH : integer;
+		IN0_SIZE: integer :=8;
+		IN1_SIZE: integer :=8;
+		IN2_SIZE: integer :=8;
+		IN3_SIZE: integer :=8;
+		OUT0_SIZE: integer :=16;
+		OUT1_SIZE: integer :=16
 	);
 	port(
 		clk_proc : in std_logic;
@@ -27,30 +33,30 @@ entity usb_cypress_CY7C68014A is
 		addr : out std_logic_vector(1 downto 0);
 
 		------ in0 flow ------
-		in0_data : in std_logic_vector(7 downto 0);
+		in0_data : in std_logic_vector(IN0_SIZE-1 downto 0);
 		in0_fv : in std_logic;
 		in0_dv : in std_logic;
 		------ in1 flow ------
-		in1_data : in std_logic_vector(7 downto 0);
+		in1_data : in std_logic_vector(IN1_SIZE-1 downto 0);
 		in1_fv : in std_logic;
 		in1_dv : in std_logic;
 		------ in2 flow ------
-		in2_data : in std_logic_vector(7 downto 0);
+		in2_data : in std_logic_vector(IN2_SIZE-1 downto 0);
 		in2_fv : in std_logic;
 		in2_dv : in std_logic;
 		------ in3 flow ------
-		in3_data : in std_logic_vector(7 downto 0);
+		in3_data : in std_logic_vector(IN0_SIZE-1 downto 0);
 		in3_fv : in std_logic;
 		in3_dv : in std_logic;
 
 
 		------ out0 flow ------
-		out0_data : out std_logic_vector(15 downto 0);
+		out0_data : out std_logic_vector(OUT0_SIZE-1 downto 0);
 		out0_fv : out std_logic;
 		out0_dv : out std_logic;
 
 		------ out1 flow ------
-		out1_data : out std_logic_vector(15 downto 0);
+		out1_data : out std_logic_vector(OUT1_SIZE-1 downto 0);
 		out1_fv : out std_logic;
 		out1_dv : out std_logic;
 
@@ -151,11 +157,6 @@ begin
 reset <= rst;
 		
 USB_SM_INST : usb_sm
-    -- generic map (
-	  -- FLOW_STATUS_ID => 253,
-	  -- NB_FLOW => 2, -- NBFLOW is declared in ComFlow_pkg package
-	  -- IDFLOW =>  (1, 128)
-	  -- )
     port map (
 		usb_ifclk    => ifclk,
 		usb_flaga    => flaga,
@@ -246,7 +247,8 @@ USBFLOW_IN0: component flow_in
   generic map(
 	FIFO_DEPTH => 1024,
 	FLOW_ID => 1,
-	FLAGS_CODES => InitFlagCodes
+	FLAGS_CODES => InitFlagCodes,
+	OUTPUT_SIZE => OUT0_SIZE
     )
   port map(
 	data_wr_i =>flow_in1_wr_s,
@@ -269,7 +271,8 @@ USBFLOW_IN1: component flow_in
   generic map(
 	FIFO_DEPTH => 1024,
 	FLOW_ID => 2,
-	FLAGS_CODES => InitFlagCodes
+	FLAGS_CODES => InitFlagCodes,
+	OUTPUT_SIZE => OUT1_SIZE
     )
   port map(
 	data_wr_i =>flow_in1_wr_s,

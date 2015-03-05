@@ -39,7 +39,8 @@ package ComFlow_pkg is
 	  generic (
 		FIFO_DEPTH : POSITIVE := 1024;
 		FLOW_ID : integer := 1;
-		FLAGS_CODES : my_array_t := InitFlagCodes
+		FLAGS_CODES : my_array_t := InitFlagCodes;
+		OUTPUT_SIZE : integer:=16
 		);
 	  port(
 		data_wr_i : in std_logic;
@@ -47,7 +48,7 @@ package ComFlow_pkg is
 		pktend_i : in std_logic;
 		enable_i : in std_logic;
 
-		data_o : out std_logic_vector(15 downto 0);
+		data_o : out std_logic_vector(OUTPUT_SIZE-1 downto 0);
 		fv_o: out std_logic;
 		dv_o : out std_logic;
 		flow_full_o : out std_logic;
@@ -55,7 +56,7 @@ package ComFlow_pkg is
 		clk_in_i : in std_logic;
 		clk_out_i :in std_logic;
 		rst_n_i :in std_logic 
-		);
+    );
 	end component;
 	
 	component flow_out is

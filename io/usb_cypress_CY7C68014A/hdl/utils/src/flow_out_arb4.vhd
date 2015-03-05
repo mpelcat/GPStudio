@@ -65,6 +65,7 @@ type fsm_state_t is (Idle, Hold);
 signal fsm_state : fsm_state_t := Idle;
 signal rdreq_usb_r :std_logic:='0';
 signal priority : unsigned(1 downto 0):=(others=>'0');
+
 begin
 
 FSM:process (clk_i, rst_n_i) 
@@ -77,64 +78,54 @@ FSM:process (clk_i, rst_n_i)
 		rdreq_usb_r <= rdreq_usb_i;
 		case (fsm_state) is
 			when Idle =>  		
+			
+				if flow_rdy_0_i ='1' or flow_rdy_1_i ='1' or flow_rdy_2_i ='1' or flow_rdy_3_i ='1' then
+					fsm_state <= Hold;
+				end if;
+				
 				case priority is 
 					when "00" =>
 						if flow_rdy_0_i ='1' then
-							sel <= "00";		
-							fsm_state <= Hold;
+							sel <= "00";							
 						elsif flow_rdy_1_i ='1' then
 							sel <= "01";
-							fsm_state <= Hold;
 						elsif flow_rdy_2_i ='1' then
 							sel <= "10";
-							fsm_state <= Hold;
 						elsif flow_rdy_3_i ='1' then
 							sel <= "11";
-							fsm_state <= Hold;
 						end if;
-					when "01" =>
 
+					when "01" =>
 						if flow_rdy_1_i ='1' then
 							sel <= "01";
-							fsm_state <= Hold;
 						elsif flow_rdy_0_i ='1' then
 							sel <= "00";		
-							fsm_state <= Hold;
 						elsif flow_rdy_2_i ='1' then
 							sel <= "10";
-							fsm_state <= Hold;
 						elsif flow_rdy_3_i ='1' then
 							sel <= "11";
-							fsm_state <= Hold;
 						end if;
+						
 					when "10" =>
 						if flow_rdy_2_i ='1' then
 							sel <= "10";
-							fsm_state <= Hold;
 						elsif flow_rdy_0_i ='1' then
 							sel <= "00";		
-							fsm_state <= Hold;
 						elsif flow_rdy_1_i ='1' then
 							sel <= "01";
-							fsm_state <= Hold;
 						elsif flow_rdy_3_i ='1' then
 							sel <= "11";
-							fsm_state <= Hold;
 						end if;
 
 					when "11" =>
 						if flow_rdy_3_i ='1' then
 							sel <= "11";
-							fsm_state <= Hold;
 						elsif flow_rdy_0_i ='1' then
 							sel <= "00";		
-							fsm_state <= Hold;
 						elsif flow_rdy_1_i ='1' then
 							sel <= "01";
-							fsm_state <= Hold;
 						elsif flow_rdy_2_i ='1' then
 							sel <= "10";
-							fsm_state <= Hold;
 						end if;
 				end case;
 				

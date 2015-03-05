@@ -16,7 +16,8 @@ entity flow_in is
   generic (
 	FIFO_DEPTH : POSITIVE := 1024;
 	FLOW_ID : integer := 1;
-	FLAGS_CODES : my_array_t := InitFlagCodes
+	FLAGS_CODES : my_array_t := InitFlagCodes;
+	OUTPUT_SIZE : integer:=16
     );
   port(
 	data_wr_i : in std_logic;
@@ -24,7 +25,7 @@ entity flow_in is
 	pktend_i : in std_logic;
 	enable_i : in std_logic;
 
-	data_o : out std_logic_vector(15 downto 0);
+	data_o : out std_logic_vector(OUTPUT_SIZE-1 downto 0);
 	fv_o: out std_logic;
 	dv_o : out std_logic;
 	flow_full_o : out std_logic;
@@ -89,7 +90,7 @@ architecture rtl of flow_in is
 		flag_i :in  std_logic_vector(7 downto 0);
 		
 		read_data_o : out std_logic;
-		data_o : out std_logic_vector(15 downto 0);
+		data_o : out std_logic_vector(OUTPUT_SIZE-1 downto 0);
 		fv_o: out std_logic;
 		dv_o : out std_logic;
 
@@ -97,6 +98,29 @@ architecture rtl of flow_in is
 		rst_n_i :in std_logic
 		);
 	end component;
+	
+	component read_flow_nbits is
+	  generic (
+		FLAGS_CODES : my_array_t := InitFlagCodes;
+		DATA_SZ :integer
+		);
+	  port(
+	  
+	   data_i : in std_logic_vector(15 downto 0);
+	   flow_rdy_i: in std_logic;
+		f_empty_i : in std_logic;
+		enable_i : in std_logic;
+		flag_i :in  std_logic_vector(7 downto 0);
+		
+		read_data_o : out std_logic;
+		data_o : out std_logic_vector(DATA_SZ-1 downto 0);
+		fv_o: out std_logic;
+		dv_o : out std_logic;
+
+		clk_i :in std_logic;
+		rst_n_i :in std_logic
+    );
+end component;
 	
 ---------------------------------------------------------
 --	SIGNALS FOR INTERCONNECT
@@ -141,8 +165,9 @@ Sync_inst : component synchronizer
 	clk_o => clk_out_i
  );
  
- RD_process : component read_flow
-  generic map (FLAGS_CODES => FLAGS_CODES)
+ MODE16bits_GEN:if OUTPUT_SIZE = 16 generate
+ RD_process : component read_flow_nbits
+  generic map (FLAGS_CODES => FLAGS_CODES,DATA_SZ =>OUTPUT_SIZE)
   port map(
     data_i => data_o_s, 
 	flow_rdy_i=>flow_rdy_resync_s,
@@ -156,7 +181,26 @@ Sync_inst : component synchronizer
 	clk_i => clk_out_i,
 	rst_n_i => rst_n_i
     );
-		
+end generate MODE16bits_GEN;
+
+
+ MODEnbits_GEN:if OUTPUT_SIZE < 16 generate
+ RD_process : component read_flow_nbits
+  generic map (FLAGS_CODES => FLAGS_CODES,DATA_SZ => OUTPUT_SIZE)
+  port map(
+    data_i => data_o_s, 
+	flow_rdy_i=>flow_rdy_resync_s,
+	f_empty_i => empty_s,
+	enable_i => enable_i,
+	flag_i => flag_s,
+	read_data_o => read_data_s,
+	data_o => data_o,
+	fv_o => fv_o,
+	dv_o => dv_o,
+	clk_i => clk_out_i,
+	rst_n_i => rst_n_i
+    );
+end generate MODEnbits_GEN;
 
 end rtl;
 
