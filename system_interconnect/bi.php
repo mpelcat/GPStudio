@@ -119,14 +119,17 @@ class BusInterconnect extends Block
 								$content.="\n";
 							}
 						}
-						
-						/*foreach($param->paramenums as $paramenum)
-						{
-							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$paramenum->name),40)."\t".BusInterconnect::hex($paramenum->value,32);
-							if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
-							$content.="\n";
-						}*/
 						if(!empty($param->parambitfields)) $content.="\n";
+					}
+				}
+				
+				foreach($block->properties as $property)
+				{
+					foreach($property->propertyenums as $propertyenum)
+					{
+						$content.="	#define ".str_pad(strtoupper($property->name.'_'.$propertyenum->name),40)."\t".BusInterconnect::hex($propertyenum->value,32);
+						if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
+						$content.="\n";
 					}
 				}
 			}
