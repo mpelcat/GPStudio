@@ -139,14 +139,14 @@ class FlowInterconnect extends Block
 				$count=0;
 				foreach($ins as $in)
 				{
-					$content.='<'.$in->name.'> '.$in->name.' ('.$flow->size.')';
+					$content.='<'.$in->name.'> '.$in->name.' ('.$in->size.')';
 					if(++$count<count($ins)) $content.='|';
 				}
 				$content.='}|'.$block->name.'|{';
 				$count=0;
 				foreach($outs as $out)
 				{
-					$content.='<'.$out->name.'> '.$out->name.' ('.$flow->size.')';
+					$content.='<'.$out->name.'> '.$out->name.' ('.$out->size.')';
 					if(++$count<count($outs)) $content.='|';
 				}
 				
