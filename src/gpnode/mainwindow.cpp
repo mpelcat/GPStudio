@@ -5,55 +5,62 @@
 #include "model/node.h"
 
 #include <QDebug>
-
-#include <QScriptEngine>
+#include <QRegExp>
+#include <QAction>
 
 #include "propertywidgets/propertywidgets.h"
+
+#include "confignodedialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    createToolBarAndMenu();
 
-    _cam = NULL;
+    //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
+    _lib = new Lib("../../../GPStudio_lib_std");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete _cam;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::createToolBarAndMenu()
 {
-    //Lib lib("../../../GPStudio_lib_std/");
+    // ============= File =============
+    QMenu *fileMenu = ui->menuBar->addMenu("&File");
 
-    QString fileNameCam = "../../../std_project/node_generated.xml";
-#ifdef Q_WS_WIN
-    fileNameCam.prepend("../");
-#endif
-    _cam = new Camera(fileNameCam);
+    QAction *newDocAction = new QAction("&New",this);
+    newDocAction->setIcon(QIcon(":/icons/img/new.png"));
+    newDocAction->setShortcut(QKeySequence::New);
+    ui->mainToolBar->addAction(newDocAction);
+    fileMenu->addAction(newDocAction);
 
-    if(_cam)
-    {
-        foreach (Property *property, _cam->paramsBlocks()->subProperties().properties())
-        {
-            PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
-            ui->blocksParamsLayout->addWidget(propertyWidget);
-        }
-    }
+    QAction *openDocAction = new QAction("&Open",this);
+    openDocAction->setIcon(QIcon(":/icons/img/open.png"));
+    openDocAction->setShortcut(QKeySequence::Open);
+    ui->mainToolBar->addAction(openDocAction);
+    fileMenu->addAction(openDocAction);
+
+    QAction *saveDocAction = new QAction("&Save",this);
+    saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
+    saveDocAction->setShortcut(QKeySequence::Save);
+    ui->mainToolBar->addAction(saveDocAction);
+    fileMenu->addAction(saveDocAction);
+
+    fileMenu->addSeparator();
+
+    QAction *configNode = new QAction("&Configure node",this);
+    fileMenu->addAction(configNode);
+    connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::configNode()
 {
-    QScriptEngine e;
-    QScriptValue a(ui->lineEdit->text().toInt());
-
-    QObject *someObject = this;
-    QScriptValue objectValue = e.newQObject(someObject);
-    e.globalObject().setProperty("myObject", objectValue);
-    e.globalObject().setProperty("a", a);
-    const QScriptValue &result = e.evaluate(ui->lineEdit_2->text());
-    qDebug()<<result.toString()<<e.uncaughtExceptionBacktrace();
+    ConfigNodeDialog configNodeDialog(this);
+    configNodeDialog.setLib(_lib);
+    configNodeDialog.exec();
 }

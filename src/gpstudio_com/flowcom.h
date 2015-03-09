@@ -1,5 +1,5 @@
-#ifndef FLOW_H
-#define FLOW_H
+#ifndef FLOW_COM_H
+#define FLOW_COM_H
 
 #include <QQueue>
 #include <QMetaType>
@@ -7,11 +7,11 @@
 #include "gpstudio_com_common.h"
 #include "flowdata.h"
 
-class GPSTUDIO_COM_EXPORT Flow
+class GPSTUDIO_COM_EXPORT FlowCom
 {
 public:
-    Flow(const int idFlow=0);
-    Flow(const Flow &other);
+    FlowCom(const int idFlow=0);
+    FlowCom(const FlowCom &other);
 
     unsigned char idFlow() const;
     void setIdFlow(const unsigned char idFlow);
@@ -42,6 +42,6 @@ private:
     FlowData _current;
 };
 
-Q_DECLARE_METATYPE(Flow)
+Q_DECLARE_METATYPE(FlowCom)
 
-#endif // FLOW_H
+#endif // FLOW_COM_H

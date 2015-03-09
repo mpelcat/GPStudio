@@ -9,21 +9,21 @@ PropertiesMap::PropertiesMap()
 
 PropertiesMap::~PropertiesMap()
 {
-    QMapIterator<QString, Property *> i(_properties);
-    while (i.hasNext())
-    {
-        i.next();
-        delete i.value();
-    }
+    foreach (Property *property, _properties) delete property;
 }
 
 void PropertiesMap::addProperty(Property *property)
 {
-    _properties.insert(property->name(), property);
+    _propertiesMap.insert(property->name(), property);
+    _properties.append(property);
 }
 
-const QMap<QString, Property *> &PropertiesMap::properties() const
+const QList<Property *> &PropertiesMap::properties() const
 {
     return _properties;
 }
 
+const QMap<QString, Property *> &PropertiesMap::propertiesMap() const
+{
+    return _propertiesMap;
+}

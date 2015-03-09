@@ -11,19 +11,19 @@ SOURCES += cameraio.cpp \
     camerausb.cpp \
     camerainfo.cpp \
     cameraudp.cpp \
-    flow.cpp \
     flowdata.cpp \
-    cameracom.cpp
+    cameracom.cpp \
+    flowcom.cpp
 
 HEADERS  += \
     cameraio.h \
     camerausb.h \
     camerainfo.h \
     cameraudp.h \
-    flow.h \
     flowdata.h \
     gpstudio_com_common.h \
-    cameracom.h
+    cameracom.h \
+    flowcom.h
 
 win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
 

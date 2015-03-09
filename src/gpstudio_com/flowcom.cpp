@@ -1,39 +1,39 @@
-#include "flow.h"
+#include "flowcom.h"
 
 #include <QDebug>
 
-Flow::Flow(const int idFlow)
+FlowCom::FlowCom(const int idFlow)
     : _idFlow(idFlow)
 {
 }
 
-Flow::Flow(const Flow &other)
+FlowCom::FlowCom(const FlowCom &other)
     : _idFlow(other._idFlow), _numPacket(other._numPacket), _flowData(other._flowData)
 {
 }
 
-unsigned char Flow::idFlow() const
+unsigned char FlowCom::idFlow() const
 {
     return _idFlow;
 }
 
-void Flow::setIdFlow(const unsigned char idFlow)
+void FlowCom::setIdFlow(const unsigned char idFlow)
 {
     _idFlow = idFlow;
 }
 
-unsigned int Flow::numPacket() const
+unsigned int FlowCom::numPacket() const
 {
     return _numPacket;
 }
 
-bool Flow::readyToSend() const
+bool FlowCom::readyToSend() const
 {
     if(_flowData.size()!=0) return true;
     else return false;
 }
 
-QByteArray Flow::dataToSend(const int size)
+QByteArray FlowCom::dataToSend(const int size)
 {
     QByteArray dataToSend;
 
@@ -61,22 +61,22 @@ QByteArray Flow::dataToSend(const int size)
     return dataToSend;
 }
 
-void Flow::send(const FlowData &flowData)
+void FlowCom::send(const FlowData &flowData)
 {
     _flowData.append(flowData);
 }
 
-void Flow::send(const QImage &image)
+void FlowCom::send(const QImage &image)
 {
     send(FlowData(image));
 }
 
-void Flow::send(const QByteArray &data)
+void FlowCom::send(const QByteArray &data)
 {
     send(FlowData(data));
 }
 
-void Flow::appendData(QByteArray data)
+void FlowCom::appendData(QByteArray data)
 {
     /*if(_flowData.empty())
     {
@@ -89,27 +89,27 @@ void Flow::appendData(QByteArray data)
     _current.appendData(data.mid(4));
 }
 
-FlowData Flow::getData()
+FlowData FlowCom::getData()
 {
     if(_flowData.empty()) return FlowData();
 
     return _flowData.dequeue();
 }
 
-void Flow::validate()
+void FlowCom::validate()
 {
     _flowData.append(_current);
     _current.clear();
 }
 
-unsigned Flow::getSize() const
+unsigned FlowCom::getSize() const
 {
     /*if(_flowData.empty()) return 0;
     return _flowData.head().data().size();*/
     return _current.data().size();
 }
 
-void Flow::clear()
+void FlowCom::clear()
 {
     _flowData.clear();
 }

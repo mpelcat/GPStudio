@@ -18,16 +18,16 @@ CameraCom::CameraCom(const CameraInfo &cameraInfo)
     if(_cameraIO) _cameraIO->connect(cameraInfo);
 
     // TODO pass this part dynamic
-    _outputFlow.append(new Flow(15));   // set param
+    _outputFlow.append(new FlowCom(15));   // set param
     _paramFlow = _outputFlow[0];
 
-    _outputFlow.append(new Flow(1));
-    _outputFlow.append(new Flow(2));
+    _outputFlow.append(new FlowCom(1));
+    _outputFlow.append(new FlowCom(2));
 
-    _inputFlow.append(new Flow(0x80));
-    _inputFlow.append(new Flow(0x81));
-    _inputFlow.append(new Flow(0x82));
-    _inputFlow.append(new Flow(0x83));
+    _inputFlow.append(new FlowCom(0x80));
+    _inputFlow.append(new FlowCom(0x81));
+    _inputFlow.append(new FlowCom(0x82));
+    _inputFlow.append(new FlowCom(0x83));
 
     _start=true;
     start(QThread::NormalPriority);
@@ -189,22 +189,22 @@ void CameraCom::askStatus()
     _cameraIO->write(byte);
 }
 
-const QList<Flow*> &CameraCom::outputFlow() const
+const QList<FlowCom*> &CameraCom::outputFlow() const
 {
     return _outputFlow;
 }
 
-QList<Flow*> &CameraCom::outputFlow()
+QList<FlowCom*> &CameraCom::outputFlow()
 {
     return _outputFlow;
 }
 
-const QList<Flow*> &CameraCom::inputFlow() const
+const QList<FlowCom*> &CameraCom::inputFlow() const
 {
     return _inputFlow;
 }
 
-QList<Flow*> &CameraCom::inputFlow()
+QList<FlowCom*> &CameraCom::inputFlow()
 {
     return _inputFlow;
 }

@@ -8,18 +8,41 @@
 Lib::Lib(const QString &libPath)
 {
     QDir dir(QDir::currentPath()+'/'+libPath);
-    qDebug()<<dir.absolutePath();
+    _path = dir.absolutePath();
 
-    ProcessLibReader::readFromPath(dir.absolutePath()+"/process", *this);
+    reloadBoards();
 }
 
 Lib::~Lib()
 {
-
 }
 
-void Lib::addProcess(const ProcessLib &lib)
+void Lib::addProcess(ProcessLib *process)
 {
-    _process.append(lib);
+    _process.append(process);
 }
 
+void Lib::addBoard(BoardLib *board)
+{
+    _boards.append(board);
+}
+
+QList<BoardLib *> &Lib::boards()
+{
+    return _boards;
+}
+
+void Lib::reloadBoards()
+{
+    QDir dirPath(_path+"/board");
+
+    foreach (QFileInfo pathLib, dirPath.entryInfoList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot))
+    {
+        QDir dirIP(pathLib.absoluteFilePath());
+        foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.dev")))
+        {
+            BoardLib *board = BoardLib::readFromFile(ipInfo.absoluteFilePath());
+            addBoard(board);
+        }
+    }
+}

@@ -1,9 +1,9 @@
 #ifndef CAMTREEVIEW_H
 #define CAMTREEVIEW_H
 
-#include <QTreeView>
-
 #include "gpstudio_gui_common.h"
+
+#include <QTreeView>
 #include "caminfoitemmodel.h"
 
 class GPSTUDIO_GUI_EXPORT CamTreeView : public QTreeView

@@ -52,3 +52,8 @@ void PropertyGroupWidget::createWidget()
 void PropertyGroupWidget::destroyWidget()
 {
 }
+
+void PropertyGroupWidget::setValue(QVariant value)
+{
+
+}

@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef CAMERA_COM_H
+#define CAMERA_COM_H
 
 #include <QString>
 #include <QThread>
@@ -7,7 +7,7 @@
 
 #include "gpstudio_com_common.h"
 #include "cameraio.h"
-#include "flow.h"
+#include "flowcom.h"
 
 class GPSTUDIO_COM_EXPORT CameraCom : public QThread
 {
@@ -26,10 +26,10 @@ public:
 
     static QVector<CameraInfo> avaibleCams();
 
-    const QList<Flow*> &inputFlow() const;
-    QList<Flow*> &inputFlow();
-    const QList<Flow*> &outputFlow() const;
-    QList<Flow*> &outputFlow();
+    const QList<FlowCom*> &inputFlow() const;
+    QList<FlowCom*> &inputFlow();
+    const QList<FlowCom*> &outputFlow() const;
+    QList<FlowCom*> &outputFlow();
 
     CameraIO *cameraIO() const;
 
@@ -48,10 +48,10 @@ private:
     CameraIO *_cameraIO;
     bool _start;
 
-    QList<Flow*> _inputFlow;
-    QList<Flow*> _outputFlow;
+    QList<FlowCom*> _inputFlow;
+    QList<FlowCom*> _outputFlow;
 
-    Flow *_paramFlow;
+    FlowCom *_paramFlow;
 };
 
-#endif // CAMERA_H
+#endif // CAMERA_COM_H

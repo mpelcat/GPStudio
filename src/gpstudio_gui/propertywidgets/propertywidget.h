@@ -28,8 +28,10 @@ protected:
     virtual void destroyWidget() =0;
 
 signals:
+    void valueChanged(QVariant value);
 
 public slots:
+    virtual void setValue(QVariant value) =0;
 
 protected:
     Property *_linkedProperty;

@@ -5,8 +5,11 @@
 
 #include "propertywidget.h"
 
+class QCheckBox;
+
 class GPSTUDIO_GUI_EXPORT PropertyBoolWidget : public PropertyWidget
 {
+    Q_OBJECT
 public:
     PropertyBoolWidget();
     virtual ~PropertyBoolWidget();
@@ -16,6 +19,12 @@ public:
 protected:
     virtual void createWidget();
     virtual void destroyWidget();
+
+public slots:
+    virtual void setValue(QVariant value);
+
+private:
+    QCheckBox *_checkBox;
 };
 
 #endif // PROPERTYBOOLWIDGET_H

@@ -5,8 +5,11 @@
 
 #include "propertywidget.h"
 
+class QComboBox;
+
 class GPSTUDIO_GUI_EXPORT PropertyEnumWidget : public PropertyWidget
 {
+    Q_OBJECT
 public:
     PropertyEnumWidget();
     virtual ~PropertyEnumWidget();
@@ -16,6 +19,15 @@ public:
 protected:
     virtual void createWidget();
     virtual void destroyWidget();
+
+public slots:
+    virtual void setValue(QVariant value);
+
+protected slots:
+    virtual void wrapValue(int value);
+
+private:
+    QComboBox *_comboBox;
 };
 
 #endif // PROPERTYENUMWIDGET_H

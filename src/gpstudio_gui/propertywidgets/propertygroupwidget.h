@@ -7,6 +7,7 @@
 
 class GPSTUDIO_GUI_EXPORT PropertyGroupWidget : public PropertyWidget
 {
+    Q_OBJECT
 public:
     PropertyGroupWidget();
     virtual ~PropertyGroupWidget();
@@ -16,6 +17,9 @@ public:
 protected:
     virtual void createWidget();
     virtual void destroyWidget();
+
+public slots:
+    virtual void setValue(QVariant value);
 };
 
 #endif // PROPERTYGROUPWIDGET_H

@@ -5,14 +5,19 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QHash>
 
 #include "propertiesmap.h"
+
+#include "model/blockproperty.h"
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
     Q_OBJECT
 public:
     Property(QString name=QString());
+    Property(const Property &other);
+    Property &operator =(const Property &other);
     virtual ~Property();
 
     QString name() const;
@@ -31,21 +36,31 @@ public:
     QVariant max() const;
     void setMax(const QVariant &max);
 
+    const QHash<QString, QVariant> &enums() const;
+
     enum Type {Group, Int, SInt, Bool, Enum};
     Type type() const;
     void setType(const Type &type);
 
+    Property &operator[](const QString &name);
     const PropertiesMap &subProperties() const;
     void addSubProperty(Property *property);
 
     Property *parent() const;
     void setParent(Property *parent);
 
+    Property *path(QString path);
+
 signals:
-    void valueChanged(QVariant &value);
+    void valueChanged(QVariant value);
 
 public slots:
+    void setValue(bool value);
+    void setValue(int value);
     void setValue(const QVariant &value);
+
+public:
+    static Property *fromBlockProperty(BlockProperty *blockProperty);
 
 protected:
     QString _name;
@@ -56,6 +71,7 @@ protected:
     Type _type;
 
     Property *_parent;
+    QHash<QString, QVariant> _enums;
 
     PropertiesMap _subProperties;
 };

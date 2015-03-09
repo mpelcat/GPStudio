@@ -99,7 +99,16 @@ const QList<File *> &Block::files() const
 
 void Block::addFile(File *file)
 {
+    file->setParent(this);
     _files.append(file);
+}
+
+void Block::addFiles(const QList<File *> &files)
+{
+    foreach (File *file, files)
+    {
+        addFile(file);
+    }
 }
 
 QList<Param *> &Block::params()
@@ -114,7 +123,16 @@ const QList<Param *> &Block::params() const
 
 void Block::addParam(Param *param)
 {
+    param->setParent(this);
     _params.append(param);
+}
+
+void Block::addParams(const QList<Param *> &params)
+{
+    foreach (Param *param, params)
+    {
+        addParam(param);
+    }
 }
 
 QList<BlockProperty *> &Block::properties()
@@ -129,7 +147,16 @@ const QList<BlockProperty *> &Block::properties() const
 
 void Block::addProperty(BlockProperty *propertyEnums)
 {
+    propertyEnums->setParent(this);
     _properties.append(propertyEnums);
+}
+
+void Block::addProperties(const QList<BlockProperty *> &properties)
+{
+    foreach (BlockProperty *property, properties)
+    {
+        addProperty(property);
+    }
 }
 
 QList<Flow *> &Block::flows()
@@ -144,7 +171,16 @@ const QList<Flow *> &Block::flows() const
 
 void Block::addFlow(Flow *flow)
 {
+    flow->setParent(this);
     _flows.append(flow);
+}
+
+void Block::addFlows(const QList<Flow *> &flows)
+{
+    foreach (Flow *flow, flows)
+    {
+        addFlow(flow);
+    }
 }
 
 QList<Clock *> &Block::clocks()
@@ -159,7 +195,16 @@ const QList<Clock *> &Block::clocks() const
 
 void Block::addClock(Clock *clock)
 {
+    clock->setParent(this);
     _clocks.append(clock);
+}
+
+void Block::addClocks(const QList<Clock *> &clocks)
+{
+    foreach (Clock *clock, clocks)
+    {
+        addClock(clock);
+    }
 }
 
 QList<Port *> &Block::ports()
@@ -174,7 +219,16 @@ const QList<Port *> &Block::ports() const
 
 void Block::addPort(Port *port)
 {
+    port->setParent(this);
     _ports.append(port);
+}
+
+void Block::addPorts(const QList<Port *> &ports)
+{
+    foreach (Port *port, ports)
+    {
+        addPort(port);
+    }
 }
 
 QList<Pin *> &Block::pins()
@@ -189,7 +243,16 @@ const QList<Pin *> &Block::pins() const
 
 void Block::addPin(Pin *pin)
 {
+    pin->setParent(this);
     _pins.append(pin);
+}
+
+void Block::addPins(const QList<Pin *> &pins)
+{
+    foreach (Pin *pin, pins)
+    {
+        addPin(pin);
+    }
 }
 
 QList<Reset *> &Block::resets()
@@ -204,7 +267,16 @@ const QList<Reset *> &Block::resets() const
 
 void Block::addReset(Reset *reset)
 {
+    reset->setParent(this);
     _resets.append(reset);
+}
+
+void Block::addResets(const QList<Reset *> &resets)
+{
+    foreach (Reset *reset, resets)
+    {
+        addReset(reset);
+    }
 }
 
 Block *Block::fromNodeGenerated(const QDomElement &domElement)
@@ -251,14 +323,14 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement)
             QDomElement e = n.toElement();
             if(!e.isNull())
             {
-                if(e.tagName()=="files") block->_files.append(File::listFromNodeGenerated(e));
-                if(e.tagName()=="params") block->_params.append(Param::listFromNodeGenerated(e));
-                if(e.tagName()=="properties") block->_properties.append(BlockProperty::listFromNodeGenerated(e));
-                if(e.tagName()=="flows") block->_flows.append(Flow::listFromNodeGenerated(e));
-                if(e.tagName()=="clocks") block->_clocks.append(Clock::listFromNodeGenerated(e));
-                if(e.tagName()=="ports") block->_ports.append(Port::listFromNodeGenerated(e));
-                if(e.tagName()=="pins") block->_pins.append(Pin::listFromNodeGenerated(e));
-                if(e.tagName()=="resets") block->_resets.append(Reset::listFromNodeGenerated(e));
+                if(e.tagName()=="files") block->addFiles(File::listFromNodeGenerated(e));
+                if(e.tagName()=="params") block->addParams(Param::listFromNodeGenerated(e));
+                if(e.tagName()=="properties") block->addProperties(BlockProperty::listFromNodeGenerated(e));
+                if(e.tagName()=="flows") block->addFlows(Flow::listFromNodeGenerated(e));
+                if(e.tagName()=="clocks") block->addClocks(Clock::listFromNodeGenerated(e));
+                if(e.tagName()=="ports") block->addPorts(Port::listFromNodeGenerated(e));
+                if(e.tagName()=="pins") block->addPins(Pin::listFromNodeGenerated(e));
+                if(e.tagName()=="resets") block->addResets(Reset::listFromNodeGenerated(e));
             }
             n = n.nextSibling();
         }

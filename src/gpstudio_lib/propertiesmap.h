@@ -14,10 +14,12 @@ public:
     ~PropertiesMap();
 
     void addProperty(Property *property);
-    const QMap<QString, Property *> &properties() const;
+    const QList<Property *> &properties() const;
+    const QMap<QString, Property *> &propertiesMap() const;
 
 private:
-    QMap<QString, Property *> _properties;
+    QMap<QString, Property *> _propertiesMap;
+    QList<Property *> _properties;
 };
 
 #endif // PROPERTIESMAP_H

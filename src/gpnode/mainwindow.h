@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "camera.h"
+#include "lib_parser/lib.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,15 +17,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_pushButton_clicked();
+    void createToolBarAndMenu();
 
-    void on_pushButton_2_clicked();
+private slots:
+    void configNode();
 
 private:
     Ui::MainWindow *ui;
 
-    Camera *_cam;
+    Lib *_lib;
 };
 
 #endif // MAINWINDOW_H

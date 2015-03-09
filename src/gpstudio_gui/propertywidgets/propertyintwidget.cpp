@@ -21,15 +21,28 @@ void PropertyIntWidget::createWidget()
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0,0,0,0);
 
-    QSpinBox *spinBox = new QSpinBox();
-    spinBox->setMinimum(_linkedProperty->min().toInt());
-    spinBox->setMaximum(_linkedProperty->max().toInt());
+    _spinBox = new QSpinBox();
+    _spinBox->setMinimum(_linkedProperty->min().toInt());
+    _spinBox->setMaximum(_linkedProperty->max().toInt());
 
-    layout->addWidget(spinBox);
+    connect(_spinBox, SIGNAL(valueChanged(int)), _linkedProperty, SLOT(setValue(int)));
+    connect(_linkedProperty, SIGNAL(valueChanged(QVariant)), this, SLOT(setValue(QVariant)));
+
+    layout->addWidget(_spinBox);
 
     setLayout(layout);
 }
 
 void PropertyIntWidget::destroyWidget()
 {
+}
+
+void PropertyIntWidget::setValue(QVariant value)
+{
+    if(value.type()==QVariant::Int)
+    {
+        _spinBox->blockSignals(true);
+        _spinBox->setValue(value.toInt());
+        _spinBox->blockSignals(false);
+    }
 }

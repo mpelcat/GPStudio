@@ -1,4 +1,4 @@
-QT       += core gui xml
+QT       += core gui xml script
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -17,7 +17,9 @@ SOURCES += camtreeview.cpp \
     propertywidgets/propertyintwidget.cpp \
     propertywidgets/propertysintwidget.cpp \
     propertywidgets/propertyboolwidget.cpp \
-    propertywidgets/propertyenumwidget.cpp
+    propertywidgets/propertyenumwidget.cpp \
+    scriptwidget.cpp \
+    scriptlineedit.cpp
 
 HEADERS  += \
     camtreeview.h \
@@ -30,7 +32,9 @@ HEADERS  += \
     propertywidgets/propertyintwidget.h \
     propertywidgets/propertysintwidget.h \
     propertywidgets/propertyboolwidget.h \
-    propertywidgets/propertyenumwidget.h
+    propertywidgets/propertyenumwidget.h \
+    scriptwidget.h \
+    scriptlineedit.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)

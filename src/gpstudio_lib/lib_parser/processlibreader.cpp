@@ -15,7 +15,7 @@ void ProcessLibReader::readFromPath(const QString &path, Lib &lib)
         {
             ProcessLib process;
             readProcessLib(ipInfo.absoluteFilePath(), process);
-            lib.addProcess(process);
+            //lib.addProcess(process);
         }
     }
 }

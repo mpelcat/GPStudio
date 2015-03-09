@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui xml script
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,12 +10,19 @@ DESTDIR = ../interface_debug/
 
 QMAKE_CFLAGS_RELEASE = -O2
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    mainwindow.cpp \
+    connectnodedialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    mainwindow.h \
+    connectnodedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    mainwindow.ui \
+    connectnodedialog.ui
+
+RESOURCES += icons.qrc
 
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib
@@ -47,3 +54,6 @@ use_open_cv {
         LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc
     }
 }
+
+win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
+LIBS += -lusb-1.0

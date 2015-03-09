@@ -1,4 +1,4 @@
-QT       += core xml
+QT       += core xml script
 
 TARGET = gpstudio_lib
 TEMPLATE = lib
@@ -13,6 +13,7 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/processlib.h \
     lib_parser/processlibreader.h \
     lib_parser/lib.h \
+    lib_parser/boardlib.h \
     model/node.h \
     model/block.h \
     model/io.h \
@@ -30,14 +31,16 @@ HEADERS += gpstudio_lib_common.h \
     property.h \
     cameraregister.h \
     propertiesmap.h \
-    cameraproperty.h \
     model/blockpropertyenum.h \
-    model/blockproperty.h
+    model/blockproperty.h \
+    propertyclass.h \
+    cameraregistersmap.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
     lib_parser/processlibreader.cpp \
     lib_parser/lib.cpp \
+    lib_parser/boardlib.cpp \
     model/node.cpp \
     model/block.cpp \
     model/io.cpp \
@@ -55,6 +58,10 @@ SOURCES += \
     property.cpp \
     cameraregister.cpp \
     propertiesmap.cpp \
-    cameraproperty.cpp \
     model/blockpropertyenum.cpp \
-    model/blockproperty.cpp
+    model/blockproperty.cpp \
+    propertyclass.cpp \
+    cameraregistersmap.cpp
+
+# gpstudio_com lib
+INCLUDEPATH += $$PWD/../gpstudio_com
