@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
-    <height>194</height>
+    <width>500</width>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Choose node connexion...</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

@@ -29,6 +29,8 @@ void PropertyBoolWidget::createWidget()
     layout->addWidget(_checkBox);
 
     setLayout(layout);
+
+    setValue(_linkedProperty->value());
 }
 
 void PropertyBoolWidget::destroyWidget()

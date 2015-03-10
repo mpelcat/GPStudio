@@ -6,8 +6,7 @@
 #include <QObject>
 #include <QMap>
 
-#include <QScriptEngine>
-#include <QtScriptTools/QScriptEngineDebugger>
+#include "scriptengine.h"
 
 #include "model/node.h"
 #include "property.h"
@@ -28,17 +27,20 @@ public:
     Property *paramsBlocks() const;
     CameraRegistersMap &registers();
 
-    QScriptEngine *engine();
+    ScriptEngine *engine();
 
     bool isConnected() const;
     void connectCam(const CameraInfo &cameraInfo);
 
     CameraCom *com() const;
 
+    QByteArray registerData() const;
+
 signals:
+    void registerDataChanged();
 
 public slots:
-    uint evalPropertyMap(QString propertyMap, QString blockContext);
+    uint evalPropertyMap(const QString &propertyMap, const QString &blockContext);
     void setRegister(uint addr, uint value);
 
 private:
@@ -47,9 +49,11 @@ private:
     Property *_paramsBlocks;
     CameraRegistersMap _registers;
 
-    QScriptEngine _engine;
+    ScriptEngine _engine;
 
     CameraCom *_com;
+
+    QByteArray _registerData;
 };
 
 #endif // CAMERA_H

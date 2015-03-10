@@ -14,10 +14,8 @@
 #include "flowcom.h"
 #include "flowdata.h"
 
-#include "../../../std_project/params.h"
-
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+MainWindow::MainWindow(QStringList args) :
+    QMainWindow(0),
     ui(new Ui::MainWindow)
 {
     _cam = NULL;
@@ -26,6 +24,13 @@ MainWindow::MainWindow(QWidget *parent) :
     createToolBarAndMenu();
 
     if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
+    else
+    {
+        if(args.size()>1)
+        {
+            if(QFile::exists(args[1])) openNodeGeneratedFile(args[1]);
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +54,13 @@ bool MainWindow::event(QEvent *event)
     return QMainWindow::event(event);
 }
 
+void MainWindow::openNode()
+{
+    QString file = QFileDialog::getOpenFileName(this, "Open node", "", "*.xml");
+
+    if(!file.isEmpty()) openNodeGeneratedFile(file);
+}
+
 void MainWindow::createToolBarAndMenu()
 {
     // ============= File =============
@@ -59,6 +71,7 @@ void MainWindow::createToolBarAndMenu()
     openDocAction->setShortcut(QKeySequence::Open);
     ui->mainToolBar->addAction(openDocAction);
     nodeMenu->addAction(openDocAction);
+    connect(openDocAction, SIGNAL(triggered()), this, SLOT(openNode()));
 
     QAction *connectAction = new QAction("&Connect node",this);
     nodeMenu->addAction(connectAction);
@@ -67,6 +80,8 @@ void MainWindow::createToolBarAndMenu()
 
 void MainWindow::openNodeGeneratedFile(const QString fileName)
 {
+    if(_cam) delete _cam;
+
     _cam = new Camera(fileName);
     ui->scriptWidget->setEngine(_cam->engine());
 
@@ -78,6 +93,10 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
             ui->paramsLayout->addWidget(propertyWidget);
         }
     }
+
+    connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
+
+    connectCam();
 }
 
 void MainWindow::connectCam()
@@ -85,18 +104,27 @@ void MainWindow::connectCam()
     ConnectNodeDialog connectNodeDialog(this);
     connectNodeDialog.exec();
     _cam->connectCam(connectNodeDialog.cameraInfo());
-    connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
 
-    _cam->com()->writeParam(USB_STATUS, 1);
-    _cam->com()->writeParam(USB_FLOW_IN0, 1);
+    if(_cam->isConnected())
+    {
+        connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
+    }
 }
 
 void MainWindow::viewFlow(int flow)
 {
     if(flow==0)
     {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(320, 240, 16);
+        int w = (*_cam->paramsBlocks())["mt9"]["roi1"]["w"].value().toInt();
+        int h = (*_cam->paramsBlocks())["mt9"]["roi1"]["h"].value().toInt();
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 16);
         ui->graphicsView->showImage(*image);
         delete image;
     }
+}
+
+void MainWindow::setBiSpace()
+{
+    if(!_cam) return;
+    ui->biSpaceHex->setData(_cam->registerData());
 }

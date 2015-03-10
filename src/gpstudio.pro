@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
-SUBDIRS = gpstudio_lib \
-          gpstudio_com \
+SUBDIRS = gpstudio_com \
+          gpstudio_lib \
           gpstudio_gui \
           interface_debug \
           gpnode

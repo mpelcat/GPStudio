@@ -51,7 +51,6 @@ void Camera::setNode(Node *node)
             if(param->isDynamicParam())
             {
                 CameraRegister *cameraRegister = CameraRegister::fromParam(param);
-                //cameraRegister->dependsProperties();
                 _registers.addRegister(cameraRegister);
             }
         }
@@ -59,16 +58,17 @@ void Camera::setNode(Node *node)
 
     foreach (Property *property, _paramsBlocks->subProperties().properties())
     {
-        PropertyClass *prop=new PropertyClass(&_engine, property);
-        QScriptValue value = _engine.newObject(prop);
-        _engine.globalObject().setProperty(property->name(), value);
+        _engine.addProperty(property);
     }
 
+    int maxAddr=0;
     QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
     while (it.hasNext())
     {
         it.next();
         CameraRegister *cameraRegister = it.value();
+
+        if(cameraRegister->addr()>maxAddr) maxAddr=cameraRegister->addr();
 
         const QStringList &deps = cameraRegister->dependsProperties();
         foreach (QString propName, deps)
@@ -76,6 +76,18 @@ void Camera::setNode(Node *node)
             Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
             if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), cameraRegister, SLOT(eval()));
         }
+
+        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+        {
+            const QStringList &deps = bitField->dependsProperties();
+            foreach (QString propName, deps)
+            {
+                Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
+                if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), bitField, SLOT(eval()));
+            }
+        }
+
+        _registerData.fill(0,(maxAddr+1)*4);
 
         connect(cameraRegister, SIGNAL(registerChange(uint,uint)), this, SLOT(setRegister(uint,uint)));
     }
@@ -91,26 +103,38 @@ CameraRegistersMap &Camera::registers()
     return _registers;
 }
 
-uint Camera::evalPropertyMap(QString propertyMap, QString blockContext)
+ScriptEngine *Camera::engine()
 {
-    QScriptValue global;
-    if(!blockContext.isEmpty())
-    {
-        global = _engine.globalObject();
-        _engine.currentContext()->setThisObject(_engine.globalObject().property(blockContext));
-    }
+    return &_engine;
+}
 
-    const QScriptValue &result = _engine.evaluate(propertyMap);
-
-    if(!blockContext.isEmpty()) _engine.setGlobalObject(global);
-
-    return result.toUInt32();
+uint Camera::evalPropertyMap(const QString &propertyMap, const QString &blockContext)
+{
+    return _engine.evalPropertyMap(propertyMap, blockContext);
 }
 
 void Camera::setRegister(uint addr, uint value)
 {
     qDebug()<<"setReg"<<addr<<value;
-    if(_com) _com->writeParam(addr, value);
+    if(_com)
+    {
+        if(_com->isConnected())
+        {
+            _com->writeParam(addr, value);
+
+            _registerData[addr*4+0]=value<<24;
+            _registerData[addr*4+1]=value<<16;
+            _registerData[addr*4+2]=value<<8;
+            _registerData[addr*4+3]=value;
+
+            emit registerDataChanged();
+        }
+    }
+}
+
+QByteArray Camera::registerData() const
+{
+    return _registerData;
 }
 
 CameraCom *Camera::com() const
@@ -118,17 +142,25 @@ CameraCom *Camera::com() const
     return _com;
 }
 
-QScriptEngine *Camera::engine()
-{
-    return &_engine;
-}
-
 bool Camera::isConnected() const
 {
-    return _com != NULL;
+    if(_com)
+    {
+        return _com->isConnected();
+    }
+    else return false;
 }
 
 void Camera::connectCam(const CameraInfo &cameraInfo)
 {
     _com = new CameraCom(cameraInfo);
+
+    QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
+    while (it.hasNext())
+    {
+        it.next();
+        CameraRegister *cameraRegister = it.value();
+
+        cameraRegister->eval();
+    }
 }

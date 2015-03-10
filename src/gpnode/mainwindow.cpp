@@ -3,6 +3,7 @@
 
 #include "lib_parser/lib.h"
 #include "model/node.h"
+#include "model/parambitfield.h"
 
 #include <QDebug>
 #include <QRegExp>
@@ -21,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
     _lib = new Lib("../../../GPStudio_lib_std");
+
+    qDebug()<<ParamBitField::listBitFromBitField("5-0");
+    qDebug()<<ParamBitField::listBitFromBitField("5,0");
 }
 
 MainWindow::~MainWindow()

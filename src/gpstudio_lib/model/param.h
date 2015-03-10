@@ -57,6 +57,7 @@ public:
     QList<ParamBitField *> &paramBitFields();
     const QList<ParamBitField *> &paramBitFields() const;
     void addParamBitField(ParamBitField *bitField);
+    void addParamBitFields(const QList<ParamBitField *> &bitFields);
 
 public:
     static Param *fromNodeGenerated(const QDomElement &domElement);

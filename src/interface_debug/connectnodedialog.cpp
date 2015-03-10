@@ -22,6 +22,7 @@ void ConnectNodeDialog::on_refreshButton_clicked()
 void ConnectNodeDialog::selectCam(CameraInfo cameraInfo)
 {
     _cameraInfo = cameraInfo;
+    done(QDialog::Accepted);
 }
 
 CameraInfo ConnectNodeDialog::cameraInfo() const

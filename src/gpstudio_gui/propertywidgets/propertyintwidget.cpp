@@ -31,6 +31,8 @@ void PropertyIntWidget::createWidget()
     layout->addWidget(_spinBox);
 
     setLayout(layout);
+
+    setValue(_linkedProperty->value());
 }
 
 void PropertyIntWidget::destroyWidget()

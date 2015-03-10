@@ -5,6 +5,9 @@
 
 #include <QObject>
 #include <QString>
+#include <QList>
+
+#include "cameraregisterbitfield.h"
 
 class Param;
 class Camera;
@@ -34,6 +37,9 @@ public:
     Camera *camera() const;
     void setCamera(Camera *camera);
 
+    void addBitField(CameraRegisterBitField *bitField);
+    const QList<CameraRegisterBitField *> &bitFields() const;
+
 public:
     static CameraRegister *fromParam(const Param *param);
 
@@ -45,6 +51,8 @@ public slots:
     void setValue(const QVariant &value);
     void eval();
 
+    void setField(uint value, uint mask);
+
 private:
     QString _name;
     uint _addr;
@@ -53,6 +61,7 @@ private:
     QString _propertyMap;
 
     Camera *_camera;
+    QList<CameraRegisterBitField *> _bitFields;
 };
 
 #endif // CAMERAREGISTER_H

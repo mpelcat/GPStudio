@@ -34,7 +34,11 @@ HEADERS += gpstudio_lib_common.h \
     model/blockpropertyenum.h \
     model/blockproperty.h \
     propertyclass.h \
-    cameraregistersmap.h
+    cameraregistersmap.h \
+    cameraregisterbitfield.h \
+    lib_parser/iolib.h \
+    scriptengine.h \
+    propertyenum.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -61,7 +65,15 @@ SOURCES += \
     model/blockpropertyenum.cpp \
     model/blockproperty.cpp \
     propertyclass.cpp \
-    cameraregistersmap.cpp
+    cameraregistersmap.cpp \
+    cameraregisterbitfield.cpp \
+    lib_parser/iolib.cpp \
+    scriptengine.cpp \
+    propertyenum.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
+DEPENDPATH += $$PWD/../gpstudio_com
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/release/ -lgpstudio_com
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/debug/ -lgpstudio_com
+else:unix: LIBS += -L$$OUT_PWD/../gpstudio_com/ -lgpstudio_com

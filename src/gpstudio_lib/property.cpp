@@ -31,6 +31,7 @@ Property &Property::operator =(const Property &other)
 
 Property::~Property()
 {
+    foreach (PropertyEnum *propertyEnum, _enums) delete propertyEnum;
 }
 
 QString Property::name() const
@@ -60,18 +61,17 @@ QVariant &Property::value()
 
 void Property::setValue(bool value)
 {
-    _value = value;
-    emit valueChanged(QVariant(value));
+    setValue(QVariant(value));
 }
 
 void Property::setValue(int value)
 {
-    _value = value;
-    emit valueChanged(QVariant(value));
+    setValue(QVariant(value));
 }
 
 void Property::setValue(const QVariant &value)
 {
+    //qDebug()<<"Property::setValue"<<_name<<value<<_value;
     _value = value;
     emit valueChanged(QVariant(value));
 }
@@ -86,7 +86,12 @@ void Property::setMax(const QVariant &max)
     _max = max;
 }
 
-const QHash<QString, QVariant> &Property::enums() const
+const QMap<QString, PropertyEnum *> &Property::enumsMap() const
+{
+    return _enumsMap;
+}
+
+const QList<PropertyEnum *> &Property::enums() const
 {
     return _enums;
 }
@@ -159,7 +164,9 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
     {
         foreach (BlockPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
         {
-            paramprop->_enums.insert(blockPropertyEnum->name(), blockPropertyEnum->value());
+            PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->value());
+            paramprop->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
+            paramprop->_enums.append(propertyEnum);
         }
         paramprop->setType(Property::Enum);
     }

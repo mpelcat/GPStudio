@@ -12,6 +12,7 @@
 CameraRegister::CameraRegister(const QString &name, const uint &addr)
     : _name(name), _addr(addr)
 {
+    _value=0;
 }
 
 CameraRegister::~CameraRegister()
@@ -45,9 +46,11 @@ uint CameraRegister::value() const
 
 void CameraRegister::setValue(const uint &value)
 {
-    //qDebug()<<_blockName<<_name<<value;
-    _value = value;
-    emit registerChange(_addr, value);
+    if(_value!=value)
+    {
+        _value = value;
+        emit registerChange(_addr, value);
+    }
 }
 
 void CameraRegister::setValue(const QVariant &value)
@@ -61,6 +64,12 @@ void CameraRegister::eval()
     {
         setValue(_camera->evalPropertyMap(_propertyMap, _blockName));
     }
+}
+
+void CameraRegister::setField(uint value, uint mask)
+{
+    //qDebug()<<"setfiel"<<value<<mask<<(((~mask)&_value)|(mask&value));
+    setValue(((~mask)&_value)|(mask&value));
 }
 
 QString CameraRegister::blockName() const
@@ -106,10 +115,29 @@ void CameraRegister::setCamera(Camera *camera)
     _camera = camera;
 }
 
+void CameraRegister::addBitField(CameraRegisterBitField *bitField)
+{
+    bitField->setParent(this);
+    connect(bitField, SIGNAL(bitfieldChange(uint,uint)), this, SLOT(setField(uint,uint)));
+    _bitFields.append(bitField);
+}
+
+const QList<CameraRegisterBitField *> &CameraRegister::bitFields() const
+{
+    return _bitFields;
+}
+
 CameraRegister *CameraRegister::fromParam(const Param *param)
 {
     CameraRegister *cameraRegister = new CameraRegister(param->name(), param->absoluteAddr());
     cameraRegister->setPropertyMap(param->propertyMap());
     if(param->parent()) cameraRegister->setBlockName(param->parent()->name());
+
+    foreach(ParamBitField *bitField, param->paramBitFields())
+    {
+        CameraRegisterBitField *camBitField = CameraRegisterBitField::fromParamBitField(bitField);
+        cameraRegister->addBitField(camBitField);
+    }
+
     return cameraRegister;
 }

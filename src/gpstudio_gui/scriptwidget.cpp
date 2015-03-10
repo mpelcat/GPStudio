@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QBoxLayout>
 
+#include <QScriptEngine>
+
 ScriptWidget::ScriptWidget(QWidget *parent) :
     QWidget(parent)
 {
@@ -36,12 +38,12 @@ ScriptWidget::~ScriptWidget()
 {
 }
 
-QScriptEngine *ScriptWidget::engine() const
+ScriptEngine *ScriptWidget::engine() const
 {
     return _engine;
 }
 
-void ScriptWidget::setEngine(QScriptEngine *engine)
+void ScriptWidget::setEngine(ScriptEngine *engine)
 {
     _engine = engine;
 }
@@ -51,7 +53,7 @@ void ScriptWidget::exec()
     if(!_engine) return;
 
     _textEdit->appendPlainText("> "+_lineEdit->text());
-    QScriptValue value = _engine->evaluate(_lineEdit->text());
+    QScriptValue value = _engine->engine()->evaluate(_lineEdit->text());
     if(value.isError())
     {
         _textEdit->appendHtml("<pre style=\"color:red\">"+value.toString()/*.toHtmlEscaped()*/+"</pre>");

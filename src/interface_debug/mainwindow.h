@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QStringList args);
     ~MainWindow();
 
     void openNodeGeneratedFile(const QString fileName);
@@ -23,8 +23,12 @@ protected:
     bool event(QEvent *event);
 
 private slots:
+    void openNode();
+
     void connectCam();
     void viewFlow(int flow);
+
+    void setBiSpace();
 
 private:
     Ui::MainWindow *ui;

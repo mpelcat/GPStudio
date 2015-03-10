@@ -145,7 +145,16 @@ const QList<ParamBitField *> &Param::paramBitFields() const
 
 void Param::addParamBitField(ParamBitField *bitField)
 {
+    bitField->setParent(this);
     _parambitfields.append(bitField);
+}
+
+void Param::addParamBitFields(const QList<ParamBitField *> &bitFields)
+{
+    foreach (ParamBitField *bitField, bitFields)
+    {
+        addParamBitField(bitField);
+    }
 }
 
 Param *Param::fromNodeGenerated(const QDomElement &domElement)
@@ -183,7 +192,7 @@ Param *Param::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="bitfields") param->_parambitfields.append(ParamBitField::listFromNodeGenerated(e));
+            if(e.tagName()=="bitfields") param->addParamBitFields(ParamBitField::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

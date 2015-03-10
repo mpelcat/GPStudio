@@ -9,9 +9,8 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 
-#include <QScriptEngine>
-
 #include "scriptlineedit.h"
+#include "scriptengine.h"
 
 class GPSTUDIO_GUI_EXPORT ScriptWidget : public QWidget
 {
@@ -20,8 +19,8 @@ public:
     explicit ScriptWidget(QWidget *parent = 0);
     virtual ~ScriptWidget();
 
-    QScriptEngine *engine() const;
-    void setEngine(QScriptEngine *engine);
+    ScriptEngine *engine() const;
+    void setEngine(ScriptEngine *engine);
 
 signals:
 
@@ -33,7 +32,7 @@ private slots:
     void down();
 
 private:
-    QScriptEngine *_engine;
+    ScriptEngine *_engine;
     QPlainTextEdit *_textEdit;
     ScriptLineEdit *_lineEdit;
     QPushButton *_execButton;

@@ -1,5 +1,9 @@
 #include "parambitfield.h"
 
+#include <QRegExp>
+#include <QStringList>
+#include <QDebug>
+
 ParamBitField::ParamBitField()
 {
 }
@@ -58,6 +62,26 @@ void ParamBitField::setDescription(const QString &description)
     _description = description;
 }
 
+QString ParamBitField::propertyMap() const
+{
+    return _propertyMap;
+}
+
+void ParamBitField::setPropertyMap(const QString &propertyMap)
+{
+    _propertyMap = propertyMap;
+}
+
+Param *ParamBitField::parent() const
+{
+    return _parent;
+}
+
+void ParamBitField::setParent(Param *parent)
+{
+    _parent = parent;
+}
+
 ParamBitField *ParamBitField::fromNodeGenerated(const QDomElement &domElement)
 {
     ParamBitField *paramBitField=new ParamBitField();
@@ -69,6 +93,7 @@ ParamBitField *ParamBitField::fromNodeGenerated(const QDomElement &domElement)
     paramBitField->setValue(value);
 
     paramBitField->setBitfield(domElement.attribute("bitfield",""));
+    paramBitField->setPropertyMap(domElement.attribute("propertymap",""));
     paramBitField->setDescription(domElement.attribute("desc",""));
 
     return paramBitField;
@@ -88,4 +113,46 @@ QList<ParamBitField *> ParamBitField::listFromNodeGenerated(const QDomElement &d
         n = n.nextSibling();
     }
     return list;
+}
+
+QList<uint> ParamBitField::listBitFromBitField(const QString &bitField)
+{
+    QList<uint> bits;
+    if(bitField.isEmpty()) return QList<uint>();
+
+    QString lastSymbole = "";
+    int previous = -1;
+
+    QRegExp exp("([-,]?)([0-9]+)");
+    int pos=0;
+    while((pos = exp.indexIn(bitField, pos)) != -1)
+    {
+        QString symbole = exp.cap(1);
+        int bit = exp.cap(2).toUInt();
+
+        if(bit>31) return QList<uint>();
+
+        if(symbole==",")
+        {
+            if(lastSymbole=="," || lastSymbole=="")
+            {
+                if(previous==-1) return QList<uint>();
+                bits.append(previous);
+            }
+        }
+        else if(symbole=="-")
+        {
+            if(previous<bit) return QList<uint>();
+            for(int i=previous; i>=bit; i--) bits.append(i);
+        }
+
+        previous = bit;
+        lastSymbole = symbole;
+
+        pos += exp.matchedLength();
+    }
+
+    if((lastSymbole=="," || lastSymbole=="") and previous!=-1) bits.append(previous);
+
+    return bits;
 }

@@ -23,7 +23,7 @@ void ConfigNodeDialog::setLib(Lib *lib)
 
     foreach (BoardLib *board, _lib->boards())
     {
-        ui->boardComboBox->addItem(board->name());
+        ui->boardComboBox->addItem(board->name()+board->ios().first()->name());
     }
 }
 

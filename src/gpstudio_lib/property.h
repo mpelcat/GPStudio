@@ -5,9 +5,11 @@
 
 #include <QObject>
 #include <QVariant>
-#include <QHash>
+#include <QMap>
+#include <QList>
 
 #include "propertiesmap.h"
+#include "propertyenum.h"
 
 #include "model/blockproperty.h"
 
@@ -36,7 +38,8 @@ public:
     QVariant max() const;
     void setMax(const QVariant &max);
 
-    const QHash<QString, QVariant> &enums() const;
+    const QMap<QString, PropertyEnum *> &enumsMap() const;
+    const QList<PropertyEnum *> &enums() const;
 
     enum Type {Group, Int, SInt, Bool, Enum};
     Type type() const;
@@ -71,7 +74,8 @@ protected:
     Type _type;
 
     Property *_parent;
-    QHash<QString, QVariant> _enums;
+    QMap<QString, PropertyEnum* > _enumsMap;
+    QList<PropertyEnum*> _enums;
 
     PropertiesMap _subProperties;
 };

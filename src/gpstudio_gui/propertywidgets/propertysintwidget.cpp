@@ -39,6 +39,8 @@ void PropertySIntWidget::createWidget()
     layout->addWidget(_label);
 
     setLayout(layout);
+
+    setValue(_linkedProperty->value());
 }
 
 void PropertySIntWidget::destroyWidget()

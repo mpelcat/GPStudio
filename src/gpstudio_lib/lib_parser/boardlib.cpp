@@ -16,6 +16,26 @@ void BoardLib::setName(const QString &name)
     _name = name;
 }
 
+QList<IOLib *> &BoardLib::ios()
+{
+    return _ios;
+}
+
+const QList<IOLib *> &BoardLib::ios() const
+{
+    return _ios;
+}
+
+void BoardLib::addIO(IOLib *io)
+{
+    _ios.append(io);
+}
+
+void BoardLib::addIOs(const QList<IOLib *> &ios)
+{
+    _ios.append(ios);
+}
+
 BoardLib *BoardLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
@@ -37,6 +57,17 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
 {
     BoardLib *board=new BoardLib();
     board->setName(domElement.attribute("name","no_name"));
+
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="ios") board->addIOs(IOLib::listFromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
 
     return board;
 }
