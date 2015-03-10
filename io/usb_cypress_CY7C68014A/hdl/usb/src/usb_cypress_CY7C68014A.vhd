@@ -12,7 +12,11 @@ entity usb_cypress_CY7C68014A is
 		IN2_SIZE: integer :=8;
 		IN3_SIZE: integer :=8;
 		OUT0_SIZE: integer :=16;
-		OUT1_SIZE: integer :=16
+		OUT1_SIZE: integer :=16;
+		IN0_NBWORDS: integer := 32768;
+		IN1_NBWORDS: integer := 32768;
+		IN2_NBWORDS: integer := 1280; 
+		IN3_NBWORDS: integer := 1280
 	);
 	port(
 		clk_proc : in std_logic;
@@ -292,6 +296,8 @@ USBFLOW_IN1: component flow_in
 
 ------------------------------------------------------------
 --FLOW OUT 0
+
+FO0_label1 : if IN0_SIZE = 8 generate
 USB8TO16_FLOW0: component usb8to16bits 
 	port map( 
 		rst_n_i  		=> rst,
@@ -303,10 +309,16 @@ USB8TO16_FLOW0: component usb8to16bits
 		data_valid_o	=> in0_dv_s,
 		data_o			=> in0_data_s
 	);
+end generate FO0_label1;
+FO0_label2 : if IN0_SIZE = 16 generate
+		in0_fv_s <= in0_fv;
+		in0_dv_s <= in0_dv;
+		in0_data_s <= in0_data;
+end generate FO0_label2;
 
 USBFLOW_OUT0: component flow_out 
   generic map (
-	FIFO_DEPTH => 512*64,
+	FIFO_DEPTH => IN0_NBWORDS,
 	FLOW_ID => 128,
 	PACKET_SIZE => 256, -- header inclus
 	FLAGS_CODES => InitFlagCodes
@@ -329,6 +341,7 @@ USBFLOW_OUT0: component flow_out
 
 ------------------------------------------------------------
 --FLOW OUT 1
+FO1_label1 : if IN1_SIZE = 8 generate
 USB8TO16_FLOW1: component usb8to16bits 
 	port map( 
 		rst_n_i  		=> rst,
@@ -340,10 +353,16 @@ USB8TO16_FLOW1: component usb8to16bits
 		data_valid_o	=> in1_dv_s,
 		data_o			=> in1_data_s
 );
+end generate FO1_label1;
+FO1_label2 : if IN1_SIZE = 16 generate
+		in1_fv_s <= in1_fv;
+		in1_dv_s <= in1_dv;
+		in1_data_s <= in1_data;
+end generate FO1_label2;
 
 USBFLOW_OUT1: component flow_out 
   generic map (
-	FIFO_DEPTH => 512*64,
+	FIFO_DEPTH => IN1_NBWORDS,
 	FLOW_ID => 129,
 	PACKET_SIZE => 256, -- header inclus
 	FLAGS_CODES => InitFlagCodes
@@ -367,6 +386,7 @@ USBFLOW_OUT1: component flow_out
 
 ------------------------------------------------------------
 --FLOW OUT 2
+FO2_label1 : if IN2_SIZE = 8 generate
 USB8TO16_FLOW2: component usb8to16bits 
 	port map( 
 		rst_n_i  		=> rst,
@@ -378,10 +398,18 @@ USB8TO16_FLOW2: component usb8to16bits
 		data_valid_o	=> in2_dv_s,
 		data_o			=> in2_data_s
 );
+end generate FO2_label1;
+FO2_label2 : if IN2_SIZE = 16 generate
+		in2_fv_s <= frame_valid_o;
+		in2_dv_s <= data_valid_o;
+		in2_data_s <= data_o;	
+);
+end generate FO2_label2;
+
 
 USBFLOW_OUT2: component flow_out 
   generic map (
-	FIFO_DEPTH => 512*64,
+	FIFO_DEPTH => IN2_NBWORDS,
 	FLOW_ID => 130,
 	PACKET_SIZE => 256, -- header inclus
 	FLAGS_CODES => InitFlagCodes
@@ -402,6 +430,8 @@ USBFLOW_OUT2: component flow_out
 ------------------------------------------------------------
 ------------------------------------------------------------
 --FLOW OUT 3
+
+FO3_label1 : if IN3_SIZE = 8 generate
 USB8TO16_FLOW3: component usb8to16bits 
 	port map( 
 		rst_n_i  		=> rst,
@@ -413,10 +443,20 @@ USB8TO16_FLOW3: component usb8to16bits
 		data_valid_o	=> in3_dv_s,
 		data_o			=> in3_data_s
 );
+end generate FO3_label1;
+
+FO3_label2 : if IN3_SIZE = 16 generate
+		in2_fv_s <= frame_valid_o;
+		in2_dv_s <= data_valid_o;
+		in2_data_s <= data_o;	
+);
+end generate FO3_label2;
+
+
 
 USBFLOW_OUT3: component flow_out 
   generic map (
-	FIFO_DEPTH => 512*64,
+	FIFO_DEPTH => IN3_NBWORDS,
 	FLOW_ID => 131,
 	PACKET_SIZE => 256, -- header inclus
 	FLAGS_CODES => InitFlagCodes
