@@ -68,7 +68,7 @@ class ParamBitfield
 			if(!empty($bitfield) or $bitfield=="0")
 			{
 				$this->bitfield		= $bitfield;
-				preg_match_all("|([-:]?)([0-9])|", $bitfield, $out, PREG_SET_ORDER);
+				preg_match_all("|([-,]?)([0-9])|", $bitfield, $out, PREG_SET_ORDER);
 				
 				$prev=-1;
 				$lastsymbole='';

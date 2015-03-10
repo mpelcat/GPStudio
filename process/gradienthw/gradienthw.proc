@@ -12,19 +12,24 @@
 	<params>
 		<param name="scr" type="int" regaddr="0" default="0" desc="Status Control Register" hard="false">
 			<bitfields>
-				<bitfield name="enable" type="int" bitfield="0" default="0" desc="On/Off bit"/>
-				<bitfield name="scr" type="int" bitfield="1" default="0" desc="Status Control Register"/>
+				<bitfield name="enable" type="int" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
+				<bitfield name="width" type="int" bitfield="10-3" default="0" propertymap="width.value" desc="Input image width"/>
 			</bitfields>
 		</param>
 		
-		<param name="threshold" type="int" regaddr="1" default="50" desc="Threshold" hard="false"/>
+		<param name="threshold" type="int" regaddr="1" default="50" desc="Threshold" propertymap="threshold.value" hard="false"/>
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
-		<property name="mode" caption="mode" desc="Histogram mode setup">
+		<property name="width" caption="width" desc="Input image width">
           <enums>
-            <enum name="luminance" value="0" desc="Histogram of luminance"/>
-            <enum name="HOG" value="1" desc="Output for HOG"/>
+            <enum name="64" value="0"/>
+            <enum name="128" value="1"/>
+            <enum name="192" value="2"/>
+            <enum name="256" value="3"/>
+            <enum name="320" value="4"/>
+            <enum name="640" value="5"/>
+            <enum name="960" value="6"/>
           </enums>
         </property>
 		<property name="threshold" caption="threshold" type="sint" desc="Gradiant threshold" min="0" max="255"/>

@@ -28,14 +28,14 @@
 		<port name="sclk_o" type="out" size="1" desc=""/>
 	</ports>
 	<params>
-		<param name="ENABLE" regaddr="0" propertymap="enable"/>
-		<param name="FLOWLENGHT" regaddr="1" propertymap="roi1.w*roi1.h"/>
-		<param name="XSTART" regaddr="2" propertymap="roi1.x"/>
-		<param name="YSTART" regaddr="3" propertymap="roi1.y"/>
-		<param name="XEND" regaddr="4" propertymap="roi1.x+roi1.w"/>
-		<param name="YEND" regaddr="5" propertymap="roi1.y+roi1.h"/>
-		<param name="AUTOEXP" regaddr="6" propertymap="auto_exposure"/>
-		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime"/>
+		<param name="ENABLE" regaddr="0" propertymap="enable.value"/>
+		<param name="FLOWLENGHT" regaddr="1" propertymap="roi1.w.value*roi1.h.value"/>
+		<param name="XSTART" regaddr="2" propertymap="roi1.x.value"/>
+		<param name="YSTART" regaddr="3" propertymap="roi1.y.value"/>
+		<param name="XEND" regaddr="4" propertymap="roi1.x.value+roi1.w.value-1"/>
+		<param name="YEND" regaddr="5" propertymap="roi1.y.value+roi1.h.value-1"/>
+		<param name="AUTOEXP" regaddr="6" propertymap="auto_exposure.value"/>
+		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime.value"/>
 		<param name="LINELENGHT" regaddr="8"/>
 		
 		<param name="DATA_WIDTH" hard="1" value="32"/>
@@ -43,16 +43,16 @@
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable image sensor"/>
-		<property name="roi1" type="roi">
+		<property name="roi1" type="group">
 			<properties>
-				<property name="x" type="roi.x" assert="" min="0" max="1280"/>
-				<property name="y" type="roi.y" assert="" min="0" max="960"/>
-				<property name="w" type="roi.w" assert="roi.w%2==0" min="2" max="1280-roi.x"/>
-				<property name="h" type="roi.h" assert="roi.h%2==0" min="2" max="960-roi.y"/>
+				<property name="x" value="0" type="int" assert="" min="0" max="1280"/>
+				<property name="y" value="0" type="int" assert="" min="0" max="960"/>
+				<property name="w" value="320" type="int" assert="roi.w%2==0" min="2" max="1280"/>
+				<property name="h" value="240" type="int" assert="roi.h%2==0" min="2" max="960"/>
 			</properties>
 		</property>
 		<property name="auto_exposure" caption="auto exposure" type="bool"/>
-		<property name="exposuretime" caption="exposure time" type="sint" min="0" max="4500"/>
+		<property name="exposuretime" value="200" caption="exposure time" type="sint" min="0" max="4500"/>
 	</properties>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>

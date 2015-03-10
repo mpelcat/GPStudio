@@ -52,27 +52,27 @@
 		
 		<param name="status" regaddr="0"> 
 			<bitfields> 
-				<bitfield name="enable" bitfield="0" propertymap="enable"/>
+				<bitfield name="enable" bitfield="0" propertymap="enable.value"/>
 			</bitfields>
 		</param>
 		<param name="flow_in0" regaddr="1">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0" propertymap="enableflow1"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow1.value"/>
 			</bitfields>
 		</param>
 		<param name="flow_in1" regaddr="2">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0" propertymap="enableflow2"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow2.value"/>
 			</bitfields>
 		</param>
 		<param name="flow_in2" regaddr="3">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0" propertymap="enableflow3"/>
+				<bitfield name="enable" bitfield="0" propertymap="enableflow3.value"/>
 			</bitfields>
 		</param>
 		<param name="flow_in3" regaddr="4">
 			<bitfields> 
-				<bitfield name="enable" bitfield="0" propertymap="enableflow4" />
+				<bitfield name="enable" bitfield="0" propertymap="enableflow4.value" />
 			</bitfields>
 		</param>
 	</params>

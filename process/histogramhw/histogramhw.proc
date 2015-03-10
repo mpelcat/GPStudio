@@ -17,14 +17,14 @@
 		
 		<param name="scr" regaddr="0" default="0" desc="Status Control Register">
 			<bitfields>
-				<bitfield name="enable" bitfield="0" default="0" desc="On/Off bit"/>
-				<bitfield name="mode" bitfield="1" default="0" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
+				<bitfield name="enable" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
+				<bitfield name="mode" bitfield="1" default="0" propertymap="mode.value" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
 			</bitfields>
 		</param>
 		<param name="cellcontrol" regaddr="1" default="1799" desc="Cell size control">
 			<bitfields>
-				<bitfield name="cellwidth" bitfield="9-0" default="7" desc="Histogram cell width minus one"/>
-				<bitfield name="cellheight" bitfield="25-16" default="7" desc="Histogram cell height minus one"/>
+				<bitfield name="cellwidth" bitfield="9-0" default="7" propertymap="cellwidth.value" desc="Histogram cell width minus one"/>
+				<bitfield name="cellheight" bitfield="25-16" default="7" propertymap="cellheight.value" desc="Histogram cell height minus one"/>
 			</bitfields>
 		</param>
 		<param name="imagecontrol" regaddr="2" default="39" desc="Image size divided by cell width"/>
@@ -38,8 +38,8 @@
             <enum name="HOG" value="1" desc="Output for HOG"/>
           </enums>
         </property>
-		<property name="cellwidth" caption="cell width" type="int" desc="Width of cell"/>
-		<property name="cellheight" caption="cell height" type="int" desc="Height of cell"/>
+		<property name="cellwidth" caption="cell width" type="int" min="0" max="1023" desc="Width of cell"/>
+		<property name="cellheight" caption="cell height" type="int" min="0" max="1023" desc="Height of cell"/>
 	</properties>
 	<files>
 		<file name="histogramhw.v" path="hdl/histogramhw.v" type="verilog" group="hdl" desc=""/>

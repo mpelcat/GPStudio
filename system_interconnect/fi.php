@@ -78,15 +78,9 @@ class FlowInterconnect extends Block
 				$param->desc = 'Mux control for '.$in_connect.' flow input';
 				
 				$parambitfield = new ParamBitfield();
-				$parambitfield->name = 'Muxdir';
+				$parambitfield->name = 'muxdir';
 				$parambitfield->default = 0;
-				
-				$bitcountenum = ceil(log(count($parambitfield->paramenums),2));
-				for($i=0; $i<$bitcountenum; $i++) array_push($parambitfield->bitfieldlist, $i);
-				if($bitcountenum>1) $parambitfield->bitfield = ($bitcountenum-1)."-0";
-				else $parambitfield->bitfield = "0";
-				
-				array_push($param->parambitfields, $parambitfield);
+				$parambitfield->propertymap = $in_connect.".value";
 				
 				array_push($this->params, $param);
 				
@@ -106,6 +100,13 @@ class FlowInterconnect extends Block
 						array_push($property->propertyenums, $propertyenum);
 					}
 				}
+				
+				$bitcountenum = ceil(log(count($property->propertyenums),2));
+				for($i=0; $i<$bitcountenum; $i++) array_push($parambitfield->bitfieldlist, $i);
+				if($bitcountenum>1) $parambitfield->bitfield = ($bitcountenum-1)."-0";
+				else $parambitfield->bitfield = "0";
+				
+				array_push($param->parambitfields, $parambitfield);
 				
 				array_push($this->properties, $property);
 				
