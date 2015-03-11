@@ -49,7 +49,7 @@ entity usb_cypress_CY7C68014A is
 		in2_fv : in std_logic;
 		in2_dv : in std_logic;
 		------ in3 flow ------
-		in3_data : in std_logic_vector(IN0_SIZE-1 downto 0);
+		in3_data : in std_logic_vector(IN3_SIZE-1 downto 0);
 		in3_fv : in std_logic;
 		in3_dv : in std_logic;
 
@@ -400,10 +400,9 @@ USB8TO16_FLOW2: component usb8to16bits
 );
 end generate FO2_label1;
 FO2_label2 : if IN2_SIZE = 16 generate
-		in2_fv_s <= frame_valid_o;
-		in2_dv_s <= data_valid_o;
-		in2_data_s <= data_o;	
-);
+		in2_fv_s <= in2_fv;
+		in2_dv_s <= in2_dv;
+		in2_data_s <= in2_data;	
 end generate FO2_label2;
 
 
@@ -446,10 +445,9 @@ USB8TO16_FLOW3: component usb8to16bits
 end generate FO3_label1;
 
 FO3_label2 : if IN3_SIZE = 16 generate
-		in2_fv_s <= frame_valid_o;
-		in2_dv_s <= data_valid_o;
-		in2_data_s <= data_o;	
-);
+		in3_fv_s <= in3_fv;
+		in3_dv_s <= in3_dv;
+		in3_data_s <= in3_data;	
 end generate FO3_label2;
 
 
