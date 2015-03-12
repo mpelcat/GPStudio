@@ -144,6 +144,7 @@ wire loadcompleted_cellB;
 /*! \{ Output flow valid fsm */
 reg [1:0] hist_fv_fsm, hist_fv_fsm_new;
 reg hist_fv_reg;
+reg fv_int_reg;
 
 localparam WAIT_A_LOADCOMPL  = 2'd0;
 localparam WAIT_A_STORECOMPL = 2'd1;
@@ -286,9 +287,15 @@ always@(*)
 
 always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
+		fv_int_reg <= 0;
+	else 
+		fv_int_reg <= fv_int;
+		
+always@(posedge clk_proc or negedge reset_n)
+	if (reset_n == 0)
 		hist_fv_reg <= 0;
 	else 
-		hist_fv_reg <= fv_int || (hist_fv_fsm == WAIT_A_STORECOMPL) || (hist_fv_fsm == WAIT_B_STORECOMPL);
+		hist_fv_reg <= fv_int_reg || (hist_fv_fsm == WAIT_A_STORECOMPL) || (hist_fv_fsm == WAIT_B_STORECOMPL);		
 		
 /* ###################	*/	
 

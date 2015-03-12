@@ -7,7 +7,7 @@
 	<flows>
 		<flow name="inc" type="in" desc="increment value"/>
 		<flow name="index" type="in" desc="memory addressing index"/>
-		<flow name="hist" type="out" size="8" desc="histogram output"/>
+		<flow name="hist" type="out" size="16" desc="histogram output"/>
 	</flows>	
 	<params>
 		<param name="HISTMEM_WORD" type="int" value="2048" desc="HISTMEM_WORD: M9K memory footprint" hard="true"/>
