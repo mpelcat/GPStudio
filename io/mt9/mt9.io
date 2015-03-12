@@ -36,7 +36,7 @@
 		<param name="YEND" regaddr="5" propertymap="roi1.y.value+roi1.h.value-1"/>
 		<param name="AUTOEXP" regaddr="6" propertymap="auto_exposure.value"/>
 		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime.value"/>
-		<param name="LINELENGHT" regaddr="8"/>
+		<param name="LINELENGHT" regaddr="8" propertymap="linelenght.value"/>
 		
 		<param name="DATA_WIDTH" hard="1" value="32"/>
 		<param name="PIXEL_WIDTH" hard="1" value="8"/>
@@ -47,12 +47,13 @@
 			<properties>
 				<property name="x" value="0" type="int" assert="" min="0" max="1280"/>
 				<property name="y" value="0" type="int" assert="" min="0" max="960"/>
-				<property name="w" value="320" type="int" assert="roi.w%2==0" min="2" max="1280"/>
-				<property name="h" value="240" type="int" assert="roi.h%2==0" min="2" max="960"/>
+				<property name="w" value="320" type="int" step="2" assert="roi.w%2==0" min="2" max="1280"/>
+				<property name="h" value="240" type="int" step="2" assert="roi.h%2==0" min="2" max="960"/>
 			</properties>
 		</property>
 		<property name="auto_exposure" caption="auto exposure" type="bool"/>
-		<property name="exposuretime" value="200" caption="exposure time" type="sint" min="0" max="4500"/>
+		<property name="exposuretime" value="1000" caption="exposure time" type="sint" min="0" max="4500"/>
+		<property name="linelenght" value="1650" type="int" assert="" min="1650" max="4500"/>
 	</properties>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>

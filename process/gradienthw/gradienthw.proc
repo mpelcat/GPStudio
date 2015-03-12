@@ -32,7 +32,7 @@
             <enum name="960" value="6"/>
           </enums>
         </property>
-		<property name="threshold" caption="threshold" type="sint" desc="Gradiant threshold" min="0" max="255"/>
+		<property name="threshold" caption="threshold" type="sint" value="2000" desc="Gradiant threshold" min="0" max="65000"/>
 	</properties>
 	<files>
 		<file name="gradienthw.v" path="hdl/gradienthw.v" type="verilog" group="hdl" desc=""/>

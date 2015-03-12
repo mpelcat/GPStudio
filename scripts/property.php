@@ -41,6 +41,12 @@ class Property
 	public $max;
 
 	/**
+	* Step value of the property
+	* @var string $step
+	*/
+	public $step;
+
+	/**
 	* Check if the property is good (optional)
 	* @var string $assert
 	*/
@@ -80,6 +86,7 @@ class Property
 		$this->value		= (string)$xml['value'];
 		$this->min			= (string)$xml['min'];
 		$this->max			= (string)$xml['max'];
+		$this->step			= (string)$xml['step'];
 		$this->assert		= (string)$xml['assert'];
 		$this->desc			= (string)$xml['desc'];
 		
@@ -134,6 +141,11 @@ class Property
 		// max
 		$att = $xml->createAttribute('max');
 		$att->value = $this->max;
+		$xml_element->appendChild($att);
+		
+		// step
+		$att = $xml->createAttribute('step');
+		$att->value = $this->step;
 		$xml_element->appendChild($att);
 		
 		// assert

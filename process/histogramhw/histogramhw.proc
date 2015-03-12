@@ -7,7 +7,7 @@
 	<flows>
 		<flow name="inc" type="in" desc="increment value"/>
 		<flow name="index" type="in" desc="memory addressing index"/>
-		<flow name="hist" type="out" desc="histogram output"/>
+		<flow name="hist" type="out" size="8" desc="histogram output"/>
 	</flows>	
 	<params>
 		<param name="HISTMEM_WORD" type="int" value="2048" desc="HISTMEM_WORD: M9K memory footprint" hard="true"/>
@@ -19,16 +19,17 @@
 			<bitfields>
 				<bitfield name="enable" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
 				<bitfield name="mode" bitfield="1" default="0" propertymap="mode.value" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
+				<bitfield name="nbin" bitfield="5-2" default="0" propertymap="nbin.value" desc="Histogram NBin"/>
 			</bitfields>
 		</param>
 		<param name="cellcontrol" regaddr="1" default="1799" desc="Cell size control">
 			<bitfields>
-				<bitfield name="cellwidth" bitfield="9-0" default="7" propertymap="cellwidth.value" desc="Histogram cell width minus one"/>
-				<bitfield name="cellheight" bitfield="25-16" default="7" propertymap="cellheight.value" desc="Histogram cell height minus one"/>
+				<bitfield name="cellwidth" bitfield="9-0" default="7" propertymap="cellwidth.value-1" desc="Histogram cell width minus one"/>
+				<bitfield name="cellheight" bitfield="25-16" default="7" propertymap="cellheight.value-1" desc="Histogram cell height minus one"/>
 			</bitfields>
 		</param>
-		<param name="imagecontrol" regaddr="2" default="39" desc="Image size divided by cell width"/>
-		<param name="storecycles" regaddr="3" default="640" desc="Memory locations each cell row"/>
+		<param name="imagecontrol" regaddr="2" default="39" propertymap="imgwidth.value/cellwidth.value-1" desc="Image size divided by cell width"/>
+		<param name="storecycles" regaddr="3" default="640" propertymap="(1&lt;&lt;nbin.value)*(imgwidth.value/cellwidth.value)" desc="Memory locations each cell row"/>
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
@@ -38,8 +39,17 @@
             <enum name="HOG" value="1" desc="Output for HOG"/>
           </enums>
         </property>
-		<property name="cellwidth" caption="cell width" type="int" min="0" max="1023" desc="Width of cell"/>
-		<property name="cellheight" caption="cell height" type="int" min="0" max="1023" desc="Height of cell"/>
+		<property name="cellwidth" caption="cell width" type="int" value="8" min="0" max="1023" desc="Width of cell"/>
+		<property name="cellheight" caption="cell height" type="int" value="8" min="0" max="1023" desc="Height of cell"/>
+		<property name="nbin" caption="Nb bin" desc="Height of cell">
+		  <enums>
+            <enum name="4" value="2"/>
+            <enum name="8" value="3"/>
+            <enum name="16" value="4"/>
+            <enum name="256" value="8"/>
+          </enums>
+        </property>
+		<property name="imgwidth" caption="imgwidth" type="int" value="320" min="0" max="1280" desc="Width of input image"/>
 	</properties>
 	<files>
 		<file name="histogramhw.v" path="hdl/histogramhw.v" type="verilog" group="hdl" desc=""/>
