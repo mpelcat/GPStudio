@@ -13,6 +13,7 @@ public:
     explicit CamTreeView(QWidget *parent = 0);
 
     void refreshCams();
+    CameraInfo camInfoSelected() const;
 
 signals:
     void cameraSelected(CameraInfo cameraInfo);

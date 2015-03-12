@@ -35,6 +35,9 @@ public:
     QString max() const;
     void setMax(const QString &max);
 
+    QString step() const;
+    void setStep(const QString &step);
+
     QString assert() const;
     void setAssert(const QString &assert);
 
@@ -63,6 +66,7 @@ protected:
     QString _value;
     QString _min;
     QString _max;
+    QString _step;
     QString _assert;
     QString _description;
 

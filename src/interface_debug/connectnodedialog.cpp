@@ -29,3 +29,8 @@ CameraInfo ConnectNodeDialog::cameraInfo() const
 {
     return _cameraInfo;
 }
+
+void ConnectNodeDialog::on_buttonBox_accepted()
+{
+    _cameraInfo = ui->camTreeView->camInfoSelected();
+}

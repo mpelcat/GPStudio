@@ -4,6 +4,7 @@
 #include "camerausb.h"
 
 #include <QDebug>
+#include <QDateTime>
 
 CameraCom::CameraCom(const CameraInfo &cameraInfo)
 {
@@ -71,7 +72,7 @@ void CameraCom::run()
 
     while(_start)
     {
-        const QByteArray &received = _cameraIO->read(512*128, 10, &succes);
+        const QByteArray &received = _cameraIO->read(512*128, 1, &succes);
 //           const QByteArray &received = _cameraIO->read(512, 1, &succes);
         //qDebug() <<received.mid(0,30).toHex();
         if(!succes)
@@ -89,6 +90,7 @@ void CameraCom::run()
             unsigned char flagFlow = packet[1];
             unsigned short numpacket = ((unsigned short)((unsigned char)packet[2])*256)+(unsigned char)packet[3];
 
+            //qDebug()<<"receive:start"; qint64 time = QDateTime::currentDateTime().toMSecsSinceEpoch();
             for(int i=0; i<_inputFlow.size(); i++)
             {
                 if(_inputFlow[i]->idFlow()==idFlow)
@@ -114,6 +116,7 @@ void CameraCom::run()
             {
                 //emit flowReadyToRead(received);
             }
+            //qDebug()<<"receive:stop"<<QDateTime::currentDateTime().toMSecsSinceEpoch()-time;
 
             start+=512;
         }
@@ -122,7 +125,7 @@ void CameraCom::run()
             if(_outputFlow[i]->readyToSend())
             {
                 const QByteArray data = _outputFlow[i]->dataToSend(_cameraIO->sizePacket());
-                _cameraIO->write(data);
+                _cameraIO->write(data, 1);
             }
         }
 

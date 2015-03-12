@@ -76,7 +76,7 @@ void FlowCom::send(const QByteArray &data)
     send(FlowData(data));
 }
 
-void FlowCom::appendData(QByteArray data)
+void FlowCom::appendData(const QByteArray &data)
 {
     /*if(_flowData.empty())
     {

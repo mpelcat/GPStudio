@@ -70,25 +70,29 @@ void Camera::setNode(Node *node)
 
         if(cameraRegister->addr()>maxAddr) maxAddr=cameraRegister->addr();
 
-        const QStringList &deps = cameraRegister->dependsProperties();
-        foreach (QString propName, deps)
+        //if(cameraRegister->bitFields().count())
         {
-            Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
-            if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), cameraRegister, SLOT(eval()));
-        }
-
-        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
-        {
-            const QStringList &deps = bitField->dependsProperties();
+            const QStringList &deps = cameraRegister->dependsProperties();
             foreach (QString propName, deps)
             {
                 Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
-                if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), bitField, SLOT(eval()));
+                if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), cameraRegister, SLOT(eval()));
+            }
+        }
+        //else
+        {
+            foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+            {
+                const QStringList &deps = bitField->dependsProperties();
+                foreach (QString propName, deps)
+                {
+                    Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
+                    if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), bitField, SLOT(eval()));
+                }
             }
         }
 
         _registerData.fill(0,(maxAddr+1)*4);
-
         connect(cameraRegister, SIGNAL(registerChange(uint,uint)), this, SLOT(setRegister(uint,uint)));
     }
 }
@@ -162,5 +166,9 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
         CameraRegister *cameraRegister = it.value();
 
         cameraRegister->eval();
+        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+        {
+            bitField->eval();
+        }
     }
 }

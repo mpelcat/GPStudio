@@ -1,5 +1,8 @@
 #include "processlib.h"
 
+#include <QFile>
+#include <QDebug>
+
 ProcessLib::ProcessLib()
 {
 }
@@ -62,4 +65,29 @@ QString ProcessLib::draw() const
 void ProcessLib::setDraw(const QString &draw)
 {
     _draw = draw;
+}
+
+ProcessLib *ProcessLib::readFromFile(const QString &fileName)
+{
+    QDomDocument doc;
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    else
+    {
+        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
+        else
+        {
+            return ProcessLib::fromNodeGenerated(doc.documentElement());
+        }
+        file.close();
+    }
+    return NULL;
+}
+
+ProcessLib *ProcessLib::fromNodeGenerated(const QDomElement &domElement)
+{
+    ProcessLib *processLib=new ProcessLib();
+    processLib->setName(domElement.attribute("name","no_name"));
+
+    return processLib;
 }

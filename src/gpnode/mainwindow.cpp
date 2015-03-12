@@ -22,9 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
     _lib = new Lib("../../../GPStudio_lib_std");
-
-    qDebug()<<ParamBitField::listBitFromBitField("5-0");
-    qDebug()<<ParamBitField::listBitFromBitField("5,0");
 }
 
 MainWindow::~MainWindow()

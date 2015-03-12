@@ -22,6 +22,8 @@ private slots:
     void on_refreshButton_clicked();
     void selectCam(CameraInfo cameraInfo);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::ConnectNodeDialog *ui;
 

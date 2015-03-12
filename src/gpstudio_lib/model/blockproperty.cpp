@@ -70,6 +70,16 @@ void BlockProperty::setMax(const QString &max)
     _max = max;
 }
 
+QString BlockProperty::step() const
+{
+    return _step;
+}
+
+void BlockProperty::setStep(const QString &step)
+{
+    _step = step;
+}
+
 QString BlockProperty::assert() const
 {
     return _assert;
@@ -141,6 +151,7 @@ BlockProperty *BlockProperty::fromNodeGenerated(const QDomElement &domElement)
     blockProperty->setValue(domElement.attribute("value",""));
     blockProperty->setMin(domElement.attribute("min",""));
     blockProperty->setMax(domElement.attribute("max",""));
+    blockProperty->setStep(domElement.attribute("step","1"));
     blockProperty->setAssert(domElement.attribute("assert",""));
     blockProperty->setDescription(domElement.attribute("desc",""));
 

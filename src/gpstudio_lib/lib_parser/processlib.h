@@ -4,6 +4,8 @@
 #include "gpstudio_lib_common.h"
 
 #include <QString>
+#include <QDomElement>
+#include <QList>
 
 class GPSTUDIO_LIB_EXPORT ProcessLib
 {
@@ -27,6 +29,10 @@ public:
 
     QString draw() const;
     void setDraw(const QString &draw);
+
+public:
+    static ProcessLib *readFromFile(const QString &fileName);
+    static ProcessLib *fromNodeGenerated(const QDomElement &domElement);
 
 private:
     QString _name;

@@ -101,7 +101,7 @@ bool CameraUSB::isConnected() const
     return (_devHandle!=NULL);
 }
 
-QByteArray CameraUSB::read(const unsigned maxSize, const int timeOut, bool *state)
+QByteArray CameraUSB::read(const unsigned sizePacket, const int timeOut, bool *state)
 {
     if(!_devHandle)
     {
@@ -109,7 +109,6 @@ QByteArray CameraUSB::read(const unsigned maxSize, const int timeOut, bool *stat
         return QByteArray();
     }
 
-    const int sizePacket = maxSize;
     unsigned char buffer[sizePacket];
     int transferredByte;
 

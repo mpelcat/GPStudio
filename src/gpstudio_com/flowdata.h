@@ -23,7 +23,7 @@ public:
     bool empty() const;
     void clear();
 
-    void appendData(QByteArray data);
+    void appendData(const QByteArray &data);
 
     QImage *toImage(const int width, const int height, const int dataSize);
     QImage *toImage(const QSize size, const int dataSize);

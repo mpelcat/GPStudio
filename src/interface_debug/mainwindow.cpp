@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QFile>
 
+#include <QDateTime>
+
 #include "property.h"
 #include "propertywidgets/propertywidgets.h"
 #include "connectnodedialog.h"
@@ -13,6 +15,8 @@
 #include "cameracom.h"
 #include "flowcom.h"
 #include "flowdata.h"
+
+#include "datawrapper/gradiantwrapper.h"
 
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
@@ -113,13 +117,31 @@ void MainWindow::connectCam()
 
 void MainWindow::viewFlow(int flow)
 {
+    int w = (*_cam->paramsBlocks())["mt9"]["roi1"]["w"].value().toInt();
+    int h = (*_cam->paramsBlocks())["mt9"]["roi1"]["h"].value().toInt();
+
     if(flow==0)
     {
-        int w = (*_cam->paramsBlocks())["mt9"]["roi1"]["w"].value().toInt();
-        int h = (*_cam->paramsBlocks())["mt9"]["roi1"]["h"].value().toInt();
         QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 16);
         ui->graphicsView->showImage(*image);
         delete image;
+    }
+    if(flow==1)
+    {
+        GradiantWrapper grad;
+        grad.setXimg(w);
+        grad.setYimg(h);
+
+        int nbin = 8;//(*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
+        grad.setNbBins(nbin);
+        int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
+        grad.setCellSize(cellsize);
+
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w/cellsize*nbin, h/cellsize, 16);
+        QImage *gradImg = grad.transform(image);
+
+        ui->graphicsView_2->showImage(*gradImg);
+        delete gradImg;
     }
 }
 

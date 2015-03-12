@@ -1,13 +1,15 @@
 #ifndef SCRIPTENGINE_H
 #define SCRIPTENGINE_H
 
+#include "gpstudio_lib_common.h"
+
 #include <QObject>
 
 #include <QScriptEngine>
 
 #include "propertyclass.h"
 
-class ScriptEngine : public QObject
+class GPSTUDIO_LIB_EXPORT ScriptEngine : public QObject
 {
     Q_OBJECT
 public:

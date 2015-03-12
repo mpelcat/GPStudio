@@ -76,6 +76,16 @@ void Property::setValue(const QVariant &value)
     emit valueChanged(QVariant(value));
 }
 
+QVariant Property::min() const
+{
+    return _min;
+}
+
+void Property::setMin(const QVariant &min)
+{
+    _min = min;
+}
+
 QVariant Property::max() const
 {
     return _max;
@@ -86,6 +96,16 @@ void Property::setMax(const QVariant &max)
     _max = max;
 }
 
+QVariant Property::step() const
+{
+    return _step;
+}
+
+void Property::setStep(const QVariant &step)
+{
+    _step = step;
+}
+
 const QMap<QString, PropertyEnum *> &Property::enumsMap() const
 {
     return _enumsMap;
@@ -94,16 +114,6 @@ const QMap<QString, PropertyEnum *> &Property::enumsMap() const
 const QList<PropertyEnum *> &Property::enums() const
 {
     return _enums;
-}
-
-QVariant Property::min() const
-{
-    return _min;
-}
-
-void Property::setMin(const QVariant &min)
-{
-    _min = min;
 }
 
 Property::Type Property::type() const
@@ -177,8 +187,13 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
         paramprop->setValue(blockProperty->value().toInt());
         paramprop->setMin(blockProperty->min());
         paramprop->setMax(blockProperty->max());
+        paramprop->setStep(blockProperty->step().toInt());
     }
-    if(blockProperty->type()=="bool") paramprop->setType(Bool);
+    if(blockProperty->type()=="bool")
+    {
+        paramprop->setType(Bool);
+        paramprop->setValue(QVariant(blockProperty->value()).toBool());
+    }
     if(blockProperty->type()=="group") paramprop->setType(Group);
 
     foreach (BlockProperty *subBlockProperty, blockProperty->properties())

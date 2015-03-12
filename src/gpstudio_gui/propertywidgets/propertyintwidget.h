@@ -23,6 +23,9 @@ protected:
 public slots:
     virtual void setValue(QVariant value);
 
+protected slots:
+    virtual void wrapValue();
+
 private:
     QSpinBox *_spinBox;
 };

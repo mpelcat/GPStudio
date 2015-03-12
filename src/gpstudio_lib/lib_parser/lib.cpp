@@ -10,7 +10,7 @@ Lib::Lib(const QString &libPath)
     QDir dir(QDir::currentPath()+'/'+libPath);
     _path = dir.absolutePath();
 
-    reloadBoards();
+    reloadLib();
 }
 
 Lib::~Lib()
@@ -22,12 +22,32 @@ void Lib::addProcess(ProcessLib *process)
     _process.append(process);
 }
 
+const QList<ProcessLib *> &Lib::process() const
+{
+    return _process;
+}
+
+void Lib::reloadProcess()
+{
+    QDir dirPath(_path+"/process");
+
+    foreach (QFileInfo pathLib, dirPath.entryInfoList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot))
+    {
+        QDir dirIP(pathLib.absoluteFilePath());
+        foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.proc")))
+        {
+            ProcessLib *process = ProcessLib::readFromFile(ipInfo.absoluteFilePath());
+            addProcess(process);
+        }
+    }
+}
+
 void Lib::addBoard(BoardLib *board)
 {
     _boards.append(board);
 }
 
-QList<BoardLib *> &Lib::boards()
+const QList<BoardLib *> &Lib::boards() const
 {
     return _boards;
 }
@@ -45,4 +65,10 @@ void Lib::reloadBoards()
             addBoard(board);
         }
     }
+}
+
+void Lib::reloadLib()
+{
+    reloadBoards();
+    reloadProcess();
 }

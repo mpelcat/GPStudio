@@ -19,6 +19,12 @@ void CamTreeView::refreshCams()
     resizeColumnToContents(2);
 }
 
+CameraInfo CamTreeView::camInfoSelected() const
+{
+    if(!currentIndex().isValid()) return CameraInfo();
+    return _model->usbList()[currentIndex().row()];
+}
+
 void CamTreeView::cameraSelect(QModelIndex index)
 {
     if(!index.isValid()) return;

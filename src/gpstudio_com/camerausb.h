@@ -23,7 +23,7 @@ public:
     bool resetDevice();
     bool isConnected() const;
 
-    QByteArray read(const unsigned maxSize=512, const int timeOut=1000, bool *state=NULL);
+    QByteArray read(const unsigned sizePacket=512, const int timeOut=1000, bool *state=NULL);
     bool write(const QByteArray &array, const int timeOut=1000);
 
     static QVector<CameraInfo> avaibleCams();

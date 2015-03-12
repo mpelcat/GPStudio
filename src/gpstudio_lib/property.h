@@ -38,6 +38,9 @@ public:
     QVariant max() const;
     void setMax(const QVariant &max);
 
+    QVariant step() const;
+    void setStep(const QVariant &step);
+
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> &enums() const;
 
@@ -71,6 +74,7 @@ protected:
     QVariant _value;
     QVariant _min;
     QVariant _max;
+    QVariant _step;
     Type _type;
 
     Property *_parent;

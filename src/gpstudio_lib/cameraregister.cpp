@@ -46,7 +46,7 @@ uint CameraRegister::value() const
 
 void CameraRegister::setValue(const uint &value)
 {
-    if(_value!=value)
+    //if(_value!=value)
     {
         _value = value;
         emit registerChange(_addr, value);

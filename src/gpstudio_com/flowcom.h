@@ -27,7 +27,7 @@ public:
     //void send(const Mat);
     //void send(const stdVector);
 
-    void appendData(QByteArray data);
+    void appendData(const QByteArray &data);
 
     FlowData getData();
     void validate();

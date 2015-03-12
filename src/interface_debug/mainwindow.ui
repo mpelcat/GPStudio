@@ -26,7 +26,13 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="ImageView" name="graphicsView"/>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="ImageView" name="graphicsView"/>
+          <widget class="ImageView" name="graphicsView_2"/>
+         </widget>
         </item>
        </layout>
       </widget>

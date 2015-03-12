@@ -38,7 +38,9 @@ HEADERS += gpstudio_lib_common.h \
     cameraregisterbitfield.h \
     lib_parser/iolib.h \
     scriptengine.h \
-    propertyenum.h
+    propertyenum.h \
+    datawrapper/datawrapper.h \
+    datawrapper/gradiantwrapper.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -69,7 +71,9 @@ SOURCES += \
     cameraregisterbitfield.cpp \
     lib_parser/iolib.cpp \
     scriptengine.cpp \
-    propertyenum.cpp
+    propertyenum.cpp \
+    datawrapper/datawrapper.cpp \
+    datawrapper/gradiantwrapper.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

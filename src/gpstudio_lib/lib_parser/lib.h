@@ -15,13 +15,15 @@ public:
     Lib(const QString &libPath);
     ~Lib();
 
+    void reloadProcess();
     void addProcess(ProcessLib *process);
-
-    void addBoard(BoardLib *board);
-    QList<BoardLib *> &boards();
+    const QList<ProcessLib *> &process() const;
 
     void reloadBoards();
+    void addBoard(BoardLib *board);
+    const QList<BoardLib *> &boards()const;
 
+    void reloadLib();
 private:
     QList<ProcessLib*> _process;
     QList<BoardLib*> _boards;

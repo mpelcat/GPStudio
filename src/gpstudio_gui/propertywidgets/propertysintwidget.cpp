@@ -26,7 +26,7 @@ void PropertySIntWidget::createWidget()
     _slider = new QSlider();
     _slider->setMinimum(_linkedProperty->min().toInt());
     _slider->setMaximum(_linkedProperty->max().toInt());
-    _slider->setValue(_linkedProperty->value().toInt());
+    _slider->setSingleStep(_linkedProperty->step().toInt());
     _slider->setOrientation(Qt::Horizontal);
     layout->addWidget(_slider);
 
