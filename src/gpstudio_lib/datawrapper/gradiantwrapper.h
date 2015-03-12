@@ -19,17 +19,17 @@ public:
     int cellSize() const;
     void setCellSize(int cellSize);
 
-    int ximg() const;
-    void setXimg(int ximg);
+    int wimg() const;
+    void setWimg(int wimg);
 
-    int yimg() const;
-    void setYimg(int yimg);
+    int himg() const;
+    void setHimg(int himg);
 
 private:
     int _nbBins;
     int _cellSize;
-    int _ximg;
-    int _yimg;
+    int _wimg;
+    int _himg;
 };
 
 #endif // GRADIANTWRAPPER_H

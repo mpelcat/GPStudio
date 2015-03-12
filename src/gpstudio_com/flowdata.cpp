@@ -63,7 +63,7 @@ void FlowData::appendData(const QByteArray &data)
 
 QImage *FlowData::toImage(const int width, const int height, const int dataSize)
 {
-    Q_UNUSED(dataSize);
+    //Q_UNUSED(dataSize);
 
     QImage *img = new QImage(width, height, QImage::Format_Indexed8);
     QVector<QRgb> colors;
@@ -86,7 +86,9 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
         }
     }*/
 
+    //qDebug() << _data.size() << width * height;
     char *ptr = _data.data();
+    if(dataSize==16) ptr++;
     char *ptrEnd = _data.data()+_data.size();
     for(int y=0; y<height; y++)
     {
@@ -94,11 +96,10 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
         {
             if(ptr<ptrEnd)
             {
-                //unsigned value = ;
-                //ptr++;
 
                 //if(value==1) value = 255;
-                img->setPixel(x,y,(unsigned char)(*(ptr++)));
+                img->setPixel(x,y,(unsigned char)(*ptr));
+                ptr+=dataSize/8;
             }
         }
     }

@@ -74,7 +74,7 @@ void CameraCom::run()
     {
         const QByteArray &received = _cameraIO->read(512*128, 1, &succes);
 //           const QByteArray &received = _cameraIO->read(512, 1, &succes);
-        //qDebug() <<received.mid(0,30).toHex();
+//        qDebug() <<"rec: "<<received.mid(0,10).toHex();
         if(!succes)
         {
             qDebug()<<"fail";

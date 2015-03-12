@@ -15,57 +15,77 @@ GradiantWrapper::~GradiantWrapper()
 
 QImage *GradiantWrapper::transform(QImage *input)
 {
-    QImage *visu = new QImage(_ximg, _yimg, QImage::Format_RGB16);
+    QImage *visu = new QImage(_wimg, _himg, QImage::Format_RGB16);
     /*QVector<QRgb> colors;
     for(int i=0; i<256; i++) colors.append(qRgb(i,i,i));
     visu->setColorTable(colors);*/
 
-    int cells_in_x_dir = _ximg / _cellSize;
-    int cells_in_y_dir = _yimg / _cellSize;
+    int cells_in_x_dir = _wimg / _cellSize;
+    int cells_in_y_dir = _himg / _cellSize;
     float radRangeForOneBin = 3.1415/(float)_nbBins; // dividing 180° into 9 bins, how large (in rad) is one bin?
 
-    float zoomFac = 1;
     visu->fill(Qt::black);
 
     QPainter p(visu);
+    p.setRenderHints(QPainter::Antialiasing, false);
 
-    for (int celly=0; celly < cells_in_y_dir; celly++)
+    int32_t drawX;
+    int32_t drawY;
+
+    int32_t mx;
+    int32_t my;
+
+    float currRad;
+
+    float dirVecX;
+    float dirVecY;
+    float maxVecLen;
+
+
+    // compute line coordinates
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+
+    int currentGradStrength;
+
+    for (int celly=1; celly < cells_in_y_dir-1; celly++)
     {
-        for (int cellx=0; cellx < cells_in_x_dir; cellx++)
+        for (int cellx=1; cellx < cells_in_x_dir-1; cellx++)
         {
-            int32_t drawX = cellx * _cellSize;
-            int32_t drawY = celly * _cellSize;
+            drawX = cellx * _cellSize;
+            drawY = celly * _cellSize;
 
-            int32_t mx = drawX + _cellSize/2;
-            int32_t my = drawY + _cellSize/2;
+            mx = drawX + _cellSize/2;
+            my = drawY + _cellSize/2;
 
             // draw in each cell all 9 gradient strengths
             for (int bin=0; bin<_nbBins; bin++)
             {
-                int currentGradStrength = qGray( input->pixel(cellx*_nbBins + bin , celly));
+                currentGradStrength = qGray(
+                    input->pixel(cellx*_nbBins + bin , celly));
 
                 // no line to draw?
-                if (currentGradStrength==0)
+                if (currentGradStrength == 0)
                     continue;
 
-                float currRad = bin * radRangeForOneBin + radRangeForOneBin/2;
+                currRad = bin * radRangeForOneBin + radRangeForOneBin/2;
 
-                float dirVecX = cos( currRad );
-                float dirVecY = sin( currRad );
-                float maxVecLen = _cellSize/2;
-                float scale = 1; // just a visualization scale, to see the lines better
+                dirVecX = cos( currRad );
+                dirVecY = sin( currRad );
+                maxVecLen = _cellSize/2;
+
 
                 // compute line coordinates
-                float x1 = mx - dirVecX * maxVecLen * scale;
-                float y1 = my - dirVecY * maxVecLen * scale;
-                float x2 = mx + dirVecX * maxVecLen * scale;
-                float y2 = my + dirVecY * maxVecLen * scale;
-
-                // draw gradient visualization
+                x1 = mx - dirVecX * maxVecLen;
+                y1 = my - dirVecY * maxVecLen;
+                x2 = mx + dirVecX * maxVecLen;
+                y2 = my + dirVecY * maxVecLen;
 
                 p.setPen(QPen(QColor(currentGradStrength,currentGradStrength,currentGradStrength,255)));
-                //p.setBrush(QBrush(QColor(Qt::color0), Qt::NoBrush));
-                p.drawLine(QPoint(x1*zoomFac,y1*zoomFac), QPoint(x2*zoomFac,y2*zoomFac));
+
+                p.drawLine(QPoint(x1,y1), QPoint(x2,y2));
             } // for (all bins)
         } // for (cellx)
     } // for (celly)
@@ -96,21 +116,21 @@ void GradiantWrapper::setCellSize(int cellSize)
     _cellSize = cellSize;
 }
 
-int GradiantWrapper::ximg() const
+int GradiantWrapper::wimg() const
 {
-    return _ximg;
+    return _wimg;
 }
 
-void GradiantWrapper::setXimg(int ximg)
+void GradiantWrapper::setWimg(int wimg)
 {
-    _ximg = ximg;
+    _wimg = wimg;
 }
-int GradiantWrapper::yimg() const
+int GradiantWrapper::himg() const
 {
-    return _yimg;
+    return _himg;
 }
 
-void GradiantWrapper::setYimg(int yimg)
+void GradiantWrapper::setHimg(int himg)
 {
-    _yimg = yimg;
+    _himg = himg;
 }

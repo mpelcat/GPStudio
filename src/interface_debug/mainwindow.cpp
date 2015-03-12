@@ -132,8 +132,8 @@ void MainWindow::viewFlow(int flow)
     if(flow==1)
     {
         GradiantWrapper grad;
-        grad.setXimg(w);
-        grad.setYimg(h);
+        grad.setWimg(w);
+        grad.setHimg(h);
 
         int nbin = 8;//(*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
         grad.setNbBins(nbin);
