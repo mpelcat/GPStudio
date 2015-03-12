@@ -18,6 +18,7 @@ ImageView::ImageView(QWidget *parent) :
 
     _propertyView = All;
     _pixmapItem = _scene->addPixmap(QPixmap());
+    _titleItem = _scene->addSimpleText(QString());
 }
 
 #ifdef __USE_OPEN_CV__
@@ -71,8 +72,8 @@ void ImageView::showImage(const QPixmap &image, const QString &title)
     _pixmapItem->setPixmap(image);
 
     // add title to image
-    QGraphicsSimpleTextItem *text=_scene->addSimpleText(title);
-    text->setPos((_pixmapItem->pixmap().width()-text->boundingRect().width())/2, -text->boundingRect().height()-10);
+    _titleItem->setText(title);
+    _titleItem->setPos((_pixmapItem->pixmap().width()-_titleItem->boundingRect().width())/2, -_titleItem->boundingRect().height()-10);
 }
 
 void ImageView::wheelEvent(QWheelEvent *event)

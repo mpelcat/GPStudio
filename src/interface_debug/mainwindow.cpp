@@ -80,6 +80,9 @@ void MainWindow::createToolBarAndMenu()
     QAction *connectAction = new QAction("&Connect node",this);
     nodeMenu->addAction(connectAction);
     connect(connectAction, SIGNAL(triggered()), this, SLOT(connectCam()));
+
+    QMenu *viewMenu = ui->menuBar->addMenu("&View");
+    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
 }
 
 void MainWindow::openNodeGeneratedFile(const QString fileName)

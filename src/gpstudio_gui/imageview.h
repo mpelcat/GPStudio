@@ -49,7 +49,9 @@ private:
     double _currentZoomLevel;
     QPointF _startPos;
     unsigned int _propertyView;
+
     QGraphicsPixmapItem *_pixmapItem;
+    QGraphicsSimpleTextItem *_titleItem;
 };
 
 #endif // IMAGEVIEW_H
