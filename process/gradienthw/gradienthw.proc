@@ -13,7 +13,7 @@
 		<param name="scr" type="int" regaddr="0" default="0" desc="Status Control Register" hard="false">
 			<bitfields>
 				<bitfield name="enable" type="int" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
-				<bitfield name="width" type="int" bitfield="10-3" default="0" propertymap="width.value" desc="Input image width"/>
+				<bitfield name="width" type="int" bitfield="10-3" default="0" propertymap="width.bits" desc="Input image width"/>
 			</bitfields>
 		</param>
 		

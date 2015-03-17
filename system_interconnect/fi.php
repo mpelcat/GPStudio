@@ -80,7 +80,7 @@ class FlowInterconnect extends Block
 				$parambitfield = new ParamBitfield();
 				$parambitfield->name = 'muxdir';
 				$parambitfield->default = 0;
-				$parambitfield->propertymap = $in_connect.".value";
+				$parambitfield->propertymap = $in_connect.".bits";
 				
 				array_push($this->params, $param);
 				
