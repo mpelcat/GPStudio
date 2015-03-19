@@ -32,6 +32,9 @@ public:
     QVariant &value();
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged SCRIPTABLE true)
 
+    uint bits() const;
+    Q_PROPERTY(uint bits READ bits WRITE setBits NOTIFY bitsChanged SCRIPTABLE true)
+
     QVariant min() const;
     void setMin(const QVariant &min);
 
@@ -59,11 +62,14 @@ public:
 
 signals:
     void valueChanged(QVariant value);
+    void bitsChanged(uint value);
 
 public slots:
     void setValue(bool value);
     void setValue(int value);
     void setValue(const QVariant &value);
+
+    void setBits(const uint bits);
 
 public:
     static Property *fromBlockProperty(BlockProperty *blockProperty);
@@ -72,6 +78,7 @@ protected:
     QString _name;
     QString _caption;
     QVariant _value;
+    uint _bits;
     QVariant _min;
     QVariant _max;
     QVariant _step;

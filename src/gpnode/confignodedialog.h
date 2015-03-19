@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "lib_parser/lib.h"
+#include "gpnodeproject.h"
 
 namespace Ui {
 class ConfigNodeDialog;
@@ -17,13 +17,16 @@ public:
     explicit ConfigNodeDialog(QWidget *parent = 0);
     ~ConfigNodeDialog();
 
-    Lib *lib() const;
-    void setLib(Lib *lib);
+    GPNodeProject *project() const;
+    void setProject(GPNodeProject *project);
+
+private slots:
+    void on_boardComboBox_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::ConfigNodeDialog *ui;
 
-    Lib *_lib;
+    GPNodeProject *_project;
 };
 
 #endif // CONFIGNODEDIALOG_H

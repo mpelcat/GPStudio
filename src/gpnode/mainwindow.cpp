@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "lib_parser/lib.h"
 #include "model/node.h"
 #include "model/parambitfield.h"
 
@@ -21,12 +20,17 @@ MainWindow::MainWindow(QWidget *parent) :
     createToolBarAndMenu();
 
     //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
-    _lib = new Lib("../../../GPStudio_lib_std");
+
+    _project = new GPNodeProject();
+
+    ui->libTreeView->setLib(_project->lib());
+    ui->processView->setLib(_project->lib());
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete _project;
 }
 
 void MainWindow::createToolBarAndMenu()
@@ -53,15 +57,22 @@ void MainWindow::createToolBarAndMenu()
     fileMenu->addAction(saveDocAction);
 
     fileMenu->addSeparator();
+    ui->mainToolBar->addSeparator();
 
     QAction *configNode = new QAction("&Configure node",this);
+    configNode->setIcon(QIcon(":/icons/img/settings.png"));
+    saveDocAction->setShortcut(QKeySequence::Preferences);
     fileMenu->addAction(configNode);
+    ui->mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
+
+    QMenu *viewMenu = ui->menuBar->addMenu("&View");
+    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
 }
 
 void MainWindow::configNode()
 {
     ConfigNodeDialog configNodeDialog(this);
-    configNodeDialog.setLib(_lib);
+    configNodeDialog.setProject(_project);
     configNodeDialog.exec();
 }

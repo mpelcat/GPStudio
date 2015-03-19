@@ -29,11 +29,11 @@ QImage *GradiantWrapper::transform(QImage *input)
     QPainter p(visu);
     p.setRenderHints(QPainter::Antialiasing, false);
 
-    int32_t drawX;
-    int32_t drawY;
+    int drawX;
+    int drawY;
 
-    int32_t mx;
-    int32_t my;
+    int mx;
+    int my;
 
     float currRad;
 

@@ -46,7 +46,7 @@ void PropertyEnumWidget::destroyWidget()
 
 void PropertyEnumWidget::setValue(QVariant value)
 {
-    int index = _comboBox->findData(value);
+    int index = _comboBox->findText(value.toString());
     //qDebug()<<"combo"<<value<<index;
     if(index!=-1)
     {
@@ -58,6 +58,6 @@ void PropertyEnumWidget::setValue(QVariant value)
 
 void PropertyEnumWidget::wrapValue(int value)
 {
-    //qDebug()<<"wrapValue"<<value<<_comboBox->itemData(value);
-    emit(valueChanged(_comboBox->itemData(value)));
+    //qDebug()<<"wrapValue"<<value<<_comboBox->currentText();
+    emit(valueChanged(_comboBox->currentText()));
 }

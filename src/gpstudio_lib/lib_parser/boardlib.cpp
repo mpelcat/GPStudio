@@ -29,11 +29,30 @@ const QList<IOLib *> &BoardLib::ios() const
 void BoardLib::addIO(IOLib *io)
 {
     _ios.append(io);
+    _iosMap.insert(io->name(), io);
+    if(_iosGroups.contains(io->group()))
+    {
+        _iosGroups[io->group()].addIos(io->name());
+    }
+    else
+    {
+        _iosGroups.insert(io->group(), IOLibGroup(io->type()));
+        _iosGroups[io->group()].addIos(io->name());
+    }
 }
 
 void BoardLib::addIOs(const QList<IOLib *> &ios)
 {
-    _ios.append(ios);
+    foreach (IOLib *io, ios)
+    {
+        addIO(io);
+    }
+}
+
+IOLib *BoardLib::io(const QString &name) const
+{
+    if(_iosMap.contains(name)) return _iosMap[name];
+    return NULL;
 }
 
 BoardLib *BoardLib::readFromFile(const QString &fileName)
@@ -72,3 +91,7 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
     return board;
 }
 
+const QMap<QString, IOLibGroup> &BoardLib::iosGroups() const
+{
+    return _iosGroups;
+}

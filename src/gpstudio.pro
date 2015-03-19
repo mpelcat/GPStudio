@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 SUBDIRS = gpstudio_com \
           gpstudio_lib \
           gpstudio_gui \
-          interface_debug \
+          gpviewer \
           gpnode
 
 # SUBDIRS += ../thirdparts

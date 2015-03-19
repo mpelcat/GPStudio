@@ -26,6 +26,8 @@ MainWindow::MainWindow(QStringList args) :
 
     ui->setupUi(this);
     createToolBarAndMenu();
+    QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
 
     if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
     else
@@ -78,6 +80,8 @@ void MainWindow::createToolBarAndMenu()
     connect(openDocAction, SIGNAL(triggered()), this, SLOT(openNode()));
 
     QAction *connectAction = new QAction("&Connect node",this);
+    connectAction->setIcon(QIcon(":/icons/img/connect.png"));
+    ui->mainToolBar->addAction(connectAction);
     nodeMenu->addAction(connectAction);
     connect(connectAction, SIGNAL(triggered()), this, SLOT(connectCam()));
 
@@ -125,7 +129,7 @@ void MainWindow::viewFlow(int flow)
 
     if(flow==0)
     {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 16);
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
         ui->graphicsView->showImage(*image);
         delete image;
     }
@@ -135,7 +139,7 @@ void MainWindow::viewFlow(int flow)
         grad.setWimg(w);
         grad.setHimg(h);
 
-        int nbin = 8;//(*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
+        int nbin = (*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
         grad.setNbBins(nbin);
         int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
         grad.setCellSize(cellsize);

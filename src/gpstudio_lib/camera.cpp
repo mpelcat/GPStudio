@@ -76,7 +76,7 @@ void Camera::setNode(Node *node)
             foreach (QString propName, deps)
             {
                 Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
-                if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), cameraRegister, SLOT(eval()));
+                if(prop) connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
             }
         }
         //else
@@ -87,7 +87,7 @@ void Camera::setNode(Node *node)
                 foreach (QString propName, deps)
                 {
                     Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
-                    if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), bitField, SLOT(eval()));
+                    if(prop) connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
                 }
             }
         }

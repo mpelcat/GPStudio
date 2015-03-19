@@ -73,6 +73,10 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
     {
         return QScriptValue(_linkedProperty->value().toInt());
     }
+    if(name.toString()=="bits")
+    {
+        return QScriptValue(_linkedProperty->bits());
+    }
     if(name.toString()=="valueOf")
     {
         QScriptValue value = QScriptValue(_linkedProperty->value().toInt());

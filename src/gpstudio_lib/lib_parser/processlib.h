@@ -6,6 +6,7 @@
 #include <QString>
 #include <QDomElement>
 #include <QList>
+#include <QIcon>
 
 class GPSTUDIO_LIB_EXPORT ProcessLib
 {
@@ -30,9 +31,12 @@ public:
     QString draw() const;
     void setDraw(const QString &draw);
 
+    QIcon icon() const;
+    void setIcon(const QIcon &icon);
+
 public:
     static ProcessLib *readFromFile(const QString &fileName);
-    static ProcessLib *fromNodeGenerated(const QDomElement &domElement);
+    static ProcessLib *fromDomElement(const QDomElement &domElement);
 
 private:
     QString _name;
@@ -41,6 +45,7 @@ private:
     QString _configFile;
     QString _description;
     QString _draw;
+    QIcon _icon;
 };
 
 #endif // PROCESSLIB_H

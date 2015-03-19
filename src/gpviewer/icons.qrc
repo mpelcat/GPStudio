@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>../img/open.png</file>
+        <file>../img/connect.png</file>
+        <file>../img/term.png</file>
+    </qresource>
+</RCC>

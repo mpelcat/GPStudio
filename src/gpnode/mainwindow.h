@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "lib_parser/lib.h"
+#include "gpnodeproject.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +25,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    Lib *_lib;
+    GPNodeProject *_project;
 };
 
 #endif // MAINWINDOW_H

@@ -55,5 +55,5 @@ void PropertyGroupWidget::destroyWidget()
 
 void PropertyGroupWidget::setValue(QVariant value)
 {
-
+    Q_UNUSED(value)
 }

@@ -1,4 +1,4 @@
-QT       += core xml script
+QT       += core xml script svg
 
 TARGET = gpstudio_lib
 TEMPLATE = lib
@@ -40,7 +40,9 @@ HEADERS += gpstudio_lib_common.h \
     scriptengine.h \
     propertyenum.h \
     datawrapper/datawrapper.h \
-    datawrapper/gradiantwrapper.h
+    datawrapper/gradiantwrapper.h \
+    gpnodeproject.h \
+    lib_parser/iolibgroup.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -73,7 +75,9 @@ SOURCES += \
     scriptengine.cpp \
     propertyenum.cpp \
     datawrapper/datawrapper.cpp \
-    datawrapper/gradiantwrapper.cpp
+    datawrapper/gradiantwrapper.cpp \
+    gpnodeproject.cpp \
+    lib_parser/iolibgroup.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

@@ -50,6 +50,16 @@ void IOLib::setOptional(bool optional)
     _optional = optional;
 }
 
+QString IOLib::group() const
+{
+    return _group;
+}
+
+void IOLib::setGroup(const QString &group)
+{
+    _group = group;
+}
+
 QString IOLib::description() const
 {
     return _description;
@@ -68,6 +78,7 @@ IOLib *IOLib::fromNodeGenerated(const QDomElement &domElement)
     io->setDriver(domElement.attribute("driver",""));
 
     io->setOptional((domElement.attribute("optional","")=="1" || domElement.attribute("optional","")=="true"));
+    io->setGroup(domElement.attribute("optionalgroup",""));
 
     io->setDescription(domElement.attribute("description",""));
 

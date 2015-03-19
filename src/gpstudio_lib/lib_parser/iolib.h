@@ -25,6 +25,9 @@ public:
     bool isOptional() const;
     void setOptional(bool isOptional);
 
+    QString group() const;
+    void setGroup(const QString &group);
+
     QString description() const;
     void setDescription(const QString &description);
 
@@ -37,6 +40,7 @@ private:
     QString _type;
     QString _driver;
     bool _optional;
+    QString _group;
     QString _description;
 };
 

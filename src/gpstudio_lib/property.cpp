@@ -71,9 +71,30 @@ void Property::setValue(int value)
 
 void Property::setValue(const QVariant &value)
 {
-    //qDebug()<<"Property::setValue"<<_name<<value<<_value;
     _value = value;
+    if(!_enums.isEmpty())
+    {
+        if(_enumsMap.contains(value.toString()))
+        {
+            setBits(_enumsMap[value.toString()]->value().toUInt());
+        }
+    }
+    else
+    {
+        setBits(_value.toUInt());
+    }
     emit valueChanged(QVariant(value));
+}
+
+uint Property::bits() const
+{
+    return _bits;
+}
+
+void Property::setBits(const uint bits)
+{
+    _bits = bits;
+    emit bitsChanged(bits);
 }
 
 QVariant Property::min() const
@@ -144,7 +165,7 @@ void Property::setParent(Property *parent)
 Property *Property::path(QString path)
 {
     //qDebug()<<"path"<<path<<_name;
-    if(path.isEmpty() || path==_name || path=="value") return this;
+    if(path.isEmpty() || path==_name || path=="value" || path=="bits") return this;
     int index = path.indexOf(".");
     if(index==-1)
     {

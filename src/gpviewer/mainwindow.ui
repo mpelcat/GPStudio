@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GPDebug</string>
+   <string>GPViewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -56,7 +56,7 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -87,7 +87,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>585</height>
+          <height>598</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -102,6 +102,10 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="scriptDock">
+   <property name="windowIcon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/img/term.png</normaloff>:/icons/img/term.png</iconset>
+   </property>
    <property name="windowTitle">
     <string>Scripts</string>
    </property>
@@ -147,6 +151,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

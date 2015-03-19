@@ -1,4 +1,4 @@
-QT       += core gui xml script
+QT       += core gui xml script svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -9,8 +9,8 @@ DEFINES += GPSTUDIO_GUI_EXPORT_LIB
 
 QMAKE_CFLAGS_RELEASE = -O2
 
-SOURCES += camtreeview.cpp \
-    caminfoitemmodel.cpp \
+SOURCES += viewmodelwidget/camtreeview.cpp \
+    viewmodelwidget/caminfoitemmodel.cpp \
     imageview.cpp \
     propertywidgets/propertywidget.cpp \
     propertywidgets/propertygroupwidget.cpp \
@@ -19,11 +19,16 @@ SOURCES += camtreeview.cpp \
     propertywidgets/propertyboolwidget.cpp \
     propertywidgets/propertyenumwidget.cpp \
     scriptwidget.cpp \
-    scriptlineedit.cpp
+    scriptlineedit.cpp \
+    viewmodelwidget/libitemmodel.cpp \
+    viewmodelwidget/libtreeview.cpp \
+    itemsview/processesview.cpp \
+    itemsview/processesscene.cpp \
+    itemsview/processitem.cpp
 
 HEADERS  += \
-    camtreeview.h \
-    caminfoitemmodel.h \
+    viewmodelwidget/camtreeview.h \
+    viewmodelwidget/caminfoitemmodel.h \
     imageview.h \
     gpstudio_gui_common.h \
     propertywidgets/propertywidgets.h \
@@ -34,7 +39,12 @@ HEADERS  += \
     propertywidgets/propertyboolwidget.h \
     propertywidgets/propertyenumwidget.h \
     scriptwidget.h \
-    scriptlineedit.h
+    scriptlineedit.h \
+    viewmodelwidget/libitemmodel.h \
+    viewmodelwidget/libtreeview.h \
+    itemsview/processesview.h \
+    itemsview/processesscene.h \
+    itemsview/processitem.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)
