@@ -118,7 +118,37 @@ class Board
 				//array_push($node->blocks, new IO($io, null));
 			}
 		}
-		//print_r($this->ios);
+		
+		// replace default param value directly in .node file
+		$concerned_block = NULL;
+		foreach($board_element->ios->io as $io)
+		{
+			if(isset($io->params))
+			{
+				foreach($node->blocks as $block)
+				{
+					if($block->name==$io['name']) $concerned_block=$block;
+				}
+				if($concerned_block!=NULL)
+				{
+					foreach($io->params->param as $param)
+					{
+						if(isset($param['name']) and isset($param['value']))
+						{
+							$concerned_param = NULL;
+							foreach($block->params as $blockparam)
+							{
+								if($blockparam->name==$param['name']) $concerned_param=$blockparam;
+							}
+							if($concerned_param)
+							{
+								$concerned_param->value = $param['value'];
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

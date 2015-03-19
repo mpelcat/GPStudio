@@ -68,7 +68,29 @@ class Node
 		{
 			foreach($xml->process->process as $process)
 			{
-				array_push($this->blocks, new Process($process));
+				$processBlock = new Process($process);
+				
+				// params
+				if(isset($process->params))
+				{
+					foreach($process->params->param as $param)
+					{
+						if(isset($param['name']) and isset($param['value']))
+						{
+							$concerned_param = NULL;
+							foreach($processBlock->params as $blockparam)
+							{
+								if($blockparam->name==$param['name']) $concerned_param=$blockparam;
+							}
+							if($concerned_param)
+							{
+								$concerned_param->value = $param['value'];
+							}
+						}
+					}
+				}
+				
+				array_push($this->blocks, $processBlock);
 			}
 		}
 		
