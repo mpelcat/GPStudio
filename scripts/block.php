@@ -35,7 +35,6 @@ class Block
 	* @var string $driver
 	*/
 	public $driver;
-
 	
 	/**
 	* The absolute adress of the block on BI
@@ -54,6 +53,18 @@ class Block
 	* @var int $master_count
 	*/
 	public $master_count;
+
+	/**
+	* Specify the external file script to configure the block (optional)
+	* @var string $scriptfile
+	*/
+	public $configscriptfile;
+
+	/**
+	* Specify the external file script to generate the block (optional)
+	* @var string $generatescriptfile
+	*/
+	public $generatescriptfile;
 
 
 	/**
@@ -126,6 +137,8 @@ class Block
 		$this->interfaces = array();
 		$this->addr_abs = -1;
 		$this->master_count = 0;
+		$this->configscriptfile='';
+		$this->generatescriptfile='';
 		
 		$this->in_lib=false;
 		
@@ -142,12 +155,34 @@ class Block
 	
 	function configure($node, $block)
 	{
-		// nothing to do for global block
+		if(!empty($this->configscriptfile))
+		{
+			if(file_exists($this->path.$this->configscriptfile))
+			{
+				$script = str_replace(LIB_PATH,'',$this->path.$this->configscriptfile);
+				$configureBlock = (include $script);
+				if($configureBlock!==FALSE)
+				{
+					$configureBlock($node, $block);
+				}
+			}
+		}
 	}
 	
 	function generate($node, $block, $path, $language)
 	{
-		// nothing to do for global block
+		if(!empty($this->generatescriptfile))
+		{
+			if(file_exists($this->path.$this->generatescriptfile))
+			{
+				$script = str_replace(LIB_PATH,'',$this->path.$this->generatescriptfile);
+				$generateBlock = (include $script);
+				if($generateBlock!==FALSE)
+				{
+					$generateBlock($node, $block, $path, $language);
+				}
+			}
+		}
 	}
 	
 	function getFlow($name)
@@ -162,6 +197,9 @@ class Block
 	protected function parse_xml()
 	{
 		$this->size_addr_rel = (int)$this->xml['size_addr_rel'];
+		$this->configscriptfile = $this->xml['configscriptfile'];
+		$this->generatescriptfile = $this->xml['generatescriptfile'];
+		
 		// files
 		if(isset($this->xml->files))
 		{

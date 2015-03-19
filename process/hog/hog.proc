@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<process name="HOG" categ="descriptor" description="Descriptor which output a HOG from image flow">
+<process name="HOG" categ="descriptor" description="Descriptor which output a HOG from image flow" configscriptfile="config.php" generatescriptfile="generate.php">
 	<svg width="160" height="110">
 		<rect width="150" height="100" x="0" y="10" fill="lightgray"/>
 		<g stroke="gray" stroke-width="10" transform="translate(5,10)">
@@ -22,12 +22,12 @@
 		<param name="rowNumber" type="int" reg_addr="0" default="3" desc="Number of rows" hard="false"/>
 		<param name="intBusSize" type="int" default="3" desc="Number of rows" hard="true"/>
 	</params>
-	<implementations>
-		<implementation name="" type="hdl">
+	<!--<implementations>
+		<implementation name="" type="hdl">-->
 			<files>
 				<file name="hog.vhd" path="hdl/hog.vhd" desc=""/>
 			</files>
-		</implementation>
+		<!--</implementation>
 		<implementation name="" type="caph">
 			<files>
 				<file name="hog.cph" path="caph/hog.cph" desc=""/>
@@ -38,7 +38,7 @@
 				<file name="hog.c" path="soft/hog.c" desc=""/>
 			</files>
 		</implementation>
-	</implementations>
+	</implementations>-->
 	<clocks>
 	</clocks>
 </process>
