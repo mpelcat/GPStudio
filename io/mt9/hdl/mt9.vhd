@@ -65,7 +65,9 @@ component mt9_config_slave
 		ystart_o 		: out std_logic_vector(31 downto 0);
 		xend_o	 		: out std_logic_vector(31 downto 0);
 		yend_o			: out std_logic_vector(31 downto 0);
-		autoexp_o		: out std_logic_vector(31 downto 0);
+		autoexp_o		: out std_logic;
+		flipvert_o		: out std_logic;
+		mirrorx_o		: out std_logic;
 		integtime_o		: out std_logic_vector(31 downto 0);
 		linelenght_o	: out std_logic_vector(31 downto 0);
 		need_to_reconf_o : out std_logic
@@ -93,7 +95,9 @@ component mt9_config_i2c
 		ystart_i		: in std_logic_vector(31 downto 0);
 		xend_i			: in std_logic_vector(31 downto 0);
 		yend_i			: in std_logic_vector(31 downto 0);
-		autoexp_i		: in std_logic_vector(31 downto 0);
+		autoexp_i		: in std_logic;
+		flipvert_i		: in std_logic;
+		mirrorx_i		: in std_logic;
 		integtime_i		: in std_logic_vector(31 downto 0);
 		linelenght_i	: in std_logic_vector(31 downto 0);
 		send_reconf_i	: in std_logic;
@@ -157,7 +161,9 @@ end component;
 	signal ystart_s : std_logic_vector(31 downto 0);
 	signal xend_s : std_logic_vector(31 downto 0);
 	signal yend_s : std_logic_vector(31 downto 0);
-	signal autoexp_s : std_logic_vector(31 downto 0);
+	signal autoexp_s : std_logic;
+	signal flipvert_s : std_logic;
+	signal mirrorx_s : std_logic;
 	signal integtime_s : std_logic_vector(31 downto 0);
 	signal linelenght_s : std_logic_vector(31 downto 0);
 
@@ -189,6 +195,8 @@ begin
 		xend_o				=>	xend_s,
 		yend_o				=>	yend_s,
 		autoexp_o			=> autoexp_s,
+		flipvert_o			=> flipvert_s,
+		mirrorx_o			=> mirrorx_s,
 		integtime_o			=> integtime_s,
 		linelenght_o		=> linelenght_s,
 		need_to_reconf_o	=>	need_to_reconf_s
@@ -216,6 +224,8 @@ begin
 		xend_i			=>	xend_s,
 		yend_i			=>	yend_s,
 		autoexp_i		=>	autoexp_s,
+		flipvert_i		=>	flipvert_s,
+		mirrorx_i		=>	mirrorx_s,
 		integtime_i		=> integtime_s,
 		linelenght_i	=>	linelenght_s,
 		send_reconf_i	=>	send_reconf_s,

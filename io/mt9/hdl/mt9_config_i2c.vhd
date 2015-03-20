@@ -25,7 +25,9 @@ entity mt9_config_i2c is
 		ystart_i		: in std_logic_vector(31 downto 0);
 		xend_i			: in std_logic_vector(31 downto 0);
 		yend_i			: in std_logic_vector(31 downto 0);
-		autoexp_i		: in std_logic_vector(31 downto 0);
+		autoexp_i		: in std_logic;
+		flipvert_i		: in std_logic;
+		mirrorx_i		: in std_logic;
 		integtime_i		: in std_logic_vector(31 downto 0);
 		linelenght_i	: in std_logic_vector(31 downto 0);
 		send_reconf_i	: in std_logic;
@@ -37,7 +39,7 @@ end mt9_config_i2c;
 
 architecture rtl of mt9_config_i2c is
 
-	constant GEN_NUM_REG : integer := 10;
+	constant GEN_NUM_REG : integer := 11;
 	
 	-- MT9 I2C constant for comunication
 	constant MT9_I2C_SLAVE_ADDR			: std_logic_vector(7 downto 0)	:= x"20";
@@ -52,6 +54,7 @@ architecture rtl of mt9_config_i2c is
 	constant EMBEDDED_DATA_CTRL_I2CREG	: std_logic_vector(15 downto 0) := x"3064";
 	constant PLL_MULTIPLIER_I2CREG		: std_logic_vector(15 downto 0) := x"3030";
 	constant LINE_LENGHT_PCK_I2CREG		: std_logic_vector(15 downto 0) := x"300C";
+	constant READ_MODE_I2CREG			: std_logic_vector(15 downto 0) := x"3040";
 
 	-- counter for power up timer and reset
 	signal p0_cnt1 : integer range 1 to 200000 := 1;
@@ -115,7 +118,7 @@ begin
 	-- int_reg_start_data(4) <= x"0003"; -- 3: Fade-to-grey color bar test pattern
 
 	int_reg_start_addr(6) <= AE_CTRL_REG_I2CREG;	-- Auto Exposure
-	int_reg_start_data(6) <= autoexp_i(15 downto 0);
+	int_reg_start_data(6) <= "000000000000000" & autoexp_i;
 	-- Autoexposure control: 	x"0000" disables AE,
 	--							x"0001" enables AE,
 	--							x"0003" enables AE + auto analog gain
@@ -130,6 +133,9 @@ begin
 
 	int_reg_start_addr(9) <= LINE_LENGHT_PCK_I2CREG;	-- line lenght reg
 	int_reg_start_data(9) <= linelenght_i(15 downto 0);
+
+	int_reg_start_addr(10) <= READ_MODE_I2CREG;			-- mirror x and y
+	int_reg_start_data(10) <= flipvert_i & mirrorx_i & "00000000000000";
 
 	-- Reset register & i/o configuration
 	--int_reg_start_addr(9) <= RESET_REGISTER_I2CREG;	-- reset register

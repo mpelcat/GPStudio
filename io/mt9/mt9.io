@@ -34,7 +34,13 @@
 		<param name="YSTART" regaddr="3" propertymap="roi1.y.value"/>
 		<param name="XEND" regaddr="4" propertymap="roi1.x.value+roi1.w.value-1"/>
 		<param name="YEND" regaddr="5" propertymap="roi1.y.value+roi1.h.value-1"/>
-		<param name="AUTOEXP" regaddr="6" propertymap="auto_exposure.value"/>
+		<param name="MODE" regaddr="6">
+			<bitfields>
+				<bitfield name="autoexp" type="int" bitfield="0" default="0" propertymap="auto_exposure.value" desc="Auto exposure bit"/>
+				<bitfield name="flipy" type="int" bitfield="1" default="0" propertymap="flipy.value" desc="flipy"/>
+				<bitfield name="flipx" type="int" bitfield="2" default="0" propertymap="flipx.value" desc="flipx"/>
+			</bitfields>
+		</param>
 		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime.value"/>
 		<param name="LINELENGHT" regaddr="8" propertymap="linelenght.value"/>
 		
@@ -51,6 +57,8 @@
 				<property name="h" value="240" type="int" step="2" assert="roi.h%2==0" min="2" max="960"/>
 			</properties>
 		</property>
+		<property name="flipx" caption="X mirror" type="bool"/>
+		<property name="flipy" caption="Y flip" type="bool"/>
 		<property name="auto_exposure" caption="auto exposure" type="bool"/>
 		<property name="exposuretime" value="1000" caption="exposure time" type="sint" min="0" max="4500"/>
 		<property name="linelenght" value="1650" type="int" assert="" min="1650" max="4500"/>

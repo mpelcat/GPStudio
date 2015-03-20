@@ -24,7 +24,9 @@ entity mt9_config_slave is
 		ystart_o		: out std_logic_vector(31 downto 0);
 		xend_o			: out std_logic_vector(31 downto 0);
 		yend_o			: out std_logic_vector(31 downto 0);
-		autoexp_o		: out std_logic_vector(31 downto 0);
+		autoexp_o		: out std_logic;
+		flipvert_o		: out std_logic;
+		mirrorx_o		: out std_logic;
 		integtime_o		: out std_logic_vector(31 downto 0);
 		linelenght_o	: out std_logic_vector(31 downto 0);
 		need_to_reconf_o : out std_logic
@@ -38,7 +40,7 @@ architecture rtl of mt9_config_slave is
 	constant YSTART_REG_ADDR		: natural := 3;
 	constant XEND_REG_ADDR			: natural := 4;
 	constant YEND_REG_ADDR			: natural := 5;
-	constant AUTOEXP_REG_ADDR		: natural := 6;
+	constant MODE_REG_ADDR			: natural := 6;
 	constant INTEGTIME_REG_ADDR		: natural := 7;
 	constant LINE_LENGHT_REG_ADDR	: natural := 8;
 
@@ -49,7 +51,9 @@ architecture rtl of mt9_config_slave is
 	signal ystart_reg		: std_logic_vector(31 downto 0);
 	signal xend_reg			: std_logic_vector(31 downto 0);
 	signal yend_reg			: std_logic_vector(31 downto 0);
-	signal autoexp_reg		: std_logic_vector(31 downto 0);
+	signal autoexp_reg		: std_logic;
+	signal flipvert_reg		: std_logic;
+	signal mirrorx_reg		: std_logic;
 	signal integtime_reg	: std_logic_vector(31 downto 0);
 	signal linelenght_reg	: std_logic_vector(31 downto 0);
 
@@ -65,7 +69,9 @@ begin
 			ystart_reg <= std_logic_vector(to_unsigned(0, 32));
 			xend_reg <= std_logic_vector(to_unsigned(320, 32));
 			yend_reg <= std_logic_vector(to_unsigned(240, 32));
-			autoexp_reg <= std_logic_vector(to_unsigned(0, 32));
+			autoexp_reg <= '0';
+			flipvert_reg <= '0';
+			mirrorx_reg <= '0';
 			integtime_reg <= x"000000E6";
 			linelenght_reg <= std_logic_vector(to_unsigned(1650, 32));
 			need_to_reconf_o <= '1';
@@ -89,8 +95,10 @@ begin
 					when std_logic_vector(to_unsigned(YEND_REG_ADDR, 4))=>
 						yend_reg <= datawr_i;
 						need_to_reconf_o <= '1';
-					when std_logic_vector(to_unsigned(AUTOEXP_REG_ADDR, 4))=>
-						autoexp_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(MODE_REG_ADDR, 4))=>
+						autoexp_reg <= datawr_i(0);
+						flipvert_reg <= datawr_i(1);
+						mirrorx_reg <= datawr_i(2);
 						need_to_reconf_o <= '1';
 					when std_logic_vector(to_unsigned(INTEGTIME_REG_ADDR, 4))=>
 						integtime_reg <= datawr_i;
@@ -111,6 +119,8 @@ begin
 	xend_o <= xend_reg;
 	yend_o <= yend_reg;
 	autoexp_o <= autoexp_reg;
+	flipvert_o <= flipvert_reg;
+	mirrorx_o <= mirrorx_reg;
 	integtime_o <= integtime_reg;
 	linelenght_o <= linelenght_reg;
 	
