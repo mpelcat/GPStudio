@@ -7,7 +7,7 @@ class IO extends Block
 	function __construct($io_device_element, $io_node_element=null)
 	{
 		parent::__construct();
-		if(get_class($io_device_element)==='SimpleXMLElement')
+		if(is_object($io_device_element) and get_class($io_device_element)==='SimpleXMLElement')
 		{
 			$io_name = (string)$io_device_element['name'];
 			$this->name = $io_name;
@@ -26,6 +26,7 @@ class IO extends Block
 		else
 		{
 			$io_file = $io_device_element;
+			$this->path = realpath(dirname($io_file));
 		}
 		
 		if (!file_exists($io_file)){echo "File $io_file doesn't exist\n";return;}

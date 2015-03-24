@@ -17,11 +17,11 @@ if(!file_exists($config_block_file))
 }
 
 $block = null;
-if(substr($config_block_file, -2)==="io")
+if(substr($config_block_file, -3)===".io")
 {
 	$block = new IO($config_block_file);
 }
-elseif(substr($config_block_file, -4)==="proc")
+elseif(substr($config_block_file, -5)===".proc")
 {
 	$block = new Process($config_block_file);
 }
@@ -31,12 +31,12 @@ else
 	exit;
 }
 
-$block->name=basename($config_block_file);
+$block->name=preg_replace('/\\.[^.\\s]{3,5}$/', '', basename($config_block_file));
 if($block->size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
 
 $generator = new VHDL_generator($block->name);
 $generator->fromBlock($block);
-$generator->save_as(getcwd().DIRECTORY_SEPARATOR.$block->name.'.vhd');
+$generator->save_as($block->path.DIRECTORY_SEPARATOR.$block->name.'.vhd');
 
 echo $block->name.'.vhd'.' generated'."\n";
 

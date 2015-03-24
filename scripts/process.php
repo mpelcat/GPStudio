@@ -8,7 +8,7 @@ class Process extends Block
 	{
 		parent::__construct();
 		
-		if(get_class($process_node_element)==='SimpleXMLElement')
+		if(is_object($process_node_element) and get_class($process_node_element)==='SimpleXMLElement')
 		{
 			$inlib=true;
 			
@@ -48,6 +48,7 @@ class Process extends Block
 			if (!($this->xml = simplexml_load_file($process_file))){echo "Error when parsing $process_file \n";return;}
 			
 			$this->parse_xml($this->xml);
+			$this->path = realpath(dirname($process_node_element));
 		}
 		
 		unset($this->xml);
