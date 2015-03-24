@@ -1,0 +1,95 @@
+[*]
+[*] GTKWave Analyzer v3.3.61 (w)1999-2014 BSI
+[*] Tue Mar 24 13:58:10 2015
+[*]
+[dumpfile] "/tmp/tb_n.vcd"
+[dumpfile_mtime] "Tue Mar 24 13:52:15 2015"
+[dumpfile_size] 31193561
+[savefile] "/home/luca/Seafile/My Library/GPStudio_lib/process/normhw/testbench/tb_n.gtkw"
+[timestart] 483100
+[size] 1920 1053
+[pos] -1 -1
+*-12.923512 513000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_n.
+[sst_width] 211
+[signals_width] 273
+[sst_expanded] 1
+[sst_vpaned_height] 312
+@24
+tb_n.normhw_inst.clk_proc
+@c00024
+tb_n.normhw_inst.div_token[9:0]
+@28
+(0)tb_n.normhw_inst.div_token[9:0]
+(1)tb_n.normhw_inst.div_token[9:0]
+(2)tb_n.normhw_inst.div_token[9:0]
+(3)tb_n.normhw_inst.div_token[9:0]
+(4)tb_n.normhw_inst.div_token[9:0]
+(5)tb_n.normhw_inst.div_token[9:0]
+(6)tb_n.normhw_inst.div_token[9:0]
+(7)tb_n.normhw_inst.div_token[9:0]
+(8)tb_n.normhw_inst.div_token[9:0]
+(9)tb_n.normhw_inst.div_token[9:0]
+@1401200
+-group_end
+@c00024
+tb_n.normhw_inst.acc_token[7:0]
+@28
+(0)tb_n.normhw_inst.acc_token[7:0]
+(1)tb_n.normhw_inst.acc_token[7:0]
+(2)tb_n.normhw_inst.acc_token[7:0]
+(3)tb_n.normhw_inst.acc_token[7:0]
+(4)tb_n.normhw_inst.acc_token[7:0]
+(5)tb_n.normhw_inst.acc_token[7:0]
+(6)tb_n.normhw_inst.acc_token[7:0]
+(7)tb_n.normhw_inst.acc_token[7:0]
+@1401200
+-group_end
+@24
+tb_n.normhw_inst.in_fv
+tb_n.normhw_inst.in_dv
+@28
+tb_n.normhw_inst.dv_s
+tb_n.normhw_inst.shift_dv
+@24
+#{tb_n.normhw_inst.in_data[15:0]} tb_n.normhw_inst.in_data[15] tb_n.normhw_inst.in_data[14] tb_n.normhw_inst.in_data[13] tb_n.normhw_inst.in_data[12] tb_n.normhw_inst.in_data[11] tb_n.normhw_inst.in_data[10] tb_n.normhw_inst.in_data[9] tb_n.normhw_inst.in_data[8] tb_n.normhw_inst.in_data[7] tb_n.normhw_inst.in_data[6] tb_n.normhw_inst.in_data[5] tb_n.normhw_inst.in_data[4] tb_n.normhw_inst.in_data[3] tb_n.normhw_inst.in_data[2] tb_n.normhw_inst.in_data[1] tb_n.normhw_inst.in_data[0]
+#{tb_n.normhw_inst.shiftout_ext[26:0]} tb_n.normhw_inst.shiftout_ext[26] tb_n.normhw_inst.shiftout_ext[25] tb_n.normhw_inst.shiftout_ext[24] tb_n.normhw_inst.shiftout_ext[23] tb_n.normhw_inst.shiftout_ext[22] tb_n.normhw_inst.shiftout_ext[21] tb_n.normhw_inst.shiftout_ext[20] tb_n.normhw_inst.shiftout_ext[19] tb_n.normhw_inst.shiftout_ext[18] tb_n.normhw_inst.shiftout_ext[17] tb_n.normhw_inst.shiftout_ext[16] tb_n.normhw_inst.shiftout_ext[15] tb_n.normhw_inst.shiftout_ext[14] tb_n.normhw_inst.shiftout_ext[13] tb_n.normhw_inst.shiftout_ext[12] tb_n.normhw_inst.shiftout_ext[11] tb_n.normhw_inst.shiftout_ext[10] tb_n.normhw_inst.shiftout_ext[9] tb_n.normhw_inst.shiftout_ext[8] tb_n.normhw_inst.shiftout_ext[7] tb_n.normhw_inst.shiftout_ext[6] tb_n.normhw_inst.shiftout_ext[5] tb_n.normhw_inst.shiftout_ext[4] tb_n.normhw_inst.shiftout_ext[3] tb_n.normhw_inst.shiftout_ext[2] tb_n.normhw_inst.shiftout_ext[1] tb_n.normhw_inst.shiftout_ext[0]
+tb_n.normhw_inst.acc[18:0]
+@25
+tb_n.normhw_inst.acc_d[18:0]
+@28
+tb_n.normhw_inst.acc_clear
+@24
+tb_n.normhw_inst.counter[5:0]
+@200
+-output
+@28
+tb_n.normhw_inst.out_fv
+@24
+tb_n.normhw_inst.out_dv
+#{tb_n.normhw_inst.out_data[15:0]} tb_n.normhw_inst.out_data[15] tb_n.normhw_inst.out_data[14] tb_n.normhw_inst.out_data[13] tb_n.normhw_inst.out_data[12] tb_n.normhw_inst.out_data[11] tb_n.normhw_inst.out_data[10] tb_n.normhw_inst.out_data[9] tb_n.normhw_inst.out_data[8] tb_n.normhw_inst.out_data[7] tb_n.normhw_inst.out_data[6] tb_n.normhw_inst.out_data[5] tb_n.normhw_inst.out_data[4] tb_n.normhw_inst.out_data[3] tb_n.normhw_inst.out_data[2] tb_n.normhw_inst.out_data[1] tb_n.normhw_inst.out_data[0]
+@c00024
+tb_n.normhw_inst.fv_token[17:0]
+@28
+(0)tb_n.normhw_inst.fv_token[17:0]
+(1)tb_n.normhw_inst.fv_token[17:0]
+(2)tb_n.normhw_inst.fv_token[17:0]
+(3)tb_n.normhw_inst.fv_token[17:0]
+(4)tb_n.normhw_inst.fv_token[17:0]
+(5)tb_n.normhw_inst.fv_token[17:0]
+(6)tb_n.normhw_inst.fv_token[17:0]
+(7)tb_n.normhw_inst.fv_token[17:0]
+(8)tb_n.normhw_inst.fv_token[17:0]
+(9)tb_n.normhw_inst.fv_token[17:0]
+(10)tb_n.normhw_inst.fv_token[17:0]
+(11)tb_n.normhw_inst.fv_token[17:0]
+(12)tb_n.normhw_inst.fv_token[17:0]
+(13)tb_n.normhw_inst.fv_token[17:0]
+(14)tb_n.normhw_inst.fv_token[17:0]
+(15)tb_n.normhw_inst.fv_token[17:0]
+(16)tb_n.normhw_inst.fv_token[17:0]
+(17)tb_n.normhw_inst.fv_token[17:0]
+@1401200
+-group_end
+[pattern_trace] 1
+[pattern_trace] 0
