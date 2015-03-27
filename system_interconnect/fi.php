@@ -18,29 +18,31 @@ class FlowInterconnect extends Block
 	
 	static function showFlows($block, $dir)
 	{
-		echo "[FI] Available flows for $block->name :\n";
+		$str = "[FI] Available flows $dir for $block->name :\n";
 		$count=0;
 		foreach($block->flows as $flow)
 		{
 			if($flow->type==$dir)
 			{
-				echo "\t+ $flow->name\n";
+				$str .= "\t+ $flow->name\n";
 				$count++;
 			}
 		}
-		if($count==0) echo "\tNo flow $dir available";
+		if($count==0) $str .= "\tNo flow $dir available";
+		return $str;
 	}
 	
 	static function showBlocks($node)
 	{
-		echo "[FI] Available blocks :\n";
+		$str = "[FI] Available blocks :\n";
 		foreach($node->blocks as $block)
 		{
 			if($block->name!="fi" and $block->name!="bi")
 			{
-				echo "\t+ $block->name\n";
+				$str .= "\t+ $block->name\n";
 			}
 		}
+		return $str;
 	}
 	
 	function configure($node, $block)
@@ -72,10 +74,10 @@ class FlowInterconnect extends Block
 			foreach($node->connects as $connect)
 			{
 				// check connexion
-				if(!$fromblock=$node->getBlock($connect->fromblock)) { echo "[FI] Block '$connect->fromblock' doesn't exists.\n"; FlowInterconnect::showBlocks($node); exit(15); }
-				if(!$fromflow=$fromblock->getFlow($connect->fromflow)) { echo "[FI] Flow '$connect->fromflow' doesn't exists in block '$connect->fromblock'.\n"; FlowInterconnect::showFlows($fromblock, "out"); exit(15); }
-				if(!$toblock=$node->getBlock($connect->toblock)) { echo "[FI] Block '$connect->toblock' doesn't exists.\n"; FlowInterconnect::showBlocks($node); exit(15); }
-				if(!$toflow=$toblock->getFlow($connect->toflow)) { echo "[FI] Flow '$connect->toflow' doesn't exists in block '$connect->toblock'.\n"; FlowInterconnect::showFlows($toblock, "in"); exit(15); }
+				if(!$fromblock=$node->getBlock($connect->fromblock)) { error("Block '$connect->fromblock' doesn't exists.\n".FlowInterconnect::showBlocks($node),15,"FI"); }
+				if(!$fromflow=$fromblock->getFlow($connect->fromflow)) { error("Flow '$connect->fromflow' doesn't exists in block '$connect->fromblock'"."\n".FlowInterconnect::showFlows($fromblock, "out"),15,"FI"); }
+				if(!$toblock=$node->getBlock($connect->toblock)) { error("Block '$connect->toblock' doesn't exists.\n".FlowInterconnect::showBlocks($node),15,"FI"); }
+				if(!$toflow=$toblock->getFlow($connect->toflow)) { error("Flow '$connect->toflow' doesn't exists in block '$connect->toblock'.\n".FlowInterconnect::showFlows($toblock, "in"),15,"FI"); }
 				
 				// create tree of connexions
 				if(!array_key_exists($toblock->name.'_'.$toflow->name, $tree_connects))
@@ -260,7 +262,7 @@ class FlowInterconnect extends Block
 				{
 					$padding_size = $out_size - $in_size;
 					$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-					echo "[FI] Warning : Size of flow $in_connect > size of flow ".$out_connects[0]['name']."\n";
+					warning("Size of flow $in_connect > size of flow ".$out_connects[0]['name'],10,"FI");
 				}
 				$code.='	'.$in_connect.'_fv <=  '.$out_connects[0]['name'].'_fv;'."\n";
 				$code.='	'.$in_connect.'_dv <=  '.$out_connects[0]['name'].'_dv;'."\n"."\n";
@@ -304,7 +306,7 @@ class FlowInterconnect extends Block
 						{
 							$padding_size = $out_size - $in_size;
 							$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-							echo "[FI] Warning : Size of flow $in_connect > size of flow ".$out_connect['name']."\n";
+							warning("Size of flow $in_connect > size of flow ".$out_connect['name'],10,"FI");
 						}
 					
 						$code.='					'.$in_connect.'_fv <= '.$out_connect['name'].'_fv;'."\n";

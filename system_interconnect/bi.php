@@ -140,10 +140,17 @@ class BusInterconnect extends Block
 	
 		if(file_exists($filename))
 		{
-			$handle = fopen($filename, 'r');
-			$actualContent = fread($handle, filesize($filename));
-			fclose($handle);
-			if($actualContent != $content) $needToReplace = true;
+			if(filesize($filename)==0)
+			{
+				$needToReplace = true;
+			}
+			else
+			{				
+				$handle = fopen($filename, 'r');
+				$actualContent = fread($handle, filesize($filename));
+				fclose($handle);
+				if($actualContent != $content) $needToReplace = true;
+			}
 		}
 		else $needToReplace = true;
 	
