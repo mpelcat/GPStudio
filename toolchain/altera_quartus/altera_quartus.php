@@ -73,7 +73,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						}
 						
 						// update the path file to the new copy path relative to project
-						$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
+						if($file->generated!==true)
+						{
+							$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
+						}
 					}
 				}
 			}

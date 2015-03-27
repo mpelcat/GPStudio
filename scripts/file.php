@@ -27,6 +27,12 @@ class File
 	public $path;
 
 	/**
+	* True if this file is generated, so the path is not modified by the toolchain
+	* @var bool $generated
+	*/
+	public $generated;
+
+	/**
 	* Description of the file (optional)
 	* @var string $desc
 	*/
@@ -34,6 +40,7 @@ class File
 	
 	function __construct($xml=null)
 	{
+		$this->generated = false;
 		if($xml) $this->parse_xml($xml);
 	}
 	
