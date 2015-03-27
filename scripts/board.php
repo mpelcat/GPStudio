@@ -53,8 +53,8 @@ class Board
 		
 		// open device define file (.dev)
 		$this->board_file = LIB_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
-		if (!file_exists($this->board_file)){echo "File $this->board_file doesn't exist\n";return;}
-		if (!($this->xml = simplexml_load_file($this->board_file))){echo "Error when parsing $this->board_file \n";return;}
+		if (!file_exists($this->board_file)) error("File $this->board_file doesn't exist",5,"Board");
+		if (!($this->xml = simplexml_load_file($this->board_file))) error("Error when parsing $this->board_file",5,"Board");
 		
 		$this->parse_xml($board_element, $node);
 		unset($this->xml);
@@ -120,11 +120,11 @@ class Board
 		}
 		
 		// replace default param value directly in .node file
-		$concerned_block = NULL;
 		foreach($board_element->ios->io as $io)
 		{
 			if(isset($io->params))
 			{
+				$concerned_block = NULL;
 				foreach($node->blocks as $block)
 				{
 					if($block->name==$io['name']) $concerned_block=$block;

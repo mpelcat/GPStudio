@@ -406,8 +406,8 @@ class VHDL_generator
 	function save_as($filename)
 	{
 		$handle = null;
-		if (!$handle = fopen($filename, 'w')) {  echo "$filename cannot be openned\n"; exit; }
-		if (fwrite($handle, $this->get_content()) === FALSE) { echo "$filename cannot be written\n"; exit; }
+		if (!$handle = fopen($filename, 'w')) error("$filename cannot be openned",5,"Vhdl Gen");
+		if (fwrite($handle, $this->get_content()) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
 		fclose($handle);
 	}
 	
@@ -429,8 +429,8 @@ class VHDL_generator
 		if($needToReplace)
 		{
 			$handle = null;
-			if (!$handle = fopen($filename, 'w')) {  echo "$filename cannot be openned\n"; exit; }
-			if (fwrite($handle, $this->get_content()) === FALSE) { echo "$filename cannot be written\n"; exit; }
+			if (!$handle = fopen($filename, 'w')) error("$filename cannot be openned",5,"Vhdl Gen");
+			if (fwrite($handle, $this->get_content()) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
 			fclose($handle);
 		}
 	}

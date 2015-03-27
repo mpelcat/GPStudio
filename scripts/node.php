@@ -56,8 +56,8 @@ class Node
 	
 	protected function parse_config_xml($node_file)
 	{
-		if (!file_exists($node_file)){echo "File $node_file doesn't exist\n";return;}
-		if (!($xml = simplexml_load_file($node_file))){echo "Error when parsing $node_file \n";return;}
+		if (!file_exists($node_file)) error("File $node_file doesn't exist",5,"Node");
+		if (!($xml = simplexml_load_file($node_file))) error("Error when parsing $node_file",5,"Node");
 		$this->node_file = $node_file;
 	
 		$this->name = (string)$xml['name'];

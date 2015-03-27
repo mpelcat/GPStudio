@@ -29,8 +29,8 @@ class IO extends Block
 			$this->path = realpath(dirname($io_file));
 		}
 		
-		if (!file_exists($io_file)){echo "File $io_file doesn't exist\n";return;}
-		if (!($this->xml = simplexml_load_file($io_file))){echo "Error when parsing $io_file \n";return;}
+		if (!file_exists($io_file)) error("File $io_file doesn't exist",5,"IO");
+		if (!($this->xml = simplexml_load_file($io_file))) error("Error when parsing $io_file",5,"IO");
 	
 		$this->parse_xml($io_device_element, $io_node_element);
 		unset($this->xml);

@@ -156,12 +156,8 @@ class BusInterconnect extends Block
 	
 		if($needToReplace)
 		{
-			if (!$handle = fopen($filename, 'w'))
-			{
-				 echo "$filename cannot be openned\n";
-				 exit;
-			}
-			if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
+			if (!$handle = fopen($filename, 'w')) error("$filename cannot be openned",5,"FI");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"FI");
 			fclose($handle);
 		}
 	}

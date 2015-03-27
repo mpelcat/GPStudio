@@ -30,8 +30,8 @@ class Process extends Block
 				$this->path = LIB_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
 				$process_file = $this->path . $this->driver . '.proc';
 				
-				if (!file_exists($process_file)){echo "File $process_file doesn't exist\n";return;}
-				if (!($this->xml = simplexml_load_file($process_file))){echo "Error when parsing $process_file \n";return;}
+				if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
+				if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");
 				
 				$this->parse_xml($this->xml);
 			}
@@ -44,8 +44,8 @@ class Process extends Block
 		{
 			$process_file = $process_node_element;
 			
-			if (!file_exists($process_file)){echo "File $process_file doesn't exist\n";return;}
-			if (!($this->xml = simplexml_load_file($process_file))){echo "Error when parsing $process_file \n";return;}
+			if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
+			if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");
 			
 			$this->parse_xml($this->xml);
 			$this->path = realpath(dirname($process_node_element));

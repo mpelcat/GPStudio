@@ -40,8 +40,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				{
 					if(!file_exists($block->path.$file->path))
 					{
-						echo $block->path.$file->path."\n";
-						echo "$file->name doesn't exists\n";
+						warning("$block->path$file->path doesn't exists",5,$block->name);
 					}
 					else
 					{
@@ -69,7 +68,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						{
 							if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
 							{
-								echo "failed to copy $file->name\n";
+								warning("failed to copy $file->name",5,$block->name);
 							}
 						}
 						
@@ -88,12 +87,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		
 		if($needToReplace)
 		{
-			if (!$handle = fopen($filename, 'w'))
-			{
-				 echo "$filename cannot be openned\n";
-				 exit;
-			}
-			if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
+			if (!$handle = fopen($filename, 'w')) error("$filename cannot be openned",5,"Altera toolchain");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Altera toolchain");
 			fclose($handle);
 		}
 	}
@@ -214,12 +209,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			
 			if($needToReplace)
 			{
-				if (!$handle = fopen($filename, 'w'))
-				{
-					 echo "$filename cannot be openned\n";
-					 exit;
-				}
-				if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
+				if (!$handle = fopen($filename, 'w')) error("$filename cannot be openned",5,"Altera toolchain");
+				if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Altera toolchain");
 				fclose($handle);
 			}
 		}

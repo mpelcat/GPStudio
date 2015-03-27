@@ -22,5 +22,6 @@ $toolchain->configure_project($node);
 $toolchain->generate_project($node, getcwd());
 
 $node->saveXml("node_generated.xml");
+message("Project successfully generated ($warningCount warnings).");
 
 ?>
