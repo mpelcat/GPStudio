@@ -163,7 +163,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					elseif($file->type=="sdc") {$type='SDC_FILE';}
 					elseif($file->type=="hex") {$type='HEX_FILE';}
 					
-					if($block->in_lib)
+					if($block->in_lib and $file->generated===false)
 					{
 						$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
 					}
