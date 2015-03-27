@@ -6,13 +6,15 @@ require_once("toolchain/hdl/hdl.php");
 class Altera_quartus_toolchain extends HDL_toolchain
 {
 	private $nopartitions;
+	private $noqsf;
 	
 	public function configure_project($node)
 	{
 		global $argv;
 		parent::configure_project($node);
 		
-		if(in_array("nopartitions", $argv))	$this->nopartitions = 1; else $this->nopartitions = 0;
+		if(in_array("nopartitions", $argv)) $this->nopartitions = 1; else $this->nopartitions = 0;
+		if(in_array("noqsf", $argv)) $this->noqsf = 1; else $this->noqsf = 0;
 	}
 	
 	public function generate_project($node, $path)
@@ -195,28 +197,31 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			}
 		}
 		
-		// save file if it's different
-		$filename = $path.DIRECTORY_SEPARATOR."$node->name.qsf";
-		$needToReplace = false;
-		
-		if(file_exists($filename))
+		if($this->noqsf==0)
 		{
-			$handle = fopen($filename, 'r');
-			$actualContent = fread($handle, filesize($filename));
-			fclose($handle);
-			if($actualContent != $content) $needToReplace = true;
-		}
-		else $needToReplace = true;
-		
-		if($needToReplace)
-		{
-			if (!$handle = fopen($filename, 'w'))
+			// save file if it's different
+			$filename = $path.DIRECTORY_SEPARATOR."$node->name.qsf";
+			$needToReplace = false;
+			
+			if(file_exists($filename))
 			{
-				 echo "$filename cannot be openned\n";
-				 exit;
+				$handle = fopen($filename, 'r');
+				$actualContent = fread($handle, filesize($filename));
+				fclose($handle);
+				if($actualContent != $content) $needToReplace = true;
 			}
-			if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
-			fclose($handle);
+			else $needToReplace = true;
+			
+			if($needToReplace)
+			{
+				if (!$handle = fopen($filename, 'w'))
+				{
+					 echo "$filename cannot be openned\n";
+					 exit;
+				}
+				if (fwrite($handle, $content) === FALSE) { echo "$filename cannot be written\n"; exit; }
+				fclose($handle);
+			}
 		}
 	}
 }
