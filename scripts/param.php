@@ -194,6 +194,15 @@ class Param
 		
 		return $xml_element;
 	}
+	
+	function getParambitfield($name)
+	{
+		foreach($this->parambitfields as $parambitfield)
+		{
+			if($parambitfield->name==$name) return $parambitfield;
+		}
+		return null;
+	}
 }
 
 ?>

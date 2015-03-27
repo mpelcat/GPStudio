@@ -185,11 +185,83 @@ class Block
 		}
 	}
 	
+	function getParam($name)
+	{
+		foreach($this->params as $param)
+		{
+			if($param->name==$name) return $param;
+		}
+		return null;
+	}
+	
+	function getProperty($name)
+	{
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) return $property;
+		}
+		return null;
+	}
+	
+	function getFile($name)
+	{
+		foreach($this->files as $file)
+		{
+			if($file->name==$name) return $file;
+		}
+		return null;
+	}
+	
 	function getFlow($name)
 	{
 		foreach($this->flows as $flow)
 		{
 			if($flow->name==$name) return $flow;
+		}
+		return null;
+	}
+	
+	function getClock($name)
+	{
+		foreach($this->clocks as $clock)
+		{
+			if($clock->name==$name) return $clock;
+		}
+		return null;
+	}
+	
+	function getReset($name)
+	{
+		foreach($this->resets as $reset)
+		{
+			if($reset->name==$name) return $reset;
+		}
+		return null;
+	}
+	
+	function getPin($name)
+	{
+		foreach($this->pins as $pin)
+		{
+			if($pin->name==$name) return $pin;
+		}
+		return null;
+	}
+	
+	function getExtPort($name)
+	{
+		foreach($this->ext_ports as $extPort)
+		{
+			if($extPort->name==$name) return $extPort;
+		}
+		return null;
+	}
+	
+	function getInterface($name)
+	{
+		foreach($this->interfaces as $interface)
+		{
+			if($interface->name==$name) return $interface;
 		}
 		return null;
 	}

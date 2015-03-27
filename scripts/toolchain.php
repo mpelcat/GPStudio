@@ -76,7 +76,16 @@ class Toolchain
 				break;
 			default:
 				throw new Exception ('Toolchain \''.$toolchain_name.'\' doesn\'t exists.');
-      }
+		}
+	}
+	
+	function getAttribute($name)
+	{
+		foreach($this->attributes as $attribute)
+		{
+			if($attribute->name==$name) return $attribute;
+		}
+		return null;
 	}
 }
 

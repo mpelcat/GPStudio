@@ -66,7 +66,7 @@ class Property
 	public $propertyenums;
 	
 	/**
-	* Array of property class specify the hight level properties
+	* Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;
@@ -181,6 +181,24 @@ class Property
 		}
 		
 		return $xml_element;
+	}
+	
+	function getPropertyEnum($name)
+	{
+		foreach($this->propertyenums as $propertyenum)
+		{
+			if($propertyenum->name==$name) return $propertyenum;
+		}
+		return null;
+	}
+	
+	function getProperty($name)
+	{
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) return $property;
+		}
+		return null;
 	}
 }
 

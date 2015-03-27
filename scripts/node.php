@@ -45,15 +45,6 @@ class Node
 		if($node_file) $this->parse_config_xml($node_file);
 	}
 	
-	function getBlock($name)
-	{
-		foreach($this->blocks as $block)
-		{
-			if($block->name==$name) return $block;
-		}
-		return null;
-	}
-	
 	protected function parse_config_xml($node_file)
 	{
 		if (!file_exists($node_file)) error("File $node_file doesn't exist",5,"Node");
@@ -142,7 +133,24 @@ class Node
 		
 		$xml->save($file);
 	}
-
+	
+	function getBlock($name)
+	{
+		foreach($this->blocks as $block)
+		{
+			if($block->name==$name) return $block;
+		}
+		return null;
+	}
+	
+	function getFlowConnect($name)
+	{
+		foreach($this->flow_connects as $flow_connect)
+		{
+			if($flow_connect->name==$name) return $flow_connect;
+		}
+		return null;
+	}
 }
 
 ?>

@@ -150,6 +150,33 @@ class Board
 			}
 		}
 	}
+	
+	function getClock($name)
+	{
+		foreach($this->clocks as $clock)
+		{
+			if($clock->name==$name) return $clock;
+		}
+		return null;
+	}
+	
+	function getReset($name)
+	{
+		foreach($this->resets as $reset)
+		{
+			if($reset->name==$name) return $reset;
+		}
+		return null;
+	}
+	
+	function getPin($name)
+	{
+		foreach($this->pins as $pin)
+		{
+			if($pin->name==$name) return $pin;
+		}
+		return null;
+	}
 }
 
 ?>
