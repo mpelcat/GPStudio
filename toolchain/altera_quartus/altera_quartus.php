@@ -38,43 +38,43 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			{
 				foreach($block->files as $file)
 				{
-					if(!file_exists($block->path.$file->path))
+					if($file->generated!==true)
 					{
-						warning("$block->path$file->path doesn't exists",5,$block->name);
-					}
-					else
-					{
-						$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
-						
-						// create directory
-						if(!is_dir($path.DIRECTORY_SEPARATOR.$subpath)) mkdir($path.DIRECTORY_SEPARATOR.$subpath, 0777, true);
-						
-						// check if copy is needed
-						$needToCopy = false;
-						if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+						if(!file_exists($block->path.$file->path))
 						{
-							if(filemtime($block->path.$file->path) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
-							{
-								$needToCopy = true;
-							}
+							warning("$block->path$file->path doesn't exists",5,$block->name);
 						}
 						else
 						{
-							$needToCopy = true;
-						}
-						
-						// copy if need
-						if($needToCopy)
-						{
-							if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+							$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
+							
+							// create directory
+							if(!is_dir($path.DIRECTORY_SEPARATOR.$subpath)) mkdir($path.DIRECTORY_SEPARATOR.$subpath, 0777, true);
+							
+							// check if copy is needed
+							$needToCopy = false;
+							if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
 							{
-								warning("failed to copy $file->name",5,$block->name);
+								if(filemtime($block->path.$file->path) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+								{
+									$needToCopy = true;
+								}
 							}
-						}
-						
-						// update the path file to the new copy path relative to project
-						if($file->generated!==true)
-						{
+							else
+							{
+								$needToCopy = true;
+							}
+							
+							// copy if need
+							if($needToCopy)
+							{
+								if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+								{
+									warning("failed to copy $file->name",5,$block->name);
+								}
+							}
+							
+							// update the path file to the new copy path relative to project
 							$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 						}
 					}
