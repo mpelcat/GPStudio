@@ -31,8 +31,8 @@ module normhw(
 	datard_o
 );
 
-localparam IN_WIDTH = 16;
-localparam OUT_WIDTH = 16;
+parameter IN_WIDTH = 16;
+parameter OUT_WIDTH = 16;
 localparam NWORDS = 8;
 localparam NPIPELINE = 10;
 
@@ -150,7 +150,7 @@ always@(posedge clk_proc or negedge reset_n)
 	end	
 
 /* Pre-normalisation compute */		
-assign shiftout_ext = {shiftout, 8'd0};	
+assign shiftout_ext = {shiftout, 11'd0};	
 
 
 /* div_token distribution */
@@ -191,7 +191,7 @@ lpm_divide #(
 	.aclr(1'b0)
 );
 
-assign out_data = out_div[15:0];
+assign out_data = {8'd0, out_div[15:8]};
 
 /* Output signals generations */
 

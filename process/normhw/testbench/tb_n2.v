@@ -1,6 +1,6 @@
 
 `timescale 1ns/100ps
-module tb_n();
+module tb_n2();
 
 	
 	reg clk;
@@ -16,7 +16,7 @@ module tb_n();
 	reg [31:0] toto;	
 		
 	initial begin
-		$dumpfile("/tmp/tb_n.vcd");
+		$dumpfile("/tmp/tb_n2.vcd");
         $dumpvars;
         
         		   
@@ -45,13 +45,14 @@ module tb_n();
 				in_dv <= 0;
 				
 	always@(posedge clk) 
-		if (reset_n == 0)
-			in_fv <= 0;
-		else
-			if (counter < 127 || toto > 1)
-				in_fv <= 1;
-			else
-				in_fv <= 0;	
+		in_fv <= reset_n;
+		//~ if (reset_n == 0)
+			//~ in_fv <= 0;
+		//~ else
+			//~ if (counter < 127 || toto > 1)
+				//~ in_fv <= 1;
+			//~ else
+				//~ in_fv <= 0;	
 				
 	always@(posedge clk) 
 		if (reset_n == 0)

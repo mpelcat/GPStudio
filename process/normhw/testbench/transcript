@@ -1,8 +1,0 @@
-# vsim -L /home/luca/altera/13.1/modelsim_ase/altera/verilog/altera_mf/ -L /home/luca/altera/13.1/modelsim_ase/altera/verilog/220model/ -do {run 200us;quit} -c tb_n 
-# Loading work.tb_n
-# Loading work.normhw
-# Loading /home/luca/altera/13.1/modelsim_ase/altera/verilog/altera_mf/.altshift_taps
-# Loading /home/luca/altera/13.1/modelsim_ase/altera/verilog/220model/.lpm_divide
-# Loading /home/luca/altera/13.1/modelsim_ase/altera/verilog/220model/.LPM_HINT_EVALUATION
-# run 200us 
-# quit 
