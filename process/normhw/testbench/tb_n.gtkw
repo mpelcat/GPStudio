@@ -5,7 +5,7 @@
 [dumpfile] "/tmp/tb_n.vcd"
 [dumpfile_mtime] "Tue Mar 24 13:52:15 2015"
 [dumpfile_size] 31193561
-[savefile] "/home/luca/Seafile/My Library/GPStudio_lib/process/normhw/testbench/tb_n.gtkw"
+[savefile] "tb_n.gtkw"
 [timestart] 483100
 [size] 1920 1053
 [pos] -1 -1
