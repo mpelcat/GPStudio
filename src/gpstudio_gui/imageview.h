@@ -32,6 +32,9 @@ public:
     unsigned int propertyView() const;
     void setPropertyView(unsigned int propertyView);
 
+public slots:
+    void setView(const QRect &viewRect);
+
 protected:
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

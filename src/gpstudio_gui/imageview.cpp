@@ -59,6 +59,19 @@ void ImageView::showImage(const Mat &image, const QString &title)
         }
         showImage(qimg, title);
     }
+    if(image.type()==CV_8UC3)
+    {
+        QImage qimg(image.cols, image.rows, QImage::Format_RGB32);
+        for(int x=0; x<image.cols; x++)
+        {
+            for(int y=0; y<image.rows; y++)
+            {
+                Vec3b pix=image.at<Vec3b>(y,x);
+                qimg.setPixel(x, y, qRgb(pix[2],pix[1],pix[0]));
+            }
+        }
+        showImage(qimg, title);
+    }
 }
 #endif
 
@@ -136,5 +149,10 @@ unsigned int ImageView::propertyView() const
 void ImageView::setPropertyView(unsigned int propertyView)
 {
     _propertyView = propertyView;
+}
+
+void ImageView::setView(const QRect &viewRect)
+{
+    fitInView(viewRect, Qt::KeepAspectRatio);
 }
 
