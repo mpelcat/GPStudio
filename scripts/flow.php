@@ -25,6 +25,12 @@ class Flow
 	* @var string $desc
 	*/
 	public $desc;
+
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
 	
 	function __construct($xml=null)
 	{
@@ -33,6 +39,7 @@ class Flow
 	
 	protected function parse_xml($xml)
 	{
+		$this->parentBlock = null;
 		$this->name = (string)$xml['name'];
 		$this->type = (string)$xml['type'];
 		$this->desc = (string)$xml['desc'];

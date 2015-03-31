@@ -37,9 +37,16 @@ class File
 	* @var string $desc
 	*/
 	public $desc;
+
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
 		$this->generated = false;
 		if($xml) $this->parse_xml($xml);
 	}

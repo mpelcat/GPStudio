@@ -6,6 +6,7 @@ require("vhdl_generator.php");
 
 require_once("fi.php");
 require_once("bi.php");
+require_once("ci.php");
 
 class HDL_toolchain extends Toolchain
 {
@@ -21,6 +22,11 @@ class HDL_toolchain extends Toolchain
 		$flowInterconnect = new FlowInterconnect();
 		array_push($node->blocks, $flowInterconnect);
 		$flowInterconnect->configure($node, $flowInterconnect);
+		
+		// add clock interconnect with config
+		$clockInterconnect = new ClockInterconnect();
+		array_push($node->blocks, $clockInterconnect);
+		$clockInterconnect->configure($node, $clockInterconnect);
 		
 		// add bus interconnect
 		$busInterconnect = new BusInterconnect();
@@ -44,8 +50,16 @@ class HDL_toolchain extends Toolchain
 		// clocks
 		foreach($node->board->clocks as $clock)
 		{
-			$generator->addPort($clock->name, 1, 'in');
+			if($clock->direction=="in")
+			{
+				$generator->addPort($clock->name, 1, 'out');
+			}
+			else
+			{
+				$generator->addPort($clock->name, 1, 'in');
+			}
 		}
+		
 		// resets
 		foreach($node->board->resets as $reset)
 		{
@@ -66,12 +80,16 @@ class HDL_toolchain extends Toolchain
 		}
 		
 		// signals for clocks
+		$generator->addSignalComment(str_pad(' clocks part ',55,'=',STR_PAD_BOTH));
 		$clocks = array();
 		foreach($node->blocks as $block)
 		{
 			foreach($block->clocks as $clock)
 			{
-				if(!in_array($clock->group, $clocks)) array_push($clocks, $clock->group);
+				if($clock->group!="")
+				{
+					if(!in_array($clock->group, $clocks)) array_push($clocks, $clock->group);
+				}
 			}
 		}
 		foreach($clocks as $clock)
@@ -80,6 +98,7 @@ class HDL_toolchain extends Toolchain
 		}
 		
 		// signals for resets
+		$generator->addSignalComment(str_pad(' resets part ',55,'=',STR_PAD_BOTH));
 		$resets = array();
 		foreach($node->blocks as $block)
 		{

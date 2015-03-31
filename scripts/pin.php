@@ -19,9 +19,16 @@ class Pin
 	* @var array|Attribute $attributes
 	*/
 	public $attributes;
+
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
 		$this->attributes = array();
 		
 		if($xml) $this->parse_xml($xml);

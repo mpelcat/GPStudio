@@ -20,9 +20,16 @@ class PropertyEnum
 	*/
 	public $desc;
 
+	/**
+	* Reference to the associated parent Property
+	* @var Property $parentProperty
+	*/
+	public $parentProperty;
+
 	
 	function __construct($xml=null)
 	{
+		$this->parentProperty = null;
 		if($xml) $this->parse_xml($xml);
 	}
 	

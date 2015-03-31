@@ -17,7 +17,8 @@ class IO extends Block
 			$file_config = new File();
 			$file_config->name = $io_driver . ".io";
 			$file_config->path = $io_driver . ".io";
-			array_push($this->files, $file_config);
+			$file_config->parentBlock = $this;
+			$this->addFile($file_config);
 		
 			$this->path = LIB_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
 			$this->in_lib=true;
@@ -47,7 +48,7 @@ class IO extends Block
 		{
 			foreach($this->xml->ports->port as $port)
 			{
-				array_push($this->ext_ports, new Port($port));
+				$this->addExtPort(new Port($port));
 			}
 		}
 		
@@ -56,7 +57,7 @@ class IO extends Block
 		{
 			foreach($io_device_element->pins->pin as $pin)
 			{
-				array_push($this->pins, new Pin($pin));
+				$this->addPin(new Pin($pin));
 			}
 		}
 	}

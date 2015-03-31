@@ -56,7 +56,7 @@ class VHDL_generator
 		// clocks
 		foreach($block->clocks as $clock)
 		{
-			$this->addPort($clock->name, 1, 'in');
+			$this->addPort($clock->name, 1, $clock->direction);
 		}
 		// resets
 		foreach($block->resets as $reset)

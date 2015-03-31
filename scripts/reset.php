@@ -25,9 +25,16 @@ class Reset
 	* @var string $desc
 	*/
 	public $desc;
+
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
 		if($xml) $this->parse_xml($xml);
 	}
 	

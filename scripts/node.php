@@ -40,7 +40,7 @@ class Node
 	function __construct($node_file=null)
 	{
 		$this->blocks = array();
-		$this->connects = array();
+		$this->flow_connects = array();
 		
 		if($node_file) $this->parse_config_xml($node_file);
 	}
@@ -81,7 +81,7 @@ class Node
 					}
 				}
 				
-				array_push($this->blocks, $processBlock);
+				$this->addBlock($processBlock);
 			}
 		}
 		
@@ -92,7 +92,7 @@ class Node
 			{
 				foreach($xml->flow_interconnect->connects->connect as $connect)
 				{
-					array_push($this->connects, new FlowConnect($connect));
+					$this->addFlowConnect(new FlowConnect($connect));
 				}
 			}
 		}
@@ -134,6 +134,17 @@ class Node
 		$xml->save($file);
 	}
 	
+	/** Add a block to the node 
+	 *  @param Block $interface interface to add to the block **/
+	function addBlock($block)
+	{
+		$block->parentNode = $this;
+		array_push($this->blocks, $block);
+	}
+	
+	/** return a reference to the block with the name $name, if not found, return false
+	 *  @param string $name name of the block to search
+	 *  @return Block found block **/
 	function getBlock($name)
 	{
 		foreach($this->blocks as $block)
@@ -143,6 +154,17 @@ class Node
 		return null;
 	}
 	
+	/** Add a flow connection to the block 
+	 *  @param FlowConnect $flow_connect flow connection to add to the block **/
+	function addFlowConnect($flow_connect)
+	{
+		$flow_connect->parentBlock = $this;
+		array_push($this->flow_connects, $flow_connect);
+	}
+	
+	/** return a reference to the flow connection with the name $name, if not found, return false
+	 *  @param string $name name of the flow connection to search
+	 *  @return FlowConnect found flow connection **/
 	function getFlowConnect($name)
 	{
 		foreach($this->flow_connects as $flow_connect)

@@ -20,6 +20,7 @@ entity usb_cypress_CY7C68014A is
 	);
 	port(
 		clk_proc : in std_logic;
+		clk_usb : out std_logic;
 		reset : out std_logic;
 
 		------ external ports ------
@@ -509,7 +510,8 @@ USBFLOW_ARB : component flow_out_arb4
 		f_empty_usb_o =>flow_out_empty_s,
 		
 		clk_i => ifclk,
-		rst_n_i => rst);
+		rst_n_i => rst
+	);
 
 
 
@@ -536,4 +538,6 @@ FLOW_PARAMS: component flow_wishbone
 			clk_out_i => clk_proc, 
 			rst_n_i => rst
 		);
+		
+		clk_usb <= ifclk;
 end rtl;

@@ -26,7 +26,7 @@ class BusInterconnect extends Block
 		$reset->name='reset';
 		$reset->direction='in';
 		$reset->group='reset_n';
-		array_push($this->resets, $reset);
+		$this->addReset($reset);
 		
 		// compute the size of the memory bus
 		$sum_space_addr_rel = 0;
@@ -53,8 +53,8 @@ class BusInterconnect extends Block
 					if($addr_space[$addr]==-1)
 					{
 						$block->addr_abs = $addr;
-						array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
-						array_push($this->interfaces, new InterfaceBus("bus_sl_$block->name",$block->name,"bi_slave_conn",$block->size_addr_rel));
+						$block->addInterface(new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
+						$this->addInterface(new InterfaceBus("bus_sl_$block->name",$block->name,"bi_slave_conn",$block->size_addr_rel));
 						for($i=0; $i<$size_addr_space; $i++) $addr_space[$addr+$i]=0;
 						break;
 					}
@@ -64,14 +64,14 @@ class BusInterconnect extends Block
 			{
 				for($i=0; $i<$block->master_count; $i++)
 				{
-					array_push($block->interfaces, new InterfaceBus("bus_master",$block->name,"bi_master",$this->addr_bus_width));
-					array_push($this->interfaces, new InterfaceBus("bus_master_$block->name",$block->name,"bi_master_conn",$this->addr_bus_width));
+					$block->addInterface(new InterfaceBus("bus_master",$block->name,"bi_master",$this->addr_bus_width));
+					$this->addInterface(new InterfaceBus("bus_master_$block->name",$block->name,"bi_master_conn",$this->addr_bus_width));
 					
 					$param = new Param();
 					$param->name = 'MASTER_ADDR_WIDTH';
 					$param->value = $this->addr_bus_width;
 					$param->hard = true;
-					array_push($block->params, $param);
+					$block->addParam($param);
 				}
 			}
 		}
@@ -239,7 +239,7 @@ class BusInterconnect extends Block
 		$file->name = 'bus_interconnect.vhd';
 		$file->group= 'hdl';
 		$file->type = 'vhdl';
-		array_push($bi->files, $file);
+		$bi->addFile($file);
 	
 		$this->create_header_file($node, $path.DIRECTORY_SEPARATOR.'params.h');
 	}

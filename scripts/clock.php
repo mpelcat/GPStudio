@@ -15,6 +15,12 @@ class Clock
 	public $group;
 
 	/**
+	* Specify if clock is in or out (value : "in" or "out", default "in")
+	* @var string $direction
+	*/
+	public $direction;
+
+	/**
 	* Phase shift of the clock (future use)
 	* @var int $shift
 	*/
@@ -43,21 +49,31 @@ class Clock
 	* @var string $desc
 	*/
 	public $desc;
+
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
+		$this->group = "";
+		$this->direction = "in";
 		if($xml) $this->parse_xml($xml);
 	}
 	
 	protected function parse_xml($xml)
 	{
-		$this->name		= (string)$xml['name'];
-		$this->group	= (string)$xml['group'];
-		$this->shift	= (string)$xml['shift'];
-		$this->min		= (int)$xml['min'];
-		$this->max		= (int)$xml['max'];
-		$this->typical	= (string)$xml['typical'];
-		$this->desc		= (string)$xml['desc'];
+		$this->name			= (string)$xml['name'];
+		if(isset($xml['group'])) $this->group = (string)$xml['group']; else $this->group = "";
+		if(isset($xml['direction'])) $this->direction = (string)$xml['direction']; else $this->direction = "in";
+		$this->shift		= (string)$xml['shift'];
+		$this->min			= (int)$xml['min'];
+		$this->max			= (int)$xml['max'];
+		$this->typical		= (string)$xml['typical'];
+		$this->desc			= (string)$xml['desc'];
 	}
 	
 	public function getXmlElement($xml)
@@ -72,6 +88,11 @@ class Clock
 		// group
 		$att = $xml->createAttribute('group');
 		$att->value = $this->group;
+		$xml_element->appendChild($att);
+		
+		// direction
+		$att = $xml->createAttribute('direction');
+		$att->value = $this->direction;
 		$xml_element->appendChild($att);
 		
 		// shift

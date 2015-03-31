@@ -31,7 +31,7 @@
 
 	<flows>
 		<flow name="in0" type="in" size="8" desc="flow 0 return for supervise results of process"/>
-		<flow name="in1" type="in" size="16" desc="flow 1 return for supervise results of process"/>
+		<flow name="in1" type="in" size="8" desc="flow 1 return for supervise results of process"/>
 		<flow name="in2" type="in" size="16" desc="flow 2 return for supervise results of process"/>
 		<flow name="in3" type="in" size="16" desc="flow 3 return for supervise results of process"/>
 		
@@ -40,7 +40,7 @@
 	</flows>
 	<params>
 		<param name="IN0_SIZE" 	hard="1" value="8" 	type="int"/> 
-		<param name="IN1_SIZE" hard="1" value="16"  type="int"/> 
+		<param name="IN1_SIZE" hard="1" value="8"  type="int"/> 
 		<param name="IN2_SIZE" hard="1" value="16" type="int"/> 
 		<param name="IN3_SIZE" hard="1" value="16" type="int"/> 
 		<param name="IN0_NBWORDS" hard="1" value="32768" type="int"/> 
@@ -101,4 +101,7 @@
 	<resets>
 		<reset name="reset" group="reset_n" direction="out" desc=""/>
 	</resets>
+	<clocks>
+		<clock name="clk_usb" direction="out" typical="48000000" desc=""/>
+	</clocks>
 </io>

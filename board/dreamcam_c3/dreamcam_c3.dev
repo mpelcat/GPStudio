@@ -31,9 +31,15 @@
 					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 				</attributes>
 			</pin>
+			<pin name="PIN_Y28" mapto="clk_125M">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+				</attributes>
+			</pin>
 		</pins>
 		<clocks>
-			<clock name="clk_50M" group="clk_proc" size="1" desc=""/>
+			<clock name="clk_50M" direction="out" typical="50000000" desc=""/>
+			<clock name="clk_125M" direction="out" typical="125000000" desc=""/>
 		</clocks>
 	</global>
 	<ios>

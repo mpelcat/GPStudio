@@ -26,7 +26,7 @@ class Toolchain
 		{
 			foreach($xml->attributes->attribute as $attribute)
 			{
-				array_push($this->attributes, new Attribute($attribute));
+				$this->addAttribute(new Attribute($attribute));
 			}
 		}
 	}
@@ -79,6 +79,16 @@ class Toolchain
 		}
 	}
 	
+	/** Add a attribute to the toolchain 
+	 *  @param Attribute $attribute attribute to add to the toolchain **/
+	function addAttribute($attribute)
+	{
+		array_push($this->attributes, $attribute);
+	}
+	
+	/** return a reference to the attribute with the name $name, if not found, return false
+	 *  @param string $name name of the attribute enum to search
+	 *  @return Attribute found attribute **/
 	function getAttribute($name)
 	{
 		foreach($this->attributes as $attribute)

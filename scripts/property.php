@@ -70,9 +70,23 @@ class Property
 	* @var array|Property $properties
 	*/
 	public $properties;
+
+	/**
+	* Reference to the associated parent block (don't set if parentProperty is set)
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
+
+	/**
+	* Reference to the associated parent Property (don't set if parentBlock is set)
+	* @var Property $parentProperty
+	*/
+	public $parentProperty;
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
+		$this->parentProperty = null;
 		$this->propertyenums	= array();
 		$this->properties		= array();
 		if($xml) $this->parse_xml($xml);
@@ -93,18 +107,18 @@ class Property
 		// enums
 		if(isset($xml->enums))
 		{
-			foreach($xml->enums->enum as $enum)
+			foreach($xml->enums->enum as $enumXml)
 			{
-				array_push($this->propertyenums, new PropertyEnum($enum));
+				$this->addPropertyEnum(new PropertyEnum($enumXml));
 			}
 		}
 		
 		// properties
 		if(isset($xml->properties))
 		{
-			foreach($xml->properties->property as $property)
+			foreach($xml->properties->property as $propertyXml)
 			{
-				array_push($this->properties, new Property($property));
+				$this->addSubProperty(new Property($propertyXml));
 			}
 		}
 	}
@@ -183,6 +197,17 @@ class Property
 		return $xml_element;
 	}
 	
+	/** Add a property enum to the block 
+	 *  @param PropertyEnum $propertyenum property enum to add to the property **/
+	function addPropertyEnum($propertyenum)
+	{
+		$propertyenum->parentProperty = $this;
+		array_push($this->propertyenums, $propertyenum);
+	}
+	
+	/** return a reference to the property enum with the name $name, if not found, return false
+	 *  @param string $name name of the property enum to search
+	 *  @return PropertyEnum found property enum **/
 	function getPropertyEnum($name)
 	{
 		foreach($this->propertyenums as $propertyenum)
@@ -192,7 +217,18 @@ class Property
 		return null;
 	}
 	
-	function getProperty($name)
+	/** Add a sub-property enum to the property 
+	 *  @param Property $property sub-property enum to add to the property **/
+	function addSubProperty($property)
+	{
+		$property->parentProperty = $this;
+		array_push($this->properties, $property);
+	}
+	
+	/** return a reference to the property with the name $name, if not found, return false
+	 *  @param string $name name of the property enum to search
+	 *  @return Property found property enum **/
+	function getSubProperty($name)
 	{
 		foreach($this->properties as $property)
 		{

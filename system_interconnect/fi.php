@@ -51,7 +51,7 @@ class FlowInterconnect extends Block
 		$reset->name='reset';
 		$reset->direction='in';
 		$reset->group='reset_n';
-		array_push($this->resets, $reset);
+		$this->addReset($reset);
 		
 		foreach($node->blocks as $block)
 		{
@@ -64,14 +64,14 @@ class FlowInterconnect extends Block
 					$flow_interface->type = $flow->type.'_conn';
 					$flow_interface->size = $flow->size;
 
-					array_push($this->flows, $flow_interface);
-					//array_push($this->params, new Param());
+					$this->addFlow($flow_interface);
+					//$this->addParam(new Param());
 				}
 			}
 			
 			// compute connexion
 			$tree_connects = array();
-			foreach($node->connects as $connect)
+			foreach($node->flow_connects as $connect)
 			{
 				// check connexion
 				if(!$fromblock=$node->getBlock($connect->fromblock)) { error("Block '$connect->fromblock' doesn't exists.\n".FlowInterconnect::showBlocks($node),15,"FI"); }
@@ -111,7 +111,7 @@ class FlowInterconnect extends Block
 				$parambitfield->default = 0;
 				$parambitfield->propertymap = $in_connect.".bits";
 				
-				array_push($this->params, $param);
+				$this->addParam($param);
 				
 				$property = new Property();
 				$property->name = $in_connect;
@@ -137,7 +137,7 @@ class FlowInterconnect extends Block
 				
 				array_push($param->parambitfields, $parambitfield);
 				
-				array_push($this->properties, $property);
+				$this->addProperty($property);
 				
 				$count_param++;
 			}

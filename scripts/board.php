@@ -42,9 +42,16 @@ class Board
 	*/
 	public $resets;
 
+	/**
+	* Reference to the associated parent node
+	* @var Node $parentNode
+	*/
+	public $parentNode;
+
 
 	function __construct($board_element, $node)
 	{
+		$this->parentNode = $node;
 		$this->pins = array();
 		$this->clocks = array();
 		$this->resets = array();
@@ -71,18 +78,18 @@ class Board
 		// clocks
 		if(isset($this->xml->global->clocks))
 		{
-			foreach($this->xml->global->clocks->clock as $clock)
+			foreach($this->xml->global->clocks->clock as $clockXml)
 			{
-				array_push($this->clocks, new Clock($clock));
+				$this->addClock(new Clock($clockXml));
 			}
 		}
 		
 		// resets
 		if(isset($this->xml->global->resets))
 		{
-			foreach($this->xml->global->resets->reset as $reset)
+			foreach($this->xml->global->resets->reset as $resetXml)
 			{
-				array_push($this->resets, new Reset($reset));
+				$this->addReset(new Reset($resetXml));
 			}
 		}
 		
@@ -91,7 +98,7 @@ class Board
 		{
 			foreach($this->xml->global->pins->pin as $pin)
 			{
-				array_push($this->pins, new Pin($pin));
+				$this->addPin(new Pin($pin));
 			}
 		}
 	}
@@ -111,11 +118,11 @@ class Board
 			$io_name = (string)$io['name'];
 			if(array_key_exists($io_name, $used_ios))
 			{
-				array_push($node->blocks, new IO($io, $used_ios[$io_name]));
+				$node->addBlock(new IO($io, $used_ios[$io_name]));
 			}
 			elseif($io['optional']!="true")
 			{
-				//array_push($node->blocks, new IO($io, null));
+				//$node->addBlock(new IO($io, null));
 			}
 		}
 		
@@ -151,6 +158,17 @@ class Board
 		}
 	}
 	
+	/** Add a clock to the block 
+	 *  @param Clock $clock clock to add to the block **/
+	function addClock($clock)
+	{
+		$clock->parentBlock = $this;
+		array_push($this->clocks, $clock);
+	}
+	
+	/** return a reference to the clock with the name $name, if not found, return false
+	 *  @param string $name name of the clock to search
+	 *  @return Clock found clock **/
 	function getClock($name)
 	{
 		foreach($this->clocks as $clock)
@@ -160,6 +178,17 @@ class Board
 		return null;
 	}
 	
+	/** Add a reset to the block 
+	 *  @param Reset $reset reset to add to the block **/
+	function addReset($reset)
+	{
+		$reset->parentBlock = $this;
+		array_push($this->resets, $reset);
+	}
+	
+	/** return a reference to the reset with the name $name, if not found, return false
+	 *  @param string $name name of the reset to search
+	 *  @return Reset found reset **/
 	function getReset($name)
 	{
 		foreach($this->resets as $reset)
@@ -169,6 +198,17 @@ class Board
 		return null;
 	}
 	
+	/** Add a pin to the block 
+	 *  @param Pin $pin pin to add to the block **/
+	function addPin($pin)
+	{
+		$pin->parentBlock = $this;
+		array_push($this->pins, $pin);
+	}
+	
+	/** return a reference to the pin with the name $name, if not found, return false
+	 *  @param string $name name of the pin to search
+	 *  @return Pin found pin **/
 	function getPin($name)
 	{
 		foreach($this->pins as $pin)

@@ -64,6 +64,12 @@ class Param
 	*/
 	public $desc;
 
+	/**
+	* Reference to the associated parent block
+	* @var Block $parentBlock
+	*/
+	public $parentBlock;
+
 	
 	/**
 	* Array of bitfields if param contain different bitfield (optional)
@@ -73,6 +79,7 @@ class Param
 	
 	function __construct($xml=null)
 	{
+		$this->parentBlock = null;
 		$this->parambitfields	= array();
 		$this->paramenums		= array();
 		if($xml) $this->parse_xml($xml);
