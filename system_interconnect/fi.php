@@ -302,7 +302,7 @@ class FlowInterconnect extends Block
 						{
 							$padding_size = $out_size - $in_size;
 							$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-							warning("Size of flow $in_connect > size of flow ".$out_connect['name'],10,"FI");
+							warning("Size of flow $in_connect ($in_size) > ".$out_connect['name']." ($out_size)",10,"FI");
 						}
 					
 						$code.='					'.$in_connect.'_fv <= '.$out_connect['name'].'_fv;'."\n";
