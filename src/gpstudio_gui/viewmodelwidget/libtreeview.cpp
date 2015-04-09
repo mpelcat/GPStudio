@@ -1,7 +1,8 @@
 #include "libtreeview.h"
 
 #include <QDebug>
-
+#include <QDrag>
+#include <QMimeData>
 LibTreeView::LibTreeView(QWidget *parent) :
     QTreeView(parent)
 {

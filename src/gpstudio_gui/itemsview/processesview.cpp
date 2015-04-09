@@ -2,7 +2,7 @@
 
 #include <QDebug>
 #include <QMouseEvent>
-
+#include <QMimeData>
 #include "processitem.h"
 
 ProcessesView::ProcessesView(QWidget *parent)
