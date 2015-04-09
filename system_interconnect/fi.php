@@ -154,7 +154,7 @@ class FlowInterconnect extends Block
 		$content.='digraph G {'."\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="bi")
+			if($block->name!="fi" and $block->name!="bi" and $block->name!="ci" and $block->name!="ri")
 			{
 				$ins=array();
 				$outs=array();

@@ -264,6 +264,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='		clk2_duty_cycle		: NATURAL;'."\n";
 				$declare.='		clk2_multiply_by		: NATURAL;'."\n";
 				$declare.='		clk2_phase_shift		: STRING;'."\n";
+				$declare.='		clk3_divide_by		: NATURAL;'."\n";
+				$declare.='		clk3_duty_cycle		: NATURAL;'."\n";
+				$declare.='		clk3_multiply_by		: NATURAL;'."\n";
+				$declare.='		clk3_phase_shift		: STRING;'."\n";
+				$declare.='		clk4_divide_by		: NATURAL;'."\n";
+				$declare.='		clk4_duty_cycle		: NATURAL;'."\n";
+				$declare.='		clk4_multiply_by		: NATURAL;'."\n";
+				$declare.='		clk4_phase_shift		: STRING;'."\n";
 				$declare.='		compensate_clock		: STRING;'."\n";
 				$declare.='		inclk0_input_frequency		: NATURAL;'."\n";
 				$declare.='		intended_device_family		: STRING;'."\n";
