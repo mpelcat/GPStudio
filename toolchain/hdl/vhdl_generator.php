@@ -30,6 +30,7 @@ class VHDL_generator
 	public $params;
 	public $blocks;
 	
+	public $declare;
 	public $code;
 	
 	function __construct($name='module')
@@ -287,6 +288,9 @@ class VHDL_generator
 				}
 			}
 		}
+		
+		$content.=$this->declare;
+		
 		$content.="\n";
 	
 		$content.='begin'."\n";
@@ -319,7 +323,7 @@ class VHDL_generator
 				foreach($block->clocks as $clock)
 				{
 					if(!$first) $content.=','."\n"; else $first=false;
-					$content.='    	'.$clock->name.'	=>	'.$clock->group;
+					$content.='    	'.$clock->name.'	=>	'.$clock->net;
 				}
 				// resets mapping
 				foreach($block->resets as $reset)

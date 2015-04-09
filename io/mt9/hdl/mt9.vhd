@@ -10,6 +10,9 @@ entity mt9 is
 	);
 	port (
 		clk_proc : in std_logic;
+    	clk_img : in std_logic;
+    	clk_50k : in std_logic;
+    	clk_100k : in std_logic;
 		reset_n : in std_logic;
 
 		--------------------- external ports --------------------
@@ -138,15 +141,15 @@ component VideoSampler
 	);
 end component;
 
-component pll
-	port
-	(
-		inclk0	: in std_logic;
-		c0		: out std_logic;
-		c1		: out std_logic;
-		c2		: out std_logic
-	);
-end component;
+--~ component pll
+	--~ port
+	--~ (
+		--~ inclk0	: in std_logic;
+		--~ c0		: out std_logic;
+		--~ c1		: out std_logic;
+		--~ c2		: out std_logic
+	--~ );
+--~ end component;
 
 -- signals part
 
@@ -259,13 +262,17 @@ begin
 		fv_o	=>	out_fv
 	);
 
-	pll_inst : pll
-    port map (
-    	inclk0	=>	clk_proc,
-    	c0	=>	ext_clk_9M_s,
-    	c1	=>	sclk_100k_s,
-    	c2	=>	sclk_50k_s
-	);
+	--~ pll_inst : pll
+    --~ port map (
+    	--~ inclk0	=>	clk_proc,
+    	--~ c0	=>	ext_clk_9M_s,
+    	--~ c1	=>	sclk_100k_s,
+    	--~ c2	=>	sclk_50k_s
+	--~ );
+	
+	ext_clk_9M_s <= clk_img;
+	sclk_100k_s <= clk_100k;
+	sclk_50k_s <= clk_50k;
 
 	process(clk_proc, need_to_reconf_s, mt9_conf_done_s, mt9_conf_done_prev_s)
 	begin

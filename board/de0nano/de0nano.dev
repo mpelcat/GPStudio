@@ -29,7 +29,7 @@
 			<pin name="clk_50M" mapto="PIN_R8"/>
 		</pins>
 		<clocks>
-			<clock name="clk_50M" group="clk_proc" size="1" desc=""/>
+			<clock name="clk_50M" direction="out" typical="50000000" desc=""/>
 		</clocks>
 	</global>
 	<ios>

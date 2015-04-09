@@ -62,17 +62,17 @@ class Toolchain
 	{
 	}
 	
-	static public function load($toolchain_name)
+	static public function load($toolchain_name, $xml=null)
 	{
 		switch ($toolchain_name)
 		{
 			case 'hdl':
 				require("toolchain/hdl/hdl.php");
-				return new HDL_toolchain();
+				return new HDL_toolchain($xml);
 				break;
 			case 'altera_quartus':
 				require("toolchain/altera_quartus/altera_quartus.php");
-				return new Altera_quartus_toolchain();
+				return new Altera_quartus_toolchain($xml);
 				break;
 			default:
 				throw new Exception ('Toolchain \''.$toolchain_name.'\' doesn\'t exists.');
@@ -96,6 +96,18 @@ class Toolchain
 			if($attribute->name==$name) return $attribute;
 		}
 		return null;
+	}
+	
+	function getRessourceAttributes($type)
+	{
+		$attr = array();
+		return $attr;
+	}
+	
+	function getRessourceDeclare($type)
+	{
+		$declare='';
+		return $declare;
 	}
 }
 

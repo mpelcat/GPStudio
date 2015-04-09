@@ -150,7 +150,7 @@ class Block
 		
 		$clock = new Clock();
 		$clock->name='clk_proc';
-		$clock->group='clk_proc';
+		$clock->domain='clk_proc';
 		$this->addClock($clock);
 		
 		/*$reset = new Reset();

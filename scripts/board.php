@@ -71,7 +71,7 @@ class Board
 	{
 		$this->name = (string)$this->xml['name'];
 		
-		$this->toolchain = new Toolchain($this->xml->toolchain);
+		$this->toolchain = Toolchain::load($this->xml->toolchain['name'], $this->xml->toolchain);
 		
 		$this->parse_ios($board_element, $node);
 		

@@ -17,7 +17,8 @@ if(!file_exists($config_node_file)) error("The config file '$config_node_file' d
 $node = new Node($config_node_file);
 
 // create toolchain depend of the config node
-$toolchain = Toolchain::load('altera_quartus');
+//$toolchain = Toolchain::load('altera_quartus');
+$toolchain = $node->board->toolchain;
 $toolchain->configure_project($node);
 $toolchain->generate_project($node, getcwd());
 

@@ -4,8 +4,8 @@
 		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="video_sampler.v" path="hdl/video_sampler.v" type="verilog" group="hdl" desc=""/>
 		<file name="mt9.vhd" path="hdl/mt9.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="pll.vhd" path="hdl/pll.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="pll.qip" path="hdl/pll.qip" type="qip" group="hdl" desc=""/>
+		<!--<file name="pll.vhd" path="hdl/pll.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="pll.qip" path="hdl/pll.qip" type="qip" group="hdl" desc=""/>-->
 		<file name="mt9_config_slave.vhd" path="hdl/mt9_config_slave.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="mt9_config_i2c.vhd" path="hdl/mt9_config_i2c.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="MT9 datasheet" path="doc/MT9M031_DS_Rev. A 1009 EN.pdf" type="doc" group="doc" desc=""/>
@@ -66,4 +66,9 @@
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
 	</resets>
+	<clocks>
+		<clock name="clk_img" direction="in" typical="14000000" desc=""/>
+		<clock name="clk_50k" direction="in" typical="50000" desc=""/>
+		<clock name="clk_100k" direction="in" typical="100000" shift="180" desc=""/>
+	</clocks>
 </io>

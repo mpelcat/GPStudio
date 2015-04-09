@@ -20,18 +20,19 @@ class HDL_toolchain extends Toolchain
 		
 		// add flow interconnect with config
 		$flowInterconnect = new FlowInterconnect();
-		array_push($node->blocks, $flowInterconnect);
-		$flowInterconnect->configure($node, $flowInterconnect);
+		$node->addBlock($flowInterconnect);
 		
 		// add clock interconnect with config
 		$clockInterconnect = new ClockInterconnect();
-		array_push($node->blocks, $clockInterconnect);
-		$clockInterconnect->configure($node, $clockInterconnect);
+		$node->addBlock($clockInterconnect);
 		
 		// add bus interconnect
 		$busInterconnect = new BusInterconnect();
-		array_push($node->blocks, $busInterconnect);
+		$node->addBlock($busInterconnect);
+		
+		$flowInterconnect->configure($node, $flowInterconnect);
 		$busInterconnect->configure($node, $busInterconnect);
+		$clockInterconnect->configure($node, $clockInterconnect);
 	}
 	
 	public function generate_project($node, $path)
@@ -86,9 +87,9 @@ class HDL_toolchain extends Toolchain
 		{
 			foreach($block->clocks as $clock)
 			{
-				if($clock->group!="")
+				if($clock->net!="")
 				{
-					if(!in_array($clock->group, $clocks)) array_push($clocks, $clock->group);
+					if(!in_array($clock->net, $clocks)) array_push($clocks, $clock->net);
 				}
 			}
 		}
@@ -175,10 +176,10 @@ class HDL_toolchain extends Toolchain
 		$generator->blocks = $node->blocks;
 		
 		$code = "";
-		/*foreach($node->board->clocks as $clock)
+		foreach($node->board->clocks as $clock)
 		{
-			$code.='	'.$clock->group.'	<=	'.$clock->name.";\n";
-		}*/
+			$code.='	'.$clock->net.'	<=	'.$clock->name.";\n";
+		}
 		$code.="	-- WARNING!! static code only for usb project, TODO to be modified --\n";
 		$code.="	clk_proc	<=	usb_ifclk;\n";
 		

@@ -3,6 +3,15 @@
 require_once("toolchain.php");
 require_once("toolchain/hdl/hdl.php");
 
+function pgcd($a,$b)
+{
+    for($c = $a % $b ; $c != 0; $c= $a%$b ) :
+       $a = $b; $b = $c;
+    endfor;
+         
+    return $b;
+}
+
 class Altera_quartus_toolchain extends HDL_toolchain
 {
 	private $nopartitions;
@@ -217,6 +226,198 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				fclose($handle);
 			}
 		}
+	}
+	
+	function getRessourceAttributes($type)
+	{
+		$attr = array();
+		switch ($type)
+		{
+			case 'pll':
+				$attr['maxPLL']=4;
+				$attr['clkByPLL']=5;
+				break;
+			default:
+				warning("ressource $type does'nt exist");
+		}
+		return $attr;
+	}
+	
+	function getRessourceDeclare($type, $params)
+	{
+		$declare='';
+		switch ($type)
+		{
+			case 'pll':
+				$declare.='	COMPONENT altpll'."\n";
+				$declare.='	GENERIC ('."\n";
+				$declare.='		bandwidth_type		: STRING;'."\n";
+				$declare.='		clk0_divide_by		: NATURAL;'."\n";
+				$declare.='		clk0_duty_cycle		: NATURAL;'."\n";
+				$declare.='		clk0_multiply_by		: NATURAL;'."\n";
+				$declare.='		clk0_phase_shift		: STRING;'."\n";
+				$declare.='		clk1_divide_by		: NATURAL;'."\n";
+				$declare.='		clk1_duty_cycle		: NATURAL;'."\n";
+				$declare.='		clk1_multiply_by		: NATURAL;'."\n";
+				$declare.='		clk1_phase_shift		: STRING;'."\n";
+				$declare.='		clk2_divide_by		: NATURAL;'."\n";
+				$declare.='		clk2_duty_cycle		: NATURAL;'."\n";
+				$declare.='		clk2_multiply_by		: NATURAL;'."\n";
+				$declare.='		clk2_phase_shift		: STRING;'."\n";
+				$declare.='		compensate_clock		: STRING;'."\n";
+				$declare.='		inclk0_input_frequency		: NATURAL;'."\n";
+				$declare.='		intended_device_family		: STRING;'."\n";
+				$declare.='		lpm_hint		: STRING;'."\n";
+				$declare.='		lpm_type		: STRING;'."\n";
+				$declare.='		operation_mode		: STRING;'."\n";
+				$declare.='		pll_type		: STRING;'."\n";
+				$declare.='		port_activeclock		: STRING;'."\n";
+				$declare.='		port_areset		: STRING;'."\n";
+				$declare.='		port_clkbad0		: STRING;'."\n";
+				$declare.='		port_clkbad1		: STRING;'."\n";
+				$declare.='		port_clkloss		: STRING;'."\n";
+				$declare.='		port_clkswitch		: STRING;'."\n";
+				$declare.='		port_configupdate		: STRING;'."\n";
+				$declare.='		port_fbin		: STRING;'."\n";
+				$declare.='		port_inclk0		: STRING;'."\n";
+				$declare.='		port_inclk1		: STRING;'."\n";
+				$declare.='		port_locked		: STRING;'."\n";
+				$declare.='		port_pfdena		: STRING;'."\n";
+				$declare.='		port_phasecounterselect		: STRING;'."\n";
+				$declare.='		port_phasedone		: STRING;'."\n";
+				$declare.='		port_phasestep		: STRING;'."\n";
+				$declare.='		port_phaseupdown		: STRING;'."\n";
+				$declare.='		port_pllena		: STRING;'."\n";
+				$declare.='		port_scanaclr		: STRING;'."\n";
+				$declare.='		port_scanclk		: STRING;'."\n";
+				$declare.='		port_scanclkena		: STRING;'."\n";
+				$declare.='		port_scandata		: STRING;'."\n";
+				$declare.='		port_scandataout		: STRING;'."\n";
+				$declare.='		port_scandone		: STRING;'."\n";
+				$declare.='		port_scanread		: STRING;'."\n";
+				$declare.='		port_scanwrite		: STRING;'."\n";
+				$declare.='		port_clk0		: STRING;'."\n";
+				$declare.='		port_clk1		: STRING;'."\n";
+				$declare.='		port_clk2		: STRING;'."\n";
+				$declare.='		port_clk3		: STRING;'."\n";
+				$declare.='		port_clk4		: STRING;'."\n";
+				$declare.='		port_clk5		: STRING;'."\n";
+				$declare.='		port_clkena0		: STRING;'."\n";
+				$declare.='		port_clkena1		: STRING;'."\n";
+				$declare.='		port_clkena2		: STRING;'."\n";
+				$declare.='		port_clkena3		: STRING;'."\n";
+				$declare.='		port_clkena4		: STRING;'."\n";
+				$declare.='		port_clkena5		: STRING;'."\n";
+				$declare.='		port_extclk0		: STRING;'."\n";
+				$declare.='		port_extclk1		: STRING;'."\n";
+				$declare.='		port_extclk2		: STRING;'."\n";
+				$declare.='		port_extclk3		: STRING;'."\n";
+				$declare.='		width_clock		: NATURAL'."\n";
+				$declare.='	);'."\n";
+				$declare.='	PORT ('."\n";
+				$declare.='			clk	: OUT STD_LOGIC_VECTOR (4 DOWNTO 0);'."\n";
+				$declare.='			inclk	: IN STD_LOGIC_VECTOR (1 DOWNTO 0)'."\n";
+				$declare.='	);'."\n";
+				$declare.='	END COMPONENT;'."\n";
+				break;
+			default:
+				warning("ressource $type does'nt exist");
+		}
+		return $declare;
+	}
+	
+	function getRessourceInstance($type, $params)
+	{
+		$instance='';
+		switch ($type)
+		{
+			case 'pll':
+				$clkin = $params['clkin'];
+				$pllname = $params['pllname'];
+				
+				$instance.='	'.$pllname.' : altpll'."\n";
+				$instance.='	GENERIC MAP ('."\n";
+				$instance.='		bandwidth_type => "AUTO",'."\n";
+				$instance.='		compensate_clock => "CLK0",'."\n";
+				$instance.='		intended_device_family => "Cyclone III",'."\n";
+				$instance.='		lpm_hint => "CBX_MODULE_PREFIX=pll",'."\n";
+				$instance.='		lpm_type => "altpll",'."\n";
+				$instance.='		operation_mode => "NORMAL",'."\n";
+				$instance.='		pll_type => "AUTO",'."\n";
+				$instance.='		port_inclk0 => "PORT_USED",'."\n";
+				
+				$instance.='		port_activeclock => "PORT_UNUSED",'."\n";
+				$instance.='		port_areset => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkbad0 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkbad1 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkloss => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkswitch => "PORT_UNUSED",'."\n";
+				$instance.='		port_configupdate => "PORT_UNUSED",'."\n";
+				$instance.='		port_fbin => "PORT_UNUSED",'."\n";
+				$instance.='		port_inclk1 => "PORT_UNUSED",'."\n";
+				$instance.='		port_locked => "PORT_UNUSED",'."\n";
+				$instance.='		port_pfdena => "PORT_UNUSED",'."\n";
+				$instance.='		port_phasecounterselect => "PORT_UNUSED",'."\n";
+				$instance.='		port_phasedone => "PORT_UNUSED",'."\n";
+				$instance.='		port_phasestep => "PORT_UNUSED",'."\n";
+				$instance.='		port_phaseupdown => "PORT_UNUSED",'."\n";
+				$instance.='		port_pllena => "PORT_UNUSED",'."\n";
+				$instance.='		port_scanaclr => "PORT_UNUSED",'."\n";
+				$instance.='		port_scanclk => "PORT_UNUSED",'."\n";
+				$instance.='		port_scanclkena => "PORT_UNUSED",'."\n";
+				$instance.='		port_scandata => "PORT_UNUSED",'."\n";
+				$instance.='		port_scandataout => "PORT_UNUSED",'."\n";
+				$instance.='		port_scandone => "PORT_UNUSED",'."\n";
+				$instance.='		port_scanread => "PORT_UNUSED",'."\n";
+				$instance.='		port_scanwrite => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena0 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena1 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena2 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena3 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena4 => "PORT_UNUSED",'."\n";
+				$instance.='		port_clkena5 => "PORT_UNUSED",'."\n";
+				$instance.='		port_extclk0 => "PORT_UNUSED",'."\n";
+				$instance.='		port_extclk1 => "PORT_UNUSED",'."\n";
+				$instance.='		port_extclk2 => "PORT_UNUSED",'."\n";
+				$instance.='		port_extclk3 => "PORT_UNUSED",'."\n";
+		
+				$instance.='		inclk0_input_frequency => '.(1000000000000/$clkin).','."\n";
+			
+				$clkId=0;
+				foreach($params['clks'] as $clk)
+				{
+					$clockFreq = $clk[0];
+					$clockShift = $clk[1];
+			
+					$div = $clkin / pgcd($clockFreq, $clkin);
+					$mul = floor($clockFreq / ($clkin / $div));
+					if($clockShift==0) $shift=0; else $shift=($clockShift/360)*10000000;
+					
+					$instance.='		-- clk'.$clkId.' at '.formatFreq($clockFreq).' '.$clockShift.'° shifted'."\n";
+					$instance.='		port_clk'.$clkId.' => "PORT_USED",'."\n";
+					$instance.='		clk'.$clkId.'_duty_cycle => 50,'."\n";
+					$instance.='		clk'.$clkId.'_divide_by => '.$div.','."\n";
+					$instance.='		clk'.$clkId.'_multiply_by => '.$mul.','."\n";
+					$instance.='		clk'.$clkId.'_phase_shift => "'.$shift.'",'."\n";
+					
+					$clkId++;
+				}
+				for($i=$clkId; $i<=5; $i++)
+				{
+					$instance.='		port_clk'.$i.' => "PORT_UNUSED",'."\n";
+				}
+				$instance.='		width_clock => 5'."\n";
+				$instance.='	)'."\n";
+				$instance.='	PORT MAP ('."\n";
+				$instance.='		inclk => '.$pllname.'_in,'."\n";
+				$instance.='		clk => '.$pllname.'_out'."\n";
+				$instance.='	);'."\n";
+			
+				break;
+			default:
+				warning("ressource $type does'nt exist");
+		}
+		return $instance;
 	}
 }
 

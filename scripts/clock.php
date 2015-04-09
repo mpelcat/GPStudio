@@ -9,40 +9,46 @@ class Clock
 	public $name;
 
 	/**
-	* Name of the group clock
-	* @var string $group
-	*/
-	public $group;
-
-	/**
 	* Specify if clock is in or out (value : "in" or "out", default "in")
 	* @var string $direction
 	*/
 	public $direction;
 
 	/**
-	* Phase shift of the clock (future use)
+	* Phase shift of the clock (in degree)
 	* @var int $shift
 	*/
 	public $shift;
 
 	/**
-	* Minimal value for this clock in MHz
+	* Minimal value for this clock in Hz
 	* @var float $min
 	*/
 	public $min;
 
 	/**
-	* Maximal value for this clock in MHz
+	* Maximal value for this clock in Hz
 	* @var float $max
 	*/
 	public $max;
 
 	/**
-	* Typical value for this clock in MHz
+	* Typical value for this clock in Hz
 	* @var float $typical
 	*/
 	public $typical;
+
+	/**
+	* Clock domain. Clocks in the same domain depend of the same clock source
+	* @var string $domain
+	*/
+	public $domain;
+
+	/**
+	* Clock net, physical net name to connect the clock. This value is computed by CI
+	* @var string $net
+	*/
+	public $net;
 
 	/**
 	* Description of the clock (optional)
@@ -67,11 +73,11 @@ class Clock
 	protected function parse_xml($xml)
 	{
 		$this->name			= (string)$xml['name'];
-		if(isset($xml['group'])) $this->group = (string)$xml['group']; else $this->group = "";
+		if(isset($xml['domain'])) $this->domain = (string)$xml['domain']; else $this->domain = "";
 		if(isset($xml['direction'])) $this->direction = (string)$xml['direction']; else $this->direction = "in";
-		$this->shift		= (string)$xml['shift'];
-		$this->min			= (int)$xml['min'];
-		$this->max			= (int)$xml['max'];
+		if(isset($xml['shift'])) $this->shift = (int)$xml['shift']; else $this->shift = 0;
+		if(isset($xml['min'])) $this->min	= (int)$xml['min'];
+		if(isset($xml['max'])) $this->min	= (int)$xml['max'];
 		$this->typical		= (string)$xml['typical'];
 		$this->desc			= (string)$xml['desc'];
 	}
@@ -85,9 +91,14 @@ class Clock
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// group
-		$att = $xml->createAttribute('group');
-		$att->value = $this->group;
+		// domain
+		$att = $xml->createAttribute('domain');
+		$att->value = $this->domain;
+		$xml_element->appendChild($att);
+		
+		// net
+		$att = $xml->createAttribute('net');
+		$att->value = $this->net;
 		$xml_element->appendChild($att);
 		
 		// direction
