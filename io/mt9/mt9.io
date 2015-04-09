@@ -68,7 +68,7 @@
 	</resets>
 	<clocks>
 		<clock name="clk_img" direction="in" typical="14000000" desc=""/>
-		<clock name="clk_50k" direction="in" typical="50000" desc=""/>
-		<clock name="clk_100k" direction="in" typical="100000" shift="180" desc=""/>
+		<clock name="clk_50k" direction="in" typical="50000" domain="i2c" desc=""/>
+		<clock name="clk_100k" direction="in" typical="100000" domain="i2c" shift="180" desc=""/>
 	</clocks>
 </io>

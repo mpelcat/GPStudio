@@ -142,7 +142,7 @@ class ClockInterconnect extends Block
 			}
 		}
 		
-		print_r($this->needed_freq);
+		//print_r($this->needed_freq);
 	}
 	
 	function generate($node, $block, $path, $language)

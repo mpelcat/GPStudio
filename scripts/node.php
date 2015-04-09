@@ -61,21 +61,58 @@ class Node
 			{
 				$processBlock = new Process($process);
 				
-				// params
+				// redef params
 				if(isset($process->params))
 				{
 					foreach($process->params->param as $param)
 					{
 						if(isset($param['name']) and isset($param['value']))
 						{
-							$concerned_param = NULL;
-							foreach($processBlock->params as $blockparam)
-							{
-								if($blockparam->name==$param['name']) $concerned_param=$blockparam;
-							}
-							if($concerned_param)
+							if($concerned_param=$processBlock->getParam($param['name']))
 							{
 								$concerned_param->value = $param['value'];
+							}
+							else
+							{
+								warning('parameter '.$param['name']." does'nt exists",16,$processBlock->name);
+							}
+						}
+					}
+				}
+				
+				// redef flow size
+				if(isset($process->flows))
+				{
+					foreach($process->flows->flow as $flow)
+					{
+						if(isset($flow['name']) and isset($flow['size']))
+						{
+							if($concerned_flow=$processBlock->getFlow($flow['name']))
+							{
+								$concerned_flow->size = $flow['size'];
+							}
+							else
+							{
+								warning('flow '.$flow['name']." does'nt exists",16,$processBlock->name);
+							}
+						}
+					}
+				}
+				
+				// redef clock freq
+				if(isset($process->clocks))
+				{
+					foreach($process->clocks->clock as $clock)
+					{
+						if(isset($clock['name']) and isset($clock['typical']))
+						{
+							if($concerned_clock=$processBlock->getClock($clock['name']))
+							{
+								$concerned_clock->typical = $clock['typical'];
+							}
+							else
+							{
+								warning('clock '.$clock['name']." does'nt exists",16,$processBlock->name);
 							}
 						}
 					}

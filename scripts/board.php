@@ -129,27 +129,60 @@ class Board
 		// replace default param value directly in .node file
 		foreach($board_element->ios->io as $io)
 		{
-			if(isset($io->params))
+			if($concerned_block=$node->getBlock($io['name']))
 			{
-				$concerned_block = NULL;
-				foreach($node->blocks as $block)
-				{
-					if($block->name==$io['name']) $concerned_block=$block;
-				}
-				if($concerned_block!=NULL)
+				// params
+				if(isset($io->params))
 				{
 					foreach($io->params->param as $param)
 					{
 						if(isset($param['name']) and isset($param['value']))
 						{
-							$concerned_param = NULL;
-							foreach($block->params as $blockparam)
-							{
-								if($blockparam->name==$param['name']) $concerned_param=$blockparam;
-							}
-							if($concerned_param)
+							if($concerned_param=$concerned_block->getParam($param['name']))
 							{
 								$concerned_param->value = $param['value'];
+							}
+							else
+							{
+								warning('parameter '.$param['name']." does'nt exists",16,$concerned_block->name);
+							}
+						}
+					}
+				}
+				
+				// flow size
+				if(isset($io->flows))
+				{
+					foreach($io->flows->flow as $flow)
+					{
+						if(isset($flow['name']) and isset($flow['size']))
+						{
+							if($concerned_flow=$concerned_block->getFlow($flow['name']))
+							{
+								$concerned_flow->size = $flow['size'];
+							}
+							else
+							{
+								warning('flow '.$flow['name']." does'nt exists",16,$concerned_block->name);
+							}
+						}
+					}
+				}
+				
+				// clocks
+				if(isset($io->clocks))
+				{
+					foreach($io->clocks->clock as $clock)
+					{
+						if(isset($clock['name']) and isset($clock['typical']))
+						{
+							if($concerned_clock=$concerned_block->getClock($clock['name']))
+							{
+								$concerned_clock->typical = $clock['typical'];
+							}
+							else
+							{
+								warning('clock '.$clock['name']." does'nt exists",16,$concerned_block->name);
 							}
 						}
 					}
