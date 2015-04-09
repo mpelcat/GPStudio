@@ -309,7 +309,6 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='		port_clk2		: STRING;'."\n";
 				$declare.='		port_clk3		: STRING;'."\n";
 				$declare.='		port_clk4		: STRING;'."\n";
-				$declare.='		port_clk5		: STRING;'."\n";
 				$declare.='		port_clkena0		: STRING;'."\n";
 				$declare.='		port_clkena1		: STRING;'."\n";
 				$declare.='		port_clkena2		: STRING;'."\n";
@@ -410,9 +409,13 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					
 					$clkId++;
 				}
-				for($i=$clkId; $i<=5; $i++)
+				for($i=$clkId; $i<5; $i++)
 				{
 					$instance.='		port_clk'.$i.' => "PORT_UNUSED",'."\n";
+					$instance.='		clk'.$i.'_duty_cycle => 50,'."\n";
+					$instance.='		clk'.$i.'_divide_by => 1,'."\n";
+					$instance.='		clk'.$i.'_multiply_by => 1,'."\n";
+					$instance.='		clk'.$i.'_phase_shift => "0",'."\n";
 				}
 				$instance.='		width_clock => 5'."\n";
 				$instance.='	)'."\n";
