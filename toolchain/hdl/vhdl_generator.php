@@ -79,17 +79,21 @@ class VHDL_generator
 			if($flow->type=='in' or $flow->type=='out')
 			{
 				$this->addPortComment(str_pad(' '.$flow->name.' flow ',55,'-',STR_PAD_BOTH));
-				$this->addPort($flow->name . '_data', $flow->size, $flow->type);
+				$this->addPort($flow->name . '_data', strtoupper($flow->name).'_SIZE', $flow->type);
 				$this->addPort($flow->name . '_fv', 1, $flow->type);
 				$this->addPort($flow->name . '_dv', 1, $flow->type);
+				
+				$this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
 			}
 			elseif($flow->type=='in_conn' or $flow->type=='out_conn')
 			{
 				if($flow->type=='in_conn') $direction='out'; else $direction='in';
 				$this->addPortComment(str_pad(' '.$flow->name.' ',55,'-',STR_PAD_BOTH));
-				$this->addPort($flow->name . '_data', $flow->size, $direction);
+				$this->addPort($flow->name . '_data', strtoupper($flow->name).'_SIZE', $direction);
 				$this->addPort($flow->name . '_fv', 1, $direction);
 				$this->addPort($flow->name . '_dv', 1, $direction);
+				
+				$this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
 			}
 		}
 		//interfaces
@@ -218,7 +222,14 @@ class VHDL_generator
 				}
 				else
 				{
-					$content.='		'.$port->name.' : '.$port->type.' std_logic_vector('.($port->size-1).' downto 0)';
+					if(is_int($port->size))
+					{
+						$content.='		'.$port->name.' : '.$port->type.' std_logic_vector('.($port->size-1).' downto 0)';
+					}
+					else
+					{
+						$content.='		'.$port->name.' : '.$port->type.' std_logic_vector('.$port->size.'-1 downto 0)';
+					}
 				}
 				if($i<$len) $content.=";\n";
 			}
@@ -300,12 +311,11 @@ class VHDL_generator
 			foreach($this->blocks as $block)
 			{
 			// generic map
-				$first=true;
-				
 				$name = $block->name;
 				if($name==$block->driver) $name=$name.'_inst';
 				$content.='	'.$name.' : '.$block->driver."\n";
 				
+				$first=true;
 				foreach($block->params as $param)
 				{
 					if($param->hard)
@@ -313,6 +323,11 @@ class VHDL_generator
 						if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
 						$content.='    	'.$param->name.'	=>	'.$param->value;
 					}
+				}
+				foreach($block->flows as $flow)
+				{
+					if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
+					$content.='    	'.strtoupper($flow->name).'_SIZE'.'	=>	'.$flow->size;
 				}
 				if(!$first) $content.="\n".'	)'."\n";
 				

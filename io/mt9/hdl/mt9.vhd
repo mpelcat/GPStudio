@@ -5,8 +5,7 @@ library std;
 
 entity mt9 is
 	generic (
-		DATA_WIDTH : integer := 32;
-		PIXEL_WIDTH : integer := 8
+		OUT_SIZE : integer := 8
 	);
 	port (
 		clk_proc : in std_logic;
@@ -238,8 +237,8 @@ begin
 
 	VideoSampler_inst : VideoSampler
     generic map (
-    	DATA_WIDTH	=>	DATA_WIDTH,
-    	PIXEL_WIDTH	=>	PIXEL_WIDTH,
+    	PIXEL_WIDTH	=>	OUT_SIZE,
+    	DATA_WIDTH	=>	32,
     	FIFO_DEPTH	=>	4096*4,
     	DEFAULT_SCR	=>	0,
     	DEFAULT_FLOWLENGHT	=>	254*254,

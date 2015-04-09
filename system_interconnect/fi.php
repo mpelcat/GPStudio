@@ -16,6 +16,12 @@ class FlowInterconnect extends Block
 		$this->driver="fi";
 	}
 	
+	static function showConnect($connect)
+	{
+		$str = "[FI] in : <connect fromblock=\"$connect->fromblock\" fromflow=\"$connect->fromflow\" toblock=\"$connect->toblock\" toflow=\"$connect->toflow\"/>\n";
+		return $str;
+	}
+	
 	static function showFlows($block, $dir)
 	{
 		$str = "[FI] Available flows $dir for $block->name :\n";
@@ -37,7 +43,7 @@ class FlowInterconnect extends Block
 		$str = "[FI] Available blocks :\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="bi")
+			if($block->name!="fi" and $block->name!="bi" and $block->name!="ci" and $block->name!="ri")
 			{
 				$str .= "\t+ $block->name\n";
 			}
@@ -74,10 +80,30 @@ class FlowInterconnect extends Block
 			foreach($node->flow_connects as $connect)
 			{
 				// check connexion
-				if(!$fromblock=$node->getBlock($connect->fromblock)) { error("Block '$connect->fromblock' doesn't exists.\n".FlowInterconnect::showBlocks($node),15,"FI"); }
-				if(!$fromflow=$fromblock->getFlow($connect->fromflow)) { error("Flow '$connect->fromflow' doesn't exists in block '$connect->fromblock'"."\n".FlowInterconnect::showFlows($fromblock, "out"),15,"FI"); }
-				if(!$toblock=$node->getBlock($connect->toblock)) { error("Block '$connect->toblock' doesn't exists.\n".FlowInterconnect::showBlocks($node),15,"FI"); }
-				if(!$toflow=$toblock->getFlow($connect->toflow)) { error("Flow '$connect->toflow' doesn't exists in block '$connect->toblock'.\n".FlowInterconnect::showFlows($toblock, "in"),15,"FI"); }
+				if(!$fromblock=$node->getBlock($connect->fromblock))
+				{
+					error("Block '$connect->fromblock' doesn't exists. Please check your flow_interconnect->connects section.\n"
+					.FlowInterconnect::showConnect($connect)
+					.FlowInterconnect::showBlocks($node),15,"FI");
+				}
+				if(!$fromflow=$fromblock->getFlow($connect->fromflow))
+				{
+					error("Flow '$connect->fromflow' doesn't exists in block '$connect->fromblock'. Please check your flow_interconnect->connects section."."\n"
+					.FlowInterconnect::showConnect($connect)
+					.FlowInterconnect::showFlows($fromblock, "out"),15,"FI");
+				}
+				if(!$toblock=$node->getBlock($connect->toblock))
+				{
+					error("Block '$connect->toblock' doesn't exists. Please check your flow_interconnect->connects section.\n"
+					.FlowInterconnect::showConnect($connect)
+					.FlowInterconnect::showBlocks($node),15,"FI");
+				}
+				if(!$toflow=$toblock->getFlow($connect->toflow))
+				{
+					error("Flow '$connect->toflow' doesn't exists in block '$connect->toblock'. Please check your flow_interconnect->connects section.\n"
+					.FlowInterconnect::showConnect($connect)
+					.FlowInterconnect::showFlows($toblock, "in"),15,"FI");
+				}
 				
 				// create tree of connexions
 				if(!array_key_exists($toblock->name.'_'.$toflow->name, $tree_connects))

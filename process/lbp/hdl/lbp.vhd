@@ -6,19 +6,20 @@ library std;
 entity lbp is
 	generic (
 		LINE_WIDTH_MAX : integer;
-		PIX_WIDTH : integer
+		IN_SIZE : integer;
+		OUT_SIZE : integer
 	);
 	port (
 		clk_proc : in std_logic;
 		reset_n : in std_logic;
 
 		------------------------- in flow -----------------------
-		in_data : in std_logic_vector((PIX_WIDTH-1) downto 0);
+		in_data : in std_logic_vector((IN_SIZE-1) downto 0);
 		in_fv : in std_logic;
 		in_dv : in std_logic;
 
 		------------------------ out flow -----------------------
-		out_data : out std_logic_vector((PIX_WIDTH-1) downto 0);
+		out_data : out std_logic_vector((OUT_SIZE-1) downto 0);
 		out_fv : out std_logic;
 		out_dv : out std_logic;
 
@@ -64,12 +65,12 @@ component lbp_process
 		reset_n		: in std_logic;
 
 		------------------------- in flow -----------------------
-		in_data		: in std_logic_vector((PIX_WIDTH-1) downto 0);
+		in_data		: in std_logic_vector((IN_SIZE-1) downto 0);
 		in_fv		: in std_logic;
 		in_dv		: in std_logic;
 
 		------------------------ out flow -----------------------
-		out_data	: out std_logic_vector((PIX_WIDTH-1) downto 0);
+		out_data	: out std_logic_vector((OUT_SIZE-1) downto 0);
 		out_fv		: out std_logic;
 		out_dv		: out std_logic;
 
@@ -108,7 +109,7 @@ begin
 	lbp_process_inst : lbp_process
     generic map (
     	LINE_WIDTH_MAX	=>	LINE_WIDTH_MAX,
-    	PIX_WIDTH	=>	PIX_WIDTH
+    	PIX_WIDTH	=>	IN_SIZE
 	)
     port map (
 		clk_proc	=>	clk_proc,

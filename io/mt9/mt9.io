@@ -43,9 +43,6 @@
 		</param>
 		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime.value"/>
 		<param name="LINELENGHT" regaddr="8" propertymap="linelenght.value"/>
-		
-		<param name="DATA_WIDTH" hard="1" value="32"/>
-		<param name="PIXEL_WIDTH" hard="1" value="8"/>
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable image sensor"/>
