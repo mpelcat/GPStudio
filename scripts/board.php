@@ -119,11 +119,18 @@ class Board
 			if(array_key_exists($io_name, $used_ios))
 			{
 				$node->addBlock(new IO($io, $used_ios[$io_name]));
+				unset($used_ios[$io_name]);
 			}
 			elseif($io['optional']!="true")
 			{
 				//$node->addBlock(new IO($io, null));
 			}
+		}
+		
+		// warning for io does'nt exist
+		foreach($used_ios as $key => $io)
+		{
+			warning('io \''.$io['name']."' does'nt exists in board ".$this->name,16,'Board');
 		}
 		
 		// replace default param value directly in .node file
