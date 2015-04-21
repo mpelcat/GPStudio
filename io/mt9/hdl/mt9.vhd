@@ -10,6 +10,7 @@ entity mt9 is
 	port (
 		clk_proc : in std_logic;
     	clk_img : in std_logic;
+    	--~ clk_img2 : in std_logic;
     	clk_50k : in std_logic;
     	clk_100k : in std_logic;
 		reset_n : in std_logic;

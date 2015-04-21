@@ -1,54 +1,57 @@
 <?php
 
 require_once("block.php");
+require_once("clockdomain.php");
 
 require_once("toolchain/hdl/vhdl_generator.php");
 
-function formatFreq($freq)
-{
-    if($freq>1000000)
-    {
-		return (floor($freq/1000)/1000).' MHz';
-	}
-	elseif($freq>1000)
-	{
-		return ($freq/1000).' kHz';
-	}
-	else
-	{
-		return $freq.' Hz';
-	}
-}
+require_once("pll.php");
 
 class ClockInterconnect extends Block
 {
 	public $clock_providers;
 	public $clock_receivers;
-	public $available_freq;
-	public $needed_freq;
+	
+	public $plls;
+	
+	public $domains;
 	
 	function __construct()
 	{
 		parent::__construct();
 		$this->clock_providers = array();
 		$this->clock_receivers = array();
+		$this->domains = array();
 		$this->name="ci";
 		$this->driver="ci";
 	}
 	
+	protected function parse_xml($xml)
+	{
+		if(isset($xml->clock_interconnect))
+		{
+			if(isset($xml->clock_interconnect->domains))
+			{
+				foreach($xml->clock_interconnect->domains->domain as $domain)
+				{
+					$this->addClockDomain(new ClockDomain($domain));
+				}
+			}
+		}
+	}
+	
 	function configure($node, $block)
 	{
+		$this->parse_xml($node->xml);
+		
 		$reset = new Reset();
 		$reset->name='reset';
 		$reset->direction='in';
 		$reset->group='reset_n';
 		$this->addReset($reset);
 		
-		$this->clock_providers = array();
-		$this->clock_receivers = array();
-		
-		$this->available_freq = array();
-		$this->needed_freq = array();
+		$available_freq = array();
+		$needed_freq = array();
 		
 		// construct list of clock providers and clock receivers
 		foreach($node->board->clocks as $clock)
@@ -64,9 +67,11 @@ class ClockInterconnect extends Block
 		}
 		
 		// construct list of available clocks
+		$inFreqs=array();
 		foreach($this->clock_providers as $clock_provider)
 		{
-			array_push($this->available_freq, $clock_provider->typical);
+			array_push($available_freq, array($clock_provider->typical, $clock_provider->shift));
+			array_push($inFreqs, $clock_provider->typical);
 			
 			$clock = new Clock();
 			$clock->name = $clock_provider->name;
@@ -76,55 +81,154 @@ class ClockInterconnect extends Block
 			
 			if($clock->shift==0)
 			{
-				$clock->net = 'clk_'.$clock->typical;
-				$clock_provider->net = 'clk_'.$clock->typical;
+				$clock->net = 'clk_'.Clock::hdlFreq($clock->typical);
+				$clock_provider->net = $clock->net;
 			}
 			else
 			{
-				$clock->net = 'clk_'.$typical.'_'.$clock->shift;
-				$clock_provider->net = 'clk_'.$typical.'_'.$clock->shift;
+				$clock->net = 'clk_'.Clock::hdlFreq($clock->typical).'_'.$clock->shift;
+				$clock_provider->net = $clock->net;
 			}
 			
 			$clock->direction = "in";
 			$this->addClock($clock);
-			
-			//echo $clock_provider->typical . "\n";
 		}
 		
-		// construct list of needed clocks
+		// construct list of plls
+		$this->plls = array();
+		$pllAttr = $node->board->toolchain->getRessourceAttributes('pll');
+		$maxPLL = $pllAttr['maxPLL'];
+		$clkByPLL = $pllAttr['clkByPLL'];
+		$vcomin = $pllAttr['vcomin'];
+		$vcomax = $pllAttr['vcomax'];
+		$mulmax = $pllAttr['mulmax'];
+		$divmax = $pllAttr['divmax'];
+		for($i=0; $i<$maxPLL; $i++)
+		{
+			$pll = new PLL();
+			$pll->inFreqs = $inFreqs;
+			$pll->clkByPLL = $clkByPLL;
+			$pll->vcomin = $vcomin;
+			$pll->vcomax = $vcomax;
+			$pll->mulmax = $mulmax;
+			$pll->divmax = $divmax;
+			array_push($this->plls, $pll);
+		}
+		
+		// construct list of needed clocks for clock with a defined freq
 		foreach($this->clock_receivers as $clock)
 		{
 			if(isset($clock->typical))
 			{
-				if(!in_array(array($clock->typical, $clock->shift), $this->needed_freq))
+				if(!in_array(array($clock->typical, $clock->shift), $available_freq))
 				{
-					array_push($this->needed_freq, array($clock->typical, $clock->shift));
-					array_push($this->available_freq, array($clock->typical, $clock->shift));
+					array_push($needed_freq, array($clock->typical, $clock->shift));
+					array_push($available_freq, array($clock->typical, $clock->shift));
 				}
-			}
-			else
-			{
-				//echo 'notset'.$clock->name."\n";
-				$clock->net = 'clk_proc';
 			}
 		}
 		
-		// add clock provider foreach needed clocks
-		foreach($this->needed_freq as $clockNeed)
+		// construct list of needed clocks for clock with min max interval
+		foreach($this->clock_receivers as $clock)
 		{
-			$clockFreq = $clockNeed[0];
-			$clockShift = $clockNeed[1];
+			if(isset($clock->min) and isset($clock->max) and !isset($clock->typical))
+			{
+				$find=false;
+				foreach($available_freq as $freq)
+				{
+					$clkFreq = $freq[0];
+					$clkShift = $freq[1];
+					
+					// if an available clock enter in the interval, set the typical clock to this frequency
+					if($clkFreq>=$clock->min and $clkFreq<=$clock->max and $clkShift==$clock->shift)
+					{
+						$clock->typical=$clkFreq;
+						$clock->shift=$clkShift;
+						$find=true;
+					}
+				}
+				if(!$find)
+				{
+					// if no clock is ok, add a the minimal frequency to the needed clock frequency
+					$clock->typical=$clock->min;
+					array_push($needed_freq, array($clock->typical, $clock->shift));
+					array_push($available_freq, array($clock->typical, $clock->shift));
+				}
+			}
+		}
+		
+		// resolve domain with ratio clock
+		foreach($this->clock_receivers as $clock)
+		{
+			if(!isset($clock->typical))
+			{
+				if(array_key_exists($clock->domain, $this->domains))
+				{
+					$clock->typical = $this->domains[$clock->domain]->typical * $clock->ratio;
+					if(!in_array(array($clock->typical, $clock->shift), $available_freq))
+					{
+						array_push($needed_freq, array($clock->typical, $clock->shift));
+						array_push($available_freq, array($clock->typical, $clock->shift));
+					}
+				}
+				else
+				{
+					$clock->typical = $this->clock_providers[0]->typical;
+					
+					warning("No clock specified in .node file for domain '".$clock->domain."', automaticaly choose : ".Clock::formatFreq($clock->typical),20,'CI');
+					
+					$domain = new ClockDomain();
+					$domain->name = $clock->domain;
+					$domain->typical = $clock->typical/$clock->ratio;
+					$this->addClockDomain($domain);
+				}
+			}
+		}
+
+		// add clock provider foreach needed clocks
+		foreach($needed_freq as $needed_freq)
+		{
+			$clkFreq = $needed_freq[0];
+			$clkShift = $needed_freq[1];
 			
-			$clock = new Clock();
-			$clock->typical = $clockFreq;
-			$clock->shift = $clockShift;
-			if($clock->shift==0) $clock->net = 'clk_'.$clockFreq;
-			else $clock->net = 'clk_'.$clockFreq.'_'.$clock->shift;
-			$clock->name = $clock->net;
-			$clock->domain = "clk_$clockFreq";
-			$clock->direction = "out";
-			$this->addClock($clock);
-			array_push($this->clock_providers, $clock);
+			$clockProvider = new Clock();
+			$clockProvider->typical = $clkFreq;
+			$clockProvider->shift = $clkShift;
+			if($clockProvider->shift==0)
+			{
+				$clockProvider->net = 'clk_'.Clock::hdlFreq($clkFreq);
+			}
+			else
+			{
+				$clockProvider->net = 'clk_'.Clock::hdlFreq($clkFreq).'_'.$clkShift;
+			}
+			$clockProvider->name = $clockProvider->net;
+			
+			$clockProvider->domain = "clk_".$clkFreq;
+			$clockProvider->direction = "out";
+			
+			$this->addClock($clockProvider);
+			array_push($this->clock_providers, $clockProvider);
+		}
+		
+		// create clocks foreach clock provider
+		foreach($this->clock_providers as $clock_provider)
+		{
+			// add the clock source to the first pll can accept the clock
+			if($clock_provider->parentBlock==$this)
+			{
+				$ok = false;
+				foreach($this->plls as $pll)
+				{
+					if($pll->canBeAdded($clock_provider))
+					{
+						$pll->addFreq($clock_provider);
+						$ok = true;
+						break;
+					}
+				}
+				if(!$ok) error("Cannot provide clock at ".Clock::formatFreq($clockProvider->typical),20,"CI");
+			}
 		}
 		
 		// associate clock net
@@ -141,8 +245,6 @@ class ClockInterconnect extends Block
 				}
 			}
 		}
-		
-		//print_r($this->needed_freq);
 	}
 	
 	function generate($node, $block, $path, $language)
@@ -155,32 +257,47 @@ class ClockInterconnect extends Block
 		array_push($generator->libs, "library altera_mf;");
 		array_push($generator->libs, "use altera_mf.all;");
 		
-		$generator->addSignal('pll1_in', 2, 'std_logic_vector');
-		$generator->addSignal('pll1_out', 5, 'std_logic_vector');
-	
 		$declare='';
-		$params['clks']=2;
+		$params=array();
 		$declare.=$node->board->toolchain->getRessourceDeclare('pll',$params);
 		$generator->declare=$declare;
 		
 		$code='';
-		$params['pllname']='pll1';
-		$params['clkin']=$this->clock_providers[0]->typical;
-		$params['clks']=$this->needed_freq;
-		$code.=$node->board->toolchain->getRessourceInstance('pll',$params);
-		
-		$clkId=0;
-		foreach($this->needed_freq as $clockNeed)
+		$pllId=0;
+		foreach($this->plls as $pll)
 		{
-			$clockFreq = $clockNeed[0];
-			$clockShift = $clockNeed[1];
-			if($clockShift==0) $net = 'clk_'.$clockFreq;
-			else $net = 'clk_'.$clockFreq.'_'.$clockShift;
-			
-			$code.='	'.$net.' <= pll1_out('.$clkId.');'."\n";
-			$clkId++;
+			if(!$pll->isempty())
+			{
+				$generator->addSignal('pll'.$pllId.'_in', 2, 'std_logic_vector');
+				$generator->addSignal('pll'.$pllId.'_out', 5, 'std_logic_vector');
+				
+				$params['pllname']='pll'.$pllId;
+				$params['pll']=$pll;
+				
+				$params['clkin']=$pll->freqIn();
+				$params['clks']=$pll->clksshift;
+				$code.=$node->board->toolchain->getRessourceInstance('pll',$params);
+				
+				$clkId=0;
+				foreach($pll->clksshift as $clockNeed)
+				{
+					$clockFreq = $clockNeed[0];
+					$clockShift = $clockNeed[1];
+					
+					if($clockShift==0) $net = 'clk_'.Clock::hdlFreq($clockFreq);
+					else $net = 'clk_'.Clock::hdlFreq($clockFreq).'_'.$clockShift;
+					
+					$code.='	'.$net.' <= pll'.$pllId.'_out('.$clkId.');'."\n";
+					
+					messageVerbosity('Generate Clock at '.Clock::formatFreq($clockFreq).' from '.Clock::formatFreq($params['clkin']).' in pll'.$pllId, 'CI');
+					
+					$clkId++;
+				}
+				$code.='	pll'.$pllId.'_in(0) <= '.$this->providerByFreq($params['clkin'])->name.';'."\n"."\n";
+				
+				$pllId++;
+			}
 		}
-		$code.='	pll1_in(0) <= '.$this->clock_providers[0]->name.';'."\n";
 		
 		$generator->code=$code;
 	
@@ -192,6 +309,10 @@ class ClockInterconnect extends Block
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
 		$ci->addFile($file);
+		
+		//echo Clock::formatFreq(ClockInterconnect::ppcm_array(array(9000000,50000,100000,96000000)))."\n";
+		//echo Clock::formatFreq(ClockInterconnect::ppcm_array(array(9000000,50000,100000,96000000,48000000)))."\n";
+		//echo Clock::formatFreq($this->plls[0]->vco)."\n";
 	}
 	
 	public function type() {return 'ci';}
@@ -206,7 +327,7 @@ class ClockInterconnect extends Block
 		{
 			$clock_element = $clock->getXmlElement($xml);
 			
-			// name
+			// blockName
 			$att = $xml->createAttribute('blockName');
 			$att->value = $clock->parentBlock->name;
 			$clock_element->appendChild($att);
@@ -219,11 +340,64 @@ class ClockInterconnect extends Block
 		$xml_clocks = $xml->createElement("clock_receivers");
 		foreach($this->clock_receivers as $clock)
 		{
-			$xml_clocks->appendChild($clock->getXmlElement($xml));
+			$clock_element = $clock->getXmlElement($xml);
+			
+			// blockName
+			$att = $xml->createAttribute('blockName');
+			$att->value = $clock->parentBlock->name;
+			$clock_element->appendChild($att);
+			
+			$xml_clocks->appendChild($clock_element);
 		}
 		$xml_element->appendChild($xml_clocks);
 		
 		return $xml_element;
+	}
+
+	static function ppcm($nombre,$nombre2)
+	{
+		$res = $nombre * $nombre2;
+		while($nombre > 1)
+		{
+			$reste = $nombre % $nombre2;
+			if($reste == 0 )
+			{
+				return $res / $nombre2;
+			}
+			$nombre = $nombre2;
+			$nombre2 = $reste;
+		}
+		return $nombre2;
+	}
+
+	static function ppcm_array($array, $a = 0)
+	{
+		$b = array_pop($array);
+		return ($b === null) ? (int)$a : ClockInterconnect::ppcm_array($array, ClockInterconnect::ppcm($a, $b));
+	}
+	
+	function providerByFreq($freq)
+	{
+		foreach($this->clock_providers as $clock)
+		{
+			if($clock->typical==$freq) return $clock;
+		}
+		return null;
+	}
+	
+	/** Add a clock domain to the block
+	 *  @param ClockDomain $flow_connect flow connection to add to the block **/
+	function addClockDomain($domain)
+	{
+		$this->domains[$domain->name]=$domain;
+	}
+	
+	/** return a reference to the clock domain with the name $name, if not found, return null
+	 *  @param string $name name of the clock domain to search
+	 *  @return ClockDomain found clock domain **/
+	function getClockDomain($name)
+	{
+		return $this->domain[$name];
 	}
 }
 

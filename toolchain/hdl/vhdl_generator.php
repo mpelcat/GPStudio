@@ -188,6 +188,11 @@ class VHDL_generator
 		$content = '';
 		
 		// generic declaration
+		$maxLenght=0;
+		foreach($this->params as $param)
+		{
+			if(strlen($param->name)>$maxLenght) $maxLenght=strlen($param->name);
+		}
 		if(!empty($this->params))
 		{
 			$content.='	generic ('."\n";
@@ -196,7 +201,7 @@ class VHDL_generator
 			foreach($this->params as $param)
 			{
 				$i++;
-				$content.='		'.$param->name.' : '.$param->type;
+				$content.='		'.str_pad($param->name,$maxLenght,' ').' : '.$param->type;
 				if($i<$len) $content.=";\n";
 			}
 			$content.="\n";
@@ -207,6 +212,14 @@ class VHDL_generator
 		$content.='	port ('."\n";
 		$i=0;
 		$len = count($this->ports);
+		$maxLenght=0;
+		foreach($this->ports as $port)
+		{
+			if(!$port->space)
+			{
+				if(strlen($port->name)>$maxLenght) $maxLenght=strlen($port->name);
+			}
+		}
 		foreach($this->ports as $port)
 		{
 			$i++;
@@ -218,17 +231,17 @@ class VHDL_generator
 			{
 				if($port->size==1 and $port->default!='std_logic_vector')
 				{
-					$content.='		'.$port->name.' : '.$port->type.' std_logic';
+					$content.='		'.str_pad($port->name,$maxLenght,' ').' : '.$port->type.' std_logic';
 				}
 				else
 				{
 					if(is_int($port->size))
 					{
-						$content.='		'.$port->name.' : '.$port->type.' std_logic_vector('.($port->size-1).' downto 0)';
+						$content.='		'.str_pad($port->name,$maxLenght,' ').' : '.$port->type.' std_logic_vector('.($port->size-1).' downto 0)';
 					}
 					else
 					{
-						$content.='		'.$port->name.' : '.$port->type.' std_logic_vector('.$port->size.'-1 downto 0)';
+						$content.='		'.str_pad($port->name,$maxLenght,' ').' : '.$port->type.' std_logic_vector('.$port->size.'-1 downto 0)';
 					}
 				}
 				if($i<$len) $content.=";\n";
@@ -281,26 +294,34 @@ class VHDL_generator
 		}
 	
 		// internal signal
+		$maxLenght=0;
 		foreach($this->signals as $signal)
 		{
 			if($signal->space)
 			{
-				$content.="\n".'	--'.$signal->name."\n";
+				if(strlen($signal->name)>$maxLenght) $maxLenght=strlen($signal->name);
+			}
+		}
+		foreach($this->signals as $signal)
+		{
+			if($signal->space)
+			{
+				$content.="\n".'	--'.str_pad($signal->name,$maxLenght,' ')."\n";
 			}
 			else
 			{
 				if($signal->size==1 and $signal->type!='std_logic_vector')
 				{
-					$content.='	signal '.$signal->name.' : '.$signal->type.';'."\n";
+					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.';'."\n";
 				}
 				else
 				{
-					$content.='	signal '.$signal->name.' : '.$signal->type.' ('.($signal->size-1).' downto 0);'."\n";
+					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.' ('.($signal->size-1).' downto 0);'."\n";
 				}
 			}
 		}
 		
-		$content.=$this->declare;
+		if(!empty($this->declare)) $content.="\n".$this->declare;
 		
 		$content.="\n";
 	
@@ -315,58 +336,68 @@ class VHDL_generator
 				if($name==$block->driver) $name=$name.'_inst';
 				$content.='	'.$name.' : '.$block->driver."\n";
 				
+				$maxLenght=0;
+				foreach($block->params as $param)
+				{
+					if($param->hard)
+					{
+						if(strlen($param->name)>$maxLenght) $maxLenght=strlen($param->name);
+					}
+				}
+				foreach($block->flows as $flow)
+				{
+					if(strlen($flow->name.'_SIZE')>$maxLenght) $maxLenght=strlen($flow->name.'_SIZE');
+				}
+				
 				$first=true;
 				foreach($block->params as $param)
 				{
 					if($param->hard)
 					{
 						if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
-						$content.='    	'.$param->name.'	=>	'.$param->value;
+						$content.='    	'.str_pad($param->name,$maxLenght,' ').' => '.$param->value;
 					}
 				}
 				foreach($block->flows as $flow)
 				{
 					if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
-					$content.='    	'.strtoupper($flow->name).'_SIZE'.'	=>	'.$flow->size;
+					$content.='    	'.str_pad(strtoupper($flow->name).'_SIZE',$maxLenght,' ').' => '.$flow->size;
 				}
 				if(!$first) $content.="\n".'	)'."\n";
 				
 			// port map
 				$first=true;
+				$portmap = array();
 				$content.='    port map ('."\n";
 				// clocks mapping
 				foreach($block->clocks as $clock)
 				{
-					if(!$first) $content.=','."\n"; else $first=false;
-					$content.='    	'.$clock->name.'	=>	'.$clock->net;
+					array_push($portmap, array($clock->name, $clock->net));
 				}
 				// resets mapping
 				foreach($block->resets as $reset)
 				{
-					if(!$first) $content.=','."\n"; else $first=false;
-					$content.='    	'.$reset->name.'	=>	'.$reset->group;
+					array_push($portmap, array($reset->name, $reset->group));
 				}
 				// ext ports mapping
 				foreach($block->ext_ports as $port)
 				{
-					if(!$first) $content.=','."\n"; else $first=false;
-					$content.='    	'.$port->name.'	=>	'.$block->name.'_'.$port->name;
+					array_push($portmap, array($port->name, $block->name.'_'.$port->name));
 				}
 				// flows mapping
 				foreach($block->flows as $flow)
 				{
-					if(!$first) $content.=','."\n"; else $first=false;
 					if($flow->type=='in' or $flow->type=='out')
 					{
-						$content.='    	'.$flow->name . '_data'.'	=>	'.$block->name . '_' . $flow->name . '_data_s'.",\n";
-						$content.='    	'.$flow->name . '_fv'.'	=>	'.$block->name . '_' . $flow->name . '_fv_s'.",\n";
-						$content.='    	'.$flow->name . '_dv'.'	=>	'.$block->name . '_' . $flow->name . '_dv_s';
+						array_push($portmap, array($flow->name . '_data', $block->name . '_' . $flow->name . '_data_s'));
+						array_push($portmap, array($flow->name . '_fv', $block->name . '_' . $flow->name . '_fv_s'));
+						array_push($portmap, array($flow->name . '_dv', $block->name . '_' . $flow->name . '_dv_s'));
 					}
 					else
 					{
-						$content.='    	'.$flow->name . '_data'.'	=>	'.$flow->name . '_data_s'.",\n";
-						$content.='    	'.$flow->name . '_fv'.'	=>	'.$flow->name . '_fv_s'.",\n";
-						$content.='    	'.$flow->name . '_dv'.'	=>	'.$flow->name . '_dv_s';
+						array_push($portmap, array($flow->name . '_data', $flow->name . '_data_s'));
+						array_push($portmap, array($flow->name . '_fv', $flow->name . '_fv_s'));
+						array_push($portmap, array($flow->name . '_dv', $flow->name . '_dv_s'));
 					}
 				}
 				// bus mapping
@@ -374,40 +405,47 @@ class VHDL_generator
 				{
 					if($interface->type=='bi_slave')
 					{
-						if(!$first) $content.=','."\n"; else $first=false;
-						$content.='    	addr_rel_i'.'	=>	'.$block->name.'_addr_rel_s'.",\n";
-						$content.='    	wr_i'.'	=>	'.$block->name.'_wr_s'.",\n";
-						$content.='    	rd_i'.'	=>	'.$block->name.'_rd_s'.",\n";
-						$content.='    	datawr_i'.'	=>	'.$block->name.'_datawr_s'.",\n";
-						$content.='    	datard_o'.'	=>	'.$block->name.'_datard_s';
+						array_push($portmap, array('addr_rel_i', $block->name.'_addr_rel_s'));
+						array_push($portmap, array('wr_i', $block->name.'_wr_s'));
+						array_push($portmap, array('rd_i', $block->name.'_rd_s'));
+						array_push($portmap, array('datawr_i', $block->name.'_datawr_s'));
+						array_push($portmap, array('datard_o', $block->name.'_datard_s'));
 					}
 					if($interface->type=='bi_master')
 					{
-						if(!$first) $content.=','."\n"; else $first=false;
-						$content.='    	master_addr_o'.'	=>	'.$block->name.'_master_addr_s'.",\n";
-						$content.='    	master_wr_o'.'	=>	'.$block->name.'_master_wr_s'.",\n";
-						$content.='    	master_rd_o'.'	=>	'.$block->name.'_master_rd_s'.",\n";
-						$content.='    	master_datawr_o'.'	=>	'.$block->name.'_master_datawr_s'.",\n";
-						$content.='    	master_datard_i'.'	=>	'.$block->name.'_master_datard_s';
+						array_push($portmap, array('master_addr_o', $block->name.'_master_addr_s'));
+						array_push($portmap, array('master_wr_o', $block->name.'_master_wr_s'));
+						array_push($portmap, array('master_rd_o', $block->name.'_master_rd_s'));
+						array_push($portmap, array('master_datawr_o', $block->name.'_master_datawr_s'));
+						array_push($portmap, array('master_datard_i', $block->name.'_master_datard_s'));
 					}
 					if($interface->type=='bi_slave_conn')
 					{
-						if(!$first) $content.=','."\n"; else $first=false;
-						$content.='    	'.$interface->blockname.'_addr_rel_o'.'	=>	'.$interface->blockname.'_addr_rel_s'.",\n";
-						$content.='    	'.$interface->blockname.'_wr_o'.'	=>	'.$interface->blockname.'_wr_s'.",\n";
-						$content.='    	'.$interface->blockname.'_rd_o'.'	=>	'.$interface->blockname.'_rd_s'.",\n";
-						$content.='    	'.$interface->blockname.'_datawr_o'.'	=>	'.$interface->blockname.'_datawr_s'.",\n";
-						$content.='    	'.$interface->blockname.'_datard_i'.'	=>	'.$interface->blockname.'_datard_s';
+						array_push($portmap, array($interface->blockname.'_addr_rel_o', $interface->blockname.'_addr_rel_s'));
+						array_push($portmap, array($interface->blockname.'_wr_o', $interface->blockname.'_wr_s'));
+						array_push($portmap, array($interface->blockname.'_rd_o', $interface->blockname.'_rd_s'));
+						array_push($portmap, array($interface->blockname.'_datawr_o', $interface->blockname.'_datawr_s'));
+						array_push($portmap, array($interface->blockname.'_datard_i', $interface->blockname.'_datard_s'));
 					}
 					if($interface->type=='bi_master_conn')
 					{
-						if(!$first) $content.=','."\n"; else $first=false;
-						$content.='    	'.$interface->blockname.'_master_addr_i'.'	=>	'.$interface->blockname.'_master_addr_s'.",\n";
-						$content.='    	'.$interface->blockname.'_master_wr_i'.'	=>	'.$interface->blockname.'_master_wr_s'.",\n";
-						$content.='    	'.$interface->blockname.'_master_rd_i'.'	=>	'.$interface->blockname.'_master_rd_s'.",\n";
-						$content.='    	'.$interface->blockname.'_master_datawr_i'.'	=>	'.$interface->blockname.'_master_datawr_s'.",\n";
-						$content.='    	'.$interface->blockname.'_master_datard_o'.'	=>	'.$interface->blockname.'_master_datard_s';
+						array_push($portmap, array($interface->blockname.'_master_addr_i', $interface->blockname.'_master_addr_s'));
+						array_push($portmap, array($interface->blockname.'_master_wr_i', $interface->blockname.'_master_wr_s'));
+						array_push($portmap, array($interface->blockname.'_master_rd_i', $interface->blockname.'_master_rd_s'));
+						array_push($portmap, array($interface->blockname.'_master_datawr_i', $interface->blockname.'_master_datawr_s'));
+						array_push($portmap, array($interface->blockname.'_master_datard_o', $interface->blockname.'_master_datard_s'));
 					}
+				}
+				
+				$maxLenght=0;
+				foreach($portmap as $map)
+				{
+					if(strlen($map[0])>$maxLenght) $maxLenght=strlen($map[0]);
+				}
+				foreach($portmap as $map)
+				{
+					if(!$first) $content.=','."\n"; else $first=false;
+					$content.='		'.str_pad($map[0],$maxLenght,' ').' => '.$map[1];
 				}
 				
 				$content.="\n".'	);'."\n";

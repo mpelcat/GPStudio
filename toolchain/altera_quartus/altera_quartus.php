@@ -3,6 +3,8 @@
 require_once("toolchain.php");
 require_once("toolchain/hdl/hdl.php");
 
+require_once("pll.php");
+
 function pgcd($a,$b)
 {
     for($c = $a % $b ; $c != 0; $c= $a%$b ) :
@@ -231,11 +233,66 @@ class Altera_quartus_toolchain extends HDL_toolchain
 	function getRessourceAttributes($type)
 	{
 		$attr = array();
+		$family = $this->getAttribute("FAMILY")->value;
+		$device = $this->getAttribute("DEVICE")->value;
+		
+		switch ($family)
+		{
+			case 'Cyclone III':
+				preg_match_all("|(EP[0-9])([A-Z]{1,3}[0-9]+)([A-Z]{1,3}[0-9]+)([A-Z][0-9]+[A-Z]*).*|", $device, $out, PREG_SET_ORDER);
+				$deviceMember = $out[0][2];
+				$speedgrade = $out[0][4];
+				break;
+			case 'Cyclone V':
+				preg_match_all("|(EP[0-9][A-Z])(SX{0,1})([F]{0,1})([A-Z][0-9])([A-Z][0-9])([A-Z][0-9]+).*|", $device, $out, PREG_SET_ORDER);
+				$deviceMember = $out[0][4];
+				$speedgrade = $out[0][5];
+				break;
+			default:
+				warning("family $family does'nt exist in toolchain");
+		}
+		
 		switch ($type)
 		{
 			case 'pll':
-				$attr['maxPLL']=4;
-				$attr['clkByPLL']=5;
+				switch ($family)
+				{
+					case 'Cyclone III':
+						if($deviceMember=='C5' or $deviceMember=='C10') $attr['maxPLL']=2; else $attr['maxPLL']=4;
+						$attr['clkByPLL']=5;
+						$attr['vcomin']=300000000; //with divide by 2 mode
+						$attr['vcomax']=1300000000;
+						$attr['mulmax']=512;
+						$attr['divmax']=512;
+						break;
+					case 'Cyclone IV':
+						$attr['maxPLL']=4;
+						$attr['clkByPLL']=5;
+						$attr['vcomin']=600000000;
+						$attr['vcomax']=1300000000;
+						$attr['mulmax']=512;
+						$attr['divmax']=512;
+						break;
+					case 'Cyclone V':
+						if($deviceMember=='A9' or $deviceMember=='C9' or $deviceMember=='D9') $attr['maxPLL']=8;
+						elseif($deviceMember=='A7' or $deviceMember=='C7' or $deviceMember=='D7') $attr['maxPLL']=7;
+						elseif($deviceMember=='A5' or $deviceMember=='C5' or $deviceMember=='C6' or $deviceMember=='C4' or $deviceMember=='D5') $attr['maxPLL']=6;
+						else $attr['maxPLL']=4;
+						
+						$attr['clkByPLL']=5;
+						$attr['vcomin']=600000000;
+						
+						if($speedgrade=='C6') $attr['vcomax']=1600000000;
+						elseif($speedgrade=='C7' or $speedgrade=='I7') $attr['vcomax']=1400000000;
+						elseif($speedgrade=='C8' or $speedgrade=='A7') $attr['vcomax']=1300000000;
+						
+						$attr['mulmax']=512;
+						$attr['divmax']=512;
+						break;
+					default:
+						warning("family $family does'nt exist in toolchain");
+				}
+			
 				break;
 			default:
 				warning("ressource $type does'nt exist");
@@ -388,10 +445,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$instance.='		port_extclk2 => "PORT_UNUSED",'."\n";
 				$instance.='		port_extclk3 => "PORT_UNUSED",'."\n";
 		
-				$instance.='		inclk0_input_frequency => '.(1000000000000/$clkin).','."\n";
+				$instance.='		inclk0_input_frequency => '.ceil(1000000000000/$clkin).','."\n";
 			
 				$clkId=0;
-				foreach($params['clks'] as $clk)
+				foreach($params['pll']->clksshift as $clk)
 				{
 					$clockFreq = $clk[0];
 					$clockShift = $clk[1];
@@ -400,7 +457,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					$mul = floor($clockFreq / ($clkin / $div));
 					if($clockShift==0) $shift=0; else $shift=($clockShift/360)*10000000;
 					
-					$instance.='		-- clk'.$clkId.' at '.formatFreq($clockFreq).' '.$clockShift.'° shifted'."\n";
+					$instance.='		-- clk'.$clkId.' at '.Clock::formatFreq($clockFreq).' '.$clockShift.'° shifted'."\n";
 					$instance.='		port_clk'.$clkId.' => "PORT_USED",'."\n";
 					$instance.='		clk'.$clkId.'_duty_cycle => 50,'."\n";
 					$instance.='		clk'.$clkId.'_divide_by => '.$div.','."\n";

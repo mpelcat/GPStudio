@@ -1,19 +1,27 @@
 <?php
 
 require_once("block.php");
+require_once("flow_connect.php");
 
 require_once("toolchain/hdl/vhdl_generator.php");
 
 class FlowInterconnect extends Block
 {
-	public $connects;
 	public $tree_connects;
+
+	/**
+	* Flow connections between blocks
+	* @var array|FlowConnect $flow_connects
+	*/
+	public $flow_connects;
 
 	function __construct()
 	{
 		parent::__construct();
 		$this->name="fi";
 		$this->driver="fi";
+		
+		$this->flow_connects = array();
 	}
 	
 	static function showConnect($connect)
@@ -51,8 +59,24 @@ class FlowInterconnect extends Block
 		return $str;
 	}
 	
+	protected function parse_xml($xml)
+	{
+		if(isset($xml->flow_interconnect))
+		{
+			if(isset($xml->flow_interconnect->connects))
+			{
+				foreach($xml->flow_interconnect->connects->connect as $connect)
+				{
+					$this->addFlowConnect(new FlowConnect($connect));
+				}
+			}
+		}
+	}
+	
 	function configure($node, $block)
 	{
+		$this->parse_xml($node->xml);
+		
 		$reset = new Reset();
 		$reset->name='reset';
 		$reset->direction='in';
@@ -77,7 +101,7 @@ class FlowInterconnect extends Block
 			
 			// compute connexion
 			$tree_connects = array();
-			foreach($node->flow_connects as $connect)
+			foreach($this->flow_connects as $connect)
 			{
 				// check connexion
 				if(!$fromblock=$node->getBlock($connect->fromblock))
@@ -398,7 +422,35 @@ class FlowInterconnect extends Block
 	{
 		$xml_element = parent::getXmlElement($xml);
 		
+		// clock_providers
+		$xml_flow_connects = $xml->createElement("flow_connects");
+		foreach($this->flow_connects as $flow_connect)
+		{
+			$xml_flow_connects->appendChild($flow_connect->getXmlElement($xml));
+		}
+		$xml_element->appendChild($xml_flow_connects);
+		
 		return $xml_element;
+	}
+	
+	/** Add a flow connection to the block 
+	 *  @param FlowConnect $flow_connect flow connection to add to the block **/
+	function addFlowConnect($flow_connect)
+	{
+		$flow_connect->parentBlock = $this;
+		array_push($this->flow_connects, $flow_connect);
+	}
+	
+	/** return a reference to the flow connection with the name $name, if not found, return false
+	 *  @param string $name name of the flow connection to search
+	 *  @return FlowConnect found flow connection **/
+	function getFlowConnect($name)
+	{
+		foreach($this->flow_connects as $flow_connect)
+		{
+			if($flow_connect->name==$name) return $flow_connect;
+		}
+		return null;
 	}
 }
 

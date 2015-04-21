@@ -38,6 +38,33 @@ class FlowConnect
 		$this->toblock = (string)$xml['toblock'];
 		$this->toflow = (string)$xml['toflow'];
 	}
+	
+	public function getXmlElement($xml)
+	{
+		$xml_element = $xml->createElement("flow_connect");
+		
+		// fromblock
+		$att = $xml->createAttribute('fromblock');
+		$att->value = $this->fromblock;
+		$xml_element->appendChild($att);
+		
+		// fromflow
+		$att = $xml->createAttribute('fromflow');
+		$att->value = $this->fromflow;
+		$xml_element->appendChild($att);
+		
+		// toblock
+		$att = $xml->createAttribute('toblock');
+		$att->value = $this->toblock;
+		$xml_element->appendChild($att);
+		
+		// toflow
+		$att = $xml->createAttribute('toflow');
+		$att->value = $this->toflow;
+		$xml_element->appendChild($att);
+		
+		return $xml_element;
+	}
 }
 
 ?>

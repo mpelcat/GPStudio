@@ -64,8 +64,21 @@
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
 	</resets>
 	<clocks>
-		<clock name="clk_img" direction="in" typical="14000000" desc=""/>
-		<clock name="clk_50k" direction="in" typical="50000" domain="i2c" desc=""/>
-		<clock name="clk_100k" direction="in" typical="100000" domain="i2c" shift="180" desc=""/>
+		<clock name="clk_img" direction="in" typical="9M" desc=""/>
+<!--
+		<clock name="clk_img2" direction="in" typical="50M" desc=""/>
+
+		<clock name="clk_img3" direction="in" typical="97M" desc=""/>
+		<clock name="clk_img8" direction="in" typical="194M" desc=""/>
+		<clock name="clk_img4" direction="in" typical="52M" desc=""/>
+		<clock name="clk_img5" direction="in" typical="2289" desc=""/>
+		<clock name="clk_img6" direction="in" typical="28M" desc=""/>
+		<clock name="clk_img7" direction="in" min="1M" max="11.5M" desc=""/>
+		
+		<clock name="clk_img9" direction="in" domain="clk_proc" ratio="2" desc=""/>
+-->
+
+		<clock name="clk_50k" direction="in" typical="50k" domain="i2c" desc=""/>
+		<clock name="clk_100k" direction="in" typical="100k" domain="i2c" shift="180" desc=""/>
 	</clocks>
 </io>

@@ -145,7 +145,7 @@ class Board
 					{
 						if(isset($param['name']) and isset($param['value']))
 						{
-							if($concerned_param=$concerned_block->getParam($param['name']))
+							if($concerned_param=$concerned_block->getParam((string)$param['name']))
 							{
 								$concerned_param->value = $param['value'];
 							}
@@ -164,9 +164,9 @@ class Board
 					{
 						if(isset($flow['name']) and isset($flow['size']))
 						{
-							if($concerned_flow=$concerned_block->getFlow($flow['name']))
+							if($concerned_flow=$concerned_block->getFlow((string)$flow['name']))
 							{
-								$concerned_flow->size = $flow['size'];
+								$concerned_flow->size = (int)$flow['size'];
 							}
 							else
 							{
@@ -183,9 +183,9 @@ class Board
 					{
 						if(isset($clock['name']) and isset($clock['typical']))
 						{
-							if($concerned_clock=$concerned_block->getClock($clock['name']))
+							if($concerned_clock=$concerned_block->getClock((string)$clock['name']))
 							{
-								$concerned_clock->typical = $clock['typical'];
+								$concerned_clock->typical = Clock::convert($clock['typical']);
 							}
 							else
 							{

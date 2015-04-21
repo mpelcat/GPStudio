@@ -467,55 +467,73 @@ class Block
 		$xml_element->appendChild($att);
 		
 		// files
-		$xml_files = $xml->createElement("files");
-		foreach($this->files as $file)
+		if(!empty($this->files))
 		{
-			$xml_files->appendChild($file->getXmlElement($xml));
+			$xml_files = $xml->createElement("files");
+			foreach($this->files as $file)
+			{
+				$xml_files->appendChild($file->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_files);
 		}
-		$xml_element->appendChild($xml_files);
 		
 		// params
-		$xml_params = $xml->createElement("params");
-		foreach($this->params as $param)
+		if(!empty($this->params))
 		{
-			$xml_params->appendChild($param->getXmlElement($xml));
+			$xml_params = $xml->createElement("params");
+			foreach($this->params as $param)
+			{
+				$xml_params->appendChild($param->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_params);
 		}
-		$xml_element->appendChild($xml_params);
 		
 		// properties
-		$xml_property = $xml->createElement("properties");
-		foreach($this->properties as $property)
+		if(!empty($this->properties))
 		{
-			$xml_property->appendChild($property->getXmlElement($xml));
+			$xml_property = $xml->createElement("properties");
+			foreach($this->properties as $property)
+			{
+				$xml_property->appendChild($property->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_property);
 		}
-		$xml_element->appendChild($xml_property);
 		
 		// flows
-		$xml_flows = $xml->createElement("flows");
-		foreach($this->flows as $flow)
+		if(!empty($this->flows))
 		{
-			if($flow->type=="in" or $flow->type=="out")
+			$xml_flows = $xml->createElement("flows");
+			foreach($this->flows as $flow)
 			{
-				$xml_flows->appendChild($flow->getXmlElement($xml));
+				if($flow->type=="in" or $flow->type=="out")
+				{
+					$xml_flows->appendChild($flow->getXmlElement($xml));
+				}
 			}
+			$xml_element->appendChild($xml_flows);
 		}
-		$xml_element->appendChild($xml_flows);
 		
 		// clocks
-		$xml_clocks = $xml->createElement("clocks");
-		foreach($this->clocks as $clock)
+		if(!empty($this->clocks))
 		{
-			$xml_clocks->appendChild($clock->getXmlElement($xml));
+			$xml_clocks = $xml->createElement("clocks");
+			foreach($this->clocks as $clock)
+			{
+				$xml_clocks->appendChild($clock->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_clocks);
 		}
-		$xml_element->appendChild($xml_clocks);
 		
 		// resets
-		$xml_resets = $xml->createElement("resets");
-		foreach($this->resets as $reset)
+		if(!empty($this->resets))
 		{
-			$xml_resets->appendChild($reset->getXmlElement($xml));
+			$xml_resets = $xml->createElement("resets");
+			foreach($this->resets as $reset)
+			{
+				$xml_resets->appendChild($reset->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_resets);
 		}
-		$xml_element->appendChild($xml_resets);
 		
 		return $xml_element;
 	}

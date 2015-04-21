@@ -83,19 +83,13 @@ class HDL_toolchain extends Toolchain
 		// signals for clocks
 		$generator->addSignalComment(str_pad(' clocks part ',55,'=',STR_PAD_BOTH));
 		$clocks = array();
-		foreach($node->blocks as $block)
+		foreach($node->getBlock('ci')->clocks as $clock)
 		{
-			foreach($block->clocks as $clock)
+			if($clock->net!="" and !in_array($clock->net, $clocks)/*and $clock->direction=='out'*/)
 			{
-				if($clock->net!="")
-				{
-					if(!in_array($clock->net, $clocks)) array_push($clocks, $clock->net);
-				}
+				$generator->addSignal($clock->net, 1, 'std_logic');
+				array_push($clocks, $clock->net);
 			}
-		}
-		foreach($clocks as $clock)
-		{
-			$generator->addSignal($clock, 1, 'std_logic');
 		}
 		
 		// signals for resets
@@ -180,8 +174,11 @@ class HDL_toolchain extends Toolchain
 		{
 			$code.='	'.$clock->net.'	<=	'.$clock->name.";\n";
 		}
-		$code.="	-- WARNING!! static code only for usb project, TODO to be modified --\n";
-		$code.="	clk_proc	<=	usb_ifclk;\n";
+		//$code.="	-- WARNING!! static code only for usb project, TODO to be modified --\n";
+		//$code.="	clk_proc	<=	usb_ifclk;\n";
+		
+		$ci = $node->getBlock('ci');
+		//print_r($ci->domains);
 		
 		$generator->code=$code;
 		$generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.'top.vhd');

@@ -3,7 +3,6 @@
 require_once("board.php");
 require_once("block.php");
 require_once("process.php");
-require_once("flow_connect.php");
 
 class Node
 {
@@ -30,17 +29,12 @@ class Node
 	* @var array|Block $blocks
 	*/
 	public $blocks;
-
-	/**
-	* Flow connections between blocks
-	* @var array|FlowConnect $flow_connects
-	*/
-	public $flow_connects;
+	
+	public $xml;
 
 	function __construct($node_file=null)
 	{
 		$this->blocks = array();
-		$this->flow_connects = array();
 		
 		if($node_file) $this->parse_config_xml($node_file);
 	}
@@ -48,16 +42,16 @@ class Node
 	protected function parse_config_xml($node_file)
 	{
 		if (!file_exists($node_file)) error("File $node_file doesn't exist",5,"Node");
-		if (!($xml = simplexml_load_file($node_file))) error("Error when parsing $node_file",5,"Node");
+		if (!($this->xml = simplexml_load_file($node_file))) error("Error when parsing $node_file",5,"Node");
 		$this->node_file = $node_file;
 	
-		$this->name = (string)$xml['name'];
-		$this->board = new Board($xml->board, $this);
+		$this->name = (string)$this->xml['name'];
+		$this->board = new Board($this->xml->board, $this);
 		
 		// process
-		if(isset($xml->process))
+		if(isset($this->xml->process))
 		{
-			foreach($xml->process->process as $process)
+			foreach($this->xml->process->process as $process)
 			{
 				$processBlock = new Process($process);
 				
@@ -68,7 +62,7 @@ class Node
 					{
 						if(isset($param['name']) and isset($param['value']))
 						{
-							if($concerned_param=$processBlock->getParam($param['name']))
+							if($concerned_param=$processBlock->getParam((string)$param['name']))
 							{
 								$concerned_param->value = $param['value'];
 							}
@@ -87,9 +81,9 @@ class Node
 					{
 						if(isset($flow['name']) and isset($flow['size']))
 						{
-							if($concerned_flow=$processBlock->getFlow($flow['name']))
+							if($concerned_flow=$processBlock->getFlow((string)$flow['name']))
 							{
-								$concerned_flow->size = $flow['size'];
+								$concerned_flow->size = (int)$flow['size'];
 							}
 							else
 							{
@@ -106,9 +100,9 @@ class Node
 					{
 						if(isset($clock['name']) and isset($clock['typical']))
 						{
-							if($concerned_clock=$processBlock->getClock($clock['name']))
+							if($concerned_clock=$processBlock->getClock((string)$clock['name']))
 							{
-								$concerned_clock->typical = $clock['typical'];
+								$concerned_clock->typical = Clock::convert($clock['typical']);
 							}
 							else
 							{
@@ -121,20 +115,6 @@ class Node
 				$this->addBlock($processBlock);
 			}
 		}
-		
-		// flow connections
-		if(isset($xml->flow_interconnect))
-		{
-			if(isset($xml->flow_interconnect->connects))
-			{
-				foreach($xml->flow_interconnect->connects->connect as $connect)
-				{
-					$this->addFlowConnect(new FlowConnect($connect));
-				}
-			}
-		}
-		
-		unset($xml);
 	}
 	
 	public function getXmlElement($xml)
@@ -187,26 +167,6 @@ class Node
 		foreach($this->blocks as $block)
 		{
 			if($block->name==$name) return $block;
-		}
-		return null;
-	}
-	
-	/** Add a flow connection to the block 
-	 *  @param FlowConnect $flow_connect flow connection to add to the block **/
-	function addFlowConnect($flow_connect)
-	{
-		$flow_connect->parentBlock = $this;
-		array_push($this->flow_connects, $flow_connect);
-	}
-	
-	/** return a reference to the flow connection with the name $name, if not found, return false
-	 *  @param string $name name of the flow connection to search
-	 *  @return FlowConnect found flow connection **/
-	function getFlowConnect($name)
-	{
-		foreach($this->flow_connects as $flow_connect)
-		{
-			if($flow_connect->name==$name) return $flow_connect;
 		}
 		return null;
 	}

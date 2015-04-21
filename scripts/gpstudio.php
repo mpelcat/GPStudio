@@ -54,4 +54,13 @@ function message($messageText, $messageCtx="")
 	$lastCtx=$messageCtx;
 }
 
+function messageVerbosity($messageText, $messageCtx="")
+{
+	global $argv;
+	if(in_array("verbosity", $argv))
+	{
+		message($messageText, $messageCtx);
+	}
+}
+
 ?>
