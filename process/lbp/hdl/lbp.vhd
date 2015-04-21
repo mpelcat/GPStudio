@@ -7,7 +7,8 @@ entity lbp is
 	generic (
 		LINE_WIDTH_MAX : integer;
 		IN_SIZE : integer;
-		OUT_SIZE : integer
+		OUT_SIZE : integer;
+		CLK_PROC_FREQ : integer := 48000000
 	);
 	port (
 		clk_proc : in std_logic;

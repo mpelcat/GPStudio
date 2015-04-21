@@ -16,7 +16,8 @@ entity usb_cypress_CY7C68014A is
 		IN0_NBWORDS: integer := 32768;
 		IN1_NBWORDS: integer := 32768;
 		IN2_NBWORDS: integer := 1280; 
-		IN3_NBWORDS: integer := 1280
+		IN3_NBWORDS: integer := 1280;
+		CLK_PROC_FREQ : integer := 48000000
 	);
 	port(
 		clk_proc : in std_logic;

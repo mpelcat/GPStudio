@@ -5,7 +5,11 @@ library std;
 
 entity mt9 is
 	generic (
-		OUT_SIZE : integer := 8
+		OUT_SIZE : integer := 8;
+		CLK_PROC_FREQ : integer := 48000000;
+		CLK_IMG_FREQ : integer := 9000000;
+		CLK_50K_FREQ : integer := 50000;
+		CLK_100K_FREQ : integer := 100000
 	);
 	port (
 		clk_proc : in std_logic;

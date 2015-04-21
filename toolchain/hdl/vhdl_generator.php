@@ -58,6 +58,11 @@ class VHDL_generator
 		foreach($block->clocks as $clock)
 		{
 			$this->addPort($clock->name, 1, $clock->direction);
+			
+			if($clock->direction=="in")
+			{
+				$this->addGeneric(strtoupper($clock->name).'_FREQ', $clock->typical);
+			}
 		}
 		// resets
 		foreach($block->resets as $reset)
@@ -336,39 +341,41 @@ class VHDL_generator
 				if($name==$block->driver) $name=$name.'_inst';
 				$content.='	'.$name.' : '.$block->driver."\n";
 				
-				$maxLenght=0;
+				$genericmap = array();
+				foreach($block->clocks as $clock)
+				{
+					if($clock->direction=="in")
+					{
+						array_push($genericmap, array(strtoupper($clock->name).'_FREQ', $clock->typical));
+					}
+				}
 				foreach($block->params as $param)
 				{
 					if($param->hard)
 					{
-						if(strlen($param->name)>$maxLenght) $maxLenght=strlen($param->name);
+						array_push($genericmap, array($param->name, $param->value));
 					}
 				}
 				foreach($block->flows as $flow)
 				{
-					if(strlen($flow->name.'_SIZE')>$maxLenght) $maxLenght=strlen($flow->name.'_SIZE');
+					array_push($genericmap, array(strtoupper($flow->name).'_SIZE', $flow->size));
 				}
 				
 				$first=true;
-				foreach($block->params as $param)
+				$maxLenght=0;
+				foreach($genericmap as $map)
 				{
-					if($param->hard)
-					{
-						if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
-						$content.='    	'.str_pad($param->name,$maxLenght,' ').' => '.$param->value;
-					}
+					if(strlen($map[0])>$maxLenght) $maxLenght=strlen($map[0]);
 				}
-				foreach($block->flows as $flow)
+				foreach($genericmap as $map)
 				{
 					if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
-					$content.='    	'.str_pad(strtoupper($flow->name).'_SIZE',$maxLenght,' ').' => '.$flow->size;
+					$content.='		'.str_pad($map[0],$maxLenght,' ').' => '.$map[1];
 				}
 				if(!$first) $content.="\n".'	)'."\n";
 				
 			// port map
-				$first=true;
 				$portmap = array();
-				$content.='    port map ('."\n";
 				// clocks mapping
 				foreach($block->clocks as $clock)
 				{
@@ -437,7 +444,9 @@ class VHDL_generator
 					}
 				}
 				
+				$first=true;
 				$maxLenght=0;
+				$content.='    port map ('."\n";
 				foreach($portmap as $map)
 				{
 					if(strlen($map[0])>$maxLenght) $maxLenght=strlen($map[0]);
@@ -447,7 +456,6 @@ class VHDL_generator
 					if(!$first) $content.=','."\n"; else $first=false;
 					$content.='		'.str_pad($map[0],$maxLenght,' ').' => '.$map[1];
 				}
-				
 				$content.="\n".'	);'."\n";
 				
 				$content.="\n";

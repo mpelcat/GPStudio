@@ -5,9 +5,10 @@ library std;
 
 entity hog is
 	generic (
-		intBusSize : integer;
-		IN1_SIZE   : integer;
-		OUT1_SIZE  : integer
+		intBusSize    : integer;
+		CLK_PROC_FREQ : integer;
+		IN1_SIZE      : integer;
+		OUT1_SIZE     : integer
 	);
 	port (
 		clk_proc  : in std_logic;
