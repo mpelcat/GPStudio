@@ -108,20 +108,60 @@ class Board
 		$used_ios = array();
 		
 		// add all used ios
-		foreach($board_element->ios->io as $io)
+		foreach($board_element->ios->io as $ioXml)
 		{
-			$io_name = (string)$io['name'];
-			$used_ios[$io_name] = $io;
+			$io_name = (string)$ioXml['name'];
+			$used_ios[$io_name] = $ioXml;
 		}
-		foreach($this->xml->ios->io as $io)
+		foreach($this->xml->ios->io as $ioXml)
 		{
-			$io_name = (string)$io['name'];
+			$io_name = (string)$ioXml['name'];
 			if(array_key_exists($io_name, $used_ios))
 			{
-				$node->addBlock(new IO($io, $used_ios[$io_name]));
+				$io = new IO($ioXml, $used_ios[$io_name]);
+				
+				// redef params
+				if(isset($ioXml->params))
+				{
+					foreach($ioXml->params->param as $paramXml)
+					{
+						if(isset($paramXml['name']) and isset($paramXml['value']))
+						{
+							if($concerned_param=$io->getParam((string)$paramXml['name']))
+							{
+								$concerned_param->value = $paramXml['value'];
+							}
+							else
+							{
+								warning('parameter '.$param['name']." does'nt exists",16,$io->name);
+							}
+						}
+					}
+				}
+				
+				// redef clock freq
+				if(isset($ioXml->clocks))
+				{
+					foreach($ioXml->clocks->clock as $clockXml)
+					{
+						if(isset($clockXml['name']) and isset($clockXml['typical']))
+						{
+							if($concerned_clock=$io->getClock((string)$clockXml['name']))
+							{
+								$concerned_clock->typical = Clock::convert($clockXml['typical']);
+							}
+							else
+							{
+								warning('clock '.$clockXml['name']." does'nt exists",16,$processBlock->name);
+							}
+						}
+					}
+				}
+				
+				$node->addBlock($io);
 				unset($used_ios[$io_name]);
 			}
-			elseif($io['optional']!="true")
+			elseif($ioXml['optional']!="true")
 			{
 				//$node->addBlock(new IO($io, null));
 			}
