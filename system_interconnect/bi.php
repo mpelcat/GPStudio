@@ -171,6 +171,7 @@ class BusInterconnect extends Block
 	
 		// find the master name
 		$name_master = '';
+		$master_count=0;
 		$size_master_addr = 0;
 		foreach($bi->interfaces as $interface)
 		{
@@ -178,8 +179,11 @@ class BusInterconnect extends Block
 			{
 				$name_master=$interface->blockname;
 				$size_master_addr=$interface->size_addr;
+				$master_count++;
 			}
 		}
+		
+		if($master_count>1) error("Multi master not supported yet", 65, "BI");
 	
 		$code='';
 	
@@ -196,13 +200,15 @@ class BusInterconnect extends Block
 				$name_addr_rel = $interface->blockname.'_addr_rel_o';
 			
 				$name_wr = $interface->blockname.'_wr_o';
+				$name_rd = $interface->blockname.'_rd_o';
 				$name_datawr = $interface->blockname.'_datawr_o';
 			
 				$name_addr_master = $name_master.'_master_addr_i';
 			
 				$code.='-- '.$interface->blockname.' slave at addr : '.$addr_slave_abs.' to '.($addr_slave_abs+pow(2,$interface->size_addr)-1)."\n";
-				// cs slave
+				// rd/wr slave
 				$code.=$name_wr.' <= '.$name_cs.' and '.$name_master.'_master_wr_i;'."\n";
+				$code.=$name_rd.' <= '.$name_cs.' and '.$name_master.'_master_rd_i;'."\n";
 				// addr relative slave
 				if($interface->size_addr==1)
 				{
@@ -229,6 +235,29 @@ class BusInterconnect extends Block
 				$code.="\n";
 			}
 		}
+		
+		// data mux foreach master
+		$code.="-- data mux foreach master"."\n";
+		//$code.='data_rd_'.$name_master.' : process('.$name_master.'_master_addr_i)'."\n";
+		//$code.='begin'."\n";
+		$code.=''.$name_master.'_master_datard_o <='."\n";
+		foreach($bi->interfaces as $interface)
+		{
+			if($interface->type=='bi_slave_conn')
+			{
+				$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
+				$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
+				
+				$name_addr_rel = $interface->blockname.'_addr_rel_o';
+				$name_datard = $interface->blockname.'_datard_i';
+				
+				$conditional=$name_addr_master.'('.($size_master_addr-1).' downto '.($interface->size_addr).') = std_logic_vector(to_unsigned('.$addr_slave_abs_masked.', '.($size_master_addr-$interface->size_addr).'))';
+				
+				$code.='	'.$name_datard.' when ('.$conditional.') else'."\n";
+			}
+		}
+		$code.='	(others => \'0\');'."\n";
+		//$code.='end process;'."\n";
 	
 		$generator->code=$code;
 	

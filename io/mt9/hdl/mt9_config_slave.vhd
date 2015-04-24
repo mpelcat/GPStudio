@@ -43,6 +43,8 @@ architecture rtl of mt9_config_slave is
 	constant MODE_REG_ADDR			: natural := 6;
 	constant INTEGTIME_REG_ADDR		: natural := 7;
 	constant LINE_LENGHT_REG_ADDR	: natural := 8;
+	
+	signal data_out : std_logic_vector(31 downto 0);
 
 	signal enable_reg : std_logic;
 	signal flowlength_reg : std_logic_vector(31 downto 0);
@@ -111,6 +113,39 @@ begin
 			end if;
 		end if;
 	end process;
+	
+	read_reg : process (clk_proc, reset_n)
+	begin
+		if(reset_n='0') then
+			data_out <= (others => '0');
+		elsif(rising_edge(clk_proc)) then
+			if(rd_i='1') then
+				case addr_rel_i is
+					when std_logic_vector(to_unsigned(ENABLE_REG_ADDR, 4))=>
+						data_out <= x"0000000" & "000" & enable_reg;
+					when std_logic_vector(to_unsigned(FLOWLENGHT_REG_ADDR, 4))=>
+						data_out <= flowlength_reg;
+					when std_logic_vector(to_unsigned(XSTART_REG_ADDR, 4))=>
+						data_out <= xstart_reg;
+					when std_logic_vector(to_unsigned(YSTART_REG_ADDR, 4))=>
+						data_out <= ystart_reg;
+					when std_logic_vector(to_unsigned(XEND_REG_ADDR, 4))=>
+						data_out <= xend_reg;
+					when std_logic_vector(to_unsigned(YEND_REG_ADDR, 4))=>
+						data_out <= yend_reg;
+					when std_logic_vector(to_unsigned(MODE_REG_ADDR, 4))=>
+						data_out <= x"0000000" & "0" & mirrorx_reg & flipvert_reg & autoexp_reg;
+					when std_logic_vector(to_unsigned(INTEGTIME_REG_ADDR, 4))=>
+						data_out <= integtime_reg;
+					when std_logic_vector(to_unsigned(LINE_LENGHT_REG_ADDR, 4))=>
+						data_out <= linelenght_reg;
+					when others=>
+				end case;
+			end if;
+		end if;
+	end process;
+	
+	datard_o <= data_out;
 	
 	enable_o <= enable_reg;
 	flowlength_o <= flowlength_reg;
