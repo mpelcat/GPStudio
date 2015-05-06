@@ -74,8 +74,8 @@ QImage *GradiantWrapper::transform(const FlowData &data)
 
                 currRad = bin * radRangeForOneBin + radRangeForOneBin/2;
 
-                dirVecX = cos( currRad );
-                dirVecY = sin( currRad );
+                dirVecX = cos( currRad + M_PI_2);
+                dirVecY = sin( currRad + M_PI_2);
                 maxVecLen = _cellSize/2;
 
 
