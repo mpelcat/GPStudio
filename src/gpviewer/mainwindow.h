@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "camera.h"
+#include "imageview.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,10 +31,19 @@ private slots:
 
     void setBiSpace();
 
+    void oneViewer();
+    void twoViewer();
+    void fourViewer();
+
 private:
     Ui::MainWindow *ui;
 
     Camera *_cam;
+
+    ImageView *_view0;
+    ImageView *_view1;
+    ImageView *_view2;
+    ImageView *_view3;
 
     void createToolBarAndMenu();
 };

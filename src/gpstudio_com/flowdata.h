@@ -25,8 +25,8 @@ public:
 
     void appendData(const QByteArray &data);
 
-    QImage *toImage(const int width, const int height, const int dataSize);
-    QImage *toImage(const QSize size, const int dataSize);
+    QImage *toImage(const int width, const int height, const int dataSize) const;
+    QImage *toImage(const QSize size, const int dataSize) const;
 
 private:
     QByteArray _data;

@@ -26,13 +26,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="ImageView" name="graphicsView"/>
-          <widget class="ImageView" name="graphicsView_2"/>
-         </widget>
+         <layout class="QGridLayout" name="viewerLayout"/>
         </item>
        </layout>
       </widget>
@@ -56,8 +50,11 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -87,7 +84,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>598</height>
+          <height>585</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -138,11 +135,6 @@
    <extends>QWidget</extends>
    <header>scriptwidget.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ImageView</class>
-   <extends>QGraphicsView</extends>
-   <header>imageview.h</header>
   </customwidget>
   <customwidget>
    <class>QHexEdit</class>

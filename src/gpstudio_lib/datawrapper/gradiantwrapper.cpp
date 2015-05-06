@@ -13,9 +13,11 @@ GradiantWrapper::~GradiantWrapper()
 
 }
 
-QImage *GradiantWrapper::transform(QImage *input)
+QImage *GradiantWrapper::transform(const FlowData &data)
 {
     QImage *visu = new QImage(_wimg, _himg, QImage::Format_RGB16);
+    QImage *input = data.toImage(_wimg/_cellSize*_nbBins, _himg/_cellSize, 16);
+
     /*QVector<QRgb> colors;
     for(int i=0; i<256; i++) colors.append(qRgb(i,i,i));
     visu->setColorTable(colors);*/

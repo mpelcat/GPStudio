@@ -17,6 +17,8 @@
 #include "flowdata.h"
 
 #include "datawrapper/gradiantwrapper.h"
+#include "datawrapper/harriswrapper.h"
+
 
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
@@ -29,8 +31,15 @@ MainWindow::MainWindow(QStringList args) :
     QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
 
-    if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
-    else
+    _view0 = new ImageView();
+    _view1 = new ImageView();
+    _view2 = new ImageView();
+    _view3 = new ImageView();
+
+    oneViewer();
+
+//    if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
+//    else
     {
         if(args.size()>1)
         {
@@ -87,6 +96,18 @@ void MainWindow::createToolBarAndMenu()
 
     QMenu *viewMenu = ui->menuBar->addMenu("&View");
     QMenu *helpMenu = ui->menuBar->addMenu("&Help");
+
+    ui->mainToolBar->addSeparator();
+
+    QAction *oneViewer = new QAction("&One",this);
+    ui->mainToolBar->addAction(oneViewer);
+    connect(oneViewer, SIGNAL(triggered()), this, SLOT(oneViewer()));
+    QAction *twoViewer = new QAction("&Two",this);
+    ui->mainToolBar->addAction(twoViewer);
+    connect(twoViewer, SIGNAL(triggered()), this, SLOT(twoViewer()));
+    QAction *fourViewer = new QAction("&Four",this);
+    ui->mainToolBar->addAction(fourViewer);
+    connect(fourViewer, SIGNAL(triggered()), this, SLOT(fourViewer()));
 }
 
 void MainWindow::openNodeGeneratedFile(const QString fileName)
@@ -130,10 +151,16 @@ void MainWindow::viewFlow(int flow)
     if(flow==0)
     {
         QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
-        ui->graphicsView->showImage(*image);
+        _view0->showImage(*image);
         delete image;
     }
     if(flow==1)
+    {
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 16);
+        _view1->showImage(*image);
+        delete image;
+    }
+    if(flow==2)
     {
         GradiantWrapper grad;
         grad.setWimg(w);
@@ -144,16 +171,79 @@ void MainWindow::viewFlow(int flow)
         int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
         grad.setCellSize(cellsize);
 
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w/cellsize*nbin, h/cellsize, 16);
-        QImage *gradImg = grad.transform(image);
+        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
+        QImage *gradImg = grad.transform(flowData);
 
-        ui->graphicsView_2->showImage(*gradImg);
+//        ui->graphicsView_2->showImage(*gradImg);
+         _view2->showImage(*gradImg);
         delete gradImg;
     }
+    if(flow==3)
+    {
+        Harriswrapper harris;
+
+        harris.setHimg(h);
+        harris.setWimg(w);
+
+        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
+        QImage *harrisImg = harris.transform(flowData);
+
+//        ui->graphicsView_2->showImage(*gradImg);
+         _view3->showImage(*harrisImg);
+        delete harrisImg;
+    }
+
+
 }
 
 void MainWindow::setBiSpace()
 {
     if(!_cam) return;
     ui->biSpaceHex->setData(_cam->registerData());
+}
+
+void MainWindow::oneViewer()
+{
+    while(!ui->viewerLayout->isEmpty())
+    {
+        delete ui->viewerLayout->itemAt(0)->widget();
+    }
+    _view0 = new ImageView();
+    _view1 = new ImageView();
+    _view2 = new ImageView();
+    _view3 = new ImageView();
+
+    ui->viewerLayout->addWidget(_view0, 0, 0);
+}
+
+void MainWindow::twoViewer()
+{
+    while(!ui->viewerLayout->isEmpty())
+    {
+        delete ui->viewerLayout->itemAt(0)->widget();
+    }
+    _view0 = new ImageView();
+    _view1 = new ImageView();
+    _view2 = new ImageView();
+    _view3 = new ImageView();
+
+    ui->viewerLayout->addWidget(_view0, 0, 0);
+    ui->viewerLayout->addWidget(_view1, 0, 1);
+}
+
+void MainWindow::fourViewer()
+{
+    while(!ui->viewerLayout->isEmpty())
+    {
+        delete ui->viewerLayout->itemAt(0)->widget();
+    }
+    _view0 = new ImageView();
+    _view1 = new ImageView();
+    _view2 = new ImageView();
+    _view3 = new ImageView();
+
+    ui->viewerLayout->addWidget(_view0, 0, 0);
+    ui->viewerLayout->addWidget(_view1, 0, 1);
+    ui->viewerLayout->addWidget(_view2, 1, 0);
+    ui->viewerLayout->addWidget(_view3, 1, 1);
 }

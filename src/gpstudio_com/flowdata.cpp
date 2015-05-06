@@ -61,7 +61,7 @@ void FlowData::appendData(const QByteArray &data)
     _data.append(data);
 }
 
-QImage *FlowData::toImage(const int width, const int height, const int dataSize)
+QImage *FlowData::toImage(const int width, const int height, const int dataSize) const
 {
     //Q_UNUSED(dataSize);
 
@@ -87,9 +87,9 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
     }*/
 
     //qDebug() << _data.size() << width * height;
-    char *ptr = _data.data();
+    const char *ptr = _data.data();
     if(dataSize==16) ptr++;
-    char *ptrEnd = _data.data()+_data.size();
+    const char *ptrEnd = _data.data()+_data.size();
     for(int y=0; y<height; y++)
     {
         for(int x=0; x<width; x++)
@@ -109,7 +109,7 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
     return img;
 }
 
-QImage *FlowData::toImage(const QSize size, const int dataSize)
+QImage *FlowData::toImage(const QSize size, const int dataSize) const
 {
     return toImage(size.width(), size.height(), dataSize);
 }

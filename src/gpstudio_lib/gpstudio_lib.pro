@@ -41,6 +41,7 @@ HEADERS += gpstudio_lib_common.h \
     propertyenum.h \
     datawrapper/datawrapper.h \
     datawrapper/gradiantwrapper.h \
+    datawrapper/harriswrapper.h \
     gpnodeproject.h \
     lib_parser/iolibgroup.h
 
@@ -76,6 +77,7 @@ SOURCES += \
     propertyenum.cpp \
     datawrapper/datawrapper.cpp \
     datawrapper/gradiantwrapper.cpp \
+    datawrapper/harriswrapper.cpp \
     gpnodeproject.cpp \
     lib_parser/iolibgroup.cpp
 
