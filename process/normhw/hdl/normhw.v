@@ -62,7 +62,7 @@ output	[31:0] datard_o;
 
 wire dv_s;
 wire acc_clear;
-wire [26:0] shiftout_ext;
+wire [23:0] shiftout_ext;
 wire [IN_SIZE-1:0] shiftout;
 
 reg [5:0]  counter;
@@ -147,7 +147,7 @@ always@(posedge clk_proc or negedge reset_n)
 		else
 			if(acc_clear)
 				if (acc)
-					acc_d <= acc;
+					acc_d <= acc + in_data;
 				else
 					acc_d <= 1;
 			else
@@ -155,7 +155,7 @@ always@(posedge clk_proc or negedge reset_n)
 	end	
 
 /* Pre-normalisation compute */		
-assign shiftout_ext = {shiftout, 11'd0};	
+assign shiftout_ext = {shiftout, 8'd0};	
 
 
 /* div_token distribution */
@@ -175,11 +175,11 @@ assign out_dv = div_token[NPIPELINE-1] & dv_s;
 
 
 /* Pipelined Divisor */
-wire [26:0] out_div;
+wire [23:0] out_div;
 
 lpm_divide #(
 	.lpm_type("lpm_divide"),
-	.lpm_widthn(27),
+	.lpm_widthn(24),
 	.lpm_widthd(19),
 	.lpm_nrepresentation("UNSIGNED"),
 	.lpm_drepresentation("UNSIGNED"),
@@ -196,7 +196,7 @@ lpm_divide #(
 	.aclr(1'b0)
 );
 
-assign out_data = {8'd0, out_div[15:8]};
+assign out_data = {8'd0, out_div[7:0]- out_div[8]} ;
 
 /* Output signals generations */
 
