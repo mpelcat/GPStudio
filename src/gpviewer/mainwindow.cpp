@@ -188,9 +188,23 @@ void MainWindow::viewFlow(int flow)
         const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
         QImage *harrisImg = harris.transform(flowData);
 
-//        ui->graphicsView_2->showImage(*gradImg);
          _view3->showImage(*harrisImg);
         delete harrisImg;
+
+//        GradiantWrapper grad;
+//        grad.setWimg(w);
+//        grad.setHimg(h);
+
+//        int nbin = (*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
+//        grad.setNbBins(nbin);
+//        int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
+//        grad.setCellSize(cellsize);
+
+//        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
+//        QImage *gradImg = grad.transform(flowData);
+
+//         _view3->showImage(*gradImg);
+//        delete gradImg;
     }
 
 
