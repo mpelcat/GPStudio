@@ -68,9 +68,14 @@ module histogramhw(
 	datard_o
 );
 
-parameter INC_WIDTH = 16;
-parameter INDEX_WIDTH = 8;
-parameter HISTOGRAM_WIDTH = 16;
+/* Flows size */
+parameter INC_SIZE = 16;
+parameter INDEX_SIZE = 8;
+parameter HIST_SIZE = 16;
+
+/* Clock param */
+parameter CLK_PROC_FREQ = 50000000;
+
 parameter HISTMEM_WORD = 2048;
 localparam HISTMEM_ADDR_WIDTH = $clog2(HISTMEM_WORD);
 
@@ -79,15 +84,15 @@ input reset_n;
 
 input inc_fv;
 input inc_dv;
-input [(INC_WIDTH-1):0] inc_data;
+input [(INC_SIZE-1):0] inc_data;
 
 input index_fv;
 input index_dv;
-input [(INDEX_WIDTH-1):0] index_data;
+input [(INDEX_SIZE-1):0] index_data;
 
 output hist_fv;
 output hist_dv;
-output [(HISTOGRAM_WIDTH-1):0] hist_data;
+output [(HIST_SIZE-1):0] hist_data;
 
 //% \{
 //% Avalon-MM interface
@@ -130,8 +135,8 @@ wire storecompleted_cellB;
 wire data_valid_cellA;
 wire data_valid_cellB;
 
-wire [HISTOGRAM_WIDTH-1:0] data_out_cellA;
-wire [HISTOGRAM_WIDTH-1:0] data_out_cellB;
+wire [HIST_SIZE-1:0] data_out_cellA;
+wire [HIST_SIZE-1:0] data_out_cellB;
 
 wire data_valid_out_cellA;
 wire data_valid_out_cellB;
@@ -162,7 +167,7 @@ localparam WAIT_B_STATE = 2'd2;
 
 /*! \{ Output flow */
 reg dv_out_s;
-reg [HISTOGRAM_WIDTH-1:0] data_out;
+reg [HIST_SIZE-1:0] data_out;
 /*  \} */
 
 
@@ -310,7 +315,7 @@ assign hist_data = data_out;
 //% \{
 ram_cell 
 	#(  .HISTMEM_WORD(HISTMEM_WORD),
-		.HISTOGRAM_WIDTH(HISTOGRAM_WIDTH)) ram_cellA(
+		.HISTOGRAM_WIDTH(HIST_SIZE)) ram_cellA(
 	.clk(clk_proc),
 	.reset_n(reset_n),
 		
@@ -344,7 +349,7 @@ ram_cell
 //% \{	
 ram_cell 
 	#(  .HISTMEM_WORD(HISTMEM_WORD),
-		.HISTOGRAM_WIDTH(HISTOGRAM_WIDTH)) ram_cellB(
+		.HISTOGRAM_WIDTH(HIST_SIZE)) ram_cellB(
 	.clk(clk_proc),
 	.reset_n(reset_n),
 		

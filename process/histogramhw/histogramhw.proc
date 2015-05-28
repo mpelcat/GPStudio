@@ -11,9 +11,6 @@
 	</flows>	
 	<params>
 		<param name="HISTMEM_WORD" type="int" value="2048" desc="HISTMEM_WORD: M9K memory footprint" hard="true"/>
-		<param name="INC_WIDTH" type="int" value="16" desc="INC_WIDTH: input inc flow width" hard="true"/>
-		<param name="INDEX_WIDTH" type="int" value="8" desc="INDEX_WIDTH: input index flow width" hard="true"/>
-		<param name="HISTOGRAM_WIDTH" type="int" value="16" desc="HISTOGRAM_WIDTH: output flow width" hard="true"/>
 		
 		<param name="scr" regaddr="0" default="0" desc="Status Control Register">
 			<bitfields>

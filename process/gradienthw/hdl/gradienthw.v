@@ -92,8 +92,15 @@ module gradienthw(
 
 );
 
+/* Flows size */
+parameter IN_SIZE = 8;
+parameter MAGNITUDE_SIZE = 16;
+parameter ANGLE_SIZE = 16;
+
+/* Clock param */
+parameter CLK_PROC_FREQ = 50000000;
+
 /* Generic parameters */
-parameter DATA_WIDTH = 8;
 parameter COEF_WIDTH = 9; 
 parameter NORM_FACTOR = 8;
 
@@ -115,11 +122,11 @@ input [31:0] datawr_i;
 input wr_i;
 input rd_i;
 
-input [DATA_WIDTH-1:0] in_data;
+input [IN_SIZE-1:0] in_data;
 
 output [31:0] datard_o;
-output [15:0] magnitude_data; //TODO: generic output flow width
-output [$clog2(N_KERNEL)-1:0] angle_data; //TODO: generic output flow width
+output [MAGNITUDE_SIZE-1:0] magnitude_data; //TODO: generic output flow width
+output [ANGLE_SIZE-1:0] angle_data; //TODO: generic output flow width
 
 output magnitude_fv;
 output magnitude_dv;
@@ -133,20 +140,20 @@ reg [31:0] config_setup, config_setup_new;
 reg [31:0] threshold, threshold_new;
 
 /* Register definitions */
-reg [(DATA_WIDTH-1):0] row1[2:0], row2[2:0], row3[2:0];
+reg [(IN_SIZE-1):0] row1[2:0], row2[2:0], row3[2:0];
 reg [TOKEN_SIZE-1:0] token_d;
-reg [((COEF_WIDTH + DATA_WIDTH)+1):0] q1, q2, q3, q4, s1, s2, m_max;
+reg [((COEF_WIDTH + IN_SIZE)+1):0] q1, q2, q3, q4, s1, s2, m_max;
 reg [$clog2(N_KERNEL)-1:0] q1_dir, q2_dir, q3_dir, q4_dir, s1_dir, s2_dir, d_max;
 
-reg [(COEF_WIDTH + DATA_WIDTH - NORM_FACTOR):0] data_d;
+reg [(COEF_WIDTH + IN_SIZE - NORM_FACTOR):0] data_d;
 reg [$clog2(N_KERNEL)-1:0] dir_d;
 
 /* Wire definitions */
-wire [(DATA_WIDTH-1):0]	row2_wire, row3_wire;
+wire [(IN_SIZE-1):0]	row2_wire, row3_wire;
 wire onoff_bit;
 wire binarize_bit;
 wire dv_s;
-wire [((COEF_WIDTH + DATA_WIDTH)+1):0] matrix_out [N_KERNEL-1:0];
+wire [((COEF_WIDTH + IN_SIZE)+1):0] matrix_out [N_KERNEL-1:0];
 wire [TOKEN_SIZE-1:0] token_s;
 
 wire signed [(COEF_WIDTH-1):0] sin_coef [N_KERNEL-1:0];
@@ -154,6 +161,20 @@ wire signed [(COEF_WIDTH-1):0] cos_coef [N_KERNEL-1:0];
 
 /* Variable definitions */
 integer i, j;
+
+/* Parameters check */
+generate
+always@(*)
+	begin
+		if (MAGNITUDE_SIZE != 16)
+			$error("gradienthw.v: MAGNITUDE_SIZE different from 16 not supported yet!!!");
+		if (ANGLE_SIZE != 16)	
+			$error("gradienthw.v: ANGLE_SIZE different from 16 not supported yet!!!");
+		if (IN_SIZE != 8)	
+			$error("gradienthw.v: IN_SIZE different from 8 not supported yet!!!");	
+	end	
+endgenerate
+
 
 /* Internal signal alias */
 assign onoff_bit = config_setup[0];
@@ -187,9 +208,9 @@ always@(posedge clk_proc or negedge reset_n)
 		if (reset_n == 0)
 			for(i=0; i<3;i=i+1)
 				begin
-					row1[i] <= {DATA_WIDTH{1'b0}};
-					row2[i] <= {DATA_WIDTH{1'b0}};
-					row3[i] <= {DATA_WIDTH{1'b0}};
+					row1[i] <= {IN_SIZE{1'b0}};
+					row2[i] <= {IN_SIZE{1'b0}};
+					row3[i] <= {IN_SIZE{1'b0}};
 				end
 		else
 			if (token_s[0])
@@ -259,7 +280,7 @@ generate
 for (index=0; index < N_KERNEL; index = index + 1)
 	begin: matrix_prod_gen
 	matrix_prod #(
-		.DATA_WIDTH(DATA_WIDTH),
+		.DATA_WIDTH(IN_SIZE),
 		.COEF_WIDTH(COEF_WIDTH) 
 		
 	) matrix_prod_inst(
@@ -417,16 +438,16 @@ always@(posedge clk_proc or negedge reset_n)
 		begin
 			dir_d <= d_max;
 			if (token_s[7])
-				if (m_max[((COEF_WIDTH + DATA_WIDTH)+1):0] > threshold[((COEF_WIDTH + DATA_WIDTH)+1):0])
+				if (m_max[((COEF_WIDTH + IN_SIZE)+1):0] > threshold[((COEF_WIDTH + IN_SIZE)+1):0])
 					if(binarize_bit)
-						data_d <= {(COEF_WIDTH + DATA_WIDTH - NORM_FACTOR){1'b1}};
+						data_d <= {(COEF_WIDTH + IN_SIZE - NORM_FACTOR){1'b1}};
 					else
-						data_d <= m_max[(COEF_WIDTH + DATA_WIDTH):NORM_FACTOR-1];
+						data_d <= m_max[(COEF_WIDTH + IN_SIZE):NORM_FACTOR-1];
 				else
 					if(binarize_bit)
-						data_d <= {(COEF_WIDTH + DATA_WIDTH - NORM_FACTOR){1'b0}};
+						data_d <= {(COEF_WIDTH + IN_SIZE - NORM_FACTOR){1'b0}};
 					else
-						data_d <= {(COEF_WIDTH + DATA_WIDTH - NORM_FACTOR){1'b0}};
+						data_d <= {(COEF_WIDTH + IN_SIZE - NORM_FACTOR){1'b0}};
 		end		
 		
 		
