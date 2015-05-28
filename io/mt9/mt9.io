@@ -11,7 +11,11 @@
 		<file name="MT9 datasheet" path="doc/MT9M031_DS_Rev. A 1009 EN.pdf" type="doc" group="doc" desc=""/>
 	</files>
 	<flows>
-		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor"/>
+		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor">
+			<properties>
+				<property name="datatype" value="image" type="string"/>
+			</properties>
+		</flow>
 	</flows>
 	<ports>
 		<port name="data_i" type="in" size="12" desc=""/>

@@ -74,7 +74,7 @@ class Block
 	public $params;
 	
 	/**
-	* Array of property class specify the hight level properties
+	* Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;
