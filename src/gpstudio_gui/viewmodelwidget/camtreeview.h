@@ -12,13 +12,13 @@ class GPSTUDIO_GUI_EXPORT CamTreeView : public QTreeView
 public:
     explicit CamTreeView(QWidget *parent = 0);
 
-    void refreshCams();
     CameraInfo camInfoSelected() const;
 
 signals:
     void cameraSelected(CameraInfo cameraInfo);
 
 public slots:
+    void refreshCams();
 
 private slots:
     void cameraSelect(QModelIndex index);

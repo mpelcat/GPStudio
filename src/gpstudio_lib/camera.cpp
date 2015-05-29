@@ -126,6 +126,8 @@ void Camera::setRegister(uint addr, uint value)
         {
             _com->writeParam(addr, value);
 
+
+
             _registerData[addr*4+0]=value<<24;
             _registerData[addr*4+1]=value<<16;
             _registerData[addr*4+2]=value<<8;
@@ -159,16 +161,8 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
 {
     _com = new CameraCom(cameraInfo);
 
-    QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
-    while (it.hasNext())
+    if(_com->isConnected())
     {
-        it.next();
-        CameraRegister *cameraRegister = it.value();
-
-        cameraRegister->eval();
-        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
-        {
-            bitField->eval();
-        }
+        _registers.evalAll();
     }
 }

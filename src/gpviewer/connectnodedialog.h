@@ -2,6 +2,7 @@
 #define CONNECTNODEDIALOG_H
 
 #include <QDialog>
+#include <QTimer>
 #include "camerainfo.h"
 
 namespace Ui {
@@ -28,6 +29,7 @@ private:
     Ui::ConnectNodeDialog *ui;
 
     CameraInfo _cameraInfo;
+    QTimer _refreshTimer;
 };
 
 #endif // CONNECTNODEDIALOG_H

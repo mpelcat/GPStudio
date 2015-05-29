@@ -48,12 +48,11 @@ private:
 
     Property *_paramsBlocks;
     CameraRegistersMap _registers;
+    QByteArray _registerData;
 
     ScriptEngine _engine;
 
     CameraCom *_com;
-
-    QByteArray _registerData;
 };
 
 #endif // CAMERA_H

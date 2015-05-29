@@ -34,3 +34,19 @@ const QMap<uint, CameraRegister *> &CameraRegistersMap::registersMap() const
 {
     return _registersMap;
 }
+
+void CameraRegistersMap::evalAll()
+{
+    QMapIterator<uint, CameraRegister *> it(_registersMap);
+    while (it.hasNext())
+    {
+        it.next();
+        CameraRegister *cameraRegister = it.value();
+
+        cameraRegister->eval();
+        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+        {
+            bitField->eval();
+        }
+    }
+}
