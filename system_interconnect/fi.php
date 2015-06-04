@@ -26,13 +26,13 @@ class FlowInterconnect extends Block
 	
 	static function showConnect($connect)
 	{
-		$str = "[FI] in : <connect fromblock=\"$connect->fromblock\" fromflow=\"$connect->fromflow\" toblock=\"$connect->toblock\" toflow=\"$connect->toflow\"/>\n";
+		$str = "     in : <connect fromblock=\"$connect->fromblock\" fromflow=\"$connect->fromflow\" toblock=\"$connect->toblock\" toflow=\"$connect->toflow\"/>\n";
 		return $str;
 	}
 	
 	static function showFlows($block, $dir)
 	{
-		$str = "[FI] Available flows $dir for $block->name : ";
+		$str = "     Available flows $dir for $block->name : ";
 		$count=0;
 		foreach($block->flows as $flow)
 		{
@@ -48,7 +48,7 @@ class FlowInterconnect extends Block
 	
 	static function showBlocks($node)
 	{
-		$str = "[FI] Available blocks : ";
+		$str = "     Available blocks : ";
 		foreach($node->blocks as $block)
 		{
 			if($block->name!="fi" and $block->name!="bi" and $block->name!="ci" and $block->name!="ri")

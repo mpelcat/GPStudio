@@ -32,8 +32,17 @@ class Flow
 	*/
 	public $parentBlock;
 	
+	
+	/**
+	* Array of property class specify the high level properties
+	* @var array|Property $properties
+	*/
+	public $properties;
+	
 	function __construct($xml=null)
 	{
+		$this->properties = array();
+		
 		if($xml) $this->parse_xml($xml);
 	}
 	
@@ -44,6 +53,15 @@ class Flow
 		$this->type = (string)$xml['type'];
 		$this->desc = (string)$xml['desc'];
 		if(!empty($xml['size'])) $this->size = (int)$xml['size']; else $this->size = 16; // TODO change this hard coded default value
+		
+		// properties
+		if(isset($xml->properties))
+		{
+			foreach($xml->properties->property as $propertyXml)
+			{
+				$this->addProperty(new Property($propertyXml));
+			}
+		}
 	}
 	
 	public function getXmlElement($xml)
@@ -70,7 +88,38 @@ class Flow
 		$att->value = $this->desc;
 		$xml_element->appendChild($att);
 		
+		// properties
+		if(!empty($this->properties))
+		{
+			$xml_property = $xml->createElement("properties");
+			foreach($this->properties as $property)
+			{
+				$xml_property->appendChild($property->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_property);
+		}
+		
 		return $xml_element;
+	}
+	
+	/** Add a property to the block 
+	 *  @param Property $property property to add to the block **/
+	function addProperty($property)
+	{
+		$property->parentBlock = $this;
+		array_push($this->properties, $property);
+	}
+	
+	/** return a reference to the property with the name $name, if not found, return false
+	 *  @param string $name name of the property to search
+	 *  @return Property found property **/
+	function getProperty($name)
+	{
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) return $property;
+		}
+		return null;
 	}
 }
 

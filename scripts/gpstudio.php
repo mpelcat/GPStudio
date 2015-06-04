@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * @mainpage
+ * 
+ * This document is the complete documentation of GPStudio backend. It composed of two parts :
+ * 	- the model and backend develloper documentation
+ * 	- the user guide documentation
+ * 
+ * @section modelbckend model and backend
+ * 
+ * @section usrguide user guide
+ * 
+ * @defgroup base Base script
+**/
+
 $txtred="\e[0;31m"; # Red
 $txtorange="\e[0;33m"; # Orange
 $txtgreen="\e[0;32m"; # Green

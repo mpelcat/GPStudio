@@ -1,73 +1,109 @@
 <?php
 
+/** @brief The Clock class is used to define a clock source or a clock input in Block or Board
+ * 
+ * Clock instance is present in Board and Block.
+ * 
+ * It's possible to define a clock with 3 ways :
+ * 	- Clock::$typical frequency and eventualy a clock Clock::$shift given in degrees
+ * 	- an interval of frequency given with Clock::$min and Clock::$max
+ * 	- a clock Clock::$domain and a Clock::$ratio
+ * 
+ * If typical is set, the clock is completly constrained. In other case, the typical freq is computed by the ClockInterconnect::configure() method.
+ * 
+ * @see ClockInterconnect
+ * @ingroup base
+ */
+
 class Clock
 {
-	/**
-	* Name of the clock
+	/** @brief name of the clock
+	* 
+	* This name should be unique in the block.
 	* @var string $name
 	*/
 	public $name;
 
-	/**
+	/** @brief clock direction
+	 * 
 	* Specify if clock is in or out (value : "in" or "out", default "in")
 	* @var string $direction
 	*/
 	public $direction;
 
-	/**
-	* Phase shift of the clock (in degree)
+	/** @brief clock shift phase
+	* 
+	* Phase shift of the clock given in degrees
 	* @var int $shift
 	*/
 	public $shift;
 
-	/**
+	/** @brief minimum freq acceptance
+	* 
 	* Minimal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
 	* @var float $min
+	* @see $max
 	*/
 	public $min;
 
-	/**
+	/** @brief maximal freq acceptance
+	* 
 	* Maximal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
 	* @var float $max
+	* @see $min
 	*/
 	public $max;
 
-	/**
-	* Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
+	/** @brief frequence of the clock
+	* 
+	* Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500. If this field is set, min, max and ratio was not used.
 	* @var float $typical
 	*/
 	public $typical;
 
-	/**
+	/** @brief ratio frequence in the clock domain
+	* 
 	* ratio compared to the main clock domain. If domain not set, produce an error. Default value 1.
 	* @var float $ratio
+	* @see $domain
 	*/
 	public $ratio;
 
-	/**
-	* Clock domain. Clocks in the same domain depend of the same clock source
+	/** @brief clock domain
+	* 
+	* Clocks in the same domain depend of the same clock source
 	* @var string $domain
 	*/
 	public $domain;
 
-	/**
-	* Clock net, physical net name to connect the clock. This value is computed by CI
+	/** @brief net to connect the clock
+	* 
+	* Physical net name to connect the clock. This value is computed by CI
 	* @var string $net
+	* @see ClockInterconnect
 	*/
 	public $net;
 
-	/**
+	/** @brief description
+	* 
 	* Description of the clock (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
-	/**
+	/** @brief parent block
+	* 
 	* Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;
 	
+
+	/** @brief constructor
+	* 
+	* Initialise all the internal members and call parse_xml if $xml is set
+	* @var SimpleXMLElement $xml if it's different of null, call the xml parser to fill members
+	*/
 	function __construct($xml=null)
 	{
 		$this->parentBlock = null;

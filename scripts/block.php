@@ -53,6 +53,18 @@ class Block
 	* @var int $master_count
 	*/
 	public $master_count;
+	
+	/**
+	* X position on schematic (optional)
+	* @var int $x_pos
+	*/
+	public $x_pos;
+	
+	/**
+	* Y position on schematic (optional)
+	* @var int $y_pos
+	*/
+	public $y_pos;
 
 	/**
 	* Specify the external file script to configure the block (optional)
@@ -74,7 +86,7 @@ class Block
 	public $params;
 	
 	/**
-	* Array of property class specify the hight level properties
+	* Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;
@@ -143,6 +155,8 @@ class Block
 		$this->interfaces = array();
 		$this->addr_abs = -1;
 		$this->master_count = 0;
+		$this->x_pos=-1;
+		$this->x_pos=-1;
 		$this->configscriptfile='';
 		$this->generatescriptfile='';
 		
@@ -451,6 +465,11 @@ class Block
 		$att->value = $this->in_lib;
 		$xml_element->appendChild($att);
 		
+		// driver
+		$att = $xml->createAttribute('driver');
+		$att->value = $this->driver;
+		$xml_element->appendChild($att);
+		
 		// addr_abs
 		$att = $xml->createAttribute('addr_abs');
 		$att->value = $this->addr_abs;
@@ -464,6 +483,16 @@ class Block
 		// master_count
 		$att = $xml->createAttribute('master_count');
 		$att->value = $this->master_count;
+		$xml_element->appendChild($att);
+		
+		// x_pos
+		$att = $xml->createAttribute('x_pos');
+		$att->value = $this->x_pos;
+		$xml_element->appendChild($att);
+		
+		// y_pos
+		$att = $xml->createAttribute('y_pos');
+		$att->value = $this->y_pos;
 		$xml_element->appendChild($att);
 		
 		// files
