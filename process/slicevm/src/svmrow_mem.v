@@ -26,7 +26,6 @@ parameter WINROWS = 16;
 input clk;
 input [DWIDTH-1:0] data;
 input reset_n;
-
 input dvi_in;
 input dvi_bypass;
 input signed [CWIDTH-1:0] svcoeff_in;

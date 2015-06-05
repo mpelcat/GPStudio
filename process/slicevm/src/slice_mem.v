@@ -35,7 +35,7 @@ output signed [31:0] regout;
 
 /* Registers definition */
 reg newwin_d, newwin_d2;
-reg signed [31:0] mem_out;
+//~ reg signed [31:0] mem_out;
 reg signed [31:0] mult_out;
 reg signed [31:0] tmp;
 reg [$clog2(WINCOLS)-1:0] blockcount;
@@ -59,16 +59,21 @@ always@(posedge clk or negedge reset_n)
 	end
 
 /* newwin signal delay */
+/* 5Jun15: removed dependency of download */
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		newwin_d <= 0;
-	else if (dvi | download)
+	else if (download)
+		newwin_d <= 0;	
+	else if (dvi )
 		newwin_d <= newwin;
 		
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		newwin_d2 <= 0;
-	else if (dvi | download)
+	else if (download)
+		newwin_d2 <= 0;	
+	else if (dvi)
 		newwin_d2 <= newwin_d;
 
 /* tmp register (fast accumulator) */
