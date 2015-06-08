@@ -183,7 +183,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						$subpath = dirname($file->path);
 					}
 					if(!empty($subpath)) $subpath .= DIRECTORY_SEPARATOR;
-					$content.="set_global_assignment -name $type ".$subpath.$file->name."\n";
+					$file_path = str_replace("\\",'/',$subpath.$file->name);
+					$content.="set_global_assignment -name $type ".$file_path."\n";
 				}
 			}
 			

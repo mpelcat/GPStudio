@@ -14,6 +14,8 @@
 		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor">
 			<properties>
 				<property name="datatype" value="image" type="string"/>
+				<property name="width" value="roi1.w.value" type="int"/>
+				<property name="height" value="roi1.h.value" type="int"/>
 			</properties>
 		</flow>
 	</flows>

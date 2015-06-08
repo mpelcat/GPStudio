@@ -113,6 +113,11 @@ class Clock
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	/** @brief private function to fill this instance from the input xml structure
+	* 
+	* Can be call only from this node into the constructor
+	* @var SimpleXMLElement $xml xml element to parse
+	*/
 	protected function parse_xml($xml)
 	{
 		$this->name	= (string)$xml['name'];
@@ -148,58 +153,12 @@ class Clock
 		$this->desc = (string)$xml['desc'];
 	}
 	
-	public static function convert($string)
-	{
-		$clock = (string)$string;
-		$coef=1;
-		if(stripos($clock, 'k'))     $coef=1000;
-		elseif(stripos($clock, 'm')) $coef=1000000;
-		elseif(stripos($clock, 'g')) $coef=1000000000;
-		$clock = preg_replace('|[ kmgKMG]|','',$clock);
-		$clock = (float)$clock * $coef;
-		return $clock;
-	}
-	
-	static function formatFreq($freq)
-	{
-		if($freq>=1000000000)
-		{
-			return (floor($freq/1000000)/1000).' GHz';
-		}
-		elseif($freq>=1000000)
-		{
-			return (floor($freq/1000)/1000).' MHz';
-		}
-		elseif($freq>=1000)
-		{
-			return ($freq/1000).' kHz';
-		}
-		else
-		{
-			return $freq.' Hz';
-		}
-	}
-	
-	static function hdlFreq($freq)
-	{
-		if($freq>=1000000000)
-		{
-			return preg_replace('|[\.,]|','_',(floor($freq/1000000)/1000).'G');
-		}
-		elseif($freq>=1000000)
-		{
-			return preg_replace('|[\.,]|','_',(floor($freq/1000)/1000).'M');
-		}
-		elseif($freq>=1000)
-		{
-			return preg_replace('|[\.,]|','_',($freq/1000).'k');
-		}
-		else
-		{
-			return $freq;
-		}
-	}
-	
+	/** @brief permit to output this instance
+	* 
+	* Return a formated node for the node_generated file. This method call all the children getXmlElement to add into this node.
+	* @var DOMDocument $xml reference of the output xml document
+	* @return DOMElement xml element corresponding to this current instance
+	*/
 	public function getXmlElement($xml)
 	{
 		$xml_element = $xml->createElement("clock");
@@ -255,6 +214,76 @@ class Clock
 		$xml_element->appendChild($att);
 		
 		return $xml_element;
+	}
+	
+	/** @brief frenquency from string
+	* 
+	* Return a frequency as number in Hz from a string. Input format can be : 14.2M or 18.7k or 1500
+	* @var string $string string to convert to frequency in Hz
+	* @return int frequency in Hz
+	*/
+	public static function convert($string)
+	{
+		$clock = (string)$string;
+		$coef=1;
+		if(stripos($clock, 'k'))     $coef=1000;
+		elseif(stripos($clock, 'm')) $coef=1000000;
+		elseif(stripos($clock, 'g')) $coef=1000000000;
+		$clock = preg_replace('|[ kmgKMG]|','',$clock);
+		$clock = (float)$clock * $coef;
+		return $clock;
+	}
+	
+	/** @brief human readable frequency
+	* 
+	* Return formated string of a frequency for human reader. This is used for printable report or warning.
+	* @var int $freq frequency in Hz
+	* @return string formated string
+	*/
+	static function formatFreq($freq)
+	{
+		if($freq>=1000000000)
+		{
+			return (floor($freq/1000000)/1000).' GHz';
+		}
+		elseif($freq>=1000000)
+		{
+			return (floor($freq/1000)/1000).' MHz';
+		}
+		elseif($freq>=1000)
+		{
+			return ($freq/1000).' kHz';
+		}
+		else
+		{
+			return $freq.' Hz';
+		}
+	}
+	
+	/** @brief HDL readable frequency
+	* 
+	* Return formated string of a frequency for HDL compiler. This is used for naming convention in HDL output code.
+	* @var int $freq frequency in Hz
+	* @return string formated string
+	*/
+	static function hdlFreq($freq)
+	{
+		if($freq>=1000000000)
+		{
+			return preg_replace('|[\.,]|','_',(floor($freq/1000000)/1000).'G');
+		}
+		elseif($freq>=1000000)
+		{
+			return preg_replace('|[\.,]|','_',(floor($freq/1000)/1000).'M');
+		}
+		elseif($freq>=1000)
+		{
+			return preg_replace('|[\.,]|','_',($freq/1000).'k');
+		}
+		else
+		{
+			return $freq;
+		}
 	}
 }
 

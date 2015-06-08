@@ -156,7 +156,7 @@ class Block
 		$this->addr_abs = -1;
 		$this->master_count = 0;
 		$this->x_pos=-1;
-		$this->x_pos=-1;
+		$this->y_pos=-1;
 		$this->configscriptfile='';
 		$this->generatescriptfile='';
 		
