@@ -5,9 +5,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . LIB_PATH);
 set_include_path(get_include_path() . PATH_SEPARATOR . LIB_PATH.DIRECTORY_SEPARATOR.'scripts');
 set_include_path(get_include_path() . PATH_SEPARATOR . LIB_PATH.DIRECTORY_SEPARATOR.'system_interconnect');
 
-require("node.php");
-require("toolchain.php");
-require("gpstudio.php");
+require_once("node.php");
+require_once("gpstudio.php");
 
 if(count($argv)<2) error("Please give a config file node as argument."."\n",1);
 $config_node_file = $argv[1];

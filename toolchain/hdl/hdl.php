@@ -2,7 +2,7 @@
 
 require_once("toolchain.php");
 
-require("vhdl_generator.php");
+require_once("vhdl_generator.php");
 
 require_once("fi.php");
 require_once("bi.php");

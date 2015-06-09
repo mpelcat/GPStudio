@@ -1,6 +1,7 @@
 <?php
 
 require_once("io.php");
+require_once("toolchain.php");
 
 class Board
 {
