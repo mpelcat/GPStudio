@@ -6,7 +6,9 @@ data,
 dvi_in,
 in_fv,
 svcoeff_in,
+in_cv,
 svcoeff_out,
+out_cv,
 
 wincount,
 slide_data,
@@ -29,11 +31,13 @@ input reset_n;
 input dvi_in;
 input signed [CWIDTH-1:0] svcoeff_in;
 input in_fv;
+input in_cv;
 
 output signed [CWIDTH-1:0] svcoeff_out;
 output [$clog2(WPI)-1:0] wincount;
 output [31:0] slide_data;
 output dvo;
+output out_cv;
 
 /* Wire definitions */
 wire done;
@@ -46,6 +50,7 @@ wire [WINROWS:0] dvo_row;
 wire [31:0] svmrow_data [WINROWS:0];
 wire dvo_int;
 wire dvo_int_negedge;
+wire [WINROWS:0] out_cv_int;
 
 /* Register definitions */
 reg [$clog2(BLOCKSIZE)-1:0] dvcount;
@@ -132,8 +137,6 @@ for(ti=0; ti < (WINROWS+1); ti=ti+1)
 	always@(posedge clk or negedge reset_n)
 		if (reset_n == 0)
 			token[ti] <= (ti==0) ? 1'b1 : 1'b0;
-		//~ else if (lastimagerow && dvi_in)
-			//~ token[0] <= 1'b1; /* TODO: to be connected also to frame valid! */
 		else if (download[ti])
 			token[ti] <= 1'b0;
 		else if (	newrow 
@@ -198,7 +201,9 @@ for (index=0; index < WINROWS+1; index = index + 1)
 		.dvi_in(token[index] & dvi_in),
 		.dvi_bypass(bypass),
 		.svcoeff_in((index==0) ? ( (fsm_coeff) ? svcoeff_in : svcoeff_chain[WINROWS]) : svcoeff_chain[index-1]),
+		.in_cv((index == 0) ? ( (fsm_coeff) ? in_cv : out_cv_int[WINROWS]) : out_cv_int[index-1]),
 		.svcoeff_out(svcoeff_chain[index]),
+		.out_cv(out_cv_int[index]),
 		.wincount(),
 		.download(download[index]),
 		.done(),
@@ -207,6 +212,8 @@ for (index=0; index < WINROWS+1; index = index + 1)
 		);
 	end
 endgenerate
+
+assign out_cv = out_cv_int[WINROWS];
 
 /* Output multiplexing */
 assign dvo_int = dvo_row[outcontrol];
