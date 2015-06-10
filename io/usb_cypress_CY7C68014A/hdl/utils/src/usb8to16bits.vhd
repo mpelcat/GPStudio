@@ -43,13 +43,13 @@ begin
 		
 		case state is
 			when Initial =>
-				if data_valid_i ='1' then
+				if data_valid_i ='1' and frame_valid_i='1' then
 					tmp <= data_i;
 					state <= WaitSd;
 				end if;
 			
 			when WaitSd =>
-				if data_valid_i ='1' then
+				if data_valid_i ='1' and frame_valid_i='1' then
 					data_o <= tmp & data_i;
 					data_valid_o <='1';
 					state <= Initial;

@@ -60,13 +60,17 @@ generic (
     data_i : in std_logic_vector(15 downto 0);
 	rdreq_i : in std_logic;
 	pktend_i : in std_logic;
+	enable_i : in std_logic;
+
 	data_o : out std_logic_vector(15 downto 0);
 	flow_rdy_o: out std_logic;
 	f_empty_o : out std_logic;
 	fifos_f_o : out std_logic;
 	flag_o : out std_logic_vector(7 downto 0);
+
 	clk_in_i : in std_logic;
 	clk_out_i :in std_logic;
+
 	rst_n_i :in std_logic
     );
 end component;
@@ -104,6 +108,7 @@ ComFlowFifo_inst : component com_flow_fifo_rx
     data_i => std_logic_vector(data_s),
 	rdreq_i => read_data,
 	pktend_i => pkt_end,
+	enable_i =>'1',
 	data_o => data_o_s,
 	flag_o => flag_ss,
 	flow_rdy_o => flow_rdy,

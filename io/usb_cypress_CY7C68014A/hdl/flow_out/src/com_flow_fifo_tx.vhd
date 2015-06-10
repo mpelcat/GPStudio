@@ -14,7 +14,7 @@ use work.ComFlow_pkg.all;
 
 entity  com_flow_fifo_tx is
   generic (
-	FIFO_DEPTH : POSITIVE := 1024;
+	FIFO_DEPTH : integer := 1024;
 	FLOW_ID : integer := 1;
 	PACKET_SIZE : integer := 256; 
 	FLAGS_CODES : my_array_t := InitFlagCodes

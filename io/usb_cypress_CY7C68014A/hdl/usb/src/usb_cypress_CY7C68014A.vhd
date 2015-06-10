@@ -4,6 +4,8 @@ use ieee.numeric_std.all;
 
 use work.ComFlow_pkg.all;
 
+-- Top level du driver => se rapporter a la doc pour connaitre
+-- les possibilites ... ah ah ah 
 entity usb_cypress_CY7C68014A is
 	generic(
 		MASTER_ADDR_WIDTH : integer;
@@ -17,6 +19,8 @@ entity usb_cypress_CY7C68014A is
 		IN1_NBWORDS: integer := 32768;
 		IN2_NBWORDS: integer := 1280; 
 		IN3_NBWORDS: integer := 1280;
+		OUT0_NBWORDS : integer := 1024;
+		OUT1_NBWORDS : integer := 1024;
 		CLK_PROC_FREQ : integer := 48000000
 	);
 	port(
@@ -208,50 +212,69 @@ SLAVE_BUS_INST: component slave_usb
 -- SYNC SIGNALS FOR SLAVE REG WITH THE FLOW VALID
 ---------------------------------------------
 ENABLE_S_INST: component fv_synchro_signal
-  port map(
-	fv_i => in0_fv,
-	signal_i => enable_s,
-	signal_o => enable_s_fvsync,
-	clk_i => clk_proc,
-	rst_n_i => rst
-);
-ENABLE_IN0_INST: component fv_synchro_signal
-  port map(
-	fv_i => in0_fv,
-	signal_i => enable_in0_s,
-	signal_o => enable_in0_s_sync,
-	clk_i => clk_proc,
-	rst_n_i => rst
-);
-ENABLE_IN1_INST: component fv_synchro_signal
-  port map(
-	fv_i => in0_fv,
-	signal_i => enable_in1_s,
-	signal_o => enable_in1_s_sync,
-	clk_i => clk_proc,
-	rst_n_i => rst
-);
-ENABLE_IN2_INST: component fv_synchro_signal
-  port map(
-	fv_i => in0_fv,
-	signal_i => enable_in2_s,
-	signal_o => enable_in2_s_sync,
-	clk_i => clk_proc,
-	rst_n_i => rst
-);
-ENABLE_IN3_INST: component fv_synchro_signal
-  port map(
-	fv_i => in0_fv,
-	signal_i => enable_in3_s,
-	signal_o => enable_in3_s_sync,
-	clk_i => clk_proc,
-	rst_n_i => rst
-);
+	  port map(
+		fv_i => in0_fv,
+		signal_i => enable_s,
+		signal_o => enable_s_fvsync,
+		clk_i => clk_proc,
+		rst_n_i => rst
+	);
+	
+Sync_fv0 : if IN0_NBWORDS > 0 generate
+	ENABLE_IN0_INST: component fv_synchro_signal
+	  port map(
+		fv_i => in0_fv,
+		signal_i => enable_in0_s,
+		signal_o => enable_in0_s_sync,
+		clk_i => clk_proc,
+		rst_n_i => rst
+	);
+end generate Sync_fv0;
+
+Sync_fv1 : if IN1_NBWORDS > 0 generate
+	ENABLE_IN1_INST: component fv_synchro_signal
+	  port map(
+		fv_i => in1_fv,
+		signal_i => enable_in1_s,
+		signal_o => enable_in1_s_sync,
+		clk_i => clk_proc,
+		rst_n_i => rst
+	);
+end generate Sync_fv1;
+
+Sync_fv2 : if IN2_NBWORDS > 0 generate
+	ENABLE_IN2_INST: component fv_synchro_signal
+	  port map(
+		fv_i => in2_fv,
+		signal_i => enable_in2_s,
+		signal_o => enable_in2_s_sync,
+		clk_i => clk_proc,
+		rst_n_i => rst
+	);
+end generate Sync_fv2;
+
+Sync_fv3 : if IN3_NBWORDS > 0 generate
+	ENABLE_IN3_INST: component fv_synchro_signal
+	  port map(
+		fv_i => in3_fv,
+		signal_i => enable_in3_s,
+		signal_o => enable_in3_s_sync,
+		clk_i => clk_proc,
+		rst_n_i => rst
+	);
+end generate Sync_fv3;
 
 --FLOW_IN 0
+FI0_label0 : if OUT0_NBWORDS = 0 generate
+	out0_data <= (others=>'0');
+	out0_fv <= '0';
+	out0_dv <= '0';
+end generate FI0_label0;
+
+FI0_label1 : if OUT0_NBWORDS > 0 generate
 USBFLOW_IN0: component flow_in
   generic map(
-	FIFO_DEPTH => 1024,
+	FIFO_DEPTH => OUT0_NBWORDS,
 	FLOW_ID => 1,
 	FLAGS_CODES => InitFlagCodes,
 	OUTPUT_SIZE => OUT0_SIZE
@@ -271,11 +294,21 @@ USBFLOW_IN0: component flow_in
 	clk_out_i => clk_proc,
 	rst_n_i =>rst
     );
- 
+end generate FI0_label1;
+
+	
+
 --FLOW_IN 1
+FI1_label0 : if OUT1_NBWORDS = 0 generate
+	out1_data <= (others=>'0');
+	out1_fv <= '0';
+	out1_dv <= '0';
+end generate FI1_label0;
+
+FI1_label1 : if OUT1_NBWORDS > 0 generate
 USBFLOW_IN1: component flow_in
   generic map(
-	FIFO_DEPTH => 1024,
+	FIFO_DEPTH => OUT1_NBWORDS,
 	FLOW_ID => 2,
 	FLAGS_CODES => InitFlagCodes,
 	OUTPUT_SIZE => OUT1_SIZE
@@ -295,185 +328,217 @@ USBFLOW_IN1: component flow_in
 	clk_out_i => clk_proc,
 	rst_n_i =>rst
     );
-
+end generate FI1_label1;
 ------------------------------------------------------------
 --FLOW OUT 0
-
-FO0_label1 : if IN0_SIZE = 8 generate
-USB8TO16_FLOW0: component usb8to16bits 
-	port map( 
-		rst_n_i  		=> rst,
-		clk_i  			=> clk_proc,	
-		frame_valid_i	=> in0_fv,
-		data_valid_i	=> in0_dv,
-		data_i			=> in0_data,
-		frame_valid_o	=> in0_fv_s,
-		data_valid_o	=> in0_dv_s,
-		data_o			=> in0_data_s
-	);
+FO0_label1 : if IN0_SIZE = 8 and IN0_NBWORDS > 0 generate
+	USB8TO16_FLOW0: component usb8to16bits 
+		port map( 
+			rst_n_i  		=> rst,
+			clk_i  			=> clk_proc,	
+			frame_valid_i	=> in0_fv,
+			data_valid_i	=> in0_dv,
+			data_i			=> in0_data,
+			frame_valid_o	=> in0_fv_s,
+			data_valid_o	=> in0_dv_s,
+			data_o			=> in0_data_s
+		);
 end generate FO0_label1;
-FO0_label2 : if IN0_SIZE = 16 generate
-		in0_fv_s <= in0_fv;
-		in0_dv_s <= in0_dv;
-		in0_data_s <= in0_data;
+
+FO0_label2 : if IN0_SIZE = 16 and IN0_NBWORDS > 0 generate
+	in0_fv_s <= in0_fv;
+	in0_dv_s <= in0_dv;
+	in0_data_s <= in0_data;
 end generate FO0_label2;
 
-USBFLOW_OUT0: component flow_out 
-  generic map (
-	FIFO_DEPTH => IN0_NBWORDS,
-	FLOW_ID => 128,
-	PACKET_SIZE => 256, -- header inclus
-	FLAGS_CODES => InitFlagCodes
-    )
-  port map(
-	data_i => in0_data_s,
-	fv_i => in0_fv_s,
-	dv_i => in0_dv_s,
-	rdreq_i => flow_out_rd_0_s,-- to arb
-	enable_i => enable_s_fvsync and enable_in0_s_sync,
-	data_o => flow_out_data_0_s,-- to arb
-	flow_rdy_o=> flow_out_rdy_0_s,-- to arb
-	f_empty_o => flow_out_empty_0_s,-- to arb
-	
-	clk_in_i => clk_proc, 
-	clk_out_i => ifclk,
-	rst_n_i=> rst
+FO0_label3 : if IN0_NBWORDS = 0 generate		
+	flow_out_rdy_0_s <= '0';
+	flow_out_empty_0_s <='0';
+	flow_out_data_0_s <= (others=>'0');
+end generate FO0_label3;
+
+FO0_label4 : if IN0_NBWORDS > 0 generate
+	USBFLOW_OUT0: component flow_out 
+	  generic map (
+		FIFO_DEPTH => IN0_NBWORDS,
+		FLOW_ID => 128,
+		PACKET_SIZE => 256, -- header inclus
+		FLAGS_CODES => InitFlagCodes
+		)
+	  port map(
+		data_i => in0_data_s,
+		fv_i => in0_fv_s,
+		dv_i => in0_dv_s,
+		rdreq_i => flow_out_rd_0_s,-- to arb
+		enable_i => enable_s_fvsync and enable_in0_s_sync,
+		data_o => flow_out_data_0_s,-- to arb
+		flow_rdy_o=> flow_out_rdy_0_s,-- to arb
+		f_empty_o => flow_out_empty_0_s,-- to arb
+		
+		clk_in_i => clk_proc, 
+		clk_out_i => ifclk,
+		rst_n_i=> rst
 );
+end generate FO0_label4;
 ------------------------------------------------------------
 
 ------------------------------------------------------------
 --FLOW OUT 1
-FO1_label1 : if IN1_SIZE = 8 generate
-USB8TO16_FLOW1: component usb8to16bits 
-	port map( 
-		rst_n_i  		=> rst,
-		clk_i  			=> clk_proc,	
-		frame_valid_i	=> in1_fv,
-		data_valid_i	=> in1_dv,
-		data_i			=> in1_data,
-		frame_valid_o	=> in1_fv_s,
-		data_valid_o	=> in1_dv_s,
-		data_o			=> in1_data_s
-);
+FO1_label1 : if IN1_SIZE = 8 and IN1_NBWORDS > 0 generate
+	USB8TO16_FLOW1: component usb8to16bits 
+		port map( 
+			rst_n_i  		=> rst,
+			clk_i  			=> clk_proc,	
+			frame_valid_i	=> in1_fv,
+			data_valid_i	=> in1_dv,
+			data_i			=> in1_data,
+			frame_valid_o	=> in1_fv_s,
+			data_valid_o	=> in1_dv_s,
+			data_o			=> in1_data_s
+		);
 end generate FO1_label1;
-FO1_label2 : if IN1_SIZE = 16 generate
-		in1_fv_s <= in1_fv;
-		in1_dv_s <= in1_dv;
-		in1_data_s <= in1_data;
+
+FO1_label2 : if IN1_SIZE = 16 and IN1_NBWORDS > 0 generate
+	in1_fv_s <= in1_fv;
+	in1_dv_s <= in1_dv;
+	in1_data_s <= in1_data;
 end generate FO1_label2;
 
-USBFLOW_OUT1: component flow_out 
-  generic map (
-	FIFO_DEPTH => IN1_NBWORDS,
-	FLOW_ID => 129,
-	PACKET_SIZE => 256, -- header inclus
-	FLAGS_CODES => InitFlagCodes
-    )
-  port map(
-	data_i => in1_data_s,
-	fv_i => in1_fv_s,
-	dv_i => in1_dv_s,
 
-	rdreq_i => flow_out_rd_1_s, -- to arb
-	enable_i => enable_s_fvsync and enable_in1_s_sync,
-	data_o => flow_out_data_1_s, -- to arb
-	flow_rdy_o=> flow_out_rdy_1_s, -- to arb
-	f_empty_o => flow_out_empty_1_s, -- to arb
-	
-	clk_in_i => clk_proc, 
-	clk_out_i => ifclk,
-	rst_n_i=> rst
-);
+FO1_label3 : if IN1_NBWORDS = 0 generate		
+	flow_out_rdy_1_s <= '0';
+	flow_out_empty_1_s <='0';
+	flow_out_data_1_s <= (others=>'0');
+end generate FO1_label3;
+
+FO1_label4 : if IN1_NBWORDS > 0 generate
+	USBFLOW_OUT1: component flow_out 
+	  generic map (
+		FIFO_DEPTH => IN1_NBWORDS,
+		FLOW_ID => 129,
+		PACKET_SIZE => 256, -- header inclus
+		FLAGS_CODES => InitFlagCodes
+		)
+	  port map(
+		data_i => in1_data_s,
+		fv_i => in1_fv_s,
+		dv_i => in1_dv_s,
+
+		rdreq_i => flow_out_rd_1_s, -- to arb
+		enable_i => enable_s_fvsync and enable_in1_s_sync,
+		data_o => flow_out_data_1_s, -- to arb
+		flow_rdy_o=> flow_out_rdy_1_s, -- to arb
+		f_empty_o => flow_out_empty_1_s, -- to arb
+		
+		clk_in_i => clk_proc, 
+		clk_out_i => ifclk,
+		rst_n_i=> rst
+		);
+end generate FO1_label4;
 ------------------------------------------------------------
 
 ------------------------------------------------------------
 --FLOW OUT 2
-FO2_label1 : if IN2_SIZE = 8 generate
-USB8TO16_FLOW2: component usb8to16bits 
-	port map( 
-		rst_n_i  		=> rst,
-		clk_i  			=> clk_proc,	
-		frame_valid_i	=> in2_fv,
-		data_valid_i	=> in2_dv,
-		data_i			=> in2_data,
-		frame_valid_o	=> in2_fv_s,
-		data_valid_o	=> in2_dv_s,
-		data_o			=> in2_data_s
-);
+FO2_label1 : if IN2_SIZE = 8 and IN2_NBWORDS > 0 generate
+	USB8TO16_FLOW2: component usb8to16bits 
+		port map( 
+			rst_n_i  		=> rst,
+			clk_i  			=> clk_proc,	
+			frame_valid_i	=> in2_fv,
+			data_valid_i	=> in2_dv,
+			data_i			=> in2_data,
+			frame_valid_o	=> in2_fv_s,
+			data_valid_o	=> in2_dv_s,
+			data_o			=> in2_data_s
+	);
 end generate FO2_label1;
-FO2_label2 : if IN2_SIZE = 16 generate
-		in2_fv_s <= in2_fv;
-		in2_dv_s <= in2_dv;
-		in2_data_s <= in2_data;	
+FO2_label2 : if IN2_SIZE = 16 and IN2_NBWORDS > 0  generate
+	in2_fv_s <= in2_fv;
+	in2_dv_s <= in2_dv;
+	in2_data_s <= in2_data;	
 end generate FO2_label2;
 
+FO2_label3 : if IN2_NBWORDS = 0 generate		
+	flow_out_rdy_2_s <= '0';
+	flow_out_empty_2_s <='0';
+	flow_out_data_2_s <= (others=>'0');
+end generate FO2_label3;
 
-USBFLOW_OUT2: component flow_out 
-  generic map (
-	FIFO_DEPTH => IN2_NBWORDS,
-	FLOW_ID => 130,
-	PACKET_SIZE => 256, -- header inclus
-	FLAGS_CODES => InitFlagCodes
-    )
-  port map(
-	data_i => in2_data_s,
-	fv_i => in2_fv_s,
-	dv_i => in2_dv_s,
-	rdreq_i => flow_out_rd_2_s, -- to arb
-	enable_i => enable_s_fvsync and enable_in2_s_sync,
-	data_o => flow_out_data_2_s, -- to arb
-	flow_rdy_o=> flow_out_rdy_2_s, -- to arb
-	f_empty_o => flow_out_empty_2_s, -- to arb
-	clk_in_i => clk_proc, 
-	clk_out_i => ifclk,
-	rst_n_i=> rst
-);
+FO2_label4 : if IN2_NBWORDS > 0 generate
+	USBFLOW_OUT2: component flow_out 
+		generic map (
+			FIFO_DEPTH => IN2_NBWORDS,
+			FLOW_ID => 130,
+			PACKET_SIZE => 256, -- header inclus
+			FLAGS_CODES => InitFlagCodes
+		)
+		port map(
+			data_i => in2_data_s,
+			fv_i => in2_fv_s,
+			dv_i => in2_dv_s,
+			rdreq_i => flow_out_rd_2_s, -- to arb
+			enable_i => enable_s_fvsync and enable_in2_s_sync,
+			data_o => flow_out_data_2_s, -- to arb
+			flow_rdy_o=> flow_out_rdy_2_s, -- to arb
+			f_empty_o => flow_out_empty_2_s, -- to arb
+			clk_in_i => clk_proc, 
+			clk_out_i => ifclk,
+			rst_n_i=> rst
+		);
+end generate FO2_label4;
 ------------------------------------------------------------
 ------------------------------------------------------------
 --FLOW OUT 3
 
-FO3_label1 : if IN3_SIZE = 8 generate
-USB8TO16_FLOW3: component usb8to16bits 
-	port map( 
-		rst_n_i  		=> rst,
-		clk_i  			=> clk_proc,	
-		frame_valid_i	=> in3_fv,
-		data_valid_i	=> in3_dv,
-		data_i			=> in3_data,
-		frame_valid_o	=> in3_fv_s,
-		data_valid_o	=> in3_dv_s,
-		data_o			=> in3_data_s
-);
+FO3_label1 : if IN3_SIZE = 8 and IN3_NBWORDS > 0  generate
+	USB8TO16_FLOW3: component usb8to16bits 
+		port map( 
+			rst_n_i  		=> rst,
+			clk_i  			=> clk_proc,	
+			frame_valid_i	=> in3_fv,
+			data_valid_i	=> in3_dv,
+			data_i			=> in3_data,
+			frame_valid_o	=> in3_fv_s,
+			data_valid_o	=> in3_dv_s,
+			data_o			=> in3_data_s
+		);
 end generate FO3_label1;
 
-FO3_label2 : if IN3_SIZE = 16 generate
+FO3_label2 : if IN3_SIZE = 16 and IN3_NBWORDS > 0  generate
 		in3_fv_s <= in3_fv;
 		in3_dv_s <= in3_dv;
 		in3_data_s <= in3_data;	
 end generate FO3_label2;
 
 
+FO3_label3 : if IN3_NBWORDS = 0 generate		
+	flow_out_rdy_3_s <= '0';
+	flow_out_empty_3_s <='0';
+	flow_out_data_3_s <= (others=>'0');
+end generate FO3_label3;
 
-USBFLOW_OUT3: component flow_out 
-  generic map (
-	FIFO_DEPTH => IN3_NBWORDS,
-	FLOW_ID => 131,
-	PACKET_SIZE => 256, -- header inclus
-	FLAGS_CODES => InitFlagCodes
-    )
-  port map(
-	data_i => in3_data_s,
-	fv_i => in3_fv_s,
-	dv_i => in3_dv_s,
-	rdreq_i => flow_out_rd_3_s, -- to arb
-	enable_i => enable_s_fvsync and enable_in3_s_sync,
-	data_o => flow_out_data_3_s, -- to arb
-	flow_rdy_o=> flow_out_rdy_3_s, -- to arb
-	f_empty_o => flow_out_empty_3_s, -- to arb
-	clk_in_i => clk_proc, 
-	clk_out_i => ifclk,
-	rst_n_i=> rst
-);
+FO3_label4 : if IN3_NBWORDS > 0 generate
+	USBFLOW_OUT3: component flow_out 
+		generic map (
+			FIFO_DEPTH => IN3_NBWORDS,
+			FLOW_ID => 131,
+			PACKET_SIZE => 256, -- header inclus
+			FLAGS_CODES => InitFlagCodes
+		)
+		port map(
+			data_i => in3_data_s,
+			fv_i => in3_fv_s,
+			dv_i => in3_dv_s,
+			rdreq_i => flow_out_rd_3_s, -- to arb
+			enable_i => enable_s_fvsync and enable_in3_s_sync,
+			data_o => flow_out_data_3_s, -- to arb
+			flow_rdy_o=> flow_out_rdy_3_s, -- to arb
+			f_empty_o => flow_out_empty_3_s, -- to arb
+			clk_in_i => clk_proc, 
+			clk_out_i => ifclk,
+			rst_n_i=> rst
+	);
+end generate FO3_label4;
 ------------------------------------------------------------
 
 -- component flow_out_arbiter 
@@ -534,7 +599,7 @@ FLOW_PARAMS: component flow_wishbone
 			param_wr_o => master_wr_o,
 			
 			-- rajouter fin d'ecriture dans la memoire...
-			tmp_update_port_o => update_port_s,
+			--~ tmp_update_port_o => update_port_s,
 			clk_in_i => ifclk,
 			clk_out_i => clk_proc, 
 			rst_n_i => rst

@@ -43,6 +43,8 @@
 		<param name="IN1_NBWORDS" hard="1" value="32768" type="int"/>
 		<param name="IN2_NBWORDS" hard="1" value="32768" type="int"/>
 		<param name="IN3_NBWORDS" hard="1" value="32768" type="int"/>
+		<param name="OUT0_NBWORDS" hard="1" value="1024" type="int"/>
+		<param name="OUT1_NBWORDS" hard="1" value="1024" type="int"/>
 		
 		<param name="status" regaddr="0"> 
 			<bitfields> 

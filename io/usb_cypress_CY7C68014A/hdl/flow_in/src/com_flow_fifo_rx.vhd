@@ -80,6 +80,7 @@ END component;
 -- registers
 	signal fifo_1_readable : std_logic:= '0';
 	signal fifo_1_rdempty_r : std_logic:= '0';
+	signal fifo_1_rdempty_rr : std_logic:= '0';
 	signal flag_fifo1 : std_logic_vector(7 downto 0):=(others=>'0');
 	signal fifo_1_aclr_s :std_logic:='0';
 -------------
@@ -97,8 +98,10 @@ END component;
 	signal 	fifo_2_aclr_s :std_logic:='0';
 
 -- registers
+
 	signal fifo_2_readable : std_logic:= '0';
 	signal fifo_2_rdempty_r : std_logic:= '0';
+	signal fifo_2_rdempty_rr : std_logic:= '0';
 	signal flag_fifo2 : std_logic_vector(7 downto 0):=(others=>'0');
 	
 -------------
@@ -169,8 +172,8 @@ flow_rdy_o <= fifo_1_readable or fifo_2_readable;
 	);
 	
 
-fifo_1_aclr_s <= not(rst_n_i) or not(enable_i);
-fifo_2_aclr_s <= not(rst_n_i) or not(enable_i);
+fifo_1_aclr_s <= not(rst_n_i or enable_i);
+fifo_2_aclr_s <= not(rst_n_i or enable_i);
 	
 FSM:process (clk_in_i, rst_n_i) 
 begin
@@ -271,18 +274,18 @@ begin
 	
 		-- register values for rising/falling edge detection on signals
 		fifo_1_rdempty_r <= fifo_1_rdempty_s;
+		fifo_1_rdempty_rr <= fifo_1_rdempty_r; -- double registert to prevent for CDC metastability
 		fifo_2_rdempty_r <= fifo_2_rdempty_s;
+		fifo_2_rdempty_rr <= fifo_2_rdempty_r;
 
-		if (fifo_1_rdempty_r ='0' and fifo_1_rdempty_s='1') then
+		--~ if (fifo_1_rdempty_r ='0' and fifo_1_rdempty_s='1') then
+		if (fifo_1_rdempty_rr ='0' and fifo_1_rdempty_r='1') then
 			fifo_1_readable <= '0';
-		else 
-			fifo_1_readable <= fifo_1_readable;
 		end if;
 		
-		if (fifo_2_rdempty_r ='0' and fifo_2_rdempty_s='1') then
+		--~ if (fifo_2_rdempty_r ='0' and fifo_2_rdempty_s='1') then
+		if (fifo_2_rdempty_rr ='0' and fifo_2_rdempty_r='1') then
 			fifo_2_readable <= '0';
-		else 
-			fifo_2_readable <= fifo_2_readable;
 		end if;
 		
 
@@ -375,10 +378,10 @@ begin
 		
 			-- Flag et signaux pour lecture dans fifos
 			fifo_1_rdreq_s <= rdreq_i;
+			fifo_2_rdreq_s <= '0';
+			
 			data_o <= fifo_1_q_s;
 			f_empty_o <= fifo_1_rdempty_s;
-			
-			fifo_2_rdreq_s <= '0';
 			
 		when others =>
 			fifo_1_wrreq_s <= cur_fifo_wrreq_s;
