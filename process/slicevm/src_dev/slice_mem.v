@@ -36,7 +36,7 @@ output signed [31:0] regout;
 /* Registers definition */
 reg newwin_d, newwin_d2;
 //~ reg signed [31:0] mem_out;
-wire signed [36:0] mult_out;
+wire signed [CWIDTH+DWIDTH-1:0] mult_out;
 reg signed [31:0] tmp;
 reg [$clog2(WINCOLS)-1:0] blockcount;
 
@@ -47,8 +47,8 @@ wire clken;
 wire newwin;
 
 /* mult_out */
-wire signed [18:0] svcoeff_int;
-assign svcoeff_int = download ? 19'b0 : {svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff[8],svcoeff};
+wire signed [CWIDTH-1:0] svcoeff_int;
+assign svcoeff_int = download ? 9'b0 : svcoeff;
 wire dv_mult;
 assign dv_mult = dvi|download;
 
@@ -64,17 +64,17 @@ assign dv_mult = dvi|download;
 	
 lpm_mult	
 #(	.lpm_type("lpm_mult"),
-	.lpm_widtha(18),
-	.lpm_widthb(19),
+	.lpm_widtha(DWIDTH),
+	.lpm_widthb(CWIDTH),
 	.lpm_widths(1),
-	.lpm_widthp(37),
+	.lpm_widthp(DWIDTH+CWIDTH),
 	.lpm_representation("SIGNED"),
 	.lpm_pipeline(1),
 	.lpm_hint("UNUSED")
 )
 lpm_mult_inst (
 			.result(mult_out), 
-			.dataa({10'b0, data}), 
+			.dataa(data), 
 			.datab(svcoeff_int),
 			.sum(), 
 			.clock(clk), 
