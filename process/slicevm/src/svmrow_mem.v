@@ -5,10 +5,10 @@ reset_n,
 dvi_in,
 dvi_bypass,
 svcoeff_in,
-svcoeff_out,
+in_cv,
+loadcoeff,
 
-/* For debugging purpose */
-wincount,
+svcoeff_out,
 
 download,
 done,
@@ -26,27 +26,30 @@ parameter WINROWS = 16;
 input clk;
 input [DWIDTH-1:0] data;
 input reset_n;
+//~ input dvi_in;
 input dvi_in;
+input loadcoeff;
+input in_cv;
 input dvi_bypass;
 input signed [CWIDTH-1:0] svcoeff_in;
 output signed [CWIDTH-1:0] svcoeff_out;
 
-output [$clog2(WPI)-1:0] wincount;
 output download;
 
-output [31:0] svm_data;
+output signed [31:0] svm_data;
 output dvo;
 output done;
+//~ output out_cv;
 
 
 /* Wire definitions */
 wire signed [31:0] regout[(WINCOLS-1):0];
-//~ wire done;
-
 
 wire [CWIDTH-1:0] svfifo_chain [(WINCOLS-1):0];
 wire [CWIDTH-1:0] first_svchain;
 wire [CWIDTH-1:0] svcoeff [(WINCOLS-1):0]; 
+
+wire [CWIDTH*WINCOLS-1:0] svcoeffparallel;
 
 wire newblock;
 wire newwin;
@@ -76,15 +79,16 @@ parameter S4 = 4;
 parameter S5 = 5;
 parameter S6 = 6;
 parameter S7 = 7;
-parameter S0R = 8;
-parameter S1R = 9;
-parameter S2R = 10;
-parameter S3R = 11;
-parameter S4R = 12;
-parameter S5R = 13;
-parameter S6R = 14;
-parameter S7R = 15;
-parameter DOWNLOAD = 16;
+parameter STEADY = 8;
+parameter S0R = 9;
+parameter S1R = 10;
+parameter S2R = 11;
+parameter S3R = 12;
+parameter S4R = 13;
+parameter S5R = 14;
+parameter S6R = 15;
+parameter S7R = 16;
+parameter DOWNLOAD = 17;
 
 reg [4:0] fsm, fsm_new;
 
@@ -160,7 +164,8 @@ always@(*)
 	S4: fsm_new = (newblock & dvi_in) ? S5 : S4; 
 	S5: fsm_new = (newblock & dvi_in) ? S6 : S5; 
 	S6: fsm_new = (newblock & dvi_in) ? S7 : S6; 
-	S7: fsm_new = (done & dvi_in)   ? S0R : S7; 
+	S7: fsm_new = (newblock & dvi_in)   ? STEADY : S7; 
+	STEADY: fsm_new = (done & dvi_in)   ? S0R : STEADY; 
 	S0R: fsm_new = ((newblock & dvi_in) | dvi_bypass) ? S1R : S0R; 
 	S1R: fsm_new = ((newblock & dvi_in) | dvi_bypass) ? S2R : S1R; 
 	S2R: fsm_new = ((newblock & dvi_in) | dvi_bypass) ? S3R : S2R; 
@@ -194,6 +199,7 @@ always@(*)
 		S5: 		dvi = 8'b00111111 & {8{dvi_in}};
 		S6: 		dvi = 8'b01111111 & {8{dvi_in}};
 		S7: 		dvi = 8'b11111111 & {8{dvi_in}};
+		STEADY:		dvi = 8'b11111111 & {8{dvi_in}};
 		S0R: 		dvi = 8'b11111110 & {8{dvi_in}};
 		S1R: 		dvi = 8'b11111100 & {8{dvi_in}};
 		S2R: 		dvi = 8'b11111000 & {8{dvi_in}};
@@ -210,48 +216,46 @@ always@(*)
 
 /* Coefficients loopback */
 /* 22May15: removed newwin dependency on svchainmux */
-assign svchainmux = (fsm == S7) && (wincount != 0);
-assign first_svchain = ( svchainmux ) ? svfifo_chain[(WINCOLS-1)] : svcoeff_in;	
+assign svchainmux = (fsm == STEADY) && (wincount != 0);
+assign first_svchain = ( svchainmux ) ? svcoeff_out : svcoeff_in;	
 
 /* shift_nextstep (data valid for the coefficient shift register) */
 /* Note: this expects a dvi masked with the dvi_in signal */
-assign shift_nextstep = (dvi != 0) | ((fsm == S7R) & dvi_in);
+assign shift_nextstep = in_cv | (dvi != 0) | ((fsm == S7R) & dvi_in) | loadcoeff;
 
 /* SV network distribution
  * generic altshift instantiation
  */
+
+altshift_taps	
+#(	.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+	.lpm_type("altshift_taps"),
+	.number_of_taps(WINCOLS),
+	.tap_distance(BLOCKSIZE),
+	.width(CWIDTH)
+)
+coeff_shift_inst (
+			.clock (clk),
+			.clken (shift_nextstep),
+			.shiftin (first_svchain),
+			.shiftout (svcoeff_out),
+			.taps (svcoeffparallel)
+			// synopsys translate_off
+			,
+			.aclr (~reset_n)
+			// synopsys translate_on
+			);
+
 genvar i;
 generate
-for (i=0; i < (WINCOLS-1); i = i+1)
-	begin: svnetwork
-	svfifo 
-	#(
-	.CWIDTH(CWIDTH),
-	.STAGE(BLOCKSIZE)) 
-	svfifo_inst(
-	.clk(clk),
-	.reset_n(reset_n),
-	.dv(shift_nextstep), 
-	.fifo_in( (i == 0) ? first_svchain : svfifo_chain[i-1] ),
-	.stage(),
-	.fifo_out(svfifo_chain[i]),
-	.svcoeff(svcoeff[i])	
-	);
-	end
+	for (i=0; i < WINCOLS; i = i+1)
+		begin: svcoeff_gen  
+			if (i == 0)
+				assign svcoeff[i] = first_svchain;
+			else
+				assign svcoeff[i] = svcoeffparallel[i*9-1:(i-1)*9];
+		end
 endgenerate
-
-svfifo #(.CWIDTH(CWIDTH), .STAGE(BLOCKSIZE)) svfifo_inst_last(
-	.clk(clk),
-	.reset_n(reset_n),
-	.dv(shift_nextstep),
-	.fifo_in(svfifo_chain[(WINCOLS-2)] ),
-	.stage(),
-	.fifo_out(svfifo_chain[(WINCOLS-1)]),
-	.svcoeff()	
-	);
-
-assign svcoeff[(WINCOLS-1)] = svfifo_chain[(WINCOLS-2)];
-assign svcoeff_out = svfifo_chain[(WINCOLS-1)];
 
 /* Slice
  * generic slice_mem instantiation

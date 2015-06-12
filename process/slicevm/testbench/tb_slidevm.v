@@ -12,25 +12,28 @@ parameter WINROWS = 16;
 parameter HPI = 19;
 
 localparam DATATOT = BLOCKSIZE*WINCOLS*WPI*HPI;
+localparam COEFFTOT = BLOCKSIZE*WINCOLS*WINROWS+64;
 
 reg clk;
 reg toto;
 reg reset_n;
-reg dvi_orig;
+reg sendcoeff;
 reg [DWIDTH-1:0] data;
 reg [DWIDTH-1:0] datatmp;
 reg signed [CWIDTH-1:0] svcoeff_in;
 reg signed [CWIDTH-1:0] coefftmp;
 
-wire signed [CWIDTH-1:0] svcoeff_out;
-wire [$clog2(WPI)-1:0] wincount;
+wire coeffflow;
+wire imageflow;
+reg loadstart;
+reg imagestart;
 
 wire dvo;
-wire done;
-wire signed [31:0] slide_data;
-wire dvi;
+wire signed [31:0] out_data;
+reg dvi;
+wire out_fv;
 
-integer fp_image, fp_coeff, r, i;
+integer i;
 integer fp_test;
 
 reg [31:0] counter_coeff;
@@ -43,6 +46,10 @@ reg signed [31:0] acc [(WPI*WINCOLS)-1:0];
 
 reg [31:0] dvo_count;
 reg [31:0] dvi_count;
+
+reg addr_rel_i; 
+reg  wr_i;
+reg  [31:0] datawr_i;
 
 
 reg [DWIDTH-1:0] datamem [(DATATOT)-1:0];
@@ -65,7 +72,7 @@ initial begin
 	
 	
 	clk = 0;
-	dvi_orig = 0;
+	dvi = 0;
 	data = 0;
 	svcoeff_in = 0;
 	coefftmp = 0;
@@ -77,8 +84,14 @@ initial begin
 	dvo_row_count = 0;
 	counter_ok = 0;
 	counter_error = 0;
+	loadstart = 0;
+	sendcoeff = 0;
+	imagestart = 0;
 	
-
+	addr_rel_i = 0; 
+	wr_i = 0;
+	datawr_i = 0;
+	
 	fp_test = $fopen("toto.txt", "w");	
 	if(!fp_test) 
 	begin
@@ -89,52 +102,89 @@ initial begin
 	for(i=0; i<(WPI*WINCOLS); i=i+1)
 		acc[i] = 0;
 
-	#1 reset_n = 1'd0;
-	#2 reset_n = 1'd1;	
+	#1 reset_n = 0;
+	#2 reset_n = 1;	
+	
+	#2 addr_rel_i <= 0;
+	#0 datawr_i <= 2;
+	#2 wr_i <= 1;
+	#2 wr_i <= 0;
+	
+	#2 addr_rel_i <= 1;
+	
+	#2 loadstart <= 1;
+
+	
 
 end
 
 always #1 clk = ~clk;
 
-wire imageflow;
-assign imageflow = (dvi_count < DATATOT);//+ BLOCKSIZE*WINCOLS);	
-wire coeffflow;
-assign coeffflow = (counter_coeff < BLOCKSIZE*WINCOLS*WINROWS);	
 
-assign dvi = dvi_orig & imageflow;
+assign imageflow = imagestart && (dvi_count < DATATOT);
 
-always@(posedge clk or negedge reset_n)	
-	if (reset_n == 0)
-		dvi_orig <= 0;
-	else
-		if(imageflow)
-			dvi_orig <= $random;	
-		else
-			dvi_orig <= 0;
+assign coeffflow = loadstart && (counter_coeff < COEFFTOT);
 
-always@(posedge clk)
-	if ($time > 20000 && $time < 20002)
-		dvi_count <= 0;
-	else if (imageflow)		
+always@(posedge clk) 
+	if(loadstart)
 		begin
-			if(dvi)
-				dvi_count <= dvi_count + 1;	
+			if (coeffflow)
+				wr_i <= $random;
+			else
+				wr_i <= 0;
 		end
 
+always@(negedge coeffflow) 		
+	if (loadstart)
+		begin
+			#0 wr_i <= 0;
+			loadstart <= 0;
+			
+			#10 addr_rel_i <= 0;
+			#0 datawr_i <= 1;
+			#2 wr_i <= 1;
+			#2 wr_i <= 0;
+			
+			#20 imagestart <= 1;
+		end
+		
+			
+always@(*) 
+	if (loadstart)
+		datawr_i = svcoeff_in;
+
 always@ (posedge clk)
-	if (coeffflow)
-		if (dvi && wincount == 0)
-			counter_coeff <= counter_coeff + 1;			
+	if (coeffflow & wr_i)
+		counter_coeff <= counter_coeff + 1;		
+
+always@(posedge clk)
+	if (imageflow)
+		dvi <= $random;
+	else
+		dvi <= 0;
+			
+always@(posedge clk or negedge reset_n)
+	if (reset_n == 0)
+		dvi_count <= 0;
+	else if(dvi)
+		dvi_count <= dvi_count + 1;	
 		
 always@(posedge clk)
 	begin
 		datatmp <= {$random}%100;
 		coefftmp <= $random % 100;
 		data <= datatmp;
-		datamem[dvi_count] <= data;
+		datamem[dvi_count] <=  data;
 		svcoeff_in <= coefftmp;
 		coeffmem[counter_coeff] <= svcoeff_in;
 	end
+	
+	
+/* Automatic image send mechanism */
+always@(negedge imageflow)
+	begin
+		#100 dvi_count <= 0;
+	end	
 	
 
 /* Selfcheck */		
@@ -157,19 +207,23 @@ always@(posedge dvo)
 				for(x=0; x< (BLOCKSIZE*WINCOLS); x=x+1)
 					begin
 						acc[index] = acc[index] + $signed({1'b0,datamem[x + y*BLOCKSIZE*WINCOLS*WPI + BLOCKSIZE*index + WPI*WINCOLS*BLOCKSIZE*dvo_row_count]})*coeffmem[x + y*(BLOCKSIZE*WINCOLS)];
-					end	 
-			$fwrite(fp_test,"%d\n", acc[index]);	
+					end	 	
 		end	
 		
 wire signed [31:0] acc0, acc1;
 assign acc0 = 	acc[0];	
 assign acc1 = 	acc[1];		
 
-wire signed [31:0] coeffmem0, coeffmem1;
+wire signed [31:0] coeffmem0, coeffmem1, coeffmem2;
 assign coeffmem0 = 	coeffmem[0];	
-assign coeffmem1 = 	coeffmem[1];		
+assign coeffmem1 = 	coeffmem[1];
+assign coeffmem2 = 	coeffmem[2];		
 
-always@(negedge dvo or negedge reset_n)
+wire signed [31:0] datamem0, datamem1;
+assign datamem0 = 	datamem[0];	
+assign datamem1 = 	datamem[1];			
+		
+always@(posedge dvo or negedge reset_n)
 	if (reset_n == 0)
 		dvo_row_count <= 0;
 	else if (imageflow == 0)
@@ -183,23 +237,23 @@ always@(negedge dvo)
 		
 always@(posedge clk)
 	if (dvo)
-		if (slide_data != acc[dvo_count])
+		if ((out_data - acc[dvo_count] )!= 0)
 			begin
-				$display("ERROR!%d, time = %d, value testbench = %d, value svmrow_mem = ", dvo_count, $time, acc[dvo_count], slide_data);
+				$display("ERROR!%d, time = %d, value testbench = %d, value svmrow_mem = ", dvo_count, $time, acc[dvo_count], out_data);
 				counter_error <= counter_error +1;
 			end
 		else
 			begin
-				$display("OK!%d, time = %d, value testbench = %d, value svmrow_mem = ", dvo_count, $time, acc[dvo_count], slide_data);	
+				$display("OK!%d, time = %d, value testbench = %d, value svmrow_mem = ", dvo_count, $time, acc[dvo_count], out_data);	
 				counter_ok <= counter_ok +1;
 			end
 			
 always@(negedge dvo)		
 	$display("counter_ok = %d, counter_error = %d\n", counter_ok, counter_error);	
 			
-always@(negedge imageflow)
+always@(posedge imageflow)
 		for(i=0; i<BLOCKSIZE*WINCOLS*WINROWS ; i=i+1)
-			$fwrite(fp_test, "%d\n", coeffmem[i]);			
+			$fwrite(fp_test, "%d\n", coeffmem[i]);	
 			
 slidevm #( 
 	.DWIDTH(DWIDTH),
@@ -212,14 +266,25 @@ slidevm #(
 slidevm_inst(  
 .clk(clk),
 .reset_n(reset_n),
-.data(data),
-.dvi_in(dvi),
+
 .in_fv(imageflow),
-.svcoeff_in(svcoeff_in),
-.svcoeff_out(svcoeff_out),
-.wincount(wincount),
-.slide_data(slide_data),
-.dvo(dvo)
+.in_dv(dvi & imageflow),
+.in_data(data),
+
+
+//~ .svcoeff_in(svcoeff_in),
+//~ .loadcoeff(wr_i & coeffflow),
+
+.out_fv(out_fv),
+.out_dv(dvo),
+.out_data(out_data),
+
+.addr_rel_i(addr_rel_i),
+.wr_i(wr_i),
+.datawr_i(datawr_i),
+.rd_i(1'b0),
+.datard_o()
+
 );
 
 

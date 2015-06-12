@@ -2,50 +2,89 @@ module slidevm(
 clk,
 reset_n,
 
-data,
-dvi_in,
 in_fv,
-svcoeff_in,
-svcoeff_out,
+in_dv,
+in_data,
 
-wincount,
-slide_data,
-dvo
+//~ svcoeff_in,
+//~ loadcoeff,
+
+out_fv,
+out_dv,
+out_data,
+
+addr_rel_i,
+wr_i,
+datawr_i,
+rd_i,
+
+datard_o
+
 );
+
+/* Flow parameters */
+parameter IN_SIZE = 8;
+parameter OUT_SIZE = 32;
 
 /* Default parameters */
 parameter DWIDTH = 8;
 parameter CWIDTH = 9;
 parameter BLOCKSIZE = 16;
-parameter BPW = 8;
 parameter WPI = 40;
 parameter WINCOLS = 8;
 parameter WINROWS = 16;
 parameter HPI = 20;
 
 input clk;
-input [DWIDTH-1:0] data;
 input reset_n;
-input dvi_in;
-input signed [CWIDTH-1:0] svcoeff_in;
-input in_fv;
 
-output signed [CWIDTH-1:0] svcoeff_out;
-output [$clog2(WPI)-1:0] wincount;
-output [31:0] slide_data;
-output dvo;
+input in_fv;
+input in_dv;
+input [DWIDTH-1:0] in_data;
+
+
+wire loadcoeff;
+reg loadcoeff_valid;
+wire signed [CWIDTH-1:0] svcoeff_in;
+
+output out_fv;
+output out_dv;
+output signed [31:0] out_data;
+
+//% \{
+//% Avalon-MM interface
+//%
+input  addr_rel_i; 
+input  wr_i;
+input  rd_i;
+input  [31:0] datawr_i;
+output [31:0] datard_o;
+//% \}
+
+/*! \{ Status and Control Register */
+reg [31:0] scr, scr_new;
+/*! \} */
+
+/*! \{  Avalon-MM Parameters */
+reg [31:0] load, load_new;
+/*! \} */
+
+/*! \{ Internal registers */
+reg [31:0] readdata, readdata_new;
+/*  \} */
 
 /* Wire definitions */
 wire done;
 wire newblock;
 wire newwin;
 wire newrow;
-wire lastimagerow;
+
 wire [WINROWS:0] download;
 wire [WINROWS:0] dvo_row;
 wire [31:0] svmrow_data [WINROWS:0];
-wire dvo_int;
+wire out_dv_int;
 wire dvo_int_negedge;
+wire [WINROWS:0] out_cv_int;
 
 /* Register definitions */
 reg [$clog2(BLOCKSIZE)-1:0] dvcount;
@@ -53,46 +92,41 @@ reg [$clog2(WINCOLS)-1:0] blockcount;
 reg [$clog2(WPI)-1:0] wincount;
 reg [WINROWS:0] token;
 reg [$clog2(WINROWS):0] outcontrol;
-reg lir_token;
 reg [$clog2(WINROWS+1):0] token_counter;
-reg fsm_coeff, fsm_coeff_new;
 reg dvo_int_d;
 reg [$clog2(HPI)-1:0] outrow_count;
-
-
-/* FSM counter */
 
 
 /* dvcount */
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		dvcount <= 0;
-	else if (newblock & dvi_in)	
+	else if (newblock & in_dv)	
 		dvcount <= 0;
-	else if (dvi_in)
+	else if (in_dv)
 		dvcount <= dvcount + 1'b1;	
 		
 /* blockcount */		
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		blockcount <= 0;
-	else if (newwin & dvi_in)
+	else if (newwin & in_dv)
 		blockcount <= 0;
-	else if (newblock & dvi_in)
+	else if (newblock & in_dv)
 		blockcount <= blockcount + 1'b1;			
 
 /* wincount */
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		wincount <= 0;
-	else if (newrow & dvi_in)	
+	else if (newrow & in_dv)	
 		wincount <= 0;
-	else if (newwin & dvi_in)
+	else if (newwin & in_dv)
 		wincount <= wincount + 1'b1;	
 		
 		
 assign newblock = ((dvcount == (BLOCKSIZE-1))) ? 1'b1 : 1'b0;
-assign newwin  = (newblock && (blockcount == BPW-1)) ? 1'b1 : 1'b0;
+assign newwin  = (newblock && (blockcount == WINCOLS-1)) ? 1'b1 : 1'b0;
 assign newrow = (newwin && (wincount == (WPI-1) ))? 1'b1 : 1'b0;
 wire bypass;
 
@@ -120,8 +154,6 @@ assign bypass = (bypass_count < WINCOLS*BLOCKSIZE) && (in_fv == 0);
  *      will not be any other activation, since the last activated svmrow
  *      takes last cell row. No more activetoken are sent, system is 
  *      waiting all pipeline flows to complete.
- *      TODO: modify effect of lastimagerow!
- *            SlideVM should act as a close cycle machine  
  *
  */
 
@@ -132,13 +164,11 @@ for(ti=0; ti < (WINROWS+1); ti=ti+1)
 	always@(posedge clk or negedge reset_n)
 		if (reset_n == 0)
 			token[ti] <= (ti==0) ? 1'b1 : 1'b0;
-		//~ else if (lastimagerow && dvi_in)
-			//~ token[0] <= 1'b1; /* TODO: to be connected also to frame valid! */
 		else if (download[ti])
 			token[ti] <= 1'b0;
 		else if (	newrow 
 					&& (token_counter == ti)
-					&& dvi_in)
+					&& in_dv)
 			token[ti] <= 1'b1;
 	end
 endgenerate
@@ -150,29 +180,8 @@ always@(posedge clk or negedge reset_n)
 	else
 		if (token_counter == WINROWS+1)
 			token_counter <= 0;
-		else if (newrow & dvi_in)
+		else if (newrow & in_dv)
 			token_counter <= token_counter + 1;
-
-/* Input coeff mux control */
-always@(posedge clk or negedge reset_n)
-	if (reset_n == 0)
-		fsm_coeff <= 1'b1;
-	else
-		fsm_coeff <= fsm_coeff_new;
-		
-always@(*)
-	case(fsm_coeff)
-		1'b0:
-			fsm_coeff_new = fsm_coeff;	
-		1'b1:
-			if(token[0] == 1'b0)
-				fsm_coeff_new = 1'b0;
-			else
-				fsm_coeff_new = 1'b1;
-				
-		default:
-			fsm_coeff_new = 1'b1;
-	endcase
 
 /* svmrow_gen 
  * NOTE: WINROWS+1 svmrow_mem are instantiated to ensure continuous data flow
@@ -193,13 +202,14 @@ for (index=0; index < WINROWS+1; index = index + 1)
 		
 		svmrow_mem_inst(  
 		.clk(clk),
-		.data(data),
+		.data(in_data),
 		.reset_n(reset_n),
-		.dvi_in(token[index] & dvi_in),
+		.dvi_in(token[index] & in_dv),
 		.dvi_bypass(bypass),
-		.svcoeff_in((index==0) ? ( (fsm_coeff) ? svcoeff_in : svcoeff_chain[WINROWS]) : svcoeff_chain[index-1]),
+		.svcoeff_in((index==0) ? ( (loadcoeff) ? svcoeff_in : svcoeff_chain[WINROWS]) : svcoeff_chain[index-1]),
+		.in_cv(in_dv & (wincount == 0)),
+		.loadcoeff(loadcoeff_valid),
 		.svcoeff_out(svcoeff_chain[index]),
-		.wincount(),
 		.download(download[index]),
 		.done(),
 		.svm_data(svmrow_data[index]),
@@ -209,15 +219,13 @@ for (index=0; index < WINROWS+1; index = index + 1)
 endgenerate
 
 /* Output multiplexing */
-assign dvo_int = dvo_row[outcontrol];
-
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
 		dvo_int_d <= 1'b0;
 	else
-		dvo_int_d <= dvo_int;
+		dvo_int_d <= out_dv_int;
 
-assign dvo_int_negedge = ~dvo_int & dvo_int_d;
+assign dvo_int_negedge = ~out_dv_int & dvo_int_d;
 
 always@(posedge clk or negedge reset_n)
 	if (reset_n == 0)
@@ -238,12 +246,88 @@ always@(posedge clk or negedge reset_n)
 			outrow_count <= outrow_count + 1;
 
 
-assign dvo = (outrow_count < HPI-WINROWS+1) ? dvo_row[outcontrol] : 1'b0;
+assign out_dv_int = dvo_row[outcontrol];
 
-assign slide_data = svmrow_data[outcontrol];
+assign out_fv = (outrow_count < HPI-WINROWS+1);
 
-assign svcoeff_out = svcoeff_chain[WINROWS];
+assign out_dv = (out_fv) ? dvo_row[outcontrol] : 1'b0;
 
+assign out_data = svmrow_data[outcontrol];
+
+/* -------------- Avalon-MM Interface -------------- 
+
+	SCR				-	R/W
+	LOAD			-   R/W
+
+*/
+
+assign loadcoeff = scr[1];
+always@(posedge clk or negedge reset_n)
+	if (reset_n == 0)
+		loadcoeff_valid <= 0;
+	else
+		loadcoeff_valid <= loadcoeff & addr_rel_i & wr_i;
+
+assign svcoeff_in = $signed(load[8:0]);
+
+//%
+//% Avalon-MM registers write
+//% \code
+always @ (*)
+	if (wr_i)
+		case(addr_rel_i)
+		1'd0: 
+			begin 
+				scr_new = datawr_i;
+				load_new = load;
+			end
+		1'd1: 
+			begin 
+				scr_new = scr;
+				load_new = datawr_i;
+			end
+			
+		default:
+			begin 
+				scr_new = scr;
+				load_new = load;
+			end			
+		endcase
+	else /* write disabled */
+		begin 
+			scr_new = scr;
+			load_new = load;
+		end				
+//% \endcode
+	
+	
+/*! Read phase 
+*/	
+always @ (*)
+	if (rd_i)
+		case(addr_rel_i)
+			1'd0:		readdata_new = scr;
+			1'd1:		readdata_new = load;	
+			default:	readdata_new = 32'd0;
+		endcase
+	else 
+		readdata_new = readdata;
+
+/* Internal register update */
+always @ (posedge clk or negedge reset_n)
+	if (reset_n == 1'b0)
+		begin
+			scr			<= 32'd0;	
+			load		<= 32'd0;
+			readdata	<= 32'd0;
+		end
+	else 
+		begin
+			scr 	<= scr_new;
+			load 	<= load_new;
+		end
+		
+assign datard_o = readdata;
 
 
 

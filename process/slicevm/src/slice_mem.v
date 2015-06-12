@@ -36,7 +36,7 @@ output signed [31:0] regout;
 /* Registers definition */
 reg newwin_d, newwin_d2;
 //~ reg signed [31:0] mem_out;
-reg signed [31:0] mult_out;
+wire signed [CWIDTH+DWIDTH-1:0] mult_out;
 reg signed [31:0] tmp;
 reg [$clog2(WINCOLS)-1:0] blockcount;
 
@@ -47,16 +47,40 @@ wire clken;
 wire newwin;
 
 /* mult_out */
-always@(posedge clk or negedge reset_n)
-	begin
-		if (reset_n == 0)
-			mult_out <= 0;
-		else if(download)
-			mult_out <= 0;	
-		else if (dvi) 
-			mult_out <= svcoeff * $signed({1'b0,data});
-			
-	end
+wire signed [CWIDTH-1:0] svcoeff_int;
+assign svcoeff_int = download ? 9'b0 : svcoeff;
+wire dv_mult;
+assign dv_mult = dvi|download;
+
+//~ always@(posedge clk or negedge reset_n)
+	//~ begin
+		//~ if (reset_n == 0)
+			//~ mult_out <= 0;
+		//~ else if(download)
+			//~ mult_out <= 0;	
+		//~ else if (dvi) 
+			//~ mult_out <= svcoeff * $signed({1'b0,data});	
+	//~ end
+	
+lpm_mult	
+#(	.lpm_type("lpm_mult"),
+	.lpm_widtha(DWIDTH),
+	.lpm_widthb(CWIDTH),
+	.lpm_widths(1),
+	.lpm_widthp(DWIDTH+CWIDTH),
+	.lpm_representation("SIGNED"),
+	.lpm_pipeline(1),
+	.lpm_hint("UNUSED")
+)
+lpm_mult_inst (
+			.result(mult_out), 
+			.dataa(data), 
+			.datab(svcoeff_int),
+			.sum(), 
+			.clock(clk), 
+			.clken(dv_mult), 
+			.aclr(~reset_n)
+			);	
 
 /* newwin signal delay */
 /* 5Jun15: removed dependency of download */
@@ -108,8 +132,8 @@ assign shiftin = tmp + mult_out;
 assign clken = (newwin_d & dvi) || download;
 	
 	altshift_taps	
-	#(	.intended_device_family("Cyclone IV E"),
-		//.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+	#(	
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
 		.lpm_type("altshift_taps"),
 		.number_of_taps(1),
 		.tap_distance(WPI),
@@ -130,7 +154,7 @@ assign clken = (newwin_d & dvi) || download;
 
 /* dummy output (to be removed) */
 assign regout = fifo_out;		
-assign msb = fifo_out > 0? 1: 0;
+assign msb = 0;//fifo_out > 0? 1: 0;
 	
 endmodule
 
