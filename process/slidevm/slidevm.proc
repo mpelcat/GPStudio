@@ -6,7 +6,7 @@
 	</svg>
 	<flows>
 		<flow name="in" type="in" desc="Feature input vector"/>
-		<flow name="out" type="in" desc="Classification output"/>
+		<flow name="out" type="out" desc="Classification output"/>
 	</flows>	
 	<params>		
 		<param name="scr" regaddr="0" default="0" desc="Status Control Register">
