@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<process name="slidevm" categ="slidevm" description="SVM Hardware to rule them all!" size_addr_rel="1">
+	<svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">slicevm</text>
+	</svg>
+	<flows>
+		<flow name="in" type="in" desc="Feature input vector"/>
+		<flow name="out" type="in" desc="Classification output"/>
+	</flows>	
+	<params>		
+		<param name="scr" regaddr="0" default="0" desc="Status Control Register">
+			<bitfields>
+				<bitfield name="enable" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
+				<bitfield name="loadcoeff" bitfield="1" default="0" propertymap="loadcoeff.bits" desc="LoadCoeff mode: 1 load, 0 store"/>
+			</bitfields>
+		</param>
+		<param name="load" regaddr="1" default="0" desc="Load coeff">
+			<bitfields>
+				<bitfield name="loadcoeff" bitfield="8-0" default="0" propertymap="loadcoeff.value" desc="Load SVM coefficient"/>
+			</bitfields>
+		</param>
+	</params>
+	<properties>
+		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
+		<property name="mode" caption="mode" desc="SVM Load coefficients">
+          <enums>
+            <enum name="Store" value="0" desc="Store SVM coefficients"/>
+            <enum name="Load" value="1" desc="Load SVM coefficients"/>
+          </enums>
+        </property>
+	</properties>
+	<files>
+		<file name="slidevm.v" path="src/slidevm.v" type="verilog" group="hdl" desc=""/>
+		<file name="svmrow_mem.v" path="src/svmrow_mem.v" type="verilog" group="hdl" desc=""/>
+		<file name="slice_mem.v" path="src/slice_mem.v" type="verilog" group="hdl" desc=""/>	
+	</files>
+	<resets>
+		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
+	</resets>
+</process>
