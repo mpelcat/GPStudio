@@ -34,6 +34,7 @@ class Reset
 	
 	function __construct($xml=null)
 	{
+		$this->direction = 'in';
 		$this->parentBlock = null;
 		if($xml) $this->parse_xml($xml);
 	}

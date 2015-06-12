@@ -139,8 +139,9 @@ class FlowInterconnect extends Block
 			{
 				$tree_connects[$toblock->name.'_'.$toflow->name] = array();
 				$tree_connects[$toblock->name.'_'.$toflow->name]['size'] = $toflow->size;
+				$tree_connects[$toblock->name.'_'.$toflow->name]['order'] = $connect->order;
 			}
-			array_push($tree_connects[$toblock->name.'_'.$toflow->name], array('name' => $fromblock->name.'_'.$fromflow->name, 'size' => $fromflow->size));
+			array_push($tree_connects[$toblock->name.'_'.$toflow->name], array('name' => $fromblock->name.'_'.$fromflow->name, 'size' => $fromflow->size, 'order' => $connect->order));
 		}
 		
 		/*echo "\n" . '// =============== Flow connections ===============' . "\n";
@@ -306,13 +307,27 @@ class FlowInterconnect extends Block
 				{
 					$padding_size = $in_size - $out_size;
 					$padding = '"' . str_pad('', $padding_size, '0') . '"';
-					$code.='	'.$in_connect.'_data <= '.$padding.' & '.$out_connects[0]['name'].'_data;'."\n";
+					if($out_connect['order']=='msb')
+					{
+						$code.='	'.$in_connect.'_data <= '.$padding.' & '.$out_connects[0]['name'].'_data;'."\n";
+					}
+					else
+					{
+						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data & '.$padding.';'."\n";
+					}
 				}
 				elseif($in_size < $out_size)
 				{
 					$padding_size = $out_size - $in_size;
-					$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-					warning("Size of flow $in_connect > size of flow ".$out_connects[0]['name'],10,"FI");
+					if($out_connect['order']=='msb')
+					{
+						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
+					}
+					else
+					{
+						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($padding_size-1).' downto 0);'."\n";
+					}
+					warning("Size of flow ".$out_connects[0]['name']." ($out_size) > size of flow ".$in_connect." ($in_size), ".$out_connects[0]['order']." connection",10,"FI");
 				}
 				$code.='	'.$in_connect.'_fv <=  '.$out_connects[0]['name'].'_fv;'."\n";
 				$code.='	'.$in_connect.'_dv <=  '.$out_connects[0]['name'].'_dv;'."\n"."\n";
@@ -350,13 +365,27 @@ class FlowInterconnect extends Block
 						{
 							$padding_size = $in_size - $out_size;
 							$padding = '"' . str_pad('', $padding_size, '0') . '"';
-							$code.='					'.$in_connect.'_data <= '.$padding.' & '.$out_connect['name'].'_data;'."\n";
+							if($out_connect['order']=='msb')
+							{
+								$code.='					'.$in_connect.'_data <= '.$padding.' & '.$out_connect['name'].'_data;'."\n";
+							}
+							else
+							{
+								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data & '.$padding.';'."\n";
+							}
 						}
 						elseif($in_size < $out_size)
 						{
 							$padding_size = $out_size - $in_size;
-							$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-							warning("Size of flow $in_connect ($in_size) > ".$out_connect['name']." ($out_size)",10,"FI");
+							if($out_connect['order']=='msb')
+							{
+								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
+							}
+							else
+							{
+								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($padding_size-1).' downto 0);'."\n";
+							}
+							warning("Size of flow ".$out_connect['name']." ($out_size) > ".$in_connect." ($in_size), ".$out_connect['order']." connection",10,"FI");
 						}
 					
 						$code.='					'.$in_connect.'_fv <= '.$out_connect['name'].'_fv;'."\n";

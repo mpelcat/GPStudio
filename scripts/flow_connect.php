@@ -25,9 +25,16 @@ class FlowConnect
 	* @var string $toflow
 	*/
 	public $toflow;
+
+	/**
+	* Byte ordering can be "msb" or "lsb", default value is "msb"
+	* @var string $order
+	*/
+	public $order;
 	
 	function __construct($xml=null)
 	{
+		$this->order='msb';
 		if($xml) $this->parse_xml($xml);
 	}
 	
@@ -37,6 +44,7 @@ class FlowConnect
 		$this->fromflow = (string)$xml['fromflow'];
 		$this->toblock = (string)$xml['toblock'];
 		$this->toflow = (string)$xml['toflow'];
+		if(isset($xml['order'])) $this->order = (string)$xml['order']; else $this->order = 'msb';
 	}
 	
 	public function getXmlElement($xml)
@@ -61,6 +69,11 @@ class FlowConnect
 		// toflow
 		$att = $xml->createAttribute('toflow');
 		$att->value = $this->toflow;
+		$xml_element->appendChild($att);
+		
+		// order
+		$att = $xml->createAttribute('order');
+		$att->value = $this->order;
 		$xml_element->appendChild($att);
 		
 		return $xml_element;
