@@ -152,7 +152,7 @@ class FlowInterconnect extends Block
 		$count_param=0;
 		foreach($this->tree_connects as $in_connect => $out_connects)
 		{
-			if(count($out_connects)-1>1)
+			if(count($out_connects)-2>1)
 			{
 				$param = new Param();
 				$param->name = $in_connect;
@@ -290,11 +290,11 @@ class FlowInterconnect extends Block
 		$count_reg=0;
 		foreach($fi->tree_connects as $in_connect => $out_connects)
 		{
-			if(count($out_connects)-1==0)
+			if(count($out_connects)-2==0)
 			{
 				// nothing to do
 			}
-			elseif(count($out_connects)-1==1)
+			elseif(count($out_connects)-2==1)
 			{
 				$in_size = $out_connects['size'];
 				$out_size = $out_connects[0]['size'];
@@ -407,7 +407,7 @@ class FlowInterconnect extends Block
 		$count_reg=0;
 		foreach($fi->tree_connects as $in_connect => $out_connects)
 		{
-			if(count($out_connects)-1>1)
+			if(count($out_connects)-2>1)
 			{
 				$name_reg = 'mux_'.$in_connect.'_reg';
 				$code.='	slave_'.$in_connect.' : process (clk_proc, reset)'."\n";
