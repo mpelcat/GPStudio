@@ -134,7 +134,26 @@ class Board
 							}
 							else
 							{
-								warning('parameter '.$param['name']." does'nt exists",16,$io->name);
+								warning('parameter '.$paramXml['name']." does'nt exists",16,$io->name);
+							}
+						}
+					}
+				}
+				
+				// redef properties
+				if(isset($ioXml->properties))
+				{
+					foreach($ioXml->properties->property as $propertyXml)
+					{
+						if(isset($propertyXml['name']) and isset($propertyXml['value']))
+						{
+							if($concerned_property=$io->getProperty((string)$propertyXml['name']))
+							{
+								$concerned_property->value = $propertyXml['value'];
+							}
+							else
+							{
+								warning('property '.$propertyXml['name']." does'nt exists",16,$io->name);
 							}
 						}
 					}
@@ -143,6 +162,7 @@ class Board
 				// redef clock freq
 				if(isset($ioXml->clocks))
 				{
+					warning('clocks',16,$io->name);
 					foreach($ioXml->clocks->clock as $clockXml)
 					{
 						if(isset($clockXml['name']) and isset($clockXml['typical']))
@@ -193,6 +213,25 @@ class Board
 							else
 							{
 								warning('parameter '.$param['name']." does'nt exists",16,$concerned_block->name);
+							}
+						}
+					}
+				}
+				
+				// redef properties
+				if(isset($io->properties))
+				{
+					foreach($io->properties->property as $property)
+					{
+						if(isset($property['name']) and isset($property['value']))
+						{
+							if($concerned_property=$concerned_block->getProperty((string)$property['name']))
+							{
+								$concerned_property->value = $property['value'];
+							}
+							else
+							{
+								warning('property '.$property['name']." does'nt exists",16,$concerned_block->name);
 							}
 						}
 					}

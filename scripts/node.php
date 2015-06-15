@@ -74,6 +74,25 @@ class Node
 					}
 				}
 				
+				// redef properties
+				if(isset($process->properties))
+				{
+					foreach($process->properties->property as $property)
+					{
+						if(isset($property['name']) and isset($property['value']))
+						{
+							if($concerned_property=$processBlock->getProperty((string)$property['name']))
+							{
+								$concerned_property->value = $property['value'];
+							}
+							else
+							{
+								warning('property '.$property['name']." does'nt exists",16,$processBlock->name);
+							}
+						}
+					}
+				}
+				
 				// redef flow size
 				if(isset($process->flows))
 				{

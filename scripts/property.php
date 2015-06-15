@@ -95,6 +95,7 @@ class Property
 	protected function parse_xml($xml)
 	{
 		$this->name			= (string)$xml['name'];
+		if(strpos($this->name, '.')!==false) error("Property name cannot contains . (dot) in \"$this->name\"",5,"Property");
 		$this->caption		= (string)$xml['caption'];
 		$this->type			= (string)$xml['type'];
 		$this->value		= (string)$xml['value'];

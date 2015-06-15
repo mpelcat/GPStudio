@@ -51,7 +51,6 @@ class Process extends Block
 					}
 					
 					$process_file = $this->path . $this->driver . '.proc';
-					echo $process_file."\n";
 				
 					if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
 					if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");
