@@ -40,7 +40,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content='';
 		
 		$content.="QUARTUS_VERSION = \"13.1\""."\n";
-		$content.="PROJECT_REVISION = \"start\""."\n";
+		$content.="PROJECT_REVISION = \"$node->name\""."\n";
 		
 		// copy all files for block declared in library
 		foreach($node->blocks as $block)
