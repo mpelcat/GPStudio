@@ -1,5 +1,5 @@
 module slidevm(  
-clk,
+clk_proc,
 reset_n,
 
 in_fv,
@@ -29,13 +29,16 @@ parameter OUT_SIZE = 32;
 /* Default parameters */
 parameter DWIDTH = 8;
 parameter CWIDTH = 9;
-parameter BLOCKSIZE = 16;
-parameter WPI = 40;
+parameter BLOCKSIZE = 8;
+parameter WPI = 10;
 parameter WINCOLS = 8;
 parameter WINROWS = 16;
-parameter HPI = 20;
+parameter HPI = 59;
 
-input clk;
+/* GP Studio parameters */ 
+parameter CLK_PROC_FREQ = 48;
+
+input clk_proc;
 input reset_n;
 
 input in_fv;
@@ -98,7 +101,7 @@ reg [$clog2(HPI)-1:0] outrow_count;
 
 
 /* dvcount */
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		dvcount <= 0;
 	else if (newblock & in_dv)	
@@ -107,7 +110,7 @@ always@(posedge clk or negedge reset_n)
 		dvcount <= dvcount + 1'b1;	
 		
 /* blockcount */		
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		blockcount <= 0;
 	else if (newwin & in_dv)
@@ -116,7 +119,7 @@ always@(posedge clk or negedge reset_n)
 		blockcount <= blockcount + 1'b1;			
 
 /* wincount */
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		wincount <= 0;
 	else if (newrow & in_dv)	
@@ -131,7 +134,7 @@ assign newrow = (newwin && (wincount == (WPI-1) ))? 1'b1 : 1'b0;
 wire bypass;
 
 reg [10:0] bypass_count;
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		bypass_count <= 0;
 	else
@@ -161,7 +164,7 @@ genvar ti;
 generate
 for(ti=0; ti < (WINROWS+1); ti=ti+1)
 	begin: token_gen
-	always@(posedge clk or negedge reset_n)
+	always@(posedge clk_proc or negedge reset_n)
 		if (reset_n == 0)
 			token[ti] <= (ti==0) ? 1'b1 : 1'b0;
 		else if (download[ti])
@@ -174,7 +177,7 @@ for(ti=0; ti < (WINROWS+1); ti=ti+1)
 endgenerate
 
 /* Token counter */
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		token_counter <= 1;
 	else
@@ -201,7 +204,7 @@ for (index=0; index < WINROWS+1; index = index + 1)
 	.WINROWS(WINROWS) )
 		
 		svmrow_mem_inst(  
-		.clk(clk),
+		.clk(clk_proc),
 		.data(in_data),
 		.reset_n(reset_n),
 		.dvi_in(token[index] & in_dv),
@@ -219,7 +222,7 @@ for (index=0; index < WINROWS+1; index = index + 1)
 endgenerate
 
 /* Output multiplexing */
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		dvo_int_d <= 1'b0;
 	else
@@ -227,7 +230,7 @@ always@(posedge clk or negedge reset_n)
 
 assign dvo_int_negedge = ~out_dv_int & dvo_int_d;
 
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		outcontrol <= 0;
 	else if (dvo_int_negedge)
@@ -236,7 +239,7 @@ always@(posedge clk or negedge reset_n)
 		else
 			outcontrol <= outcontrol + 1;
 
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		outrow_count <= 0;			
 	else
@@ -262,7 +265,7 @@ assign out_data = svmrow_data[outcontrol];
 */
 
 assign loadcoeff = scr[1];
-always@(posedge clk or negedge reset_n)
+always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		loadcoeff_valid <= 0;
 	else
@@ -314,7 +317,7 @@ always @ (*)
 		readdata_new = readdata;
 
 /* Internal register update */
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk_proc or negedge reset_n)
 	if (reset_n == 1'b0)
 		begin
 			scr			<= 32'd0;	
