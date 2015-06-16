@@ -213,7 +213,7 @@ class Block
 		array_push($this->params, $param);
 	}
 	
-	/** return a reference to the parameter with the name $name, if not found, return false
+	/** return a reference to the parameter with the name $name, if not found, return null
 	 *  @param string $name name of the parameter to search
 	 *  @return Param found parameter **/
 	function getParam($name)
@@ -233,7 +233,7 @@ class Block
 		array_push($this->properties, $property);
 	}
 	
-	/** return a reference to the property with the name $name, if not found, return false
+	/** return a reference to the property with the name $name, if not found, return null
 	 *  @param string $name name of the property to search
 	 *  @return Property found property **/
 	function getProperty($name)
@@ -245,6 +245,25 @@ class Block
 		return null;
 	}
 	
+	/** return a reference to the property with the access path $path, if not found, return null
+	 *  @param string $path path of the property to search, separed by . (dot)
+	 *  @return Property found property **/
+	function getPropertyPath($path)
+	{
+		$subprops = explode('.', $path);
+		if(count($subprops)==0) return null;
+		
+		$property = $this->getProperty($subprops[0]);
+		if($property==null) return null;
+		
+		for($i=1; $i<count($subprops); $i++)
+		{
+			$property = $property->getSubProperty($subprops[$i]);
+			if($property==null) return null;
+		}
+		return $property;
+	}
+	
 	/** Add a file to the block 
 	 *  @param File $file file to add to the block **/
 	function addFile($file)
@@ -253,7 +272,7 @@ class Block
 		array_push($this->files, $file);
 	}
 	
-	/** return a reference to the file with the name $name, if not found, return false
+	/** return a reference to the file with the name $name, if not found, return null
 	 *  @param string $name name of the file to search
 	 *  @return File found file **/
 	function getFile($name)
@@ -273,7 +292,7 @@ class Block
 		array_push($this->flows, $flow);
 	}
 	
-	/** return a reference to the flow with the name $name, if not found, return false
+	/** return a reference to the flow with the name $name, if not found, return null
 	 *  @param string $name name of the flow to search
 	 *  @return Flow found flow **/
 	function getFlow($name)
@@ -293,7 +312,7 @@ class Block
 		array_push($this->clocks, $clock);
 	}
 	
-	/** return a reference to the clock with the name $name, if not found, return false
+	/** return a reference to the clock with the name $name, if not found, return null
 	 *  @param string $name name of the clock to search
 	 *  @return Clock found clock **/
 	function getClock($name)
@@ -313,7 +332,7 @@ class Block
 		array_push($this->resets, $reset);
 	}
 	
-	/** return a reference to the reset with the name $name, if not found, return false
+	/** return a reference to the reset with the name $name, if not found, return null
 	 *  @param string $name name of the reset to search
 	 *  @return Reset found reset **/
 	function getReset($name)
@@ -333,7 +352,7 @@ class Block
 		array_push($this->pins, $pin);
 	}
 	
-	/** return a reference to the pin with the name $name, if not found, return false
+	/** return a reference to the pin with the name $name, if not found, return null
 	 *  @param string $name name of the pin to search
 	 *  @return Pin found pin **/
 	function getPin($name)
@@ -353,7 +372,7 @@ class Block
 		array_push($this->ext_ports, $extPort);
 	}
 	
-	/** return a reference to the external port with the name $name, if not found, return false
+	/** return a reference to the external port with the name $name, if not found, return null
 	 *  @param string $name name of the external port to search
 	 *  @return Port found external port **/
 	function getExtPort($name)
@@ -373,7 +392,7 @@ class Block
 		array_push($this->interfaces, $interface);
 	}
 	
-	/** return a reference to the interface with the name $name, if not found, return false
+	/** return a reference to the interface with the name $name, if not found, return null
 	 *  @param string $name name of the interface to search
 	 *  @return Interface found interface **/
 	function getInterface($name)

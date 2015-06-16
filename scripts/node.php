@@ -81,7 +81,7 @@ class Node
 					{
 						if(isset($property['name']) and isset($property['value']))
 						{
-							if($concerned_property=$processBlock->getProperty((string)$property['name']))
+							if($concerned_property=$processBlock->getPropertyPath((string)$property['name']))
 							{
 								$concerned_property->value = $property['value'];
 							}

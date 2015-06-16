@@ -147,7 +147,7 @@ class Board
 					{
 						if(isset($propertyXml['name']) and isset($propertyXml['value']))
 						{
-							if($concerned_property=$io->getProperty((string)$propertyXml['name']))
+							if($concerned_property=$io->getPropertyPath((string)$propertyXml['name']))
 							{
 								$concerned_property->value = $propertyXml['value'];
 							}
@@ -225,7 +225,7 @@ class Board
 					{
 						if(isset($property['name']) and isset($property['value']))
 						{
-							if($concerned_property=$concerned_block->getProperty((string)$property['name']))
+							if($concerned_property=$concerned_block->getPropertyPath((string)$property['name']))
 							{
 								$concerned_property->value = $property['value'];
 							}
