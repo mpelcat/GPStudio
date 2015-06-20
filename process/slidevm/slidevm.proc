@@ -8,7 +8,15 @@
 		<flow name="in" type="in" desc="Feature input vector"/>
 		<flow name="out" type="out" desc="Classification output" size="32"/>
 	</flows>	
-	<params>		
+	<params>	
+		<param name="DWIDTH" type="int" value="8" desc="DWIDTH: Input Data width" hard="true"/>
+		<param name="CWIDTH" type="int" value="9" desc="CWIDTH: Input Coefficients width" hard="true"/>
+		<param name="BLOCKSIZE" type="int" value="8" desc="BLOCKSIZE: Block size (in pixel)" hard="true"/>
+		<param name="WPI" type="int" value="10" desc="WPI: Windows per Image width (not overlapped)" hard="true"/>
+		<param name="WINCOLS" type="int" value="8" desc="WINCOLS: Cell column per Window" hard="true"/>
+		<param name="WINROWS" type="int" value="16" desc="WINROWS: Cell rows per Window" hard="true"/>
+		<param name="HPI" type="int" value="59" desc="HPI: Cell within Image height -1 " hard="true"/>
+		
 		<param name="scr" regaddr="0" default="0" desc="Status Control Register">
 			<bitfields>
 				<bitfield name="enable" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>

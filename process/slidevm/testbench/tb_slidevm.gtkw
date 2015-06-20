@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.61 (w)1999-2014 BSI
-[*] Wed Jun 10 12:36:47 2015
+[*] Tue Jun 16 19:29:17 2015
 [*]
 [dumpfile] "/tmp/tb_slidevm.vcd"
-[dumpfile_mtime] "Wed Jun 10 12:36:41 2015"
-[dumpfile_size] 1047471213
-[savefile] "/home/luca/Seafile/My Library/GPStudio_lib/process/slicevm/testbench_dev/tb_slidevm.gtkw"
-[timestart] 0
+[dumpfile_mtime] "Tue Jun 16 19:24:56 2015"
+[dumpfile_size] 1524068352
+[savefile] "/home/acvin/Seafile/My Library/GPStudio_lib/process/slidevm/testbench/tb_slidevm.gtkw"
+[timestart] 60546000
 [size] 1920 1053
-[pos] -1 -1
-*-24.239807 2185000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -28
+*-20.239807 65977000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_slidevm.
 [treeopen] tb_slidevm.slidevm_inst.
 [treeopen] tb_slidevm.slidevm_inst.svmrow_gen[0].
@@ -37,18 +37,13 @@
 [sst_width] 223
 [signals_width] 253
 [sst_expanded] 1
-[sst_vpaned_height] 508
-@24
-tb_slidevm.slidevm_inst.clk
+[sst_vpaned_height] 638
 @28
 tb_slidevm.reset_n
 @24
 tb_slidevm.dvi_count[31:0]
 @28
 tb_slidevm.slidevm_inst.in_fv
-tb_slidevm.slidevm_inst.dvi_in
-@24
-#{tb_slidevm.slidevm_inst.data[7:0]} tb_slidevm.slidevm_inst.data[7] tb_slidevm.slidevm_inst.data[6] tb_slidevm.slidevm_inst.data[5] tb_slidevm.slidevm_inst.data[4] tb_slidevm.slidevm_inst.data[3] tb_slidevm.slidevm_inst.data[2] tb_slidevm.slidevm_inst.data[1] tb_slidevm.slidevm_inst.data[0]
 @420
 #{tb_slidevm.slidevm_inst.svcoeff_in[8:0]} tb_slidevm.slidevm_inst.svcoeff_in[8] tb_slidevm.slidevm_inst.svcoeff_in[7] tb_slidevm.slidevm_inst.svcoeff_in[6] tb_slidevm.slidevm_inst.svcoeff_in[5] tb_slidevm.slidevm_inst.svcoeff_in[4] tb_slidevm.slidevm_inst.svcoeff_in[3] tb_slidevm.slidevm_inst.svcoeff_in[2] tb_slidevm.slidevm_inst.svcoeff_in[1] tb_slidevm.slidevm_inst.svcoeff_in[0]
 @c00024
@@ -79,9 +74,6 @@ tb_slidevm.slidevm_inst.newblock
 tb_slidevm.slidevm_inst.newwin
 tb_slidevm.slidevm_inst.newrow
 tb_slidevm.slidevm_inst.outcontrol[4:0]
-tb_slidevm.slidevm_inst.dvo
-@420
-#{tb_slidevm.slide_data[31:0]} tb_slidevm.slide_data[31] tb_slidevm.slide_data[30] tb_slidevm.slide_data[29] tb_slidevm.slide_data[28] tb_slidevm.slide_data[27] tb_slidevm.slide_data[26] tb_slidevm.slide_data[25] tb_slidevm.slide_data[24] tb_slidevm.slide_data[23] tb_slidevm.slide_data[22] tb_slidevm.slide_data[21] tb_slidevm.slide_data[20] tb_slidevm.slide_data[19] tb_slidevm.slide_data[18] tb_slidevm.slide_data[17] tb_slidevm.slide_data[16] tb_slidevm.slide_data[15] tb_slidevm.slide_data[14] tb_slidevm.slide_data[13] tb_slidevm.slide_data[12] tb_slidevm.slide_data[11] tb_slidevm.slide_data[10] tb_slidevm.slide_data[9] tb_slidevm.slide_data[8] tb_slidevm.slide_data[7] tb_slidevm.slide_data[6] tb_slidevm.slide_data[5] tb_slidevm.slide_data[4] tb_slidevm.slide_data[3] tb_slidevm.slide_data[2] tb_slidevm.slide_data[1] tb_slidevm.slide_data[0]
 @c00024
 tb_slidevm.slidevm_inst.token[16:0]
 @28
@@ -111,7 +103,31 @@ tb_slidevm.slidevm_inst.loadcoeff
 #{tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[8:0]} tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[8] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[7] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[6] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[5] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[4] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[3] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[2] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[1] tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.svcoeff_out[0]
 #{tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[8:0]} tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[8] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[7] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[6] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[5] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[4] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[3] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[2] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[1] tb_slidevm.slidevm_inst.svmrow_gen[15].svmrow_mem_inst.svcoeff_out[0]
 #{tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[8:0]} tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[8] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[7] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[6] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[5] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[4] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[3] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[2] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[1] tb_slidevm.slidevm_inst.svmrow_gen[16].svmrow_mem_inst.svcoeff_in[0]
+@c00024
+tb_slidevm.slidevm_inst.token[16:0]
+@28
+(0)tb_slidevm.slidevm_inst.token[16:0]
+(1)tb_slidevm.slidevm_inst.token[16:0]
+(2)tb_slidevm.slidevm_inst.token[16:0]
+(3)tb_slidevm.slidevm_inst.token[16:0]
+(4)tb_slidevm.slidevm_inst.token[16:0]
+(5)tb_slidevm.slidevm_inst.token[16:0]
+(6)tb_slidevm.slidevm_inst.token[16:0]
+(7)tb_slidevm.slidevm_inst.token[16:0]
+(8)tb_slidevm.slidevm_inst.token[16:0]
+(9)tb_slidevm.slidevm_inst.token[16:0]
+(10)tb_slidevm.slidevm_inst.token[16:0]
+(11)tb_slidevm.slidevm_inst.token[16:0]
+(12)tb_slidevm.slidevm_inst.token[16:0]
+(13)tb_slidevm.slidevm_inst.token[16:0]
+(14)tb_slidevm.slidevm_inst.token[16:0]
+(15)tb_slidevm.slidevm_inst.token[16:0]
+(16)tb_slidevm.slidevm_inst.token[16:0]
+@1401200
+-group_end
+@28
+tb_slidevm.slidevm_inst.out_fv
 @29
-tb_slidevm.slidevm_inst.svmrow_gen[0].svmrow_mem_inst.out_cv
+tb_slidevm.slidevm_inst.out_dv
 [pattern_trace] 1
 [pattern_trace] 0

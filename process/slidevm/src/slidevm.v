@@ -237,13 +237,25 @@ always@(posedge clk_proc or negedge reset_n)
 		if (outcontrol == WINROWS)
 			outcontrol <= 0;
 		else
-			outcontrol <= outcontrol + 1;
+			outcontrol <= outcontrol + 1;			
+
+/*
+17Jun15: modified firing codition of outrow_count reset (HPI+1)
+It appears to work, but the issue is far more subtle. If the in_fv comes
+delayed from the expected one (later than the latest out_dv) the 
+last activated svmrow would not be properly initialised. Therefore, 
+the results are delayed by 1 row! (that is qhat we have seen in the dataset images)
+Workaround: keep HPI+1
+the issue needs further modification in the svm architecture (in_fv should 
+not be important to the correct behaviour)....
+*/
+	
 
 always@(posedge clk_proc or negedge reset_n)
 	if (reset_n == 0)
 		outrow_count <= 0;			
 	else
-		if(outrow_count == HPI)
+		if(outrow_count == HPI+1)
 			outrow_count <= 0;
 		else if (dvo_int_negedge)
 			outrow_count <= outrow_count + 1;
@@ -328,6 +340,7 @@ always @ (posedge clk_proc or negedge reset_n)
 		begin
 			scr 	<= scr_new;
 			load 	<= load_new;
+			readdata <= readdata_new;
 		end
 		
 assign datard_o = readdata;

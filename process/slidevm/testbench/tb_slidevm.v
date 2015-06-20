@@ -31,13 +31,13 @@ reg imagestart;
 wire dvo;
 wire signed [31:0] out_data;
 reg dvi;
+reg fv_toto;
 wire out_fv;
 
 integer i;
 integer fp_test;
 
 reg [31:0] counter_coeff;
-reg [31:0] dvo_row_count;
 
 reg [31:0] counter_ok;
 reg [31:0] counter_error;
@@ -81,12 +81,12 @@ initial begin
 	datatmp = 0;
 	counter_coeff = 0;
 	dvi_count = 0;	
-	dvo_row_count = 0;
 	counter_ok = 0;
 	counter_error = 0;
 	loadstart = 0;
 	sendcoeff = 0;
 	imagestart = 0;
+	fv_toto = 0;
 	
 	addr_rel_i = 0; 
 	wr_i = 0;
@@ -183,7 +183,9 @@ always@(posedge clk)
 /* Automatic image send mechanism */
 always@(negedge imageflow)
 	begin
-		#100 dvi_count <= 0;
+		#0 fv_toto <= 1;
+		#200 fv_toto <= 0;
+		#1000 dvi_count <= 0;
 	end	
 	
 
@@ -206,7 +208,9 @@ always@(posedge dvo)
 			for(y=0; y< WINROWS; y=y+1)
 				for(x=0; x< (BLOCKSIZE*WINCOLS); x=x+1)
 					begin
-						acc[index] = acc[index] + $signed({1'b0,datamem[x + y*BLOCKSIZE*WINCOLS*WPI + BLOCKSIZE*index + WPI*WINCOLS*BLOCKSIZE*dvo_row_count]})*coeffmem[x + y*(BLOCKSIZE*WINCOLS)];
+						acc[index] = acc[index] 
+									+ $signed({1'b0,  datamem[x + y*BLOCKSIZE*WINCOLS*WPI + BLOCKSIZE*index + WPI*WINCOLS*BLOCKSIZE*slidevm_inst.outrow_count]})
+									   * coeffmem[x + y*(BLOCKSIZE*WINCOLS)];
 					end	 	
 		end	
 		
@@ -221,16 +225,8 @@ assign coeffmem2 = 	coeffmem[2];
 
 wire signed [31:0] datamem0, datamem1;
 assign datamem0 = 	datamem[0];	
-assign datamem1 = 	datamem[1];			
-		
-always@(posedge dvo or negedge reset_n)
-	if (reset_n == 0)
-		dvo_row_count <= 0;
-	else if (imageflow == 0)
-		dvo_row_count <= 0;
-	else
-		dvo_row_count <= dvo_row_count + 1;
-		
+assign datamem1 = 	datamem[1];		
+
 always@(negedge dvo)		
 	for(i=0; i<(WPI*WINCOLS); i=i+1)
 		acc[i] = 0;
@@ -254,6 +250,13 @@ always@(negedge dvo)
 always@(posedge imageflow)
 		for(i=0; i<BLOCKSIZE*WINCOLS*WINROWS ; i=i+1)
 			$fwrite(fp_test, "%d\n", coeffmem[i]);	
+
+/* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+17Jun15 fv_toto added to extend the in_fv signal after the latest out_dv
+This contition has not been verified before on testbench while it 
+happens every time on real!!!
+
+ */
 			
 slidevm #( 
 	.DWIDTH(DWIDTH),
@@ -264,10 +267,10 @@ slidevm #(
 	.WINROWS(WINROWS),
 	.HPI(HPI) )
 slidevm_inst(  
-.clk(clk),
+.clk_proc(clk),
 .reset_n(reset_n),
 
-.in_fv(imageflow),
+.in_fv(imageflow ),//| fv_toto),
 .in_dv(dvi & imageflow),
 .in_data(data),
 
