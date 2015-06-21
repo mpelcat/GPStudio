@@ -75,10 +75,10 @@
 
 	<properties>
 		<property name="enable" value="1" caption="enable" type="bool" desc="Enable or disable process"/>
-		<property name="enableflow1" caption="Enable Flow 1" value="1" type="bool" desc=""/>
-		<property name="enableflow2" caption="Enable Flow 2" type="bool" desc=""/>
-		<property name="enableflow3" caption="Enable Flow 3" type="bool" desc=""/>
-		<property name="enableflow4" caption="Enable Flow 4" type="bool" desc=""/>		
+		<property name="enableflow1" caption="Enable Flow 1"  value="1" type="bool" desc=""/>
+		<property name="enableflow2" caption="Enable Flow 2"  value="1" type="bool" desc=""/>
+		<property name="enableflow3" caption="Enable Flow 3"  value="1" type="bool" desc=""/>
+		<property name="enableflow4" caption="Enable Flow 4"  value="1" type="bool" desc=""/>		
 	</properties>
 	<ports>
 		<port name="rst" type="in" size="1" desc=""/>

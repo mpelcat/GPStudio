@@ -4,8 +4,10 @@ use ieee.numeric_std.all;
 
 use work.ComFlow_pkg.all;
 
--- Top level du driver => se rapporter a la doc pour connaitre
--- les possibilites ... ah ah ah 
+-- Top level du driver USB
+-- 4 output flows max
+-- 2 input flow max
+
 entity usb_cypress_CY7C68014A is
 	generic(
 		MASTER_ADDR_WIDTH : integer;
@@ -331,33 +333,53 @@ USBFLOW_IN1: component flow_in
 end generate FI1_label1;
 ------------------------------------------------------------
 --FLOW OUT 0
-FO0_label1 : if IN0_SIZE = 8 and IN0_NBWORDS > 0 generate
-	USB8TO16_FLOW0: component usb8to16bits 
-		port map( 
-			rst_n_i  		=> rst,
-			clk_i  			=> clk_proc,	
-			frame_valid_i	=> in0_fv,
-			data_valid_i	=> in0_dv,
-			data_i			=> in0_data,
-			frame_valid_o	=> in0_fv_s,
-			data_valid_o	=> in0_dv_s,
-			data_o			=> in0_data_s
-		);
-end generate FO0_label1;
+-- FO0_label1 : if IN0_SIZE = 8 and IN0_NBWORDS > 0 generate
+	-- USB8TO16_FLOW0: component usb8to16bits 
+		-- port map( 
+			-- rst_n_i  		=> rst,
+			-- clk_i  			=> clk_proc,	
+			-- frame_valid_i	=> in0_fv,
+			-- data_valid_i	=> in0_dv,
+			-- data_i			=> in0_data,
+			-- frame_valid_o	=> in0_fv_s,
+			-- data_valid_o	=> in0_dv_s,
+			-- data_o			=> in0_data_s
+		-- );
+-- end generate FO0_label1;
 
-FO0_label2 : if IN0_SIZE = 16 and IN0_NBWORDS > 0 generate
-	in0_fv_s <= in0_fv;
-	in0_dv_s <= in0_dv;
-	in0_data_s <= in0_data;
-end generate FO0_label2;
+-- FO0_label2 : if IN0_SIZE = 16 and IN0_NBWORDS > 0 generate
+	-- in0_fv_s <= in0_fv;
+	-- in0_dv_s <= in0_dv;
+	-- in0_data_s <= in0_data;
+-- end generate FO0_label2;
 
+--Disable flow if not used
 FO0_label3 : if IN0_NBWORDS = 0 generate		
 	flow_out_rdy_0_s <= '0';
 	flow_out_empty_0_s <='0';
 	flow_out_data_0_s <= (others=>'0');
 end generate FO0_label3;
 
+
 FO0_label4 : if IN0_NBWORDS > 0 generate
+
+	-- Adapt input flow size to 16 bits 
+	USBFLOW_OUT0_BUSADAPTER: component usbnto16bits
+			generic map (
+				INPUT_SIZE => IN0_SIZE,
+				FIFO_DEPTH => 128
+			)
+			port map( 
+				rst_n_i  		=> rst,
+				clk_i  			=> clk_proc,
+				frame_valid_i	=> in0_fv,			
+				data_valid_i	=> in0_dv,				
+				data_i			=> in0_data,
+				frame_valid_o	=> in0_fv_s,
+				data_valid_o	=> in0_dv_s,
+				data_o			=> in0_data_s
+			);
+
 	USBFLOW_OUT0: component flow_out 
 	  generic map (
 		FIFO_DEPTH => IN0_NBWORDS,
@@ -384,25 +406,25 @@ end generate FO0_label4;
 
 ------------------------------------------------------------
 --FLOW OUT 1
-FO1_label1 : if IN1_SIZE = 8 and IN1_NBWORDS > 0 generate
-	USB8TO16_FLOW1: component usb8to16bits 
-		port map( 
-			rst_n_i  		=> rst,
-			clk_i  			=> clk_proc,	
-			frame_valid_i	=> in1_fv,
-			data_valid_i	=> in1_dv,
-			data_i			=> in1_data,
-			frame_valid_o	=> in1_fv_s,
-			data_valid_o	=> in1_dv_s,
-			data_o			=> in1_data_s
-		);
-end generate FO1_label1;
+-- FO1_label1 : if IN1_SIZE = 8 and IN1_NBWORDS > 0 generate
+	-- USB8TO16_FLOW1: component usb8to16bits 
+		-- port map( 
+			-- rst_n_i  		=> rst,
+			-- clk_i  			=> clk_proc,	
+			-- frame_valid_i	=> in1_fv,
+			-- data_valid_i	=> in1_dv,
+			-- data_i			=> in1_data,
+			-- frame_valid_o	=> in1_fv_s,
+			-- data_valid_o	=> in1_dv_s,
+			-- data_o			=> in1_data_s
+		-- );
+-- end generate FO1_label1;
 
-FO1_label2 : if IN1_SIZE = 16 and IN1_NBWORDS > 0 generate
-	in1_fv_s <= in1_fv;
-	in1_dv_s <= in1_dv;
-	in1_data_s <= in1_data;
-end generate FO1_label2;
+-- FO1_label2 : if IN1_SIZE = 16 and IN1_NBWORDS > 0 generate
+	-- in1_fv_s <= in1_fv;
+	-- in1_dv_s <= in1_dv;
+	-- in1_data_s <= in1_data;
+-- end generate FO1_label2;
 
 
 FO1_label3 : if IN1_NBWORDS = 0 generate		
@@ -412,6 +434,23 @@ FO1_label3 : if IN1_NBWORDS = 0 generate
 end generate FO1_label3;
 
 FO1_label4 : if IN1_NBWORDS > 0 generate
+
+	-- Adapt input flow size to 16 bits 
+	USBFLOW_OUT1_BUSADAPTER: component usbnto16bits
+			generic map (
+				INPUT_SIZE => IN1_SIZE,
+				FIFO_DEPTH => 128
+			)
+			port map( 
+				rst_n_i  		=> rst,
+				clk_i  			=> clk_proc,
+				frame_valid_i	=> in1_fv,			
+				data_valid_i	=> in1_dv,				
+				data_i			=> in1_data,
+				frame_valid_o	=> in1_fv_s,
+				data_valid_o	=> in1_dv_s,
+				data_o			=> in1_data_s
+			);
 	USBFLOW_OUT1: component flow_out 
 	  generic map (
 		FIFO_DEPTH => IN1_NBWORDS,
@@ -439,24 +478,24 @@ end generate FO1_label4;
 
 ------------------------------------------------------------
 --FLOW OUT 2
-FO2_label1 : if IN2_SIZE = 8 and IN2_NBWORDS > 0 generate
-	USB8TO16_FLOW2: component usb8to16bits 
-		port map( 
-			rst_n_i  		=> rst,
-			clk_i  			=> clk_proc,	
-			frame_valid_i	=> in2_fv,
-			data_valid_i	=> in2_dv,
-			data_i			=> in2_data,
-			frame_valid_o	=> in2_fv_s,
-			data_valid_o	=> in2_dv_s,
-			data_o			=> in2_data_s
-	);
-end generate FO2_label1;
-FO2_label2 : if IN2_SIZE = 16 and IN2_NBWORDS > 0  generate
-	in2_fv_s <= in2_fv;
-	in2_dv_s <= in2_dv;
-	in2_data_s <= in2_data;	
-end generate FO2_label2;
+-- FO2_label1 : if IN2_SIZE = 8 and IN2_NBWORDS > 0 generate
+	-- USB8TO16_FLOW2: component usb8to16bits 
+		-- port map( 
+			-- rst_n_i  		=> rst,
+			-- clk_i  			=> clk_proc,	
+			-- frame_valid_i	=> in2_fv,
+			-- data_valid_i	=> in2_dv,
+			-- data_i			=> in2_data,
+			-- frame_valid_o	=> in2_fv_s,
+			-- data_valid_o	=> in2_dv_s,
+			-- data_o			=> in2_data_s
+	-- );
+-- end generate FO2_label1;
+-- FO2_label2 : if IN2_SIZE = 16 and IN2_NBWORDS > 0  generate
+	-- in2_fv_s <= in2_fv;
+	-- in2_dv_s <= in2_dv;
+	-- in2_data_s <= in2_data;	
+-- end generate FO2_label2;
 
 FO2_label3 : if IN2_NBWORDS = 0 generate		
 	flow_out_rdy_2_s <= '0';
@@ -465,6 +504,22 @@ FO2_label3 : if IN2_NBWORDS = 0 generate
 end generate FO2_label3;
 
 FO2_label4 : if IN2_NBWORDS > 0 generate
+-- Adapt input flow size to 16 bits 
+	USBFLOW_OUT2_BUSADAPTER: component usbnto16bits
+			generic map (
+				INPUT_SIZE => IN2_SIZE,
+				FIFO_DEPTH => 128
+			)
+			port map( 
+				rst_n_i  		=> rst,
+				clk_i  			=> clk_proc,
+				frame_valid_i	=> in2_fv,			
+				data_valid_i	=> in2_dv,				
+				data_i			=> in2_data,
+				frame_valid_o	=> in2_fv_s,
+				data_valid_o	=> in2_dv_s,
+				data_o			=> in2_data_s
+			);
 	USBFLOW_OUT2: component flow_out 
 		generic map (
 			FIFO_DEPTH => IN2_NBWORDS,
@@ -490,25 +545,25 @@ end generate FO2_label4;
 ------------------------------------------------------------
 --FLOW OUT 3
 
-FO3_label1 : if IN3_SIZE = 8 and IN3_NBWORDS > 0  generate
-	USB8TO16_FLOW3: component usb8to16bits 
-		port map( 
-			rst_n_i  		=> rst,
-			clk_i  			=> clk_proc,	
-			frame_valid_i	=> in3_fv,
-			data_valid_i	=> in3_dv,
-			data_i			=> in3_data,
-			frame_valid_o	=> in3_fv_s,
-			data_valid_o	=> in3_dv_s,
-			data_o			=> in3_data_s
-		);
-end generate FO3_label1;
+-- FO3_label1 : if IN3_SIZE = 8 and IN3_NBWORDS > 0  generate
+	-- USB8TO16_FLOW3: component usb8to16bits 
+		-- port map( 
+			-- rst_n_i  		=> rst,
+			-- clk_i  			=> clk_proc,	
+			-- frame_valid_i	=> in3_fv,
+			-- data_valid_i	=> in3_dv,
+			-- data_i			=> in3_data,
+			-- frame_valid_o	=> in3_fv_s,
+			-- data_valid_o	=> in3_dv_s,
+			-- data_o			=> in3_data_s
+		-- );
+-- end generate FO3_label1;
 
-FO3_label2 : if IN3_SIZE = 16 and IN3_NBWORDS > 0  generate
-		in3_fv_s <= in3_fv;
-		in3_dv_s <= in3_dv;
-		in3_data_s <= in3_data;	
-end generate FO3_label2;
+-- FO3_label2 : if IN3_SIZE = 16 and IN3_NBWORDS > 0  generate
+		-- in3_fv_s <= in3_fv;
+		-- in3_dv_s <= in3_dv;
+		-- in3_data_s <= in3_data;	
+-- end generate FO3_label2;
 
 
 FO3_label3 : if IN3_NBWORDS = 0 generate		
@@ -518,6 +573,24 @@ FO3_label3 : if IN3_NBWORDS = 0 generate
 end generate FO3_label3;
 
 FO3_label4 : if IN3_NBWORDS > 0 generate
+
+-- Adapt input flow size to 16 bits 
+	USBFLOW_OUT3_BUSADAPTER: component usbnto16bits
+			generic map (
+				INPUT_SIZE => IN3_SIZE,
+				FIFO_DEPTH => 128
+			)
+			port map( 
+				rst_n_i  		=> rst,
+				clk_i  			=> clk_proc,
+				frame_valid_i	=> in3_fv,			
+				data_valid_i	=> in3_dv,				
+				data_i			=> in3_data,
+				frame_valid_o	=> in3_fv_s,
+				data_valid_o	=> in3_dv_s,
+				data_o			=> in3_data_s
+			);
+			
 	USBFLOW_OUT3: component flow_out 
 		generic map (
 			FIFO_DEPTH => IN3_NBWORDS,
