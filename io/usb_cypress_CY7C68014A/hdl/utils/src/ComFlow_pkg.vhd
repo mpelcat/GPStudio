@@ -207,7 +207,7 @@ component flow_out_arb
 end component;
 
 
-component flow_out_arb4 is
+component flow_out_arb4 
 
   port(
 	-- fv 0 signals
@@ -246,7 +246,7 @@ component flow_out_arb4 is
     );
 end component;
 
-component usb8to16bits is
+component usb8to16bits
 		port ( 
 			rst_n_i  		: in  std_logic;
 			clk_i  			: in  std_logic;		
@@ -259,7 +259,25 @@ component usb8to16bits is
 		);
 end component;
 
+component usbnto16bits
+		generic (
+			INPUT_SIZE: integer;
+			FIFO_DEPTH : integer := 32
+		);
+		port ( 
+			rst_n_i  		: in  std_logic;
+			clk_i  			: in  std_logic;		
+			frame_valid_i	: in  std_logic;					
+			data_valid_i	: in  std_logic;					
+			data_i			: in  std_logic_vector(INPUT_SIZE-1 downto 0);
+			frame_valid_o	: out std_logic;
+			data_valid_o	: out std_logic;
+			data_o			: out std_logic_vector(15 downto 0) 
+		);
+end component;
+
 end package ComFlow_pkg;
+
 
 
 package body ComFlow_pkg is
