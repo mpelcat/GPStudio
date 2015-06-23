@@ -31,6 +31,9 @@ MainWindow::MainWindow(QStringList args) :
     QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
 
+    _lib = new Lib("../../../GPStudio_lib_std");
+    ui->blocksView->setLib(_lib);
+
     _view0 = new ImageView();
     _view1 = new ImageView();
     _view2 = new ImageView();
@@ -46,6 +49,7 @@ MainWindow::MainWindow(QStringList args) :
             if(QFile::exists(args[1])) openNodeGeneratedFile(args[1]);
         }
     }
+
 }
 
 MainWindow::~MainWindow()
@@ -81,7 +85,7 @@ void MainWindow::createToolBarAndMenu()
     // ============= File =============
     QMenu *nodeMenu = ui->menuBar->addMenu("&Node");
 
-    QAction *openDocAction = new QAction("&Open",this);
+    QAction *openDocAction = new QAction("&Open node",this);
     openDocAction->setIcon(QIcon(":/icons/img/open.png"));
     openDocAction->setShortcut(QKeySequence::Open);
     ui->mainToolBar->addAction(openDocAction);
@@ -95,19 +99,22 @@ void MainWindow::createToolBarAndMenu()
     connect(connectAction, SIGNAL(triggered()), this, SLOT(connectCam()));
 
     QMenu *viewMenu = ui->menuBar->addMenu("&View");
-    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
-
-    ui->mainToolBar->addSeparator();
-
     QAction *oneViewer = new QAction("&One",this);
     ui->mainToolBar->addAction(oneViewer);
+    viewMenu->addAction(oneViewer);
     connect(oneViewer, SIGNAL(triggered()), this, SLOT(oneViewer()));
     QAction *twoViewer = new QAction("&Two",this);
     ui->mainToolBar->addAction(twoViewer);
+    viewMenu->addAction(twoViewer);
     connect(twoViewer, SIGNAL(triggered()), this, SLOT(twoViewer()));
     QAction *fourViewer = new QAction("&Four",this);
     ui->mainToolBar->addAction(fourViewer);
+    viewMenu->addAction(fourViewer);
     connect(fourViewer, SIGNAL(triggered()), this, SLOT(fourViewer()));
+
+    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
+
+    ui->mainToolBar->addSeparator();
 }
 
 void MainWindow::openNodeGeneratedFile(const QString fileName)
@@ -126,6 +133,8 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
         }
     }
 
+    ui->blocksView->loadFromNode(_cam->node());
+
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
     connectCam();
@@ -133,13 +142,18 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
 void MainWindow::connectCam()
 {
-    ConnectNodeDialog connectNodeDialog(this);
-    connectNodeDialog.exec();
-    _cam->connectCam(connectNodeDialog.cameraInfo());
-
-    if(_cam->isConnected())
+    if(_cam)
     {
-        connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
+        ConnectNodeDialog connectNodeDialog(this);
+        if(connectNodeDialog.exec()==QDialog::Accepted)
+        {
+            _cam->connectCam(connectNodeDialog.cameraInfo());
+
+            if(_cam->isConnected())
+            {
+                connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
+            }
+        }
     }
 }
 
@@ -228,6 +242,7 @@ void MainWindow::oneViewer()
     _view3 = new ImageView();
 
     ui->viewerLayout->addWidget(_view0, 0, 0);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::twoViewer()
@@ -243,6 +258,7 @@ void MainWindow::twoViewer()
 
     ui->viewerLayout->addWidget(_view0, 0, 0);
     ui->viewerLayout->addWidget(_view1, 0, 1);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::fourViewer()
@@ -260,4 +276,5 @@ void MainWindow::fourViewer()
     ui->viewerLayout->addWidget(_view1, 0, 1);
     ui->viewerLayout->addWidget(_view2, 1, 0);
     ui->viewerLayout->addWidget(_view3, 1, 1);
+    ui->tabWidget->setCurrentIndex(0);
 }

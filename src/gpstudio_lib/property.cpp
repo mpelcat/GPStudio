@@ -200,6 +200,7 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
             paramprop->_enums.append(propertyEnum);
         }
         paramprop->setType(Property::Enum);
+        paramprop->setValue(blockProperty->value());
     }
     if(blockProperty->type()=="int" || blockProperty->type()=="sint")
     {

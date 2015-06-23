@@ -30,6 +30,9 @@ public:
     bool inLib() const;
     void setInLib(bool inLib);
 
+    QString driver() const;
+    void setDriver(const QString &driver);
+
     qint32 addrAbs() const;
     void setAddrAbs(const qint32 &value);
 
@@ -38,6 +41,12 @@ public:
 
     quint8 masterCount() const;
     void setMasterCount(const quint8 &value);
+
+    int xPos() const;
+    void setXPos(int value);
+
+    int yPos() const;
+    void setYPos(int value);
 
     const QString &description() const;
     void setDescription(const QString &description);
@@ -91,9 +100,12 @@ public:
 protected:
     QString _name;
     bool _inLib;
+    QString _driver;
     qint32 _addrAbs;
     quint8 _sizeAddrRel;
     quint8 _masterCount;
+    int _xPos;
+    int _yPos;
     QString _description;
 
     QList<File *> _files;

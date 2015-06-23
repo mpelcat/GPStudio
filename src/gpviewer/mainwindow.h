@@ -5,6 +5,7 @@
 
 #include "camera.h"
 #include "imageview.h"
+#include "lib_parser/lib.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +45,8 @@ private:
     ImageView *_view1;
     ImageView *_view2;
     ImageView *_view3;
+
+    Lib *_lib;
 
     void createToolBarAndMenu();
 };

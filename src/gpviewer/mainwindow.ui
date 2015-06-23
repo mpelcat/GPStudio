@@ -30,6 +30,16 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Blocks</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="ProcessesView" name="blocksView"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
         <string>BI space</string>
@@ -50,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -84,7 +94,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>585</height>
+          <height>598</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -141,6 +151,11 @@
    <extends>QWidget</extends>
    <header>../../thirdparts/hexedit/qhexedit.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ProcessesView</class>
+   <extends>QGraphicsView</extends>
+   <header>itemsview/processesview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

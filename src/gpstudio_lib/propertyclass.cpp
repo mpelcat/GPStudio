@@ -53,37 +53,39 @@ QScriptClass::QueryFlags PropertyClass::queryProperty(const QScriptValue & objec
 #else
     Q_UNUSED(name);
 #endif
-    return flags;
+    return QScriptClass::HandlesReadAccess;
 }
 
 QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptString &name, uint id)
 {
     Q_UNUSED(id);
 #ifdef __PROP_DEBUG__
-    qDebug()<<_linkedProperty->name()+".get"<<name.toString()<<object.toVariant().toMap();
+    qDebug()<<_linkedProperty->name()+".get"<<name.toString()<<object.toVariant();
 #else
     Q_UNUSED(object);
 #endif
 
     if(name.toString()=="toString")
     {
-        return QScriptValue(_linkedProperty->name()+": "+_linkedProperty->value().toString());
+        return engine()->newVariant(object, _linkedProperty->value().toString());
+        //return QScriptValue(_linkedProperty->name()+": "+_linkedProperty->value().toString());
     }
-    if(name.toString()=="value")
+    if(name.toString()=="value" || name.toString()=="valueOf")
     {
-        return QScriptValue(_linkedProperty->value().toInt());
+        switch (_linkedProperty->type())
+        {
+        case Property::Int:
+        case Property::SInt:
+            return QScriptValue(_linkedProperty->value().toInt());
+        case Property::Bool:
+            return QScriptValue(_linkedProperty->value().toBool());
+        default:
+            return QScriptValue(_linkedProperty->value().toInt());
+        }
     }
     if(name.toString()=="bits")
     {
         return QScriptValue(_linkedProperty->bits());
-    }
-    if(name.toString()=="valueOf")
-    {
-        QScriptValue value = QScriptValue(_linkedProperty->value().toInt());
-#ifdef __PROP_DEBUG__
-        qDebug()<<value.call().toString();
-#endif
-        return value;
     }
     if(_subPropertiesClasses.contains(name.toString()))
     {
@@ -100,7 +102,7 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
         }
     }
 
-    return QScriptValue(0);
+    return QScriptValue();
 }
 
 void PropertyClass::setProperty(QScriptValue &object, const QScriptString &name, uint id, const QScriptValue &value)

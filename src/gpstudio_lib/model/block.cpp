@@ -42,6 +42,16 @@ void Block::setInLib(bool inLib)
     _inLib = inLib;
 }
 
+QString Block::driver() const
+{
+    return _driver;
+}
+
+void Block::setDriver(const QString &driver)
+{
+    _driver = driver;
+}
+
 qint32 Block::addrAbs() const
 {
     return _addrAbs;
@@ -70,6 +80,26 @@ quint8 Block::masterCount() const
 void Block::setMasterCount(const quint8 &value)
 {
     _masterCount = value;
+}
+
+int Block::xPos() const
+{
+    return _xPos;
+}
+
+void Block::setXPos(int value)
+{
+    _xPos = value;
+}
+
+int Block::yPos() const
+{
+    return _yPos;
+}
+
+void Block::setYPos(int value)
+{
+    _yPos = value;
 }
 
 const QString &Block::description() const
@@ -305,6 +335,14 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement)
         block->setName(domElement.attribute("name","no_name"));
 
         block->setInLib((domElement.attribute("in_lib","")=="1" || domElement.attribute("in_lib","")=="true"));
+
+        block->setDriver(domElement.attribute("driver",""));
+
+        int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
+        if(ok) block->setXPos(xPos); else block->setXPos(-1);
+
+        int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
+        if(ok) block->setYPos(yPos); else block->setYPos(-1);
 
         int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
         if(ok) block->setAddrAbs(addrAbs); else block->setAddrAbs(-1);

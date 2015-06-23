@@ -43,10 +43,16 @@ void CameraRegistersMap::evalAll()
         it.next();
         CameraRegister *cameraRegister = it.value();
 
-        cameraRegister->eval();
-        foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+        if(cameraRegister->bitFields().empty())
         {
-            bitField->eval();
+            cameraRegister->eval();
+        }
+        else
+        {
+            foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
+            {
+                bitField->eval();
+            }
         }
     }
 }

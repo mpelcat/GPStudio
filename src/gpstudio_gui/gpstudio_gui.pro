@@ -24,7 +24,8 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     viewmodelwidget/libtreeview.cpp \
     itemsview/processesview.cpp \
     itemsview/processesscene.cpp \
-    itemsview/processitem.cpp
+    itemsview/processitem.cpp \
+    itemsview/processconnectoritem.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -44,7 +45,8 @@ HEADERS  += \
     viewmodelwidget/libtreeview.h \
     itemsview/processesview.h \
     itemsview/processesscene.h \
-    itemsview/processitem.h
+    itemsview/processitem.h \
+    itemsview/processconnectoritem.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)

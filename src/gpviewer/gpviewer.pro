@@ -1,4 +1,4 @@
-QT       += core gui xml script
+QT       += core gui xml script svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

@@ -1,3 +1,4 @@
+#include "processconnectoritem.h"
 #include "processitem.h"
 
 #include <QPainter>
@@ -16,9 +17,14 @@ ProcessItem::~ProcessItem()
 {
 }
 
+int ProcessItem::type() const
+{
+    return Type;
+}
+
 QRectF ProcessItem::boundingRect() const
 {
-    return QRectF(0,0,125,50).adjusted(-10,-10,10,10);
+    return _boundingRect;
 }
 
 void ProcessItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -59,4 +65,30 @@ void ProcessItem::update(ProcessLib *processLib)
 {
     if(!processLib) return;
     _svgRenderer.load(processLib->draw().toUtf8());
+
+    if(_svgRenderer.isValid())
+    {
+        _boundingRect = _svgRenderer.viewBoxF().adjusted(-10,-10,10,10);
+    }
+    else
+    {
+        _boundingRect = QRectF(0,0,125,50).adjusted(-10,-10,10,10);
+    }
+}
+
+void ProcessItem::addConnect(ProcessConnectorItem *connectItem)
+{
+    _connects.append(connectItem);
+}
+
+QVariant ProcessItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange && scene())
+    {
+        foreach (ProcessConnectorItem *connectItem, _connects)
+        {
+            connectItem->update();
+        }
+    }
+    return QGraphicsItem::itemChange(change, value);
 }
