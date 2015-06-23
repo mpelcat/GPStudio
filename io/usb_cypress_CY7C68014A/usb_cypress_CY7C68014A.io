@@ -26,7 +26,7 @@
 		<file name="fv_synchro_signal.vhd" path="hdl/utils/src/fv_synchro_signal.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="flow_out_arb.vhd" path="hdl/utils/src/flow_out_arb.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="flow_out_arb4.vhd" path="hdl/utils/src/flow_out_arb4.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="usb8to16bits.vhd" path="hdl/utils/src/usb8to16bits.vhd" type="vhdl" group="hdl" desc=""/>		
+		<file name="usbnto16bits.vhd" path="hdl/utils/src/usbnto16bits.vhd" type="vhdl" group="hdl" desc=""/>		
 	</files>
 
 	<flows>
