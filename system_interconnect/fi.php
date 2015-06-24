@@ -309,11 +309,11 @@ class FlowInterconnect extends Block
 					$padding = '"' . str_pad('', $padding_size, '0') . '"';
 					if($out_connect['order']=='msb')
 					{
-						$code.='	'.$in_connect.'_data <= '.$padding.' & '.$out_connects[0]['name'].'_data;'."\n";
+						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data & '.$padding.';'."\n";
 					}
 					else
 					{
-						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data & '.$padding.';'."\n";
+						$code.='	'.$in_connect.'_data <= '.$padding.' & '.$out_connects[0]['name'].'_data;'."\n";
 					}
 				}
 				elseif($in_size < $out_size)
@@ -367,11 +367,11 @@ class FlowInterconnect extends Block
 							$padding = '"' . str_pad('', $padding_size, '0') . '"';
 							if($out_connect['order']=='msb')
 							{
-								$code.='					'.$in_connect.'_data <= '.$padding.' & '.$out_connect['name'].'_data;'."\n";
+								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data & '.$padding.';'."\n";
 							}
 							else
 							{
-								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data & '.$padding.';'."\n";
+								$code.='					'.$in_connect.'_data <= '.$padding.' & '.$out_connect['name'].'_data;'."\n";
 							}
 						}
 						elseif($in_size < $out_size)
