@@ -249,8 +249,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$deviceMember = $out[0][4];
 				$speedgrade = $out[0][5];
 				break;
+			case 'Stratix IV': // EP4SE820F43C3
+				preg_match_all("|(EP[0-9])(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
+				$deviceMember = $out[0][3];
+				$speedgrade = $out[0][6];
+				echo $deviceMember . '   ' . $speedgrade . "\n";
+				break;
 			default:
-				warning("family $family does'nt exist in toolchain");
+				warning("family $family does'nt exist in toolchain",5,'Altera toolchain');
 		}
 		
 		switch ($type)
@@ -290,13 +296,22 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						$attr['mulmax']=512;
 						$attr['divmax']=512;
 						break;
+					case 'Stratix IV':
+						// TODO complete
+						$attr['maxPLL']=4;
+						$attr['clkByPLL']=5;
+						$attr['vcomin']=600000000;
+						if($speedgrade=='C2') $attr['vcomax']=1600000000; else $attr['vcomax']=1300000000;
+						$attr['mulmax']=512;
+						$attr['divmax']=512;
+						break;
 					default:
-						warning("family $family does'nt exist in toolchain");
+						warning("family $family does'nt exist in toolchain",5,'Altera toolchain');
 				}
 			
 				break;
 			default:
-				warning("ressource $type does'nt exist");
+				warning("resource $type does'nt exist",5,'Altera toolchain');
 		}
 		return $attr;
 	}
@@ -386,7 +401,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='	END COMPONENT;'."\n";
 				break;
 			default:
-				warning("ressource $type does'nt exist");
+				warning("ressource $type does'nt exist",5,'Altera toolchain');
 		}
 		return $declare;
 	}
@@ -484,7 +499,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			
 				break;
 			default:
-				warning("ressource $type does'nt exist");
+				warning("ressource $type does'nt exist",5,'Altera toolchain');
 		}
 		return $instance;
 	}

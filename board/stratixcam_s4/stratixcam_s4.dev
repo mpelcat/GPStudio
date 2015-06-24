@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<device name="stratixcam_s4" description="Stratix 4 with USB/Eth communication and MT9/E2V image sensor">
+	<svg width="200" height="100">
+		<rect width="150" height="100" x="0" y="0" fill="green"/>
+		<text x="35" y="53">StratixCam_s4</text>
+		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
+	</svg>
+	<toolchain name="altera_quartus" type="EP4SE820F43C3" family="Stratix IV">
+		<attributes>
+			<attribute name="FAMILY" value="Stratix IV" type="global"/>
+			<attribute name="DEVICE" value="EP4SE820F43C3" type="global"/>
+			<attribute name="TOP_LEVEL_ENTITY" value="top" type="global"/>
+			<attribute name="ORIGINAL_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="LAST_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="PROJECT_OUTPUT_DIRECTORY" value="output_files" type="global"/>
+			<attribute name="MIN_CORE_JUNCTION_TEMP" value="0" type="global"/>
+			<attribute name="MAX_CORE_JUNCTION_TEMP" value="85" type="global"/>
+			<attribute name="ERROR_CHECK_FREQUENCY_DIVISOR" value="1" type="global"/>
+			<attribute name="PARTITION_NETLIST_TYPE" value="SOURCE -section_id Top" type="global"/>
+			<attribute name="PARTITION_FITTER_PRESERVATION_LEVEL" value="PLACEMENT_AND_ROUTING -section_id Top" type="global"/>
+			<attribute name="PARTITION_COLOR" value="16764057 -section_id Top" type="global"/>
+			<attribute name="STRATIX_DEVICE_IO_STANDARD" value="2.5 V" type="global"/>
+			<attribute name="PARTITION_HIERARCHY" value="root_partition -to | -section_id Top" type="instance"/>
+		</attributes>
+	</toolchain>
+	<global>
+		<pins>
+			<pin name="PIN_C42" mapto="clk_osc_1_80mhz_i"/>
+			<pin name="PIN_AY42" mapto="clk_osc_2_125mhz_i"/>
+			<pin name="PIN_AY1" mapto="clk_osc_3_44mhz_i"/>
+			<pin name="PIN_AB2" mapto="clk_osc_3_44mhz_p_i"/>
+			<pin name="PIN_C1" mapto="clk_osc_4_50mhz_i"/>
+		</pins>
+		<clocks>
+			<clock name="clk_osc_1_80mhz_i" direction="out" typical="80M" desc=""/>
+			<clock name="clk_osc_2_125mhz_i" direction="out" typical="125M" desc=""/>
+<!--
+			<clock name="clk_osc_3_44mhz_i" direction="out" typical="44M" desc=""/>
+			<clock name="clk_osc_3_44mhz_p_i" direction="out" typical="44M" desc=""/>
+-->
+			<clock name="clk_osc_4_50mhz_i" direction="out" typical="50M" desc=""/>
+		</clocks>
+	</global>
+	<ios>
+		<io name="led" type="visual_output" driver="leds" optional="true" description="Top blue led">
+			<pin name="PIN_W1" mapto="led_o[0]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_W3" mapto="led_o[1]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_W4" mapto="led_o[2]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_W5" mapto="led_o[3]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_W6" mapto="led_o[4]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_Y1" mapto="led_o[5]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_Y3" mapto="led_o[6]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_Y4" mapto="led_o[7]">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+					<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+					<attribute name="SLEW_RATE" value="0" type="instance"/>
+				</attributes>
+			</pin>
+		</io>
+		<io name="usb" type="communication" driver="usb_cypress_CY7C68014A" optional="false" optionalgroup="2" description="">
+			<pins>
+				<pin name="PIN_AA2" mapto="ifclk">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_L7" mapto="flaga">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M2" mapto="flagb">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M4" mapto="flagc">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N6" mapto="flagd">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J1" mapto="fd_io[0]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_H3" mapto="fd_io[1]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G4" mapto="fd_io[2]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G2" mapto="fd_io[3]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_K4" mapto="fd_io[4]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_K6" mapto="fd_io[5]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_L1" mapto="fd_io[6]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_L4" mapto="fd_io[7]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N9" mapto="fd_io[8]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_U13" mapto="fd_io[9]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_P3" mapto="fd_io[10]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_P6" mapto="fd_io[11]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_U12" mapto="fd_io[12]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_T1" mapto="fd_io[13]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_P7" mapto="fd_io[14]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_P4" mapto="fd_io[15]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M6" mapto="sloe">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J6" mapto="slrd">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J4" mapto="slwr">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N4" mapto="pktend">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M8" mapto="addr[0]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N1" mapto="addr[1]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVCMOS" type="instance"/>
+						<attribute name="CURRENT_STRENGTH_NEW" value="4MA" type="instance"/>
+						<attribute name="SLEW_RATE" value="2" type="instance"/>
+					</attributes>
+				</pin>
+			</pins>
+		</io>
+	</ios>
+</device>

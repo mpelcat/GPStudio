@@ -59,6 +59,8 @@ POWER_BOARD_THERMAL_MODEL
 # regular expression to create dev file :
 set_([a-z]+)_assignment -name ([a-zA-Z0-9_]+) [\"]?([^\"\n]*)  ====>>>>    <attribute name="\2" value="\3" type="\1"/>
 
+set_location_assignment ([a-zA-Z0-9_]+)[ \t]+-to[ \t]+([^\"\n]*)  ====>>>>    <pin name="\1" mapto="\2"/>
+
 #set instance parameter IO_STANDARD 3.3-V LVTTL
 (pin name=[\"]?[^\"\n]*\" map=[\"]?[^\"\n]*\")\/>  ====>>>>  \1>\n\t\t\t\t\t<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"\/>\n\t\t\t\t<\/pin>
 
@@ -66,3 +68,10 @@ set_([a-z]+)_assignment -name ([a-zA-Z0-9_]+) [\"]?([^\"\n]*)  ====>>>>    <attr
 
 #to swap name with map definition
 pin name=([\"]?[^\"\n]*\") map=([\"]?[^\"\n]*\")> =====>>>> pin name=\2 mapto=\1\/>
+
+
+.dev
+[#]+.*\n ====> 
+set_location_assignment ([a-zA-Z0-9_]+)[ \t]+-to[ \t]+([^\"\n]*)  ====>>>>   \t</attributes>\n</pin>\n<pin name="\1" mapto="\2">\n\t<attributes>
+set_([a-z]+)_assignment -name ([a-zA-Z0-9_]+) [\"]?([^\"\n]*).*  ====>>>>    \t\t<attribute name="\2" value="\3" type="\1"/>
+
