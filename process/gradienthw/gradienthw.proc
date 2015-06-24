@@ -30,6 +30,7 @@
             <enum name="320" value="4"/>
             <enum name="640" value="5"/>
             <enum name="960" value="6"/>
+            <enum name="1280" value="7"/>
           </enums>
         </property>
 		<property name="threshold" caption="threshold" type="sint" value="2000" desc="Gradiant threshold" min="0" max="65000"/>

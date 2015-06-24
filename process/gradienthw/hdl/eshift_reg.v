@@ -77,13 +77,14 @@ parameter WIDTH_256  = 8'd3;
 parameter WIDTH_320  = 8'd4;
 parameter WIDTH_640  = 8'd5;
 parameter WIDTH_960  = 8'd6;
+parameter WIDTH_1280  = 8'd7;
 
 
 /* ############################################# */	
 /*    Power management HDL - work in progress    */
 /* ############################################# */
 	
-wire clken0, clken1, clken2, clken3, clken4, clken5, clken6;
+wire clken0, clken1, clken2, clken3, clken4, clken5, clken6, clken7;
 //reg clken0, clken1, clken2, clken3, clken4;
 
 // testing code
@@ -100,14 +101,15 @@ assign clken3 = clken;
 assign clken4 = clken;	
 assign clken5 = clken;	
 assign clken6 = clken;	
+assign clken7 = clken;	
 
 
 /* ############################################# */
 /* ######## Shift multiplex controller ######### */
 /* ############################################# */
 
-wire [7:0] in0, in1, in2, in3, in4, in5, in6;
-wire [7:0] out0, out1, out2, out3, out4, out5, out6;
+wire [7:0] in0, in1, in2, in3, in4, in5, in6, in7;
+wire [7:0] out0, out1, out2, out3, out4, out5, out6, out7;
 
 assign in0 = shiftin;
 
@@ -122,6 +124,7 @@ always@(*)
 			WIDTH_320: shiftout = out4;
 			WIDTH_640: shiftout = out5;
 			WIDTH_960: shiftout = out6;
+			WIDTH_1280: shiftout = out7;
 			
 			default:
 				shiftout = 8'd0;
@@ -134,11 +137,20 @@ assign in3 = out2;
 assign in4 = out3;	
 assign in5 = out4;	
 assign in6 = out5;	
+assign in7 = out6;	
 
 /*#############################################*/
 
 	
-	altshift_taps	altshift_taps_inst_0 (
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(61),
+		.width(8)
+		
+	)	altshift_taps_inst_0 (
 				.clock (clk),
 				.clken (clken0),
 				.shiftin (in0),
@@ -149,16 +161,16 @@ assign in6 = out5;
 				.aclr ()
 				// synopsys translate_on
 				);
-	defparam
-		altshift_taps_inst_0.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_0.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_0.lpm_type = "altshift_taps",
-		altshift_taps_inst_0.number_of_taps = 1,
-		altshift_taps_inst_0.tap_distance = 61,
-		altshift_taps_inst_0.width = 8;
+	
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(64),
+		.width(8)		
 		
-		
-	altshift_taps	altshift_taps_inst_1 (
+	)	altshift_taps_inst_1 (
 		.clock (clk),
 		.clken (clken1),
 		.shiftin (in1),
@@ -168,16 +180,17 @@ assign in6 = out5;
 		,
 		.aclr ()
 		// synopsys translate_on
-		);
-	defparam
-		altshift_taps_inst_1.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_1.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_1.lpm_type = "altshift_taps",
-		altshift_taps_inst_1.number_of_taps = 1,
-		altshift_taps_inst_1.tap_distance = 64,
-		altshift_taps_inst_1.width = 8;		
+		);	
 		
-	altshift_taps	altshift_taps_inst_2 (
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(64),
+		.width(8)	
+		
+	)	altshift_taps_inst_2 (
 		.clock (clk),
 		.clken (clken2),
 		.shiftin (in2),
@@ -188,15 +201,17 @@ assign in6 = out5;
 		.aclr ()
 		// synopsys translate_on
 		);
-	defparam
-		altshift_taps_inst_2.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_2.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_2.lpm_type = "altshift_taps",
-		altshift_taps_inst_2.number_of_taps = 1,
-		altshift_taps_inst_2.tap_distance = 64,
-		altshift_taps_inst_2.width = 8;	
 
-	altshift_taps	altshift_taps_inst_3 (
+
+	altshift_taps 
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(64),
+		.width(8)
+	
+	)	altshift_taps_inst_3 (
 		.clock (clk),
 		.clken (clken3),
 		.shiftin (in3),
@@ -207,15 +222,18 @@ assign in6 = out5;
 		.aclr ()
 		// synopsys translate_on
 		);
-	defparam
-		altshift_taps_inst_3.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_3.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_3.lpm_type = "altshift_taps",
-		altshift_taps_inst_3.number_of_taps = 1,
-		altshift_taps_inst_3.tap_distance = 64,
-		altshift_taps_inst_3.width = 8;	
 
-	altshift_taps	altshift_taps_inst_4 (
+
+
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(64),
+		.width(8)
+	
+	)	altshift_taps_inst_4 (
 		.clock (clk),
 		.clken (clken4),
 		.shiftin (in4),
@@ -226,15 +244,16 @@ assign in6 = out5;
 		.aclr ()
 		// synopsys translate_on
 		);
-	defparam
-		altshift_taps_inst_4.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_4.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_4.lpm_type = "altshift_taps",
-		altshift_taps_inst_4.number_of_taps = 1,
-		altshift_taps_inst_4.tap_distance = 64,
-		altshift_taps_inst_4.width = 8;	
 		
-	altshift_taps	altshift_taps_inst_5 (
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(320),
+		.width(8)
+	
+	)	altshift_taps_inst_5 (
 		.clock (clk),
 		.clken (clken5),
 		.shiftin (in5),
@@ -245,15 +264,16 @@ assign in6 = out5;
 		.aclr ()
 		// synopsys translate_on
 		);
-	defparam
-		altshift_taps_inst_5.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_5.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_5.lpm_type = "altshift_taps",
-		altshift_taps_inst_5.number_of_taps = 1,
-		altshift_taps_inst_5.tap_distance = 320,
-		altshift_taps_inst_5.width = 8;	
 		
-	altshift_taps	altshift_taps_inst_6 (
+	altshift_taps
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(320),
+		.width(8)
+	
+	)	altshift_taps_inst_6 (
 		.clock (clk),
 		.clken (clken6),
 		.shiftin (in6),
@@ -264,12 +284,26 @@ assign in6 = out5;
 		.aclr ()
 		// synopsys translate_on
 		);
-	defparam
-		altshift_taps_inst_6.intended_device_family = "Cyclone IV E",
-		altshift_taps_inst_6.lpm_hint = "RAM_BLOCK_TYPE=M9K",
-		altshift_taps_inst_6.lpm_type = "altshift_taps",
-		altshift_taps_inst_6.number_of_taps = 1,
-		altshift_taps_inst_6.tap_distance = 320,
-		altshift_taps_inst_6.width = 8;	
+		
+	altshift_taps	
+	#(
+		.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+		.lpm_type("altshift_taps"),
+		.number_of_taps(1),
+		.tap_distance(320),
+		.width(8)
+	
+	)	altshift_taps_inst_7 (
+		.clock (clk),
+		.clken (clken7),
+		.shiftin (in7),
+		.shiftout (out7),
+		.taps ()
+		// synopsys translate_off
+		,
+		.aclr ()
+		// synopsys translate_on
+		);
+
 		
 endmodule
