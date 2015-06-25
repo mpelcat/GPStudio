@@ -10,7 +10,12 @@ FlowData::FlowData(const QByteArray &data)
 FlowData::FlowData(const FlowData &other)
     : _data(other._data)
 {
-   // qDebug()<<"copy FLOWDATA"<<other._data.size();
+    // qDebug()<<"copy FLOWDATA"<<other._data.size();
+}
+
+const FlowData &FlowData::operator=(const FlowData &other)
+{
+    _data = other._data;
 }
 
 FlowData::FlowData(const QImage &image, const int bitCount, const FlowData::ImageMode imageMode)

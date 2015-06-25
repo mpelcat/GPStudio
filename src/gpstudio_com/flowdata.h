@@ -13,6 +13,7 @@ class GPSTUDIO_COM_EXPORT FlowData
 public:
     FlowData(const QByteArray &data=QByteArray());
     FlowData(const FlowData &other);
+    const FlowData &operator= (const FlowData &other);
 
     enum ImageMode {ImageModeGray, ImageModeColor};
     FlowData(const QImage &image, const int bitCount=8, const ImageMode imageMode=ImageModeGray);

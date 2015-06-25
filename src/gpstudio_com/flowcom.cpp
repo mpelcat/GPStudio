@@ -1,6 +1,7 @@
 #include "flowcom.h"
 
 #include <QDebug>
+#include <QMutexLocker>
 
 FlowCom::FlowCom(const int idFlow)
     : _idFlow(idFlow)
@@ -8,7 +9,7 @@ FlowCom::FlowCom(const int idFlow)
 }
 
 FlowCom::FlowCom(const FlowCom &other)
-    : _idFlow(other._idFlow), _numPacket(other._numPacket), _flowData(other._flowData)
+    : _idFlow(other._idFlow), _numPacket(other._numPacket), _flowDataToSend(other._flowDataToSend)
 {
 }
 
@@ -29,7 +30,7 @@ unsigned int FlowCom::numPacket() const
 
 bool FlowCom::readyToSend() const
 {
-    if(_flowData.size()!=0) return true;
+    if(_flowDataToSend.size()!=0) return true;
     else return false;
 }
 
@@ -37,16 +38,16 @@ QByteArray FlowCom::dataToSend(const int size)
 {
     QByteArray dataToSend;
 
-    if(_flowData.head().empty()) _flowData.dequeue();
-    if(_flowData.empty()) return QByteArray();
+    if(_flowDataToSend.head().empty()) _flowDataToSend.dequeue();
+    if(_flowDataToSend.empty()) return QByteArray();
     if(size<=4) return QByteArray();
 
-    QByteArray data = _flowData.head().getPart(size-4);
+    QByteArray data = _flowDataToSend.head().getPart(size-4);
 
     dataToSend.append(_idFlow);
-    if(_flowData.head().empty())
+    if(_flowDataToSend.head().empty())
     {
-        _flowData.dequeue();
+        _flowDataToSend.dequeue();
         dataToSend.append(0xBA);
     }
     else dataToSend.append(0xAA);
@@ -63,7 +64,7 @@ QByteArray FlowCom::dataToSend(const int size)
 
 void FlowCom::send(const FlowData &flowData)
 {
-    _flowData.append(flowData);
+    _flowDataToSend.append(flowData);
 }
 
 void FlowCom::send(const QImage &image)
@@ -78,38 +79,24 @@ void FlowCom::send(const QByteArray &data)
 
 void FlowCom::appendData(const QByteArray &data)
 {
-    /*if(_flowData.empty())
-    {
-        _flowData.append(FlowData(data.mid(4)));
-    }
-    else
-    {
-        _flowData.head().appendData(data.mid(4));
-    }*/
     _current.appendData(data.mid(4));
 }
 
 FlowData FlowCom::getData()
 {
-    if(_flowData.empty()) return FlowData();
-
-    return _flowData.dequeue();
+    QMutexLocker locker(&_mutexDataRead);
+    return _lastFlowData;
 }
 
 void FlowCom::validate()
 {
-    _flowData.append(_current);
+    _mutexDataRead.lock();
+    _lastFlowData = _current;
     _current.clear();
+    _mutexDataRead.unlock();
 }
 
 unsigned FlowCom::getSize() const
 {
-    /*if(_flowData.empty()) return 0;
-    return _flowData.head().data().size();*/
     return _current.data().size();
-}
-
-void FlowCom::clear()
-{
-    _flowData.clear();
 }

@@ -3,6 +3,7 @@
 
 #include <QQueue>
 #include <QMetaType>
+#include <QMutex>
 
 #include "gpstudio_com_common.h"
 #include "flowdata.h"
@@ -15,8 +16,10 @@ public:
 
     unsigned char idFlow() const;
     void setIdFlow(const unsigned char idFlow);
+
     unsigned int numPacket() const;
 
+    // Flow OUT
     bool readyToSend() const;
     QByteArray dataToSend(const int size);
 
@@ -27,19 +30,22 @@ public:
     //void send(const Mat);
     //void send(const stdVector);
 
+    // Flow IN
     void appendData(const QByteArray &data);
 
     FlowData getData();
     void validate();
     unsigned getSize() const;
 
-    void clear();
-
 private:
     unsigned char _idFlow;
     unsigned int _numPacket;
-    QQueue<FlowData> _flowData;
-    FlowData _current;
+
+    QQueue<FlowData> _flowDataToSend;     // flowData to send
+
+    FlowData _current;              // flowData currently received
+    FlowData _lastFlowData;              // flowData currently received
+    QMutex _mutexDataRead;
 };
 
 Q_DECLARE_METATYPE(FlowCom)
