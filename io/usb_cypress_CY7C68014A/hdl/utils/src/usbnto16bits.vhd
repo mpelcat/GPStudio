@@ -184,6 +184,7 @@ begin
 		case state is
 			when Initial =>
 				if data_valid_i ='1' and frame_valid_i='1' then
+					data_valid_o <='0';
 					tmp8bits <= data_i;
 					state <= WaitSd;
 				end if;

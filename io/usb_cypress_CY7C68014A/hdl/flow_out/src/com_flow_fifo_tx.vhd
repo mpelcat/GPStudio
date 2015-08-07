@@ -47,8 +47,9 @@ architecture rtl of com_flow_fifo_tx is
 
 -- Calcul de la largeur de bus en fonction de la profondeur de la Fifo 
  --constant WIDTHU : integer := integer(ceil(log2(real(FIFO_DEPTH))));
+ 
  constant WIDTHU : integer := clog2(FIFO_DEPTH);
-
+ constant FIFO_PKT_SIZE: integer := integer(ceil(real(FIFO_DEPTH/PACKET_SIZE))) + 1;
 
 ---------------------------------------------------------
 --	COMPONENT DECLARATION
@@ -108,13 +109,13 @@ END component;
 	signal fifo_1_rdusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_DEPTH))))-1 DOWNTO 0):=(others=>'0');
 	signal fifo_1_wrusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_DEPTH))))-1 DOWNTO 0):=(others=>'0');
 	
-	signal fifo_flag_rdusedw_s	: std_logic_vector(integer(ceil(log2(real(512))))-1 DOWNTO 0):=(others=>'0');
-	signal fifo_flag_wrusedw_s	: std_logic_vector(integer(ceil(log2(real(512))))-1 DOWNTO 0):=(others=>'0');
+	signal fifo_flag_rdusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_PKT_SIZE))))-1 DOWNTO 0):=(others=>'0');
+	signal fifo_flag_wrusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_PKT_SIZE))))-1 DOWNTO 0):=(others=>'0');
 	signal fifo_flag_wrfull_s 	: std_logic:= '0';
 	signal fifo_flag_rdempty_s 	: std_logic:= '0';
 	
-	signal fifo_pkt_rdusedw_s	: std_logic_vector(integer(ceil(log2(real(512))))-1 DOWNTO 0):=(others=>'0');
-	signal fifo_pkt_wrusedw_s	: std_logic_vector(integer(ceil(log2(real(512))))-1 DOWNTO 0):=(others=>'0');
+	signal fifo_pkt_rdusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_PKT_SIZE))))-1 DOWNTO 0):=(others=>'0');
+	signal fifo_pkt_wrusedw_s	: std_logic_vector(integer(ceil(log2(real(FIFO_PKT_SIZE))))-1 DOWNTO 0):=(others=>'0');
 	signal fifo_pkt_wrfull_s 	: std_logic:= '0';
 	signal fifo_pkt_rdempty_s 	: std_logic:= '0';
 	signal fifo_pkt_wr_s 		: std_logic:= '0';
@@ -156,7 +157,7 @@ begin
 	
 	flag_s <= X"00"& flag_i;
 	FIFO_FLAG : component fifo_com_tx
-	GENERIC MAP(DEPTH => 512)
+	GENERIC MAP(DEPTH => FIFO_PKT_SIZE)
 	PORT map 
 	(
 		--data		=> X"00"& flag_i,
@@ -174,8 +175,8 @@ begin
 	);
 	
 	
-	FIFO_PKT_SIZE : component fifo_com_tx
-	GENERIC MAP(DEPTH => 512)
+	FIFO_PKT : component fifo_com_tx
+	GENERIC MAP(DEPTH => FIFO_PKT_SIZE)
 	PORT map 
 	(
 		data		=> fifo_pkt_data_i,

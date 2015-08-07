@@ -105,7 +105,8 @@ begin
 	end if;
 end process;
 
-	data_wr_o <= dv_i and enable_i and not(fifo_f_i);
+--	data_wr_o <= dv_i and enable_i and not(fifo_f_i); -- Add fv_i in condition to avoid data write if fv = 0 
+	data_wr_o <= dv_i and enable_i and not(fifo_f_i) and fv_i;
 	data_o <= data_i;
 	
 	flag_wr_o <= flag_wr_fv_s or (flag_wr_cpt_s_r and fv_i);
