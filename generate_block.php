@@ -41,10 +41,55 @@ foreach($blocks as $block)
 {
 	if($block->size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
 
-	$generator = new VHDL_generator($block->name);
-	$generator->fromBlock($block);
+	$block_generator = new VHDL_generator($block->name);
+	$block_generator->fromBlock($block);
 	if(empty($block->path)) $path=''; else $path=$block->path.DIRECTORY_SEPARATOR;
-	$generator->save_as($path.$block->name.'.vhd');
+	
+	$slave_generator = new VHDL_generator($block->name . '_slave');
+	$process_generator = new VHDL_generator($block->name . '_process');
+	
+	$process_block = new Block();
+	$process_block->name = $block->name . '_process';
+	$process_block->driver = $block->name . '_process';
+	$process_block->clocks = array();
+	$process_block->flows = $block->flows;
+	$process_block->params = $block->params;
+	
+	$slave_block = new Block();
+	$slave_block->name = $block->name . '_slave';
+	$slave_block->driver = $block->name . '_slave';
+	$slave_block->clocks = array();
+	$slave_block->interfaces = $block->interfaces;
+	
+	// clocks
+	foreach($block->clocks as $clock)
+	{
+		$nclock = new Clock();
+		$nclock->name = $clock->name;
+		$nclock->net = $clock->name;
+		$nclock->typical = strtoupper($clock->name).'_FREQ';
+		array_push($process_block->clocks, $nclock);
+		array_push($slave_block->clocks, $nclock);
+	}
+	
+	// resets
+	foreach($block->resets as $reset)
+	{
+		$nreset = new Clock();
+		$nreset->name = $reset->name;
+		$nreset->group = $reset->name;
+		array_push($process_block->resets, $nreset);
+		array_push($slave_block->resets, $nreset);
+	}
+	
+	$slave_generator->fromBlock($slave_block);
+	$process_generator->fromBlock($process_block);
+	
+	$block_generator->blocks = array($process_block, $slave_block);
+	
+	$block_generator->save_as($path.$block->name   . '.vhd');
+	$process_generator->save_as($path.$block->name . '_process.vhd');
+	$slave_generator->save_as($path.$block->name   . '_slave.vhd');
 
 	echo $block->name.'.vhd'.' generated'."\n";
 }
