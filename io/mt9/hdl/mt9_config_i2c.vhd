@@ -21,16 +21,25 @@ entity mt9_config_i2c is
 		mt9_sclk_o		:	out std_logic;
 
 		-- connections from mt9_config_i2c
-		xstart_i		: in std_logic_vector(31 downto 0);
-		ystart_i		: in std_logic_vector(31 downto 0);
-		xend_i			: in std_logic_vector(31 downto 0);
-		yend_i			: in std_logic_vector(31 downto 0);
-		autoexp_i		: in std_logic;
-		flipvert_i		: in std_logic;
-		mirrorx_i		: in std_logic;
-		integtime_i		: in std_logic_vector(31 downto 0);
-		linelenght_i	: in std_logic_vector(31 downto 0);
-		send_reconf_i	: in std_logic;
+		xstart_i			: in std_logic_vector(15 downto 0);
+		ystart_i			: in std_logic_vector(15 downto 0);
+		xend_i				: in std_logic_vector(15 downto 0);
+		yend_i				: in std_logic_vector(15 downto 0);
+		autoexp_i			: in std_logic;
+		autoexptarget_i		: in std_logic_vector(15 downto 0);
+		autoexpvmin_i		: in std_logic_vector(15 downto 0);
+		autoexpvmax_i		: in std_logic_vector(15 downto 0);
+		autoexpstepmin_i	: in std_logic_vector(15 downto 0);
+		autoexpstepmax_i	: in std_logic_vector(15 downto 0);
+		autoexpdampofset_i	: in std_logic_vector(15 downto 0);
+		autoexpdampgain_i	: in std_logic_vector(15 downto 0);
+		autoexpdampmax_i	: in std_logic_vector(15 downto 0);
+		flipvert_i			: in std_logic;
+		mirrorx_i			: in std_logic;
+		binning_i			: in std_logic;
+		integtime_i			: in std_logic_vector(15 downto 0);
+		linelenght_i		: in std_logic_vector(15 downto 0);
+		send_reconf_i		: in std_logic;
 
 		mt9_conf_done_o : out std_logic
 
@@ -39,7 +48,7 @@ end mt9_config_i2c;
 
 architecture rtl of mt9_config_i2c is
 
-	constant GEN_NUM_REG : integer := 11;
+	constant GEN_NUM_REG : integer := 20;
 	
 	-- MT9 I2C constant for comunication
 	constant MT9_I2C_SLAVE_ADDR			: std_logic_vector(7 downto 0)	:= x"20";
@@ -51,10 +60,19 @@ architecture rtl of mt9_config_i2c is
 	constant RESET_REGISTER_I2CREG		: std_logic_vector(15 downto 0) := x"301A";
 	constant COARSE_INTEGR_TIME_I2CREG	: std_logic_vector(15 downto 0) := x"3012";
 	constant AE_CTRL_REG_I2CREG			: std_logic_vector(15 downto 0) := x"3100";
+	constant AE_TARGET_I2CREG			: std_logic_vector(15 downto 0) := x"3102";
+	constant AE_MINEX_I2CREG			: std_logic_vector(15 downto 0) := x"311E";
+	constant AE_MAXEX_I2CREG			: std_logic_vector(15 downto 0) := x"311C";
+	constant AE_MINSTEP_I2CREG			: std_logic_vector(15 downto 0) := x"3108";
+	constant AE_MAXSTEP_I2CREG			: std_logic_vector(15 downto 0) := x"310A";
+	constant AE_DAMPOFSET_I2CREG		: std_logic_vector(15 downto 0) := x"310C";
+	constant AE_DAMPGAIN_I2CREG			: std_logic_vector(15 downto 0) := x"310E";
+	constant AE_DAMPMAX_I2CREG			: std_logic_vector(15 downto 0) := x"3110";
 	constant EMBEDDED_DATA_CTRL_I2CREG	: std_logic_vector(15 downto 0) := x"3064";
 	constant PLL_MULTIPLIER_I2CREG		: std_logic_vector(15 downto 0) := x"3030";
 	constant LINE_LENGHT_PCK_I2CREG		: std_logic_vector(15 downto 0) := x"300C";
 	constant READ_MODE_I2CREG			: std_logic_vector(15 downto 0) := x"3040";
+	constant DIG_BINNIGN_I2CREG			: std_logic_vector(15 downto 0) := x"3032";
 
 	-- counter for power up timer and reset
 	signal p0_cnt1 : integer range 1 to 200000 := 1;
@@ -97,28 +115,28 @@ begin
 
 	-- Y address start
 	int_reg_start_addr(1) <= Y_ADDR_START_I2CREG;
-	int_reg_start_data(1) <= ystart_i(15 downto 0);
+	int_reg_start_data(1) <= ystart_i;
 	-- Y address end (reg_3006-reg_3002+1)
 	int_reg_start_addr(2) <= Y_ADDR_END_I2CREG;
-	int_reg_start_data(2) <= yend_i(15 downto 0);
+	int_reg_start_data(2) <= yend_i;
 
 	-- X address start
 	int_reg_start_addr(3) <= X_ADDR_START_I2CREG;
-	int_reg_start_data(3) <= xstart_i(15 downto 0);
+	int_reg_start_data(3) <= xstart_i;
 	-- X address end (reg_3008-reg_3004+1)
 	int_reg_start_addr(4) <= X_ADDR_END_I2CREG;
-	int_reg_start_data(4) <= xend_i(15 downto 0);
+	int_reg_start_data(4) <= xend_i;
 
 	-- Coarse Integration Time = R0x3012 * RawTime. (RawTime = 50 µs)
 	int_reg_start_addr(5) <= COARSE_INTEGR_TIME_I2CREG;
-	int_reg_start_data(5) <= integtime_i(15 downto 0); --x"00E6";
-
-	-- int_reg_start_addr(4) <= x"3070";	-- Test patterns
-	-- int_reg_start_data(4) <= x"0002"; -- 3: 100% color bar test pattern
-	-- int_reg_start_data(4) <= x"0003"; -- 3: Fade-to-grey color bar test pattern
+	int_reg_start_data(5) <= integtime_i; --x"00E6";
 
 	int_reg_start_addr(6) <= AE_CTRL_REG_I2CREG;	-- Auto Exposure
-	int_reg_start_data(6) <= "000000000000000" & autoexp_i;
+	WITH autoexp_i SELECT
+	int_reg_start_data(6) <= x"0000" WHEN '0',
+                             x"0013" WHEN '1',
+                             x"0000" WHEN OTHERS;
+                             
 	-- Autoexposure control: 	x"0000" disables AE,
 	--							x"0001" enables AE,
 	--							x"0003" enables AE + auto analog gain
@@ -132,14 +150,37 @@ begin
 	int_reg_start_data(8) <= x"002C";	-- multiplier set to 44
 
 	int_reg_start_addr(9) <= LINE_LENGHT_PCK_I2CREG;	-- line lenght reg
-	int_reg_start_data(9) <= linelenght_i(15 downto 0);
+	int_reg_start_data(9) <= linelenght_i;
 
-	int_reg_start_addr(10) <= READ_MODE_I2CREG;			-- mirror x and y
-	int_reg_start_data(10) <= flipvert_i & mirrorx_i & "00000000000000";
+	int_reg_start_addr(10) <= DIG_BINNIGN_I2CREG;		-- binning
+	int_reg_start_data(10) <= "0000000000" & binning_i & "000" & binning_i & "0";
 
-	-- Reset register & i/o configuration
-	--int_reg_start_addr(9) <= RESET_REGISTER_I2CREG;	-- reset register
-	--int_reg_start_data(9) <= x"01DC";	-- pass image sensor in streaming mode (video mode)
+	int_reg_start_addr(11) <= READ_MODE_I2CREG;			-- mirror x and y
+	int_reg_start_data(11) <= flipvert_i & mirrorx_i & "00000000000000";
+
+	int_reg_start_addr(12) <= AE_TARGET_I2CREG;			-- target AE
+	int_reg_start_data(12) <= autoexptarget_i;
+
+	int_reg_start_addr(13) <= AE_MINEX_I2CREG;			-- min AE exposure value
+	int_reg_start_data(13) <= autoexpvmin_i;
+
+	int_reg_start_addr(14) <= AE_MAXEX_I2CREG;			-- max AE exposure value
+	int_reg_start_data(14) <= autoexpvmax_i;
+
+	int_reg_start_addr(15) <= AE_MINSTEP_I2CREG;		-- min AE step value
+	int_reg_start_data(15) <= autoexpstepmin_i;
+
+	int_reg_start_addr(16) <= AE_MAXSTEP_I2CREG;		-- max AE step value
+	int_reg_start_data(16) <= autoexpstepmax_i;
+
+	int_reg_start_addr(17) <= AE_DAMPOFSET_I2CREG;		-- Adjusts step size and settling speed
+	int_reg_start_data(17) <= autoexpdampofset_i;
+
+	int_reg_start_addr(18) <= AE_DAMPGAIN_I2CREG;		-- Adjusts step size and settling speed
+	int_reg_start_data(18) <= autoexpdampgain_i;
+
+	int_reg_start_addr(19) <= AE_DAMPMAX_I2CREG;		-- Max value allowed for recursiveDamp
+	int_reg_start_data(19) <= autoexpdampmax_i;
 
 	timer_start_proc : process(reset_n, mt9_extclk)
 	begin
