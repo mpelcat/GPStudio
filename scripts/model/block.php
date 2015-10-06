@@ -179,7 +179,7 @@ class Block
 		{
 			if(file_exists($this->path.$this->configscriptfile))
 			{
-				$script = str_replace(LIB_PATH,'',$this->path.$this->configscriptfile);
+				$script = str_replace(SUPPORT_PATH,'',$this->path.$this->configscriptfile);
 				$configureBlock = (include $script);
 				if($configureBlock!==FALSE)
 				{
@@ -195,7 +195,7 @@ class Block
 		{
 			if(file_exists($this->path.$this->generatescriptfile))
 			{
-				$script = str_replace(LIB_PATH,'',$this->path.$this->generatescriptfile);
+				$script = str_replace(SUPPORT_PATH,'',$this->path.$this->generatescriptfile);
 				$generateBlock = (include $script);
 				if($generateBlock!==FALSE)
 				{

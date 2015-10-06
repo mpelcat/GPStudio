@@ -67,11 +67,11 @@ class Toolchain
 		switch ($toolchain_name)
 		{
 			case 'hdl':
-				require("toolchain/hdl/hdl.php");
+				require_once("toolchain/hdl/hdl.php");
 				return new HDL_toolchain($xml);
 				break;
 			case 'altera_quartus':
-				require("toolchain/altera_quartus/altera_quartus.php");
+				require_once("toolchain/altera_quartus/altera_quartus.php");
 				return new Altera_quartus_toolchain($xml);
 				break;
 			default:

@@ -28,7 +28,7 @@ class Process extends Block
 				// process defined in library
 				if(!isset($this->driver)) $this->driver=$this->name;
 				
-				$this->path = LIB_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
+				$this->path = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
 				$process_file = $this->path . $this->driver . '.proc';
 				
 				if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");

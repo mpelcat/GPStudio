@@ -60,7 +60,7 @@ class Board
 		$board_name = $board_element['name'];
 		
 		// open device define file (.dev)
-		$this->board_file = LIB_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
+		$this->board_file = SUPPORT_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
 		if (!file_exists($this->board_file)) error("File $this->board_file doesn't exist",5,"Board");
 		if (!($this->xml = simplexml_load_file($this->board_file))) error("Error when parsing $this->board_file",5,"Board");
 		

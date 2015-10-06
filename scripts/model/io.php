@@ -20,7 +20,7 @@ class IO extends Block
 			$file_config->parentBlock = $this;
 			$this->addFile($file_config);
 		
-			$this->path = LIB_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
+			$this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
 			$this->in_lib=true;
 			$io_file = $this->path . $io_driver . ".io";
 		}
