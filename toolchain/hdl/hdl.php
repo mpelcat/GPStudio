@@ -5,7 +5,7 @@ require_once("toolchain.php");
 require_once("vhdl_generator.php");
 
 require_once("fi.php");
-require_once("bi.php");
+require_once("pi.php");
 require_once("ci.php");
 
 class HDL_toolchain extends Toolchain
@@ -27,11 +27,11 @@ class HDL_toolchain extends Toolchain
 		$node->addBlock($clockInterconnect);
 		
 		// add bus interconnect
-		$busInterconnect = new BusInterconnect();
-		$node->addBlock($busInterconnect);
+		$paramInterconnect = new ParamInterconnect();
+		$node->addBlock($paramInterconnect);
 		
 		$flowInterconnect->configure($node, $flowInterconnect);
-		$busInterconnect->configure($node, $busInterconnect);
+		$paramInterconnect->configure($node, $paramInterconnect);
 		$clockInterconnect->configure($node, $clockInterconnect);
 	}
 	

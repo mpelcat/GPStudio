@@ -1,7 +1,7 @@
 <?php
 
 require_once("block.php");
-require_once("flow_connect.php");
+require_once("flowconnect.php");
 
 require_once("toolchain/hdl/vhdl_generator.php");
 
@@ -198,8 +198,8 @@ class FlowInterconnect extends Block
 			}
 		}
 		
-		if($count_param==1) $this->size_addr_rel=1;
-		else $this->size_addr_rel = ceil(log($count_param, 2));
+		if($count_param==1) $this->pi_size_addr_rel=1;
+		else $this->pi_size_addr_rel = ceil(log($count_param, 2));
 	}
 	
 	function create_dot_file($node, $filename)
@@ -417,13 +417,13 @@ class FlowInterconnect extends Block
 			
 				$code.='		elsif(rising_edge(clk_proc)) then'."\n";
 				
-				if($fi->size_addr_rel==1)
+				if($fi->pi_size_addr_rel==1)
 				{
 					$code.='			if(wr_i=\'1\' and addr_rel_i=\''.$count_reg.'\') then'."\n";
 				}
 				else
 				{
-					$code.='			if(wr_i=\'1\' and addr_rel_i=std_logic_vector(to_unsigned('.$count_reg.', '.$fi->size_addr_rel.'))) then'."\n";
+					$code.='			if(wr_i=\'1\' and addr_rel_i=std_logic_vector(to_unsigned('.$count_reg.', '.$fi->pi_size_addr_rel.'))) then'."\n";
 				}
 				$code.='				'.$name_reg.' <= datawr_i;'."\n";
 				$code.='			end if;'."\n";

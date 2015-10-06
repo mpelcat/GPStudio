@@ -4,7 +4,7 @@ require_once("block.php");
 
 require_once("toolchain/hdl/vhdl_generator.php");
 
-class BusInterconnect extends Block
+class ParamInterconnect extends Block
 {
 	public $addr_bus_width;
 
@@ -32,9 +32,9 @@ class BusInterconnect extends Block
 		$sum_space_addr_rel = 0;
 		foreach($node->blocks as $block)
 		{
-			if($block->size_addr_rel>0)
+			if($block->pi_size_addr_rel>0)
 			{
-				$size_addr_space = pow(2, $block->size_addr_rel);
+				$size_addr_space = pow(2, $block->pi_size_addr_rel);
 				$sum_space_addr_rel += $size_addr_space;
 			}
 		}
@@ -45,16 +45,16 @@ class BusInterconnect extends Block
 		$addr_space = array_fill(0, $max_addr, -1);
 		foreach($node->blocks as $block)
 		{
-			if($block->size_addr_rel>0)
+			if($block->pi_size_addr_rel>0)
 			{
-				$size_addr_space = pow(2, $block->size_addr_rel);
+				$size_addr_space = pow(2, $block->pi_size_addr_rel);
 				for($addr=0; $addr<$max_addr; $addr+=$size_addr_space)
 				{
 					if($addr_space[$addr]==-1)
 					{
 						$block->addr_abs = $addr;
-						$block->addInterface(new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->size_addr_rel));
-						$this->addInterface(new InterfaceBus("bus_sl_$block->name",$block->name,"bi_slave_conn",$block->size_addr_rel));
+						$block->addInterface(new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->pi_size_addr_rel));
+						$this->addInterface(new InterfaceBus("bus_sl_$block->name",$block->name,"bi_slave_conn",$block->pi_size_addr_rel));
 						for($i=0; $i<$size_addr_space; $i++) $addr_space[$addr+$i]=0;
 						break;
 					}
@@ -79,7 +79,7 @@ class BusInterconnect extends Block
 		/*echo "\n" . '// =============== Slaves addr ===============' . "\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->size_addr_rel>0)
+			if($block->pi_size_addr_rel>0)
 			{
 				echo $block->name . ' : ' . $block->addr_abs . "\n";
 			}
@@ -92,7 +92,7 @@ class BusInterconnect extends Block
 	
 		foreach($node->blocks as $block)
 		{
-			if($block->size_addr_rel>0)
+			if($block->pi_size_addr_rel>0)
 			{
 				$count=0;
 				foreach($block->params as $param)
@@ -102,7 +102,7 @@ class BusInterconnect extends Block
 						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' ',55,'-',STR_PAD_BOTH)."\n";
 						$paramname = strtoupper($block->name.'_'.$param->name);
 						$value = $block->addr_abs+$param->regaddr;
-						$content.="#define ".str_pad($paramname,25)."\t".BusInterconnect::hex($value,$this->addr_bus_width);
+						$content.="#define ".str_pad($paramname,25)."\t".ParamInterconnect::hex($value,$this->addr_bus_width);
 						if(!empty($param->desc)) $content.="\t// ".$param->desc;
 						$content.="\n";
 					
@@ -110,11 +110,11 @@ class BusInterconnect extends Block
 						{
 							$mask=0;
 							foreach($parambitfield->bitfieldlist as $bitfield) $mask += pow(2, $bitfield);
-							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$parambitfield->name.'_MASK'),40)."\t".BusInterconnect::hex($mask,32)."\n";
+							$content.="	#define ".str_pad(strtoupper($paramname.'_'.$parambitfield->name.'_MASK'),40)."\t".ParamInterconnect::hex($mask,32)."\n";
 							
 							foreach($parambitfield->paramenums as $paramenum)
 							{
-								$content.="		#define ".str_pad(strtoupper($paramname.'_'.$paramenum->name),40)."\t".BusInterconnect::hex($paramenum->value,32);
+								$content.="		#define ".str_pad(strtoupper($paramname.'_'.$paramenum->name),40)."\t".ParamInterconnect::hex($paramenum->value,32);
 								if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
 								$content.="\n";
 							}
@@ -127,7 +127,7 @@ class BusInterconnect extends Block
 				{
 					foreach($property->propertyenums as $propertyenum)
 					{
-						$content.="	#define ".str_pad(strtoupper($property->name.'_'.$propertyenum->name),40)."\t".BusInterconnect::hex($propertyenum->value,32);
+						$content.="	#define ".str_pad(strtoupper($property->name.'_'.$propertyenum->name),40)."\t".ParamInterconnect::hex($propertyenum->value,32);
 						if(!empty($enum->desc)) $content.="\t// ".$paramenum->desc;
 						$content.="\n";
 					}

@@ -8,7 +8,7 @@ require_once("clock.php");
 require_once("reset.php");
 require_once("pin.php");
 require_once("port.php");
-require_once("interface.php");
+require_once("interfacebus.php");
 
 class Block
 {
@@ -44,9 +44,9 @@ class Block
 
 	/**
 	* Size of relative adress bus
-	* @var int $size_addr_rel
+	* @var int $pi_size_addr_rel
 	*/
-	public $size_addr_rel;
+	public $pi_size_addr_rel;
 
 	/**
 	* Number of master in the block on BI
@@ -406,7 +406,7 @@ class Block
 	
 	protected function parse_xml()
 	{
-		$this->size_addr_rel = (int)$this->xml['size_addr_rel'];
+		$this->pi_size_addr_rel = (int)$this->xml['pi_size_addr_rel'];
 		$this->configscriptfile = $this->xml['configscriptfile'];
 		$this->generatescriptfile = $this->xml['generatescriptfile'];
 		
@@ -494,9 +494,9 @@ class Block
 		$att->value = $this->addr_abs;
 		$xml_element->appendChild($att);
 		
-		// size_addr_rel
-		$att = $xml->createAttribute('size_addr_rel');
-		$att->value = $this->size_addr_rel;
+		// pi_size_addr_rel
+		$att = $xml->createAttribute('pi_size_addr_rel');
+		$att->value = $this->pi_size_addr_rel;
 		$xml_element->appendChild($att);
 		
 		// master_count

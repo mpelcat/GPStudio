@@ -283,6 +283,7 @@ class Board
 	function addClock($clock)
 	{
 		$clock->parentBlock = $this;
+		$clock->direction = "out";
 		array_push($this->clocks, $clock);
 	}
 	

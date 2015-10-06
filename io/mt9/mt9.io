@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<io driver="mt9" size_addr_rel="5">
+<io driver="mt9" pi_size_addr_rel="5">
 	<files>
 		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="video_sampler.v" path="hdl/video_sampler.v" type="verilog" group="hdl" desc=""/>

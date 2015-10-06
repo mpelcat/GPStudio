@@ -38,8 +38,8 @@
 			</pin>
 		</pins>
 		<clocks>
-			<clock name="clk_50M_i" direction="out" typical="50M" desc=""/>
-			<clock name="clk_125M_i" direction="out" typical="125M" desc=""/>
+			<clock name="clk_50M_i" typical="50M" desc=""/>
+			<clock name="clk_125M_i" typical="125M" desc=""/>
 		</clocks>
 	</global>
 	<ios>
