@@ -302,7 +302,7 @@ class VHDL_generator
 		$maxLenght=0;
 		foreach($this->signals as $signal)
 		{
-			if($signal->space)
+			if(!$signal->space)
 			{
 				if(strlen($signal->name)>$maxLenght) $maxLenght=strlen($signal->name);
 			}
