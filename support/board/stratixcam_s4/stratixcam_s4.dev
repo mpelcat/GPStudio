@@ -100,6 +100,125 @@
 				</attributes>
 			</pin>
 		</io>
+			<io name="mt9" type="image-sensor" driver="mt9" optional="true" optionalgroup="1" description="MT9 image sensor">
+			<pins>
+				<pin name="PIN_K42" mapto="data_i[0]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M38" mapto="data_i[1]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_L40" mapto="data_i[2]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N39" mapto="data_i[3]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M40" mapto="data_i[4]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N35" mapto="data_i[5]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_R30" mapto="data_i[6]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_P36" mapto="data_i[7]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_R32" mapto="data_i[8]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_K36" mapto="data_i[9]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J38" mapto="data_i[10]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AA40" mapto="data_i[11]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_Y36" mapto="extclk_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N38" mapto="fval_i">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_L39" mapto="lval_i">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M31" mapto="oe_n_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AA39" mapto="pixclk_i">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_K37" mapto="reset_n_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_K35" mapto="saddr_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AA36" mapto="sclk_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J37" mapto="sdata_io">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_N33" mapto="standby_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_M39" mapto="trigger_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+			</pins>
+		</io>
 		<io name="usb" type="communication" driver="usb_cypress_CY7C68014A" optional="false" optionalgroup="2" description="">
 			<pins>
 				<pin name="PIN_AA2" mapto="ifclk">

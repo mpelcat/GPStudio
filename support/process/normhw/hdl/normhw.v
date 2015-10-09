@@ -75,7 +75,7 @@ reg fsm, fsm_new;
 assign dv_s = (in_fv & in_dv) | (out_fv & ~in_fv);
 
 altshift_taps	 #(
-	.lpm_hint("RAM_BLOCK_TYPE=M9K"),
+	.lpm_hint("RAM_BLOCK_TYPE=AUTO"),
 	.lpm_type("altshift_taps"),
 	.number_of_taps(1),
 	.tap_distance(NWORDS),

@@ -1861,5 +1861,205 @@
 				</pin>
 			</pins>
 		</io>
+	<io name="nios" type="communication" driver="nios_base" optional="true" optionalgroup="3" description="">
+			<pins>
+				<pin name="PIN_E18" mapto="mem6_ce_n_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_F21" mapto="mem6_oe_n_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_H16" mapto="mem6_we_n_o">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D18" mapto="mem6_addr_o[0]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J19" mapto="mem6_addr_o[1]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_H19" mapto="mem6_addr_o[2]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G19" mapto="mem6_addr_o[3]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_F19" mapto="mem6_addr_o[4]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G20" mapto="mem6_addr_o[5]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D20" mapto="mem6_addr_o[6]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_C20" mapto="mem6_addr_o[7]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G21" mapto="mem6_addr_o[8]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E24" mapto="mem6_addr_o[9]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D24" mapto="mem6_addr_o[10]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_C24" mapto="mem6_addr_o[11]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E25" mapto="mem6_addr_o[12]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D25" mapto="mem6_addr_o[13]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_C25" mapto="mem6_addr_o[14]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J15" mapto="mem6_addr_o[15]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_H15" mapto="mem6_addr_o[16]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_F15" mapto="mem6_addr_o[17]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E15" mapto="mem6_addr_o[18]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J16" mapto="mem6_addr_o[19]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_F18" mapto="mem6_data_io[0]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G18" mapto="mem6_data_io[1]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E17" mapto="mem6_data_io[2]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_F17" mapto="mem6_data_io[3]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_H17" mapto="mem6_data_io[4]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_J17" mapto="mem6_data_io[5]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D16" mapto="mem6_data_io[6]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G16" mapto="mem6_data_io[7]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_A23" mapto="mem6_data_io[8]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_B23" mapto="mem6_data_io[9]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_C22" mapto="mem6_data_io[10]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D22" mapto="mem6_data_io[11]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E22" mapto="mem6_data_io[12]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_G22" mapto="mem6_data_io[13]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_D21" mapto="mem6_data_io[14]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_E21" mapto="mem6_data_io[15]">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+			</pins>
+		</io>
+		
 	</ios>
 </device>
