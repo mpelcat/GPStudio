@@ -5,6 +5,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = gpstudio_gui
 TEMPLATE = lib
 
+OUT_PWD = ../gpstudio_gui/
+win32 {
+    DESTDIR = ../../bin-win/
+}
+unix {
+    DESTDIR = ../../bin-linux/
+}
+
 DEFINES += GPSTUDIO_GUI_EXPORT_LIB
 
 QMAKE_CFLAGS_RELEASE = -O2
@@ -51,19 +59,18 @@ HEADERS  += \
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)
 
+# shared libraries in bin directory
+LIBS += -L../../bin/
+
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib
 DEPENDPATH += $$PWD/../gpstudio_lib
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_lib/release/ -lgpstudio_lib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_lib/debug/ -lgpstudio_lib
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_lib/ -lgpstudio_lib
+LIBS += -lgpstudio_lib
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
 DEPENDPATH += $$PWD/../gpstudio_com
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/release/ -lgpstudio_com
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/debug/ -lgpstudio_com
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_com/ -lgpstudio_com
+LIBS += -lgpstudio_com
 
 use_open_cv {
     DEFINES += __USE_OPEN_CV__

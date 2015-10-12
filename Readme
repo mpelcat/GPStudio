@@ -1,7 +1,14 @@
 How to build ??
 
+sudo apt-get install qtscript5-dev libqt5svg5-dev qtcreator libusb-1.0-0-dev
+
 # in the root of repo
+
 mkdir build
 cd build
 qmake ../src
 make -j9
+
+
+# To cross build to windows
+sudo apt-get install wine mingw-w64

@@ -3,6 +3,14 @@ QT       += core xml script svg
 TARGET = gpstudio_lib
 TEMPLATE = lib
 
+OUT_PWD = ../gpstudio_lib/
+win32 {
+    DESTDIR = ../../bin-win/
+}
+unix {
+    DESTDIR = ../../bin-linux/
+}
+
 DEFINES += GPSTUDIO_LIB_EXPORT_LIB
 
 QMAKE_CFLAGS_RELEASE = -O2
@@ -81,9 +89,10 @@ SOURCES += \
     gpnodeproject.cpp \
     lib_parser/iolibgroup.cpp
 
+# shared libraries in bin directory
+LIBS += -L../../bin/
+
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
 DEPENDPATH += $$PWD/../gpstudio_com
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/release/ -lgpstudio_com
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/debug/ -lgpstudio_com
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_com/ -lgpstudio_com
+LIBS += -lgpstudio_com

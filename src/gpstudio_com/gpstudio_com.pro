@@ -3,6 +3,14 @@ QT       += core
 TARGET = gpstudio_com
 TEMPLATE = lib
 
+OUT_PWD = ../gpstudio_com/
+win32 {
+    DESTDIR = ../../bin-win/
+}
+unix {
+    DESTDIR = ../../bin-linux/
+}
+
 DEFINES += GPSTUDIO_COM_EXPORT_LIB
 
 QMAKE_CFLAGS_RELEASE = -O2

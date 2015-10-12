@@ -6,7 +6,12 @@ TARGET = node_gui
 TEMPLATE = app
 
 OUT_PWD = ../gpnode/
-DESTDIR = ../gpnode/
+win32 {
+    DESTDIR = ../../bin-win/
+}
+unix {
+    DESTDIR = ../../bin-linux/
+}
 
 QMAKE_CFLAGS_RELEASE = -O2
 
@@ -22,26 +27,26 @@ FORMS    += mainwindow.ui \
 
 RESOURCES  += icons.qrc
 
+# relative path for shared library in the same directory
+LIBS += -Wl,-R.
+
+# shared libraries in bin directory
+LIBS += -L../../bin/
+
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib
 DEPENDPATH += $$PWD/../gpstudio_lib
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_lib/release/ -lgpstudio_lib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_lib/debug/ -lgpstudio_lib
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_lib/ -lgpstudio_lib
+LIBS += -lgpstudio_lib
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
 DEPENDPATH += $$PWD/../gpstudio_com
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/release/ -lgpstudio_com
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_com/debug/ -lgpstudio_com
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_com/ -lgpstudio_com
+LIBS += -lgpstudio_com
 
 # gpstudio_gui lib
 INCLUDEPATH += $$PWD/../gpstudio_gui
 DEPENDPATH += $$PWD/../gpstudio_gui
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_gui/release/ -lgpstudio_gui
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gpstudio_gui/debug/ -lgpstudio_gui
-else:unix: LIBS += -L$$OUT_PWD/../gpstudio_gui/ -lgpstudio_gui
+LIBS += -lgpstudio_gui
 
 use_open_cv {
     win32 {

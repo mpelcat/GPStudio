@@ -3,7 +3,7 @@
 GPNodeProject::GPNodeProject()
 {
     //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
-    _lib = new Lib("../../../GPStudio_lib_std");
+    _lib = new Lib("../../GPStudio_lib_std");
 }
 
 GPNodeProject::~GPNodeProject()

@@ -7,8 +7,10 @@
 
 Lib::Lib(const QString &libPath)
 {
-    QDir dir(QDir::currentPath()+'/'+libPath);
+    QDir dir(QDir::currentPath()+'/'+libPath+"/support");
     _path = dir.absolutePath();
+
+    qDebug()<<_path;
 
     reloadLib();
 }
