@@ -3,3 +3,5 @@ work/
 doc/*
 distrib/gpstudio_win/
 distrib/gpstudio_linux/
+*/sim/*
+*/tb/*
