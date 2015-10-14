@@ -347,7 +347,7 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement)
         int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
         if(ok) block->setAddrAbs(addrAbs); else block->setAddrAbs(-1);
 
-        int sizeAddrRel = domElement.attribute("size_addr_rel","0").toInt(&ok);
+        int sizeAddrRel = domElement.attribute("pi_size_addr_rel","0").toInt(&ok);
         if(ok && sizeAddrRel>=0) block->setSizeAddrRel(sizeAddrRel); else block->setSizeAddrRel(0);
 
         int masterCount = domElement.attribute("master_count","0").toInt(&ok);

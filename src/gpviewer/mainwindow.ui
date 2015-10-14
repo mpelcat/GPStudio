@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -42,11 +42,11 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>BI space</string>
+        <string>PI space</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <widget class="QHexEdit" name="biSpaceHex" native="true"/>
+         <widget class="QHexEdit" name="piSpaceHex" native="true"/>
         </item>
        </layout>
       </widget>
@@ -60,7 +60,7 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -94,7 +94,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>598</height>
+          <height>585</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">

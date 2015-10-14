@@ -161,6 +161,12 @@ void MainWindow::viewFlow(int flow)
 {
     int w = (*_cam->paramsBlocks())["mt9"]["roi1"]["w"].value().toInt();
     int h = (*_cam->paramsBlocks())["mt9"]["roi1"]["h"].value().toInt();
+    int binning = (*_cam->paramsBlocks())["mt9"]["binning"].value().toInt();
+    if(binning==1)
+    {
+        w/=2;
+        h/=2;
+    }
 
     if(flow==0)
     {
@@ -227,7 +233,7 @@ void MainWindow::viewFlow(int flow)
 void MainWindow::setBiSpace()
 {
     if(!_cam) return;
-    ui->biSpaceHex->setData(_cam->registerData());
+    ui->piSpaceHex->setData(_cam->registerData());
 }
 
 void MainWindow::oneViewer()

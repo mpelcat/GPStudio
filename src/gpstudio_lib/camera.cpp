@@ -128,10 +128,10 @@ void Camera::setRegister(uint addr, uint value)
 
 
 
-            _registerData[addr*4+0]=value<<24;
-            _registerData[addr*4+1]=value<<16;
-            _registerData[addr*4+2]=value<<8;
-            _registerData[addr*4+3]=value;
+            _registerData.data()[addr*4+0]=value>>24;
+            _registerData.data()[addr*4+1]=value>>16;
+            _registerData.data()[addr*4+2]=value>>8;
+            _registerData.data()[addr*4+3]=value;
 
             emit registerDataChanged();
         }
