@@ -6,9 +6,11 @@ TEMPLATE = lib
 OUT_PWD = ../gpstudio_lib/
 win32 {
     DESTDIR = ../../bin-win/
+    LIBS += -L../../bin-win/
 }
 unix {
     DESTDIR = ../../bin-linux/
+    LIBS += -L../../bin-linux/
 }
 
 DEFINES += GPSTUDIO_LIB_EXPORT_LIB
@@ -88,9 +90,6 @@ SOURCES += \
     datawrapper/harriswrapper.cpp \
     gpnodeproject.cpp \
     lib_parser/iolibgroup.cpp
-
-# shared libraries in bin directory
-LIBS += -L../../bin/
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

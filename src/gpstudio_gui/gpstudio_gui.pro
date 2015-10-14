@@ -8,9 +8,11 @@ TEMPLATE = lib
 OUT_PWD = ../gpstudio_gui/
 win32 {
     DESTDIR = ../../bin-win/
+    LIBS += -L../../bin-win/
 }
 unix {
     DESTDIR = ../../bin-linux/
+    LIBS += -L../../bin-linux/
 }
 
 DEFINES += GPSTUDIO_GUI_EXPORT_LIB
@@ -58,9 +60,6 @@ HEADERS  += \
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)
-
-# shared libraries in bin directory
-LIBS += -L../../bin/
 
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib

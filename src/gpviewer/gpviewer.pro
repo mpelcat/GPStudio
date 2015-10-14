@@ -8,9 +8,11 @@ TEMPLATE = app
 OUT_PWD = ../gpviewer/
 win32 {
     DESTDIR = ../../bin-win/
+    LIBS += -L../../bin-win/
 }
 unix {
     DESTDIR = ../../bin-linux/
+    LIBS += -L../../bin-linux/
 }
 
 QMAKE_CFLAGS_RELEASE = -O2
@@ -31,9 +33,6 @@ RESOURCES += icons.qrc
 
 # relative path for shared library in the same directory
 LIBS += -Wl,-R.
-
-# shared libraries in bin directory
-LIBS += -L../../bin/
 
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib
