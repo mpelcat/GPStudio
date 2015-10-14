@@ -11,8 +11,8 @@ class ParamInterconnect extends Block
 	function __construct()
 	{
 		parent::__construct();
-		$this->name="bi";
-		$this->driver="bi";
+		$this->name="pi";
+		$this->driver="pi";
 	}
 	
 	static function hex($value, $width)
@@ -53,8 +53,8 @@ class ParamInterconnect extends Block
 					if($addr_space[$addr]==-1)
 					{
 						$block->addr_abs = $addr;
-						$block->addInterface(new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->pi_size_addr_rel));
-						$this->addInterface(new InterfaceBus("bus_sl_$block->name",$block->name,"bi_slave_conn",$block->pi_size_addr_rel));
+						$block->addInterface(new InterfaceBus("bus_sl",$block->name,"pi_slave",$block->pi_size_addr_rel));
+						$this->addInterface(new InterfaceBus("bus_sl_$block->name",$block->name,"pi_slave_conn",$block->pi_size_addr_rel));
 						for($i=0; $i<$size_addr_space; $i++) $addr_space[$addr+$i]=0;
 						break;
 					}
@@ -64,8 +64,8 @@ class ParamInterconnect extends Block
 			{
 				for($i=0; $i<$block->master_count; $i++)
 				{
-					$block->addInterface(new InterfaceBus("bus_master",$block->name,"bi_master",$this->addr_bus_width));
-					$this->addInterface(new InterfaceBus("bus_master_$block->name",$block->name,"bi_master_conn",$this->addr_bus_width));
+					$block->addInterface(new InterfaceBus("bus_master",$block->name,"pi_master",$this->addr_bus_width));
+					$this->addInterface(new InterfaceBus("bus_master_$block->name",$block->name,"pi_master_conn",$this->addr_bus_width));
 					
 					$param = new Param();
 					$param->name = 'MASTER_ADDR_WIDTH';
@@ -164,9 +164,9 @@ class ParamInterconnect extends Block
 
 	function generate($node, $block, $path, $language)
 	{
-		$generator = new VHDL_generator('bi');
+		$generator = new VHDL_generator('pi');
 	
-		if(!$bi=$node->getBlock('bi')) return;
+		if(!$bi=$node->getBlock('pi')) return;
 		$generator->fromBlock($bi);
 	
 		// find the master name
@@ -175,7 +175,7 @@ class ParamInterconnect extends Block
 		$size_master_addr = 0;
 		foreach($bi->interfaces as $interface)
 		{
-			if($interface->type=='bi_master_conn')
+			if($interface->type=='pi_master_conn')
 			{
 				$name_master=$interface->blockname;
 				$size_master_addr=$interface->size_addr;
@@ -183,7 +183,7 @@ class ParamInterconnect extends Block
 			}
 		}
 		
-		if($master_count>1) error("Multi master not supported yet", 65, "BI");
+		if($master_count>1) error("Multi master not supported yet", 65, "PI");
 	
 		$code='';
 	
@@ -191,7 +191,7 @@ class ParamInterconnect extends Block
 		// generate for only ONE master
 		foreach($bi->interfaces as $interface)
 		{
-			if($interface->type=='bi_slave_conn')
+			if($interface->type=='pi_slave_conn')
 			{
 				$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
 				$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
@@ -243,7 +243,7 @@ class ParamInterconnect extends Block
 		$code.=''.$name_master.'_master_datard_o <='."\n";
 		foreach($bi->interfaces as $interface)
 		{
-			if($interface->type=='bi_slave_conn')
+			if($interface->type=='pi_slave_conn')
 			{
 				$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
 				$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
@@ -273,11 +273,11 @@ class ParamInterconnect extends Block
 		$this->create_header_file($node, $path.DIRECTORY_SEPARATOR.'params.h');
 	}
 	
-	public function type() {return 'bi';}
+	public function type() {return 'pi';}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml);
+		$xml_element = parent::getXmlElement($xml, $format);
 		
 		return $xml_element;
 	}

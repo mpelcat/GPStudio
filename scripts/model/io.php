@@ -64,25 +64,28 @@ class IO extends Block
 	
 	public function type() {return 'io';}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml);
+		$xml_element = parent::getXmlElement($xml, $format);
 		
-		// ports
-		$xml_ports = $xml->createElement("ports");
-		foreach($this->ext_ports as $port)
+		if($format=="complete")
 		{
-			$xml_ports->appendChild($port->getXmlElement($xml));
+			// ports
+			$xml_ports = $xml->createElement("ports");
+			foreach($this->ext_ports as $port)
+			{
+				$xml_ports->appendChild($port->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_ports);
+			
+			// pins
+			$xml_pins = $xml->createElement("pins");
+			foreach($this->pins as $pin)
+			{
+				$xml_pins->appendChild($pin->getXmlElement($xml));
+			}
+			$xml_element->appendChild($xml_pins);
 		}
-		$xml_element->appendChild($xml_ports);
-		
-		// pins
-		$xml_pins = $xml->createElement("pins");
-		foreach($this->pins as $pin)
-		{
-			$xml_pins->appendChild($pin->getXmlElement($xml));
-		}
-		$xml_element->appendChild($xml_pins);
 		
 		return $xml_element;
 	}

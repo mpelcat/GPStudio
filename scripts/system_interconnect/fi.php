@@ -51,7 +51,7 @@ class FlowInterconnect extends Block
 		$str = "     Available blocks : ";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="bi" and $block->name!="ci" and $block->name!="ri")
+			if($block->name!="fi" and $block->name!="pi" and $block->name!="ci" and $block->name!="ri")
 			{
 				$str .= "$block->name, ";
 			}
@@ -209,7 +209,7 @@ class FlowInterconnect extends Block
 		$content.='digraph G {'."\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="bi" and $block->name!="ci" and $block->name!="ri")
+			if($block->name!="fi" and $block->name!="fi" and $block->name!="ci" and $block->name!="ri")
 			{
 				$ins=array();
 				$outs=array();
@@ -451,9 +451,9 @@ class FlowInterconnect extends Block
 	
 	public function type() {return 'fi';}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml);
+		$xml_element = parent::getXmlElement($xml, $format);
 		
 		// clock_providers
 		$xml_flow_connects = $xml->createElement("flow_connects");

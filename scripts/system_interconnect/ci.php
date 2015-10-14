@@ -317,9 +317,9 @@ class ClockInterconnect extends Block
 	
 	public function type() {return 'ci';}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml);
+		$xml_element = parent::getXmlElement($xml, $format);
 		
 		// clock_providers
 		$xml_clocks = $xml->createElement("clock_providers");

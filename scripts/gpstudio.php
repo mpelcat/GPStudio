@@ -11,7 +11,7 @@
  * 
  * @section usrguide user guide
  * 
- * @defgroup base Base script
+ * @defgroup base Base script model
 **/
 
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')

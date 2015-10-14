@@ -1,5 +1,12 @@
 <?php
 
+/** 
+ * Block is the base of IO and Process block. 
+ * @brief Block is the base of IO and Process block.
+ * @see IO Process
+ * @ingroup base
+ */
+
 require_once("file.php");
 require_once("param.php");
 require_once("property.php");
@@ -465,9 +472,16 @@ class Block
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = $xml->createElement("block");
+		if($format=="project")
+		{
+			$xml_element = $xml->createElement($this->type());
+		}
+		else
+		{
+			$xml_element = $xml->createElement("block");
+		}
 		
 		// name
 		$att = $xml->createAttribute('name');
@@ -475,9 +489,12 @@ class Block
 		$xml_element->appendChild($att);
 		
 		// type
-		$att = $xml->createAttribute('type');
-		$att->value = $this->type();
-		$xml_element->appendChild($att);
+		if($format=="complete")
+		{
+			$att = $xml->createAttribute('type');
+			$att->value = $this->type();
+			$xml_element->appendChild($att);
+		}
 		
 		// in_lib
 		$att = $xml->createAttribute('in_lib');
@@ -489,98 +506,111 @@ class Block
 		$att->value = $this->driver;
 		$xml_element->appendChild($att);
 		
-		// addr_abs
-		$att = $xml->createAttribute('addr_abs');
-		$att->value = $this->addr_abs;
-		$xml_element->appendChild($att);
+		// pi information
+		if($format=="complete")
+		{
+			// addr_abs
+			$att = $xml->createAttribute('addr_abs');
+			$att->value = $this->addr_abs;
+			$xml_element->appendChild($att);
 		
-		// pi_size_addr_rel
-		$att = $xml->createAttribute('pi_size_addr_rel');
-		$att->value = $this->pi_size_addr_rel;
-		$xml_element->appendChild($att);
+			// pi_size_addr_rel
+			$att = $xml->createAttribute('pi_size_addr_rel');
+			$att->value = $this->pi_size_addr_rel;
+			$xml_element->appendChild($att);
 		
-		// master_count
-		$att = $xml->createAttribute('master_count');
-		$att->value = $this->master_count;
-		$xml_element->appendChild($att);
+			// master_count
+			$att = $xml->createAttribute('master_count');
+			$att->value = $this->master_count;
+			$xml_element->appendChild($att);
+		}
 		
 		// x_pos
-		$att = $xml->createAttribute('x_pos');
-		$att->value = $this->x_pos;
-		$xml_element->appendChild($att);
+		if(isset($this->x_pos) and $this->x_pos!=-1)
+		{
+			$att = $xml->createAttribute('x_pos');
+			$att->value = $this->x_pos;
+			$xml_element->appendChild($att);
+		}
 		
 		// y_pos
-		$att = $xml->createAttribute('y_pos');
-		$att->value = $this->y_pos;
-		$xml_element->appendChild($att);
-		
-		// files
-		if(!empty($this->files))
+		if(isset($this->y_pos) and $this->y_pos!=-1)
 		{
-			$xml_files = $xml->createElement("files");
-			foreach($this->files as $file)
-			{
-				$xml_files->appendChild($file->getXmlElement($xml));
-			}
-			$xml_element->appendChild($xml_files);
+			$att = $xml->createAttribute('y_pos');
+			$att->value = $this->y_pos;
+			$xml_element->appendChild($att);
 		}
 		
-		// params
-		if(!empty($this->params))
+		if($format=="complete")
 		{
-			$xml_params = $xml->createElement("params");
-			foreach($this->params as $param)
+			// files
+			if(!empty($this->files))
 			{
-				$xml_params->appendChild($param->getXmlElement($xml));
-			}
-			$xml_element->appendChild($xml_params);
-		}
-		
-		// properties
-		if(!empty($this->properties))
-		{
-			$xml_property = $xml->createElement("properties");
-			foreach($this->properties as $property)
-			{
-				$xml_property->appendChild($property->getXmlElement($xml));
-			}
-			$xml_element->appendChild($xml_property);
-		}
-		
-		// flows
-		if(!empty($this->flows))
-		{
-			$xml_flows = $xml->createElement("flows");
-			foreach($this->flows as $flow)
-			{
-				if($flow->type=="in" or $flow->type=="out")
+				$xml_files = $xml->createElement("files");
+				foreach($this->files as $file)
 				{
-					$xml_flows->appendChild($flow->getXmlElement($xml));
+					$xml_files->appendChild($file->getXmlElement($xml));
 				}
+				$xml_element->appendChild($xml_files);
 			}
-			$xml_element->appendChild($xml_flows);
-		}
-		
-		// clocks
-		if(!empty($this->clocks))
-		{
-			$xml_clocks = $xml->createElement("clocks");
-			foreach($this->clocks as $clock)
+			
+			// params
+			if(!empty($this->params))
 			{
-				$xml_clocks->appendChild($clock->getXmlElement($xml));
+				$xml_params = $xml->createElement("params");
+				foreach($this->params as $param)
+				{
+					$xml_params->appendChild($param->getXmlElement($xml));
+				}
+				$xml_element->appendChild($xml_params);
 			}
-			$xml_element->appendChild($xml_clocks);
-		}
-		
-		// resets
-		if(!empty($this->resets))
-		{
-			$xml_resets = $xml->createElement("resets");
-			foreach($this->resets as $reset)
+			
+			// properties
+			if(!empty($this->properties))
 			{
-				$xml_resets->appendChild($reset->getXmlElement($xml));
+				$xml_property = $xml->createElement("properties");
+				foreach($this->properties as $property)
+				{
+					$xml_property->appendChild($property->getXmlElement($xml));
+				}
+				$xml_element->appendChild($xml_property);
 			}
-			$xml_element->appendChild($xml_resets);
+			
+			// flows
+			if(!empty($this->flows))
+			{
+				$xml_flows = $xml->createElement("flows");
+				foreach($this->flows as $flow)
+				{
+					if($flow->type=="in" or $flow->type=="out")
+					{
+						$xml_flows->appendChild($flow->getXmlElement($xml));
+					}
+				}
+				$xml_element->appendChild($xml_flows);
+			}
+			
+			// clocks
+			if(!empty($this->clocks))
+			{
+				$xml_clocks = $xml->createElement("clocks");
+				foreach($this->clocks as $clock)
+				{
+					$xml_clocks->appendChild($clock->getXmlElement($xml));
+				}
+				$xml_element->appendChild($xml_clocks);
+			}
+			
+			// resets
+			if(!empty($this->resets))
+			{
+				$xml_resets = $xml->createElement("resets");
+				foreach($this->resets as $reset)
+				{
+					$xml_resets->appendChild($reset->getXmlElement($xml));
+				}
+				$xml_element->appendChild($xml_resets);
+			}
 		}
 		
 		return $xml_element;

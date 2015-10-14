@@ -136,7 +136,7 @@ class Node
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("node");
 		
@@ -145,27 +145,51 @@ class Node
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// toolchain
-		$xml_element->appendChild($this->board->toolchain->getXmlElement($xml));
-		
-		// blocks
-		$xml_blocks = $xml->createElement("blocks");
-		foreach($this->blocks as $block)
+		// board
+		$xml_element->appendChild($this->board->getXmlElement($xml, $format));
+			
+		if($format=="complete")
 		{
-			$xml_blocks->appendChild($block->getXmlElement($xml));
+			// blocks
+			$xml_blocks = $xml->createElement("blocks");
+			foreach($this->blocks as $block)
+			{
+				$xml_blocks->appendChild($block->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_blocks);
 		}
-		$xml_element->appendChild($xml_blocks);
+		elseif($format=="project")
+		{
+			// process
+			$xml_blocks = $xml->createElement("process");
+			foreach($this->blocks as $block)
+			{
+				if($block->type()=="process") $xml_blocks->appendChild($block->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_blocks);
+		}
 		
 		return $xml_element;
 	}
 	
 	function saveXml($file)
 	{
-		$xml = new DOMDocument();
+		$xml = new DOMDocument("1.0", "UTF-8");
 		$xml->preserveWhiteSpace = false;
 		$xml->formatOutput = true;
 		
-		$xml->appendChild($this->getXmlElement($xml));
+		$xml->appendChild($this->getXmlElement($xml, "complete"));
+		
+		$xml->save($file);
+	}
+	
+	function saveProject($file)
+	{
+		$xml = new DOMDocument("1.0", "UTF-8");
+		$xml->preserveWhiteSpace = false;
+		$xml->formatOutput = true;
+		
+		$xml->appendChild($this->getXmlElement($xml, "project"));
 		
 		$xml->save($file);
 	}

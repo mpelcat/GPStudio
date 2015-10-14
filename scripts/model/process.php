@@ -86,9 +86,9 @@ class Process extends Block
 	
 	public function type() {return 'process';}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml);
+		$xml_element = parent::getXmlElement($xml, $format);
 		
 		return $xml_element;
 	}

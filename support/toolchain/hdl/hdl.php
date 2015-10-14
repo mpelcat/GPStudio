@@ -131,7 +131,7 @@ class HDL_toolchain extends Toolchain
 			{
 				foreach($block->interfaces as $interface)
 				{
-					if($interface->type=='bi_slave')
+					if($interface->type=='pi_slave')
 					{
 						$generator->addSignalComment(str_pad(' '.$block->name.' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
 						if($interface->size_addr==1)
@@ -147,7 +147,7 @@ class HDL_toolchain extends Toolchain
 						$generator->addSignal($block->name.'_datawr_s', 32, 'std_logic_vector');
 						$generator->addSignal($block->name.'_datard_s', 32, 'std_logic_vector');
 					}
-					if($interface->type=='bi_master')
+					if($interface->type=='pi_master')
 					{
 						$generator->addSignalComment(str_pad(' '.$block->name.' '.$interface->name.' ',55,'-',STR_PAD_BOTH));
 						if($interface->size_addr==1)

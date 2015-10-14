@@ -42,7 +42,7 @@ else error('The config file is not a know extension.',1);
 
 foreach($blocks as $block)
 {
-	if($block->pi_size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"bi_slave",$block->pi_size_addr_rel));
+	if($block->pi_size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"pi_slave",$block->pi_size_addr_rel));
 
 	$block_generator = new VHDL_generator($block->name);
 	$block_generator->fromBlock($block);

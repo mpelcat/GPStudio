@@ -104,6 +104,33 @@ class Board
 		}
 	}
 	
+	public function getXmlElement($xml, $format)
+	{
+		$xml_element = $xml->createElement("board");
+		
+		// name
+		$att = $xml->createAttribute('name');
+		$att->value = $this->name;
+		$xml_element->appendChild($att);
+		
+		if($format=="complete")
+		{
+			$xml_element->appendChild($this->toolchain->getXmlElement($xml, $format));
+		}
+		elseif($format=="project")
+		{
+			// process
+			$xml_blocks = $xml->createElement("ios");
+			foreach($this->parentNode->blocks as $block)
+			{
+				if($block->type()=="io") $xml_blocks->appendChild($block->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_blocks);
+		}
+		
+		return $xml_element;
+	}
+	
 	private function parse_ios($board_element, $node)
 	{
 		$used_ios = array();
