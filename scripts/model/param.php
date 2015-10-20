@@ -118,7 +118,7 @@ class Param
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("param");
 		
@@ -127,77 +127,69 @@ class Param
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		if($this->hard)
-		{
-			// type
-			$att = $xml->createAttribute('type');
-			$att->value = $this->type;
-			$xml_element->appendChild($att);
-		
-			// hard
-			$att = $xml->createAttribute('hard');
-			$att->value = $this->hard;
-			$xml_element->appendChild($att);
-		}
-		else
-		{
-			// regaddr
-			$att = $xml->createAttribute('regaddr');
-			$att->value = $this->regaddr;
-			$xml_element->appendChild($att);
-		
-			// propertymap
-			$att = $xml->createAttribute('propertymap');
-			$att->value = $this->propertymap;
-			$xml_element->appendChild($att);
-		}
-		
 		// value
 		$att = $xml->createAttribute('value');
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		// default
-		$att = $xml->createAttribute('default');
-		$att->value = $this->default;
-		$xml_element->appendChild($att);
-		
-		// min
-		$att = $xml->createAttribute('min');
-		$att->value = $this->min;
-		$xml_element->appendChild($att);
-		
-		// max
-		$att = $xml->createAttribute('max');
-		$att->value = $this->max;
-		$xml_element->appendChild($att);
-		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
-		
-		// parambitfields
-		if(!empty($this->parambitfields))
+		if($format=="complete")
 		{
-			$xml_parambitfields = $xml->createElement("bitfields");
-			foreach($this->parambitfields as $parambitfield)
+			if($this->hard)
 			{
-				$xml_parambitfields->appendChild($parambitfield->getXmlElement($xml));
+				// type
+				$att = $xml->createAttribute('type');
+				$att->value = $this->type;
+				$xml_element->appendChild($att);
+			
+				// hard
+				$att = $xml->createAttribute('hard');
+				$att->value = $this->hard;
+				$xml_element->appendChild($att);
 			}
-			$xml_element->appendChild($xml_parambitfields);
+			else
+			{
+				// regaddr
+				$att = $xml->createAttribute('regaddr');
+				$att->value = $this->regaddr;
+				$xml_element->appendChild($att);
+			
+				// propertymap
+				$att = $xml->createAttribute('propertymap');
+				$att->value = $this->propertymap;
+				$xml_element->appendChild($att);
+			}
+			
+			// default
+			$att = $xml->createAttribute('default');
+			$att->value = $this->default;
+			$xml_element->appendChild($att);
+			
+			// min
+			$att = $xml->createAttribute('min');
+			$att->value = $this->min;
+			$xml_element->appendChild($att);
+			
+			// max
+			$att = $xml->createAttribute('max');
+			$att->value = $this->max;
+			$xml_element->appendChild($att);
+			
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+			
+			// parambitfields
+			if(!empty($this->parambitfields))
+			{
+				$xml_parambitfields = $xml->createElement("bitfields");
+				foreach($this->parambitfields as $parambitfield)
+				{
+					$xml_parambitfields->appendChild($parambitfield->getXmlElement($xml, $format));
+				}
+				$xml_element->appendChild($xml_parambitfields);
+			}
 		}
-		
-		/*// paramenums
-		if(!empty($this->paramenums))
-		{
-			$xml_paramenums = $xml->createElement("enums");
-			foreach($this->paramenums as $paramenum)
-			{
-				$xml_paramenums->appendChild($paramenum->getXmlElement($xml));
-			}
-			$xml_element->appendChild($xml_paramenums);
-		}*/
 		
 		return $xml_element;
 	}

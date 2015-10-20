@@ -87,4 +87,18 @@ function messageVerbosity($messageText, $messageCtx="")
 	}
 }
 
+function findproject()
+{
+	$projects=array();
+	$files=scandir(getcwd());
+	foreach($files as $file)
+	{
+		if(substr($file,-5)===".node")
+		{
+			$projects[]=$file;
+		}
+	}
+	if(count($projects)==1) return $projects[0];
+}
+
 ?>

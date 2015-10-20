@@ -64,7 +64,7 @@ class Flow
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("flow");
 		
@@ -73,30 +73,33 @@ class Flow
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// type
-		$att = $xml->createAttribute('type');
-		$att->value = $this->type;
-		$xml_element->appendChild($att);
-		
 		// size
 		$att = $xml->createAttribute('size');
 		$att->value = $this->size;
 		$xml_element->appendChild($att);
 		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
-		
-		// properties
-		if(!empty($this->properties))
+		if($format=="complete")
 		{
-			$xml_property = $xml->createElement("properties");
-			foreach($this->properties as $property)
+			// type
+			$att = $xml->createAttribute('type');
+			$att->value = $this->type;
+			$xml_element->appendChild($att);
+			
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+			
+			// properties
+			if(!empty($this->properties))
 			{
-				$xml_property->appendChild($property->getXmlElement($xml));
+				$xml_property = $xml->createElement("properties");
+				foreach($this->properties as $property)
+				{
+					$xml_property->appendChild($property->getXmlElement($xml, $format));
+				}
+				$xml_element->appendChild($xml_property);
 			}
-			$xml_element->appendChild($xml_property);
 		}
 		
 		return $xml_element;

@@ -57,7 +57,14 @@ class Board
 		$this->clocks = array();
 		$this->resets = array();
 		
-		$board_name = $board_element['name'];
+		if(is_string($board_element))
+		{
+			$board_name = $board_element;
+		}
+		else
+		{
+			$board_name = $board_element['name'];
+		}
 		
 		// open device define file (.dev)
 		$this->board_file = SUPPORT_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
@@ -104,6 +111,189 @@ class Board
 		}
 	}
 	
+	private function parse_ios($board_element, $node)
+	{
+		$used_ios = array();
+		
+		// add all used ios
+		if(isset($board_element->ios->io))
+		{
+			foreach($board_element->ios->io as $ioXml)
+			{
+				$io_name = (string)$ioXml['name'];
+				$used_ios[$io_name] = $ioXml;
+			}
+		}
+		if(isset($this->xml->ios->io))
+		{
+			foreach($this->xml->ios->io as $ioXml)
+			{
+				$io_name = (string)$ioXml['name'];
+				if(array_key_exists($io_name, $used_ios))
+				{
+					$io = new IO($ioXml, $used_ios[$io_name]);
+					
+					// redef params
+					if(isset($ioXml->params))
+					{
+						foreach($ioXml->params->param as $paramXml)
+						{
+							if(isset($paramXml['name']) and isset($paramXml['value']))
+							{
+								if($concerned_param=$io->getParam((string)$paramXml['name']))
+								{
+									$concerned_param->value = $paramXml['value'];
+								}
+								else
+								{
+									warning('parameter '.$paramXml['name']." does'nt exists",16,$io->name);
+								}
+							}
+						}
+					}
+					
+					// redef properties
+					if(isset($ioXml->properties))
+					{
+						foreach($ioXml->properties->property as $propertyXml)
+						{
+							if(isset($propertyXml['name']) and isset($propertyXml['value']))
+							{
+								if($concerned_property=$io->getPropertyPath((string)$propertyXml['name']))
+								{
+									$concerned_property->value = $propertyXml['value'];
+								}
+								else
+								{
+									warning('property '.$propertyXml['name']." does'nt exists",16,$io->name);
+								}
+							}
+						}
+					}
+					
+					// redef clock freq
+					if(isset($ioXml->clocks))
+					{
+						warning('clocks',16,$io->name);
+						foreach($ioXml->clocks->clock as $clockXml)
+						{
+							if(isset($clockXml['name']) and isset($clockXml['typical']))
+							{
+								if($concerned_clock=$io->getClock((string)$clockXml['name']))
+								{
+									$concerned_clock->typical = Clock::convert($clockXml['typical']);
+								}
+								else
+								{
+									warning('clock '.$clockXml['name']." does'nt exists",16,$processBlock->name);
+								}
+							}
+						}
+					}
+					
+					$node->addBlock($io);
+					unset($used_ios[$io_name]);
+				}
+				elseif($ioXml['optional']!="true")
+				{
+					//$node->addBlock(new IO($io, null));
+				}
+			}
+		}
+		
+		// warning for io does'nt exist
+		foreach($used_ios as $key => $io)
+		{
+			warning('io \''.$io['name']."' does'nt exists in board ".$this->name,16,'Board');
+		}
+		
+		// replace default param value directly in .node file
+		if(isset($board_element->ios->io))
+		{
+			foreach($board_element->ios->io as $io)
+			{
+				if($concerned_block=$node->getBlock($io['name']))
+				{
+					// params
+					if(isset($io->params))
+					{
+						foreach($io->params->param as $param)
+						{
+							if(isset($param['name']) and isset($param['value']))
+							{
+								if($concerned_param=$concerned_block->getParam((string)$param['name']))
+								{
+									$concerned_param->value = $param['value'];
+								}
+								else
+								{
+									warning('parameter '.$param['name']." does'nt exists",16,$concerned_block->name);
+								}
+							}
+						}
+					}
+					
+					// redef properties
+					if(isset($io->properties))
+					{
+						foreach($io->properties->property as $property)
+						{
+							if(isset($property['name']) and isset($property['value']))
+							{
+								if($concerned_property=$concerned_block->getPropertyPath((string)$property['name']))
+								{
+									$concerned_property->value = $property['value'];
+								}
+								else
+								{
+									warning('property '.$property['name']." does'nt exists",16,$concerned_block->name);
+								}
+							}
+						}
+					}
+					
+					// flow size
+					if(isset($io->flows))
+					{
+						foreach($io->flows->flow as $flow)
+						{
+							if(isset($flow['name']) and isset($flow['size']))
+							{
+								if($concerned_flow=$concerned_block->getFlow((string)$flow['name']))
+								{
+									$concerned_flow->size = (int)$flow['size'];
+								}
+								else
+								{
+									warning('flow '.$flow['name']." does'nt exists",16,$concerned_block->name);
+								}
+							}
+						}
+					}
+					
+					// clocks
+					if(isset($io->clocks))
+					{
+						foreach($io->clocks->clock as $clock)
+						{
+							if(isset($clock['name']) and isset($clock['typical']))
+							{
+								if($concerned_clock=$concerned_block->getClock((string)$clock['name']))
+								{
+									$concerned_clock->typical = Clock::convert($clock['typical']);
+								}
+								else
+								{
+									warning('clock '.$clock['name']." does'nt exists",16,$concerned_block->name);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("board");
@@ -129,180 +319,6 @@ class Board
 		}
 		
 		return $xml_element;
-	}
-	
-	private function parse_ios($board_element, $node)
-	{
-		$used_ios = array();
-		
-		// add all used ios
-		foreach($board_element->ios->io as $ioXml)
-		{
-			$io_name = (string)$ioXml['name'];
-			$used_ios[$io_name] = $ioXml;
-		}
-		foreach($this->xml->ios->io as $ioXml)
-		{
-			$io_name = (string)$ioXml['name'];
-			if(array_key_exists($io_name, $used_ios))
-			{
-				$io = new IO($ioXml, $used_ios[$io_name]);
-				
-				// redef params
-				if(isset($ioXml->params))
-				{
-					foreach($ioXml->params->param as $paramXml)
-					{
-						if(isset($paramXml['name']) and isset($paramXml['value']))
-						{
-							if($concerned_param=$io->getParam((string)$paramXml['name']))
-							{
-								$concerned_param->value = $paramXml['value'];
-							}
-							else
-							{
-								warning('parameter '.$paramXml['name']." does'nt exists",16,$io->name);
-							}
-						}
-					}
-				}
-				
-				// redef properties
-				if(isset($ioXml->properties))
-				{
-					foreach($ioXml->properties->property as $propertyXml)
-					{
-						if(isset($propertyXml['name']) and isset($propertyXml['value']))
-						{
-							if($concerned_property=$io->getPropertyPath((string)$propertyXml['name']))
-							{
-								$concerned_property->value = $propertyXml['value'];
-							}
-							else
-							{
-								warning('property '.$propertyXml['name']." does'nt exists",16,$io->name);
-							}
-						}
-					}
-				}
-				
-				// redef clock freq
-				if(isset($ioXml->clocks))
-				{
-					warning('clocks',16,$io->name);
-					foreach($ioXml->clocks->clock as $clockXml)
-					{
-						if(isset($clockXml['name']) and isset($clockXml['typical']))
-						{
-							if($concerned_clock=$io->getClock((string)$clockXml['name']))
-							{
-								$concerned_clock->typical = Clock::convert($clockXml['typical']);
-							}
-							else
-							{
-								warning('clock '.$clockXml['name']." does'nt exists",16,$processBlock->name);
-							}
-						}
-					}
-				}
-				
-				$node->addBlock($io);
-				unset($used_ios[$io_name]);
-			}
-			elseif($ioXml['optional']!="true")
-			{
-				//$node->addBlock(new IO($io, null));
-			}
-		}
-		
-		// warning for io does'nt exist
-		foreach($used_ios as $key => $io)
-		{
-			warning('io \''.$io['name']."' does'nt exists in board ".$this->name,16,'Board');
-		}
-		
-		// replace default param value directly in .node file
-		foreach($board_element->ios->io as $io)
-		{
-			if($concerned_block=$node->getBlock($io['name']))
-			{
-				// params
-				if(isset($io->params))
-				{
-					foreach($io->params->param as $param)
-					{
-						if(isset($param['name']) and isset($param['value']))
-						{
-							if($concerned_param=$concerned_block->getParam((string)$param['name']))
-							{
-								$concerned_param->value = $param['value'];
-							}
-							else
-							{
-								warning('parameter '.$param['name']." does'nt exists",16,$concerned_block->name);
-							}
-						}
-					}
-				}
-				
-				// redef properties
-				if(isset($io->properties))
-				{
-					foreach($io->properties->property as $property)
-					{
-						if(isset($property['name']) and isset($property['value']))
-						{
-							if($concerned_property=$concerned_block->getPropertyPath((string)$property['name']))
-							{
-								$concerned_property->value = $property['value'];
-							}
-							else
-							{
-								warning('property '.$property['name']." does'nt exists",16,$concerned_block->name);
-							}
-						}
-					}
-				}
-				
-				// flow size
-				if(isset($io->flows))
-				{
-					foreach($io->flows->flow as $flow)
-					{
-						if(isset($flow['name']) and isset($flow['size']))
-						{
-							if($concerned_flow=$concerned_block->getFlow((string)$flow['name']))
-							{
-								$concerned_flow->size = (int)$flow['size'];
-							}
-							else
-							{
-								warning('flow '.$flow['name']." does'nt exists",16,$concerned_block->name);
-							}
-						}
-					}
-				}
-				
-				// clocks
-				if(isset($io->clocks))
-				{
-					foreach($io->clocks->clock as $clock)
-					{
-						if(isset($clock['name']) and isset($clock['typical']))
-						{
-							if($concerned_clock=$concerned_block->getClock((string)$clock['name']))
-							{
-								$concerned_clock->typical = Clock::convert($clock['typical']);
-							}
-							else
-							{
-								warning('clock '.$clock['name']." does'nt exists",16,$concerned_block->name);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 	
 	/** Add a clock to the block 
@@ -364,6 +380,12 @@ class Board
 			if($pin->name==$name) return $pin;
 		}
 		return null;
+	}
+	
+	function addIo($ioName)
+	{
+		$io = new IO($ioName);
+		$this->parentNode->addBlock($io);
 	}
 }
 

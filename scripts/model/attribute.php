@@ -39,7 +39,7 @@ class Attribute
 		$this->type		= (string)$xml['type'];
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("attribute");
 		

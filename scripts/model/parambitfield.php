@@ -97,7 +97,7 @@ class ParamBitfield
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("bitfield");
 		

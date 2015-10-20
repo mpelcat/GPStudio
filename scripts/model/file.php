@@ -60,7 +60,7 @@ class File
 		$this->desc = (string)$xml['desc'];
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("file");
 		

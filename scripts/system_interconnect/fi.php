@@ -209,7 +209,7 @@ class FlowInterconnect extends Block
 		$content.='digraph G {'."\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="fi" and $block->name!="ci" and $block->name!="ri")
+			if($block->name!="fi" and $block->name!="pi" and $block->name!="ci" and $block->name!="ri")
 			{
 				$ins=array();
 				$outs=array();
@@ -453,17 +453,35 @@ class FlowInterconnect extends Block
 	
 	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml, $format);
-		
-		// clock_providers
-		$xml_flow_connects = $xml->createElement("flow_connects");
-		foreach($this->flow_connects as $flow_connect)
+		if($format=="complete")
 		{
-			$xml_flow_connects->appendChild($flow_connect->getXmlElement($xml));
+			$xml_element = parent::getXmlElement($xml, $format);
+			
+			// flow_connects
+			$xml_flow_connects = $xml->createElement("flow_connects");
+			foreach($this->flow_connects as $flow_connect)
+			{
+				$xml_flow_connects->appendChild($flow_connect->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_flow_connects);
+			
+			return $xml_element;
 		}
-		$xml_element->appendChild($xml_flow_connects);
+		elseif($format=="project")
+		{
+			$xml_element = $xml->createElement("flow_interconnect");
 		
-		return $xml_element;
+			// flow_connects
+			$xml_flow_connects = $xml->createElement("connects");
+			foreach($this->flow_connects as $flow_connect)
+			{
+				$xml_flow_connects->appendChild($flow_connect->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_flow_connects);
+			
+			return $xml_element;
+		}
+		return NULL;
 	}
 	
 	/** Add a flow connection to the block 
@@ -474,14 +492,31 @@ class FlowInterconnect extends Block
 		array_push($this->flow_connects, $flow_connect);
 	}
 	
+	function delFlowConnect($fromBlock, $fromFlow, $toBlock, $toFlow)
+	{
+		$i=0;
+		foreach($this->flow_connects as $flow_connect)
+		{
+			if( $flow_connect->fromblock==$fromblock
+			and $flow_connect->fromflow==$fromflow
+			and $flow_connect->toblock==$toblock
+			and $flow_connect->toflow==$toflow) unset($this->flow_connects[i]);
+			$i++;
+		}
+		return null;
+	}
+	
 	/** return a reference to the flow connection with the name $name, if not found, return false
 	 *  @param string $name name of the flow connection to search
 	 *  @return FlowConnect found flow connection **/
-	function getFlowConnect($name)
+	function getFlowConnect($fromBlock, $fromFlow, $toBlock, $toFlow)
 	{
 		foreach($this->flow_connects as $flow_connect)
 		{
-			if($flow_connect->name==$name) return $flow_connect;
+			if( $flow_connect->fromblock==$fromblock
+			and $flow_connect->fromflow==$fromflow
+			and $flow_connect->toblock==$toblock
+			and $flow_connect->toflow==$toflow) return $flow_connect;
 		}
 		return null;
 	}

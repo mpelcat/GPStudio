@@ -319,39 +319,57 @@ class ClockInterconnect extends Block
 	
 	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml, $format);
-		
-		// clock_providers
-		$xml_clocks = $xml->createElement("clock_providers");
-		foreach($this->clock_providers as $clock)
+		if($format=="complete")
 		{
-			$clock_element = $clock->getXmlElement($xml);
+			$xml_element = parent::getXmlElement($xml, $format);
 			
-			// blockName
-			$att = $xml->createAttribute('blockName');
-			$att->value = $clock->parentBlock->name;
-			$clock_element->appendChild($att);
-		
-			$xml_clocks->appendChild($clock_element);
+			// clock_providers
+			$xml_clocks = $xml->createElement("clock_providers");
+			foreach($this->clock_providers as $clock)
+			{
+				$clock_element = $clock->getXmlElement($xml, $format);
+				
+				// blockName
+				$att = $xml->createAttribute('blockName');
+				$att->value = $clock->parentBlock->name;
+				$clock_element->appendChild($att);
+			
+				$xml_clocks->appendChild($clock_element);
+			}
+			$xml_element->appendChild($xml_clocks);
+			
+			// clock_receivers
+			$xml_clocks = $xml->createElement("clock_receivers");
+			foreach($this->clock_receivers as $clock)
+			{
+				$clock_element = $clock->getXmlElement($xml, $format);
+				
+				// blockName
+				$att = $xml->createAttribute('blockName');
+				$att->value = $clock->parentBlock->name;
+				$clock_element->appendChild($att);
+				
+				$xml_clocks->appendChild($clock_element);
+			}
+			$xml_element->appendChild($xml_clocks);
+			
+			return $xml_element;
 		}
-		$xml_element->appendChild($xml_clocks);
-		
-		// clock_receivers
-		$xml_clocks = $xml->createElement("clock_receivers");
-		foreach($this->clock_receivers as $clock)
+		elseif($format=="project")
 		{
-			$clock_element = $clock->getXmlElement($xml);
+			$xml_element = $xml->createElement("clock_interconnect");
 			
-			// blockName
-			$att = $xml->createAttribute('blockName');
-			$att->value = $clock->parentBlock->name;
-			$clock_element->appendChild($att);
+			// domains
+			$xml_flow_connects = $xml->createElement("domains");
+			foreach($this->domains as $domain)
+			{
+				$xml_flow_connects->appendChild($domain->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_flow_connects);
 			
-			$xml_clocks->appendChild($clock_element);
+			return $xml_element;
 		}
-		$xml_element->appendChild($xml_clocks);
-		
-		return $xml_element;
+		return NULL;
 	}
 
 	static function ppcm($nombre,$nombre2)

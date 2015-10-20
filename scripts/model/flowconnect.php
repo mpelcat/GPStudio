@@ -32,10 +32,25 @@ class FlowConnect
 	*/
 	public $order;
 	
-	function __construct($xml=null)
+	function __construct($fromBlock=NULL, $fromFlow=NULL, $toBlock=NULL, $toFlow=NULL, $order='msb')
 	{
 		$this->order='msb';
-		if($xml) $this->parse_xml($xml);
+		if($fromBlock!=NULL)
+		{
+			if(is_object($fromBlock) and get_class($fromBlock)==='SimpleXMLElement')
+			{
+				$xml=$fromBlock;
+				$this->parse_xml($xml);
+			}
+			else
+			{
+				$this->fromblock = $fromBlock;
+				$this->fromflow = $fromFlow;
+				$this->toblock = $toBlock;
+				$this->toflow = $toFlow;
+				$this->order = $order;
+			}
+		}
 	}
 	
 	protected function parse_xml($xml)
@@ -47,9 +62,16 @@ class FlowConnect
 		if(isset($xml['order'])) $this->order = (string)$xml['order']; else $this->order = 'msb';
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = $xml->createElement("flow_connect");
+		if($format=="project")
+		{
+			$xml_element = $xml->createElement("connect");
+		}
+		else
+		{
+			$xml_element = $xml->createElement("flow_connect");
+		}
 		
 		// fromblock
 		$att = $xml->createAttribute('fromblock');

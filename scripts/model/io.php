@@ -24,10 +24,21 @@ class IO extends Block
 			$this->in_lib=true;
 			$io_file = $this->path . $io_driver . ".io";
 		}
-		else
+		elseif(is_string($io_device_element))
 		{
-			$io_file = $io_device_element;
-			$this->path = realpath(dirname($io_file));
+			if(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
+			{
+				$io_driver = $io_device_element;
+				$this->name = $io_driver;
+				$this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
+				$this->in_lib=true;
+				$io_file = $this->path . $io_driver . ".io";
+			}
+			else
+			{
+				$io_file = $io_device_element;
+				$this->path = realpath(dirname($io_file));
+			}
 		}
 		
 		if (!file_exists($io_file)) error("File $io_file doesn't exist",5,"IO");
@@ -74,7 +85,7 @@ class IO extends Block
 			$xml_ports = $xml->createElement("ports");
 			foreach($this->ext_ports as $port)
 			{
-				$xml_ports->appendChild($port->getXmlElement($xml));
+				$xml_ports->appendChild($port->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_ports);
 			
@@ -82,7 +93,7 @@ class IO extends Block
 			$xml_pins = $xml->createElement("pins");
 			foreach($this->pins as $pin)
 			{
-				$xml_pins->appendChild($pin->getXmlElement($xml));
+				$xml_pins->appendChild($pin->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_pins);
 		}

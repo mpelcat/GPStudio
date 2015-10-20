@@ -124,7 +124,7 @@ class Property
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("property");
 		
@@ -133,55 +133,58 @@ class Property
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// caption
-		$att = $xml->createAttribute('caption');
-		$att->value = $this->caption;
-		$xml_element->appendChild($att);
-		
-		// type
-		$att = $xml->createAttribute('type');
-		$att->value = $this->type;
-		$xml_element->appendChild($att);
-		
 		// value
 		$att = $xml->createAttribute('value');
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		// min
-		$att = $xml->createAttribute('min');
-		$att->value = $this->min;
-		$xml_element->appendChild($att);
-		
-		// max
-		$att = $xml->createAttribute('max');
-		$att->value = $this->max;
-		$xml_element->appendChild($att);
-		
-		// step
-		$att = $xml->createAttribute('step');
-		$att->value = $this->step;
-		$xml_element->appendChild($att);
-		
-		// assert
-		$att = $xml->createAttribute('assert');
-		$att->value = $this->assert;
-		$xml_element->appendChild($att);
-		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
-		
-		// propertyenums
-		if(!empty($this->propertyenums))
+		if($format=="complete")
 		{
-			$xml_propertyenums = $xml->createElement("enums");
-			foreach($this->propertyenums as $property)
+			// caption
+			$att = $xml->createAttribute('caption');
+			$att->value = $this->caption;
+			$xml_element->appendChild($att);
+			
+			// type
+			$att = $xml->createAttribute('type');
+			$att->value = $this->type;
+			$xml_element->appendChild($att);
+			
+			// min
+			$att = $xml->createAttribute('min');
+			$att->value = $this->min;
+			$xml_element->appendChild($att);
+			
+			// max
+			$att = $xml->createAttribute('max');
+			$att->value = $this->max;
+			$xml_element->appendChild($att);
+			
+			// step
+			$att = $xml->createAttribute('step');
+			$att->value = $this->step;
+			$xml_element->appendChild($att);
+			
+			// assert
+			$att = $xml->createAttribute('assert');
+			$att->value = $this->assert;
+			$xml_element->appendChild($att);
+			
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+			
+			// propertyenums
+			if(!empty($this->propertyenums))
 			{
-				$xml_propertyenums->appendChild($property->getXmlElement($xml));
+				$xml_propertyenums = $xml->createElement("enums");
+				foreach($this->propertyenums as $property)
+				{
+					$xml_propertyenums->appendChild($property->getXmlElement($xml, $format));
+				}
+				$xml_element->appendChild($xml_propertyenums);
 			}
-			$xml_element->appendChild($xml_propertyenums);
 		}
 		
 		// properties
@@ -190,7 +193,7 @@ class Property
 			$xml_property = $xml->createElement("properties");
 			foreach($this->properties as $property)
 			{
-				$xml_property->appendChild($property->getXmlElement($xml));
+				$xml_property->appendChild($property->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_property);
 		}

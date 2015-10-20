@@ -46,7 +46,11 @@ class Node
 		$this->node_file = $node_file;
 	
 		$this->name = (string)$this->xml['name'];
-		$this->board = new Board($this->xml->board, $this);
+		
+		if(isset($this->xml->board))
+		{
+			$this->board = new Board($this->xml->board, $this);
+		}
 		
 		// process
 		if(isset($this->xml->process))
@@ -146,8 +150,11 @@ class Node
 		$xml_element->appendChild($att);
 		
 		// board
-		$xml_element->appendChild($this->board->getXmlElement($xml, $format));
-			
+		if(isset($this->board))
+		{
+			$xml_element->appendChild($this->board->getXmlElement($xml, $format));
+		}
+		
 		if($format=="complete")
 		{
 			// blocks
@@ -167,9 +174,59 @@ class Node
 				if($block->type()=="process") $xml_blocks->appendChild($block->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_blocks);
+			
+			// special blocks
+			foreach($this->blocks as $block)
+			{
+				if($block->type()!="process" and $block->type()!="io") $xml_element->appendChild($block->getXmlElement($xml, $format));
+			}
 		}
 		
 		return $xml_element;
+	}
+	
+	function setBoard($boardName)
+	{
+		if(isset($this->board))
+		{
+			unset($this->board);
+		}
+		$this->board = new Board($boardName, $this);
+	}
+	
+	function addIo($ioName)
+	{
+		if(isset($this->board))
+		{
+			$this->board->addIo($ioName);
+		}
+	}
+	
+	function delIo($ioName)
+	{
+		$i=0;
+		foreach($this->blocks as $block)
+		{
+			if($block->name==$ioName and $block->type()=="io") unset($this->blocks[$i]);
+			$i++;
+		}
+	}
+	
+	function addProcess($processName, $processDriver)
+	{
+		$process = new Process($processDriver);
+		$process->name = $processName;
+		$this->addBlock($process);
+	}
+	
+	function delProcess($ioProcess)
+	{
+		$i=0;
+		foreach($this->blocks as $block)
+		{
+			if($block->name==$ioProcess and $block->type()=="process") unset($this->blocks[$i]);
+			$i++;
+		}
 	}
 	
 	function saveXml($file)

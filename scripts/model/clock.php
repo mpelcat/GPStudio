@@ -159,7 +159,7 @@ class Clock
 	* @var DOMDocument $xml reference of the output xml document
 	* @return DOMElement xml element corresponding to this current instance
 	*/
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("clock");
 		
@@ -168,50 +168,53 @@ class Clock
 		$att->value = $this->name;
 		$xml_element->appendChild($att);
 		
-		// domain
-		$att = $xml->createAttribute('domain');
-		$att->value = $this->domain;
-		$xml_element->appendChild($att);
-		
-		// net
-		$att = $xml->createAttribute('net');
-		$att->value = $this->net;
-		$xml_element->appendChild($att);
-		
-		// direction
-		$att = $xml->createAttribute('direction');
-		$att->value = $this->direction;
-		$xml_element->appendChild($att);
-		
-		// shift
-		$att = $xml->createAttribute('shift');
-		$att->value = $this->shift;
-		$xml_element->appendChild($att);
-		
-		// min
-		$att = $xml->createAttribute('min');
-		$att->value = $this->min;
-		$xml_element->appendChild($att);
-		
-		// max
-		$att = $xml->createAttribute('max');
-		$att->value = $this->max;
-		$xml_element->appendChild($att);
-		
 		// typical
 		$att = $xml->createAttribute('typical');
 		$att->value = $this->typical;
 		$xml_element->appendChild($att);
 		
-		// ratio
-		$att = $xml->createAttribute('ratio');
-		$att->value = $this->ratio;
-		$xml_element->appendChild($att);
-		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
+		if($format=="complete")
+		{
+			// domain
+			$att = $xml->createAttribute('domain');
+			$att->value = $this->domain;
+			$xml_element->appendChild($att);
+			
+			// net
+			$att = $xml->createAttribute('net');
+			$att->value = $this->net;
+			$xml_element->appendChild($att);
+			
+			// direction
+			$att = $xml->createAttribute('direction');
+			$att->value = $this->direction;
+			$xml_element->appendChild($att);
+			
+			// shift
+			$att = $xml->createAttribute('shift');
+			$att->value = $this->shift;
+			$xml_element->appendChild($att);
+			
+			// min
+			$att = $xml->createAttribute('min');
+			$att->value = $this->min;
+			$xml_element->appendChild($att);
+			
+			// max
+			$att = $xml->createAttribute('max');
+			$att->value = $this->max;
+			$xml_element->appendChild($att);
+			
+			// ratio
+			$att = $xml->createAttribute('ratio');
+			$att->value = $this->ratio;
+			$xml_element->appendChild($att);
+			
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+		}
 		
 		return $xml_element;
 	}

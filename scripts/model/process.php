@@ -64,9 +64,19 @@ class Process extends Block
 				}
 			}
 		}
-		else
+		elseif(is_string($process_node_element))
 		{
-			$process_file = $process_node_element;
+			if(strpos($process_node_element, "/")===false and strpos($process_node_element, "\\")===false)
+			{
+				$this->driver=$process_node_element;
+				$this->path = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
+				$process_file = $this->path . $this->driver . '.proc';
+				$this->in_lib = true;
+			}
+			else
+			{
+				$process_file = $process_node_element;
+			}
 			
 			if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
 			if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");

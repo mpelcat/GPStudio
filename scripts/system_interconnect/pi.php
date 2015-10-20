@@ -42,7 +42,7 @@ class ParamInterconnect extends Block
 		
 		// compute the adress relative of each block
 		$max_addr = pow(2, $this->addr_bus_width) - 1;
-		$addr_space = array_fill(0, $max_addr, -1);
+		if($max_addr>0) $addr_space = array_fill(0, $max_addr, -1); else $addr_space = array();
 		foreach($node->blocks as $block)
 		{
 			if($block->pi_size_addr_rel>0)
@@ -261,11 +261,11 @@ class ParamInterconnect extends Block
 	
 		$generator->code=$code;
 	
-		$filename = $path.DIRECTORY_SEPARATOR.'bus_interconnect.vhd';
+		$filename = $path.DIRECTORY_SEPARATOR.'parameter_interconnect.vhd';
 		$generator->save_as_ifdiff($filename);
 	
 		$file = new File();
-		$file->name = 'bus_interconnect.vhd';
+		$file->name = 'parameter_interconnect.vhd';
 		$file->group= 'hdl';
 		$file->type = 'vhdl';
 		$bi->addFile($file);
@@ -277,9 +277,18 @@ class ParamInterconnect extends Block
 	
 	public function getXmlElement($xml, $format)
 	{
-		$xml_element = parent::getXmlElement($xml, $format);
-		
-		return $xml_element;
+		if($format=="complete")
+		{
+			$xml_element = parent::getXmlElement($xml, $format);
+			
+			return $xml_element;
+		}
+		elseif($format=="project")
+		{
+			$xml_element = $xml->createElement("params_interconnect");
+			return $xml_element;
+		}
+		return NULL;
 	}
 }
 

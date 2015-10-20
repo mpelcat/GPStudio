@@ -14,9 +14,18 @@ class ClockDomain
 	*/
 	public $typical;
 	
-	function __construct($xml=null)
+	function __construct($name=null, $typical=null)
 	{
-		if($xml) $this->parse_xml($xml);
+		if(is_object($name) and get_class($name)==='SimpleXMLElement')
+		{
+			$xml=$name;
+			$this->parse_xml($xml);
+		}
+		else
+		{
+			$this->name = $name;
+			$this->typical = $typical;
+		}
 	}
 	
 	protected function parse_xml($xml)
@@ -25,9 +34,9 @@ class ClockDomain
 		$this->typical = Clock::convert($xml['typical']);
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
-		$xml_element = $xml->createElement("clock");
+		$xml_element = $xml->createElement("domain");
 		
 		// name
 		$att = $xml->createAttribute('name');

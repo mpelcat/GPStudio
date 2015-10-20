@@ -31,7 +31,7 @@ class Toolchain
 		}
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("toolchain");
 		
@@ -46,7 +46,7 @@ class Toolchain
 			$xml_attributes = $xml->createElement("attributes");
 			foreach($this->attributes as $attribute)
 			{
-				$xml_attributes->appendChild($attribute->getXmlElement($xml));
+				$xml_attributes->appendChild($attribute->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_attributes);
 		}

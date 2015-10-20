@@ -40,7 +40,7 @@ class PropertyEnum
 		$this->desc		= (string)$xml['desc'];
 	}
 	
-	public function getXmlElement($xml)
+	public function getXmlElement($xml, $format)
 	{
 		$xml_element = $xml->createElement("enum");
 		
@@ -54,10 +54,13 @@ class PropertyEnum
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		// desc
-		$att = $xml->createAttribute('desc');
-		$att->value = $this->desc;
-		$xml_element->appendChild($att);
+		if($format=="complete")
+		{
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+		}
 		
 		return $xml_element;
 	}
