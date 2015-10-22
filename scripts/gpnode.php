@@ -183,6 +183,7 @@ switch($action)
 		if($fromBlock==NULL) error("Block '".$fromRes[0]."' doesn't exists."."\n",1);
 		$fromFlow = $fromBlock->getFlow($fromRes[1]);
 		if($fromFlow==NULL) error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' doesn't exists."."\n",1);
+		if($fromFlow->type!="out") error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' isn't a flow out."."\n",1);
 		
 		$toRes = explode(".", $to, 2);
 		if(count($toRes)!=2) error("Malformed expression to flow -t."."\n",1);
@@ -190,6 +191,7 @@ switch($action)
 		if($toBlock==NULL) error("Block '".$toRes[0]."' doesn't exists."."\n",1);
 		$toFlow = $toBlock->getFlow($toRes[1]);
 		if($toFlow==NULL) error("Flow '".$toRes[1]."' in '".$toRes[0]."' doesn't exists."."\n",1);
+		if($toFlow->type!="in") error("Flow '".$toRes[1]."' in '".$toRes[0]."' isn't a flow in."."\n",1);
 		break;
 		
 	case "showconnects":
@@ -384,10 +386,10 @@ switch($action)
 					foreach($block->flows as $flow) echo $blockName.'.'.$flow->name.' ';
 					break;
 				case "flowin":
-					foreach($block->flows as $flow) if($flow->direction=="in") echo $blockName.'.'.$flow->name.' ';
+					foreach($block->flows as $flow) if($flow->type=="in") echo $blockName.'.'.$flow->name.' ';
 					break;
 				case "flowout":
-					foreach($block->flows as $flow) if($flow->direction=="out") echo $blockName.'.'.$flow->name.' ';
+					foreach($block->flows as $flow) if($flow->type=="out") echo $blockName.'.'.$flow->name.' ';
 					break;
 			}
 		}

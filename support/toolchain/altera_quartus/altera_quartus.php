@@ -237,10 +237,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 		{
 			$win = true;
+			$rm = 'del';
+			$rmreq = 'rmdir /s /q';
 		}
 		else
 		{
 			$win = false;
+			$rm = 'rm -f';
+			$rmreq = 'rm -rf';
 		}
 		
 		$nodename = $node->name;
@@ -267,10 +271,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER)/bin-linux/ $(GPS_VIEWER)/bin-linux/gpviewer node_generated.xml"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "clean:"."\r\n";
-		$content .= "	rm -rf output_files incremental_db db IP greybox_tmp"."\r\n";
-		$content .= "	rm -f top.vhd pi.vhd fi.vhd ci.vhd"."\r\n";
-		$content .= "	rm -f node_generated.xml PLLJ_PLLSPE_INFO.txt fi.dot fi.png params.h"."\r\n";
-		$content .= "	rm -f $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc"."\r\n";
+		$content .= "	$rmreq output_files incremental_db db IP greybox_tmp"."\r\n";
+		$content .= "	$rm top.vhd pi.vhd fi.vhd ci.vhd"."\r\n";
+		$content .= "	$rm node_generated.xml PLLJ_PLLSPE_INFO.txt fi.dot fi.png params.h"."\r\n";
+		$content .= "	$rm $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc"."\r\n";
 
 		$content .= "printfi:"."\r\n";
 		$content .= "	dot -Tpng -o fi.png fi.dot"."\r\n";
@@ -483,7 +487,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='	END COMPONENT;'."\n";
 				break;
 			default:
-				warning("ressource $type does'nt exist",5,'Altera toolchain');
+				warning("Ressource $type does'nt exist",5,'Altera toolchain');
 		}
 		return $declare;
 	}
@@ -581,7 +585,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			
 				break;
 			default:
-				warning("ressource $type does'nt exist",5,'Altera toolchain');
+				warning("Ressource $type does'nt exist",5,'Altera toolchain');
 		}
 		return $instance;
 	}
