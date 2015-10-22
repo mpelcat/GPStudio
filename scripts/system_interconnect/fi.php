@@ -437,14 +437,14 @@ class FlowInterconnect extends Block
 	
 		$generator->code=$code;
 	
-		$filename = $path.DIRECTORY_SEPARATOR.'flow_interconnect.vhd';
-		$generator->save_as_ifdiff($filename);
-	
 		$file = new File();
-		$file->name = 'flow_interconnect.vhd';
+		$file->name = 'fi.vhd';
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
+	
 		array_push($fi->files, $file);
+		$filename = $path.DIRECTORY_SEPARATOR.$file->name;
+		$generator->save_as_ifdiff($filename);
 		
 		$this->create_dot_file($node, $path.DIRECTORY_SEPARATOR.'fi.dot');
 	}

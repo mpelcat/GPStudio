@@ -200,21 +200,21 @@ class VHDL_generator
 		}
 		if(!empty($this->params))
 		{
-			$content.='	generic ('."\n";
+			$content.='	generic ('."\r\n";
 			$i=0;
 			$len = count($this->params);
 			foreach($this->params as $param)
 			{
 				$i++;
 				$content.='		'.str_pad($param->name,$maxLenght,' ').' : '.$param->type;
-				if($i<$len) $content.=";\n";
+				if($i<$len) $content.=";\r\n";
 			}
-			$content.="\n";
-			$content.='	);'."\n";
+			$content.="\r\n";
+			$content.='	);'."\r\n";
 		}
 		
 		// port declaration
-		$content.='	port ('."\n";
+		$content.='	port ('."\r\n";
 		$i=0;
 		$len = count($this->ports);
 		$maxLenght=0;
@@ -230,7 +230,7 @@ class VHDL_generator
 			$i++;
 			if($port->space)
 			{
-				$content.="\n".'		--'.$port->name."\n";
+				$content.="\r\n".'		--'.$port->name."\r\n";
 			}
 			else
 			{
@@ -249,11 +249,11 @@ class VHDL_generator
 						$content.='		'.str_pad($port->name,$maxLenght,' ').' : '.$port->type.' std_logic_vector('.$port->size.'-1 downto 0)';
 					}
 				}
-				if($i<$len) $content.=";\n";
+				if($i<$len) $content.=";\r\n";
 			}
 		}
-		$content.="\n";
-		$content.='	);'."\n";
+		$content.="\r\n";
+		$content.='	);'."\r\n";
 		return $content;
 	}
 	
@@ -264,18 +264,18 @@ class VHDL_generator
 		// ====== header and libs ======
 		foreach($this->libs as $lib)
 		{
-			$content.=$lib."\n";
+			$content.=$lib."\r\n";
 		}
-		$content.="\n";
+		$content.="\r\n";
 		
 		// ========== entity ==========
-		$content.='entity '.$this->name.' is'."\n";
+		$content.='entity '.$this->name.' is'."\r\n";
 		$content.=$this->get_ports_and_generic();
-		$content.='end '.$this->name.';'."\n";
-		$content.="\n";
+		$content.='end '.$this->name.';'."\r\n";
+		$content.="\r\n";
 		
 		// ======= architecture =======
-		$content.='architecture rtl of '.$this->name.' is'."\n";
+		$content.='architecture rtl of '.$this->name.' is'."\r\n";
 		
 		// components declaration
 		$used_drivers = array();
@@ -288,9 +288,9 @@ class VHDL_generator
 					$modgenerator = new VHDL_generator();
 					$modgenerator->fromBlock($block);
 			
-					$content.='component '.$block->driver."\n";
+					$content.='component '.$block->driver."\r\n";
 					$content.=$modgenerator->get_ports_and_generic();
-					$content.='end component;'."\n\n";
+					$content.='end component;'."\r\n\r\n";
 			
 					unset($modgenerator);
 					array_push($used_drivers, $block->driver);
@@ -311,26 +311,26 @@ class VHDL_generator
 		{
 			if($signal->space)
 			{
-				$content.="\n".'	--'.str_pad($signal->name,$maxLenght,' ')."\n";
+				$content.="\r\n".'	--'.str_pad($signal->name,$maxLenght,' ')."\r\n";
 			}
 			else
 			{
 				if($signal->size==1 and $signal->type!='std_logic_vector')
 				{
-					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.';'."\n";
+					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.';'."\r\n";
 				}
 				else
 				{
-					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.' ('.($signal->size-1).' downto 0);'."\n";
+					$content.='	signal '.str_pad($signal->name,$maxLenght,' ').' : '.$signal->type.' ('.($signal->size-1).' downto 0);'."\r\n";
 				}
 			}
 		}
 		
-		if(!empty($this->declare)) $content.="\n".$this->declare;
+		if(!empty($this->declare)) $content.="\r\n".$this->declare;
 		
-		$content.="\n";
+		$content.="\r\n";
 	
-		$content.='begin'."\n";
+		$content.='begin'."\r\n";
 		
 		if(!empty($this->blocks))
 		{
@@ -339,7 +339,7 @@ class VHDL_generator
 			// generic map
 				$name = $block->name;
 				if($name==$block->driver) $name=$name.'_inst';
-				$content.='	'.$name.' : '.$block->driver."\n";
+				$content.='	'.$name.' : '.$block->driver."\r\n";
 				
 				$genericmap = array();
 				foreach($block->clocks as $clock)
@@ -369,10 +369,10 @@ class VHDL_generator
 				}
 				foreach($genericmap as $map)
 				{
-					if(!$first) $content.=','."\n"; else { $first=false; $content.='    generic map ('."\n"; }
+					if(!$first) $content.=','."\r\n"; else { $first=false; $content.='    generic map ('."\r\n"; }
 					$content.='		'.str_pad($map[0],$maxLenght,' ').' => '.$map[1];
 				}
-				if(!$first) $content.="\n".'	)'."\n";
+				if(!$first) $content.="\r\n".'	)'."\r\n";
 				
 			// port map
 				$portmap = array();
@@ -446,24 +446,24 @@ class VHDL_generator
 				
 				$first=true;
 				$maxLenght=0;
-				$content.='    port map ('."\n";
+				$content.='    port map ('."\r\n";
 				foreach($portmap as $map)
 				{
 					if(strlen($map[0])>$maxLenght) $maxLenght=strlen($map[0]);
 				}
 				foreach($portmap as $map)
 				{
-					if(!$first) $content.=','."\n"; else $first=false;
+					if(!$first) $content.=','."\r\n"; else $first=false;
 					$content.='		'.str_pad($map[0],$maxLenght,' ').' => '.$map[1];
 				}
-				$content.="\n".'	);'."\n";
+				$content.="\r\n".'	);'."\r\n";
 				
-				$content.="\n";
+				$content.="\r\n";
 			}
 		}
 		
-		$content.=$this->code."\n";
-		$content.='end rtl;'."\n";
+		$content.=$this->code."\r\n";
+		$content.='end rtl;'."\r\n";
 		
 		return $content;
 	}

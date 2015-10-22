@@ -620,7 +620,13 @@ class Block
 		$xml_clocks = $xml->createElement("clocks");
 		foreach($this->clocks as $clock)
 		{
-			if($format!="project" or $clock->domain=="")
+			$export=true;
+			
+			if($format=="project")
+			{
+				if($clock->direction=="out" or $clock->domain!="") $export=false;
+			}
+			if($export)
 			{
 				$xml_clocks->appendChild($clock->getXmlElement($xml, $format));
 				$count++;

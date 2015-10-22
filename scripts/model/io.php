@@ -28,8 +28,10 @@ class IO extends Block
 		{
 			if(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
 			{
-				$io_driver = $io_device_element;
-				$this->name = $io_driver;
+				$io_name = $io_device_element;
+				$io_driver = $io_node_element;
+				$this->name = $io_name;
+				$this->driver = $io_driver;
 				$this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
 				$this->in_lib=true;
 				$io_file = $this->path . $io_driver . ".io";

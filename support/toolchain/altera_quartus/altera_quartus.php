@@ -33,6 +33,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		parent::generate_project($node, $path);
 		$this->generate_tcl($node, $path);
 		$this->generate_project_file($node, $path);
+		$this->generate_makefile($node, $path);
 	}
 	
 	protected function generate_project_file($node, $path)
@@ -228,6 +229,87 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Altera toolchain");
 				fclose($handle);
 			}
+		}
+	}
+	
+	public function generate_makefile($node, $path)
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+		{
+			$win = true;
+		}
+		else
+		{
+			$win = false;
+		}
+		
+		$nodename = $node->name;
+		
+		$content =  "-include Makefile.local"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "ifndef GPS_LIB"."\r\n";
+		$content .= "	$(error Define GPS_LIB in Makefile.local)"."\r\n";
+		$content .= "endif"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "PROJECT=$nodename"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "all: generate compile send view"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "generate: *.node"."\r\n";
+		$content .= "	php $(GPS_LIB)/generate_node.php $(PROJECT).node \${OPT}"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "compile:"."\r\n";
+		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $(PROJECT).qpf"."\r\n";
+		$content .= "send:"."\r\n";
+		$content .= "		$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 dreamcam.cdf"."\r\n";
+		$content .= "view:"."\r\n";
+		if($win)	$content .= "	$(GPS_VIEWER)/bin-win/gpviewer node_generated.xml"."\r\n";
+		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER)/bin-linux/ $(GPS_VIEWER)/bin-linux/gpviewer node_generated.xml"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "clean:"."\r\n";
+		$content .= "	rm -rf output_files incremental_db db IP greybox_tmp"."\r\n";
+		$content .= "	rm -f top.vhd pi.vhd fi.vhd ci.vhd"."\r\n";
+		$content .= "	rm -f node_generated.xml PLLJ_PLLSPE_INFO.txt fi.dot fi.png params.h"."\r\n";
+		$content .= "	rm -f $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc"."\r\n";
+
+		$content .= "printfi:"."\r\n";
+		$content .= "	dot -Tpng -o fi.png fi.dot"."\r\n";
+		$content .= "	xdg-open fi.png"."\r\n";
+		
+		$filename = "Makefile";
+
+		// save file if it's different
+		$needToReplace = false;
+		if(file_exists($path.DIRECTORY_SEPARATOR.$filename))
+		{
+			$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'r');
+			$actualContent = fread($handle, filesize($path.DIRECTORY_SEPARATOR.$filename));
+			fclose($handle);
+			if($actualContent != $content) $needToReplace = true;
+		}
+		else $needToReplace = true;
+	
+		if($needToReplace)
+		{
+			$handle = null;
+			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
+			fclose($handle);
+		}
+		
+		// makefile local
+		$content =  "GPS_LIB=../GPStudio_lib_std"."\r\n";
+		$content .= "QUARTUS_TOOLS_PATH=/home/seb/altera/13.1/quartus/bin/"."\r\n";
+		$content .= "GPS_VIEWER=../GPStudio"."\r\n";
+		$content .= ""."\r\n";
+		
+		$filename = "Makefile.local";
+		if(!file_exists($path.DIRECTORY_SEPARATOR.$filename))
+		{
+			$handle = null;
+			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
+			fclose($handle);
 		}
 	}
 	

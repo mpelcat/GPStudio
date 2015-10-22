@@ -261,14 +261,14 @@ class ParamInterconnect extends Block
 	
 		$generator->code=$code;
 	
-		$filename = $path.DIRECTORY_SEPARATOR.'parameter_interconnect.vhd';
-		$generator->save_as_ifdiff($filename);
-	
 		$file = new File();
-		$file->name = 'parameter_interconnect.vhd';
+		$file->name = 'pi.vhd';
 		$file->group= 'hdl';
 		$file->type = 'vhdl';
 		$bi->addFile($file);
+		
+		$filename = $path.DIRECTORY_SEPARATOR.$file->name;
+		$generator->save_as_ifdiff($filename);
 	
 		$this->create_header_file($node, $path.DIRECTORY_SEPARATOR.'params.h');
 	}

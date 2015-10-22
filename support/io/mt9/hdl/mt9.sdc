@@ -22,15 +22,6 @@ create_clock \
   [get_ports {mt9_pixclk_i}]
 
 # ----------------------------------------------------------------------------
-# Create Generated Clock
-# ----------------------------------------------------------------------------
-
-derive_pll_clocks -create_base_clocks
-
-# Automatically calculate clock uncertainty to jitter and other effects.
-derive_clock_uncertainty
-
-# ----------------------------------------------------------------------------
 # Create Clock Group
 # ----------------------------------------------------------------------------
 

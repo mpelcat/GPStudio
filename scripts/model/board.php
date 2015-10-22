@@ -72,7 +72,6 @@ class Board
 		if (!($this->xml = simplexml_load_file($this->board_file))) error("Error when parsing $this->board_file",5,"Board");
 		
 		$this->parse_xml($board_element, $node);
-		unset($this->xml);
 	}
 	
 	private function parse_xml($board_element, $node)
@@ -384,8 +383,30 @@ class Board
 	
 	function addIo($ioName)
 	{
-		$io = new IO($ioName);
-		$this->parentNode->addBlock($io);
+		if(isset($this->xml->ios->io))
+		{
+			foreach($this->xml->ios->io as $ioXml)
+			{
+				if($ioName==(string)$ioXml['name'])
+				{
+					$io = new IO($ioName, (string)$ioXml['driver']);
+					$this->parentNode->addBlock($io);
+				}
+			}
+		}
+	}
+	
+	function availableIos()
+	{
+		$result = array();
+		if(isset($this->xml->ios->io))
+		{
+			foreach($this->xml->ios->io as $ioXml)
+			{
+				$result[]=(string)$ioXml['name'];
+			}
+		}
+		return $result;
 	}
 }
 

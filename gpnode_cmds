@@ -1,32 +1,39 @@
 # gpnode command line tool to manage a gpstudio node (v1.0)
 
 # project
-gpnode newproject -n <project-name>											# create a directory named <project-name> with a project file inside named <project-name>.node
-gpnode setboard -n <board-name>												# specify the name of the used board for the node
-gpnode generate [-o <dir>]													# generate all files needed for the specified toolchain and Makefile
+gpnode newproject -n <project-name>								# create a directory named <project-name> with a project file inside named <project-name>.node
+gpnode setboard -n <board-name>									# specify the name of the used board for the node
+gpnode generate [-o <dir>]										# generate all files needed for the specified toolchain and Makefile
 
 # io
-gpnode addio -n <io-name>													# add IP support in the project to manage <io-name>. <io-name> must be define in the board file definition
-gpnode delio -n <io-name>													# remove io support
-gpnode showio																# print the list of io support in the current project
+gpnode addio -n <io-name>										# add IP support in the project to manage <io-name>. <io-name> must be define in the board file definition
+gpnode delio -n <io-name>										# remove io support
+gpnode showio													# print the list of io support in the current project
 
 # process
-gpnode addprocess -n <process-name> -d <driver-name>						# add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir.
-gpnode delprocess -n <process-name>											# remove process <process-name> and all the connections to or from it
-gpnode showprocess															# print the list of process in the current project
+gpnode addprocess -n <process-name> -d <driver-name>			# add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir.
+gpnode delprocess -n <process-name>								# remove process <process-name> and all the connections to or from it
+gpnode showprocess												# print the list of process in the current project
 
 # block attributes
-gpnode renameblock -n <block-name> -v <new-name>							# rename a process block
-gpnode setproperty -p <block-name> -n <property-name> -v <default-value>	# define a default value <default-value> to the property <property-name> in the block (io or process) <block-name>
-gpnode setparam -p <block-name> -n <param-name> -v <value>					# set the value <value> to the param <param-name> in the block (io or process) <block-name>
-gpnode setclock -p <block-name> -n <clock-name> -v <frequency>				# define the clock frequency <frequency> to the clock <clock-name> in the block (io or process) <block-name>
-gpnode setflowsize -p <block-name> -n <clock-name> -v <flow-size>				# define the clock frequency <frequency> to the clock <clock-name> in the block (io or process) <block-name>
+gpnode renameblock -n <block-name> -v <new-name>				# rename a process block
+gpnode setproperty -n <property-name> -v <default-value>		# define a default value <default-value> to the property <property-name>
+gpnode setparam -n <param-name> -v <value>						# set the value <value> to the param <param-name>
+gpnode setclock -n <clock-name> -v <frequency>					# define the clock frequency <frequency> to the clock <clock-name>
+gpnode setflowsize -n <flow-name> -v <flow-size>				# define the flow size <flow-size> to the flow <flow-name>
 
 # flow interconnect
-gpnode connect -f <flow-out> -t <flow-in> [-s <bit-shift>]					# add a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in> with a bit shift <bit-shift> ("lsb" or "msb")
-gpnode unconnect -f <flow-out> -t <flow-in>									# remove a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in>
-gpnode showconnects															# print the list of flow connections in the current project
+gpnode connect -f <flow-out> -t <flow-in> [-s <bit-shift>]		# add a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in> with a bit shift <bit-shift> ("lsb" or "msb")
+gpnode unconnect -f <flow-out> -t <flow-in>						# remove a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in>
+gpnode showconnects												# print the list of flow connections in the current project
 
 # clock interconnect
-gpnode setclockdomain -n <domain-name> -v <frequency>						# define a clock frequency <frequency> the the clock domain <domain-name>
-gpnode showclockdomain														# print the list of clock domains in the current project
+gpnode setclockdomain -n <domain-name> -v <frequency>			# define a clock frequency <frequency> the the clock domain <domain-name>
+gpnode showclockdomain											# print the list of clock domains in the current project
+
+# lists
+gpnode listavailableio
+gpnode listio
+gpnode listavailableprocess
+gpnode listprocess
+gpnode listword

@@ -89,8 +89,8 @@ function messageVerbosity($messageText, $messageCtx="")
 
 function findproject()
 {
-	$projects=array();
-	$files=scandir(getcwd());
+	$projects = array();
+	$files = scandir(getcwd());
 	foreach($files as $file)
 	{
 		if(substr($file,-5)===".node")
@@ -98,7 +98,35 @@ function findproject()
 			$projects[]=$file;
 		}
 	}
-	if(count($projects)==1) return $projects[0];
+	if(count($projects)==1) return $projects[0]; else return '';
+}
+
+function listprocess()
+{
+	$directory = SUPPORT_PATH."process".DIRECTORY_SEPARATOR;
+	echo $directory;
+	$files = scandir($directory);
+	foreach($files as $file)
+	{
+		if($file!='.' and $file!='..')
+		{
+			echo $file." ";
+		}
+	}
+}
+
+function listio()
+{
+	$directory = SUPPORT_PATH."io".DIRECTORY_SEPARATOR;
+	echo $directory;
+	$files = scandir($directory);
+	foreach($files as $file)
+	{
+		if($file!='.' and $file!='..')
+		{
+			echo $file." ";
+		}
+	}
 }
 
 ?>

@@ -301,18 +301,55 @@ class ClockInterconnect extends Block
 		
 		$generator->code=$code;
 	
-		$filename = $path.DIRECTORY_SEPARATOR.'clock_interconnect.vhd';
-		$generator->save_as_ifdiff($filename);
-	
 		$file = new File();
-		$file->name = 'clock_interconnect.vhd';
+		$file->name = 'ci.vhd';
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
 		$ci->addFile($file);
+	
+		$filename = $path.DIRECTORY_SEPARATOR.$file->name;
+		$generator->save_as_ifdiff($filename);
 		
-		//echo Clock::formatFreq(ClockInterconnect::ppcm_array(array(9000000,50000,100000,96000000)))."\n";
-		//echo Clock::formatFreq(ClockInterconnect::ppcm_array(array(9000000,50000,100000,96000000,48000000)))."\n";
-		//echo Clock::formatFreq($this->plls[0]->vco)."\n";
+		$this->create_sdc($path);
+	}
+	
+	public function create_sdc($path)
+	{
+		$content =  "# ----------------------------------------------------------------------------"."\r\n";
+		$content .= "# Create Generated Clock"."\r\n";
+		$content .= "# ----------------------------------------------------------------------------"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "derive_pll_clocks -create_base_clocks"."\r\n";
+		$content .= ""."\r\n";
+		$content .= "# Automatically calculate clock uncertainty to jitter and other effects."."\r\n";
+		$content .= "derive_clock_uncertainty"."\r\n";
+		
+		$filename = $this->parentNode->name.'.sdc';
+
+		// save file if it's different
+		$needToReplace = false;
+		if(file_exists($path.DIRECTORY_SEPARATOR.$filename))
+		{
+			$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'r');
+			$actualContent = fread($handle, filesize($path.DIRECTORY_SEPARATOR.$filename));
+			fclose($handle);
+			if($actualContent != $content) $needToReplace = true;
+		}
+		else $needToReplace = true;
+	
+		if($needToReplace)
+		{
+			$handle = null;
+			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Vhdl Gen");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
+			fclose($handle);
+		}
+		
+		$file = new File();
+		$file->name = $filename;
+		$file->group = 'hdl';
+		$file->type = 'sdc';
+		$this->addFile($file);
 	}
 	
 	public function type() {return 'ci';}
