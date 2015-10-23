@@ -2,5 +2,6 @@
 # dependancies
 - php5-cli
 - git
+- doxygen
 
 sudo apt-get install php5-cli git

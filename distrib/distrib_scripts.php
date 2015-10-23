@@ -90,11 +90,15 @@ function distrib_bin($mainoutpath, $os)
 	
 	if($os=="win")
 	{
-		copy(LIB_PATH."gpnode-prod.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
+		$src=LIB_PATH."gpnode-prod.bat";
+		$dest=$mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat";
+		copy_with_rights($src, $dest);
 	}
 	else
 	{
-		copy(LIB_PATH."gpnode-prod", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
+		$src=LIB_PATH."gpnode-prod";
+		$dest=$mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode";
+		copy_with_rights($src, $dest);
 	}
 	echo GUI_TOOLS_PATH."bin-$os";
 	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");

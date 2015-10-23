@@ -61,6 +61,13 @@ function mkdirExists($dir)
 	if(!file_exists($dir)) mkdir($dir);
 }
 
+function copy_with_rights($src, $dest)
+{
+	copy($src, $dest);
+	$srcright = fileperms($src);
+	if(fileperms($dest)!=$srcright) chmod($dest, $srcright);
+}
+
 function cpy_dir($source, $dest)
 {
     if(is_dir($source))
@@ -86,7 +93,7 @@ function cpy_dir($source, $dest)
 					}
                     else
 					{
-						copy($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+						copy_with_rights($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
 					}
                 }
             }
@@ -95,7 +102,7 @@ function cpy_dir($source, $dest)
     }
     else
     {
-        copy($source, $dest);
+        copy_with_rights($source, $dest);
     }
 }
 
