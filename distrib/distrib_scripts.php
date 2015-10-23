@@ -1,15 +1,13 @@
 <?php
 
-function distrib_scripts()
+function distrib_scripts($mainoutpath, $os)
 {
+	echo "copying scripts files in $mainoutpath for $os..."."\n";
+	
 	// create directory
-	mkdirExists(WIN_DISTRIB_PATH."scripts");
-	mkdirExists(WIN_DISTRIB_PATH."scripts".DIRECTORY_SEPARATOR."model");
-	mkdirExists(WIN_DISTRIB_PATH."scripts".DIRECTORY_SEPARATOR."system_interconnect");
-
-	mkdirExists(LINUX_DISTRIB_PATH."scripts");
-	mkdirExists(LINUX_DISTRIB_PATH."scripts".DIRECTORY_SEPARATOR."model");
-	mkdirExists(LINUX_DISTRIB_PATH."scripts".DIRECTORY_SEPARATOR."system_interconnect");
+	mkdirExists($mainoutpath."scripts");
+	mkdirExists($mainoutpath."scripts".DIRECTORY_SEPARATOR."model");
+	mkdirExists($mainoutpath."scripts".DIRECTORY_SEPARATOR."system_interconnect");
 
 	// copy scripts and prepend license file
 	$paths = array(	'scripts'.DIRECTORY_SEPARATOR,
@@ -23,23 +21,84 @@ function distrib_scripts()
 			if(substr($file,-4)===".php")
 			{
 				$filename = LIB_PATH . $path . $file;
+				
 				$handle_read = fopen($filename, 'r');
 				$content_file = getComments(getLicense(),"php");
 				$content_file .= fread($handle_read, filesize($filename));
 				fclose($handle_read);
 				
-				$filename = WIN_DISTRIB_PATH . $path . $file;
-				$handle_write = fopen($filename, 'w');
-				fwrite($handle_write, $content_file);
-				fclose($handle_write);
-				
-				$filename = LINUX_DISTRIB_PATH . $path . $file;
+				$filename = $mainoutpath . $path . $file;
 				$handle_write = fopen($filename, 'w');
 				fwrite($handle_write, $content_file);
 				fclose($handle_write);
 			}
 		}
 	}
+	echo "done."."\n";
+}
+
+function distrib_support($mainoutpath, $os)
+{
+	echo "copying support files in $mainoutpath for $os..."."\n";
+	
+	// create directory
+	mkdirExists($mainoutpath."support");
+	
+	foreach(array("board", "io", "process", "toolchain") as $dir)
+	{
+		$path = $mainoutpath."support".DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR;
+		mkdirExists($path);
+		
+		$filename = DISTRIB_PATH.$dir.".txt";
+		$handle_read = fopen($filename, 'r');
+		
+		if($handle_read)
+		{
+			while(($line = fgets($handle_read)) !== false)
+			{
+				$line = str_replace("\n","",$line);
+				$line = str_replace("\r","",$line);
+				
+				$ip = $line;
+				echo "	+ ".$dir." ".$ip."\n";
+				
+				mkdirExists($path.$ip);
+				cpy_dir(SUPPORT_PATH.$dir.DIRECTORY_SEPARATOR.$ip, $path.$ip);
+			}
+			fclose($handle_read);
+		}
+	}
+	echo "done."."\n";
+}
+
+function distrib_doc($mainoutpath, $os)
+{
+	echo "copying doc files in $mainoutpath for $os..."."\n";
+	
+	// create directory
+	mkdirExists($mainoutpath."doc");
+	cpy_dir(LIB_PATH."doc", $mainoutpath."doc");
+	echo "done."."\n";
+}
+
+function distrib_bin($mainoutpath, $os)
+{
+	echo "copying bin files in $mainoutpath for $os..."."\n";
+	
+	// create directory
+	mkdirExists($mainoutpath."bin");
+	
+	if($os=="win")
+	{
+		copy(LIB_PATH."gpnode-prod.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
+	}
+	else
+	{
+		copy(LIB_PATH."gpnode-prod", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
+	}
+	echo GUI_TOOLS_PATH."bin-$os";
+	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");
+	echo "done."."\n";
 }
 
 ?>

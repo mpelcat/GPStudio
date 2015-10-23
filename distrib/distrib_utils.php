@@ -5,6 +5,7 @@ $license_cache = '';
 
 function getVersion()
 {
+	global $version_cache;
 	if(empty($version_cache))
 	{
 		$filename = LIB_PATH.DIRECTORY_SEPARATOR.'version';
@@ -14,6 +15,10 @@ function getVersion()
 		$version_cache = str_replace("\n","",$version_cache);
 		$version_cache = str_replace("\r","",$version_cache);
 		
+		exec("cat ".LIB_PATH.".git/ORIG_HEAD", $out);
+		
+		$version_cache.=" based on repo ".$out[0];
+		
 		fclose($handle);
 	}
 	return $version_cache;
@@ -21,6 +26,7 @@ function getVersion()
 
 function getLicense()
 {
+	global $license_cache;
 	if(empty($license_cache))
 	{
 		$filename = DISTRIB_PATH.DIRECTORY_SEPARATOR.'license';
@@ -55,5 +61,42 @@ function mkdirExists($dir)
 	if(!file_exists($dir)) mkdir($dir);
 }
 
+function cpy_dir($source, $dest)
+{
+    if(is_dir($source))
+    {
+        $dir_handle=opendir($source);
+        while($file=readdir($dir_handle))
+        {
+            if($file!="." && $file!="..")
+            {
+                if(is_dir($source.DIRECTORY_SEPARATOR.$file))
+                {
+                    if(!is_dir($dest.DIRECTORY_SEPARATOR.$file))
+                    {
+                        mkdir($dest.DIRECTORY_SEPARATOR.$file);
+                    }
+                    cpy_dir($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+                }
+                else
+                {
+					if(is_link($source.DIRECTORY_SEPARATOR.$file))
+					{
+						symlink(readlink($source.DIRECTORY_SEPARATOR.$file), $dest.DIRECTORY_SEPARATOR.$file);
+					}
+                    else
+					{
+						copy($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+					}
+                }
+            }
+        }
+        closedir($dir_handle);
+    }
+    else
+    {
+        copy($source, $dest);
+    }
+}
 
 ?>

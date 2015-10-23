@@ -1,0 +1,114 @@
+# Debian gpnode(8) completion                             -*- shell-script -*-
+
+_gpnode()
+{
+    local sourcesdir="/etc/apt/sources.list.d"
+    local cur prev words cword
+    _init_completion || return
+
+    # see if the user selected a command already
+    local COMMANDS=("newproject" "setboard" "generate"
+                    "addio" "delio" "showio"
+                    "addprocess" "delprocess" "showprocess"
+                    "renameblock" "setproperty" "setparam" "setclock" "setflowsize"
+                    "connect" "unconnect" "showconnects"
+                    "setclockdomain" "showclockdomain")
+
+    local command i
+    for (( i=0; i < ${#words[@]}-1; i++ )); do
+        if [[ ${COMMANDS[@]} =~ ${words[i]} ]]; then
+            command=${words[i]}
+            break
+        fi
+    done
+    
+    local count=${#words[@]};
+
+    # supported options per command
+    if [[ "$cur" == * ]]; then
+        case $count in
+            3)
+                case $command in
+                    newproject|setboard|addio|delio|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain)
+                        COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
+                        return 0
+                        ;;
+                    generate)
+                        COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
+                        return 0
+                        ;;
+                    connect|unconnect)
+                        COMPREPLY=( $( compgen -W '-f' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            4)
+                case $command in
+                    addio)
+                        COMPREPLY=( $( compgen -W '$( gpnode listavailableio )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m property )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m param )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    setclock)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m clock )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    setflowsize)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flow )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    connect|unconnect)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowin )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                esac
+                ;;
+            5)
+                case $command in
+                    renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addprocess)
+                        COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
+                        return 0
+                        ;;
+                    connect|unconnect)
+                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            6)
+                case $command in
+                    connect|unconnect)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowout )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    addprocess)
+                        COMPREPLY=( $( compgen -W '$( gpnode listprocess )' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+        esac
+    fi
+
+    # no command yet, show what commands we have
+    if [ "$command" = "" ]; then
+        COMPREPLY=( $( compgen -W '${COMMANDS[@]}' -- "$cur" ) )
+    fi
+
+    return 0
+} &&
+complete -F _gpnode gpnode
+
+# ex: ts=4 sw=4 et filetype=sh
