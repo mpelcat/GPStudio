@@ -421,10 +421,14 @@ switch($action)
 		message("Project successfully generated ($warningCount warnings).");
 		break;
 	case "connect":
-		$node->getBlock("fi")->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name));
+		$fi = $node->getBlock("fi");
+		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)!=NULL) error("This flow name connexion ever exists."."\n",1);
+		$fi->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name));
 		break;
 	case "unconnect":
-		$node->getBlock("fi")->delFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name);
+		$fi = $node->getBlock("fi");
+		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)==NULL) error("This flow name connexion doesn't exists."."\n",1);
+		$fi->delFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name);
 		break;
 	case "showconnects":
 		echo "connects :" . "\n";

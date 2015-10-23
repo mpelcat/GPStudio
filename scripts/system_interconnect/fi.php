@@ -497,10 +497,10 @@ class FlowInterconnect extends Block
 		$i=0;
 		foreach($this->flow_connects as $flow_connect)
 		{
-			if( $flow_connect->fromblock==$fromblock
-			and $flow_connect->fromflow==$fromflow
-			and $flow_connect->toblock==$toblock
-			and $flow_connect->toflow==$toflow) unset($this->flow_connects[i]);
+			if( $flow_connect->fromblock==$fromBlock
+			and $flow_connect->fromflow==$fromFlow
+			and $flow_connect->toblock==$toBlock
+			and $flow_connect->toflow==$toFlow) unset($this->flow_connects[$i]);
 			$i++;
 		}
 		return null;
@@ -513,10 +513,10 @@ class FlowInterconnect extends Block
 	{
 		foreach($this->flow_connects as $flow_connect)
 		{
-			if( $flow_connect->fromblock==$fromblock
-			and $flow_connect->fromflow==$fromflow
-			and $flow_connect->toblock==$toblock
-			and $flow_connect->toflow==$toflow) return $flow_connect;
+			if( $flow_connect->fromblock==$fromBlock
+			and $flow_connect->fromflow==$fromFlow
+			and $flow_connect->toblock==$toBlock
+			and $flow_connect->toflow==$toFlow) return $flow_connect;
 		}
 		return null;
 	}
