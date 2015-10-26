@@ -33,7 +33,7 @@ function getLicense()
 		$handle = fopen($filename, 'r');
 		$license_cache = fread($handle, filesize($filename));
 		$license_cache = str_replace('%%version%%',getVersion(),$license_cache);
-		$license_cache = str_replace('%%date%%',date('Y-m-d'),$license_cache);
+		$license_cache = str_replace('%%date%%',date('Y-m-d H:i'),$license_cache);
 		fclose($handle);
 	}
 	return $license_cache;
