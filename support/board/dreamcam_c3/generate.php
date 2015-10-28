@@ -20,7 +20,7 @@ return function($node, $path, $language)
 	$filename = $node->name.".cdf";
 
 	// save file if it's different
-	if(!file_exists($path.DIRECTORY_SEPARATOR.$filename))
+	if(file_exists($path.DIRECTORY_SEPARATOR.$filename))
 	{
 		$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'r');
 		$actualContent = fread($handle, filesize($path.DIRECTORY_SEPARATOR.$filename));
