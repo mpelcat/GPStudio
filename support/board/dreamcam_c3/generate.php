@@ -20,6 +20,7 @@ return function($node, $path, $language)
 	$filename = $node->name.".cdf";
 
 	// save file if it's different
+	$needToReplace = false;
 	if(file_exists($path.DIRECTORY_SEPARATOR.$filename))
 	{
 		$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'r');
@@ -32,8 +33,8 @@ return function($node, $path, $language)
 	if($needToReplace)
 	{
 		$handle = null;
-		if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
-		if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
+		if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Dreamcam_c3");
+		if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Dreamcam_c3");
 		fclose($handle);
 	}
 }
