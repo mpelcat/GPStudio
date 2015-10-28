@@ -14,6 +14,7 @@ gpnode showio													# print the list of io support in the current project
 gpnode addprocess -n <process-name> -d <driver-name>			# add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir.
 gpnode delprocess -n <process-name>								# remove process <process-name> and all the connections to or from it
 gpnode showprocess												# print the list of process in the current project
+gpnode showblock												# print the list of process and io in the current project
 
 # block attributes
 gpnode renameblock -n <block-name> -v <new-name>				# rename a process block

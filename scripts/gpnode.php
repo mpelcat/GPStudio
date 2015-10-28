@@ -116,8 +116,6 @@ switch($action)
 		
 		if(!isset($node->board)) error("You should specify a board with gpnode setboard before del io."."\n",1);
 		if($node->getBlock($ioName)==NULL) error("This io name '$ioName' doesn't exists."."\n",1);
-		
-		$node->delIo($ioName);
 		break;
 		
 	case "showio":
@@ -151,8 +149,6 @@ switch($action)
 		if(array_key_exists('n',$options)) $processName = $options['n']; else error("You should specify an process name with -n"."\n",1);
 		
 		if($node->getBlock($processName)==NULL) error("This process name '$processName' doesn't exists."."\n",1);
-		
-		$node->delProcess($processName);
 		break;
 		
 	case "showprocess":
@@ -163,6 +159,21 @@ switch($action)
 		foreach($node->blocks as $block)
 		{
 			if($block->type()=="process")
+			{
+				echo "  + ".$block->name . "\n";
+			}
+		}
+		$save = false;
+		break;
+		
+	case "showblock":
+		$options = getopt("a:f:");
+		if(array_key_exists('f',$options)) $format = $options['f']; else $format="";
+		
+		echo "blocks :" . "\n";
+		foreach($node->blocks as $block)
+		{
+			if($block->type()=="process" or $block->type()=="io")
 			{
 				echo "  + ".$block->name . "\n";
 			}
@@ -420,16 +431,31 @@ switch($action)
 		$node->saveXml($outDir.DIRECTORY_SEPARATOR."node_generated.xml");
 		message("Project successfully generated ($warningCount warnings).");
 		break;
+		
+	case "delio":
+		$fi = $node->getBlock("fi");
+		$node->delIo($ioName);
+		$fi->delFlowConnectToBlock($ioName);
+		break;
+		
+	case "delprocess":
+		$fi = $node->getBlock("fi");
+		$node->delProcess($processName);
+		$fi->delFlowConnectToBlock($processName);
+		break;
+		
 	case "connect":
 		$fi = $node->getBlock("fi");
 		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)!=NULL) error("This flow name connexion ever exists."."\n",1);
 		$fi->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name));
 		break;
+		
 	case "unconnect":
 		$fi = $node->getBlock("fi");
 		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)==NULL) error("This flow name connexion doesn't exists."."\n",1);
 		$fi->delFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name);
 		break;
+		
 	case "showconnects":
 		echo "connects :" . "\n";
 		foreach($node->getBlock("fi")->flow_connects as $flow_connect)
@@ -437,9 +463,11 @@ switch($action)
 			echo "  + ".$flow_connect->fromblock.".".$flow_connect->fromflow." -> ".$flow_connect->toblock.".".$flow_connect->toflow." (".$flow_connect->order.")"."\n";
 		}
 		break;
+		
 	case "setclockdomain":
 		$node->getBlock("ci")->addClockDomain(new ClockDomain($clockName, $value));
 		break;
+		
 	case "showclockdomain":
 		echo "domains :" . "\n";
 		foreach($node->getBlock("ci")->domains as $domain)

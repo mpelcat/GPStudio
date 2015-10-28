@@ -9,7 +9,7 @@ _gpnode()
     # see if the user selected a command already
     local COMMANDS=("newproject" "setboard" "generate"
                     "addio" "delio" "showio"
-                    "addprocess" "delprocess" "showprocess"
+                    "addprocess" "delprocess" "showprocess" "showblock"
                     "renameblock" "setproperty" "setparam" "setclock" "setflowsize"
                     "connect" "unconnect" "showconnects"
                     "setclockdomain" "showclockdomain")

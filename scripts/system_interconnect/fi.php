@@ -506,6 +506,17 @@ class FlowInterconnect extends Block
 		return null;
 	}
 	
+	function delFlowConnectToBlock($block)
+	{
+		$i=0;
+		foreach($this->flow_connects as $flow_connect)
+		{
+			if( $flow_connect->fromblock==$block or $flow_connect->toflow==$block) unset($this->flow_connects[$i]);
+			$i++;
+		}
+		return null;
+	}
+	
 	/** return a reference to the flow connection with the name $name, if not found, return false
 	 *  @param string $name name of the flow connection to search
 	 *  @return FlowConnect found flow connection **/
