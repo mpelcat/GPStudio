@@ -13,6 +13,7 @@ class HDL_toolchain extends Toolchain
 
 	public function configure_project($node)
 	{
+		$node->board->configure($node);
 		foreach($node->blocks as $block)
 		{
 			$block->configure($node, $block);
@@ -37,6 +38,7 @@ class HDL_toolchain extends Toolchain
 	
 	public function generate_project($node, $path)
 	{
+		$node->board->generate($node, $path, 'hdl');
 		foreach($node->blocks as $block)
 		{
 			$block->generate($node, $block, $path, 'hdl');

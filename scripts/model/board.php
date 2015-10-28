@@ -20,10 +20,29 @@ class Board
 	public $name;
 
 	/**
+	* Specify the external file script to configure the board (optional)
+	* @var string $scriptfile
+	*/
+	public $configscriptfile;
+
+	/**
+	* Specify the external file script to generate the board files (optional)
+	* @var string $generatescriptfile
+	*/
+	public $generatescriptfile;
+
+	/**
+	* Path where the root of files and define of the board is putted
+	* @var string $path
+	*/
+	public $path;
+
+	/**
 	* Toolchain structure of board
 	* @var Toolchain $toolchain
 	*/
 	public $toolchain;
+	
 
 	/**
 	* Array of pin mapping of the board
@@ -67,16 +86,51 @@ class Board
 		}
 		
 		// open device define file (.dev)
-		$this->board_file = SUPPORT_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR . $board_name . ".dev";
+		$this->path = SUPPORT_PATH . "board" . DIRECTORY_SEPARATOR . $board_name . DIRECTORY_SEPARATOR;
+		$this->board_file = $this->path . $board_name . ".dev";
 		if (!file_exists($this->board_file)) error("File $this->board_file doesn't exist",5,"Board");
 		if (!($this->xml = simplexml_load_file($this->board_file))) error("Error when parsing $this->board_file",5,"Board");
 		
 		$this->parse_xml($board_element, $node);
 	}
 	
+	function configure($node)
+	{
+		if(!empty($this->configscriptfile))
+		{
+			if(file_exists($this->path.$this->configscriptfile))
+			{
+				$script = str_replace(SUPPORT_PATH,'',$this->path.$this->configscriptfile);
+				$configureBoard = (include $script);
+				if($configureBoard!==FALSE)
+				{
+					$configureBoard($node);
+				}
+			}
+		}
+	}
+	
+	function generate($node, $path, $language)
+	{
+		if(!empty($this->generatescriptfile))
+		{
+			if(file_exists($this->path.$this->generatescriptfile))
+			{
+				$script = str_replace(SUPPORT_PATH,'',$this->path.$this->generatescriptfile);
+				$generateBoard = (include $script);
+				if($generateBoard!==FALSE)
+				{
+					$generateBoard($node, $path, $language);
+				}
+			}
+		}
+	}
+	
 	private function parse_xml($board_element, $node)
 	{
 		$this->name = (string)$this->xml['name'];
+		$this->configscriptfile = (string)$this->xml['configscriptfile'];
+		$this->generatescriptfile = (string)$this->xml['generatescriptfile'];
 		
 		$this->toolchain = Toolchain::load($this->xml->toolchain['name'], $this->xml->toolchain);
 		

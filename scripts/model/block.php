@@ -415,8 +415,8 @@ class Block
 	{
 		if(isset($this->xml['size_addr_rel'])) warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'",12,"Block");
 		$this->pi_size_addr_rel = (int)$this->xml['pi_size_addr_rel'];
-		$this->configscriptfile = $this->xml['configscriptfile'];
-		$this->generatescriptfile = $this->xml['generatescriptfile'];
+		$this->configscriptfile = (string)$this->xml['configscriptfile'];
+		$this->generatescriptfile = (string)$this->xml['generatescriptfile'];
 		
 		// files
 		if(isset($this->xml->files))
