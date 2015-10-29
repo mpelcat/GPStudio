@@ -53,7 +53,7 @@ QScriptClass::QueryFlags PropertyClass::queryProperty(const QScriptValue & objec
 #else
     Q_UNUSED(name);
 #endif
-    return QScriptClass::HandlesReadAccess;
+    return flags;
 }
 
 QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptString &name, uint id)
