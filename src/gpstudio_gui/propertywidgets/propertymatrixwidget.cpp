@@ -23,21 +23,20 @@ void PropertyMatrixWidget::createWidget()
     QGridLayout *layout = new QGridLayout();
     layout->setContentsMargins(0,0,0,0);
 
-    int i=0;
-    qDebug()<<_linkedProperty->value().toInt();
-    for(int x=0; x<3; x++)
+    for(int x=0; x<9; x++)
     {
+        int find=0;
         for(int y=0; y<_linkedProperty->value().toInt(); y++)
         {
-            qDebug()<<QString("m%1%2").arg(x).arg(y);
             Property *property = _linkedProperty->subProperties().propertiesMap()[QString("m%1%2").arg(x).arg(y)];
             if(property)
             {
-                qDebug()<<"prop";
                 PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
                 layout->addWidget(propertyWidget,x,y);
+                find++;
             }
         }
+        if(find==0) break;
     }
 
     setLayout(layout);

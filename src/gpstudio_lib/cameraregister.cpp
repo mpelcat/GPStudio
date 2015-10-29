@@ -102,6 +102,7 @@ QStringList CameraRegister::dependsProperties() const
         pos += exp.matchedLength();
         props.append(exp.cap(0));
     }
+    props.removeDuplicates();
     return props;
 }
 
