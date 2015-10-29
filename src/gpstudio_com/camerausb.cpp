@@ -98,7 +98,6 @@ bool CameraUSB::resetDevice()
 
 bool CameraUSB::isConnected() const
 {
-    qDebug()<<"isConnected"<<(_devHandle!=NULL);
     return (_devHandle!=NULL);
 }
 
