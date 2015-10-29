@@ -7,6 +7,7 @@
 #include "propertysintwidget.h"
 #include "propertyboolwidget.h"
 #include "propertyenumwidget.h"
+#include "propertymatrixwidget.h"
 
 #endif // PROPERTYWIDGETS_H
 

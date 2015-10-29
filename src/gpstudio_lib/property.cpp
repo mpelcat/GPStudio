@@ -211,6 +211,11 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
         paramprop->setMax(blockProperty->max());
         paramprop->setStep(blockProperty->step().toInt());
     }
+    if(blockProperty->type()=="matrix")
+    {
+        paramprop->setType(Matrix);
+        paramprop->setValue(QVariant(blockProperty->value()).toInt());
+    }
     if(blockProperty->type()=="bool")
     {
         paramprop->setType(Bool);

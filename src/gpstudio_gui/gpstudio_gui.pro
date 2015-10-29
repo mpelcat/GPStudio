@@ -35,7 +35,8 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     itemsview/processesview.cpp \
     itemsview/processesscene.cpp \
     itemsview/processitem.cpp \
-    itemsview/processconnectoritem.cpp
+    itemsview/processconnectoritem.cpp \
+    propertywidgets/propertymatrixwidget.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -56,7 +57,8 @@ HEADERS  += \
     itemsview/processesview.h \
     itemsview/processesscene.h \
     itemsview/processitem.h \
-    itemsview/processconnectoritem.h
+    itemsview/processconnectoritem.h \
+    propertywidgets/propertymatrixwidget.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)

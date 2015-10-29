@@ -47,7 +47,7 @@ public:
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> &enums() const;
 
-    enum Type {Group, Int, SInt, Bool, Enum};
+    enum Type {Group, Int, SInt, Bool, Enum, Matrix};
     Type type() const;
     void setType(const Type &type);
 

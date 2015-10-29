@@ -58,6 +58,9 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(Property *property)
     case Property::Enum:
         widget = new PropertyEnumWidget();
         break;
+    case Property::Matrix:
+        widget = new PropertyMatrixWidget();
+        break;
     default:
         qDebug()<<"unknow prop type"<<(int)property->type();
         break;

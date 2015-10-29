@@ -12,3 +12,8 @@ make -j9
 
 # To cross build to windows
 sudo apt-get install wine mingw-w64
+
+mkdir build-win
+cd build-win
+/opt/qt-5.5-win32/bin/qmake ../src/gpstudio.pro
+make release -j9
