@@ -50,6 +50,7 @@ MainWindow::MainWindow(QStringList args) :
         }
     }
 
+    ui->scriptDock->close();
 }
 
 MainWindow::~MainWindow()
@@ -112,6 +113,10 @@ void MainWindow::createToolBarAndMenu()
     viewMenu->addAction(fourViewer);
     connect(fourViewer, SIGNAL(triggered()), this, SLOT(fourViewer()));
 
+    viewMenu->addSeparator();
+    viewMenu->addAction(ui->paramsDock->toggleViewAction());
+    viewMenu->addAction(ui->scriptDock->toggleViewAction());
+
     QMenu *helpMenu = ui->menuBar->addMenu("&Help");
 
     ui->mainToolBar->addSeparator();
@@ -147,11 +152,16 @@ void MainWindow::connectCam()
         ConnectNodeDialog connectNodeDialog(this);
         if(connectNodeDialog.exec()==QDialog::Accepted)
         {
-            _cam->connectCam(connectNodeDialog.cameraInfo());
+            const CameraInfo &cameraInfo = connectNodeDialog.cameraInfo();
 
-            if(_cam->isConnected())
+            if(cameraInfo.isValid())
             {
-                connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
+                _cam->connectCam(cameraInfo);
+
+                if(_cam->isConnected())
+                {
+                    connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
+                }
             }
         }
     }
@@ -233,6 +243,7 @@ void MainWindow::viewFlow(int flow)
 void MainWindow::setBiSpace()
 {
     if(!_cam) return;
+    if(!_cam->com()) return;
     ui->piSpaceHex->setData(_cam->registerData());
 }
 

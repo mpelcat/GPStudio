@@ -37,6 +37,11 @@ void CameraInfo::setAddr(const QString &addr)
     _addr = addr;
 }
 
+const bool CameraInfo::isValid() const
+{
+    if(_name.isEmpty() || _driverType.isEmpty()) return false; else return true;
+}
+
 QDebug operator<<(QDebug d, const CameraInfo &cameraInfo)
 {
     QString outDebug=QString("%1 connected at %2 by %3").arg(cameraInfo._name)

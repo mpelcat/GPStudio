@@ -6,6 +6,7 @@ ConnectNodeDialog::ConnectNodeDialog(QWidget *parent) :
     ui(new Ui::ConnectNodeDialog)
 {
     ui->setupUi(this);
+    _cameraInfo = CameraInfo();
     connect(ui->camTreeView, SIGNAL(cameraSelected(CameraInfo)), this, SLOT(selectCam(CameraInfo)));
     connect(&_refreshTimer, SIGNAL(timeout()), ui->camTreeView, SLOT(refreshCams()));
     _refreshTimer.start(500);

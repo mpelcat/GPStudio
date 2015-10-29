@@ -11,6 +11,7 @@ Camera::Camera(const QString &fileCameraConfig)
 {
     _paramsBlocks = NULL;
     _node = NULL;
+    _com = NULL;
     setNode(Node::readFromFile(fileCameraConfig));
 }
 
@@ -125,8 +126,6 @@ void Camera::setRegister(uint addr, uint value)
         if(_com->isConnected())
         {
             _com->writeParam(addr, value);
-
-
 
             _registerData.data()[addr*4+0]=value>>24;
             _registerData.data()[addr*4+1]=value>>16;

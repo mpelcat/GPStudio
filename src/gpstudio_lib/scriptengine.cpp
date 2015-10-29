@@ -34,7 +34,7 @@ uint ScriptEngine::evalPropertyMap(const QString &propertyMap, const QString &bl
     }
 
     const QScriptValue &result = _engine.evaluate(propertyMap);
-    if(result.isError()) qDebug()<<"Script engine: error evaluating "<<propertyMap;
+    if(result.isError()) qDebug()<<"Script engine: error evaluating "<<propertyMap<<result.toString();
 
     if(!blockContext.isEmpty()) _engine.setGlobalObject(global);
 
