@@ -53,6 +53,12 @@ class Property
 	public $assert;
 
 	/**
+	* Code to execute if the property change (optional)
+	* @var string $onchange
+	*/
+	public $onchange;
+
+	/**
 	* Description of the param (optional)
 	* @var string $desc
 	*/
@@ -103,6 +109,7 @@ class Property
 		$this->max			= (string)$xml['max'];
 		$this->step			= (string)$xml['step'];
 		$this->assert		= (string)$xml['assert'];
+		$this->onchange		= (string)$xml['onchange'];
 		$this->desc			= (string)$xml['desc'];
 		
 		// enums
@@ -168,6 +175,11 @@ class Property
 			// assert
 			$att = $xml->createAttribute('assert');
 			$att->value = $this->assert;
+			$xml_element->appendChild($att);
+			
+			// onchange
+			$att = $xml->createAttribute('onchange');
+			$att->value = $this->onchange;
 			$xml_element->appendChild($att);
 			
 			// desc

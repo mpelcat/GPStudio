@@ -302,7 +302,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		}
 		
 		// makefile local
-		$content =  "GPS_LIB=../GPStudio_lib_std"."\r\n";
+		$content =  "GPS_LIB=".LIB_PATH."\r\n";
 		$content .= "QUARTUS_TOOLS_PATH=/home/seb/altera/13.1/quartus/bin/"."\r\n";
 		$content .= "GPS_VIEWER=../GPStudio"."\r\n";
 		$content .= ""."\r\n";
