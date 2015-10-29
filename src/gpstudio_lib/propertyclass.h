@@ -6,7 +6,7 @@
 #include <QScriptClass>
 #include <QMap>
 
-#include "property.h"
+class Property;
 
 class GPSTUDIO_LIB_EXPORT PropertyClass: public QObject, public QScriptClass
 {

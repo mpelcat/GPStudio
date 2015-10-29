@@ -7,6 +7,7 @@ Property::Property(QString name)
 {
     _parent = NULL;
     _type = Group;
+    _engine = NULL;
 }
 
 Property::Property(const Property &other)
@@ -26,6 +27,7 @@ Property &Property::operator =(const Property &other)
     _parent = other._parent;
     _enums = other._enums;
     _subProperties = other._subProperties;
+    _engine = other._engine;
     return (*this);
 }
 
@@ -84,6 +86,11 @@ void Property::setValue(const QVariant &value)
         setBits(_value.toUInt());
     }
     emit valueChanged(QVariant(value));
+
+    if(_engine)
+    {
+        _engine->evalPropertyMap(_onchange, _blockName);
+    }
 }
 
 uint Property::bits() const
@@ -147,6 +154,40 @@ void Property::setType(const Property::Type &type)
     _type = type;
 }
 
+QString Property::blockName() const
+{
+    return _blockName;
+}
+
+void Property::setBlockName(const QString &blockName)
+{
+    _blockName = blockName;
+}
+
+ScriptEngine *Property::engine() const
+{
+    return _engine;
+}
+
+void Property::setEngine(ScriptEngine *engine)
+{
+    _engine = engine;
+    foreach (Property *property, _subProperties.properties())
+    {
+        property->setEngine(_engine);
+    }
+}
+
+QString Property::onchange() const
+{
+    return _onchange;
+}
+
+void Property::setOnchange(const QString &onchange)
+{
+    _onchange = onchange;
+}
+
 Property &Property::operator[](const QString &name)
 {
     return *_subProperties.propertiesMap()[name];
@@ -187,10 +228,12 @@ void Property::addSubProperty(Property *property)
     _subProperties.addProperty(property);
 }
 
-Property *Property::fromBlockProperty(BlockProperty *blockProperty)
+Property *Property::fromBlockProperty(BlockProperty *blockProperty, Block *block)
 {
     Property *paramprop = new Property(blockProperty->name());
     paramprop->setCaption(blockProperty->caption());
+    paramprop->setOnchange(blockProperty->onchange());
+    paramprop->setBlockName(block->name());
     if(!blockProperty->propertyEnums().empty())
     {
         foreach (BlockPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
@@ -225,7 +268,7 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
 
     foreach (BlockProperty *subBlockProperty, blockProperty->properties())
     {
-        paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
+        paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty, block));
     }
 
     return paramprop;

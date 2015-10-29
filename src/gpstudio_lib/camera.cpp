@@ -42,7 +42,7 @@ void Camera::setNode(Node *node)
         propBlock->setType(Property::Group);
         foreach (BlockProperty *property, block->properties())
         {
-            Property *paramprop = Property::fromBlockProperty(property);
+            Property *paramprop = Property::fromBlockProperty(property, block);
             propBlock->addSubProperty(paramprop);
         }
         _paramsBlocks->addSubProperty(propBlock);

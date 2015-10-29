@@ -85,6 +85,16 @@ QString BlockProperty::assert() const
     return _assert;
 }
 
+QString BlockProperty::onchange() const
+{
+    return _onchange;
+}
+
+void BlockProperty::setOnchange(const QString &onchange)
+{
+    _onchange = onchange;
+}
+
 void BlockProperty::setAssert(const QString &assert)
 {
     _assert = assert;
@@ -153,6 +163,7 @@ BlockProperty *BlockProperty::fromNodeGenerated(const QDomElement &domElement)
     blockProperty->setMax(domElement.attribute("max",""));
     blockProperty->setStep(domElement.attribute("step","1"));
     blockProperty->setAssert(domElement.attribute("assert",""));
+    blockProperty->setOnchange(domElement.attribute("onchange",""));
     blockProperty->setDescription(domElement.attribute("desc",""));
 
     QDomNode n = domElement.firstChild();

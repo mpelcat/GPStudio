@@ -8,10 +8,13 @@
 #include <QMap>
 #include <QList>
 
+#include "camera.h"
 #include "propertiesmap.h"
 #include "propertyenum.h"
 
 #include "model/blockproperty.h"
+
+class ScriptEngine;
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
@@ -51,6 +54,12 @@ public:
     Type type() const;
     void setType(const Type &type);
 
+    QString blockName() const;
+    void setBlockName(const QString &blockName);
+
+    QString onchange() const;
+    void setOnchange(const QString &onchange);
+
     Property &operator[](const QString &name);
     const PropertiesMap &subProperties() const;
     void addSubProperty(Property *property);
@@ -59,6 +68,9 @@ public:
     void setParent(Property *parent);
 
     Property *path(QString path);
+
+    ScriptEngine *engine() const;
+    void setEngine(ScriptEngine *engine);
 
 signals:
     void valueChanged(QVariant value);
@@ -72,7 +84,7 @@ public slots:
     void setBits(const uint bits);
 
 public:
-    static Property *fromBlockProperty(BlockProperty *blockProperty);
+    static Property *fromBlockProperty(BlockProperty *blockProperty, Block *block);
 
 protected:
     QString _name;
@@ -84,11 +96,16 @@ protected:
     QVariant _step;
     Type _type;
 
+    QString _blockName;
+    ScriptEngine *_engine;
+    QString _onchange;
+
     Property *_parent;
     QMap<QString, PropertyEnum* > _enumsMap;
     QList<PropertyEnum*> _enums;
 
     PropertiesMap _subProperties;
+
 };
 
 #endif // PROPERTY_H

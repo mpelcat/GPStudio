@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+#include "property.h"
+
 ScriptEngine::ScriptEngine(QObject *parent) : QObject(parent)
 {
 
@@ -20,6 +22,7 @@ QScriptEngine *ScriptEngine::engine()
 void ScriptEngine::addProperty(Property *property)
 {
     PropertyClass *prop=new PropertyClass(&_engine, property);
+    property->setEngine(this);
     QScriptValue value = _engine.newObject(prop);
     _engine.globalObject().setProperty(property->name(), value);
 }

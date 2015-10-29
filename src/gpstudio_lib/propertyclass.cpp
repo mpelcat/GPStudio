@@ -4,6 +4,8 @@
 #include <QScriptString>
 #include <QScriptEngine>
 
+#include "property.h"
+
 //#define __PROP_DEBUG__
 
 PropertyClass::PropertyClass(QScriptEngine * engine, Property *linkedProperty)

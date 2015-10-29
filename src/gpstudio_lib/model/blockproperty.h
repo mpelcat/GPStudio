@@ -41,6 +41,9 @@ public:
     QString assert() const;
     void setAssert(const QString &assert);
 
+    QString onchange() const;
+    void setOnchange(const QString &onchange);
+
     QString description() const;
     void setDescription(const QString &description);
 
@@ -68,6 +71,7 @@ protected:
     QString _max;
     QString _step;
     QString _assert;
+    QString _onchange;
     QString _description;
 
     Block *_parent;
