@@ -4,6 +4,8 @@
 -- 
 -- 16/10/2014 - creation
 --------------------------------------------------------------------
+-- TODO: Supprmier machine d'états => possibilité de mettre à jour le reg seulement sur le front descendant de fv 
+--		: A verifier !
 
 library ieee;
 use ieee.std_logic_1164.all;
