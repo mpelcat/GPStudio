@@ -1,0 +1,197 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lmodern}
+\usepackage{fancyvrb}
+\usepackage{tikz}
+
+\newcommand{\version}{\input{../../version.txt}}
+
+\newcommand{\command}[1]{%
+\noindent \fbox{%
+   \begin{minipage}{\textwidth}
+      #1
+   \end{minipage}%
+}
+}
+
+\newcommand{\sample}[1]{%
+\vspace{0.2cm}Exemple :\\
+\command{#1}
+}
+
+\author{Sebastien CAUX}
+\title{gpnode doc \version}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+gpnode is a command line tool that permits to create and manage a node project in GPStudio toolchain.
+
+A node in GPStudio is a physical node, it can be a smart camera or a sensor.
+
+\section{Use}
+gpnode always takes the project in the current directory, so you only can have one project per directory. A node project file have the '.node' extension.
+
+At the very beginning, you need to create a project with the \emph{newproject} command. After that, you can use all the commands set on this project.
+
+Please read the tutorial 'GPStudio command line quick start' to learn how to use this tool.
+
+\section{Commands}
+\subsection{project}
+\subsubsection{newproject}
+\command{\textbf{gpnode} \textbf{newproject} -n <project-name>}
+
+Create a project file inside the current directory named '\emph{<project-name>}.node'.
+
+\sample{\textbf{gpnode} \textbf{newproject} -n project1}
+
+\subsubsection{setboard}
+\command{\textbf{gpnode} \textbf{setboard} -n <board-name>}
+
+Specify the name of the used board for the node. You need to specify a board before setting up any io in the project.
+
+\sample{\textbf{gpnode} \textbf{setboard} -n dreamcam\_c3}
+
+\subsubsection{generate}
+\command{\textbf{gpnode} \textbf{generate} [-o <dir>]}
+
+Generate all files needed for the specified toolchain and Makefile. After that, you just need to call 'make compile' to compile the project with specific tools needed by the node.
+
+\sample{\textbf{gpnode} \textbf{generate} -o build/}
+
+\subsection{io}
+\subsubsection{addio}
+\command{\textbf{gpnode} \textbf{addio} -n <io-name>}
+
+Add IP support in the project to manage \emph{<io-name>}. \emph{<io-name>} must be define in the board file definition.
+
+\sample{\textbf{gpnode} \textbf{addio} -n mt9}
+
+\subsubsection{delio}
+\command{\textbf{gpnode} \textbf{delio} -n <io-name>}
+
+Remove io support named \emph{<io-name>}.
+
+\sample{\textbf{gpnode} \textbf{delio} -n mt9}
+
+\subsubsection{showio}
+\command{\textbf{gpnode} \textbf{showio}}
+
+Print the list of io support in the current project.
+
+\sample{\textbf{gpnode} \textbf{showio}\\ios :\\ + mt9\\ + usb}
+
+\subsection{process}
+\subsubsection{addprocess}
+\command{\textbf{gpnode} \textbf{addprocess} -n \emph{<process-name>} -d \emph{<driver-name>}}
+
+Add a process named \emph{<process-name>} as an instance of \emph{<driver-name>} IP in the library or the project dir.
+
+\sample{\textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw}
+
+\subsubsection{delprocess}
+\command{\textbf{gpnode} \textbf{delprocess} -n <process-name>}
+
+Remove process \emph{<process-name>} and all the connections to or from it.
+
+\subsubsection{showprocess}
+\command{\textbf{gpnode} \textbf{showprocess}}
+
+Print the list of process in the current project.
+
+\sample{\textbf{gpnode} \textbf{showprocess}\\ios :\\ + process1\\ + process2}
+
+\subsubsection{showblock}
+\command{\textbf{gpnode} \textbf{showblock}}
+
+Print the list of process and io in the current project.
+
+\sample{\textbf{gpnode} \textbf{showblock}\\blocks :\\ + mt9\\ + usb\\ + process1\\ + process2}
+
+\subsection{block attributes}
+\subsubsection{renameblock}
+\command{\textbf{gpnode} \textbf{renameblock} -n <block-name> -v <new-name>}
+
+Rename a process block.
+
+\sample{\textbf{gpnode} \textbf{renameblock} -n process1 -v first\_gradient}
+
+\subsubsection{setproperty}
+\command{\textbf{gpnode} \textbf{setproperty} -n <property-name> -v <default-value>}
+
+Define a default value \emph{<default-value>} to the property \emph{<property-name>}.
+
+\subsubsection{setparam}
+\command{\textbf{gpnode} \textbf{setparam} -n <param-name> -v <value>}
+
+Set the value \emph{<value>} to the param \emph{<param-name>}.
+
+\subsubsection{setclock}
+\command{\textbf{gpnode} \textbf{setclock} -n <clock-name> -v <frequency>}
+
+Define the clock frequency \emph{<frequency>} to the clock \emph{<clock-name>}.
+
+\subsubsection{setflowsize}
+\command{\textbf{gpnode} \textbf{setflowsize} -n <flow-name> -v <flow-size>}
+
+define the flow size \emph{<flow-size>} to the flow \emph{<flow-name>}
+
+\subsection{flow interconnect}
+\subsubsection{connect}
+\command{\textbf{gpnode} \textbf{connect} -f <flow-out> -t <flow-in> [-s <bit-shift>]}
+
+Add a flow connection between a flow out \emph{<flow-out>} (ex: mt9.out) to a flow in \emph{<flow-in>} with a bit shift \emph{<bit-shift>} ("lsb" or "msb").
+
+\subsubsection{unconnect}
+\command{\textbf{gpnode} \textbf{unconnect} -f <flow-out> -t <flow-in>}
+
+Remove a flow connection between a flow out \emph{<flow-out>} (ex: mt9.out) to a flow in \emph{<flow-in>}.
+
+\subsubsection{showconnects}
+\command{\textbf{gpnode} \textbf{showconnects}}
+
+Print the list of flow connections in the current project.
+
+\subsection{clock interconnect}
+\subsubsection{setclockdomain}
+\command{\textbf{gpnode} \textbf{setclockdomain} -n <domain-name> -v <frequency>}
+
+Define a clock frequency \emph{<frequency>} the the clock domain \emph{<domain-name>}.
+
+\subsubsection{showclockdomain}
+\command{\textbf{gpnode} \textbf{showclockdomain}}
+
+Print the list of clock domains in the current project.
+
+%\subsection{lists}
+%\subsubsection{listavailableio}
+%\begin{Verbatim}[frame=single]
+%gpnode listavailableio
+%\end{Verbatim}
+%
+%\subsubsection{listio}
+%\begin{Verbatim}[frame=single]
+%gpnode listio
+%\end{Verbatim}
+%
+%\subsubsection{listavailableprocess}
+%\begin{Verbatim}[frame=single]
+%gpnode listavailableprocess
+%\end{Verbatim}
+%
+%\subsubsection{listprocess}
+%\begin{Verbatim}[frame=single]
+%gpnode listprocess
+%\end{Verbatim}
+%
+%\subsubsection{listword}
+%\begin{Verbatim}[frame=single]
+%gpnode listword
+%\end{Verbatim}
+
+\end{document}

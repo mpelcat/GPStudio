@@ -1,0 +1,22 @@
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shadows}
+\usetikzlibrary{patterns}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes}
+\usetikzlibrary{3d}
+%\usetikzlibrary{automata}
+\usetikzlibrary{fit}
+
+\tikzset{block/.style={draw, text centered, fill=gray!10,drop shadow}}
+\tikzset{connect/.style={draw, line width=1 pt}}
+
+\tikzset{fifo/.style={draw,rectangle,minimum height=0.2cm,minimum width=0.5cm,preaction={fill=white},pattern=vertical lines,pattern color=black}}
+
+\tikzset{state/.style={block,rectangle,minimum height=1.5cm,minimum width=2cm}}
+  
+  
+  \newcommand{\action}[2]{\path[draw] (#1.east) -- node[draw,rectangle,anchor=west,xshift=0.25cm,text width=6cm]{#2} ++(0.5cm,0);}
+
+\newcommand{\rising}{$\uparrow$}

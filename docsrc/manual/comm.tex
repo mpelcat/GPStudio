@@ -1,0 +1,152 @@
+
+
+\chapter{Communication system}
+
+tableau de flow:
+\begin{figure}[!h]
+\begin{tabular}{|c|c|c|}
+\hline 
+ Type Flow & Num actual & Num targeted a long terme\\ \hline \hline
+ Set Param &  15  & 127\\\hline
+ Get Param &  to implement & 254 \\\hline
+ USB Status & 253 & to remove\\\hline
+ MT9 FLow OUT & 128 & 128 \\\hline
+ Loopback Flow In & 1 & 1 \\\hline
+ Loopback Flow out & 129 & 129 \\\hline
+ 
+\end{tabular}
+\end{figure}
+
+We give the ability to developers to use either the hardware image sensor or a virtual image sensor
+which receive data from the communication system
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=3cm]
+\tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,minimum width=2cm}};
+
+% Com
+\node[blocstyle,minimum height=1.5cm,minimum width=3cm,rotate=90] (usbphy) {PHY};
+\node[blocstyle,minimum height=3cm,minimum width=3cm,text width=3cm,right of=usbphy] (usbcom) {COM\\USB};
+\node[dashed,draw,inner sep=10pt,fit=(usbphy) (usbcom),label=Com] (comfit) {};
+
+% Rx
+\node[blocstyle,minimum height=0.8cm,minimum width=2cm,anchor=west] (rxfifo) at([xshift=0.9cm,yshift=0.9cm]usbcom.east) {Rx FIFO};
+\node[blocstyle,minimum height=0.8cm,minimum width=1.5cm,right of=rxfifo, node distance=2.5cm] (rdflow) {Read Flow};
+\node[dashed,draw,inner sep=10pt,fit=(rxfifo) (rdflow),label=Rx Flow] (rxfit) {};
+
+% Tx
+\node[blocstyle,minimum height=0.8cm,minimum width=2cm,anchor=west] (txfifo) at([xshift=0.9cm,yshift=-0.9cm]usbcom.east) {Tx FIFO};
+\node[blocstyle,minimum height=0.8cm,minimum width=1.5cm,right of=txfifo, node distance=2.5cm] (wrflow) {Write Flow};
+\node[dashed,draw,inner sep=10pt,fit=(txfifo) (wrflow),label=below:Tx Flow] (rxfit) {};
+
+
+\end{tikzpicture}
+\caption{Top level of a node}
+\end{figure}
+
+\section{Virtual image sensor}
+
+
+
+\section{Flow Component}
+
+\subsection{Flow In}
+\subsubsection{ComFlowFifoRX component}
+
+%% Faire schema  avec les mux
+
+
+
+The ComFlowfifoRX component included three different FSM
+
+\paragraph{GENERAL FSM}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=2.8cm, semithick]
+  \tikzstyle{every state}=[block,minimum size=2cm]
+
+  
+  
+  \node[state] (A)              {Idle};
+    \action{A}{\rising data\_wr and enable=1}
+  \node[state]         (B) [below of=A] {DecodeFrameNb};
+  \action{B}{frame\_number $\Leftarrow$data\i}
+  \node[state]         (C) [below of=B] {ReceivePacket};
+  \node[state]         (D) [below of=C] {SwapFifos};
+  \action{D}{}
+  \node[state]         (E) [below of=D] {Full};
+  %% A refaire
+  \path[->] 
+        (A) edge   node {1} (B)
+        (B) edge   node  {data\_i = FLOW\_ID} (C)
+        (B) edge [bend left=35]  node  {data\_i != FLOW\_ID} (A);
+        
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{READABLE Process}
+% faire scheme
+\paragraph{FLAG Process}
+
+\paragraph{MUX}
+
+
+\subsubsection{ReadFlow}
+
+State Machine of ReadFlow component
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[>=stealth',shorten >=1pt,node distance=2.8cm, semithick]
+
+
+  \node[state] (A)              {Idle};
+    \action{A}{	
+        dv\_o $\Leftarrow 0$ \\
+		read\_data\_o $\Leftarrow 0$\\
+			last\_packet $:=0$
+			}
+  \node[state]         (B) [below of=A] {DecodeFlag};
+  \action{B}{	
+        if flag = SoF then  fv\_o $\Leftarrow 1$ \\
+		if flag = EoF then last\_packet $:=1$
+			}
+  \node[state]         (C) [below of=B] {Wait One clk};
+  \node[state]         (D) [below of=C] {ReadFlow};
+  \action{D}{	
+        dv\_o $\Leftarrow 1$ \\
+        data\_o $\Leftarrow$ data\_i 
+		}
+  \node[state]         (E) [below of=D] {DeassertDV};
+  \node[state]         (F) [below of=E] {EndFrame};
+    \action{F}{	
+        fv\_o $\Leftarrow 0$
+		}
+  
+    \path[->,draw] (A) -- node{-} node[right]{enable\_i=1 and flow\_rdy=1} (B);
+    \path[->,draw] (B) -- node{-} node[right]{1} (C);
+    \path[->,draw] (C) -- node{-} node[right]{1} (D);
+    \path[->,draw] (D) -- node{-} node[right]{\rising f\_empty\_i/ dv\_o $\Leftarrow 0$} (E);
+    \path[->,draw] (E) -- node{-} node[right]{last\_packet $=1$} (F);
+    \path[->,draw] (E) -- node{-} node[right]{last\_packet $=01$} (A);
+    \path[->,draw] (F) -- node{-} node[right]{1} (A);
+    
+\end{tikzpicture}
+\end{figure}
+
+\subsection{Flow Out}
+\subsubsection{ComFlowFifoTX component}
+\subsubsection{WriteFlow}
+
+
+\section{USB DreamCAM driver}
+
+
+\subsection{Arbiter}
+
+
+\section{Composant Params to bus}
+

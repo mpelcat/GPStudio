@@ -1,0 +1,51 @@
+\chapter{Distribution}
+
+\section{Files organisation}
+\begin{figure}[h]
+\dirtree{%
+.1 GPS distribution root.
+   .2 \bfseries bin/.
+        .3 gpnode.
+        .3 gpviewer.
+   .2 \bfseries doc/.
+   .2 \bfseries script/.
+   .2 \bfseries support/.
+        .3 board/.
+           .4 board1/.
+                .5 board1.dev.
+        .3 io/.
+        .3 process/.
+        .3 toolchain/.
+}
+\caption{Files tree of the main distribution of GPStudio}
+\label{fig:archivetree}
+\end{figure}
+
+\section{Files format}
+All files used by GPStudio are under XML format with specific extension.
+
+\subsection{.dev}
+This file is the definition of a board platform, his capabilities and functionalities.
+
+It contains the toolchain to produce a byte code, special attributes for supporting the board and the list of available peripheral. For each peripheral, 
+
+\subsection{.proc}
+files implementation list with type of file and path
+
+\subsection{.io}
+Io file definition is quite similar of process file with addition of an external interface.
+
+\subsection{.node}
+
+\section{Tools}
+\subsection{gpnode}
+gpnode is a command line tool that permit to manage a gptudio node project.
+
+\emph{See also gpnode manual.}
+
+\subsection{gpviewer}
+gpviewer is a graphical interface to see results of processing and setting up your smart camera during execution.
+
+\emph{See also gpviewer manual.}
+
+\section{Work flow}

@@ -1,0 +1,31 @@
+\chapter{Node}
+\section{Top level of a node}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=3cm]
+\tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,minimum width=2cm}};
+
+% blocks
+\node[blocstyle] (bloc1) {image sensor};
+\node[blocstyle,right of=bloc1] (bloc2) {block1};
+\node[blocstyle,right of=bloc2] (bloc3) {block2};
+\node[blocstyle,right of=bloc3] (bloc4) {communication};
+
+% SI
+\node[blocstyle,fit=(bloc1) (bloc4),inner xsep=0.5cm,inner ysep=0,yshift=2.5cm] (siwb) {Bus Interconnect};
+\node[blocstyle,fit=(bloc1) (bloc4),inner xsep=0.5cm,inner ysep=0,yshift=-2.5cm] (mx) {Flow Interconnect};
+
+% Flow to 
+\foreach \s in {1,...,4}
+{
+    \path[connect,->] (bloc\s.east) -| ([xshift=0.2cm]bloc\s.east |- mx.north);
+    \path[connect,<-] (bloc\s.west) -| ([xshift=-0.2cm]bloc\s.west |- mx.north);
+    \path[connect,<-,double,double distance=0.5mm] (bloc\s.north) -- (bloc\s.north |- siwb.south);
+}
+\end{tikzpicture}
+\caption{Top level of a node}
+\end{figure}
+
+\section{Properties}
+Properties is a way to link block low level hardware registers to high level software controller.

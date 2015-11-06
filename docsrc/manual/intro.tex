@@ -1,0 +1,11 @@
+\chapter*{Introduction}
+
+Smart Cameras allow to embed image processing nearest to image sensors. Embedded systems are therefore deployed to extract high level image features with (pixel-wise) computational intensive operations. Given the limited computational capabilities of embedded devices, programmable FPGA architectures have been proposed to speed-up the processing performance. Such architectures are able to perform high throughput processing within a modular and flexible approach. However, in developing FPGA vision applications one of the biggest issues is the increased development time compared to classical computer vision techniques.
+
+Therefore, with the integration of FPGA devices into smart camera platforms, node programmability becomes a major concern for FPGA developers. In addition of the algorithm transcription using low-level programming languages such as VHDL or Verilog, FPGA designers have also to manage internal circuitry.
+%(communication drivers, modules synchronization, interfaces...).
+With the time-to-market era, reducing the development time can be a considerable advantage. In this context,
+a higher level description would be useful to abstract low-level hardware considerations and increase the added value. 
+
+In this work we propose the \textit{GPStudio} toolchain. It aims at managing low-level hardware abstractions allowing developers to focus on the porting of algorithms into hardware architecture. By leveraging the modular architecture concept, available Intellectual Properties (IP) modules are easily instantiated with standard interfaces between sensors, processing and communication blocks. In this way, a cross-platform IP library is proposed to improve the code re-usability for a wide range of smart camera applications. Once the application is defined, \textit{GPStudio} automatically generates the architecture and the glue code for the targeted board. 
+All in all, \textit{GPStudio} allows a rapid FPGA deployment using in-library or custom defined modules (with your preferred HDL language or HLS). With the generated \textit{GPStudio} debug facilities, the FPGA development has never been so easy! 

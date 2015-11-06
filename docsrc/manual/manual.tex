@@ -1,0 +1,64 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lmodern}
+\usepackage{fancyvrb}
+\usepackage{dirtree}
+\usepackage{hyperref}		% enabling hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue, % Couleur des liens internes
+    citecolor=red, % Couleur des numéros de la biblio dans le corps
+    urlcolor=blue} % Couleur des url
+\input{tikz.tex}
+
+% ********* head and foot *********
+\usepackage{fancyvrb}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+%\headheight = 30pt
+\pagestyle{fancy}
+\fancyhead[LO]{\small\slshape \rightmark}
+\fancyhead[RO]{\small\slshape \leftmark}
+\renewcommand{\chaptermark}[1]{% 
+\markboth{\MakeUppercase{\thechapter.\ }#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+\makeatletter
+\patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{\vspace*{20\p@}}{}{}
+\patchcmd{\DOTIS}{\vskip 40\p@}{\vskip -20\p@}{}{}
+\preto{\@verbatim}{\topsep=0pt \partopsep=0pt }
+\makeatother
+
+% ********* version *********
+\newcommand{\version}{\input{../../version.txt}}
+
+\author{Sebastien CAUX}
+\title{GPStudio manual \version}
+
+\begin{document}
+\maketitle
+
+\input{dev.tex}
+
+% ========== CONTENTS TABLE ==========
+\newpage
+\addtocontents{toc}{~\hfill\textbf{Page}\par}
+%\setcounter{tocdepth}{1}
+\thispagestyle{empty}
+\tableofcontents
+\thispagestyle{empty}
+
+\input{intro.tex}
+\input{concepts.tex}
+\input{block.tex}
+\input{flows.tex}
+\input{node.tex}
+%\input{net.tex}
+\input{distrib.tex}
+
+\end{document}

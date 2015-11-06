@@ -1,7 +1,15 @@
 transcript
 work/
 doc/*
-distrib/gpstudio_win/
-distrib/gpstudio_linux/
 */sim/*
 */tb/*
+
+*.log
+*.aux
+*.synctex.gz 
+docsrc/*/*.pdf
+
+distrib/gpstudio_linux.tar.gz
+distrib/gpstudio_win.zip
+distrib/gpstudio_win/
+distrib/gpstudio_linux/
