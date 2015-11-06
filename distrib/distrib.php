@@ -20,6 +20,7 @@ function distrib($os)
 	distrib_support($path, $os);
 	distrib_doc($path, $os);
 	distrib_bin($path, $os);
+	distrib_thirdparts($path, $os);
 }
 
 $options = getopt("o:");

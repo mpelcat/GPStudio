@@ -102,4 +102,14 @@ function distrib_bin($mainoutpath, $os)
 	echo "done."."\n";
 }
 
+function distrib_thirdparts($mainoutpath, $os)
+{
+	echo "copying doc files in $mainoutpath for $os..."."\n";
+	
+	// create directory
+	mkdirExists($mainoutpath."thirdparts");
+	cpy_dir(LIB_PATH."distrib".DIRECTORY_SEPARATOR."thirdparts".DIRECTORY_SEPARATOR.$os, $mainoutpath."thirdparts");
+	echo "done."."\n";
+}
+
 ?>

@@ -8,7 +8,7 @@ function getVersion()
 	global $version_cache;
 	if(empty($version_cache))
 	{
-		$filename = LIB_PATH.DIRECTORY_SEPARATOR.'version';
+		$filename = LIB_PATH.DIRECTORY_SEPARATOR.'version.txt';
 		$handle = fopen($filename, 'r');
 		$version_cache = fread($handle, filesize($filename));
 		

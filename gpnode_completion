@@ -66,7 +66,7 @@ _gpnode()
                         return 0
                         ;;
                     connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowin )' -- "$cur" ) ) && compopt -o nospace
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowout )' -- "$cur" ) ) && compopt -o nospace
                         return 0
                         ;;
                 esac
@@ -90,7 +90,7 @@ _gpnode()
             6)
                 case $command in
                     connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowout )' -- "$cur" ) ) && compopt -o nospace
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowin )' -- "$cur" ) ) && compopt -o nospace
                         return 0
                         ;;
                     addprocess)
