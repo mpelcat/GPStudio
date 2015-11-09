@@ -40,7 +40,7 @@ bool CameraUSB::connect(const CameraInfo &info)
                 if(desc.idVendor==vendorId && desc.idProduct==productId)
                 {
                     QString addr = QString("%1.%2").arg((int)libusb_get_bus_number(devs[i]))
-                                                   .arg((int)libusb_get_port_number(devs[i]));
+                                                   .arg((int)libusb_get_device_address(devs[i]));
                     if(addr==info.addr())
                     {
                         libusb_open(devs[i], &_devHandle);
@@ -178,7 +178,7 @@ QVector<CameraInfo> CameraUSB::avaibleCams()
             if(desc.idVendor==vendorId && desc.idProduct==productId)
             {
                 QString addr = QString("%1.%2").arg((int)libusb_get_bus_number(devs[i]))
-                                               .arg((int)libusb_get_port_number(devs[i]));
+                                               .arg((int)libusb_get_device_address(devs[i]));
                 avaibleCams.append(CameraInfo("DreamCam USB", "USB", addr));
             }
         }
