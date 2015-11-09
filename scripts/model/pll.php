@@ -30,7 +30,8 @@ class PLL
 	
 	function freqIn()
 	{
-		$inFreq = array_values($this->inFreqs)[0];
+		$inFreq = array_values($this->inFreqs);
+		$inFreq = $inFreq[0];
 		$this->mul = ceil($this->vco / $inFreq);
 		return $inFreq;
 	}
