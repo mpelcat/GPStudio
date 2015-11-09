@@ -10,7 +10,7 @@
 class Attribute
 {
 	/**
-	* Pin name to map
+	* Attribute name
 	* @var string $name
 	*/
 	public $name;

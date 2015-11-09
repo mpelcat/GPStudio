@@ -441,7 +441,7 @@ class ClockInterconnect extends Block
 	}
 	
 	/** Add a clock domain to the block
-	 *  @param ClockDomain $flow_connect flow connection to add to the block **/
+	 *  @param ClockDomain $domain clock domain to add to the block **/
 	function addClockDomain($domain)
 	{
 		$this->domains[$domain->name]=$domain;

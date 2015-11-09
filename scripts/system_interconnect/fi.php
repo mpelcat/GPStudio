@@ -518,7 +518,10 @@ class FlowInterconnect extends Block
 	}
 	
 	/** return a reference to the flow connection with the name $name, if not found, return false
-	 *  @param string $name name of the flow connection to search
+	 *  @param string $fromBlock name of the output flow block.
+	 *  @param string $fromFlow name of the output flow in $fromBlock.
+	 *  @param string $toBlock name of the input flow block.
+	 *  @param string $toFlow name of the input flow block in $toBlock.
 	 *  @return FlowConnect found flow connection **/
 	function getFlowConnect($fromBlock, $fromFlow, $toBlock, $toFlow)
 	{

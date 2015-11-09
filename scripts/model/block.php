@@ -75,7 +75,7 @@ class Block
 
 	/**
 	* Specify the external file script to configure the block (optional)
-	* @var string $scriptfile
+	* @var string $configscriptfile
 	*/
 	public $configscriptfile;
 

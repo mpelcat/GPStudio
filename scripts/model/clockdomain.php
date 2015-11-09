@@ -1,5 +1,12 @@
 <?php
 
+/** 
+ * ClockDomain permits to save typical frequency of a clock domain.
+ * @brief ClockDomain permits to save typical frequency of a clock domain.
+ * @see Clock ClockInterconnect
+ * @ingroup base
+ */
+
 class ClockDomain
 {
 	/**

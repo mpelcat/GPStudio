@@ -11,7 +11,7 @@
  * 
  * If typical is set, the clock is completly constrained. In other case, the typical freq is computed by the ClockInterconnect::configure() method.
  * 
- * @see ClockInterconnect
+ * @see ClockInterconnect ClockDomain
  * @ingroup base
  */
 
@@ -102,7 +102,7 @@ class Clock
 	/** @brief constructor
 	* 
 	* Initialise all the internal members and call parse_xml if $xml is set
-	* @var SimpleXMLElement $xml if it's different of null, call the xml parser to fill members
+	* @param SimpleXMLElement $xml if it's different of null, call the xml parser to fill members
 	*/
 	function __construct($xml=null)
 	{
@@ -116,7 +116,7 @@ class Clock
 	/** @brief private function to fill this instance from the input xml structure
 	* 
 	* Can be call only from this node into the constructor
-	* @var SimpleXMLElement $xml xml element to parse
+	* @param SimpleXMLElement $xml xml element to parse
 	*/
 	protected function parse_xml($xml)
 	{
@@ -156,7 +156,7 @@ class Clock
 	/** @brief permit to output this instance
 	* 
 	* Return a formated node for the node_generated file. This method call all the children getXmlElement to add into this node.
-	* @var DOMDocument $xml reference of the output xml document
+	* @param DOMDocument $xml reference of the output xml document
 	* @return DOMElement xml element corresponding to this current instance
 	*/
 	public function getXmlElement($xml, $format)
@@ -222,7 +222,7 @@ class Clock
 	/** @brief frenquency from string
 	* 
 	* Return a frequency as number in Hz from a string. Input format can be : 14.2M or 18.7k or 1500
-	* @var string $string string to convert to frequency in Hz
+	* @param string $string string to convert to frequency in Hz
 	* @return int frequency in Hz
 	*/
 	public static function convert($string)
@@ -240,7 +240,7 @@ class Clock
 	/** @brief human readable frequency
 	* 
 	* Return formated string of a frequency for human reader. This is used for printable report or warning.
-	* @var int $freq frequency in Hz
+	* @param int $freq frequency in Hz
 	* @return string formated string
 	*/
 	static function formatFreq($freq)
@@ -266,7 +266,7 @@ class Clock
 	/** @brief HDL readable frequency
 	* 
 	* Return formated string of a frequency for HDL compiler. This is used for naming convention in HDL output code.
-	* @var int $freq frequency in Hz
+	* @param int $freq frequency in Hz
 	* @return string formated string
 	*/
 	static function hdlFreq($freq)

@@ -1,5 +1,12 @@
 <?php
 
+/** 
+ * File are stored in Block::files as a list.
+ * @brief Model class to have informations about file implementation in a Block.
+ * @see Block
+ * @ingroup base
+ */
+
 class File
 {
 	/**

@@ -1,5 +1,12 @@
 <?php
 
+/** 
+ * Board is the class to load .dev support platform file and manage IO support for the board. It also load the toolchain with attribute.
+ * @brief Board is the class to load .dev support platform file.
+ * @see IO Pin Toolchain
+ * @ingroup base
+ */
+
 require_once("io.php");
 require_once("toolchain.php");
 
@@ -21,7 +28,7 @@ class Board
 
 	/**
 	* Specify the external file script to configure the board (optional)
-	* @var string $scriptfile
+	* @var string $configscriptfile
 	*/
 	public $configscriptfile;
 

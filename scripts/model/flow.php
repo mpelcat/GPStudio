@@ -1,5 +1,12 @@
 <?php
 
+/** 
+ * Flow are stored in Block::flows as a list.
+ * @brief Define flow interface in a Block.
+ * @see Block FI
+ * @ingroup base
+ */
+
 class Flow
 {
 	/**

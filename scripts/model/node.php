@@ -252,7 +252,7 @@ class Node
 	}
 	
 	/** Add a block to the node 
-	 *  @param Block $interface interface to add to the block **/
+	 *  @param Block $block block to add to the node **/
 	function addBlock($block)
 	{
 		$block->parentNode = $this;
