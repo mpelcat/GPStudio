@@ -267,8 +267,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= "send:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
 		$content .= "view:"."\r\n";
-		if($win)	$content .= "	$(GPS_LIB)/bin/gpviewer node_generated.xml"."\r\n";
-		else		$content .= "	LD_LIBRARY_PATH=$(GPS_LIB)/bin/ $(GPS_LIB)/bin/gpviewer node_generated.xml"."\r\n";
+		if($win)	$content .= "	$(GPS_VIEWER)/bin/gpviewer node_generated.xml"."\r\n";
+		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER) $(GPS_VIEWER)gpviewer node_generated.xml"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "clean:"."\r\n";
 		$content .= "	$rmreq output_files incremental_db db IP greybox_tmp"."\r\n";
@@ -303,6 +303,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		
 		// makefile local
 		$content =  "GPS_LIB=".LIB_PATH."\r\n";
+		$content .=  "GPS_VIEWER=".LIB_PATH."bin/\r\n";
 		$content .= "QUARTUS_TOOLS_PATH="."\r\n";
 		$content .= ""."\r\n";
 		
