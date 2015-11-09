@@ -1,0 +1,12 @@
+#ifndef GPSTUDIO_GUI_COMMON_H
+#define GPSTUDIO_GUI_COMMON_H
+
+#include <Qt>
+
+#if defined(GPSTUDIO_GUI_EXPORT_LIB)
+#  define GPSTUDIO_GUI_EXPORT Q_DECL_EXPORT
+#else
+#  define GPSTUDIO_GUI_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // GPSTUDIO_GUI_COMMON_H

@@ -1,0 +1,6 @@
+build*/
+bin*/
+doc/
+*.user
+win
+*.autosave
