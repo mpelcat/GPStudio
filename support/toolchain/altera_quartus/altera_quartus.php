@@ -260,21 +260,21 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= "all: generate compile send view"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "generate: *.node"."\r\n";
-		$content .= "	php $(GPS_LIB)/generate_node.php $(PROJECT).node \${OPT}"."\r\n";
+		$content .= "	php $(GPS_LIB)generate_node.php $(PROJECT).node \${OPT}"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "compile:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $(PROJECT).qpf"."\r\n";
 		$content .= "send:"."\r\n";
-		$content .= "		$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
+		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
 		$content .= "view:"."\r\n";
-		if($win)	$content .= "	$(GPS_VIEWER)/bin-win/gpviewer node_generated.xml"."\r\n";
-		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER)/bin-linux/ $(GPS_VIEWER)/bin-linux/gpviewer node_generated.xml"."\r\n";
+		if($win)	$content .= "	$(GPS_LIB)/bin/gpviewer node_generated.xml"."\r\n";
+		else		$content .= "	LD_LIBRARY_PATH=$(GPS_LIB)/bin/ $(GPS_LIB)/bin/gpviewer node_generated.xml"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "clean:"."\r\n";
 		$content .= "	$rmreq output_files incremental_db db IP greybox_tmp"."\r\n";
 		$content .= "	$rm top.vhd pi.vhd fi.vhd ci.vhd"."\r\n";
 		$content .= "	$rm node_generated.xml PLLJ_PLLSPE_INFO.txt fi.dot fi.png params.h"."\r\n";
-		$content .= "	$rm $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc"."\r\n";
+		$content .= "	$rm $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc $nodename.cdf"."\r\n";
 
 		$content .= "printfi:"."\r\n";
 		$content .= "	dot -Tpng -o fi.png fi.dot"."\r\n";
@@ -303,8 +303,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		
 		// makefile local
 		$content =  "GPS_LIB=".LIB_PATH."\r\n";
-		$content .= "QUARTUS_TOOLS_PATH=/home/seb/altera/13.1/quartus/bin/"."\r\n";
-		$content .= "GPS_VIEWER=../GPStudio"."\r\n";
+		$content .= "QUARTUS_TOOLS_PATH="."\r\n";
 		$content .= ""."\r\n";
 		
 		$filename = "Makefile.local";

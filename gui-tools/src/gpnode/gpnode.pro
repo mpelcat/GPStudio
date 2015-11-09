@@ -2,7 +2,7 @@ QT       += core gui xml script scripttools
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = node_gui
+TARGET = gpnode_gui
 TEMPLATE = app
 
 OUT_PWD = ../gpnode/

@@ -14,5 +14,11 @@ clean:
 lines: FORCE
 	wc -l scripts/*.php scripts/*/*.php support/toolchain/*/*.php | sort -n -k1
 
+gui-tools: FORCE
+	cd gui-tools/ && make -f Makefile
+
+install:
+	cd gui-tools/ && make -f Makefile install
+
 FORCE:
 

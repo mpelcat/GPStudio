@@ -13,3 +13,17 @@ distrib/gpstudio_linux.tar.gz
 distrib/gpstudio_win.zip
 distrib/gpstudio_win/
 distrib/gpstudio_linux/
+
+bin/*.so*
+bin/*.dll
+bin/*.exe
+bin/gpnode_gui
+bin/gpviewer
+
+gui-tools/build*/
+gui-tools/bin*/
+gui-tools/doc/
+gui-tools/*.user
+gui-tools/win
+gui-tools/*.autosave
+
