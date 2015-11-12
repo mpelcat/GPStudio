@@ -6,6 +6,9 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 use work.caph_flow_pkg.all;
 
+-- Bloc de creation de jetons a parti d'un signal d'entree de control dv_i et de deux registres (imwidth_i imheight_i)
+-- TODO: actuellement, le bloc ecrit dans la FIFO de sortie meme si celle-ci est pleine => utiliser le signal fifo_full_i 
+
 entity tokenize_flow is
   generic (
 	DATA_INPUT_SIZE: integer := 8;

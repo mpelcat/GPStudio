@@ -8,6 +8,14 @@ use work.ComFlow_pkg.all;
 -- 4 output flows max
 -- 2 input flow max
 
+-- TODO
+-- PASSER LES Identifiants de FLOW en générique du driver:
+-- ca permettrait de specifier les valeurs des identifiants des trames par GPStudio
+
+-- Header trame USB
+-- TRAME USB 16 bits	: permier mot header:  FLOW ID/FLAG  (8b/8b)
+--						: second mot header :  Packet number  (16b)
+
 entity usb_cypress_CY7C68014A is
 	generic(
 		MASTER_ADDR_WIDTH : integer;
