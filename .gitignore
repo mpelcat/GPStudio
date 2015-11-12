@@ -6,8 +6,14 @@ doc/*
 
 *.log
 *.aux
-*.synctex.gz 
-docsrc/*/*.pdf
+*.out
+*.toc
+*.synctex.gz
+
+docsrc/gpnode/gpnode.pdf
+docsrc/manual/manual.pdf
+docsrc/tutorial/install_linux/install_linux.pdf
+docsrc/tutorial/quick_start_cmd/quick_start_cmd.pdf
 
 distrib/gpstudio_linux.tar.gz
 distrib/gpstudio_win.zip
@@ -23,7 +29,7 @@ bin/gpviewer
 gui-tools/build*/
 gui-tools/bin*/
 gui-tools/doc/
-gui-tools/*.user
 gui-tools/win
-gui-tools/*.autosave
+*.autosave
+*.user
 

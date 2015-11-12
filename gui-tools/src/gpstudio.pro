@@ -1,12 +1,10 @@
 TEMPLATE = subdirs
 
-SUBDIRS = gpstudio_com \
-          gpstudio_lib \
-          gpstudio_gui \
-          gpviewer \
-          gpnode
-
-# SUBDIRS += ../thirdparts
+SUBDIRS += gpstudio_com \
+           gpstudio_lib \
+           gpstudio_gui \
+           gpviewer \
+           gpnode
 
 # doxygen rules
 dox.target = doc
@@ -15,4 +13,4 @@ doxclean.target = doc-clean
 doxclean.commands = rm -rf $$PWD/../doc/*
 QMAKE_EXTRA_TARGETS += dox doxclean
 
-QMAKE_CLEAN += $(shell find ../doc/ -type f)
+QMAKE_CLEAN += "$(shell find ../doc/ -type f)"

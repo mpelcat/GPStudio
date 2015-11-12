@@ -4,11 +4,15 @@ TARGET = gpstudio_com
 TEMPLATE = lib
 
 OUT_PWD = ../gpstudio_com/
-win32 {
-    DESTDIR = ../../bin-win/
-}
-unix {
-    DESTDIR = ../../bin-linux/
+equals(DISTRIB, 1) {
+    win32 {
+        DESTDIR = ../../bin-win/
+    }
+    unix {
+        DESTDIR = ../../bin-linux/
+    }
+} else {
+    DESTDIR = ../../../bin/
 }
 
 DEFINES += GPSTUDIO_COM_EXPORT_LIB

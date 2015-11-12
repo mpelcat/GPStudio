@@ -3,42 +3,62 @@ all: gui-tools
 
 gui-tools: gpnode gpviewer
 
-install: gui-tools
-	cp -r bin-linux/libgpstudio_com.so ../bin
-	cp -r bin-linux/libgpstudio_com.so.1 ../bin
-	cp -r bin-linux/libgpstudio_com.so.1.0 ../bin
-	cp -r bin-linux/libgpstudio_com.so.1.0.0 ../bin
-	cp -r bin-linux/libgpstudio_gui.so ../bin
-	cp -r bin-linux/libgpstudio_gui.so.1 ../bin
-	cp -r bin-linux/libgpstudio_gui.so.1.0 ../bin
-	cp -r bin-linux/libgpstudio_gui.so.1.0.0 ../bin
-	cp -r bin-linux/libgpstudio_lib.so ../bin
-	cp -r bin-linux/libgpstudio_lib.so.1 ../bin
-	cp -r bin-linux/libgpstudio_lib.so.1.0 ../bin
-	cp -r bin-linux/libgpstudio_lib.so.1.0.0 ../bin
-	cp -r bin-linux/gpviewer ../bin
-	cp -r bin-linux/gpnode_gui ../bin
+distrib: gpnode-win gpviewer-win gpnode-linux gpviewer-linux
+
+
+build-win/:
+	mkdir build-win
+build-win/Makefile: build-win/ src/gpstudio.pro
+	cd build-win/ && /opt/qt-5.5-win32/bin/qmake -r ../src "DISTRIB=1"
+gpstudio_com-win: build-win/Makefile
+	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib-win: build-win/Makefile gpstudio_com-win
+	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win
+	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_gui
+gpnode-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
+	cd build-win/ && make release -j9 -f Makefile sub-gpnode
+gpviewer-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
+	cd build-win/ && make release -j9 -f Makefile sub-gpviewer
+
 
 build-linux/:
 	mkdir build-linux
-
 build-linux/Makefile: build-linux/ src/gpstudio.pro
-	cd build-linux/ && qmake ../src
-
-gpstudio_com: build-linux/Makefile
+	cd build-linux/ && qmake -r ../src "DISTRIB=1" -spec linux-g++-64
+gpstudio_com-linux: build-linux/Makefile
 	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_com
-
-gpstudio_lib: build-linux/Makefile gpstudio_com
+gpstudio_lib-linux: build-linux/Makefile gpstudio_com-linux
 	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_lib
-
-gpstudio_gui: build-linux/Makefile gpstudio_com gpstudio_lib
+gpstudio_gui-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux
 	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_gui
-
-gpnode: build-linux/Makefile gpstudio_com gpstudio_lib gpstudio_gui
+gpnode-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux gpstudio_gui-linux
 	cd build-linux/ && make -j9 -f Makefile sub-gpnode
-
-gpviewer: build-linux/Makefile gpstudio_com gpstudio_lib gpstudio_gui
+gpviewer-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux gpstudio_gui-linux
 	cd build-linux/ && make -j9 -f Makefile sub-gpviewer
+
+
+build/:
+	mkdir build
+build/Makefile: build/ src/gpstudio.pro
+	cd build/ && qmake ../src -spec linux-g++-64
+gpstudio_com: build/Makefile
+	cd build/ && make -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib: build/Makefile gpstudio_com
+	cd build/ && make -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui: build/Makefile gpstudio_com gpstudio_lib
+	cd build/ && make -j9 -f Makefile sub-gpstudio_gui
+gpnode: build/Makefile gpstudio_com gpstudio_lib gpstudio_gui
+	cd build/ && make -j9 -f Makefile sub-gpnode
+gpviewer: build/Makefile gpstudio_com gpstudio_lib gpstudio_gui
+	cd build/ && make -j9 -f Makefile sub-gpviewer
+
+
+clean:
+	rm -rf build/
+	rm -rf build-linux/
+	rm -rf build-win/
+
 
 FORCE:
 

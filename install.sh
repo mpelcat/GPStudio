@@ -15,5 +15,10 @@ command -v dot >/dev/null 2>&1 || { echo "installing dot..."; apt-get install --
 # copy bash completion file for gpnode
 cp gpnode_completion /usr/share/bash-completion/completions/gpnode
 
+# udev rules for dreamcam
+sh -c 'echo "ATTR{idVendor}==\"04b4\", ATTR{idProduct}==\"1003\", MODE=\"666\"" > /etc/udev/rules.d/dreamcam.rules'
+sh -c 'echo "ATTR{idVendor}==\"09fb\", ATTR{idProduct}==\"6001\", MODE=\"666\"" > /etc/udev/rules.d/usb_blaster.rules'
+udevadm trigger
+
 echo "To add permanently GPStudio in your path, add this to your bashrc file :"
 echo "export PATH=\$PATH:$(pwd)"

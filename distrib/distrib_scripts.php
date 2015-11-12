@@ -90,25 +90,37 @@ function distrib_bin($mainoutpath, $os)
 	
 	if($os=="win")
 	{
-		copy_with_rights(LIB_PATH."gpnode-prod.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
+		copy_with_rights(LIB_PATH."bin/gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
 	}
 	else
 	{
-		copy_with_rights(LIB_PATH."gpnode-prod", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
+		copy_with_rights(LIB_PATH."bin/gpnode", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
 		copy_with_rights(LIB_PATH."setenv.sh", $mainoutpath.DIRECTORY_SEPARATOR."setenv.sh");
 	}
 	echo GUI_TOOLS_PATH."bin-$os";
 	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");
+	
+	// copy lib_bin
+	$lib_bin_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."lib_bin".DIRECTORY_SEPARATOR.$os;
+	if(file_exists($lib_bin_dir))
+	{
+		cpy_dir($lib_bin_dir, $mainoutpath."bin");
+	}
+	
 	echo "done."."\n";
 }
 
 function distrib_thirdparts($mainoutpath, $os)
 {
-	echo "copying doc files in $mainoutpath for $os..."."\n";
+	echo "copying thirdparts files in $mainoutpath for $os..."."\n";
 	
-	// create directory
-	mkdirExists($mainoutpath."thirdparts");
-	cpy_dir(LIB_PATH."distrib".DIRECTORY_SEPARATOR."thirdparts".DIRECTORY_SEPARATOR.$os, $mainoutpath."thirdparts");
+	$thirdparts_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."thirdparts".DIRECTORY_SEPARATOR.$os;
+	if(file_exists($thirdparts_dir))
+	{
+		// create directory
+		mkdirExists($mainoutpath."thirdparts");
+		cpy_dir($thirdparts_dir, $mainoutpath."thirdparts");
+	}
 	echo "done."."\n";
 }
 
