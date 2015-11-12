@@ -53,6 +53,12 @@ class Property
 	public $assert;
 
 	/**
+	* Mapping to properties (optional)
+	* @var string $propertymap
+	*/
+	public $propertymap;
+
+	/**
 	* Code to execute if the property change (optional)
 	* @var string $onchange
 	*/
@@ -109,6 +115,7 @@ class Property
 		$this->max			= (string)$xml['max'];
 		$this->step			= (string)$xml['step'];
 		$this->assert		= (string)$xml['assert'];
+		$this->propertymap	= (string)$xml['propertymap'];
 		$this->onchange		= (string)$xml['onchange'];
 		$this->desc			= (string)$xml['desc'];
 		
@@ -175,6 +182,11 @@ class Property
 			// assert
 			$att = $xml->createAttribute('assert');
 			$att->value = $this->assert;
+			$xml_element->appendChild($att);
+			
+			// propertymap
+			$att = $xml->createAttribute('propertymap');
+			$att->value = $this->propertymap;
 			$xml_element->appendChild($att);
 			
 			// onchange

@@ -41,6 +41,9 @@ public:
     QString assert() const;
     void setAssert(const QString &assert);
 
+    QString propertymap() const;
+    void setPropertymap(const QString &propertymap);
+
     QString onchange() const;
     void setOnchange(const QString &onchange);
 
@@ -72,6 +75,7 @@ protected:
     QString _step;
     QString _assert;
     QString _onchange;
+    QString _propertymap;
     QString _description;
 
     Block *_parent;

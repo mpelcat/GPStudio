@@ -85,6 +85,21 @@ QString BlockProperty::assert() const
     return _assert;
 }
 
+void BlockProperty::setAssert(const QString &assert)
+{
+    _assert = assert;
+}
+
+QString BlockProperty::propertymap() const
+{
+    return _propertymap;
+}
+
+void BlockProperty::setPropertymap(const QString &propertymap)
+{
+    _propertymap = propertymap;
+}
+
 QString BlockProperty::onchange() const
 {
     return _onchange;
@@ -93,11 +108,6 @@ QString BlockProperty::onchange() const
 void BlockProperty::setOnchange(const QString &onchange)
 {
     _onchange = onchange;
-}
-
-void BlockProperty::setAssert(const QString &assert)
-{
-    _assert = assert;
 }
 
 QString BlockProperty::description() const
@@ -163,6 +173,7 @@ BlockProperty *BlockProperty::fromNodeGenerated(const QDomElement &domElement)
     blockProperty->setMax(domElement.attribute("max",""));
     blockProperty->setStep(domElement.attribute("step","1"));
     blockProperty->setAssert(domElement.attribute("assert",""));
+    blockProperty->setPropertymap(domElement.attribute("propertymap",""));
     blockProperty->setOnchange(domElement.attribute("onchange",""));
     blockProperty->setDescription(domElement.attribute("desc",""));
 

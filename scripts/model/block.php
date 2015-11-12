@@ -42,6 +42,12 @@ class Block
 	* @var string $driver
 	*/
 	public $driver;
+
+	/**
+	* Specify the categorie of the block eg : communication, imagesensor, descriptor...
+	* @var string $categ
+	*/
+	public $categ;
 	
 	/**
 	* The absolute adress of the block on BI
@@ -415,6 +421,7 @@ class Block
 	{
 		if(isset($this->xml['size_addr_rel'])) warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'",12,"Block");
 		$this->pi_size_addr_rel = (int)$this->xml['pi_size_addr_rel'];
+		$this->categ = (string)$this->xml['categ'];
 		$this->configscriptfile = (string)$this->xml['configscriptfile'];
 		$this->generatescriptfile = (string)$this->xml['generatescriptfile'];
 		
@@ -494,6 +501,10 @@ class Block
 		{
 			$att = $xml->createAttribute('type');
 			$att->value = $this->type();
+			$xml_element->appendChild($att);
+			
+			$att = $xml->createAttribute('categ');
+			$att->value = $this->categ;
 			$xml_element->appendChild($att);
 		}
 		

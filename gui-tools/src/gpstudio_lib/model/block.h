@@ -30,8 +30,11 @@ public:
     bool inLib() const;
     void setInLib(bool inLib);
 
-    QString driver() const;
+    const QString &driver() const;
     void setDriver(const QString &driver);
+
+    const QString &categ() const;
+    void setCateg(const QString &categ);
 
     qint32 addrAbs() const;
     void setAddrAbs(const qint32 &value);
@@ -101,6 +104,7 @@ protected:
     QString _name;
     bool _inLib;
     QString _driver;
+    QString _categ;
     qint32 _addrAbs;
     quint8 _sizeAddrRel;
     quint8 _masterCount;

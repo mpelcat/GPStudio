@@ -42,7 +42,7 @@ void Block::setInLib(bool inLib)
     _inLib = inLib;
 }
 
-QString Block::driver() const
+const QString &Block::driver() const
 {
     return _driver;
 }
@@ -50,6 +50,16 @@ QString Block::driver() const
 void Block::setDriver(const QString &driver)
 {
     _driver = driver;
+}
+
+const QString &Block::categ() const
+{
+    return _categ;
+}
+
+void Block::setCateg(const QString &categ)
+{
+    _categ = categ;
 }
 
 qint32 Block::addrAbs() const
@@ -337,6 +347,7 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement)
         block->setInLib((domElement.attribute("in_lib","")=="1" || domElement.attribute("in_lib","")=="true"));
 
         block->setDriver(domElement.attribute("driver",""));
+        block->setCateg(domElement.attribute("categ",""));
 
         int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
         if(ok) block->setXPos(xPos); else block->setXPos(-1);
