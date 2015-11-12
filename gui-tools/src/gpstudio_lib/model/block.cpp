@@ -384,7 +384,6 @@ QList<Block *> Block::listFromNodeGenerated(const QDomElement &domElement)
         {
             Block *block=NULL;
             QString typeBlock = e.attribute("type");
-            qDebug()<<typeBlock<<e.attribute("name");
             if(e.tagName()=="block")
             {
                 if(typeBlock=="process") block = Process::fromNodeGenerated(e);

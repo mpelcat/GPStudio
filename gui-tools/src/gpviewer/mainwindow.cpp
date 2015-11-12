@@ -163,7 +163,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     ui->blocksView->loadFromNode(_cam->node());
 
-    setupViewers();
+    setupViewers(2);
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
@@ -273,40 +273,24 @@ void MainWindow::setBiSpace()
 
 void MainWindow::oneViewer()
 {
-    ui->tabWidget->setCurrentIndex(0);
-
-    ui->mdiArea->closeAllSubWindows();
-
-    ui->mdiArea->addSubWindow(_viewers[0]);
-
-    QList<QMdiSubWindow *> windows = ui->mdiArea->subWindowList();
-
-    for (int i = 0; i < windows.size(); ++i)
-    {
-        QMdiSubWindow *child = windows.at(i);
-
-        if(child->widget()==_viewers[0]) child->show();
-    }
-
+    setupViewers(1);
     ui->mdiArea->tileSubWindows();
 }
 
 void MainWindow::twoViewer()
 {
-
+    setupViewers(2);
     ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::fourViewer()
 {
-
+    setupViewers(4);
     ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::updateWindowsMenu()
 {
-    qDebug()<<"upMenu";
-
     _winMenu->clear();
     _winMenu->addAction(_closeAct);
     _winMenu->addAction(_closeAllAct);
@@ -340,20 +324,19 @@ void MainWindow::updateWindowsMenu()
     }
 }
 
-void MainWindow::setupViewers()
+void MainWindow::setupViewers(int count)
 {
-    for(int i=4-1; i>=0; i--)
+    ui->mdiArea->closeAllSubWindows();
+    _viewers.clear();
+
+    for(int i=count-1; i>=0; i--)
     {
         ImageView *viewer = new ImageView();
         viewer->setWindowTitle(QString("Flow %1").arg(i));
         viewer->setFlowNumber(i);
         _viewers.insert(i, viewer);
-        ui->mdiArea->addSubWindow(viewer);
+        ui->mdiArea->addSubWindow(viewer)->show();
     }
 
-    /*ui->mdiArea->addSubWindow(_view3);
-    ui->mdiArea->addSubWindow(_view2);
-    ui->mdiArea->addSubWindow(_view1);
-    ui->mdiArea->addSubWindow(_view0);*/
     ui->mdiArea->tileSubWindows();
 }

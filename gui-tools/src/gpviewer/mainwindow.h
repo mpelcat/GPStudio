@@ -45,7 +45,7 @@ private:
     Camera *_cam;
 
     // viewer
-    void setupViewers();
+    void setupViewers(int count);
     QMap<int, ImageView *> _viewers;
 
     Lib *_lib;
