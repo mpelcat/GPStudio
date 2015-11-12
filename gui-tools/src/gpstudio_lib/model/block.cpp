@@ -5,6 +5,9 @@
 
 #include "io.h"
 #include "process.h"
+#include "piblock.h"
+#include "fiblock.h"
+#include "ciblock.h"
 
 Block::Block()
 {
@@ -319,70 +322,50 @@ void Block::addResets(const QList<Reset *> &resets)
     }
 }
 
-Block *Block::fromNodeGenerated(const QDomElement &domElement)
+Block *Block::fromNodeGenerated(const QDomElement &domElement, Block *block)
 {
-    Block *block=NULL;
+    if(block==NULL) block = new Block();
 
-    QStringList typeBlock;
-    typeBlock << "process" << "io";
-    switch (typeBlock.indexOf(domElement.attribute("type")))
+    bool ok=false;
+
+    block->setName(domElement.attribute("name","no_name"));
+
+    block->setInLib((domElement.attribute("in_lib","")=="1" || domElement.attribute("in_lib","")=="true"));
+
+    block->setDriver(domElement.attribute("driver",""));
+    block->setCateg(domElement.attribute("categ",""));
+
+    int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
+    if(ok) block->setXPos(xPos); else block->setXPos(-1);
+
+    int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
+    if(ok) block->setYPos(yPos); else block->setYPos(-1);
+
+    int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
+    if(ok) block->setAddrAbs(addrAbs); else block->setAddrAbs(-1);
+
+    int sizeAddrRel = domElement.attribute("pi_size_addr_rel","0").toInt(&ok);
+    if(ok && sizeAddrRel>=0) block->setSizeAddrRel(sizeAddrRel); else block->setSizeAddrRel(0);
+
+    int masterCount = domElement.attribute("master_count","0").toInt(&ok);
+    if(ok && masterCount>=0) block->setMasterCount(masterCount); else block->setMasterCount(0);
+
+    block->setDescription(domElement.attribute("desc",""));
+
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
     {
-    case 0:
-        block = new Process();
-        break;
-    case 1:
-        block = new IO();
-        break;
-    default:
-        block = new Block();
-        break;
-    }
-
-    if(block)
-    {
-        bool ok=false;
-
-        block->setName(domElement.attribute("name","no_name"));
-
-        block->setInLib((domElement.attribute("in_lib","")=="1" || domElement.attribute("in_lib","")=="true"));
-
-        block->setDriver(domElement.attribute("driver",""));
-        block->setCateg(domElement.attribute("categ",""));
-
-        int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
-        if(ok) block->setXPos(xPos); else block->setXPos(-1);
-
-        int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
-        if(ok) block->setYPos(yPos); else block->setYPos(-1);
-
-        int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
-        if(ok) block->setAddrAbs(addrAbs); else block->setAddrAbs(-1);
-
-        int sizeAddrRel = domElement.attribute("pi_size_addr_rel","0").toInt(&ok);
-        if(ok && sizeAddrRel>=0) block->setSizeAddrRel(sizeAddrRel); else block->setSizeAddrRel(0);
-
-        int masterCount = domElement.attribute("master_count","0").toInt(&ok);
-        if(ok && masterCount>=0) block->setMasterCount(masterCount); else block->setMasterCount(0);
-
-        block->setDescription(domElement.attribute("desc",""));
-
-        QDomNode n = domElement.firstChild();
-        while(!n.isNull())
+        QDomElement e = n.toElement();
+        if(!e.isNull())
         {
-            QDomElement e = n.toElement();
-            if(!e.isNull())
-            {
-                if(e.tagName()=="files") block->addFiles(File::listFromNodeGenerated(e));
-                if(e.tagName()=="params") block->addParams(Param::listFromNodeGenerated(e));
-                if(e.tagName()=="properties") block->addProperties(BlockProperty::listFromNodeGenerated(e));
-                if(e.tagName()=="flows") block->addFlows(Flow::listFromNodeGenerated(e));
-                if(e.tagName()=="clocks") block->addClocks(Clock::listFromNodeGenerated(e));
-                if(e.tagName()=="ports") block->addPorts(Port::listFromNodeGenerated(e));
-                if(e.tagName()=="pins") block->addPins(Pin::listFromNodeGenerated(e));
-                if(e.tagName()=="resets") block->addResets(Reset::listFromNodeGenerated(e));
-            }
-            n = n.nextSibling();
+            if(e.tagName()=="files") block->addFiles(File::listFromNodeGenerated(e));
+            if(e.tagName()=="params") block->addParams(Param::listFromNodeGenerated(e));
+            if(e.tagName()=="properties") block->addProperties(BlockProperty::listFromNodeGenerated(e));
+            if(e.tagName()=="flows") block->addFlows(Flow::listFromNodeGenerated(e));
+            if(e.tagName()=="clocks") block->addClocks(Clock::listFromNodeGenerated(e));
+            if(e.tagName()=="resets") block->addResets(Reset::listFromNodeGenerated(e));
         }
+        n = n.nextSibling();
     }
 
     // block specific part TODO
@@ -399,7 +382,20 @@ QList<Block *> Block::listFromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="block") list.append(Block::fromNodeGenerated(e));
+            Block *block=NULL;
+            QString typeBlock = e.attribute("type");
+            qDebug()<<typeBlock<<e.attribute("name");
+            if(e.tagName()=="block")
+            {
+                if(typeBlock=="process") block = Process::fromNodeGenerated(e);
+                if(typeBlock=="io") block = IO::fromNodeGenerated(e);
+                if(typeBlock=="pi") block = PIBlock::fromNodeGenerated(e);
+                if(typeBlock=="fi") block = FIBlock::fromNodeGenerated(e);
+                if(typeBlock=="ci") block = CIBlock::fromNodeGenerated(e);
+                if(block==NULL) block = Block::fromNodeGenerated(e);
+
+                list.append(block);
+            }
         }
         n = n.nextSibling();
     }

@@ -16,17 +16,17 @@ void BoardLib::setName(const QString &name)
     _name = name;
 }
 
-QList<IOLib *> &BoardLib::ios()
+QList<IOBoardLib *> &BoardLib::ios()
 {
     return _ios;
 }
 
-const QList<IOLib *> &BoardLib::ios() const
+const QList<IOBoardLib *> &BoardLib::ios() const
 {
     return _ios;
 }
 
-void BoardLib::addIO(IOLib *io)
+void BoardLib::addIO(IOBoardLib *io)
 {
     _ios.append(io);
     _iosMap.insert(io->name(), io);
@@ -41,15 +41,15 @@ void BoardLib::addIO(IOLib *io)
     }
 }
 
-void BoardLib::addIOs(const QList<IOLib *> &ios)
+void BoardLib::addIOs(const QList<IOBoardLib *> &ios)
 {
-    foreach (IOLib *io, ios)
+    foreach (IOBoardLib *io, ios)
     {
         addIO(io);
     }
 }
 
-IOLib *BoardLib::io(const QString &name) const
+IOBoardLib *BoardLib::io(const QString &name) const
 {
     if(_iosMap.contains(name)) return _iosMap[name];
     return NULL;
@@ -83,7 +83,7 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="ios") board->addIOs(IOLib::listFromNodeGenerated(e));
+            if(e.tagName()=="ios") board->addIOs(IOBoardLib::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

@@ -14,6 +14,9 @@ public:
     virtual ~IO();
 
     QString type() const;
+
+public:
+    static IO *fromNodeGenerated(const QDomElement &domElement, IO *io=NULL);
 };
 
 #endif // IO_H

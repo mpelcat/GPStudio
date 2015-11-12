@@ -97,7 +97,7 @@ public:
     void addResets(const QList<Reset *> &resets);
 
 public:
-    static Block *fromNodeGenerated(const QDomElement &domElement);
+    static Block *fromNodeGenerated(const QDomElement &domElement, Block *block=NULL);
     static QList<Block *> listFromNodeGenerated(const QDomElement &domElement);
 
 protected:

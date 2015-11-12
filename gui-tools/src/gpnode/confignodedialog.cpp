@@ -56,7 +56,7 @@ void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
         group->setLayout(layout);
         foreach(QString ioName, i.value().ios())
         {
-            IOLib *io = board->io(ioName);
+            IOBoardLib *io = board->io(ioName);
             if(io)
             {
                 if(io->isOptional())

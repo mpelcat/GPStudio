@@ -13,6 +13,7 @@
 #include "cameraregistersmap.h"
 
 #include "cameracom.h"
+#include "flowmanager.h"
 
 class GPSTUDIO_LIB_EXPORT Camera : public QObject
 {
@@ -53,6 +54,8 @@ private:
     ScriptEngine _engine;
 
     CameraCom *_com;
+
+    FlowManager *_flowManager;
 };
 
 #endif // CAMERA_H

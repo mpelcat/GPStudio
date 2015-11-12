@@ -35,6 +35,8 @@ void Camera::setNode(Node *node)
     if(_paramsBlocks) delete _paramsBlocks;
     _paramsBlocks = new Property();
 
+    _flowManager = new FlowManager(_node);
+
     foreach (Block *block, _node->blocks())
     {
         Property *propBlock = new Property(block->name());

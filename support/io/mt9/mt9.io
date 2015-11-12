@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<io driver="mt9" pi_size_addr_rel="5">
+<io driver="mt9" categ="imagesensor" pi_size_addr_rel="5">
+	<svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">MT9</text>
+	</svg>
 	<files>
 		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="video_sampler.v" path="hdl/video_sampler.v" type="verilog" group="hdl" desc=""/>
@@ -11,9 +15,9 @@
 	<flows>
 		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor">
 			<properties>
-				<property name="datatype" value="image" type="string"/>
-				<property name="width" value="roi1.w.value" type="int"/>
-				<property name="height" value="roi1.h.value" type="int"/>
+				<property name="datatype" value="image" type="flowtype"/>
+				<property name="width" value="roi1.w.value/(binning.value ? 2 : 1)" type="int"/>
+				<property name="height" value="roi1.h.value/(binning.value ? 2 : 1)" type="int"/>
 			</properties>
 		</flow>
 	</flows>

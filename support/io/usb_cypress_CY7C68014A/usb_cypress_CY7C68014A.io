@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<io driver="usb_cypress_CY7C68014A" pi_size_addr_rel="4" master_count="1">
+<io driver="usb_cypress_CY7C68014A" categ="communication" pi_size_addr_rel="4" master_count="1">
+	<svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">USB</text>
+	</svg>
 	<files>
 		<file name="USB datasheet" path="doc/CY7C68013A_14A_15A_16A_38-08032.pdf" type="doc" group="doc" desc=""/>
 		<file name="usb.sdc" path="usb.sdc" type="sdc" group="hdl" desc=""/>
@@ -32,8 +36,8 @@
 	<flows>
 		<flow name="in0" type="in" size="8" desc="flow 0 return for supervise results of process"/>
 		<flow name="in1" type="in" size="8" desc="flow 1 return for supervise results of process"/>
-		<flow name="in2" type="in" size="16" desc="flow 2 return for supervise results of process"/>
-		<flow name="in3" type="in" size="16" desc="flow 3 return for supervise results of process"/>
+		<flow name="in2" type="in" size="8" desc="flow 2 return for supervise results of process"/>
+		<flow name="in3" type="in" size="8" desc="flow 3 return for supervise results of process"/>
 		
 		<flow name="out0" type="out" size="16" desc="flow 0 return for supervise results of process"/>
 		<flow name="out1" type="out" size="8" desc="flow 1 return for supervise results of process"/> 

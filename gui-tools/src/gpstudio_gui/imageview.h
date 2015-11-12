@@ -32,6 +32,9 @@ public:
     unsigned int propertyView() const;
     void setPropertyView(unsigned int propertyView);
 
+    int flowNumber() const;
+    void setFlowNumber(int flowNumber);
+
 public slots:
     void setView(const QRect &viewRect);
 
@@ -55,6 +58,8 @@ private:
 
     QGraphicsPixmapItem *_pixmapItem;
     QGraphicsSimpleTextItem *_titleItem;
+
+    int _flowNumber;
 };
 
 #endif // IMAGEVIEW_H

@@ -37,7 +37,7 @@ void CameraInfo::setAddr(const QString &addr)
     _addr = addr;
 }
 
-const bool CameraInfo::isValid() const
+bool CameraInfo::isValid() const
 {
     if(_name.isEmpty() || _driverType.isEmpty()) return false; else return true;
 }

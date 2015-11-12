@@ -7,6 +7,7 @@
 #include <QSvgRenderer>
 
 class ProcessLib;
+class IOLib;
 
 class ProcessConnectorItem;
 
@@ -14,6 +15,7 @@ class GPSTUDIO_GUI_EXPORT ProcessItem : public QGraphicsItem
 {
 public:
     ProcessItem(ProcessLib *processLib=NULL);
+    ProcessItem(IOLib *ioLib=NULL);
     ~ProcessItem();
 
     enum { Type = UserType + 1 };
@@ -29,6 +31,7 @@ public:
     void setName(const QString &name);
 
     void update(ProcessLib *processLib);
+    void update(IOLib *ioLib);
 
     void addConnect(ProcessConnectorItem *connectItem);
 

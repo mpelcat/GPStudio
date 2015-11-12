@@ -66,7 +66,7 @@ HEADERS  += \
     propertywidgets/propertymatrixwidget.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
-include(../../thirdparts/qcustomplot/qcustomplot.pri)
+# include(../../thirdparts/qcustomplot/qcustomplot.pri)
 
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib

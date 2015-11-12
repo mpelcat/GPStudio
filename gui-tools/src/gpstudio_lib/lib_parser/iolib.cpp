@@ -1,13 +1,12 @@
 #include "iolib.h"
 
+#include <QFile>
+#include <QSvgRenderer>
+#include <QDebug>
+#include <QPainter>
+
 IOLib::IOLib()
 {
-
-}
-
-IOLib::~IOLib()
-{
-
 }
 
 QString IOLib::name() const
@@ -20,46 +19,6 @@ void IOLib::setName(const QString &name)
     _name = name;
 }
 
-QString IOLib::type() const
-{
-    return _type;
-}
-
-void IOLib::setType(const QString &type)
-{
-    _type = type;
-}
-
-QString IOLib::driver() const
-{
-    return _driver;
-}
-
-void IOLib::setDriver(const QString &driver)
-{
-    _driver = driver;
-}
-
-bool IOLib::isOptional() const
-{
-    return _optional;
-}
-
-void IOLib::setOptional(bool optional)
-{
-    _optional = optional;
-}
-
-QString IOLib::group() const
-{
-    return _group;
-}
-
-void IOLib::setGroup(const QString &group)
-{
-    _group = group;
-}
-
 QString IOLib::description() const
 {
     return _description;
@@ -70,33 +29,96 @@ void IOLib::setDescription(const QString &description)
     _description = description;
 }
 
-IOLib *IOLib::fromNodeGenerated(const QDomElement &domElement)
+QString IOLib::categ() const
 {
-    IOLib *io=new IOLib();
-    io->setName(domElement.attribute("name","no_name"));
-    io->setType(domElement.attribute("type",""));
-    io->setDriver(domElement.attribute("driver",""));
-
-    io->setOptional((domElement.attribute("optional","")=="1" || domElement.attribute("optional","")=="true"));
-    io->setGroup(domElement.attribute("optionalgroup",""));
-
-    io->setDescription(domElement.attribute("description",""));
-
-    return io;
+    return _categ;
 }
 
-QList<IOLib *> IOLib::listFromNodeGenerated(const QDomElement &domElement)
+void IOLib::setCateg(const QString &categ)
 {
-    QDomNode n = domElement.firstChild();
-    QList<IOLib *> list;
-    while(!n.isNull())
+    _categ = categ;
+}
+
+QString IOLib::path() const
+{
+    return _path;
+}
+
+void IOLib::setPath(const QString &path)
+{
+    _path = path;
+}
+
+QString IOLib::configFile() const
+{
+    return _configFile;
+}
+
+void IOLib::setConfigFile(const QString &configFile)
+{
+    _configFile = configFile;
+}
+
+QString IOLib::draw() const
+{
+    return _draw;
+}
+
+void IOLib::setDraw(const QString &draw)
+{
+    _draw = draw;
+}
+
+QIcon IOLib::icon() const
+{
+    return _icon;
+}
+
+void IOLib::setIcon(const QIcon &icon)
+{
+    _icon = icon;
+}
+
+IOLib *IOLib::readFromFile(const QString &fileName)
+{
+    QDomDocument doc;
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    else
     {
-        QDomElement e = n.toElement();
-        if(!e.isNull())
+        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
+        else
         {
-            if(e.tagName()=="io") list.append(IOLib::fromNodeGenerated(e));
+            return IOLib::fromDomElement(doc.documentElement());
         }
-        n = n.nextSibling();
+        file.close();
     }
-    return list;
+    return NULL;
+}
+
+IOLib *IOLib::fromDomElement(const QDomElement &domElement)
+{
+    IOLib *ioLib=new IOLib();
+    ioLib->setName(domElement.attribute("driver","no_name"));
+    ioLib->setCateg(domElement.attribute("categ",""));
+    ioLib->setDescription(domElement.attribute("description",""));
+
+    const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
+    if(nodesSvg.size()>0)
+    {
+        QString svg;
+        QTextStream streamSvg(&svg);
+        streamSvg << nodesSvg.at(0);
+        ioLib->setDraw(svg);
+    }
+
+    QSvgRenderer render;
+    QPixmap pixIcon(32,32);
+    QPainter painter(&pixIcon);
+    render.load(ioLib->draw().toUtf8());
+    render.render(&painter, QRectF(0,0,32,32));
+    painter.end();
+    ioLib->_icon.addPixmap(pixIcon);
+
+    return ioLib;
 }

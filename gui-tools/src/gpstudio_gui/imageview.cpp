@@ -141,6 +141,16 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
+int ImageView::flowNumber() const
+{
+    return _flowNumber;
+}
+
+void ImageView::setFlowNumber(int flowNumber)
+{
+    _flowNumber = flowNumber;
+}
+
 unsigned int ImageView::propertyView() const
 {
     return _propertyView;
@@ -155,4 +165,3 @@ void ImageView::setView(const QRect &viewRect)
 {
     fitInView(viewRect, Qt::KeepAspectRatio);
 }
-

@@ -114,13 +114,27 @@ bool ProcessesView::loadFromNode(Node *node)
 
     foreach (Block *block, node->blocks())
     {
-        ProcessLib *processLib = _lib->process(block->driver());
-        if(processLib)
+        if(block->type()=="io")
         {
-            ProcessItem *proc = new ProcessItem(processLib);
-            proc->setName(block->name());
-            proc->setPos(block->xPos(), block->yPos());
-            _scene->addItem(proc);
+            IOLib *ioLib = _lib->io(block->driver());
+            if(ioLib)
+            {
+                ProcessItem *proc = new ProcessItem(ioLib);
+                proc->setName(block->name());
+                proc->setPos(block->xPos(), block->yPos());
+                _scene->addItem(proc);
+            }
+        }
+        if(block->type()=="process")
+        {
+            ProcessLib *processLib = _lib->process(block->driver());
+            if(processLib)
+            {
+                ProcessItem *proc = new ProcessItem(processLib);
+                proc->setName(block->name());
+                proc->setPos(block->xPos(), block->yPos());
+                _scene->addItem(proc);
+            }
         }
     }
 

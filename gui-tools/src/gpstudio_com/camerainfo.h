@@ -20,7 +20,7 @@ public:
     QString addr() const;
     void setAddr(const QString &addr);
 
-    const bool isValid() const;
+    bool isValid() const;
 
     friend QDebug operator<< (QDebug d, const CameraInfo &cameraInfo);
 

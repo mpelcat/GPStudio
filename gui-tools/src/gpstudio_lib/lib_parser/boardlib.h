@@ -8,7 +8,7 @@
 #include <QList>
 #include <QMap>
 
-#include "iolib.h"
+#include "ioboardlib.h"
 #include "iolibgroup.h"
 
 class GPSTUDIO_LIB_EXPORT BoardLib
@@ -19,11 +19,11 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    QList<IOLib *> &ios();
-    const QList<IOLib *> &ios() const;
-    void addIO(IOLib *io);
-    void addIOs(const QList<IOLib *> &ios);
-    IOLib *io(const QString &name) const;
+    QList<IOBoardLib *> &ios();
+    const QList<IOBoardLib *> &ios() const;
+    void addIO(IOBoardLib *io);
+    void addIOs(const QList<IOBoardLib *> &ios);
+    IOBoardLib *io(const QString &name) const;
     const QMap<QString, IOLibGroup> &iosGroups() const;
 
 public:
@@ -33,8 +33,8 @@ public:
 private:
     QString _name;
 
-    QList<IOLib *> _ios;
-    QMap<QString, IOLib *> _iosMap;
+    QList<IOBoardLib *> _ios;
+    QMap<QString, IOBoardLib *> _iosMap;
     QMap<QString, IOLibGroup> _iosGroups;
 };
 

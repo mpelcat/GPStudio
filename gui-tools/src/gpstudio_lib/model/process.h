@@ -14,6 +14,9 @@ public:
     virtual ~Process();
 
     QString type() const;
+
+public:
+    static Process *fromNodeGenerated(const QDomElement &domElement, Process *process=NULL);
 };
 
 #endif // PROCESS_H

@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -26,7 +26,20 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <layout class="QGridLayout" name="viewerLayout"/>
+         <widget class="QMdiArea" name="mdiArea">
+          <property name="activationOrder">
+           <enum>QMdiArea::CreationOrder</enum>
+          </property>
+          <property name="tabsClosable">
+           <bool>true</bool>
+          </property>
+          <property name="tabsMovable">
+           <bool>true</bool>
+          </property>
+          <property name="tabPosition">
+           <enum>QTabWidget::South</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -60,7 +73,7 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -94,7 +107,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>585</height>
+          <height>598</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">

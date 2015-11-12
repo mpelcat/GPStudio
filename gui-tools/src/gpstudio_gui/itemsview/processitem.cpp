@@ -4,6 +4,7 @@
 #include <QPainter>
 
 #include "lib_parser/processlib.h"
+#include "lib_parser/iolib.h"
 
 ProcessItem::ProcessItem(ProcessLib *processLib)
 {
@@ -11,6 +12,14 @@ ProcessItem::ProcessItem(ProcessLib *processLib)
     setFlag(ItemIsSelectable, true);
 
     update(processLib);
+}
+
+ProcessItem::ProcessItem(IOLib *ioLib)
+{
+    setFlag(ItemIsMovable, true);
+    setFlag(ItemIsSelectable, true);
+
+    update(ioLib);
 }
 
 ProcessItem::~ProcessItem()
@@ -65,6 +74,21 @@ void ProcessItem::update(ProcessLib *processLib)
 {
     if(!processLib) return;
     _svgRenderer.load(processLib->draw().toUtf8());
+
+    if(_svgRenderer.isValid())
+    {
+        _boundingRect = _svgRenderer.viewBoxF().adjusted(-10,-10,10,10);
+    }
+    else
+    {
+        _boundingRect = QRectF(0,0,125,50).adjusted(-10,-10,10,10);
+    }
+}
+
+void ProcessItem::update(IOLib *ioLib)
+{
+    if(!ioLib) return;
+    _svgRenderer.load(ioLib->draw().toUtf8());
 
     if(_svgRenderer.isValid())
     {

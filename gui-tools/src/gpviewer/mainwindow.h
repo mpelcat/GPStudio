@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMdiSubWindow>
 
 #include "camera.h"
 #include "imageview.h"
@@ -36,19 +37,28 @@ private slots:
     void twoViewer();
     void fourViewer();
 
+    void updateWindowsMenu();
+
 private:
     Ui::MainWindow *ui;
 
     Camera *_cam;
 
-    ImageView *_view0;
-    ImageView *_view1;
-    ImageView *_view2;
-    ImageView *_view3;
+    // viewer
+    void setupViewers();
+    QMap<int, ImageView *> _viewers;
 
     Lib *_lib;
 
+    // menu and toolbar
     void createToolBarAndMenu();
+    QMenu *_winMenu;
+    QAction *_closeAct;
+    QAction *_closeAllAct;
+    QAction *_tileAct;
+    QAction *_cascadeAct;
+    QAction *_nextAct;
+    QAction *_previousAct;
 };
 
 #endif // MAINWINDOW_H
