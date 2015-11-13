@@ -49,6 +49,10 @@ _gpnode()
                         COMPREPLY=( $( compgen -W '$( gpnode listavailableio )' -- "$cur" ) )
                         return 0
                         ;;
+                    setboard)
+                        COMPREPLY=( $( compgen -W '$( gplib listboards )' -- "$cur" ) )
+                        return 0
+                        ;;
                     setproperty)
                         COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m property )' -- "$cur" ) ) && compopt -o nospace
                         return 0
@@ -94,7 +98,7 @@ _gpnode()
                         return 0
                         ;;
                     addprocess)
-                        COMPREPLY=( $( compgen -W '$( gpnode listprocess )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gplib listprocess )' -- "$cur" ) )
                         return 0
                         ;;
                 esac

@@ -1,0 +1,31 @@
+# Debian gplib(8) completion                             -*- shell-script -*-
+
+_gplib()
+{
+    local sourcesdir="/etc/apt/sources.list.d"
+    local cur prev words cword
+    _init_completion || return
+
+    # see if the user selected a command already
+    local COMMANDS=("listios" "listprocess" "listboards" "listtoolchains")
+
+    local command i
+    for (( i=0; i < ${#words[@]}-1; i++ )); do
+        if [[ ${COMMANDS[@]} =~ ${words[i]} ]]; then
+            command=${words[i]}
+            break
+        fi
+    done
+    
+    local count=${#words[@]};
+
+    # no command yet, show what commands we have
+    if [ "$command" = "" ]; then
+        COMPREPLY=( $( compgen -W '${COMMANDS[@]}' -- "$cur" ) )
+    fi
+
+    return 0
+} &&
+complete -F _gplib gplib
+
+# ex: ts=4 sw=4 et filetype=sh

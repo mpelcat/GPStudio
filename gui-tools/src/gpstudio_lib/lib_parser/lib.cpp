@@ -2,10 +2,11 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QCoreApplication>
 
 Lib::Lib(const QString &libPath)
 {
-    QDir dir(QDir::currentPath()+'/'+libPath+"/support");
+    QDir dir(QCoreApplication::applicationDirPath()+'/'+libPath+"/support");
     _path = dir.absolutePath();
 
     reloadLib();

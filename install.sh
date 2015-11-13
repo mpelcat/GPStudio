@@ -14,6 +14,7 @@ command -v dot >/dev/null 2>&1 || { echo "installing dot..."; apt-get install --
 
 # copy bash completion file for gpnode
 cp gpnode_completion /usr/share/bash-completion/completions/gpnode
+cp gplib_completion /usr/share/bash-completion/completions/gplib
 
 # udev rules for dreamcam
 sh -c 'echo "ATTR{idVendor}==\"04b4\", ATTR{idProduct}==\"1003\", MODE=\"666\"" > /etc/udev/rules.d/dreamcam.rules'

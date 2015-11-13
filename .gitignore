@@ -21,6 +21,7 @@ distrib/gpstudio_win/
 distrib/gpstudio_linux/
 
 bin/*.so*
+bin/*.a
 bin/*.dll
 bin/*.exe
 bin/gpnode_gui
