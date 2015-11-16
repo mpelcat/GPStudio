@@ -12,6 +12,9 @@ class IO extends Block
 			$io_name = (string)$io_device_element['name'];
 			$this->name = $io_name;
 			$io_driver = (string)$io_device_element['driver'];
+			
+			if(isset($io_node_element['x_pos'])) $this->x_pos = (int)$io_node_element['x_pos'];
+			if(isset($io_node_element['y_pos'])) $this->y_pos = (int)$io_node_element['y_pos'];
 		
 			// add io file to the list of files
 			$file_config = new File();

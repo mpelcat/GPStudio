@@ -22,6 +22,9 @@ class Process extends Block
 			if(!isset($process_node_element['name'])) $this->name = $this->driver;
 			else $this->name = (string)$process_node_element['name'];
 			
+			if(isset($process_node_element['x_pos'])) $this->x_pos = (int)$process_node_element['x_pos'];
+			if(isset($process_node_element['y_pos'])) $this->y_pos = (int)$process_node_element['y_pos'];
+			
 			$this->in_lib = $inlib;
 			if($this->in_lib)
 			{

@@ -90,12 +90,15 @@ function distrib_bin($mainoutpath, $os)
 	
 	if($os=="win")
 	{
-		copy_with_rights(LIB_PATH."bin/gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib.bat");
 	}
 	else
 	{
-		copy_with_rights(LIB_PATH."bin/gpnode", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib");
 		copy_with_rights(LIB_PATH."setenv.sh", $mainoutpath.DIRECTORY_SEPARATOR."setenv.sh");
+		copy_with_rights(LIB_PATH."install.sh", $mainoutpath.DIRECTORY_SEPARATOR."install.sh");
 	}
 	echo GUI_TOOLS_PATH."bin-$os";
 	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");
