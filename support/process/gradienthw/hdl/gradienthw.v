@@ -57,7 +57,7 @@
  *                teastbench with image. Flow valid generation validated. 
  *                
  * TO DO:
- * - generic kernal instatiations (realtointeger problem!!!)
+ * - generic kernel instatiations (realtointeger problem!!!)
  *
  */
 
