@@ -11,6 +11,7 @@ class ClockInterconnect extends Block
 {
 	public $clock_providers;
 	public $clock_receivers;
+	public $virtual_pll;
 	
 	public $plls;
 	
@@ -21,6 +22,7 @@ class ClockInterconnect extends Block
 		parent::__construct();
 		$this->clock_providers = array();
 		$this->clock_receivers = array();
+		$this->virtual_pll = array();
 		$this->domains = array();
 		$this->name="ci";
 		$this->driver="ci";
@@ -103,6 +105,7 @@ class ClockInterconnect extends Block
 		$vcomax = $pllAttr['vcomax'];
 		$mulmax = $pllAttr['mulmax'];
 		$divmax = $pllAttr['divmax'];
+		$pllclkcanbechain = $pllAttr['pllclkcanbechain'];
 		for($i=0; $i<$maxPLL; $i++)
 		{
 			$pll = new PLL();
@@ -112,6 +115,7 @@ class ClockInterconnect extends Block
 			$pll->vcomax = $vcomax;
 			$pll->mulmax = $mulmax;
 			$pll->divmax = $divmax;
+			$pll->canbechain = $pllclkcanbechain;
 			array_push($this->plls, $pll);
 		}
 		
@@ -186,10 +190,10 @@ class ClockInterconnect extends Block
 		}
 
 		// add clock provider foreach needed clocks
-		foreach($needed_freq as $needed_freq)
+		foreach($needed_freq as $needed_freq_item)
 		{
-			$clkFreq = $needed_freq[0];
-			$clkShift = $needed_freq[1];
+			$clkFreq = $needed_freq_item[0];
+			$clkShift = $needed_freq_item[1];
 			
 			$clockProvider = new Clock();
 			$clockProvider->typical = $clkFreq;
@@ -224,12 +228,18 @@ class ClockInterconnect extends Block
 					{
 						$pll->addFreq($clock_provider);
 						$ok = true;
+						
+						// remove clock from needed_freq list
+						unset($needed_freq[array_search(array($clock_provider->typical, $clock_provider->shift) ,$needed_freq)]);
 						break;
 					}
 				}
-				if(!$ok) error("Cannot provide clock at ".Clock::formatFreq($clockProvider->typical),20,"CI");
+				//if(!$ok) error("Cannot provide clock at ".Clock::formatFreq($clockProvider->typical),20,"CI");
 			}
 		}
+		
+		// create virtual pll (counter...) for remaining clocks
+		$this->virtual_pll = $needed_freq;
 		
 		// associate clock net
 		foreach($this->clock_receivers as $clockin)
@@ -263,6 +273,8 @@ class ClockInterconnect extends Block
 		$generator->declare=$declare;
 		
 		$code='';
+		
+		// instantiate plls
 		$pllId=0;
 		foreach($this->plls as $pll)
 		{
@@ -296,6 +308,56 @@ class ClockInterconnect extends Block
 				$code.='	pll'.$pllId.'_in(0) <= '.$this->providerByFreq($params['clkin'])->name.';'."\n"."\n";
 				
 				$pllId++;
+			}
+		}
+		
+		// generate virtual plls
+		if(!empty($this->virtual_pll))
+		{
+			$code.="	-- virtual plls"."\r\n";
+			
+			// each virtual pll is a process counter, all based on the SAME input freq
+			$input_clock = $this->clock_providers[0]->typical;
+			foreach($this->virtual_pll as $virtual_pll)
+			{
+				$clock = $virtual_pll[0];
+				$shift = $virtual_pll[1];
+				
+				$code.='	-- clock counter at '.Clock::formatFreq($virtual_pll[0])." with $shift degree phase shift"."\r\n";
+				
+				if($shift==0) $clockname = 'clk_'.Clock::hdlFreq($clock);
+				else $clockname = 'clk_'.Clock::hdlFreq($clock).'_'.$shift;
+				
+				$clock_div = ceil($input_clock / $clock) / 4;
+				$counter_size = ceil(log($clock_div,2));
+				
+				if($shift<0 or $shift>360) error("invalid clock shift $shift",32,"CI");
+				if($shift>=180) {$beginvalue = 1; $shift-=180;} else {$beginvalue = 0;}
+				$beginphase = ceil(($shift / 180) * $clock_div);
+				
+				$signal_clock_name = $clockname.'_s';
+				$signal_counter_name = $clockname.'_counter_s';
+				
+				$generator->addSignalComment(" signal for $clockname");
+				$generator->addSignal($signal_clock_name, 1, 'std_logic');
+				$generator->addSignal($signal_counter_name, $counter_size, 'unsigned');
+				
+				$code.="	virtual_pll_$clockname : process (clk_proc, reset)"."\n";
+				$code.="	begin"."\n";
+				$code.="		if(reset='0') then"."\n";
+				$code.="			$signal_clock_name <= '$beginvalue';"."\n";
+				$code.="			$signal_counter_name <= to_unsigned($beginphase, $counter_size);"."\n";
+				$code.="		elsif(rising_edge(clk_proc)) then"."\n";
+				$code.="			if($signal_counter_name<$clock_div) then"."\n";
+				$code.="				$signal_counter_name <= $signal_counter_name + 1;"."\n";
+				$code.="			else"."\n";
+				$code.="				$signal_counter_name <= to_unsigned(0, $counter_size);"."\n";
+				$code.="				$signal_clock_name <= not($signal_clock_name);"."\n";
+				$code.="			end if;"."\n";
+				$code.="		end if;"."\n";
+				$code.="	end process;"."\n";
+				$code.="	$clockname <= $signal_clock_name;"."\n";
+				$code.="\n";
 			}
 		}
 		
@@ -340,7 +402,7 @@ class ClockInterconnect extends Block
 		if($needToReplace)
 		{
 			$handle = null;
-			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Vhdl Gen");
+			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"CI");
 			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
 			fclose($handle);
 		}

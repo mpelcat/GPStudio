@@ -331,14 +331,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$speedgrade = $out[0][4];
 				break;
 			case 'Cyclone V':
-				preg_match_all("|(EP[0-9][A-Z])(SX{0,1})([F]{0,1})([A-Z][0-9])([A-Z][0-9])([A-Z][0-9]+).*|", $device, $out, PREG_SET_ORDER);
-				$deviceMember = $out[0][4];
-				$speedgrade = $out[0][5];
+				preg_match_all("|(5C)(SX{0,1})([F]{0,1})([A-Z][0-9])([A-Z][0-9])([A-Z][0-9]+).*|", $device, $out, PREG_SET_ORDER);
+				$deviceMember = $out[0][5];
+				$speedgrade = $out[0][4];
 				break;
 			case 'Stratix IV': // EP4SE820F43C3
 				preg_match_all("|(EP[0-9])(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
-				$deviceMember = $out[0][3];
-				$speedgrade = $out[0][6];
+				$deviceMember = $out[0][4];
+				$speedgrade = $out[0][5];
 				echo $deviceMember . '   ' . $speedgrade . "\n";
 				break;
 			default:
@@ -356,7 +356,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						$attr['vcomin']=300000000; //with divide by 2 mode
 						$attr['vcomax']=1300000000;
 						$attr['mulmax']=512;
-						$attr['divmax']=512;
+						$attr['divmax']=array(512, 512, 512, 512, 512);
+						$attr['pllclkcanbechain']=true;
 						break;
 					case 'Cyclone IV':
 						$attr['maxPLL']=4;
@@ -364,7 +365,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						$attr['vcomin']=600000000;
 						$attr['vcomax']=1300000000;
 						$attr['mulmax']=512;
-						$attr['divmax']=512;
+						$attr['divmax']=array(512, 512, 512, 512, 512);
+						$attr['pllclkcanbechain']=true;
 						break;
 					case 'Cyclone V':
 						if($deviceMember=='A9' or $deviceMember=='C9' or $deviceMember=='D9') $attr['maxPLL']=8;
@@ -379,8 +381,9 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						elseif($speedgrade=='C7' or $speedgrade=='I7') $attr['vcomax']=1400000000;
 						elseif($speedgrade=='C8' or $speedgrade=='A7') $attr['vcomax']=1300000000;
 						
-						$attr['mulmax']=512;
-						$attr['divmax']=512;
+						$attr['mulmax']=4096;
+						$attr['divmax']=array(4096, 1024, 1024, 512, 512, 512);
+						$attr['pllclkcanbechain']=false;
 						break;
 					case 'Stratix IV':
 						// TODO complete
@@ -389,10 +392,11 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						$attr['vcomin']=600000000;
 						if($speedgrade=='C2') $attr['vcomax']=1600000000; else $attr['vcomax']=1300000000;
 						$attr['mulmax']=512;
-						$attr['divmax']=512;
+						$attr['divmax']=array(512, 512, 512, 512, 512);
+						$attr['pllclkcanbechain']=true;
 						break;
 					default:
-						warning("family $family does'nt exist in toolchain",5,'Altera toolchain');
+						error("family $family does'nt exist in toolchain",5,'Altera toolchain');
 				}
 			
 				break;
@@ -405,6 +409,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 	function getRessourceDeclare($type, $params)
 	{
 		$declare='';
+		
 		switch ($type)
 		{
 			case 'pll':
@@ -495,6 +500,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 	function getRessourceInstance($type, $params)
 	{
 		$instance='';
+		$family = $this->getAttribute("FAMILY")->value;
+		
 		switch ($type)
 		{
 			case 'pll':
@@ -505,7 +512,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$instance.='	GENERIC MAP ('."\n";
 				$instance.='		bandwidth_type => "AUTO",'."\n";
 				$instance.='		compensate_clock => "CLK0",'."\n";
-				$instance.='		intended_device_family => "Cyclone III",'."\n";
+				$instance.='		intended_device_family => "'.$family.'",'."\n";
 				$instance.='		lpm_hint => "CBX_MODULE_PREFIX=pll",'."\n";
 				$instance.='		lpm_type => "altpll",'."\n";
 				$instance.='		operation_mode => "NORMAL",'."\n";

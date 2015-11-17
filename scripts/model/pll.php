@@ -16,6 +16,7 @@ class PLL
 	public $divmax;
 	
 	public $dummyClc;
+	public $canbechain;
 	
 	function __construct()
 	{
@@ -23,9 +24,12 @@ class PLL
 		$this->outFreqs = array();
 		$this->clksshift = array();
 		
+		$this->divmax = array();
+		
 		$this->clocks = array();
 		
 		$this->dummyClc = 0;
+		$this->canbechain = false;
 	}
 	
 	function freqIn()
@@ -43,7 +47,8 @@ class PLL
 	
 	function canBeAdded($clock)
 	{
-		if(count($this->outFreqs)+$this->dummyClc>=$this->clkByPLL) return false;
+		$idPll = count($this->outFreqs)+$this->dummyClc;
+		if($idPll>=$this->clkByPLL) return false;
 		
 		$find=false;
 		foreach($this->inFreqs as $inFreq)
@@ -51,28 +56,31 @@ class PLL
 			$vco = ClockInterconnect::ppcm_array(array_merge($this->outFreqs, array($clock->typical, $inFreq)));
 			if($vco<$this->vcomin)
 			{
-				$vco = ceil(($this->vcomin/2) / $vco) * $vco;
+				$vco = ceil(($this->vcomin) / $vco) * $vco;
 			}
 			//if($vco>$this->vcomax) return false;
-			//echo $clock->typical;
-			//var_dump($vco);
 			if($vco<=$this->vcomax) $find=true;
 		}
 		if($find==false) return false;
-		//echo "vco=$vco, freq=$clock->typical\n";
 		
 		$div=ceil($vco / $clock->typical);
-		if($div>$this->divmax*$this->divmax) return false;
-		if($div>$this->divmax)
+		if($this->canbechain)
 		{
-			if(count($this->outFreqs)+$this->dummyClc+1>=$this->clkByPLL) return false;
+			if($div>$this->divmax[$idPll]*$this->divmax[$idPll]) return false;
+			if($div>$this->divmax[$idPll])
+			{
+				if(count($this->outFreqs)+$this->dummyClc+1>=$this->clkByPLL) return false;
+			}
+		}
+		else
+		{
+			if($div>$this->divmax[$idPll]) return false;
 		}
 		
 		$can = false;
 		foreach($this->inFreqs as $inFreq)
 		{
 			$mul = ceil($vco / $inFreq);
-			//echo "mul=$mul, inFreq=$inFreq, freq=$clock->typical\n";
 			if($mul<$this->mulmax) $can=true;
 		}
 		
@@ -81,7 +89,8 @@ class PLL
 	
 	function addFreq($clock)
 	{
-		if(count($this->outFreqs)+$this->dummyClc>=$this->clkByPLL) return;
+		$idPll = count($this->outFreqs)+$this->dummyClc;
+		if($idPll>=$this->clkByPLL) return;
 		
 		$vco = ClockInterconnect::ppcm_array(array_merge($this->outFreqs, array($clock->typical)));
 		if($vco<$this->vcomin)
@@ -116,7 +125,7 @@ class PLL
 		array_push($this->clocks, $clock);
 		
 		$div=ceil($vco / $clock->typical);
-		if($div>$this->divmax)
+		if($div>$this->divmax[$idPll])
 		{
 			$this->dummyClc++;
 		}

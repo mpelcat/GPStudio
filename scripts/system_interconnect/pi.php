@@ -183,80 +183,84 @@ class ParamInterconnect extends Block
 			}
 		}
 		
+		if($master_count==0) warning("No master on PI, you can't change parameters.", 65, "PI");
 		if($master_count>1) error("Multi master not supported yet", 65, "PI");
 	
 		$code='';
 	
 		$code.="\n";
-		// generate for only ONE master
-		foreach($bi->interfaces as $interface)
+		if($master_count==1)
 		{
-			if($interface->type=='pi_slave_conn')
+			// generate for only ONE master
+			foreach($bi->interfaces as $interface)
 			{
-				$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
-				$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
-		
-				$name_cs = 'cs_'.$interface->blockname.'_s';
-				$name_addr_rel = $interface->blockname.'_addr_rel_o';
-			
-				$name_wr = $interface->blockname.'_wr_o';
-				$name_rd = $interface->blockname.'_rd_o';
-				$name_datawr = $interface->blockname.'_datawr_o';
-			
-				$name_addr_master = $name_master.'_master_addr_i';
-			
-				$code.='-- '.$interface->blockname.' slave at addr : '.$addr_slave_abs.' to '.($addr_slave_abs+pow(2,$interface->size_addr)-1)."\n";
-				// rd/wr slave
-				$code.=$name_wr.' <= '.$name_cs.' and '.$name_master.'_master_wr_i;'."\n";
-				$code.=$name_rd.' <= '.$name_cs.' and '.$name_master.'_master_rd_i;'."\n";
-				// addr relative slave
-				if($interface->size_addr==1)
+				if($interface->type=='pi_slave_conn')
 				{
-					$code.=$name_addr_rel.' <= '.$name_addr_master.'(0);'."\n";
-				}
-				else
-				{
-					$code.=$name_addr_rel.' <= '.$name_addr_master.'('.($interface->size_addr-1).' downto 0);'."\n";
-				}
-				// write slave
-				$code.=$name_datawr.' <= '.$name_master.'_master_datawr_i;'."\n";
+					$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
+					$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
 			
-				// decode address slave
-				$code.="\n";
-				$code.='decode_'.$interface->blockname.' : process('.$name_master.'_master_addr_i)'."\n";
-				$code.='begin'."\n";
-				$code.='	if('.$name_addr_master.'('.($size_master_addr-1).' downto '.($interface->size_addr).') = std_logic_vector(to_unsigned('.$addr_slave_abs_masked.', '.($size_master_addr-$interface->size_addr).'))) then'."\n";
-				$code.='		'.$name_cs.' <= \'1\';'."\n";
-				$code.='	else'."\n";
-				$code.='		'.$name_cs.' <= \'0\';'."\n";
-				$code.='	end if;'."\n";
-				$code.='end process;'."\n";
-			
-				$code.="\n";
+					$name_cs = 'cs_'.$interface->blockname.'_s';
+					$name_addr_rel = $interface->blockname.'_addr_rel_o';
+				
+					$name_wr = $interface->blockname.'_wr_o';
+					$name_rd = $interface->blockname.'_rd_o';
+					$name_datawr = $interface->blockname.'_datawr_o';
+				
+					$name_addr_master = $name_master.'_master_addr_i';
+				
+					$code.='-- '.$interface->blockname.' slave at addr : '.$addr_slave_abs.' to '.($addr_slave_abs+pow(2,$interface->size_addr)-1)."\n";
+					// rd/wr slave
+					$code.=$name_wr.' <= '.$name_cs.' and '.$name_master.'_master_wr_i;'."\n";
+					$code.=$name_rd.' <= '.$name_cs.' and '.$name_master.'_master_rd_i;'."\n";
+					// addr relative slave
+					if($interface->size_addr==1)
+					{
+						$code.=$name_addr_rel.' <= '.$name_addr_master.'(0);'."\n";
+					}
+					else
+					{
+						$code.=$name_addr_rel.' <= '.$name_addr_master.'('.($interface->size_addr-1).' downto 0);'."\n";
+					}
+					// write slave
+					$code.=$name_datawr.' <= '.$name_master.'_master_datawr_i;'."\n";
+				
+					// decode address slave
+					$code.="\n";
+					$code.='decode_'.$interface->blockname.' : process('.$name_master.'_master_addr_i)'."\n";
+					$code.='begin'."\n";
+					$code.='	if('.$name_addr_master.'('.($size_master_addr-1).' downto '.($interface->size_addr).') = std_logic_vector(to_unsigned('.$addr_slave_abs_masked.', '.($size_master_addr-$interface->size_addr).'))) then'."\n";
+					$code.='		'.$name_cs.' <= \'1\';'."\n";
+					$code.='	else'."\n";
+					$code.='		'.$name_cs.' <= \'0\';'."\n";
+					$code.='	end if;'."\n";
+					$code.='end process;'."\n";
+				
+					$code.="\n";
+				}
 			}
-		}
 		
-		// data mux foreach master
-		$code.="-- data mux foreach master"."\n";
-		//$code.='data_rd_'.$name_master.' : process('.$name_master.'_master_addr_i)'."\n";
-		//$code.='begin'."\n";
-		$code.=''.$name_master.'_master_datard_o <='."\n";
-		foreach($bi->interfaces as $interface)
-		{
-			if($interface->type=='pi_slave_conn')
+			// data mux foreach master
+			$code.="-- data mux foreach master"."\n";
+			//$code.='data_rd_'.$name_master.' : process('.$name_master.'_master_addr_i)'."\n";
+			//$code.='begin'."\n";
+			$code.=''.$name_master.'_master_datard_o <='."\n";
+			foreach($bi->interfaces as $interface)
 			{
-				$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
-				$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
-				
-				$name_addr_rel = $interface->blockname.'_addr_rel_o';
-				$name_datard = $interface->blockname.'_datard_i';
-				
-				$conditional=$name_addr_master.'('.($size_master_addr-1).' downto '.($interface->size_addr).') = std_logic_vector(to_unsigned('.$addr_slave_abs_masked.', '.($size_master_addr-$interface->size_addr).'))';
-				
-				$code.='	'.$name_datard.' when ('.$conditional.') else'."\n";
+				if($interface->type=='pi_slave_conn')
+				{
+					$addr_slave_abs = $node->getBlock($interface->blockname)->addr_abs;
+					$addr_slave_abs_masked = $addr_slave_abs >> $interface->size_addr;
+					
+					$name_addr_rel = $interface->blockname.'_addr_rel_o';
+					$name_datard = $interface->blockname.'_datard_i';
+					
+					$conditional=$name_addr_master.'('.($size_master_addr-1).' downto '.($interface->size_addr).') = std_logic_vector(to_unsigned('.$addr_slave_abs_masked.', '.($size_master_addr-$interface->size_addr).'))';
+					
+					$code.='	'.$name_datard.' when ('.$conditional.') else'."\n";
+				}
 			}
+			$code.='	(others => \'0\');'."\n";
 		}
-		$code.='	(others => \'0\');'."\n";
 		//$code.='end process;'."\n";
 	
 		$generator->code=$code;

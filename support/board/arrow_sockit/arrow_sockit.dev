@@ -5,58 +5,143 @@
 		<text x="35" y="53">Arrow Sockit</text>
 		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
 	</svg>
-	<toochain name="altera_quartus_cyclone5" type="EP5CSXFC6D6F31"/>
+	<toolchain name="altera_quartus" type="EP5CSXFC6D6F31">
+		<attributes>
+			<attribute name="FAMILY" value="Cyclone V" type="global"/>
+			<attribute name="DEVICE" value="5CSXFC6D6F31C8ES" type="global"/>
+			<attribute name="TOP_LEVEL_ENTITY" value="top" type="global"/>
+			<attribute name="ORIGINAL_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="LAST_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="PROJECT_OUTPUT_DIRECTORY" value="output_files" type="global"/>
+			<attribute name="MIN_CORE_JUNCTION_TEMP" value="0" type="global"/>
+			<attribute name="MAX_CORE_JUNCTION_TEMP" value="85" type="global"/>
+			<attribute name="DEVICE_FILTER_PACKAGE" value="FBGA" type="global"/>
+			<attribute name="DEVICE_FILTER_PIN_COUNT" value="896" type="global"/>
+			<attribute name="ERROR_CHECK_FREQUENCY_DIVISOR" value="256" type="global"/>
+			<attribute name="PARTITION_NETLIST_TYPE" value="SOURCE -section_id Top" type="global"/>
+			<attribute name="PARTITION_FITTER_PRESERVATION_LEVEL" value="PLACEMENT_AND_ROUTING -section_id Top" type="global"/>
+			<attribute name="PARTITION_HIERARCHY" value="root_partition -to | -section_id Top" type="instance"/>
+			<attribute name="UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE" value="ON" type="global"/>
+			<attribute name="OPTIMIZE_MULTI_CORNER_TIMING" value="ON" type="global"/>
+			<attribute name="ECO_REGENERATE_REPORT" value="ON" type="global"/>
+			<attribute name="SYNTH_TIMING_DRIVEN_SYNTHESIS" value="ON" type="global"/>
+			<attribute name="AUTO_OPEN_DRAIN_PINS" value="OFF" type="global"/>
+			<attribute name="OPTIMIZE_HOLD_TIMING" value="ALL PATHS" type="global"/>
+		</attributes>
+	</toolchain>
 	<global>
 		<pins>
-			<!--<pin name="PIN_J28" mapto="clk_50M"/>-->
+			<pin name="PIN_AF14" mapto="clk_50M_i">
+				<attributes>
+					<attribute name="IO_STANDARD" value="1.5 V" type="instance"/>
+				</attributes>
+			</pin>
+<!--
+			<pin name="PIN_Y26" mapto="clk_100m_fpga">
+				<attributes>
+					<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+				</attributes>
+			</pin>
+-->
 		</pins>
+		<clocks>
+			<clock name="clk_50M_i" typical="50M" desc=""/>
+		</clocks>
 	</global>
 	<ios>
 		<io name="led" type="him_output" driver="leds" optional="true" description="4 blue leds">
 			<pins>
-				<pin name="PIN_AF10" mapto="led0"/>
-				<pin name="PIN_AD10" mapto="led1"/>
-				<pin name="PIN_AE11" mapto="led2"/>
-				<pin name="PIN_AD7" mapto="led3"/>
+				<pin name="PIN_AF10" mapto="led0">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AD10" mapto="led1">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AE11" mapto="led2">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AD7" mapto="led3">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
 			</pins>
 		</io>
 		<io name="buttons" type="him_input" driver="buttons" optional="true" description="4 push buttons and 4 switch buttons">
 			<pins>
-				<pin name="PIN_AE9" mapto="key0"/>
-				<pin name="PIN_AE12" mapto="key1"/>
-				<pin name="PIN_AD9" mapto="key2"/>
-				<pin name="PIN_AD11" mapto="key3"/>
-				<pin name="PIN_W25" mapto="SW0"/>
-				<pin name="PIN_V25" mapto="SW1"/>
-				<pin name="PIN_AC28" mapto="SW2"/>
-				<pin name="PIN_AC29" mapto="SW3"/>
+				<pin name="PIN_AE9" mapto="key0">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AE12" mapto="key1">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AD9" mapto="key2">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AD11" mapto="key3">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_W25" mapto="SW0">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_V25" mapto="SW1">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AC28" mapto="SW2">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
+				<pin name="PIN_AC29" mapto="SW3">
+					<attributes>
+						<attribute name="IO_STANDARD" value="2.5 V" type="instance"/>
+					</attributes>
+				</pin>
 			</pins>
 		</io>
 		<io name="mt9" type="image-sensor" driver="mt9" optional="false" optionalgroup="1" description="MT9 image sensor">
 			<pins>
-				<pin name="PIN_C3" mapto="mt9_data_i[0]"/>
-				<pin name="PIN_F10" mapto="mt9_data_i[1]"/>
-				<pin name="PIN_J10" mapto="mt9_data_i[2]"/>
-				<pin name="PIN_B10" mapto="mt9_data_i[3]"/>
-				<pin name="PIN_G11" mapto="mt9_data_i[4]"/>
-				<pin name="PIN_G13" mapto="mt9_data_i[5]"/>
-				<pin name="PIN_C9" mapto="mt9_data_i[6]"/>
-				<pin name="PIN_F11" mapto="mt9_data_i[7]"/>
-				<pin name="PIN_B12" mapto="mt9_data_i[8]"/>
-				<pin name="PIN_E12" mapto="mt9_data_i[9]"/>
-				<pin name="PIN_C11" mapto="mt9_data_i[10]"/>
-				<pin name="PIN_A14" mapto="mt9_data_i[11]"/>
-				<pin name="PIN_D5" mapto="mt9_extclk_o"/>
-				<pin name="PIN_A10" mapto="mt9_fval_i"/>
-				<pin name="PIN_H10" mapto="mt9_lval_i"/>
-				<pin name="PIN_D12" mapto="mt9_oe_n_o"/>
-				<pin name="PIN_B14" mapto="mt9_pixclk_i"/>
-				<pin name="PIN_J13" mapto="mt9_reset_n_o"/>
-				<pin name="PIN_F12" mapto="mt9_saddr_o"/>
-				<pin name="PIN_C5" mapto="mt9_sclk_o"/>
-				<pin name="PIN_D11" mapto="mt9_sdata_io"/>
-				<pin name="PIN_A11" mapto="mt9_standby_o"/>
-				<pin name="PIN_H12" mapto="mt9_trigger_o"/>
+				<pin name="PIN_D11" mapto="mt9_data_i[0]"/>
+				<pin name="PIN_D10" mapto="mt9_data_i[1]"/>
+				<pin name="PIN_C13" mapto="mt9_data_i[2]"/>
+				<pin name="PIN_B12" mapto="mt9_data_i[3]"/>
+				<pin name="PIN_F13" mapto="mt9_data_i[4]"/>
+				<pin name="PIN_E13" mapto="mt9_data_i[5]"/>
+				<pin name="PIN_H14" mapto="mt9_data_i[6]"/>
+				<pin name="PIN_G13" mapto="mt9_data_i[7]"/>
+				<pin name="PIN_F15" mapto="mt9_data_i[8]"/>
+				<pin name="PIN_F14" mapto="mt9_data_i[9]"/>
+				<pin name="PIN_H15" mapto="mt9_data_i[10]"/>
+				<pin name="PIN_G15" mapto="mt9_data_i[11]"/>
+				<pin name="PIN_AD29" mapto="mt9_extclk_o"/>
+				<pin name="PIN_C7" mapto="mt9_fval_i"/>
+				<pin name="PIN_A5" mapto="mt9_lval_i"/>
+				<pin name="PIN_A13" mapto="mt9_oe_n_o"/>
+				<pin name="PIN_J14" mapto="mt9_pixclk_i"/>
+				<pin name="PIN_B11" mapto="mt9_reset_n_o"/>
+				<pin name="PIN_B8" mapto="mt9_saddr_o"/>
+				<pin name="PIN_A3" mapto="mt9_sclk_o"/>
+				<pin name="PIN_C12" mapto="mt9_sdata_io"/>
+				<pin name="PIN_B13" mapto="mt9_standby_o"/>
+				<pin name="PIN_B7" mapto="mt9_trigger_o"/>
 			</pins>
 		</io>
 		<io name="e2v" type="image-sensor" driver="e2v" optional="false" optionalgroup="1" description="E2V image sensor">
