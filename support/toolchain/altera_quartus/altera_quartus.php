@@ -63,27 +63,36 @@ class Altera_quartus_toolchain extends HDL_toolchain
 							// create directory
 							if(!is_dir($path.DIRECTORY_SEPARATOR.$subpath)) mkdir($path.DIRECTORY_SEPARATOR.$subpath, 0777, true);
 							
-							// check if copy is needed
-							$needToCopy = false;
-							if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+							if($file->type!="directory")
 							{
-								if(filemtime($block->path.$file->path) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+								// check if copy is needed
+								$needToCopy = false;
+								if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+								{
+									if(filemtime($block->path.$file->path) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+									{
+										$needToCopy = true;
+									}
+								}
+								else
 								{
 									$needToCopy = true;
+								}
+								
+								// copy if need
+								if($needToCopy)
+								{
+									if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+									{
+										warning("failed to copy $file->name",5,$block->name);
+									}
 								}
 							}
 							else
 							{
-								$needToCopy = true;
-							}
-							
-							// copy if need
-							if($needToCopy)
-							{
-								if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
-								{
-									warning("failed to copy $file->name",5,$block->name);
-								}
+								$dirtoCopy = $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name;
+								if(!file_exists($dirtoCopy)) mkdir($dirtoCopy);
+								cpy_dir($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name);
 							}
 							
 							// update the path file to the new copy path relative to project
@@ -166,7 +175,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			$content.="\n# --------- files ---------\n";
 			foreach($block->files as $file)
 			{
-				if($file->group=="hdl")
+				if($file->group=="hdl" and $file->type!="directory")
 				{
 					$type='';
 					if($file->type=="verilog") {$type='VERILOG_FILE';}
@@ -186,6 +195,24 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					if(!empty($subpath)) $subpath .= DIRECTORY_SEPARATOR;
 					$file_path = str_replace("\\",'/',$subpath.$file->name);
 					$content.="set_global_assignment -name $type ".$file_path."\n";
+				}
+			}
+			
+			// attributes
+			if(!empty($block->attributes))
+			{
+				$content.="\n# --------- attributes ---------\n";
+				foreach($block->attributes as $attribute)
+				{
+					$value = $attribute->value;
+					if(strpos($attribute->type, "location")===false)
+					{
+						$content.='set_'.$attribute->type.'_assignment -name '.$attribute->name.' '.$value."\n";
+					}
+					else
+					{
+						$content.='set_'.$attribute->type.'_assignment '.$attribute->name.' -to '.$value."\n";
+					}
 				}
 			}
 			

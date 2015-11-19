@@ -129,4 +129,53 @@ function listio()
 	}
 }
 
+function copy_with_rights($src, $dest)
+{
+	copy($src, $dest);
+	$srcright = fileperms($src);
+	if(file_exists($dest))
+	{
+		if(fileperms($dest)!=$srcright) chmod($dest, $srcright);
+	}
+	else chmod($dest, $srcright);
+}
+
+function cpy_dir($source, $dest)
+{
+    if(is_dir($source))
+    {
+        $dir_handle=opendir($source);
+        while($file=readdir($dir_handle))
+        {
+            if($file!="." && $file!="..")
+            {
+                if(is_dir($source.DIRECTORY_SEPARATOR.$file))
+                {
+                    if(!is_dir($dest.DIRECTORY_SEPARATOR.$file))
+                    {
+                        mkdir($dest.DIRECTORY_SEPARATOR.$file);
+                    }
+                    cpy_dir($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+                }
+                else
+                {
+					if(is_link($source.DIRECTORY_SEPARATOR.$file))
+					{
+						symlink(readlink($source.DIRECTORY_SEPARATOR.$file), $dest.DIRECTORY_SEPARATOR.$file);
+					}
+                    else
+					{
+						copy_with_rights($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+					}
+                }
+            }
+        }
+        closedir($dir_handle);
+    }
+    else
+    {
+        copy_with_rights($source, $dest);
+    }
+}
+
 ?>

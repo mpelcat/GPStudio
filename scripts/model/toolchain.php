@@ -5,7 +5,7 @@ require_once("attribute.php");
 class Toolchain
 {
 	/**
-	* Array of attributes of the pin (optional)
+	* Array of attributes of the toolchain (optional)
 	* @var array|Attribute $attributes
 	*/
 	public $attributes;

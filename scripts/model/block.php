@@ -16,6 +16,7 @@ require_once("reset.php");
 require_once("pin.php");
 require_once("port.php");
 require_once("interfacebus.php");
+require_once("attribute.php");
 
 class Block
 {
@@ -145,6 +146,12 @@ class Block
 	* @var array|InterfaceBus $interfaces
 	*/
 	public $interfaces;
+	
+	/**
+	* Array of attributes of the block (optional)
+	* @var array|Attribute $attributes
+	*/
+	public $attributes;
 
 	/**
 	* Reference to the associated parent node
@@ -166,6 +173,8 @@ class Block
 		$this->pins = array();
 		$this->ext_ports = array();
 		$this->interfaces = array();
+		$this->attributes = array();
+		
 		$this->addr_abs = -1;
 		$this->master_count = 0;
 		$this->x_pos=-1;
@@ -417,6 +426,25 @@ class Block
 		return null;
 	}
 	
+	/** Add a attribute to the toolchain 
+	 *  @param Attribute $attribute attribute to add to the block **/
+	function addAttribute($attribute)
+	{
+		array_push($this->attributes, $attribute);
+	}
+	
+	/** return a reference to the attribute with the name $name, if not found, return false
+	 *  @param string $name name of the attribute enum to search
+	 *  @return Attribute found attribute **/
+	function getAttribute($name)
+	{
+		foreach($this->attributes as $attribute)
+		{
+			if($attribute->name==$name) return $attribute;
+		}
+		return null;
+	}
+	
 	protected function parse_xml()
 	{
 		if(isset($this->xml['size_addr_rel'])) warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'",12,"Block");
@@ -476,6 +504,16 @@ class Block
 			foreach($this->xml->resets->reset as $resetXml)
 			{
 				$this->addReset(new Reset($resetXml));
+			}
+		}
+		
+		// attributes
+		if(isset($this->xml->attributes))
+		{
+			echo "toto";
+			foreach($this->xml->attributes->attribute as $attribute)
+			{
+				$this->addAttribute(new Attribute($attribute));
 			}
 		}
 	}
@@ -578,6 +616,17 @@ class Block
 					$xml_resets->appendChild($reset->getXmlElement($xml, $format));
 				}
 				$xml_element->appendChild($xml_resets);
+			}
+		
+			// attributes
+			if(!empty($this->attributes))
+			{
+				$xml_attributes = $xml->createElement("attributes");
+				foreach($this->attributes as $attribute)
+				{
+					$xml_attributes->appendChild($attribute->getXmlElement($xml, $format));
+				}
+				$xml_element->appendChild($xml_attributes);
 			}
 		}
 		
