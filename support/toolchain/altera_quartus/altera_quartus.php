@@ -589,7 +589,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$instance.='		width_clock => '.$clkByPLL."\n";
 				$instance.='	)'."\n";
 				$instance.='	PORT MAP ('."\n";
-				$instance.='		areset => reset,'."\n";
+				$instance.='		areset => not(reset),'."\n";
 				$instance.='		inclk => '.$pllname.'_in,'."\n";
 				$instance.='		clk => '.$pllname.'_out'."\n";
 				$instance.='	);'."\n";
