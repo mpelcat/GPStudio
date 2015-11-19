@@ -17,15 +17,15 @@
 		</param>
 		<param name="width" regaddr="1" default="320" propertymap="imgwidth.value" desc="Image width"/>
 		
-		<param name="w11" regaddr="2" 	default="0" propertymap="w11.value" desc="kernel value"/>
-		<param name="w12" regaddr="3" 	default="0" propertymap="w12.value" desc="kernel value"/>
-		<param name="w13" regaddr="4" 	default="0" propertymap="w13.value" desc="kernel value"/>
-		<param name="w21" regaddr="5" 	default="0" propertymap="w21.value" desc="kernel value"/>
-		<param name="w22" regaddr="6" 	default="1" propertymap="w22.value" desc="kernel value"/>
-		<param name="w23" regaddr="7" 	default="0" propertymap="w23.value" desc="kernel value"/>
-		<param name="w31" regaddr="8" 	default="0" propertymap="w31.value" desc="kernel value"/>
-		<param name="w32" regaddr="9" 	default="0" propertymap="w32.value" desc="kernel value"/>
-		<param name="w33" regaddr="10"	default="0" propertymap="w33.value" desc="kernel value"/>
+		<param name="w11" regaddr="2" 	default="0" propertymap="weight.m00.value" desc="kernel value"/>
+		<param name="w12" regaddr="3" 	default="0" propertymap="weight.m01.value" desc="kernel value"/>
+		<param name="w13" regaddr="4" 	default="0" propertymap="weight.m02.value" desc="kernel value"/>
+		<param name="w21" regaddr="5" 	default="0" propertymap="weight.m10.value" desc="kernel value"/>
+		<param name="w22" regaddr="6" 	default="1" propertymap="weight.m11.value" desc="kernel value"/>
+		<param name="w23" regaddr="7" 	default="0" propertymap="weight.m12.value" desc="kernel value"/>
+		<param name="w31" regaddr="8" 	default="0" propertymap="weight.m20.value" desc="kernel value"/>
+		<param name="w32" regaddr="9" 	default="0" propertymap="weight.m21.value" desc="kernel value"/>
+		<param name="w33" regaddr="10"	default="0" propertymap="weight.m22.value" desc="kernel value"/>
 		<param name="norm" regaddr="11"	default="0" propertymap="norm.value" desc="Normalisation term log2(sum of kernel)"/>
 
 		
@@ -34,16 +34,57 @@
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
 		<property name="imgwidth" caption="imgwidth" type="int" value="320" min="0" max="320" desc="Width of input image"/>
 		
-		<property name="w11" caption="w11" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w12" caption="w12" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w13" caption="w13" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w21" caption="w21" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w22" caption="w22" type="int" value="1" min="-127" max="128" desc="kernel value"/>
-		<property name="w23" caption="w23" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w31" caption="w31" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w32" caption="w32" type="int" value="0" min="-127" max="128" desc="kernel value"/>
-		<property name="w33" caption="w33" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+		<property name="weight" caption="weight" type="matrix" value="3">
+			<properties>
+				<property name="m00" caption="w11" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m01" caption="w12" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m02" caption="w13" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m10" caption="w21" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m11" caption="w22" type="int" value="1" min="-127" max="128" desc="kernel value"/>
+				<property name="m12" caption="w23" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m20" caption="w31" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m21" caption="w32" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+				<property name="m22" caption="w33" type="int" value="0" min="-127" max="128" desc="kernel value"/>
+			</properties>
+		</property>
+
 		<property name="norm" caption="norm" type="int" value="0" min="0" max="8" 	 desc="Normalisation term log2(sum of kernel)"/>
+		
+		<property name="filtertype" caption="filtertype" type="enum" onchange="switch(filtertype.bits) { 
+	case 0:
+		weight.m00.value=0; weight.m01.value=0; weight.m02.value=0;
+		weight.m10.value=0; weight.m11.value=1; weight.m12.value=0;
+		weight.m20.value=0; weight.m21.value=0; weight.m22.value=0;
+		norm.value=0;
+		break;
+	case 1:
+		weight.m00.value=1; weight.m01.value=2; weight.m02.value=1;
+		weight.m10.value=1; weight.m11.value=4; weight.m12.value=1;
+		weight.m20.value=1; weight.m21.value=2; weight.m22.value=1;
+		norm.value=4;
+		break;
+	case 2:
+		weight.m00.value=1; weight.m01.value=1; weight.m02.value=1;
+		weight.m10.value=1; weight.m11.value=-8; weight.m12.value=1;
+		weight.m20.value=1; weight.m21.value=1; weight.m22.value=1;
+		norm.value=0;
+		break;
+	case 3:
+		weight.m00.value=1; weight.m01.value=0; weight.m02.value=-1;
+		weight.m10.value=2; weight.m11.value=0; weight.m12.value=-2;
+		weight.m20.value=1; weight.m21.value=0; weight.m22.value=-1;
+		norm.value=0;
+		break;
+	}">
+			<enums>
+				<enum name="normal"  	value="0" />
+				<enum name="gaussien"  	value="1" />
+				<enum name="laplacien"  value="2" />
+				<enum name="sobel" 		value="3" />
+			</enums>
+		</property>
+
+		
 		
 	</properties>
 	<files>
