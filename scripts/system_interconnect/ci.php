@@ -329,7 +329,7 @@ class ClockInterconnect extends Block
 				if($shift==0) $clockname = 'clk_'.Clock::hdlFreq($clock);
 				else $clockname = 'clk_'.Clock::hdlFreq($clock).'_'.$shift;
 				
-				$clock_div = ceil($input_clock / $clock) / 4;
+				$clock_div = ceil($input_clock / $clock) / 2;
 				$counter_size = ceil(log($clock_div,2));
 				
 				if($shift<0 or $shift>360) error("invalid clock shift $shift",32,"CI");
