@@ -269,6 +269,7 @@ class ClockInterconnect extends Block
 		
 		$declare='';
 		$params=array();
+		$params['pll']=$this->plls[0];
 		$declare.=$node->board->toolchain->getRessourceDeclare('pll',$params);
 		$generator->declare=$declare;
 		
@@ -281,7 +282,7 @@ class ClockInterconnect extends Block
 			if(!$pll->isempty())
 			{
 				$generator->addSignal('pll'.$pllId.'_in', 2, 'std_logic_vector');
-				$generator->addSignal('pll'.$pllId.'_out', 5, 'std_logic_vector');
+				$generator->addSignal('pll'.$pllId.'_out', $pll->clkByPLL, 'std_logic_vector');
 				
 				$params['pllname']='pll'.$pllId;
 				$params['pll']=$pll;

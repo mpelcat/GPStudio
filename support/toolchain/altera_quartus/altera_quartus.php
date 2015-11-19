@@ -401,7 +401,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 						elseif($deviceMember=='A5' or $deviceMember=='C5' or $deviceMember=='C6' or $deviceMember=='C4' or $deviceMember=='D5') $attr['maxPLL']=6;
 						else $attr['maxPLL']=4;
 						
-						$attr['clkByPLL']=5;
+						$attr['clkByPLL']=6;
 						$attr['vcomin']=600000000;
 						
 						if($speedgrade=='C6') $attr['vcomax']=1600000000;
@@ -440,29 +440,17 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		switch ($type)
 		{
 			case 'pll':
+				$clkByPLL = $params['pll']->clkByPLL;
 				$declare.='	COMPONENT altpll'."\n";
 				$declare.='	GENERIC ('."\n";
 				$declare.='		bandwidth_type		: STRING;'."\n";
-				$declare.='		clk0_divide_by		: NATURAL;'."\n";
-				$declare.='		clk0_duty_cycle		: NATURAL;'."\n";
-				$declare.='		clk0_multiply_by		: NATURAL;'."\n";
-				$declare.='		clk0_phase_shift		: STRING;'."\n";
-				$declare.='		clk1_divide_by		: NATURAL;'."\n";
-				$declare.='		clk1_duty_cycle		: NATURAL;'."\n";
-				$declare.='		clk1_multiply_by		: NATURAL;'."\n";
-				$declare.='		clk1_phase_shift		: STRING;'."\n";
-				$declare.='		clk2_divide_by		: NATURAL;'."\n";
-				$declare.='		clk2_duty_cycle		: NATURAL;'."\n";
-				$declare.='		clk2_multiply_by		: NATURAL;'."\n";
-				$declare.='		clk2_phase_shift		: STRING;'."\n";
-				$declare.='		clk3_divide_by		: NATURAL;'."\n";
-				$declare.='		clk3_duty_cycle		: NATURAL;'."\n";
-				$declare.='		clk3_multiply_by		: NATURAL;'."\n";
-				$declare.='		clk3_phase_shift		: STRING;'."\n";
-				$declare.='		clk4_divide_by		: NATURAL;'."\n";
-				$declare.='		clk4_duty_cycle		: NATURAL;'."\n";
-				$declare.='		clk4_multiply_by		: NATURAL;'."\n";
-				$declare.='		clk4_phase_shift		: STRING;'."\n";
+				for($i=0; $i<$clkByPLL; $i++)
+				{
+					$declare.='		clk'.$i.'_divide_by		: NATURAL;'."\n";
+					$declare.='		clk'.$i.'_duty_cycle		: NATURAL;'."\n";
+					$declare.='		clk'.$i.'_multiply_by		: NATURAL;'."\n";
+					$declare.='		clk'.$i.'_phase_shift		: STRING;'."\n";
+				}
 				$declare.='		compensate_clock		: STRING;'."\n";
 				$declare.='		inclk0_input_frequency		: NATURAL;'."\n";
 				$declare.='		intended_device_family		: STRING;'."\n";
@@ -495,17 +483,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='		port_scandone		: STRING;'."\n";
 				$declare.='		port_scanread		: STRING;'."\n";
 				$declare.='		port_scanwrite		: STRING;'."\n";
-				$declare.='		port_clk0		: STRING;'."\n";
-				$declare.='		port_clk1		: STRING;'."\n";
-				$declare.='		port_clk2		: STRING;'."\n";
-				$declare.='		port_clk3		: STRING;'."\n";
-				$declare.='		port_clk4		: STRING;'."\n";
-				$declare.='		port_clkena0		: STRING;'."\n";
-				$declare.='		port_clkena1		: STRING;'."\n";
-				$declare.='		port_clkena2		: STRING;'."\n";
-				$declare.='		port_clkena3		: STRING;'."\n";
-				$declare.='		port_clkena4		: STRING;'."\n";
-				$declare.='		port_clkena5		: STRING;'."\n";
+				for($i=0; $i<$clkByPLL; $i++) $declare.='		port_clk'.$i.'		: STRING;'."\n";
+				for($i=0; $i<$clkByPLL; $i++) $declare.='		port_clkena'.$i.'		: STRING;'."\n";
 				$declare.='		port_extclk0		: STRING;'."\n";
 				$declare.='		port_extclk1		: STRING;'."\n";
 				$declare.='		port_extclk2		: STRING;'."\n";
@@ -513,7 +492,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$declare.='		width_clock		: NATURAL'."\n";
 				$declare.='	);'."\n";
 				$declare.='	PORT ('."\n";
-				$declare.='			clk	: OUT STD_LOGIC_VECTOR (4 DOWNTO 0);'."\n";
+				$declare.='			areset : IN STD_LOGIC;'."\n";
+				$declare.='			clk	: OUT STD_LOGIC_VECTOR ('.($clkByPLL-1).' DOWNTO 0);'."\n";
 				$declare.='			inclk	: IN STD_LOGIC_VECTOR (1 DOWNTO 0)'."\n";
 				$declare.='	);'."\n";
 				$declare.='	END COMPONENT;'."\n";
@@ -532,6 +512,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		switch ($type)
 		{
 			case 'pll':
+				$clkByPLL = $params['pll']->clkByPLL;
 				$clkin = $params['clkin'];
 				$pllname = $params['pllname'];
 				
@@ -547,7 +528,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$instance.='		port_inclk0 => "PORT_USED",'."\n";
 				
 				$instance.='		port_activeclock => "PORT_UNUSED",'."\n";
-				$instance.='		port_areset => "PORT_UNUSED",'."\n";
+				$instance.='		port_areset => "PORT_USED",'."\n";
 				$instance.='		port_clkbad0 => "PORT_UNUSED",'."\n";
 				$instance.='		port_clkbad1 => "PORT_UNUSED",'."\n";
 				$instance.='		port_clkloss => "PORT_UNUSED",'."\n";
@@ -570,12 +551,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				$instance.='		port_scandone => "PORT_UNUSED",'."\n";
 				$instance.='		port_scanread => "PORT_UNUSED",'."\n";
 				$instance.='		port_scanwrite => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena0 => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena1 => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena2 => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena3 => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena4 => "PORT_UNUSED",'."\n";
-				$instance.='		port_clkena5 => "PORT_UNUSED",'."\n";
+				for($i=0; $i<$clkByPLL; $i++) $instance.='		port_clkena'.$i.' => "PORT_UNUSED",'."\n";
 				$instance.='		port_extclk0 => "PORT_UNUSED",'."\n";
 				$instance.='		port_extclk1 => "PORT_UNUSED",'."\n";
 				$instance.='		port_extclk2 => "PORT_UNUSED",'."\n";
@@ -602,7 +578,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					
 					$clkId++;
 				}
-				for($i=$clkId; $i<5; $i++)
+				for($i=$clkId; $i<$clkByPLL; $i++)
 				{
 					$instance.='		port_clk'.$i.' => "PORT_UNUSED",'."\n";
 					$instance.='		clk'.$i.'_duty_cycle => 50,'."\n";
@@ -610,9 +586,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					$instance.='		clk'.$i.'_multiply_by => 1,'."\n";
 					$instance.='		clk'.$i.'_phase_shift => "0",'."\n";
 				}
-				$instance.='		width_clock => 5'."\n";
+				$instance.='		width_clock => '.$clkByPLL."\n";
 				$instance.='	)'."\n";
 				$instance.='	PORT MAP ('."\n";
+				$instance.='		areset => reset,'."\n";
 				$instance.='		inclk => '.$pllname.'_in,'."\n";
 				$instance.='		clk => '.$pllname.'_out'."\n";
 				$instance.='	);'."\n";
