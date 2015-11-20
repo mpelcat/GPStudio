@@ -309,6 +309,23 @@ class Board
 									warning('property '.$property['name']." does'nt exists",16,$concerned_block->name);
 								}
 							}
+							if(isset($property->properties))
+							{
+								foreach($property->properties->property as $childPropertyXml)
+								{
+									if(isset($childPropertyXml['name']) and isset($childPropertyXml['value']))
+									{
+										if($concerned_property=$concerned_block->getPropertyPath($property['name'].'.'.(string)$childPropertyXml['name']))
+										{
+											$concerned_property->value = $childPropertyXml['value'];
+										}
+										else
+										{
+											warning('property '.$property['name'].'.'.$childPropertyXml['name']." does'nt exists",16,$io->name);
+										}
+									}
+								}
+							}
 						}
 					}
 					
