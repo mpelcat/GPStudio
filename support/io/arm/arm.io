@@ -110,13 +110,17 @@
 		<port name="hps_0_hps_io_hps_io_gpio_inst_GPIO61" type="inout" size="1" desc=""/>
 		<port name="hps_0_hps_io_hps_io_gpio_inst_GPIO62" type="inout" size="1" desc=""/>
 		
+<!--
 		<port name="hps_0_h2f_reset_reset_n" type="out" size="1" desc=""/>
+-->
 		<port name="hps_0_f2h_cold_reset_req_reset_n" type="in" size="1" desc=""/>
 		<port name="hps_0_f2h_debug_reset_req_reset_n" type="in" size="1" desc=""/>
 		<port name="hps_0_f2h_warm_reset_req_reset_n" type="in" size="1" desc=""/>
 		<port name="hps_0_f2h_stm_hw_events_stm_hwevents" type="in" size="28" desc=""/>
 	</ports>
+	
 	<resets>
+		<reset name="hps_0_h2f_reset_reset_n" group="reset_n" direction="out" desc=""/>
 		<reset name="reset_reset_n" group="reset_n" direction="in" desc=""/>
 	</resets>
 	
@@ -394,87 +398,5 @@
 		<attribute name="OUTPUT_TERMINATION" value="&quot;SERIES 50 OHM WITH CALIBRATION&quot; -to arm_memory_mem_dm[2] -tag __hps_sdram_p0" type="instance"/>
 		<attribute name="IO_STANDARD" value="&quot;SSTL-15 CLASS I&quot; -to arm_memory_mem_dm[3] -tag __hps_sdram_p0" type="instance"/>
 		<attribute name="OUTPUT_TERMINATION" value="&quot;SERIES 50 OHM WITH CALIBRATION&quot; -to arm_memory_mem_dm[3] -tag __hps_sdram_p0" type="instance"/>
-<!--
-
-		<attribute name="PIN_P19A0T" value="hps_io|border|hps_io_emac1_inst_TX_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P19B0T" value="hps_io|border|hps_io_emac1_inst_TXD0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P19A1T" value="hps_io|border|hps_io_emac1_inst_TXD1[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P19B1T" value="hps_io|border|hps_io_emac1_inst_TXD2[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P20A0T" value="hps_io|border|hps_io_emac1_inst_TXD3[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P20B0T" value="hps_io|border|hps_io_emac1_inst_RXD0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P20A1T" value="hps_io|border|hps_io_emac1_inst_MDIO[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P20B1T" value="hps_io|border|hps_io_emac1_inst_MDC[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P21A0T" value="hps_io|border|hps_io_emac1_inst_RX_CTL[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P21B0T" value="hps_io|border|hps_io_emac1_inst_TX_CTL[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P21A1T" value="hps_io|border|hps_io_emac1_inst_RX_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P21B1T" value="hps_io|border|hps_io_emac1_inst_RXD1[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P22A0T" value="hps_io|border|hps_io_emac1_inst_RXD2[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P22B0T" value="hps_io|border|hps_io_emac1_inst_RXD3[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P22B1T" value="hps_io|border|hps_io_qspi_inst_IO0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P23A0T" value="hps_io|border|hps_io_qspi_inst_IO1[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P23B0T" value="hps_io|border|hps_io_qspi_inst_IO2[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P23A1T" value="hps_io|border|hps_io_qspi_inst_IO3[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P23B1T" value="hps_io|border|hps_io_qspi_inst_SS0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P24A0T" value="hps_io|border|hps_io_qspi_inst_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P25A0T" value="hps_io|border|hps_io_sdio_inst_CMD[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P25A1T" value="hps_io|border|hps_io_sdio_inst_D0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P25B1T" value="hps_io|border|hps_io_sdio_inst_D1[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P27B0T" value="hps_io|border|hps_io_sdio_inst_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P27A1T" value="hps_io|border|hps_io_sdio_inst_D2[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P27B1T" value="hps_io|border|hps_io_sdio_inst_D3[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P28B0T" value="hps_io|border|hps_io_usb1_inst_D0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P28A1T" value="hps_io|border|hps_io_usb1_inst_D1[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P28B1T" value="hps_io|border|hps_io_usb1_inst_D2[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P29A0T" value="hps_io|border|hps_io_usb1_inst_D3[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P29B0T" value="hps_io|border|hps_io_usb1_inst_D4[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P29A1T" value="hps_io|border|hps_io_usb1_inst_D5[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P29B1T" value="hps_io|border|hps_io_usb1_inst_D6[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P30A0T" value="hps_io|border|hps_io_usb1_inst_D7[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P30A1T" value="hps_io|border|hps_io_usb1_inst_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P30B1T" value="hps_io|border|hps_io_usb1_inst_STP[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P31A0T" value="hps_io|border|hps_io_usb1_inst_DIR[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P31B0T" value="hps_io|border|hps_io_usb1_inst_NXT[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P16B0T" value="hps_io|border|hps_io_spim0_inst_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P16A1T" value="hps_io|border|hps_io_spim0_inst_MOSI[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P16B1T" value="hps_io|border|hps_io_spim0_inst_MISO[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P17A0T" value="hps_io|border|hps_io_spim0_inst_SS0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P17B1T" value="hps_io|border|hps_io_spim1_inst_CLK[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P18A0T" value="hps_io|border|hps_io_spim1_inst_MOSI[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P18B0T" value="hps_io|border|hps_io_spim1_inst_MISO[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P18A1T" value="hps_io|border|hps_io_spim1_inst_SS0[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P14B0T" value="hps_io|border|hps_io_uart0_inst_RX[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P14A1T" value="hps_io|border|hps_io_uart0_inst_TX[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P14B1T" value="hps_io|border|hps_io_i2c1_inst_SDA[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P15A0T" value="hps_io|border|hps_io_i2c1_inst_SCL[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P28A0T" value="hps_io|border|hps_io_gpio_inst_GPIO00[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P30B0T" value="hps_io|border|hps_io_gpio_inst_GPIO09[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P24B0T" value="hps_io|border|hps_io_gpio_inst_GPIO35[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P14A0T" value="hps_io|border|hps_io_gpio_inst_GPIO48[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P15B0T" value="hps_io|border|hps_io_gpio_inst_GPIO53[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P15A1T" value="hps_io|border|hps_io_gpio_inst_GPIO54[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P15B1T" value="hps_io|border|hps_io_gpio_inst_GPIO55[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P16A0T" value="hps_io|border|hps_io_gpio_inst_GPIO56[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P17B0T" value="hps_io|border|hps_io_gpio_inst_GPIO61[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="PIN_P17A1T" value="hps_io|border|hps_io_gpio_inst_GPIO62[0] -entity soc_system_hps_0" type="hps_location"/>
-		<attribute name="HPSPERIPHERALEMAC_X77_Y39_N111" value="emac1_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALQSPI_X87_Y58_N111" value="qspi_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALSDMMC_X87_Y39_N111" value="sdio_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALUSB_X55_Y39_N111" value="usb1_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALSPIMASTER_X87_Y55_N111" value="spim0_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALSPIMASTER_X87_Y53_N111" value="spim1_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALUART_X87_Y45_N111" value="uart0_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALI2C_X87_Y65_N111" value="i2c1_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSPERIPHERALGPIO_X87_Y74_N111" value="gpio_inst -entity soc_system_hps_0_hps_io_border" type="hps_location"/>
-		<attribute name="HPSINTERFACECLOCKSRESETS_X52_Y78_N111" value="clocks_resets -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEDBGAPB_X52_Y80_N111" value="debug_apb -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACESTMEVENT_X52_Y42_N111" value="stm_event -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACETPIUTRACE_X52_Y39_N111" value="tpiu -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEBOOTFROMFPGA_X52_Y74_N111" value="boot_from_fpga -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEFPGA2HPS_X52_Y45_N111" value="fpga2hps -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEHPS2FPGALIGHTWEIGHT_X52_Y43_N111" value="hps2fpga_light_weight -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEHPS2FPGA_X52_Y47_N111" value="hps2fpga -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEFPGA2SDRAM_X52_Y53_N111" value="f2sdram -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
-		<attribute name="HPSINTERFACEINTERRUPTS_X52_Y40_N111" value="interrupts -entity soc_system_hps_0_fpga_interfaces" type="hps_location"/>
--->
 	</attributes>
 </io>

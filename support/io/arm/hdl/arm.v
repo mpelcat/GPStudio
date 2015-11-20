@@ -194,10 +194,10 @@ soc_system soc_system_inst
 		.hps_0_hps_io_hps_io_gpio_inst_GPIO61(hps_0_hps_io_hps_io_gpio_inst_GPIO61),
 		.hps_0_hps_io_hps_io_gpio_inst_GPIO62(hps_0_hps_io_hps_io_gpio_inst_GPIO62),
 		.hps_0_h2f_reset_reset_n(hps_0_h2f_reset_reset_n),
-		.hps_0_f2h_cold_reset_req_reset_n(hps_0_f2h_cold_reset_req_reset_n),
-		.hps_0_f2h_debug_reset_req_reset_n(hps_0_f2h_debug_reset_req_reset_n),
-		.hps_0_f2h_warm_reset_req_reset_n(hps_0_f2h_warm_reset_req_reset_n),
-		.hps_0_f2h_stm_hw_events_stm_hwevents(hps_0_f2h_stm_hw_events_stm_hwevents),
+		.hps_0_f2h_cold_reset_req_reset_n(1'b1),//hps_0_f2h_cold_reset_req_reset_n), 	//TODO
+		.hps_0_f2h_debug_reset_req_reset_n(1'b1),//hps_0_f2h_debug_reset_req_reset_n), 	//TODO
+		.hps_0_f2h_warm_reset_req_reset_n(1'b1),//hps_0_f2h_warm_reset_req_reset_n), 	//TODO
+		.hps_0_f2h_stm_hw_events_stm_hwevents(hps_0_f2h_stm_hw_events_stm_hwevents), 	//TODO
 		.out0_fv(out0_fv),
 		.out0_dv(out0_dv),
 		.out0_data(out0_data),
