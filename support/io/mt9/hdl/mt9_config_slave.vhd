@@ -91,7 +91,7 @@ begin
 	begin
 		if(reset_n='0') then
 			enable_reg <= '0';
-			flowlength_reg <= std_logic_vector(to_unsigned(100*100, 32));
+			flowlength_reg <= std_logic_vector(to_unsigned(320*240, 32));
 			
 			xstart_reg <= std_logic_vector(to_unsigned(0, 16));
 			ystart_reg <= std_logic_vector(to_unsigned(0, 16));
