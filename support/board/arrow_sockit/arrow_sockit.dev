@@ -8,7 +8,7 @@
 	<toolchain name="altera_quartus" type="EP5CSXFC6D6F31">
 		<attributes>
 			<attribute name="FAMILY" value="Cyclone V" type="global"/>
-			<attribute name="DEVICE" value="5CSXFC6D6F31C8ES" type="global"/>
+			<attribute name="DEVICE" value="5CSXFC6D6F31C6" type="global"/>
 			<attribute name="TOP_LEVEL_ENTITY" value="top" type="global"/>
 			<attribute name="ORIGINAL_QUARTUS_VERSION" value="13.1" type="global"/>
 			<attribute name="LAST_QUARTUS_VERSION" value="13.1" type="global"/>
@@ -24,6 +24,7 @@
 			<attribute name="UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE" value="ON" type="global"/>
 			<attribute name="OPTIMIZE_MULTI_CORNER_TIMING" value="ON" type="global"/>
 			<attribute name="ECO_REGENERATE_REPORT" value="ON" type="global"/>
+			<attribute name="USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN" value="ON" type="global"/>
 			<attribute name="SYNTH_TIMING_DRIVEN_SYNTHESIS" value="ON" type="global"/>
 			<attribute name="AUTO_OPEN_DRAIN_PINS" value="OFF" type="global"/>
 			<attribute name="OPTIMIZE_HOLD_TIMING" value="ALL PATHS" type="global"/>
