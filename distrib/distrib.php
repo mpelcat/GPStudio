@@ -9,6 +9,7 @@ define("LINUX_DISTRIB_PATH", DISTRIB_PATH."gpstudio_linux".DIRECTORY_SEPARATOR);
 
 include("distrib_utils.php");
 include("distrib_scripts.php");
+include(LIB_PATH."scripts".DIRECTORY_SEPARATOR."gpstudio.php");
 
 function distrib($os)
 {

@@ -18,6 +18,8 @@ lines: FORCE
 gui-tools: FORCE
 	cd gui-tools/ && make -f Makefile
 
+install: gui-tools
+
 gui-tools-distrib: FORCE
 	cd gui-tools/ && make -f Makefile distrib
 
