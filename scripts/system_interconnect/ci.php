@@ -331,10 +331,13 @@ class ClockInterconnect extends Block
 				
 				$clock_div = ceil($input_clock / $clock) / 2;
 				$counter_size = ceil(log($clock_div,2));
+				$clock_div -= 1;
 				
 				if($shift<0 or $shift>360) error("invalid clock shift $shift",32,"CI");
-				if($shift>=180) {$beginvalue = 1; $shift-=180;} else {$beginvalue = 0;}
-				$beginphase = ceil(($shift / 180) * $clock_div);
+				//~ if($shift>=180) {$beginvalue = 1; $shift-=180;} else {$beginvalue = 0;}
+				//~ $beginphase = ceil(($shift / 180) * $clock_div);
+				$beginphase = 0;
+				$beginvalue = 0;
 				
 				$signal_clock_name = $clockname.'_s';
 				$signal_counter_name = $clockname.'_counter_s';
