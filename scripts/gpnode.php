@@ -14,6 +14,8 @@ require_once("gpstudio.php");
 $options = getopt("a:");
 if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a"."\n",1);
 
+if(strrpos($action, "list", -strlen($action)) !== FALSE) setVerbosity(false);
+
 // new project creation
 if($action=="newproject")
 {

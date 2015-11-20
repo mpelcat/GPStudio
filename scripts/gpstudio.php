@@ -31,6 +31,13 @@ else
 
 $warningCount=0;
 $lastCtx='';
+$setVerbosityOption=true;
+
+function setVerbosity($option)
+{
+	global $setVerbosityOption;
+	$setVerbosityOption = $option;
+}
 
 function error($errorText, $errorCode, $errorCtx="")
 {
@@ -50,16 +57,20 @@ function warning($warningText, $warningCode, $warningCtx="")
 	global $txtorange;
 	global $warningCount;
 	global $lastCtx;
+	global $setVerbosityOption;
 	
-	if($lastCtx!='' and $lastCtx!=$warningCtx) echo "\n";
-	
-	echo $txtorange;
-	if(!empty($warningCtx)) echo "[$warningCtx] ";
-	echo "Warning ($warningCode) : ".$warningText."\n";
-	echo $txtrst;
-	
-	$warningCount++;
-	$lastCtx=$warningCtx;
+	if($setVerbosityOption)
+	{
+		if($lastCtx!='' and $lastCtx!=$warningCtx) echo "\n";
+		
+		echo $txtorange;
+		if(!empty($warningCtx)) echo "[$warningCtx] ";
+		echo "Warning ($warningCode) : ".$warningText."\n";
+		echo $txtrst;
+		
+		$warningCount++;
+		$lastCtx=$warningCtx;
+	}
 }
 
 function message($messageText, $messageCtx="")
@@ -67,15 +78,19 @@ function message($messageText, $messageCtx="")
 	global $txtrst;
 	global $txtgreen;
 	global $lastCtx;
+	global $setVerbosityOption;
 	
-	if($lastCtx!='' and $lastCtx!=$messageCtx) echo "\n";
-	
-	echo $txtgreen;
-	if(!empty($messageCtx)) echo "[$messageCtx] ";
-	echo $messageText."\n";
-	echo $txtrst;
-	
-	$lastCtx=$messageCtx;
+	if($setVerbosityOption)
+	{
+		if($lastCtx!='' and $lastCtx!=$messageCtx) echo "\n";
+		
+		echo $txtgreen;
+		if(!empty($messageCtx)) echo "[$messageCtx] ";
+		echo $messageText."\n";
+		echo $txtrst;
+		
+		$lastCtx=$messageCtx;
+	}
 }
 
 function messageVerbosity($messageText, $messageCtx="")

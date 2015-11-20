@@ -510,7 +510,6 @@ class Block
 		// attributes
 		if(isset($this->xml->attributes))
 		{
-			echo "toto";
 			foreach($this->xml->attributes->attribute as $attribute)
 			{
 				$this->addAttribute(new Attribute($attribute));
