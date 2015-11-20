@@ -298,6 +298,7 @@ class FlowInterconnect extends Block
 			{
 				$in_size = $out_connects['size'];
 				$out_size = $out_connects[0]['size'];
+				$out_connect = $out_connects[0];
 			
 				if($in_size == $out_size)
 				{
