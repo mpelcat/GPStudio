@@ -92,20 +92,51 @@ class ParamInterconnect extends Block
 		
 		$content.='#define MASTER_ADDR_WIDTH '.ParamInterconnect::hex($this->addr_bus_width, 8)."\t\t// size of bus master adress in bits"."\n";
 	
+		$used_drivers = array();
 		foreach($node->blocks as $block)
 		{
 			if($block->pi_size_addr_rel>0)
 			{
+				$content.="\n".'// '.str_pad(' '.$block->name.' at '.ParamInterconnect::hex($block->addr_abs,$this->addr_bus_width).' ('.$block->addr_abs.')'.' : '.$block->driver. ' ',71,'=',STR_PAD_BOTH)."\n";
+				if(!empty($block->driver)) $used_drivers[$block->driver]=0;
+				
+				// base
+				$paramname = strtoupper($block->name.'_REG_BASE');
+				$value = $block->addr_abs;
+				$content.="#define ".str_pad($paramname,35)."\t".str_pad(ParamInterconnect::hex($value, $this->addr_bus_width),10);
+				$content.="// (".$value.") ";
+				if(!empty($block->desc)) $content.=$block->desc;
+				$content.="\n\n";
+				
+				// generics
 				$count=0;
+				foreach($block->params as $param)
+				{
+					if($param->hard==true)
+					{
+						if($count++==0) $content.="//----- generics \n";
+						$value = $param->value;
+						$paramname = strtoupper($block->name.'_'.$param->name.'_GENERIC_VALUE');
+						$content.="#define ".str_pad($paramname,35)."\t".str_pad($value,10);
+						$content.="// (".$value.") ";
+						if(!empty($block->desc)) $content.=$block->desc;
+						$content.="\n";
+					}
+				}
+				if($count>0) $content.="\n";
+				
+				// params
+				$content.="//----- params \n";
 				foreach($block->params as $param)
 				{
 					if($param->hard==false)
 					{
-						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' at '.ParamInterconnect::hex($block->addr_abs,32).' ('.$block->driver.')'.' ',71,'-',STR_PAD_BOTH)."\n";
-						$paramname = strtoupper($block->name.'_'.$param->name.'_REG_ADDR');
-						$value = $block->addr_abs+$param->regaddr;
-						$content.="#define ".str_pad($paramname,25)."\t".ParamInterconnect::hex($value,$this->addr_bus_width);
-						if(!empty($param->desc)) $content.="        // ".$param->desc;
+						// offset
+						$paramname = strtoupper($block->name.'_'.$param->name.'_REG_OFFSET');
+						$value = $param->regaddr;
+						$content.="#define ".str_pad($paramname,35)."\t".str_pad(ParamInterconnect::hex($value,$this->addr_bus_width),10);
+						$content.="// (".$value.") ";
+						if(!empty($block->desc)) $content.=$block->desc;
 						$content.="\n";
 					
 						foreach($param->parambitfields as $parambitfield)
@@ -135,6 +166,14 @@ class ParamInterconnect extends Block
 					}
 				}
 			}
+		}
+		
+		// used drivers
+		$content.="\n";
+		$content.="// ".str_pad(' used drivers ',71,'=',STR_PAD_BOTH)."\n";
+		foreach($used_drivers as $driver => $val)
+		{
+			$content.="#define ".strtoupper($driver)." 1"."\n";
 		}
 	
 		// save file if it's different
