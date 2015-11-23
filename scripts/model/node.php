@@ -100,13 +100,13 @@ class Node
 							{
 								if(isset($childPropertyXml['name']) and isset($childPropertyXml['value']))
 								{
-									if($concerned_property=$io->getPropertyPath($property['name'].'.'.(string)$childPropertyXml['name']))
+									if($concerned_property=$processBlock->getPropertyPath($property['name'].'.'.(string)$childPropertyXml['name']))
 									{
 										$concerned_property->value = $childPropertyXml['value'];
 									}
 									else
 									{
-										warning('property '.$property['name'].'.'.$childPropertyXml['name']." does'nt exists",16,$io->name);
+										warning('property '.$property['name'].'.'.$childPropertyXml['name']." does'nt exists",16,$processBlock->name);
 									}
 								}
 							}
