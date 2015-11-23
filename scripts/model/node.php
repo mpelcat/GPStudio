@@ -43,7 +43,7 @@ class Node
 	{
 		if (!file_exists($node_file)) error("File $node_file doesn't exist",5,"Node");
 		if (!($this->xml = simplexml_load_file($node_file))) error("Error when parsing $node_file",5,"Node");
-		$this->node_file = $node_file;
+		$this->node_file = realpath($node_file);
 	
 		$this->name = (string)$this->xml['name'];
 		

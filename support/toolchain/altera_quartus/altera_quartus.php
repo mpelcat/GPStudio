@@ -286,8 +286,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= ""."\r\n";
 		$content .= "all: generate compile send view"."\r\n";
 		$content .= ""."\r\n";
-		$content .= "generate: *.node"."\r\n";
-		$content .= "	php \"$(GPS_LIB)generate_node.php\" $(PROJECT).node \${OPT}"."\r\n";
+		$content .= "generate: ".$node->node_file."\r\n";
+		$content .= "	php \"$(GPS_LIB)generate_node.php\" ".$node->node_file." \${OPT}"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "compile:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $(PROJECT).qpf"."\r\n";
