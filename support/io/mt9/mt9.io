@@ -36,7 +36,11 @@
 		<port name="sclk_o" type="out" size="1" desc=""/>
 	</ports>
 	<params>
-		<param name="ENABLE" regaddr="0" propertymap="enable.value"/>
+		<param name="ENABLE" regaddr="0">
+			<bitfields>
+				<bitfield name="enable" type="int" bitfield="0" default="0" propertymap="enable.value" desc="Enable bit"/>
+			</bitfields>
+		</param>
 		<param name="FLOWLENGHT" regaddr="1" propertymap="(roi1.w.value*roi1.h.value)/(binning.value ? 4 : 1)"/>
 		<param name="XSTART" regaddr="2" propertymap="roi1.x.value"/>
 		<param name="YSTART" regaddr="3" propertymap="roi1.y.value"/>

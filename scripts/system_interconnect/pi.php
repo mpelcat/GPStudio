@@ -99,8 +99,8 @@ class ParamInterconnect extends Block
 				{
 					if($param->hard==false)
 					{
-						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' ',55,'-',STR_PAD_BOTH)."\n";
-						$paramname = strtoupper($block->name.'_'.$param->name);
+						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' at '.ParamInterconnect::hex($block->addr_abs,32).' ',55,'-',STR_PAD_BOTH)."\n";
+						$paramname = strtoupper($block->name.'_'.$param->name.'_REG_ADDR');
 						$value = $block->addr_abs+$param->regaddr;
 						$content.="#define ".str_pad($paramname,25)."\t".ParamInterconnect::hex($value,$this->addr_bus_width);
 						if(!empty($param->desc)) $content.="\t// ".$param->desc;
