@@ -89,6 +89,8 @@ class ParamInterconnect extends Block
 	function create_header_file($node, $filename)
 	{
 		$content='';
+		
+		$content.='#define MASTER_ADDR_WIDTH '.ParamInterconnect::hex($this->addr_bus_width, 8)."\t\t// size of bus master adress in bits"."\n";
 	
 		foreach($node->blocks as $block)
 		{
@@ -99,11 +101,11 @@ class ParamInterconnect extends Block
 				{
 					if($param->hard==false)
 					{
-						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' at '.ParamInterconnect::hex($block->addr_abs,32).' ',55,'-',STR_PAD_BOTH)."\n";
+						if($count++==0) $content.="\n".'// '.str_pad(' '.$block->name.' at '.ParamInterconnect::hex($block->addr_abs,32).' ('.$block->driver.')'.' ',71,'-',STR_PAD_BOTH)."\n";
 						$paramname = strtoupper($block->name.'_'.$param->name.'_REG_ADDR');
 						$value = $block->addr_abs+$param->regaddr;
 						$content.="#define ".str_pad($paramname,25)."\t".ParamInterconnect::hex($value,$this->addr_bus_width);
-						if(!empty($param->desc)) $content.="\t// ".$param->desc;
+						if(!empty($param->desc)) $content.="        // ".$param->desc;
 						$content.="\n";
 					
 						foreach($param->parambitfields as $parambitfield)
