@@ -240,7 +240,7 @@ class VHDL_generator
 				}
 				else
 				{
-					if(is_int($port->size))
+					if(is_numeric($port->size))
 					{
 						$content.='		'.str_pad($port->name,$maxLenght,' ').' : '.$port->type.' std_logic_vector('.($port->size-1).' downto 0)';
 					}

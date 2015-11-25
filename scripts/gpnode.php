@@ -186,9 +186,10 @@ switch($action)
 	// =========================== flow connections commands =========================== 
 	case "connect":
 	case "unconnect":
-		$options = getopt("a:f:t:");
+		$options = getopt("a:f:t:s:");
 		if(array_key_exists('f',$options)) $from = $options['f'];	else error("You should specify a source flow with -f"."\n",1);
 		if(array_key_exists('t',$options)) $to = $options['t'];		else error("You should specify a sink flow with -t"."\n",1);
+		if(array_key_exists('s',$options)) $shift = $options['s'];	else $shift = 'msb';
 		
 		$fromRes = explode(".", $from, 2);
 		if(count($fromRes)!=2) error("Malformed expression from flow -f."."\n",1);
@@ -450,7 +451,7 @@ switch($action)
 	case "connect":
 		$fi = $node->getBlock("fi");
 		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)!=NULL) error("This flow name connexion ever exists."."\n",1);
-		$fi->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name));
+		$fi->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name, $shift));
 		break;
 		
 	case "unconnect":

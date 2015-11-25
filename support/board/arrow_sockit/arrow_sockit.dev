@@ -5,7 +5,7 @@
 		<text x="35" y="53">Arrow Sockit</text>
 		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
 	</svg>
-	<toolchain name="altera_quartus" type="EP5CSXFC6D6F31">
+	<toolchain name="altera_quartus" type="5CSXFC6D6F31C6">
 		<attributes>
 			<attribute name="FAMILY" value="Cyclone V" type="global"/>
 			<attribute name="DEVICE" value="5CSXFC6D6F31C6" type="global"/>
@@ -51,23 +51,26 @@
 	</global>
 	<ios>
 		<io name="led" type="him_output" driver="leds" optional="true" description="4 blue leds">
+			<params>
+				<param name="LEDCOUNT" value="4"/>
+			</params>
 			<pins>
-				<pin name="PIN_AF10" mapto="led0">
+				<pin name="PIN_AF10" mapto="o[0]">
 					<attributes>
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>
 				</pin>
-				<pin name="PIN_AD10" mapto="led1">
+				<pin name="PIN_AD10" mapto="o[1]">
 					<attributes>
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>
 				</pin>
-				<pin name="PIN_AE11" mapto="led2">
+				<pin name="PIN_AE11" mapto="o[2]">
 					<attributes>
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>
 				</pin>
-				<pin name="PIN_AD7" mapto="led3">
+				<pin name="PIN_AD7" mapto="o[3]">
 					<attributes>
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>

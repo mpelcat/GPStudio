@@ -44,8 +44,11 @@
 	</global>
 	<ios>
 		<io name="led" type="visual_output" driver="leds" optional="true" description="Top blue led">
+			<params>
+				<param name="LEDCOUNT" value="1"/>
+			</params>
 			<pins>
-				<pin name="PIN_AE6" mapto="led_o">
+				<pin name="PIN_AE6" mapto="o[0]">
 					<attributes>
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>
