@@ -5,14 +5,15 @@ library std;
 
 entity leds is
 	generic (
-		CLK_PROC_FREQ : integer := 48000000
+		CLK_PROC_FREQ : integer := 48000000;
+		LEDCOUNT : integer := 1
 	);
 	port (
 		clk_proc : in std_logic;
 		reset_n : in std_logic;
 
 		--------------------- external ports --------------------
-		led_o : out std_logic;
+		o : out std_logic_vector(LEDCOUNT-1 downto 0);
 
 		--======================= Slaves ========================
 
@@ -27,21 +28,22 @@ end leds;
 
 architecture rtl of leds is
 
-	constant ENABLE_REG_ADDR			: natural := 0;
-	signal led_reg			: std_logic;
+	constant ENABLE_REG_ADDR	: natural := 0;
+	
+	signal led_reg				: std_logic_vector(LEDCOUNT-1 downto 0);
 	
 begin
 process (clk_proc, reset_n)
 
 begin
 	if (reset_n='0') then
-		led_reg <= '0';
+		led_reg <= (others => '0');
 	elsif (clk_proc'event and clk_proc='1') then 
 
 		if(wr_i='1') then
 			case addr_rel_i is
 				when std_logic_vector(to_unsigned(ENABLE_REG_ADDR, 2))=>
-					led_reg <= datawr_i(0);
+					led_reg <= datawr_i(LEDCOUNT-1 downto 0);
 				when others=>
 			end case;
 
@@ -49,6 +51,6 @@ begin
 	end if; 
 end process;
 
-	led_o <= led_reg;
+	o <= led_reg;
 
 end rtl;

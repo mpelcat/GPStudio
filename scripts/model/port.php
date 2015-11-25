@@ -42,7 +42,7 @@ class Port
 	{
 		$this->name		= (string)$xml['name'];
 		$this->type		= (string)$xml['type'];
-		$this->size		= (int)$xml['size'];
+		$this->size		= (string)$xml['size'];
 		$this->desc		= (string)$xml['desc'];
 	}
 	

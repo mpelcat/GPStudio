@@ -77,7 +77,14 @@ class HDL_toolchain extends Toolchain
 				$generator->addPortComment(str_pad(' '.$block->name.' flow ',55,'-',STR_PAD_BOTH));
 				foreach($block->ext_ports as $port)
 				{
-					$generator->addPort($block->name.'_'.$port->name, $port->size, $port->type);
+					$size = $port->size;
+					$type="";
+					if(!is_numeric($size))
+					{
+						$size=(int)$block->getParam($size)->value;
+						$type="std_logic_vector";
+					}
+					$generator->addPort($block->name.'_'.$port->name, $size, $port->type, $type);
 				}
 			}
 		}
