@@ -55,6 +55,7 @@ architecture structural of pipliner_3x3 is
 	
 	signal all_valid,fvs,dvs	: std_logic;
 	signal enable_reg			: std_logic;	
+	signal reset_st,reset_s		: std_logic;	
 	
 	component pipline_gen
 		generic (
@@ -73,8 +74,21 @@ architecture structural of pipliner_3x3 is
 	
 	begin
 	
-	all_valid <= in_dv and in_fv and enable_i;
 
+	
+	enable_proc	:	process(enable_i,in_fv)
+	begin
+		if	(enable_i = '0') then	
+			reset_st	<= '0';
+		elsif(rising_edge(in_fv)) then
+			reset_st	<= '1';
+		end if;
+	end process;
+
+
+	all_valid <= in_dv and in_fv;
+	reset_s	  <=	reset_st and reset_n;
+	
 	data_pipline0 : pipline_gen
 		generic map (
 	    PIPLINE_LENGHT	=>	LINE_WIDTH_MAX-1,
@@ -82,7 +96,7 @@ architecture structural of pipliner_3x3 is
 		)
     	port map (
 		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
+		reset_n		=>	reset_s,
 		e			=>  all_valid,
 		in_data		=>	in_data,
 		i0			=>	p22,
@@ -98,8 +112,8 @@ architecture structural of pipliner_3x3 is
 		)
     	port map (
 		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
-		e			=>   	all_valid,		
+		reset_n		=>	reset_s,
+		e			=>   all_valid,		
 		in_data		=>	line0_pix_out,
 		i0			=>	p12,
 		i1			=>	p11,
@@ -114,7 +128,7 @@ architecture structural of pipliner_3x3 is
 		)
     	port map (
 		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
+		reset_n		=>	reset_s,
 		e			=>	all_valid,
 		in_data		=>	line1_pix_out,
 		i0			=>	p02,
@@ -129,7 +143,7 @@ architecture structural of pipliner_3x3 is
 		)
 		port map (
 		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
+		reset_n		=>	reset_s,
 		e			=>  all_valid,		
 		in_data(0)	=>	in_fv,
 		out_data(0)	=>	fvs
@@ -142,7 +156,7 @@ architecture structural of pipliner_3x3 is
 		)
 		port map (
 		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
+		reset_n		=>	reset_s,
 		e			=>	all_valid,		
 		in_data(0)	=>	in_dv,
 		out_data(0)	=>	dvs
