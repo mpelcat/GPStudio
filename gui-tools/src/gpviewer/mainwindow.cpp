@@ -203,6 +203,8 @@ void MainWindow::viewFlow(int flow)
         h/=2;
     }
 
+    if(flow>=_viewers.size()) return;
+
     if(flow==0)
     {
         QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
@@ -308,19 +310,11 @@ void MainWindow::updateWindowsMenu()
         QMdiSubWindow *child = windows.at(i);
 
         QString text;
-        if (i < 9)
-        {
-            text = tr("&%1 %2").arg(i + 1).arg(child->windowTitle());
-        }
-        else
-        {
-            text = tr("%1 %2").arg(i + 1).arg(child->windowTitle());
-        }
+        if (i < 9) text = tr("&%1 %2").arg(i + 1).arg(child->windowTitle());
+        else text = tr("%1 %2").arg(i + 1).arg(child->windowTitle());
         QAction *action  = _winMenu->addAction(text);
         action->setCheckable(true);
         action->setChecked(child == ui->mdiArea->activeSubWindow());
-        //connect(action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-        //windowMapper->setMapping(action, windows.at(i));
     }
 }
 
@@ -335,7 +329,8 @@ void MainWindow::setupViewers(int count)
         viewer->setWindowTitle(QString("Flow %1").arg(i));
         viewer->setFlowNumber(i);
         _viewers.insert(i, viewer);
-        ui->mdiArea->addSubWindow(viewer)->show();
+        QMdiSubWindow * windows = ui->mdiArea->addSubWindow(viewer);
+        windows->show();
     }
 
     ui->mdiArea->tileSubWindows();
