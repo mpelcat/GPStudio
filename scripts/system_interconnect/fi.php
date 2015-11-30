@@ -209,7 +209,7 @@ class FlowInterconnect extends Block
 		$content.='digraph G {'."\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->name!="fi" and $block->name!="pi" and $block->name!="ci" and $block->name!="ri")
+			if($block->name!="fi" and count($block->flows)>0)
 			{
 				$ins=array();
 				$outs=array();
@@ -251,7 +251,14 @@ class FlowInterconnect extends Block
 					$to=$in_connect;
 					$to_block=substr($to,0,strrpos($to,'_',-1));
 					$to_flow=substr($to,strrpos($to,'_',-1)+1);
-					$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow.';'."\n";
+					if($out_connects['size']!=$out_connect['size'])
+					{
+						$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow."[ label=\"" . $out_connect['order'] . "\" ]".';'."\n";
+					}
+					else
+					{
+						$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow.';'."\n";
+					}
 				}
 			}
 		}
