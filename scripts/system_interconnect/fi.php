@@ -5,8 +5,14 @@ require_once("flowconnect.php");
 
 require_once("toolchain/hdl/vhdl_generator.php");
 
+require_once("treeconnect.php");
+
 class FlowInterconnect extends Block
 {
+	/**
+	* Map of computed connections, indexed by a key (blockName.flowName) with a TreeConnect object intance as value which represent the tree of flow connection
+	* @var array|TreeConnect $tree_connects
+	*/
 	public $tree_connects;
 
 	/**
@@ -135,54 +141,56 @@ class FlowInterconnect extends Block
 			}
 			
 			// create tree of connexions
-			if(!array_key_exists($toblock->name.'_'.$toflow->name, $tree_connects))
+			if(!array_key_exists($toblock->name.'.'.$toflow->name, $tree_connects))
 			{
-				$tree_connects[$toblock->name.'_'.$toflow->name] = array();
-				$tree_connects[$toblock->name.'_'.$toflow->name]['size'] = $toflow->size;
-				$tree_connects[$toblock->name.'_'.$toflow->name]['order'] = $connect->order;
+				$tree_connects[$toblock->name.'.'.$toflow->name] = new TreeConnect($toblock->name, $toflow->name, $toflow->size, $connect->order);
 			}
-			array_push($tree_connects[$toblock->name.'_'.$toflow->name], array('name' => $fromblock->name.'_'.$fromflow->name, 'size' => $fromflow->size, 'order' => $connect->order));
+			array_push($tree_connects[$toblock->name.'.'.$toflow->name]->treeitems, new TreeItem($fromblock->name, $fromflow->name, $fromflow->size, $connect->order));
 		}
 		
-		/*echo "\n" . '// =============== Flow connections ===============' . "\n";
-		print_r($tree_connects);*/
 		$this->tree_connects = $tree_connects;
 		
 		// create params for each mux
 		$count_param=0;
-		foreach($this->tree_connects as $in_connect => $out_connects)
+		foreach($this->tree_connects as $treeconnect)
 		{
-			if(count($out_connects)-2>1)
+			$in_connect_name = $treeconnect->toblock.'_'.$treeconnect->toflow;
+			
+			if(count($treeconnect->treeitems)>1)
 			{
+				$property = new Property();
+				$property->name = $treeconnect->toblock.'_'.$treeconnect->toflow;
+				$property->type = 'enum';
+				
+				$treeconnect->muxname = $property->name;
+				
 				$param = new Param();
-				$param->name = $in_connect;
+				$param->name = $property->name.'_param';
 				$param->regaddr = $count_param;
 				$param->default = 0;
 				$param->hard = false;
-				$param->desc = 'Mux control for '.$in_connect.' flow input';
+				$param->desc = 'Mux control for '.$treeconnect->toblock.'.'.$treeconnect->toflow.' flow input';
 				
 				$parambitfield = new ParamBitfield();
 				$parambitfield->name = 'muxdir';
 				$parambitfield->default = 0;
-				$parambitfield->propertymap = $in_connect.".bits";
+				$parambitfield->propertymap = $property->name.".bits";
 				
 				$this->addParam($param);
 				
-				$property = new Property();
-				$property->name = $in_connect;
-				$property->type = 'enum';
-				
-				foreach($out_connects as $key => $out_connect)
+				$muxvalue=0;
+				foreach($treeconnect->treeitems as $treeitem)
 				{
-					if(is_numeric($key))
-					{
-						$propertyenum = new PropertyEnum();
-						$propertyenum->name = $out_connect['name'];
-						$propertyenum->value = $key;
-						$propertyenum->desc = $out_connect['name'].' as input of '.$in_connect;
-						
-						array_push($property->propertyenums, $propertyenum);
-					}
+					$propertyenum = new PropertyEnum();
+					$propertyenum->name = $treeitem->fromblock.'.'.$treeitem->fromflow;
+					$propertyenum->caption = $propertyenum->name;
+					$propertyenum->value = $muxvalue;
+					$propertyenum->desc = $treeitem->fromblock.'.'.$treeitem->fromflow.' as input of '.$in_connect_name;
+					
+					$treeitem->muxvalue = $muxvalue;
+					
+					array_push($property->propertyenums, $propertyenum);
+					$muxvalue++;
 				}
 				
 				$bitcountenum = ceil(log(count($property->propertyenums),2));
@@ -239,26 +247,21 @@ class FlowInterconnect extends Block
 			}
 		}
 	
-		foreach($this->tree_connects as $in_connect => $out_connects)
+		foreach($this->tree_connects as $treeconnect)
 		{
-			foreach($out_connects as $key => $out_connect)
+			foreach($treeconnect->treeitems as $treeitem)
 			{
-				if(is_numeric($key))
+				$from_block=$treeitem->fromblock;
+				$from_flow=$treeitem->fromflow;
+				$to_block=$treeconnect->toblock;
+				$to_flow=$treeconnect->toflow;
+				if($treeconnect->size != $treeitem->size)
 				{
-					$from=$out_connect['name'];
-					$from_block=substr($from,0,strrpos($from,'_',-1));
-					$from_flow=substr($from,strrpos($from,'_',-1)+1);
-					$to=$in_connect;
-					$to_block=substr($to,0,strrpos($to,'_',-1));
-					$to_flow=substr($to,strrpos($to,'_',-1)+1);
-					if($out_connects['size']!=$out_connect['size'])
-					{
-						$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow."[ label=\"" . $out_connect['order'] . "\" ]".';'."\n";
-					}
-					else
-					{
-						$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow.';'."\n";
-					}
+					$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow."[ label=\"" . $treeitem->order . "\" ]".';'."\n";
+				}
+				else
+				{
+					$content.="\t".'"'.$from_block.'":'.$from_flow.' -> "'.$to_block.'":'.$to_flow.';'."\n";
 				}
 			}
 		}
@@ -295,116 +298,119 @@ class FlowInterconnect extends Block
 	
 		// create mux foreach input flow and reg
 		$count_reg=0;
-		foreach($fi->tree_connects as $in_connect => $out_connects)
+		foreach($fi->tree_connects as $treeconnect)
 		{
-			if(count($out_connects)-2==0)
+			$in_size = $treeconnect->size;
+			$in_order = $treeconnect->order;
+			$in_connect_name = $treeconnect->toblock.'_'.$treeconnect->toflow;
+			
+			$code.='	-- '.$in_connect_name.' connection'."\n";
+			if(count($treeconnect->treeitems)==0)			// no connection
 			{
 				// nothing to do
 			}
-			elseif(count($out_connects)-2==1)
+			elseif(count($treeconnect->treeitems)==1)		// one out to one in ==> direct connection
 			{
-				$in_size = $out_connects['size'];
-				$out_size = $out_connects[0]['size'];
-				$out_connect = $out_connects[0];
+				$out_order = $treeconnect->treeitems[0]->order;
+				$out_size = $treeconnect->treeitems[0]->size;
+				$out_connect_name = $treeconnect->treeitems[0]->fromblock.'_'.$treeconnect->treeitems[0]->fromflow;
 			
 				if($in_size == $out_size)
 				{
-					$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data;'."\n";
+					$code.='	'.$in_connect_name.'_data <= '.$out_connect_name.'_data;'."\n";
 				}
 				elseif($in_size > $out_size)
 				{
 					$padding_size = $in_size - $out_size;
 					$padding = '"' . str_pad('', $padding_size, '0') . '"';
-					if($out_connect['order']=='msb')
+					if($out_order=='msb')
 					{
-						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data & '.$padding.';'."\n";
+						$code.='	'.$in_connect_name.'_data <= '.$out_connect_name.'_data & '.$padding.';'."\n";
 					}
 					else
 					{
-						$code.='	'.$in_connect.'_data <= '.$padding.' & '.$out_connects[0]['name'].'_data;'."\n";
+						$code.='	'.$in_connect_name.'_data <= '.$padding.' & '.$out_connect_name.'_data;'."\n";
 					}
 				}
 				elseif($in_size < $out_size)
 				{
 					$padding_size = $out_size - $in_size;
-					if($out_connect['order']=='msb')
+					if($out_order=='msb')
 					{
-						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
+						$code.='	'.$in_connect_name.'_data <= '.$out_connect_name.'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
 					}
 					else
 					{
-						$code.='	'.$in_connect.'_data <= '.$out_connects[0]['name'].'_data('.($padding_size-1).' downto 0);'."\n";
+						$code.='	'.$in_connect_name.'_data <= '.$out_connect_name.'_data('.($padding_size-1).' downto 0);'."\n";
 					}
-					warning("Size of flow ".$out_connects[0]['name']." ($out_size) > size of flow ".$in_connect." ($in_size), ".$out_connects[0]['order']." connection",10,"FI");
+					warning("Size of flow ".$out_connect_name." ($out_size) > size of flow ".$in_connect_name." ($in_size), ".$out_order." connection",10,"FI");
 				}
-				$code.='	'.$in_connect.'_fv <=  '.$out_connects[0]['name'].'_fv;'."\n";
-				$code.='	'.$in_connect.'_dv <=  '.$out_connects[0]['name'].'_dv;'."\n"."\n";
+				$code.='	'.$in_connect_name.'_fv <=  '.$out_connect_name.'_fv;'."\n";
+				$code.='	'.$in_connect_name.'_dv <=  '.$out_connect_name.'_dv;'."\n"."\n";
 			}
-			else
+			else 									// many outputs to one in ==> mux connection
 			{
-				$name_reg = 'mux_'.$in_connect.'_reg';
+				$name_reg = 'mux_'.$in_connect_name.'_reg';
 				$generator->addSignal($name_reg, 32, 'std_logic_vector');
 			
-				$code.='	mux_'.$in_connect.' : process (clk_proc, reset)'."\n";
+				$code.='	mux_'.$in_connect_name.' : process (clk_proc, reset)'."\n";
 				$code.='	begin'."\n";
 				$code.='		if(reset=\'0\') then'."\n";
-				$code.='			'.$in_connect.'_data <= (others => \'0\');'."\n";
-				$code.='			'.$in_connect.'_fv <= \'0\';'."\n";
-				$code.='			'.$in_connect.'_dv <= \'0\';'."\n";
+				$code.='			'.$in_connect_name.'_data <= (others => \'0\');'."\n";
+				$code.='			'.$in_connect_name.'_fv <= \'0\';'."\n";
+				$code.='			'.$in_connect_name.'_dv <= \'0\';'."\n";
 			
 				$code.='		elsif(rising_edge(clk_proc)) then'."\n";
 				$code.='			case '.$name_reg.' is'."\n";
 			
 				$value_mux=0;
-				foreach($out_connects as $key => $out_connect)
+				foreach($treeconnect->treeitems as $treeitem)
 				{
-					if(is_numeric($key))
+					$code.='				when std_logic_vector(to_unsigned('.$value_mux.', 32))=>'."\n";
+				
+					$out_order = $treeitem->order;
+					$out_size = $treeitem->size;
+					$out_connect_name = $treeitem->fromblock.'_'.$treeitem->fromflow;
+		
+					if($in_size == $out_size)
 					{
-						$code.='				when std_logic_vector(to_unsigned('.$value_mux.', 32))=>'."\n";
-					
-						$in_size = $out_connects['size'];
-						$out_size = $out_connect['size'];
-			
-						if($in_size == $out_size)
-						{
-							$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data;'."\n";
-						}
-						elseif($in_size > $out_size)
-						{
-							$padding_size = $in_size - $out_size;
-							$padding = '"' . str_pad('', $padding_size, '0') . '"';
-							if($out_connect['order']=='msb')
-							{
-								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data & '.$padding.';'."\n";
-							}
-							else
-							{
-								$code.='					'.$in_connect.'_data <= '.$padding.' & '.$out_connect['name'].'_data;'."\n";
-							}
-						}
-						elseif($in_size < $out_size)
-						{
-							$padding_size = $out_size - $in_size;
-							if($out_connect['order']=='msb')
-							{
-								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
-							}
-							else
-							{
-								$code.='					'.$in_connect.'_data <= '.$out_connect['name'].'_data('.($padding_size-1).' downto 0);'."\n";
-							}
-							warning("Size of flow ".$out_connect['name']." ($out_size) > ".$in_connect." ($in_size), ".$out_connect['order']." connection",10,"FI");
-						}
-					
-						$code.='					'.$in_connect.'_fv <= '.$out_connect['name'].'_fv;'."\n";
-						$code.='					'.$in_connect.'_dv <= '.$out_connect['name'].'_dv;'."\n";
-						$value_mux++;
+						$code.='					'.$in_connect_name.'_data <= '.$out_connect_name.'_data;'."\n";
 					}
+					elseif($in_size > $out_size)
+					{
+						$padding_size = $in_size - $out_size;
+						$padding = '"' . str_pad('', $padding_size, '0') . '"';
+						if($out_order=='msb')
+						{
+							$code.='					'.$in_connect_name.'_data <= '.$out_connect_name.'_data & '.$padding.';'."\n";
+						}
+						else
+						{
+							$code.='					'.$in_connect_name.'_data <= '.$padding.' & '.$out_connect_name.'_data;'."\n";
+						}
+					}
+					elseif($in_size < $out_size)
+					{
+						$padding_size = $out_size - $in_size;
+						if($out_order=='msb')
+						{
+							$code.='					'.$in_connect_name.'_data <= '.$out_connect_name.'_data('.($out_size-1).' downto '.$padding_size.');'."\n";
+						}
+						else
+						{
+							$code.='					'.$in_connect_name.'_data <= '.$out_connect_name.'_data('.($padding_size-1).' downto 0);'."\n";
+						}
+						warning("Size of flow ".$out_connect_name." ($out_size) > ".$in_connect_name." ($in_size), ".$out_order." connection",10,"FI");
+					}
+				
+					$code.='					'.$in_connect_name.'_fv <= '.$out_connect_name.'_fv;'."\n";
+					$code.='					'.$in_connect_name.'_dv <= '.$out_connect_name.'_dv;'."\n";
+					$value_mux++;
 				}
 				$code.='				when others=>'."\n";
-				$code.='					'.$in_connect.'_data <= (others => \'0\');'."\n";
-				$code.='					'.$in_connect.'_fv <= \'0\';'."\n";
-				$code.='					'.$in_connect.'_dv <= \'0\';'."\n";
+				$code.='					'.$in_connect_name.'_data <= (others => \'0\');'."\n";
+				$code.='					'.$in_connect_name.'_fv <= \'0\';'."\n";
+				$code.='					'.$in_connect_name.'_dv <= \'0\';'."\n";
 				$code.='			end case;'."\n";
 				$code.='		end if;'."\n";
 				$code.='	end process;'."\n";
@@ -412,13 +418,17 @@ class FlowInterconnect extends Block
 			}
 		}
 	
+		// register management
 		$count_reg=0;
-		foreach($fi->tree_connects as $in_connect => $out_connects)
+		foreach($fi->tree_connects as $treeconnect)
 		{
-			if(count($out_connects)-2>1)
+			$in_connect_name = $treeconnect->toblock.'_'.$treeconnect->toflow;
+			
+			if(count($treeconnect->treeitems)>1)
 			{
-				$name_reg = 'mux_'.$in_connect.'_reg';
-				$code.='	slave_'.$in_connect.' : process (clk_proc, reset)'."\n";
+				$code.='	-- '.$in_connect_name.' register'."\n";
+				$name_reg = 'mux_'.$in_connect_name.'_reg';
+				$code.='	slave_'.$in_connect_name.' : process (clk_proc, reset)'."\n";
 				$code.='	begin'."\n";
 				$code.='		if(reset=\'0\') then'."\n";
 				$code.='			'.$name_reg.' <= (others => \'0\');'."\n";	// TODO modify default value
@@ -472,6 +482,14 @@ class FlowInterconnect extends Block
 				$xml_flow_connects->appendChild($flow_connect->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_flow_connects);
+			
+			// tree_connects
+			$xml_tree_connects = $xml->createElement("tree_connects");
+			foreach($this->tree_connects as $treeconnect)
+			{
+				$xml_tree_connects->appendChild($treeconnect->getXmlElement($xml, $format));
+			}
+			$xml_element->appendChild($xml_tree_connects);
 			
 			return $xml_element;
 		}

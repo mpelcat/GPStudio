@@ -63,7 +63,10 @@ HEADERS += gpstudio_lib_common.h \
     datawrapper/harriswrapper.h \
     gpnodeproject.h \
     flowmanager.h \
-    flowconnection.h
+    flowconnection.h \
+    model/iocom.h \
+    model/comconnect.h \
+    model/flowconnect.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -104,7 +107,10 @@ SOURCES += \
     datawrapper/harriswrapper.cpp \
     gpnodeproject.cpp \
     flowmanager.cpp \
-    flowconnection.cpp
+    flowconnection.cpp \
+    model/iocom.cpp \
+    model/comconnect.cpp \
+    model/flowconnect.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
