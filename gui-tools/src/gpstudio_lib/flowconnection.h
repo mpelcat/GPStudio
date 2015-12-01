@@ -4,6 +4,7 @@
 #include "gpstudio_lib_common.h"
 
 #include "QWidget"
+#include "model/flow.h"
 #include "datawrapper/datawrapper.h"
 
 class GPSTUDIO_LIB_EXPORT FlowConnection
@@ -14,6 +15,9 @@ public:
     int flowId() const;
     void setFlowId(int flowId);
 
+    Flow *flow() const;
+    void setFlow(Flow *flow);
+
     DataWrapper *wrapper() const;
     void setWrapper(DataWrapper *wrapper);
 
@@ -22,6 +26,7 @@ public:
 
 private:
     int _flowId;
+    Flow *_flow;
     DataWrapper *_wrapper;
     QWidget *_flowViewer;
 };

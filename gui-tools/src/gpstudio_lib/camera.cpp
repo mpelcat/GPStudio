@@ -40,7 +40,7 @@ void Camera::setNode(Node *node)
     foreach (Block *block, _node->blocks())
     {
         Property *propBlock = new Property(block->name());
-        propBlock->setCaption(block->name());
+        propBlock->setCaption(block->name() + " (" + block->driver() + ")");
         propBlock->setType(Property::Group);
         foreach (BlockProperty *property, block->properties())
         {
@@ -48,6 +48,7 @@ void Camera::setNode(Node *node)
             propBlock->addSubProperty(paramprop);
         }
         _paramsBlocks->addSubProperty(propBlock);
+        _engine.addProperty(propBlock);
 
         foreach (Param *param, block->params())
         {
@@ -59,10 +60,15 @@ void Camera::setNode(Node *node)
         }
     }
 
-    foreach (Property *property, _paramsBlocks->subProperties().properties())
+    /*foreach (Property *property, _paramsBlocks->subProperties().properties())
     {
-        _engine.addProperty(property);
-    }
+        const QStringList &deps = cameraRegister->dependsProperties();
+        foreach (QString propName, deps)
+        {
+            Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
+            if(prop) connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
+        }
+    }*/
 
     int maxAddr=0;
     QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
@@ -166,4 +172,6 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
     {
         _registers.evalAll();
     }
+
+    connect(_com, SIGNAL(flowReadyToRead(int)), _flowManager, SLOT(processFlow(int)));
 }

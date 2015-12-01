@@ -42,7 +42,6 @@ void ProcessesView::dropEvent(QDropEvent *event)
     ProcessItem *proc = new ProcessItem(_lib->process(blockType));
     proc->setPos(mapToScene(event->pos()));
     proc->setName(blockType);
-    qDebug()<<proc->name();
     _scene->addItem(proc);
 }
 
@@ -59,7 +58,6 @@ void ProcessesView::mousePressEvent(QMouseEvent *event)
             _lineConector = new QGraphicsLineItem();
             _lineConector->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
             scene()->addItem(_lineConector);
-            qDebug()<<processItem->name();
         }
     }
 }
@@ -71,7 +69,7 @@ void ProcessesView::mouseMoveEvent(QMouseEvent *event)
     if(_startConnectItem)
     {
         QLineF line = _lineConector->line();
-        line.setP2(mapToScene(event->pos()));
+        line.setP2(mapToScene(event->pos()-QPoint(-5,-5)));
         _lineConector->setLine(line);
     }
 }

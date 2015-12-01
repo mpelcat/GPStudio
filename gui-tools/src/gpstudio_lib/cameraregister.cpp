@@ -94,16 +94,7 @@ void CameraRegister::setPropertyMap(const QString &propertyMap)
 
 QStringList CameraRegister::dependsProperties() const
 {
-    QRegExp exp("([a-zA-Z0-9_]+\\.?)+");
-    int pos=0;
-    QStringList props;
-    while((pos = exp.indexIn(_propertyMap, pos)) != -1)
-    {
-        pos += exp.matchedLength();
-        props.append(exp.cap(0));
-    }
-    props.removeDuplicates();
-    return props;
+    return ScriptEngine::dependsProperties(_propertyMap);
 }
 
 Camera *CameraRegister::camera() const

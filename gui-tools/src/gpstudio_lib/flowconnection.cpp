@@ -14,6 +14,16 @@ void FlowConnection::setFlowId(int flowId)
     _flowId = flowId;
 }
 
+Flow *FlowConnection::flow() const
+{
+    return _flow;
+}
+
+void FlowConnection::setFlow(Flow *flow)
+{
+    _flow = flow;
+}
+
 DataWrapper *FlowConnection::wrapper() const
 {
     return _wrapper;

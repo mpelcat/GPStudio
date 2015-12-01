@@ -101,10 +101,12 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
         {
             if(ptr<ptrEnd)
             {
-
-                //if(value==1) value = 255;
                 img->setPixel(x,y,(unsigned char)(*ptr));
                 ptr+=dataSize/8;
+            }
+            else
+            {
+                img->setPixel(x,y,255);
             }
         }
     }

@@ -9,6 +9,11 @@
 
 #include "block.h"
 
+class FIBlock;
+class CIBlock;
+class PIBlock;
+class IOCom;
+
 class GPSTUDIO_LIB_EXPORT Node
 {
 public:
@@ -23,6 +28,11 @@ public:
     QList<Block *> &blocks();
     const QList<Block *> &blocks() const;
     void addBlock(Block *block);
+
+    FIBlock *getFIBlock() const;
+    CIBlock *getCIBlock() const;
+    PIBlock *getPIBlock() const;
+    IOCom *getIOCom() const;
 
 public:
     static Node *readFromFile(const QString &fileName);

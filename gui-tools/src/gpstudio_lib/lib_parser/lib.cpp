@@ -28,7 +28,7 @@ void Lib::reloadProcess()
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.proc")))
         {
             ProcessLib *process = ProcessLib::readFromFile(ipInfo.absoluteFilePath());
-            addProcess(process);
+            if(process) addProcess(process);
         }
     }
 }
@@ -65,7 +65,7 @@ void Lib::reloadIos()
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.io")))
         {
             IOLib *io = IOLib::readFromFile(ipInfo.absoluteFilePath());
-            addIo(io);
+            if(io) addIo(io);
         }
     }
 }

@@ -22,6 +22,7 @@ public:
 
     uint evalPropertyMap(const QString &propertyMap, const QString &blockContext);
 
+    static QStringList dependsProperties(const QString &expression);
 signals:
 
 public slots:

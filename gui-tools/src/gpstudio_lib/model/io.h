@@ -3,8 +3,6 @@
 
 #include "gpstudio_lib_common.h"
 
-#include <QString>
-
 #include "block.h"
 
 class GPSTUDIO_LIB_EXPORT IO : public Block

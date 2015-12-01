@@ -195,7 +195,10 @@ class Node
 			// special blocks
 			foreach($this->blocks as $block)
 			{
-				if($block->type()!="process" and $block->type()!="io") $xml_element->appendChild($block->getXmlElement($xml, $format));
+				if($block->type()!="process" and $block->type()!="io" and $block->type()!="iocom")
+				{
+					$xml_element->appendChild($block->getXmlElement($xml, $format));
+				}
 			}
 		}
 		
@@ -224,7 +227,7 @@ class Node
 		$i=0;
 		foreach($this->blocks as $block)
 		{
-			if($block->name==$ioName and $block->type()=="io") unset($this->blocks[$i]);
+			if($block->name==$ioName and ($block->type()=="io" or $block->type()=="iocom")) unset($this->blocks[$i]);
 			$i++;
 		}
 	}

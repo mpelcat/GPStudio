@@ -78,7 +78,7 @@
 	</params>
 
 	<properties>
-		<property name="enable" value="1" caption="enable" type="bool" desc="Enable or disable process"/>
+		<property name="enable" caption="Global enable" value="1" type="bool" desc="Enable or disable process"/>
 		<property name="enableflow1" caption="Enable Flow 1"  value="1" type="bool" desc=""/>
 		<property name="enableflow2" caption="Enable Flow 2"  value="1" type="bool" desc=""/>
 		<property name="enableflow3" caption="Enable Flow 3"  value="1" type="bool" desc=""/>
@@ -104,4 +104,15 @@
 	<clocks>
 		<clock name="clk_usb" direction="out" typical="48000000" desc=""/>
 	</clocks>
+	
+	<com_connects driverio="usb">
+		<com_connect link="out0" id="0" type="flow"/>
+		<com_connect link="out1" id="1" type="flow"/>
+		<com_connect link="in0" id="128" type="flow"/>
+		<com_connect link="in1" id="129" type="flow"/>
+		<com_connect link="in2" id="130" type="flow"/>
+		<com_connect link="in3" id="131" type="flow"/>
+		<com_connect link="" id="15" type="paramout"/>
+<!--	<com_connect link="" id="143" type="paramin"/>	-->
+	</com_connects>
 </io>

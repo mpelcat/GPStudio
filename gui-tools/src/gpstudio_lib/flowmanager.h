@@ -8,8 +8,9 @@
 
 #include <QMap>
 
-class GPSTUDIO_LIB_EXPORT FlowManager
+class GPSTUDIO_LIB_EXPORT FlowManager : public QObject
 {
+    Q_OBJECT
 public:
     FlowManager(Node *node);
 
@@ -20,6 +21,9 @@ public:
 private:
     Node *_node;
     QMap<int, FlowConnection* > _flowConnectionsID;
+
+public slots:
+    void processFlow(int idFlow);
 };
 
 #endif // FLOWMANAGER_H

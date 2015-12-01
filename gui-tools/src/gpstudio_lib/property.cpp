@@ -164,6 +164,26 @@ void Property::setBlockName(const QString &blockName)
     _blockName = blockName;
 }
 
+QString Property::propertymap() const
+{
+    return _propertyMap;
+}
+
+void Property::setPropertymap(const QString &propertymap)
+{
+    _propertyMap = propertymap;
+}
+
+QString Property::onchange() const
+{
+    return _onchange;
+}
+
+void Property::setOnchange(const QString &onchange)
+{
+    _onchange = onchange;
+}
+
 ScriptEngine *Property::engine() const
 {
     return _engine;
@@ -176,16 +196,6 @@ void Property::setEngine(ScriptEngine *engine)
     {
         property->setEngine(_engine);
     }
-}
-
-QString Property::onchange() const
-{
-    return _onchange;
-}
-
-void Property::setOnchange(const QString &onchange)
-{
-    _onchange = onchange;
 }
 
 Property &Property::operator[](const QString &name)
@@ -205,7 +215,6 @@ void Property::setParent(Property *parent)
 
 Property *Property::path(QString path)
 {
-    //qDebug()<<"path"<<path<<_name;
     if(path.isEmpty() || path==_name || path=="value" || path=="bits") return this;
     int index = path.indexOf(".");
     if(index==-1)
@@ -215,6 +224,11 @@ Property *Property::path(QString path)
     }
     if(_subProperties.propertiesMap().contains(path.left(index))) return _subProperties.propertiesMap()[path.left(index)]->path(path.mid(index+1));
     return NULL;
+}
+
+QStringList Property::dependsProperties() const
+{
+    return ScriptEngine::dependsProperties(_propertyMap);
 }
 
 const PropertiesMap &Property::subProperties() const
@@ -234,6 +248,7 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty, Block *block
     paramprop->setCaption(blockProperty->caption());
     paramprop->setOnchange(blockProperty->onchange());
     paramprop->setBlockName(block->name());
+    paramprop->setPropertymap(blockProperty->propertymap());
     if(!blockProperty->propertyEnums().empty())
     {
         foreach (BlockPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
@@ -266,6 +281,7 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty, Block *block
     }
     if(blockProperty->type()=="group") paramprop->setType(Group);
 
+    // sub properties
     foreach (BlockProperty *subBlockProperty, blockProperty->properties())
     {
         paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty, block));

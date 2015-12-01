@@ -2,6 +2,9 @@
 
 #include <QDebug>
 
+#include "model/fiblock.h"
+#include "model/iocom.h"
+
 FlowManager::FlowManager(Node *node)
 {
     setNode(node);
@@ -17,27 +20,23 @@ void FlowManager::setNode(Node *node)
     _node = node;
     if(node==NULL) return;
 
-    Block *blockCom=NULL;
-    Block *fi=NULL;
-    for(int i=0; i<_node->blocks().size(); i++)
-    {
-        Block *block=_node->blocks().at(i);
-        if(block->categ()=="communication") blockCom=block;
-        if(block->type()=="fi") fi=block;
-    }
+    IOCom *blockCom=node->getIOCom();
+    FIBlock *fi=node->getFIBlock();
 
     if(blockCom)
     {
-        for(int i=0; i<blockCom->flows().size(); i++)
+        for(int i=0; i<blockCom->comConnects().size(); i++)
         {
-            Flow *flow=blockCom->flows().at(i);
-            if(flow->type()=="in")
+            ComConnect *comConnect=blockCom->comConnects().at(i);
+            if(comConnect->type()=="flow")
             {
                 FlowConnection *flowConnection = new FlowConnection();
-                flowConnection->setFlowId(i);
+                flowConnection->setFlowId(comConnect->id().toInt());
+                flowConnection->setFlow(blockCom->getFlow(comConnect->link()));
                 flowConnection->setWrapper(NULL);
                 flowConnection->setFlowViewer(NULL);
                 addFlowConnection(flowConnection);
+                qDebug()<<flowConnection->flow()->name();
             }
         }
     }
@@ -46,5 +45,10 @@ void FlowManager::setNode(Node *node)
 void FlowManager::addFlowConnection(FlowConnection *flowConnection)
 {
     _flowConnectionsID.insert(flowConnection->flowId(), flowConnection);
+}
+
+void FlowManager::processFlow(int idFlow)
+{
+    //qDebug()<<idFlow;
 }
 

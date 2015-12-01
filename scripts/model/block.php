@@ -130,18 +130,6 @@ class Block
 	public $resets;
 
 	/**
-	* External pins mapping for blocks abble to comunicate with the output
-	* @var array|Pin $pins
-	*/
-	public $pins;
-
-	/**
-	* Array of port abble to comunicate with the output
-	* @var array|Port $ext_ports
-	*/
-	public $ext_ports;
-
-	/**
 	* Array of interfaces of the block
 	* @var array|InterfaceBus $interfaces
 	*/
@@ -170,8 +158,6 @@ class Block
 		$this->flows = array();
 		$this->clocks = array();
 		$this->resets = array();
-		$this->pins = array();
-		$this->ext_ports = array();
 		$this->interfaces = array();
 		$this->attributes = array();
 		
@@ -521,7 +507,11 @@ class Block
 	{
 		if($format=="project")
 		{
-			$xml_element = $xml->createElement($this->type());
+			if($this->type()=="io" or $this->type()=="iocom") $typeName='io';
+			elseif($this->type()=="process") $typeName="process";
+			else $typeName="";
+			
+			if($typeName!="") $xml_element = $xml->createElement($typeName);
 		}
 		else
 		{

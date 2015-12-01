@@ -44,6 +44,46 @@ void Node::addBlock(Block *block)
     _blocks.append(block);
 }
 
+FIBlock *Node::getFIBlock() const
+{
+    for(int i=0; i<this->blocks().size(); i++)
+    {
+        Block *block = this->blocks().at(i);
+        if(block->type()=="fi") return (FIBlock*)block;
+    }
+    return NULL;
+}
+
+CIBlock *Node::getCIBlock() const
+{
+    for(int i=0; i<this->blocks().size(); i++)
+    {
+        Block *block = this->blocks().at(i);
+        if(block->type()=="ci") return (CIBlock*)block;
+    }
+    return NULL;
+}
+
+PIBlock *Node::getPIBlock() const
+{
+    for(int i=0; i<this->blocks().size(); i++)
+    {
+        Block *block = this->blocks().at(i);
+        if(block->type()=="pi") return (PIBlock*)block;
+    }
+    return NULL;
+}
+
+IOCom *Node::getIOCom() const
+{
+    for(int i=0; i<this->blocks().size(); i++)
+    {
+        Block *block = this->blocks().at(i);
+        if(block->type()=="iocom") return (IOCom*)block;
+    }
+    return NULL;
+}
+
 Node *Node::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
@@ -52,11 +92,9 @@ Node *Node::readFromFile(const QString &fileName)
     else
     {
         if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
-        else
-        {
-            return Node::fromNodeGenerated(doc.documentElement());
-        }
+        Node *node = Node::fromNodeGenerated(doc.documentElement());
         file.close();
+        return node;
     }
     return NULL;
 }

@@ -60,41 +60,49 @@ public:
     const QList<File *> &files() const;
     void addFile(File *file);
     void addFiles(const QList<File *> &files);
+    File *getFile(const QString &name) const;
 
     QList<Param *> &params();
     const QList<Param *> &params() const;
     void addParam(Param *param);
     void addParams(const QList<Param *> &params);
+    Param *getParam(const QString &name) const;
 
     QList<BlockProperty *> &properties();
     const QList<BlockProperty *> &properties() const;
     void addProperty(BlockProperty *propertyEnum);
     void addProperties(const QList<BlockProperty *> &properties);
+    BlockProperty *getBlockProperty(const QString &name) const;
 
     QList<Flow *> &flows();
     const QList<Flow *> &flows() const;
     void addFlow(Flow *flow);
     void addFlows(const QList<Flow *> &flows);
+    Flow *getFlow(const QString &name) const;
 
     QList<Clock *> &clocks();
     const QList<Clock *> &clocks() const;
     void addClock(Clock *clock);
     void addClocks(const QList<Clock *> &clocks);
+    Clock *getClock(const QString &name) const;
 
     QList<Port *> &ports();
     const QList<Port *> &ports() const;
     void addPort(Port *port);
     void addPorts(const QList<Port *> &ports);
+    Port *getPort(const QString &name) const;
 
     QList<Pin *> &pins();
     const QList<Pin *> &pins() const;
     void addPin(Pin *pin);
     void addPins(const QList<Pin *> &pins);
+    Pin *getPin(const QString &name) const;
 
     QList<Reset *> &resets();
     const QList<Reset *> &resets() const;
     void addReset(Reset *reset);
     void addResets(const QList<Reset *> &resets);
+    Reset *getReset(const QString &name) const;
 
 public:
     static Block *fromNodeGenerated(const QDomElement &domElement, Block *block=NULL);

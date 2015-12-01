@@ -387,9 +387,12 @@ class VHDL_generator
 					array_push($portmap, array($reset->name, $reset->group));
 				}
 				// ext ports mapping
-				foreach($block->ext_ports as $port)
+				if($block->type()=="io" or $block->type()=="iocom")
 				{
-					array_push($portmap, array($port->name, $block->name.'_'.$port->name));
+					foreach($block->ext_ports as $port)
+					{
+						array_push($portmap, array($port->name, $block->name.'_'.$port->name));
+					}
 				}
 				// flows mapping
 				foreach($block->flows as $flow)

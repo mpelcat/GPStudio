@@ -43,3 +43,17 @@ uint ScriptEngine::evalPropertyMap(const QString &propertyMap, const QString &bl
 
     return result.toUInt32();
 }
+
+QStringList ScriptEngine::dependsProperties(const QString &expression)
+{
+    QRegExp exp("([a-zA-Z0-9_]+\\.?)+");
+    int pos=0;
+    QStringList props;
+    while((pos = exp.indexIn(expression, pos)) != -1)
+    {
+        pos += exp.matchedLength();
+        props.append(exp.cap(0));
+    }
+    props.removeDuplicates();
+    return props;
+}

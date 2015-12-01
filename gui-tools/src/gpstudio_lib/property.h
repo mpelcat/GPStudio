@@ -57,6 +57,9 @@ public:
     QString blockName() const;
     void setBlockName(const QString &blockName);
 
+    QString propertymap() const;
+    void setPropertymap(const QString &propertymap);
+
     QString onchange() const;
     void setOnchange(const QString &onchange);
 
@@ -71,6 +74,8 @@ public:
 
     ScriptEngine *engine() const;
     void setEngine(ScriptEngine *engine);
+
+    QStringList dependsProperties() const;
 
 signals:
     void valueChanged(QVariant value);
@@ -98,6 +103,7 @@ protected:
 
     QString _blockName;
     ScriptEngine *_engine;
+    QString _propertyMap;
     QString _onchange;
 
     Property *_parent;

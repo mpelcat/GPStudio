@@ -8,6 +8,7 @@
  */
 
 require_once("io.php");
+require_once("iocom.php");
 require_once("toolchain.php");
 
 class Board
@@ -191,7 +192,14 @@ class Board
 				$io_name = (string)$ioXml['name'];
 				if(array_key_exists($io_name, $used_ios))
 				{
-					$io = new IO($ioXml, $used_ios[$io_name]);
+					if((string)$ioXml['type']=="communication")
+					{
+						$io = new IOCom($ioXml, $used_ios[$io_name]);
+					}
+					else
+					{
+						$io = new IO($ioXml, $used_ios[$io_name]);
+					}
 					
 					// redef params
 					if(isset($ioXml->params))
@@ -390,7 +398,7 @@ class Board
 			$xml_blocks = $xml->createElement("ios");
 			foreach($this->parentNode->blocks as $block)
 			{
-				if($block->type()=="io") $xml_blocks->appendChild($block->getXmlElement($xml, $format));
+				if($block->type()=="io" or $block->type()=="iocom") $xml_blocks->appendChild($block->getXmlElement($xml, $format));
 			}
 			$xml_element->appendChild($xml_blocks);
 		}

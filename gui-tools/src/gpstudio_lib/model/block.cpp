@@ -4,6 +4,7 @@
 #include <QStringList>
 
 #include "io.h"
+#include "iocom.h"
 #include "process.h"
 #include "piblock.h"
 #include "fiblock.h"
@@ -154,6 +155,16 @@ void Block::addFiles(const QList<File *> &files)
     }
 }
 
+File *Block::getFile(const QString &name) const
+{
+    for(int i=0; i<this->files().size(); i++)
+    {
+        File *file = this->files().at(i);
+        if(file->name()==name) return file;
+    }
+    return NULL;
+}
+
 QList<Param *> &Block::params()
 {
     return _params;
@@ -176,6 +187,16 @@ void Block::addParams(const QList<Param *> &params)
     {
         addParam(param);
     }
+}
+
+Param *Block::getParam(const QString &name) const
+{
+    for(int i=0; i<this->params().size(); i++)
+    {
+        Param *param = this->params().at(i);
+        if(param->name()==name) return param;
+    }
+    return NULL;
 }
 
 QList<BlockProperty *> &Block::properties()
@@ -202,6 +223,16 @@ void Block::addProperties(const QList<BlockProperty *> &properties)
     }
 }
 
+BlockProperty *Block::getBlockProperty(const QString &name) const
+{
+    for(int i=0; i<this->properties().size(); i++)
+    {
+        BlockProperty *blockProperty = this->properties().at(i);
+        if(blockProperty->name()==name) return blockProperty;
+    }
+    return NULL;
+}
+
 QList<Flow *> &Block::flows()
 {
     return _flows;
@@ -224,6 +255,16 @@ void Block::addFlows(const QList<Flow *> &flows)
     {
         addFlow(flow);
     }
+}
+
+Flow *Block::getFlow(const QString &name) const
+{
+    for(int i=0; i<this->flows().size(); i++)
+    {
+        Flow *flow = this->flows().at(i);
+        if(flow->name()==name) return flow;
+    }
+    return NULL;
 }
 
 QList<Clock *> &Block::clocks()
@@ -250,6 +291,16 @@ void Block::addClocks(const QList<Clock *> &clocks)
     }
 }
 
+Clock *Block::getClock(const QString &name) const
+{
+    for(int i=0; i<this->clocks().size(); i++)
+    {
+        Clock *clock = this->clocks().at(i);
+        if(clock->name()==name) return clock;
+    }
+    return NULL;
+}
+
 QList<Port *> &Block::ports()
 {
     return _ports;
@@ -272,6 +323,16 @@ void Block::addPorts(const QList<Port *> &ports)
     {
         addPort(port);
     }
+}
+
+Port *Block::getPort(const QString &name) const
+{
+    for(int i=0; i<this->ports().size(); i++)
+    {
+        Port *port = this->ports().at(i);
+        if(port->name()==name) return port;
+    }
+    return NULL;
 }
 
 QList<Pin *> &Block::pins()
@@ -298,6 +359,16 @@ void Block::addPins(const QList<Pin *> &pins)
     }
 }
 
+Pin *Block::getPin(const QString &name) const
+{
+    for(int i=0; i<this->pins().size(); i++)
+    {
+        Pin *pin = this->pins().at(i);
+        if(pin->name()==name) return pin;
+    }
+    return NULL;
+}
+
 QList<Reset *> &Block::resets()
 {
     return _resets;
@@ -320,6 +391,16 @@ void Block::addResets(const QList<Reset *> &resets)
     {
         addReset(reset);
     }
+}
+
+Reset *Block::getReset(const QString &name) const
+{
+    for(int i=0; i<this->resets().size(); i++)
+    {
+        Reset *reset = this->resets().at(i);
+        if(reset->name()==name) return reset;
+    }
+    return NULL;
 }
 
 Block *Block::fromNodeGenerated(const QDomElement &domElement, Block *block)
@@ -388,6 +469,7 @@ QList<Block *> Block::listFromNodeGenerated(const QDomElement &domElement)
             {
                 if(typeBlock=="process") block = Process::fromNodeGenerated(e);
                 if(typeBlock=="io") block = IO::fromNodeGenerated(e);
+                if(typeBlock=="iocom") block = IOCom::fromNodeGenerated(e);
                 if(typeBlock=="pi") block = PIBlock::fromNodeGenerated(e);
                 if(typeBlock=="fi") block = FIBlock::fromNodeGenerated(e);
                 if(typeBlock=="ci") block = CIBlock::fromNodeGenerated(e);

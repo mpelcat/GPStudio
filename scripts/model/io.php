@@ -4,9 +4,25 @@ require_once("block.php");
 
 class IO extends Block
 {
+	/**
+	* External pins mapping for blocks abble to comunicate with the output
+	* @var array|Pin $pins
+	*/
+	public $pins;
+
+	/**
+	* Array of port abble to comunicate with the output
+	* @var array|Port $ext_ports
+	*/
+	public $ext_ports;
+	
 	function __construct($io_device_element, $io_node_element=null)
 	{
+		$this->pins = array();
+		$this->ext_ports = array();
+		
 		parent::__construct();
+		
 		if(is_object($io_device_element) and get_class($io_device_element)==='SimpleXMLElement')
 		{
 			$io_name = (string)$io_device_element['name'];
@@ -50,7 +66,6 @@ class IO extends Block
 		if (!($this->xml = simplexml_load_file($io_file))) error("Error when parsing $io_file",5,"IO");
 	
 		$this->parse_xml($io_device_element, $io_node_element);
-		unset($this->xml);
 	}
 	
 	protected function parse_xml($io_device_element, $io_node_element)
