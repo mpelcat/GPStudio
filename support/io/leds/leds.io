@@ -2,7 +2,7 @@
 <io driver="leds" categ="imagesensor" pi_size_addr_rel="2" configscriptfile="config.php">
 	<svg width="160" height="110">
 		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-		<text x="50" y="50">MT9</text>
+		<text x="50" y="50">Led</text>
 	</svg>
 	<files>
 		<file name="leds.vhd" path="hdl/leds.vhd" type="vhdl" group="hdl" desc=""/>
