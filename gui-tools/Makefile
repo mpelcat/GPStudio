@@ -11,15 +11,15 @@ build-win/:
 build-win/Makefile: build-win/ src/gpstudio.pro
 	cd build-win/ && /opt/qt-5.5-win32/bin/qmake -r ../src "DISTRIB=1"
 gpstudio_com-win: build-win/Makefile
-	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_com
+	cd build-win/ && make -j9 -f Makefile sub-gpstudio_com-release
 gpstudio_lib-win: build-win/Makefile gpstudio_com-win
-	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_lib
+	cd build-win/ && make -j9 -f Makefile sub-gpstudio_lib-release
 gpstudio_gui-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win
-	cd build-win/ && make release -j9 -f Makefile sub-gpstudio_gui
+	cd build-win/ && make -j9 -f Makefile sub-gpstudio_gui-release
 gpnode-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
-	cd build-win/ && make release -j9 -f Makefile sub-gpnode
+	cd build-win/ && make -j9 -f Makefile sub-gpnode-release
 gpviewer-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
-	cd build-win/ && make release -j9 -f Makefile sub-gpviewer
+	cd build-win/ && make -j9 -f Makefile sub-gpviewer-release
 
 
 build-linux/:
