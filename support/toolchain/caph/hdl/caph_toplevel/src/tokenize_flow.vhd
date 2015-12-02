@@ -130,7 +130,7 @@ begin
 
 fifo_data_s <= data_i;
 fifo_wrreq_s <= dv_i and enable_i;
-fifo_aclr_s <= not(rst_n_i or enable_i);
+fifo_aclr_s <= not(rst_n_i and enable_i);
 
 -- Conditions de commande de la FIFO Altera
 fifo_read_label: fifo_rdreq_s <= 
