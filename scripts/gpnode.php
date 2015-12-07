@@ -95,6 +95,11 @@ switch($action)
 		if(array_key_exists('n',$options)) $boardName = $options['n']; else error("You should specify a board name with -n"."\n",1);
 		$node->setBoard($boardName);
 		break;
+	case "showboard":
+		if(isset($node->board)) echo $node->board->name."\n";
+		else echo "No board curently set."."\n";
+		$save = false;
+		break;
 		
 	case "generate":
 		$options = getopt("a:o:");
@@ -127,9 +132,9 @@ switch($action)
 		echo "ios :" . "\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->type()=="io")
+			if($block->type()=="io" or $block->type()=="iocom")
 			{
-				echo "  + ".$block->name . "\n";
+				echo "  + ".$block->name." [".$block->driver."]" . "\n";
 			}
 		}
 		$save = false;
@@ -162,7 +167,7 @@ switch($action)
 		{
 			if($block->type()=="process")
 			{
-				echo "  + ".$block->name . "\n";
+				echo "  + ".$block->name." [".$block->driver."]" . "\n";
 			}
 		}
 		$save = false;
@@ -175,9 +180,9 @@ switch($action)
 		echo "blocks :" . "\n";
 		foreach($node->blocks as $block)
 		{
-			if($block->type()=="process" or $block->type()=="io")
+			if($block->type()=="process" or $block->type()=="io" or $block->type()=="iocom")
 			{
-				echo "  + ".$block->name . "\n";
+				echo "  + ".$block->name." [".$block->type()." - ".$block->driver."]" . "\n";
 			}
 		}
 		$save = false;
@@ -336,6 +341,8 @@ switch($action)
 		break;
 		
 	case "listword":
+		$save = false;
+	
 		$options = getopt("a:w:m:");
 		if(array_key_exists('w',$options)) $word = $options['w']; else $word="";
 		if(array_key_exists('m',$options)) $mode = $options['m']; else $mode="";
@@ -343,8 +350,15 @@ switch($action)
 		$wordRes = explode(".", $word);
 		if(count($wordRes)==1)
 		{
-			foreach($node->blocks as $block) echo $block->name.'. ';
-			exit(0);
+			if($mode=="clockdomain")
+			{
+				// 
+			}
+			else
+			{
+				foreach($node->blocks as $block) echo $block->name.'. ';
+				exit(0);
+			}
 		}
 		else
 		{
@@ -408,7 +422,6 @@ switch($action)
 			}
 		}
 		
-		$save = false;
 		break;
 	
 	default:
@@ -477,6 +490,16 @@ switch($action)
 		foreach($node->getBlock("ci")->domains as $domain)
 		{
 			echo "  + ".$domain->name." = ".Clock::formatFreq($domain->typical)."\n";
+		}
+		break;
+		
+	case "listword":
+		if($mode=="clockdomain")
+		{
+			foreach($node->getBlock("ci")->domains as $domain)
+			{
+				echo $domain->name." ";
+			}
 		}
 		break;
 }

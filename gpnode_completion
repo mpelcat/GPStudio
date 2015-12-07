@@ -7,7 +7,7 @@ _gpnode()
     _init_completion || return
 
     # see if the user selected a command already
-    local COMMANDS=("newproject" "setboard" "generate"
+    local COMMANDS=("newproject" "setboard" "generate" "showboard"
                     "addio" "delio" "showio"
                     "addprocess" "delprocess" "showprocess" "showblock"
                     "renameblock" "setproperty" "setparam" "setclock" "setflowsize"
@@ -63,6 +63,10 @@ _gpnode()
                         ;;
                     setclock)
                         COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m clock )' -- "$cur" ) ) && compopt -o nospace
+                        return 0
+                        ;;
+                    setclockdomain)
+                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m clockdomain )' -- "$cur" ) ) && compopt -o nospace
                         return 0
                         ;;
                     setflowsize)
