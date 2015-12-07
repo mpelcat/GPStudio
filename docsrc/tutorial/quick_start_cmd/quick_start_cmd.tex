@@ -12,8 +12,10 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
+\input{../../gpstudio_doc.tex}
+
 \author{Sebastien CAUX}
-\title{GPStudio Tutorial : \\ 2. How to create and use a simple node project in command line mode?}
+\title{GPStudio Tutorial \version : \\ 2. How to create and use a simple node project in command line mode?}
 
 \begin{document}
 \maketitle
@@ -26,42 +28,65 @@ Finally, we will configure the smart camera with the compiled project and check 
 
 \section{Create the project}
 First of all, you need to create the project in an empty directory :
-\begin{Verbatim}[frame=single]
-mkdir tuto1
-cd tuto1
-gpnode newproject -n tuto1
-\end{Verbatim}
+
+\sample{
+> mkdir tuto1\\
+> cd tuto1\\
+> \textbf{gpnode} \textbf{newproject} -n tuto1
+}
 
 After that, you should have a file named \emph{tuto1.node} in the current directory. This file is the project file and contain the definition of the node. Please notify that you can have only one project file per directory and gpnode always works on the project in the current directory. The directory name could be different that the project name, but you shouldn't modify the name of the project file.\\
 
-The next think to do is to specify the platform that you want to use for this project. You can do it with :
-\begin{Verbatim}[frame=single]
-gpnode setboard -n dreamcam_c3
-\end{Verbatim}
+The next thing to do is to specify the platform that you want to use for this project. You can do it with :
+
+\sample{
+> \textbf{gpnode} \textbf{setboard} -n dreamcam\_c3
+}
+
+DreamCam is now set as target platform. You can check that with the command showboard :
+
+\sample{
+> \textbf{gpnode} \textbf{showboard}\\
+dreamcam\_c3}
 
 \section{Add IO support that you need}
 Until now, we only specify the Dreamcam as platform, but it's a modular one, you can use different types of image sensor and communication. It require to define witch one we want to use by adding the support of theses peripherals. \\
 
 For image sensor, you have two possibilities, mt9 from Aptina or e2v. For this example, we choose mt9 :
-\begin{Verbatim}[frame=single]
-gpnode addio -n mt9
-\end{Verbatim}
+
+\sample{
+> \textbf{gpnode} \textbf{addio} -n mt9
+}
+
 By adding mt9 IO, gpnode fetch the name of the driver to use with this IO and copy the driver files implementation. Like that, it allows you to use it to capture pictures from this sensor.\\
 
 Now, for enable a communication, you have the choice between Ethernet or USB. Choose USB support :
-\begin{Verbatim}[frame=single]
-gpnode addio -n usb
-\end{Verbatim}
+
+\sample{
+> \textbf{gpnode} \textbf{addio} -n usb
+}
+
+You can view the list of ios support with the command showio :
+
+\sample{
+> \textbf{gpnode} \textbf{showio}\\
+ios :\\
+ + mt9 [mt9]\\
+ + usb [usb\_cypress\_CY7C68014A]
+}
 
 \section{Add process that you need}
-\begin{Verbatim}[frame=single]
-gpnode addprocess -n process1 -d gradienthw
-\end{Verbatim}
+
+
+\sample{> \textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw}
+
+\sample{
+> \textbf{gpnode} \textbf{showprocess}\\process :\\ + process1 [gradienthw]}
 
 \section{Connect block flow}
-\begin{Verbatim}[frame=single]
-gpnode connect -f mt9.out -t usb.in0
-\end{Verbatim}
+\sample{
+> \textbf{gpnode} \textbf{connect} -f mt9.out -t usb.in0
+}
 %\begin{dot2tex}[dot,options=-tmath -fpgf]
 %digraph G {
 %	mt9[shape = record,label = "{{}|mt9|{<out> out (8)}}", width=1, fixedsize=true, height=1];

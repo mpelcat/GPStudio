@@ -1,0 +1,30 @@
+\newcommand{\version}{\IfFileExists{../../version.txt}
+{\input{../../version.txt}}
+{\input{../../../version.txt}}
+}
+
+\newcommand{\command}[1]{%
+\noindent \fcolorbox{black}{white}{%
+   \begin{minipage}{\textwidth}%
+      #1
+   \end{minipage}%
+}
+}
+
+\newcommand{\sample}[1]{%
+\noindent \fcolorbox{black}{lightgray}{%
+   \begin{minipage}{\textwidth}%
+      #1
+   \end{minipage}%
+}
+}
+
+\newcommand{\sampletitle}[1]{%
+\vspace{0.2cm}Exemple :\\%
+\noindent \sample{#1}%
+}
+
+\newcommand{\samplecomment}[1]{%
+
+\textit{#1}
+}
