@@ -97,8 +97,10 @@ function distrib_bin($mainoutpath, $os)
 	{
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib");
-		copy_with_rights(LIB_PATH."setenv.sh", $mainoutpath.DIRECTORY_SEPARATOR."setenv.sh");
-		copy_with_rights(LIB_PATH."install.sh", $mainoutpath.DIRECTORY_SEPARATOR."install.sh");
+		copy_with_rights(LIB_PATH."setenv.sh", $mainoutpath."setenv.sh");
+		copy_with_rights(LIB_PATH."install.sh", $mainoutpath."install.sh");
+		copy_with_rights(LIB_PATH."gpnode_completion", $mainoutpath."gpnode_completion");
+		copy_with_rights(LIB_PATH."gplib_completion", $mainoutpath."gplib_completion");
 	}
 	echo GUI_TOOLS_PATH."bin-$os";
 	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");

@@ -7,12 +7,16 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 # check if php is installed, install else
-command -v php >/dev/null 2>&1 || { echo "installing php..."; apt-get install --force-yes --yes php5-cli >/dev/null; } && { echo "php is installed"; }
+command -v make >/dev/null 2>&1 || { echo "installing make..."; apt-get install --force-yes --yes make >/dev/null; } && { echo "make is installed"; }
+
+# check if php is installed, install else
+command -v php >/dev/null 2>&1 || { echo "installing php5-cli..."; apt-get install --force-yes --yes php5-cli >/dev/null; } && { echo "php5-cli is installed"; }
 
 # check if dot is installed, install else
 command -v dot >/dev/null 2>&1 || { echo "installing dot..."; apt-get install --force-yes --yes graphviz >/dev/null; } && { echo "dot is installed"; }
 
 # copy bash completion file for gpnode
+echo "install bash completion";
 cp gpnode_completion /usr/share/bash-completion/completions/gpnode
 cp gplib_completion /usr/share/bash-completion/completions/gplib
 
