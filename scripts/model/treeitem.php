@@ -43,7 +43,7 @@ class TreeItem
 	
 	public function getXmlElement($xml, $format)
 	{
-		$xml_element = $xml->createElement("tree_connect");
+		$xml_element = $xml->createElement("tree_item");
 		
 		// fromblock
 		$att = $xml->createAttribute('fromblock');
