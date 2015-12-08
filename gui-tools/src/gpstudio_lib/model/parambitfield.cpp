@@ -6,6 +6,7 @@
 
 ParamBitField::ParamBitField()
 {
+    _parent = NULL;
 }
 
 ParamBitField::~ParamBitField()

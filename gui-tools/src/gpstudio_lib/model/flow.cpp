@@ -2,9 +2,12 @@
 
 #include "block.h"
 
+#include <QDebug>
+
 Flow::Flow(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 Flow::~Flow()
@@ -59,6 +62,44 @@ Block *Flow::parent() const
 void Flow::setParent(Block *parent)
 {
     _parent = parent;
+    foreach (BlockProperty *property, _properties)
+    {
+        property->setParent(_parent);
+    }
+}
+
+QList<BlockProperty *> &Flow::properties()
+{
+    return _properties;
+}
+
+const QList<BlockProperty *> &Flow::properties() const
+{
+    return _properties;
+}
+
+void Flow::addProperty(BlockProperty *property)
+{
+    property->setParent(_parent);
+    _properties.append(property);
+}
+
+void Flow::addProperties(const QList<BlockProperty *> &properties)
+{
+    foreach (BlockProperty *property, properties)
+    {
+        addProperty(property);
+    }
+}
+
+BlockProperty *Flow::getBlockProperty(const QString &name) const
+{
+    for(int i=0; i<this->properties().size(); i++)
+    {
+        BlockProperty *blockProperty = this->properties().at(i);
+        if(blockProperty->name()==name) return blockProperty;
+    }
+    return NULL;
 }
 
 Flow *Flow::fromNodeGenerated(const QDomElement &domElement)
@@ -73,6 +114,17 @@ Flow *Flow::fromNodeGenerated(const QDomElement &domElement)
     if(ok && size>=0) flow->setSize(size); else flow->setSize(0);
 
     flow->setDescription(domElement.attribute("desc",""));
+
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="properties") flow->addProperties(BlockProperty::listFromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
 
     return flow;
 }

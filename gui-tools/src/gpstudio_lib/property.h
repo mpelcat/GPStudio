@@ -50,7 +50,7 @@ public:
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> &enums() const;
 
-    enum Type {Group, Int, SInt, Bool, Enum, Matrix};
+    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType};
     Type type() const;
     void setType(const Type &type);
 
@@ -76,6 +76,7 @@ public:
     void setEngine(ScriptEngine *engine);
 
     QStringList dependsProperties() const;
+    void computePropertyMap(Property *paramsProps);
 
 signals:
     void valueChanged(QVariant value);
@@ -88,8 +89,11 @@ public slots:
 
     void setBits(const uint bits);
 
+    void eval();
+
 public:
-    static Property *fromBlockProperty(BlockProperty *blockProperty, Block *block);
+    static Property *fromBlockProperty(BlockProperty *blockProperty);
+    static Property *fromFlow(Flow *flow);
 
 protected:
     QString _name;

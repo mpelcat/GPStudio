@@ -6,6 +6,8 @@
 #include <QString>
 #include <QDomElement>
 
+#include "blockproperty.h"
+
 class Block;
 
 class GPSTUDIO_LIB_EXPORT Flow
@@ -29,6 +31,12 @@ public:
     Block *parent() const;
     void setParent(Block *parent);
 
+    QList<BlockProperty *> &properties();
+    const QList<BlockProperty *> &properties() const;
+    void addProperty(BlockProperty *property);
+    void addProperties(const QList<BlockProperty *> &properties);
+    BlockProperty *getBlockProperty(const QString &name) const;
+
 public:
     static Flow *fromNodeGenerated(const QDomElement &domElement);
     static QList<Flow *> listFromNodeGenerated(const QDomElement &domElement);
@@ -38,6 +46,8 @@ protected:
     QString _type;
     quint8 _size;
     QString _description;
+
+    QList<BlockProperty *> _properties;
 
     Block *_parent;
 };

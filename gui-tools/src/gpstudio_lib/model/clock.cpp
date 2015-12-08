@@ -5,6 +5,7 @@
 Clock::Clock(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 Clock::~Clock()

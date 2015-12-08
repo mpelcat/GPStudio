@@ -38,6 +38,7 @@ private slots:
     void fourViewer();
 
     void updateWindowsMenu();
+    void showFps();
 
 private:
     Ui::MainWindow *ui;

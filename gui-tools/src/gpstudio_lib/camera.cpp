@@ -6,6 +6,8 @@
 #include "property.h"
 #include "propertyclass.h"
 
+#include "flowmanager.h"
+
 Camera::Camera(const QString &fileCameraConfig)
     : _registers(this)
 {
@@ -35,8 +37,6 @@ void Camera::setNode(Node *node)
     if(_paramsBlocks) delete _paramsBlocks;
     _paramsBlocks = new Property();
 
-    _flowManager = new FlowManager(_node);
-
     foreach (Block *block, _node->blocks())
     {
         Property *propBlock = new Property(block->name());
@@ -44,9 +44,15 @@ void Camera::setNode(Node *node)
         propBlock->setType(Property::Group);
         foreach (BlockProperty *property, block->properties())
         {
-            Property *paramprop = Property::fromBlockProperty(property, block);
+            Property *paramprop = Property::fromBlockProperty(property);
             propBlock->addSubProperty(paramprop);
         }
+        foreach (Flow *flow, block->flows())
+        {
+            Property *flowprop = Property::fromFlow(flow);
+            propBlock->addSubProperty(flowprop);
+        }
+
         _paramsBlocks->addSubProperty(propBlock);
         _engine.addProperty(propBlock);
 
@@ -60,15 +66,10 @@ void Camera::setNode(Node *node)
         }
     }
 
-    /*foreach (Property *property, _paramsBlocks->subProperties().properties())
+    foreach (Property *property, _paramsBlocks->subProperties().properties())
     {
-        const QStringList &deps = cameraRegister->dependsProperties();
-        foreach (QString propName, deps)
-        {
-            Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
-            if(prop) connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
-        }
-    }*/
+        property->computePropertyMap(_paramsBlocks);
+    }
 
     int maxAddr=0;
     QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
@@ -104,6 +105,8 @@ void Camera::setNode(Node *node)
         _registerData.fill(0,(maxAddr+1)*4);
         connect(cameraRegister, SIGNAL(registerChange(uint,uint)), this, SLOT(setRegister(uint,uint)));
     }
+
+    _flowManager = new FlowManager(_node, _paramsBlocks);
 }
 
 Property *Camera::paramsBlocks() const
@@ -155,6 +158,11 @@ CameraCom *Camera::com() const
     return _com;
 }
 
+FlowManager *Camera::flowManager() const
+{
+    return _flowManager;
+}
+
 bool Camera::isConnected() const
 {
     if(_com)
@@ -173,5 +181,6 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
         _registers.evalAll();
     }
 
+    _flowManager->setCom(_com);
     connect(_com, SIGNAL(flowReadyToRead(int)), _flowManager, SLOT(processFlow(int)));
 }

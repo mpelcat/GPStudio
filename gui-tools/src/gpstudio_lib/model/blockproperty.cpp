@@ -1,8 +1,10 @@
 #include "blockproperty.h"
 
+#include <QDebug>
+
 BlockProperty::BlockProperty()
 {
-
+    _parent = NULL;
 }
 
 BlockProperty::~BlockProperty()
@@ -128,6 +130,10 @@ Block *BlockProperty::parent() const
 void BlockProperty::setParent(Block *parent)
 {
     _parent = parent;
+    foreach (BlockProperty *property, _properties)
+    {
+        property->setParent(_parent);
+    }
 }
 
 QList<BlockProperty *> &BlockProperty::properties()
@@ -140,9 +146,9 @@ const QList<BlockProperty *> &BlockProperty::properties() const
     return _properties;
 }
 
-void BlockProperty::addProperty(BlockProperty *propertyEnum)
+void BlockProperty::addProperty(BlockProperty *property)
 {
-    _properties.append(propertyEnum);
+    _properties.append(property);
 }
 
 QList<BlockPropertyEnum *> &BlockProperty::propertyEnums()

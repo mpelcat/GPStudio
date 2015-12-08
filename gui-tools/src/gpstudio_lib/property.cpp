@@ -104,6 +104,11 @@ void Property::setBits(const uint bits)
     emit bitsChanged(bits);
 }
 
+void Property::eval()
+{
+    setValue(QVariant(_engine->evalPropertyMap(_propertyMap, _blockName)));
+}
+
 QVariant Property::min() const
 {
     return _min;
@@ -231,6 +236,21 @@ QStringList Property::dependsProperties() const
     return ScriptEngine::dependsProperties(_propertyMap);
 }
 
+void Property::computePropertyMap(Property *paramsProps)
+{
+    foreach (Property *property, _subProperties.properties())
+    {
+        const QStringList &deps = property->dependsProperties();
+        foreach (QString propName, deps)
+        {
+            Property *prop = paramsProps->path(property->blockName()+"."+propName);
+            if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), property, SLOT(eval()));
+        }
+
+        property->computePropertyMap(paramsProps);
+    }
+}
+
 const PropertiesMap &Property::subProperties() const
 {
     return _subProperties;
@@ -242,12 +262,15 @@ void Property::addSubProperty(Property *property)
     _subProperties.addProperty(property);
 }
 
-Property *Property::fromBlockProperty(BlockProperty *blockProperty, Block *block)
+Property *Property::fromBlockProperty(BlockProperty *blockProperty)
 {
     Property *paramprop = new Property(blockProperty->name());
     paramprop->setCaption(blockProperty->caption());
     paramprop->setOnchange(blockProperty->onchange());
-    paramprop->setBlockName(block->name());
+    if(blockProperty->parent())
+    {
+        paramprop->setBlockName(blockProperty->parent()->name());
+    }
     paramprop->setPropertymap(blockProperty->propertymap());
     if(!blockProperty->propertyEnums().empty())
     {
@@ -284,8 +307,27 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty, Block *block
     // sub properties
     foreach (BlockProperty *subBlockProperty, blockProperty->properties())
     {
-        paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty, block));
+        paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
     }
 
     return paramprop;
+}
+
+Property *Property::fromFlow(Flow *flow)
+{
+    Property *flowprop = new Property(flow->name());
+    flowprop->setCaption(flow->name());
+    if(flow->parent())
+    {
+        flowprop->setBlockName(flow->parent()->name());
+    }
+    flowprop->setType(FlowType);
+
+    // sub properties
+    foreach (BlockProperty *subBlockProperty, flow->properties())
+    {
+        flowprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
+    }
+
+    return flowprop;
 }

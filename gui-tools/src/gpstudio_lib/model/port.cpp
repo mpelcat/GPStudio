@@ -5,6 +5,7 @@
 Port::Port(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 Port::~Port()

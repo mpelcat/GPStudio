@@ -5,6 +5,7 @@
 File::File(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 File::~File()

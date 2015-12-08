@@ -16,6 +16,7 @@
 #include "cameracom.h"
 #include "flowcom.h"
 #include "flowdata.h"
+#include "flowmanager.h"
 
 #include "datawrapper/gradiantwrapper.h"
 #include "datawrapper/harriswrapper.h"
@@ -213,7 +214,7 @@ void MainWindow::viewFlow(int flow)
     }
     if(flow==1)
     {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 16);
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w-5, h-5, 8);
         _viewers[1]->showImage(*image);
         delete image;
     }
@@ -263,7 +264,7 @@ void MainWindow::viewFlow(int flow)
 //        delete gradImg;
     }
 
-
+    showFps();
 }
 
 void MainWindow::setBiSpace()
@@ -316,6 +317,18 @@ void MainWindow::updateWindowsMenu()
         action->setCheckable(true);
         action->setChecked(child == ui->mdiArea->activeSubWindow());
     }
+}
+
+void MainWindow::showFps()
+{
+    QString text;
+    QTextStream stream(&text);
+
+    foreach (FlowConnection *flowConnection, _cam->flowManager()->flowConnectionsID())
+    {
+        stream << flowConnection->flow()->name() << " : " << flowConnection->fps() << " fps\t";
+    }
+    ui->statusBar->showMessage(text);
 }
 
 void MainWindow::setupViewers(int count)

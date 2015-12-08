@@ -5,6 +5,7 @@
 Param::Param(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 Param::~Param()

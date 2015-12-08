@@ -37,8 +37,11 @@ void PropertyMatrixWidget::createWidget()
             if(property)
             {
                 PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
-                layoutMatrix->addWidget(propertyWidget,x,y);
-                find++;
+                if(propertyWidget)
+                {
+                    layoutMatrix->addWidget(propertyWidget,x,y);
+                    find++;
+                }
             }
         }
         if(find==0) break;

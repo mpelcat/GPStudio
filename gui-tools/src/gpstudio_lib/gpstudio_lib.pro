@@ -66,7 +66,9 @@ HEADERS += gpstudio_lib_common.h \
     flowconnection.h \
     model/iocom.h \
     model/comconnect.h \
-    model/flowconnect.h
+    model/flowconnect.h \
+    model/treeconnect.h \
+    model/treeitem.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -110,7 +112,9 @@ SOURCES += \
     flowconnection.cpp \
     model/iocom.cpp \
     model/comconnect.cpp \
-    model/flowconnect.cpp
+    model/flowconnect.cpp \
+    model/treeconnect.cpp \
+    model/treeitem.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

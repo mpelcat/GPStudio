@@ -70,7 +70,7 @@ public:
 
     QList<BlockProperty *> &properties();
     const QList<BlockProperty *> &properties() const;
-    void addProperty(BlockProperty *propertyEnum);
+    void addProperty(BlockProperty *property);
     void addProperties(const QList<BlockProperty *> &properties);
     BlockProperty *getBlockProperty(const QString &name) const;
 

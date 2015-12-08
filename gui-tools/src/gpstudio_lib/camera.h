@@ -13,7 +13,7 @@
 #include "cameraregistersmap.h"
 
 #include "cameracom.h"
-#include "flowmanager.h"
+class FlowManager;
 
 class GPSTUDIO_LIB_EXPORT Camera : public QObject
 {
@@ -34,6 +34,7 @@ public:
     void connectCam(const CameraInfo &cameraInfo);
 
     CameraCom *com() const;
+    FlowManager *flowManager() const;
 
     QByteArray registerData() const;
 

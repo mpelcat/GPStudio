@@ -209,10 +209,10 @@ const QList<BlockProperty *> &Block::properties() const
     return _properties;
 }
 
-void Block::addProperty(BlockProperty *propertyEnums)
+void Block::addProperty(BlockProperty *property)
 {
-    propertyEnums->setParent(this);
-    _properties.append(propertyEnums);
+    property->setParent(this);
+    _properties.append(property);
 }
 
 void Block::addProperties(const QList<BlockProperty *> &properties)
@@ -448,8 +448,6 @@ Block *Block::fromNodeGenerated(const QDomElement &domElement, Block *block)
         }
         n = n.nextSibling();
     }
-
-    // block specific part TODO
 
     return block;
 }

@@ -5,6 +5,7 @@
 Reset::Reset(Block *parent)
     : _parent(parent)
 {
+    _parent = NULL;
 }
 
 Reset::~Reset()

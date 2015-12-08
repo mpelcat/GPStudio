@@ -1,5 +1,7 @@
 #include "fiblock.h"
 
+#include <QDebug>
+
 FIBlock::FIBlock()
 {
 }
@@ -36,11 +38,35 @@ void FIBlock::addFlowConnects(const QList<FlowConnect *> &flowConnects)
     }
 }
 
+QList<TreeConnect *> FIBlock::treeConnects()
+{
+    return _treeConnects;
+}
+
+const QList<TreeConnect *> FIBlock::treeConnects() const
+{
+    return _treeConnects;
+}
+
+void FIBlock::addTreeConnect(TreeConnect *treeConnect)
+{
+    _treeConnects.append(treeConnect);
+}
+
+void FIBlock::addTreeConnects(const QList<TreeConnect *> &treeConnects)
+{
+    foreach (TreeConnect *treeConnect, treeConnects)
+    {
+        addTreeConnect(treeConnect);
+    }
+}
+
 FIBlock *FIBlock::fromNodeGenerated(const QDomElement &domElement, FIBlock *fiBlock)
 {
     if(fiBlock==NULL) fiBlock = new FIBlock();
 
     Block::fromNodeGenerated(domElement, fiBlock);
+
 
     QDomNode n = domElement.firstChild();
     while(!n.isNull())
@@ -49,6 +75,7 @@ FIBlock *FIBlock::fromNodeGenerated(const QDomElement &domElement, FIBlock *fiBl
         if(!e.isNull())
         {
             if(e.tagName()=="flow_connects") fiBlock->addFlowConnects(FlowConnect::listFromNodeGenerated(e));
+            if(e.tagName()=="tree_connects") fiBlock->addTreeConnects(TreeConnect::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
