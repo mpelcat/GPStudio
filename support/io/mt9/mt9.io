@@ -16,8 +16,8 @@
 		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor">
 			<properties>
 				<property name="datatype" value="image" type="flowtype"/>
-				<property name="width" value="roi1.w.value/(binning.value ? 2 : 1)" type="int"/>
-				<property name="height" value="roi1.h.value/(binning.value ? 2 : 1)" type="int"/>
+				<property name="width" propertymap="roi1.w.value/(binning.value ? 2 : 1)" type="int" min="2" max="1280"/>
+				<property name="height" propertymap="roi1.h.value/(binning.value ? 2 : 1)" type="int" min="2" max="960"/>
 			</properties>
 		</flow>
 	</flows>
@@ -48,7 +48,9 @@
 		<param name="YEND" regaddr="5" propertymap="roi1.y.value+roi1.h.value-1"/>
 		<param name="MODE" regaddr="6">
 			<bitfields>
+<!--
 				<bitfield name="autoexp" type="int" bitfield="0" default="0" propertymap="autoexposure.enable.value" desc="Auto exposure bit"/>
+-->
 				<bitfield name="flipy" type="int" bitfield="1" default="0" propertymap="flipy.value" desc="flipy"/>
 				<bitfield name="flipx" type="int" bitfield="2" default="0" propertymap="flipx.value" desc="flipx"/>
 				<bitfield name="binning" type="int" bitfield="3" default="0" propertymap="binning.value" desc="flipx"/>
@@ -56,6 +58,7 @@
 		</param>
 		<param name="INTEGTIME" regaddr="7" propertymap="exposuretime.value"/>
 		<param name="LINELENGHT" regaddr="8" propertymap="linelenght.value"/>
+<!--
 		<param name="AUTOEXPTARGET" regaddr="9" propertymap="autoexposure.target.value"/>
 		<param name="AUTOEXPVMIN" regaddr="10" propertymap="autoexposure.min.value"/>
 		<param name="AUTOEXPVMAX" regaddr="11" propertymap="autoexposure.max.value"/>
@@ -64,6 +67,7 @@
 		<param name="AUTOEXPDAMPOFSET" regaddr="14" propertymap="autoexposure.dampofset.value"/>
 		<param name="AUTOEXPDAMPGAIN" regaddr="15" propertymap="autoexposure.dampgain.value"/>
 		<param name="AUTOEXPDAMPMAX" regaddr="16" propertymap="autoexposure.dampmax.value"/>
+-->
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable image sensor"/>
@@ -78,6 +82,7 @@
 		<property name="flipx" caption="X mirror" type="bool"/>
 		<property name="flipy" caption="Y flip" type="bool"/>
 		<property name="binning" caption="binning (/2)" type="bool"/>
+<!--
 		<property name="autoexposure" type="group">
 			<properties>
 				<property name="enable" caption="enable" type="bool"/>
@@ -91,6 +96,7 @@
 				<property name="dampmax" value="320" type="sint" assert="" min="0" max="65000"/>
 			</properties>
 		</property>
+-->
 		<property name="exposuretime" value="1000" caption="exposure time" type="sint" min="0" max="4500"/>
 		<property name="linelenght" value="1650" type="int" assert="" min="1650" max="4500"/>
 	</properties>

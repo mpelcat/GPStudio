@@ -39,7 +39,7 @@
 		<flow name="in2" type="in" size="8" desc="flow 2 return for supervise results of process"/>
 		<flow name="in3" type="in" size="8" desc="flow 3 return for supervise results of process"/>
 		
-		<flow name="out0" type="out" size="16" desc="flow 0 return for supervise results of process"/>
+		<flow name="out0" type="out" size="8" desc="flow 0 return for supervise results of process"/>
 		<flow name="out1" type="out" size="8" desc="flow 1 return for supervise results of process"/> 
 	</flows>
 	<params>
