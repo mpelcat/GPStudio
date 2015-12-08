@@ -85,6 +85,12 @@ class Param
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+		if($this->hard) return "generic ".$this->name." type: ".$this->type." value: ".$this->value;
+		else return "register ".$this->name." regaddr: ".$this->regaddr." propertymap: ".$this->propertymap;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name			= (string)$xml['name'];

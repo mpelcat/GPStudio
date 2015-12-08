@@ -113,6 +113,11 @@ class Clock
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        return $this->name." ".Clock::formatFreq($this->typical)." ".$this->direction;
+    }
+	
 	/** @brief private function to fill this instance from the input xml structure
 	* 
 	* Can be call only from this node into the constructor

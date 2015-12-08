@@ -39,6 +39,11 @@ class Reset
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        return $this->name." ".$this->group." ".$this->direction;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name		= (string)$xml['name'];

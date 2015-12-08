@@ -181,6 +181,57 @@ class Block
 		$this->addReset($reset);*/
 	}
 	
+	function print_flow()
+	{
+		// count flow in and out
+		$flowIn=array();
+		$maxInLenght=0;
+		$flowOut=array();
+		$maxOutLenght=0;
+		foreach($this->flows as $flow)
+		{
+			if($flow->type=="in")  {$flowIn[]=$flow; $maxInLenght=max($maxInLenght, strlen($flow->name));}
+			if($flow->type=="out") {$flowOut[]=$flow; $maxOutLenght=max($maxOutLenght, strlen($flow->name));}
+		}
+		$lenghtBlock=strlen($this->name)+8;
+		$maxInLenght+=4;
+		$maxOutLenght+=4;
+		
+		echo str_repeat(' ',$maxInLenght).str_repeat('-',$lenghtBlock+2).str_repeat(' ',$maxOutLenght)."\n";
+		$maxFlow = max(count($flowIn), count($flowOut));
+		for($i=0;$i<$maxFlow;$i++)
+		{
+			// first in line
+			if($i<count($flowIn)) echo str_pad($flowIn[$i]->name,$maxInLenght,' ',STR_PAD_BOTH);
+			else echo str_repeat(' ',$maxInLenght);
+			
+			// block 1
+			echo '|';
+			if($i==floor($maxFlow/2)) echo str_pad($this->name,$lenghtBlock,' ',STR_PAD_BOTH); else echo str_repeat(' ',$lenghtBlock);
+			echo '|';
+			
+			// first out line
+			if($i<count($flowOut)) echo str_pad($flowOut[$i]->name,$maxOutLenght,' ',STR_PAD_BOTH);
+			else echo str_repeat(' ',$maxOutLenght);
+			echo "\n";
+			
+			// second in line
+			if($i<count($flowIn)) echo str_repeat('-',$maxInLenght-1).'>';
+			else echo str_repeat(' ',$maxInLenght);
+			
+			// block 2
+			echo '|';
+			echo str_repeat(' ',$lenghtBlock);
+			echo '|';
+			
+			// second out line
+			if($i<count($flowOut)) echo str_repeat('-',$maxOutLenght-1).'>';
+			else echo str_repeat(' ',$maxOutLenght);
+			echo "\n";
+		}
+		echo str_repeat(' ',$maxInLenght).str_repeat('-',$lenghtBlock+2).str_repeat(' ',$maxOutLenght)."\n";
+	}
+	
 	function configure($node, $block)
 	{
 		if(!empty($this->configscriptfile))

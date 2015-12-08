@@ -53,6 +53,11 @@ class Flow
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        return $this->name." ".$this->type." ".$this->size;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->parentBlock = null;

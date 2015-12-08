@@ -45,44 +45,46 @@ switch($action)
 	// =========================== global commands =========================== 
 	case "-h":
 	case "--help":
-		echo "# gpnode command line tool to manage a gpstudio node (v1.0)"."\n";
+		echo "# gpnode command line tool to manage a gpstudio node (v0.9)"."\n";
 		echo ""."\n";
-		echo "# project"."\n";
-		echo "gpnode newproject -n <project-name>		# create a directory named <project-name> with a project file inside named <project-name>.node"."\n";
-		echo "gpnode setboard -n <board-name>		# specify the name of the used board for the node"."\n";
-		echo "gpnode generate [-o <dir>]		# generate all files needed for the specified toolchain and Makefile"."\n";
+		echo "# === project ==="."\n";
+		echo "gpnode newproject -n <project-name>    # create a directory named <project-name> with a project file inside named <project-name>.node"."\n";
+		echo "gpnode setboard -n <board-name>        # specify the name of the used board for the node"."\n";
+		echo "gpnode showboard                       # print the name of the board in the project"."\n";
+		echo "gpnode generate [-o <dir>]             # generate all files needed for the specified toolchain and Makefile"."\n";
 		echo ""."\n";
-		echo "# io"."\n";
-		echo "gpnode addio -n <io-name>		# add IP support in the project to manage <io-name>. <io-name> must be define in the board file definition"."\n";
-		echo "gpnode delio -n <io-name>		# remove io support"."\n";
-		echo "gpnode showio		# print the list of io support in the current project"."\n";
+		echo "# === io ==="."\n";
+		echo "gpnode addio -n <io-name>              # add IP support in the project to manage <io-name>. <io-name> must be define in the board file definition"."\n";
+		echo "gpnode delio -n <io-name>              # remove io support"."\n";
+		echo "gpnode showio                          # print the list of io support in the current project"."\n";
 		echo ""."\n";
-		echo "# process"."\n";
-		echo "gpnode addprocess -n <process-name> -d <driver-name>		# add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir."."\n";
-		echo "gpnode delprocess -n <process-name>		# remove process <process-name> and all the connections to or from it"."\n";
-		echo "gpnode showprocess		# print the list of process in the current project"."\n";
+		echo "# === process ==="."\n";
+		echo "gpnode addprocess -n <process-name> -d <driver-name>       # add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir."."\n";
+		echo "gpnode delprocess -n <process-name>                        # remove process <process-name> and all the connections to or from it"."\n";
+		echo "gpnode showprocess                                         # print the list of process in the current project"."\n";
+		echo "gpnode showblock [-n <block-name> [-f <filter>]]           # print the list of io and process without options. If -n is specified, print the list of params, clocks, resets and properties of the block <block-name>. If -f is specified with -n, show only the list of <filter>."."\n";
 		echo ""."\n";
-		echo "# block attributes"."\n";
-		echo "gpnode renameblock -n <block-name> -v <new-name>		# rename a process block"."\n";
-		echo "gpnode setproperty -n <property-name> -v <default-value>		# define a default value <default-value> to the property <property-name>"."\n";
-		echo "gpnode setparam -n <param-name> -v <value>		# set the value <value> to the param <param-name>"."\n";
-		echo "gpnode setclock -n <clock-name> -v <frequency>		# define the clock frequency <frequency> to the clock <clock-name>"."\n";
-		echo "gpnode setflowsize -n <flow-name> -v <flow-size>		# define the flow size <flow-size> to the flow <flow-name>"."\n";
+		echo "# === block attributes ==="."\n";
+		echo "gpnode renameblock -n <block-name> -v <new-name>           # rename a process block"."\n";
+		echo "gpnode setproperty -n <property-name> -v <default-value>   # define a default value <default-value> to the property <property-name>"."\n";
+		echo "gpnode setparam -n <param-name> -v <value>                 # set the value <value> to the param <param-name>"."\n";
+		echo "gpnode setclock -n <clock-name> -v <frequency>             # define the clock frequency <frequency> to the clock <clock-name>"."\n";
+		echo "gpnode setflowsize -n <flow-name> -v <flow-size>           # define the flow size <flow-size> to the flow <flow-name>"."\n";
 		echo ""."\n";
-		echo "# flow interconnect"."\n";
-		echo "gpnode connect -f <flow-out> -t <flow-in> [-s <bit-shift>]		# add a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in> with a bit shift <bit-shift> ('lsb' or 'msb')"."\n";
-		echo "gpnode unconnect -f <flow-out> -t <flow-in>		# remove a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in>"."\n";
-		echo "gpnode showconnects			# print the list of flow connections in the current project"."\n";
+		echo "# === flow interconnect ==="."\n";
+		echo "gpnode connect -f <flow-out> -t <flow-in> [-s <bit-shift>] # add a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in> with a bit shift <bit-shift> ('lsb' or 'msb')"."\n";
+		echo "gpnode unconnect -f <flow-out> -t <flow-in>                # remove a flow connection between a flow out <flow-out> (ex: mt9.out) to a flow in <flow-in>"."\n";
+		echo "gpnode showconnect                                         # print the list of flow connections in the current project"."\n";
 		echo ""."\n";
-		echo "# clock interconnect"."\n";
-		echo "gpnode setclockdomain -n <domain-name> -v <frequency>		# define a clock frequency <frequency> the the clock domain <domain-name>"."\n";
-		echo "gpnode showclockdomain		# print the list of clock domains in the current project"."\n";
+		echo "# === clock interconnect ==="."\n";
+		echo "gpnode setclockdomain -n <domain-name> -v <frequency>      # define a clock frequency <frequency> the the clock domain <domain-name>"."\n";
+		echo "gpnode showclockdomain                                     # print the list of clock domains in the current project"."\n";
 
 		$save = false;
 		break;
 	case "-v":
 	case "--version":
-		echo "# gpnode command line tool to manage a gpstudio node (v1.0)"."\n";
+		echo "# gpnode command line tool to manage a gpstudio node (v0.9)"."\n";
 		$save = false;
 		break;
 	
@@ -126,8 +128,7 @@ switch($action)
 		break;
 		
 	case "showio":
-		$options = getopt("a:f::");
-		if(array_key_exists('f',$options)) $format = $options['f']; else $format="";
+		$options = getopt("a:");
 		
 		echo "ios :" . "\n";
 		foreach($node->blocks as $block)
@@ -159,8 +160,7 @@ switch($action)
 		break;
 		
 	case "showprocess":
-		$options = getopt("a:f::");
-		if(array_key_exists('f',$options)) $format = $options['f']; else $format="";
+		$options = getopt("a:");
 		
 		echo "process :" . "\n";
 		foreach($node->blocks as $block)
@@ -174,17 +174,61 @@ switch($action)
 		break;
 		
 	case "showblock":
-		$options = getopt("a:f:");
-		if(array_key_exists('f',$options)) $format = $options['f']; else $format="";
+		$options = getopt("a:n:f:");
+		if(array_key_exists('n',$options)) $blockName = $options['n']; else $blockName="";
+		if(array_key_exists('f',$options)) $filter = $options['f']; else $filter="";
 		
-		echo "blocks :" . "\n";
-		foreach($node->blocks as $block)
+		if($blockName=="")	// list blocks
 		{
-			if($block->type()=="process" or $block->type()=="io" or $block->type()=="iocom")
+			echo "blocks :" . "\n";
+			foreach($node->blocks as $block)
 			{
-				echo "  + ".$block->name." [".$block->type()." - ".$block->driver."]" . "\n";
+				if($block->type()=="process" or $block->type()=="io" or $block->type()=="iocom")
+				{
+					echo "  + ".$block->name." [".$block->type()." - ".$block->driver."]" . "\n";
+				}
 			}
 		}
+		else				// list content of blockName
+		{
+			$block = $node->getBlock($blockName);
+			if($block==NULL) error("Block '".$blockName."' doesn't exists."."\n",1);
+			
+			// flows
+			if($filter=="" or $filter=="flows" or $filter=="flow" or $filter=="f")
+			{
+				echo "flows :"."\n";
+				$block->print_flow();
+			}
+			// params
+			if($filter=="" or $filter=="params" or $filter=="param" or $filter=="p")
+			{
+				echo "params :"."\n";
+				foreach($block->params as $param)
+				{
+					echo "  + ".$param."\n";
+				}
+			}
+			// clocks
+			if($filter=="" or $filter=="clocks" or $filter=="clock" or $filter=="c")
+			{
+				echo "clocks :"."\n";
+				foreach($block->clocks as $clock)
+				{
+					echo "  + ".$clock."\n";
+				}
+			}
+			// resets
+			if($filter=="" or $filter=="resets" or $filter=="reset" or $filter=="r")
+			{
+				echo "resets :"."\n";
+				foreach($block->resets as $reset)
+				{
+					echo "  + ".$reset."\n";
+				}
+			}
+		}
+		
 		$save = false;
 		break;
 		
@@ -213,7 +257,7 @@ switch($action)
 		if($toFlow->type!="in") error("Flow '".$toRes[1]."' in '".$toRes[0]."' isn't a flow in."."\n",1);
 		break;
 		
-	case "showconnects":
+	case "showconnect":
 		// nothing to do
 		$save = false;
 		break;
@@ -329,7 +373,7 @@ switch($action)
 		$save = false;
 		break;
 		
-	case "listprocess":
+	case "listblock":
 		foreach($node->blocks as $block) echo $block->name.' ';
 		$save = false;
 		break;
@@ -473,7 +517,7 @@ switch($action)
 		$fi->delFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name);
 		break;
 		
-	case "showconnects":
+	case "showconnect":
 		echo "connects :" . "\n";
 		foreach($node->getBlock("fi")->flow_connects as $flow_connect)
 		{

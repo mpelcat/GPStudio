@@ -11,7 +11,7 @@ _gpnode()
                     "addio" "delio" "showio"
                     "addprocess" "delprocess" "showprocess" "showblock"
                     "renameblock" "setproperty" "setparam" "setclock" "setflowsize"
-                    "connect" "unconnect" "showconnects"
+                    "connect" "unconnect" "showconnect"
                     "setclockdomain" "showclockdomain")
 
     local command i
@@ -29,7 +29,7 @@ _gpnode()
         case $count in
             3)
                 case $command in
-                    newproject|setboard|addio|delio|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain)
+                    newproject|setboard|addio|delio|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain|showblock)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -45,6 +45,10 @@ _gpnode()
                 ;;
             4)
                 case $command in
+                    showblock)
+                        COMPREPLY=( $( compgen -W '$( gpnode listblock )' -- "$cur" ) )
+                        return 0
+                        ;;
                     addio)
                         COMPREPLY=( $( compgen -W '$( gpnode listavailableio )' -- "$cur" ) )
                         return 0
@@ -93,6 +97,10 @@ _gpnode()
                         COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
                         return 0
                         ;;
+                    showblock)
+                        COMPREPLY=( $( compgen -W '-f' -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
             6)
@@ -103,6 +111,10 @@ _gpnode()
                         ;;
                     addprocess)
                         COMPREPLY=( $( compgen -W '$( gplib listprocess )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    showblock)
+                        COMPREPLY=( $( compgen -W 'clocks resets params flows' -- "$cur" ) )
                         return 0
                         ;;
                 esac

@@ -21,11 +21,11 @@ switch($action)
 	// =========================== global commands =========================== 
 	case "-h":
 	case "--help":
-		echo "# gplib command line tool to manage gpstudio lib (v1.0)"."\n";
+		echo "# gplib command line tool to manage gpstudio lib (v0.9)"."\n";
 		break;
 	case "-v":
 	case "--version":
-		echo "# gplib command line tool to manage gpstudio lib (v1.0)"."\n";
+		echo "# gplib command line tool to manage gpstudio lib (v0.9)"."\n";
 		break;
 	
 	// =========================== list commands =========================== 
