@@ -179,7 +179,8 @@ class ClockInterconnect extends Block
 				{
 					$clock->typical = $this->clock_providers[0]->typical;
 					
-					warning("No clock specified in .node file for domain '".$clock->domain."', automaticaly choose : ".Clock::formatFreq($clock->typical),20,'CI');
+					// TODO print this warning at generate step
+					//warning("No clock specified in .node file for domain '".$clock->domain."', automaticaly choose : ".Clock::formatFreq($clock->typical),20,'CI');
 					
 					$domain = new ClockDomain();
 					$domain->name = $clock->domain;
