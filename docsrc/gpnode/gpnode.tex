@@ -8,6 +8,7 @@
 \usepackage{lmodern}
 \usepackage{fancyvrb}
 \usepackage{tikz}
+\usepackage{verbatim}
 
 \input{../gpstudio_doc.tex}
 
@@ -22,11 +23,11 @@ gpnode is a command line tool that permits to create and manage a node project i
 A node in GPStudio is a physical node, it can be a smart camera or a sensor.
 
 \section{Use}
-gpnode always takes the project in the current directory, so you only can have one project per directory. A node project file have the '.node' extension.
+gpnode always takes the project in the current directory, so you only can have one project per directory. A node project file have the `.node' extension.
 
 At the very beginning, you need to create a project with the \emph{newproject} command. After that, you can use all the commands set on this project.
 
-Please read the tutorial 'GPStudio command line quick start' to learn how to use this tool.
+Please read the tutorial `GPStudio command line quick start' to learn how to use this tool.
 
 Under linux, you have a completion script to help you to writing commands.
 
@@ -35,10 +36,10 @@ Under linux, you have a completion script to help you to writing commands.
 \subsubsection{newproject}
 \command{\textbf{gpnode} \textbf{newproject} -n <project-name>}
 
-Create a project file inside the current directory named '\emph{<project-name>}.node'.
+Create a project file inside the current directory named `\texttt{<project-name>}.node'.
 
 \sampletitle{> \textbf{gpnode} \textbf{newproject} -n project1}
-\samplecomment{Create a new project named project1. After that, you may have a file project project1.node in the current directory.}
+\samplecomment{Create a new project named \texttt{project1}. After that, you may have a file project \texttt{project1.node} in the current directory.}
 
 \subsubsection{setboard}
 \command{\textbf{gpnode} \textbf{setboard} -n <board-name>}
@@ -48,6 +49,8 @@ Specify the name of the used board for the node. You need to specify a board bef
 \sampletitle{> \textbf{gpnode} \textbf{setboard} -n dreamcam\_c3}
 \samplecomment{Your project is now base on the dreamcam platform. You can now use all the image sensors and communication for this platform.}
 
+\seealso{\textbf{gplib listboards} and \textbf{gpnode showboard}}
+
 \subsubsection{showboard}
 \command{\textbf{gpnode} \textbf{showboard}}
 
@@ -56,30 +59,32 @@ Print the name of the board specified in the current project.
 \sampletitle{> \textbf{gpnode} \textbf{showboard}\\
 dreamcam\_c3}
 
+\seealso{\textbf{gpnode setboard}}
+
 \subsubsection{generate}
 \command{\textbf{gpnode} \textbf{generate} [-o <dir>]}
 
-Generate all files needed for the specified toolchain and Makefile. After that, you just need to call 'make compile' to compile the project with specific tools needed by the node.
+Generate all files needed for the specified toolchain and Makefile. After that, you just need to call `make compile' in the directory \texttt{build/} to compile the project with specific tools needed by the node.
 
 \sampletitle{> \textbf{gpnode} \textbf{generate} -o build/\\
 > cd build\\
 > make compile}
-\samplecomment{Build the project in the subdirectory build/ with a Makefile. In this directory, you can execute make compile to call the compiler for the specified platform.}
+\samplecomment{Build the project in the subdirectory \texttt{build/} with a Makefile. In this directory, you can execute make compile to call the compiler for the specified platform.}
 
 \subsection{io}
 \subsubsection{addio}
 \command{\textbf{gpnode} \textbf{addio} -n <io-name>}
 
-Add IP support in the project to manage \emph{<io-name>}. \emph{<io-name>} must be define in the board file definition.
+Add IP support in the project to manage \texttt{<io-name>}. \texttt{<io-name>} must be define in the board file definition.
 
 \sampletitle{> \textbf{gpnode} \textbf{addio} -n mt9\\
 > \textbf{gpnode} \textbf{showblock}\\blocks :\\ + mt9 [mt9]}
-\samplecomment{Add the support for mt9 image sensor. You will have a block named mt9 in the project.}
+\samplecomment{Add the support for mt9 image sensor. You have a block named mt9 in the project.}
 
 \subsubsection{delio}
 \command{\textbf{gpnode} \textbf{delio} -n <io-name>}
 
-Remove io support named \emph{<io-name>}.
+Remove io support named \texttt{<io-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{delio} -n mt9}
 \samplecomment{Remove the mt9 support and the block mt9 with all the flow connection from it.}
@@ -87,7 +92,7 @@ Remove io support named \emph{<io-name>}.
 \subsubsection{showio}
 \command{\textbf{gpnode} \textbf{showio}}
 
-Print the list of all the io support in the current project. The output format is : + <block-name> [<block-driver>]
+Print the list of all the io support in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-driver>}]
 
 \sampletitle{> \textbf{gpnode} \textbf{showio}\\ios :\\ + mt9 [mt9]\\ + usb [usb\_cypress\_CY7C68014A]}
 
@@ -95,7 +100,7 @@ Print the list of all the io support in the current project. The output format i
 \subsubsection{addprocess}
 \command{\textbf{gpnode} \textbf{addprocess} -n \emph{<process-name>} -d \emph{<driver-name>}}
 
-Add a process named \emph{<process-name>} as an instance of \emph{<driver-name>} IP in the library or the project dir.
+Add a process named \texttt{<process-name>} as an instance of \texttt{<driver-name>} IP in the library or the project dir.
 
 \sampletitle{> \textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw\\
 > \textbf{gpnode} \textbf{showprocess}\\process :\\ + process1 [gradienthw]}
@@ -104,24 +109,24 @@ Add a process named \emph{<process-name>} as an instance of \emph{<driver-name>}
 \subsubsection{delprocess}
 \command{\textbf{gpnode} \textbf{delprocess} -n <process-name>}
 
-Remove process \emph{<process-name>} and all the connections to or from it.
+Remove process \texttt{<process-name>} and all the connections to or from it.
 
-\sampletitle{> \textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw}
-\samplecomment{Remove process1.}
+\sampletitle{> \textbf{gpnode} \textbf{delprocess} -n process1}
+\samplecomment{Remove `process1'.}
 
 \subsubsection{showprocess}
 \command{\textbf{gpnode} \textbf{showprocess}}
 
-Print the list of process in the current project. The output format is : + <block-name> [<block-driver>]
+Print the list of process in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-driver>}]
 
-\sampletitle{> \textbf{gpnode} \textbf{showprocess}\\process :\\ + process1 [gradienthw]\\ + process2 [gradienthw]}
+\sampletitle{> \textbf{gpnode} \textbf{showprocess}\\process :\\ + process1 [gradienthw]\\ + process2 [lbp]}
 
 \subsubsection{showblock}
-\command{\textbf{gpnode} \textbf{showblock}}
+\command{\textbf{gpnode} \textbf{showblock} [-n \emph{<process-name>} [-d \emph{<driver-name>}]]}
 
-Print the list of process and io in the current project. The output format is : + <block-name> [<block-type> - <block-driver>]
+If -n option is not setted, print the list of process and io in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-type>} - \texttt{<block-driver>}]
 
-\sampletitle{\textbf{gpnode} \textbf{showblock}\\blocks :\\
+\sampletitle{> \textbf{gpnode} \textbf{showblock}\\blocks :\\
   + led [io - leds]\\
   + mt9 [io - mt9]\\
   + usb [iocom - usb\_cypress\_CY7C68014A]\\
@@ -129,35 +134,75 @@ Print the list of process and io in the current project. The output format is : 
   + conv [process - conv]\\
   + lbp [process - lbp]}
 
+If -n option is setted, print the list of params, clocks, resets and flow of the block \texttt{<block-name>}.
+
+\sampletitle{> \textbf{gpnode} \textbf{gpnode showblock} -n usb\\
+params :\\
+  + generic IN0\_NBWORDS type: int value: 32768\\
+  + generic IN1\_NBWORDS type: int value: 32768\\
+  + generic IN2\_NBWORDS type: int value: 32768\\
+  + generic IN3\_NBWORDS type: int value: 32768\\
+  + generic OUT0\_NBWORDS type: int value: 1024\\
+  + generic OUT1\_NBWORDS type: int value: 1024\\
+  + register status regaddr: 0 propertymap: \\
+  + register flow\_in0 regaddr: 1 propertymap: \\
+  + register flow\_in1 regaddr: 2 propertymap: \\
+  + register flow\_in2 regaddr: 3 propertymap: \\
+  + register flow\_in3 regaddr: 4 propertymap: \\
+clocks :\\
+  + clk\_proc  Hz in\\
+  + clk\_usb 48 MHz out\\
+resets :\\
+  + reset reset\_n out
+}
+
+If -f is specified with -n, show only the list of \texttt{<filter>}.
+
+\sampletitle{> \textbf{gpnode} \textbf{gpnode showblock} -n usb -f params\\
+params :\\
+  + generic IN0\_NBWORDS type: int value: 32768\\
+  + generic IN1\_NBWORDS type: int value: 32768\\
+  + generic IN2\_NBWORDS type: int value: 32768\\
+  + generic IN3\_NBWORDS type: int value: 32768\\
+  + generic OUT0\_NBWORDS type: int value: 1024\\
+  + generic OUT1\_NBWORDS type: int value: 1024\\
+  + register status regaddr: 0 propertymap: \\
+  + register flow\_in0 regaddr: 1 propertymap: \\
+  + register flow\_in1 regaddr: 2 propertymap: \\
+  + register flow\_in2 regaddr: 3 propertymap: \\
+  + register flow\_in3 regaddr: 4 propertymap:
+}
+\samplecomment{Print only the list of params}
+
 \subsection{block attributes}
 \subsubsection{renameblock}
 \command{\textbf{gpnode} \textbf{renameblock} -n <block-name> -v <new-name>}
 
-Rename a process block.
+Rename block the block named \texttt{<block-name>} with the name \texttt{<new-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{renameblock} -n process1 -v first\_gradient}
-\samplecomment{Rename the block named 'process1' with the name 'first\_gradient'.}
+\samplecomment{Rename the block named `process1' with the name `first\_gradient'.}
 
 \subsubsection{setproperty}
 \command{\textbf{gpnode} \textbf{setproperty} -n <property-name> -v <default-value>}
 
-Define a default value \emph{<default-value>} to the property \emph{<property-name>}.
+Define a default value \texttt{<default-value>} to the property \texttt{<property-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{setproperty} -n mt9.roi1.w -v 1280}
-\samplecomment{When you launch the camera, you will have image from mt9 with a width of 1280 pixels.}
+\samplecomment{When you launch the camera, you have image from mt9 with a width of 1280 pixels.}
 
 \subsubsection{setparam}
 \command{\textbf{gpnode} \textbf{setparam} -n <param-name> -v <value>}
 
-Set the value \emph{<value>} to the param \emph{<param-name>}.
+Set the value \texttt{<value>} to the param \texttt{<param-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{setparam} -n usb.IN0\_NBWORDS -v 2048}
-\samplecomment{Redefine the parameter IN0\_NBWORDS of usb block to 2048 blocks. It's the size of the fifo for in0 input flow.}
+\samplecomment{Redefine the parameter IN0\_NBWORDS of usb block to 2048 blocks. It is the size of the fifo for in0 input flow.}
 
 \subsubsection{setclock}
 \command{\textbf{gpnode} \textbf{setclock} -n <clock-name> -v <frequency>}
 
-Define the clock frequency \emph{<frequency>} to the clock \emph{<clock-name>}.
+Define the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{setclock} -n mt9.clk\_img -v 10M}
 \samplecomment{Redefine the input pixel clock of mt9 io block.}
@@ -165,7 +210,7 @@ Define the clock frequency \emph{<frequency>} to the clock \emph{<clock-name>}.
 \subsubsection{setflowsize}
 \command{\textbf{gpnode} \textbf{setflowsize} -n <flow-name> -v <flow-size>}
 
-Redefine the flow size \emph{<flow-size>} to the flow \emph{<flow-name>}.
+Redefine the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{setflowsize} -n usb.in0 -v 16}
 \samplecomment{Redefine the width of input flow in0 of usb block to 16 bits.}
@@ -174,25 +219,29 @@ Redefine the flow size \emph{<flow-size>} to the flow \emph{<flow-name>}.
 \subsubsection{connect}
 \command{\textbf{gpnode} \textbf{connect} -f <flow-out> -t <flow-in> [-s <bit-shift>]}
 
-Add a flow connection between a flow out \emph{<flow-out>} (ex: mt9.out) to a flow in \emph{<flow-in>} with a bit shift \emph{<bit-shift>} ("lsb" or "msb").
+Add a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>} with a bit shift \texttt{<bit-shift>} ("lsb" or "msb").
 
 \sampletitle{> \textbf{gpnode} \textbf{connect} -f mt9.out -t usb.in0}
-\samplecomment{Connect the output 'out' of mt9 block to the input 'in0' of usb to have a direct connection between the image sensor and usb communication.}
+\samplecomment{Connect the output `out' of mt9 block to the input `in0' of usb to have a direct connection between the image sensor and usb communication.}
+
+\seealso{\textbf{gpnode unconnect} and \textbf{gpnode showconnect}}
 
 \subsubsection{unconnect}
 \command{\textbf{gpnode} \textbf{unconnect} -f <flow-out> -t <flow-in>}
 
-Remove a flow connection between a flow out \emph{<flow-out>} (ex: mt9.out) to a flow in \emph{<flow-in>}.
+Remove a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{unconnect} -f mt9.out -t usb.in0}
 \samplecomment{Remove the direct connection between the image sensor and usb communication.}
 
-\subsubsection{showconnects}
-\command{\textbf{gpnode} \textbf{showconnects}}
+\seealso{\textbf{gpnode connect} and \textbf{gpnode showconnect}}
+
+\subsubsection{showconnect}
+\command{\textbf{gpnode} \textbf{showconnect}}
 
 Print the list of flow connections in the current project.
 
-\sampletitle{> \textbf{gpnode} \textbf{showconnects}\\
+\sampletitle{> \textbf{gpnode} \textbf{showconnect}\\
 connects :\\
   + mt9.out -> usb.in0 (msb)\\
   + process1.magnitude -> usb.in0 (lsb)\\
@@ -202,14 +251,18 @@ connects :\\
   + mt9.out -> lbp.in (msb)\\
   + lbp.out -> usb.in1 (msb)}
 
+\seealso{\textbf{gpnode connect} and \textbf{gpnode unconnect}}
+
 \subsection{clock interconnect}
 \subsubsection{setclockdomain}
 \command{\textbf{gpnode} \textbf{setclockdomain} -n <domain-name> -v <frequency>}
 
-Define a clock frequency \emph{<frequency>} the the clock domain \emph{<domain-name>}.
+Define a clock frequency \texttt{<frequency>} the the clock domain \texttt{<domain-name>}.
 
 \sampletitle{> \textbf{gpnode} \textbf{setclockdomain} -n clk\_proc -v 50M}
 \samplecomment{Set the main clock domain to 50MHz.}
+
+\seealso{\textbf{gpnode showclockdomain}}
 
 \subsubsection{showclockdomain}
 \command{\textbf{gpnode} \textbf{showclockdomain}}
@@ -219,6 +272,8 @@ Print the list of clock domains in the current project.
 \sampletitle{> \textbf{gpnode} \textbf{showclockdomain}\\
 domains :\\
   + clk\_proc = 48 MHz}
+
+\seealso{\textbf{gpnode setclockdomain}}
 
 %\subsection{lists}
 %\subsubsection{listavailableio}

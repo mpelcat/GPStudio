@@ -8,7 +8,7 @@
 \usepackage{lmodern}
 \usepackage{fancyvrb}
 
-\usepackage{dot2texi}
+%\usepackage{dot2texi}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
@@ -20,14 +20,17 @@
 \begin{document}
 \maketitle
 \section{Introduction}
-This tutorial is done to show how GPStudio is simple to use when you are using only IP in library on a supported board. For this example, we will use the famous Dreamcam platform, the firt platform supported by GPStudio.\\
+This tutorial is done to show how GPStudio is simple to use when you are using only IP in library on a supported board. For this example, we use the famous Dreamcam platform, the firt platform supported by GPStudio.\\
 
-In this tutorial, we will create a project for a specific platform and configure the platform. After that, we will add some process in the project, setting up and connect process each other.
+In this tutorial, we create a project for a specific platform and configure the platform. After that, we add some process in the project, setting up and connect process each other.
 
-Finally, we will configure the smart camera with the compiled project and check results of processing on viewer interface.
+Finally, we configure the smart camera with the compiled project and check results of processing on viewer interface.
 
-\section{Create the project}
+\section{Driving the flow from image sensor to USB}
+\subsection{Create the project and configure platform}
 First of all, you need to create the project in an empty directory :
+
+\textbf{setenv}\\
 
 \sample{
 > mkdir tuto1\\
@@ -35,7 +38,7 @@ First of all, you need to create the project in an empty directory :
 > \textbf{gpnode} \textbf{newproject} -n tuto1
 }
 
-After that, you should have a file named \emph{tuto1.node} in the current directory. This file is the project file and contain the definition of the node. Please notify that you can have only one project file per directory and gpnode always works on the project in the current directory. The directory name could be different that the project name, but you shouldn't modify the name of the project file.\\
+After that, you should have a file named \emph{tuto1.node} in the current directory. This file is the project file and contain the definition of the node. Please notify that you can have only one project file per directory and gpnode always works on the project in the current directory. The directory name could be different that the project name, but you should not modify the name of the project file.\\
 
 The next thing to do is to specify the platform that you want to use for this project. You can do it with :
 
@@ -43,14 +46,20 @@ The next thing to do is to specify the platform that you want to use for this pr
 > \textbf{gpnode} \textbf{setboard} -n dreamcam\_c3
 }
 
+`dreamcam\_c3' corresponds to a DreamCam platform with Cyclone III FPGA. The board support package for the `dreamcam\_c3' camera is located at :
+
+\emph{<gps-root>/support/board/dreamcam\_c3/dreamcam\_c3.dev}
+
 DreamCam is now set as target platform. You can check that with the command showboard :
 
 \sample{
 > \textbf{gpnode} \textbf{showboard}\\
 dreamcam\_c3}
 
-\section{Add IO support that you need}
-Until now, we only specify the Dreamcam as platform, but it's a modular one, you can use different types of image sensor and communication. It require to define witch one we want to use by adding the support of theses peripherals. \\
+\subsection{Add IO support that you need}
+Until now, we only specify the Dreamcam as platform, but it is a modular one, you can use different types of image sensor and communication. It require to define witch one we want to use by adding the support of theses peripherals. \\
+
+command to know available ios
 
 For image sensor, you have two possibilities, mt9 from Aptina or e2v. For this example, we choose mt9 :
 
@@ -75,7 +84,43 @@ ios :\\
  + usb [usb\_cypress\_CY7C68014A]
 }
 
-\section{Add process that you need}
+\subsection{Connect block flow}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=8cm]
+
+\tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=3cm}};
+
+% blocks
+\node[blocstyle] (bloc1) {MT9\\Image sensor};
+\node[blocstyle,minimum height=4cm] (bloc2) at (7,-1.5) {USB\\Communication};
+
+% Flow to
+%\path[connect,->] ([yshift=0.5cm]bloc1.east) -- node[above]{flow1\_data} node{/} ([yshift=0.5cm]bloc2.west);
+%\path[connect,->] (bloc1.east) -- node[above]{flow1\_dv} (bloc2.west);
+%\path[connect,->] ([yshift=-0.5cm]bloc1.east) -- node[above]{flow1\_fv} ([yshift=-0.5cm]bloc2.west);
+\path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in0} ([yshift=1.5cm]bloc2.west);
+\path[connect,<-] ([yshift=0.5cm]bloc2.west) -- node[above]{in1} ++(-1,0);
+\path[connect,<-] ([yshift=-0.5cm]bloc2.west) -- node[above]{in2} ++(-1,0);
+\path[connect,<-] ([yshift=-1.5cm]bloc2.west) -- node[above]{in3} ++(-1,0);
+
+\end{tikzpicture}
+\caption{Details on flow connexion}
+\end{figure}
+
+
+\sample{
+> \textbf{gpnode} \textbf{connect} -f mt9.out -t usb.in0
+}
+
+\sample{
+> \textbf{gpnode} \textbf{showconnects}\\
+connects :\\
+  + mt9.out -> usb.in0 (msb)}
+
+\section{Adding a process from GPStudio library}
+\subsection{Add process that you need}
 
 
 \sample{> \textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw}
@@ -83,18 +128,5 @@ ios :\\
 \sample{
 > \textbf{gpnode} \textbf{showprocess}\\process :\\ + process1 [gradienthw]}
 
-\section{Connect block flow}
-\sample{
-> \textbf{gpnode} \textbf{connect} -f mt9.out -t usb.in0
-}
-%\begin{dot2tex}[dot,options=-tmath -fpgf]
-%digraph G {
-%	mt9[shape = record,label = "{{}|mt9|{<out> out (8)}}", width=1, fixedsize=true, height=1];
-%	usb[shape = record,label = "{{<in0> in0 (8)|<in1> in1 (8)|<in2> in2 (16)|<in3> in3 (16)}|usb|{<out0> out0 (16)|<out1> out1 (8)}}", width=2,fixedsize=true];
-%	"mt9":out -> "usb":in0;
-%	node [shape="circle"];
-%    a_1 -> a_2 -> a_3 -> a_4 -> a_1;
-%}
-%\end{dot2tex}
 
 \end{document}

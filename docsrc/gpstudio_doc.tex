@@ -12,7 +12,7 @@
 }
 
 \newcommand{\sample}[1]{%
-\noindent \fcolorbox{black}{lightgray}{%
+\noindent \par \fcolorbox{black}{lightgray}{%
    \begin{minipage}{\textwidth}%
       #1
    \end{minipage}%
@@ -20,11 +20,25 @@
 }
 
 \newcommand{\sampletitle}[1]{%
-\vspace{0.2cm}Exemple :\\%
-\noindent \sample{#1}%
+\vspace{0.2cm} \noindent\textbf{Example} :\\%
+\noindent \fcolorbox{black}{lightgray}{%
+   \begin{minipage}{\textwidth}%
+      #1
+   \end{minipage}%
+}
 }
 
 \newcommand{\samplecomment}[1]{%
 
 \textit{#1}
 }
+
+\newcommand{\seealso}[1]{\vspace{0.2cm} \noindent\textbf{See also} :\par #1}
+
+% tikz
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shadows}
+
+\tikzset{block/.style={draw, text centered, fill=gray!10,drop shadow}}
+\tikzset{connect/.style={draw, line width=1 pt}}
