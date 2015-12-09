@@ -51,7 +51,7 @@ function getComments($text,$type)
 	}
 	elseif($type=="php")
 	{
-		return "<?php"."\n"."/**"."\n".$text."**/"."\n"."?>"."\n"."\n";
+		return "<?php"."\n"."/**"."\n".$text."**/"."\n"."?>"."\n";
 	}
 	else return $text;
 }

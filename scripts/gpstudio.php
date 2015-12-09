@@ -193,4 +193,41 @@ function cpy_dir($source, $dest)
     }
 }
 
+function getRelativePath($path, $dir)
+{
+	$path=realpath($path);
+	$dir=realpath($dir);
+	
+	if(is_dir($path))
+	{
+		$dirSrc = realpath($path);
+		$srcName = '';
+	}
+	else
+	{
+		$dirSrc = dirname($path);
+		$srcName = basename($path);
+	}
+	
+	if($dirSrc==$dir)
+	{
+		return $srcName; // file in dir
+	}
+	
+	if(strpos($dir, $dirSrc)===0)
+	{
+		$back_dir = str_replace($dirSrc, "", $dir);
+		$back_count = substr_count($back_dir, DIRECTORY_SEPARATOR);
+		return str_repeat("..".DIRECTORY_SEPARATOR, $back_count).$srcName;
+	}
+	
+	if(strpos($dirSrc, $dir)===0)
+	{
+		$back_dir = str_replace($dir.DIRECTORY_SEPARATOR, "", $dirSrc);
+		return $back_dir;
+	}
+	
+	return $path;
+}
+
 ?>

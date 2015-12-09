@@ -106,6 +106,7 @@ switch($action)
 	case "generate":
 		$options = getopt("a:o:");
 		if(array_key_exists('o',$options)) $outDir = $options['o']; else $outDir=getcwd();
+		$save=false;
 		break;
 		
 	// =========================== io commands =========================== 
