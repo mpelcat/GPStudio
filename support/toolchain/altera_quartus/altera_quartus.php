@@ -282,15 +282,16 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= "	$(error Define GPS_LIB in Makefile.local)"."\r\n";
 		$content .= "endif"."\r\n";
 		$content .= ""."\r\n";
-		$content .= "PROJECT=$nodename"."\r\n";
-		$content .= ""."\r\n";
 		$content .= "all: generate compile send view"."\r\n";
 		$content .= ""."\r\n";
-		$content .= "generate: ".$node->node_file."\r\n";
-		$content .= "	php \"$(GPS_LIB)generate_node.php\" ".$node->node_file." \${OPT}"."\r\n";
+		$content .= "generate: ".getRelativePath($node->node_file, $path)."\r\n";
+		if(dirname($node->node_file)==realpath($path))
+			$content .= "	gpnode generate \${OPT}"."\r\n";
+		else
+			$content .= "	cd \"".getRelativePath(dirname($node->node_file), $path)."\" && gpnode generate -o \"".getRelativePath($path, dirname($node->node_file))."\" \${OPT}"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "compile:"."\r\n";
-		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $(PROJECT).qpf"."\r\n";
+		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $nodename.qpf"."\r\n";
 		$content .= "send:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
 		$content .= "view:"."\r\n";
