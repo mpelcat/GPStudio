@@ -1,6 +1,6 @@
 SRC= $(wildcard ../scripts/*.php) $(wildcard ../scripts/*/*.php) $(wildcard ../support/toolchain/)
 
-all: manual gpnode tutorial doc-backend
+all: manual gpnode gplib tutorial doc-backend
 
 doc:
 	mkdir -p ../doc/
@@ -27,6 +27,11 @@ gpnode: doc FORCE
 	cd gpnode/ && make -f Makefile
 gpnode-clean: FORCE
 	cd gpnode/ && make clean -f Makefile
+
+gplib: doc FORCE
+	cd gplib/ && make -f Makefile
+gplib-clean: FORCE
+	cd gplib/ && make clean -f Makefile
 
 tutorial: doc FORCE
 	cd tutorial/ && make -f Makefile

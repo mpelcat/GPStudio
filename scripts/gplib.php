@@ -22,6 +22,10 @@ switch($action)
 	case "-h":
 	case "--help":
 		echo "# gplib command line tool to manage gpstudio lib (v0.9)"."\n";
+		echo "gplib listprocess"."\n";
+		echo "gplib listio"."\n";
+		echo "gplib listboard"."\n";
+		echo "gplib listtoolchain"."\n";
 		break;
 	case "-v":
 	case "--version":
@@ -33,15 +37,15 @@ switch($action)
 		echo implode(" ",$lib->process) . "\n";
 		break;
 		
-	case "listios":
+	case "listio":
 		echo implode(" ",$lib->ios) . "\n";
 		break;
 		
-	case "listboards":
+	case "listboard":
 		echo implode(" ",$lib->boards) . "\n";
 		break;
 		
-	case "listtoolchains":
+	case "listtoolchain":
 		echo implode(" ",$lib->toolchains) . "\n";
 		break;
 	

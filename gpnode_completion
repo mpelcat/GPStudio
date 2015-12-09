@@ -54,7 +54,7 @@ _gpnode()
                         return 0
                         ;;
                     setboard)
-                        COMPREPLY=( $( compgen -W '$( gplib listboards )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gplib listboard )' -- "$cur" ) )
                         return 0
                         ;;
                     setproperty)

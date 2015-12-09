@@ -1,0 +1,62 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lmodern}
+\usepackage{fancyvrb}
+\usepackage{tikz}
+\usepackage{verbatim}
+
+\input{../gpstudio_doc.tex}
+
+\author{Sebastien CAUX}
+\title{gplib doc \version}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+gplib is a command line tool that permits to examine and manage GPStudio library.
+
+\section{Use}
+gplib always give you information of library including by the current distribution.
+
+Under linux, you have a completion script to help you to writing commands.
+
+\section{Commands}
+\subsection{Lists}
+\subsubsection{listboard}
+\command{\textbf{gplib} \textbf{listboard}}
+
+Give the list of all available board support package.
+
+\sampletitle{> \textbf{gplib} \textbf{listboard}\\
+arrow\_sockit de0nano dreamcam\_c3 stratixcam\_s4}
+
+\subsubsection{listio}
+\command{\textbf{gplib} \textbf{listio}}
+
+Give the list of all available ios.
+
+\sampletitle{> \textbf{gplib} \textbf{listio}\\
+leds mt9 usb\_cypress\_CY7C68014A}
+
+\subsubsection{listprocess}
+\command{\textbf{gplib} \textbf{listprocess}}
+
+Give the list of all available processes.
+
+\sampletitle{> \textbf{gplib} \textbf{listprocess}\\
+conv gradienthw histogramhw hog lbp normhw roi slidevm}
+
+\subsubsection{listtoolchain}
+\command{\textbf{gplib} \textbf{listtoolchain}}
+
+Give the list of all available tool chains.
+
+\sampletitle{> \textbf{gplib} \textbf{listtoolchain}\\
+altera\_quartus hdl}
+
+\end{document}
