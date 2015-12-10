@@ -381,7 +381,7 @@ switch($action)
 		
 	case "listavailableio":
 		if(!isset($node->board)) exit(0);
-		echo implode(" ",$node->board->availableIos());
+		echo implode(" ",$node->board->availableIosName())."\n";
 		$save = false;
 		break;
 		

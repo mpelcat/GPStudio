@@ -482,7 +482,7 @@ class Board
 		}
 	}
 	
-	function availableIos()
+	function availableIosName()
 	{
 		$result = array();
 		if(isset($this->xml->ios->io))
