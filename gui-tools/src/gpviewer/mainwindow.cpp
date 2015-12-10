@@ -5,7 +5,6 @@
 #include <QImage>
 #include <QFileDialog>
 #include <QFile>
-#include <QtWidgets>
 
 #include <QDateTime>
 
@@ -214,7 +213,7 @@ void MainWindow::viewFlow(int flow)
     }
     if(flow==1)
     {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w-5, h-5, 8);
+        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
         _viewers[1]->showImage(*image);
         delete image;
     }
