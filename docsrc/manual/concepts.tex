@@ -1,19 +1,25 @@
 \chapter{Concepts}
 
+Schema node ex
+
 \section{Blocks}
 
-\subsection{IO}
+2 types de blocks
+
+%\subsection{IO}
 IO block is an interface between exterior of the node and the inside. It could be a communication with others nodes or sensors. 
 
-\subsection{Process}
+%\subsection{Process}
 A process block have the capability to transform data witch come from input to processed data depending of internal parameters.
 
 \begin{equation}
 fout_{i}=f(\underline{fin}, \underline{parameters})
 \end{equation}
 
+It have at least one input and one output, parameters are optional.
+
 \section{Flows}
-Flow is a dedicated connexion between a flow interface input and a flow interface output of two blocks.
+Flow is a dedicated connexion between a flow interface input and a flow interface output of two blocks. dataflow KPN
 
 \section{Node}
 A node in GPStudio is a physical platform, it can be a smart camera or a sensor.

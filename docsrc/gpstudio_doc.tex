@@ -4,29 +4,26 @@
 }
 
 \newcommand{\command}[1]{%
-\noindent \fcolorbox{black}{white}{%
-   \begin{minipage}{\textwidth}%
+\indent \fcolorbox{black}{white}{%
+   \begin{minipage}{\dimexpr\textwidth-\parindent\relax}%
       #1
    \end{minipage}%
 }
 }
 
-\newcommand{\sample}[1]{%
-\noindent \par \fcolorbox{black}{lightgray}{%
-   \begin{minipage}{\textwidth}%
-      #1
-   \end{minipage}%
-}
-}
+\newsavebox{\FVerbBox}
+\newenvironment{sample}
+{\par \vspace{0.2cm} \begin{lrbox}{\FVerbBox}
+\begin{minipage}{\dimexpr\textwidth-\parindent\relax}}
+{\end{minipage}
+\end{lrbox}
+\fcolorbox{black}{lightgray}{\usebox{\FVerbBox}}
+\vspace{0.2cm}}
 
-\newcommand{\sampletitle}[1]{%
-\vspace{0.2cm} \noindent\textbf{Example} :\\%
-\noindent \fcolorbox{black}{lightgray}{%
-   \begin{minipage}{\textwidth}%
-      #1
-   \end{minipage}%
-}
-}
+\newenvironment{sampletitle}
+{\vspace{0.2cm} \noindent\textbf{Example} :
+\begin{sample}}
+{\end{sample}}
 
 \newcommand{\samplecomment}[1]{%
 

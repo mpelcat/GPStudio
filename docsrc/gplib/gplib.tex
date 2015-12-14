@@ -9,11 +9,12 @@
 \usepackage{fancyvrb}
 \usepackage{tikz}
 \usepackage{verbatim}
+\usepackage{indentfirst}
 
 \input{../gpstudio_doc.tex}
 
 \author{Sebastien CAUX}
-\title{gplib doc \version}
+\title{gplib reference documentation \version}
 
 \begin{document}
 \maketitle
@@ -23,7 +24,7 @@ gplib is a command line tool that permits to examine and manage GPStudio library
 \section{Use}
 gplib always give you information of library including by the current distribution.
 
-Under linux, you have a completion script to help you to writing commands.
+Under linux, you have a completion script to help you writing commands.
 
 \section{Commands}
 \subsection{Lists}
@@ -32,31 +33,47 @@ Under linux, you have a completion script to help you to writing commands.
 
 Give the list of all available board support package.
 
-\sampletitle{> \textbf{gplib} \textbf{listboard}\\
-arrow\_sockit de0nano dreamcam\_c3 stratixcam\_s4}
+\begin{sampletitle}
+> \textbf{gplib listboard}
+\begin{Verbatim}
+arrow_sockit de0nano dreamcam_c3 stratixcam_s4
+\end{Verbatim}
+\end{sampletitle}
 
 \subsubsection{listio}
 \command{\textbf{gplib} \textbf{listio}}
 
 Give the list of all available ios.
 
-\sampletitle{> \textbf{gplib} \textbf{listio}\\
-leds mt9 usb\_cypress\_CY7C68014A}
+\begin{sampletitle}
+> \textbf{gplib listio}
+\begin{Verbatim}
+leds mt9 usb_cypress_CY7C68014A
+\end{Verbatim}
+\end{sampletitle}
 
 \subsubsection{listprocess}
-\command{\textbf{gplib} \textbf{listprocess}}
+\command{\textbf{gplib listprocess}}
 
 Give the list of all available processes.
 
-\sampletitle{> \textbf{gplib} \textbf{listprocess}\\
-conv gradienthw histogramhw hog lbp normhw roi slidevm}
+\begin{sampletitle}
+> \textbf{gplib listprocess}
+\begin{Verbatim}
+conv gradienthw histogramhw hog lbp normhw roi slidevm
+\end{Verbatim}
+\end{sampletitle}
 
 \subsubsection{listtoolchain}
-\command{\textbf{gplib} \textbf{listtoolchain}}
+\command{\textbf{gplib listtoolchain}}
 
 Give the list of all available tool chains.
 
-\sampletitle{> \textbf{gplib} \textbf{listtoolchain}\\
-altera\_quartus hdl}
+\begin{sampletitle}
+> \textbf{gplib listtoolchain}
+\begin{Verbatim}
+altera_quartus hdl
+\end{Verbatim}
+\end{sampletitle}
 
 \end{document}
