@@ -39,6 +39,10 @@ Under linux, you have a completion script to help you writing commands.
 
 Create a project file inside the current directory named `\texttt{<project-name>}.node'.
 
+\paramcommand{
+-n & project name without space & project1 \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{newproject} -n project1
 \end{sampletitle}
@@ -48,6 +52,10 @@ Create a project file inside the current directory named `\texttt{<project-name>
 \command{\textbf{gpnode} \textbf{setboard} -n <board-name>}
 
 You need to specify a for the used board board before setting up any io in the project.
+
+\paramcommand{
+-n & board name support, contained in library & dreamcam\_c3 \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setboard} -n dreamcam\_c3
@@ -64,7 +72,7 @@ Prints the name of the board specified in the current project.
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{showboard}
 \begin{Verbatim}
-dreamcam\_c3
+dreamcam_c3
 \end{Verbatim}
 \end{sampletitle}
 
@@ -75,18 +83,26 @@ dreamcam\_c3
 
 Generates all the files needed for the specified toolchain and Makefile. After that, you just need to call `make compile' in the directory \texttt{build/} to compile the project with specific tools needed by the node.
 
+\paramcommand{
+-o & output directory & build \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{generate} -o build/\\
 > cd build\\
 > make compile
 \end{sampletitle}
-\samplecomment{Build the project in the subdirectory \texttt{build/} with a Makefile. In this directory, you can execute make compile to call the compiler for the specified platform.}
+\samplecomment{Generates the project in the subdirectory \texttt{build/} with a Makefile. In this directory, you can execute make compile to call the compiler for the specified platform.}
 
 \subsection{io}
 \subsubsection{addio}
 \command{\textbf{gpnode} \textbf{addio} -n <io-name>}
 
 Adds IP support in the project to manage \texttt{<io-name>}. \texttt{<io-name>} must be define in the board file definition.
+
+\paramcommand{
+-n & io name specified in the support board package & mt9 \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{addio} -n mt9\\
@@ -98,15 +114,23 @@ blocks :
 \end{sampletitle}
 \samplecomment{Adds the support for mt9 image sensor. You have a block named mt9 in the project.}
 
+\seealso{\textbf{gpnode showio}, \textbf{gpnode delio} and \textbf{gpnode listavailableio}}
+
 \subsubsection{delio}
 \command{\textbf{gpnode} \textbf{delio} -n <io-name>}
 
 Removes io support named \texttt{<io-name>}.
 
+\paramcommand{
+-n & io name almost added & mt9 \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{delio} -n mt9
 \end{sampletitle}
 \samplecomment{Removes the `mt9' block with its support and all the flow connection from it.}
+
+\seealso{\textbf{gpnode showio} and \textbf{gpnode addio}}
 
 \subsubsection{showio}
 \command{\textbf{gpnode} \textbf{showio}}
@@ -118,7 +142,7 @@ Prints the list of all the io support in the current project. The output format 
 \begin{Verbatim}
 ios :
   + mt9 [mt9]
-  + usb [usb\_cypress\_CY7C68014A]
+  + usb [usb_cypress_CY7C68014A]
 \end{Verbatim}
 \end{sampletitle}
 
@@ -140,6 +164,12 @@ led mt9 e2v ethernet usb
 
 Adds a process named \texttt{<process-name>} as an instance of \texttt{<driver-name>} IP in the library or the project dir.
 
+\paramcommand{
+-n & name of the process instance & process1 \\ 
+\hline
+-d & driver name to instantiate. Could be defined in library or locally in the project with gpblock. & gradianthw \newline myproc/myproc \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{addprocess} -n process1 -d gradienthw\\
 > \textbf{gpnode} \textbf{showprocess}
@@ -150,15 +180,23 @@ process :
 \end{sampletitle}
 \samplecomment{Adds a process named process1 based on a process declared in library gradienthw.}
 
+\seealso{\textbf{gpnode delprocess} and \textbf{gplib listprocess}}
+
 \subsubsection{delprocess}
 \command{\textbf{gpnode} \textbf{delprocess} -n <process-name>}
 
 Removes process \texttt{<process-name>} and all the connections to or from it.
 
+\paramcommand{
+-n & process name almost added & process1 \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{delprocess} -n process1
 \end{sampletitle}
 \samplecomment{Removes `process1'.}
+
+\seealso{\textbf{gpnode addprocess}}
 
 \subsubsection{showprocess}
 \command{\textbf{gpnode} \textbf{showprocess}}
@@ -175,9 +213,15 @@ process :
 \end{sampletitle}
 
 \subsubsection{showblock}
-\command{\textbf{gpnode} \textbf{showblock} [-n \emph{<process-name>} [-d \emph{<driver-name>}]]}
+\command{\textbf{gpnode} \textbf{showblock} $\big[$-n \emph{<process-name>} [-d \emph{<driver-name>}]$\big]$}
 
 If -n option is not set, it prints the list of processes and io in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-type>} - \texttt{<block-driver>}]
+
+\paramcommand{
+-n & name of the process instance to show and only this one & process1 \\ 
+\hline
+-f & filter & flows \newline params \newline clocks \newline resets \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{showblock}
@@ -253,7 +297,13 @@ params :
 \subsubsection{renameblock}
 \command{\textbf{gpnode} \textbf{renameblock} -n <block-name> -v <new-name>}
 
-Renames block the block named \texttt{<block-name>} with the name \texttt{<new-name>}.
+Renames block the block named \texttt{<block-name>} with the name \texttt{<new-name>}. Please notify that io block could not be renamed.
+
+\paramcommand{
+-n & name of the process instance to rename & process1 \\ 
+\hline
+-v & new block instance name & convolve \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{renameblock} -n process1 -v first\_gradient
@@ -265,15 +315,28 @@ Renames block the block named \texttt{<block-name>} with the name \texttt{<new-n
 
 Defines a default value \texttt{<default-value>} to the property \texttt{<property-name>}.
 
+\paramcommand{
+-n & name of the property composed by the name of the block, a (dot) and the name of the property. A property could be a subproperty of another, in this case, name of the block, (dot), name of the parent property, (dot) and name of the child property. & process1.prop \newline process1.prop.prop2 \\ 
+\hline
+-v & value to give to the property & 50 \newline true \\ 
+}
+
 \begin{sampletitle}
-> \textbf{gpnode} \textbf{setproperty} -n mt9.roi1.w -v 1280
+> \textbf{gpnode} \textbf{setproperty} -n mt9.roi1.w -v 1280 \\
+> \textbf{gpnode} \textbf{setproperty} -n mt9.enable -v true
 \end{sampletitle}
-\samplecomment{When you launch the camera, you have an image from mt9 with 1280 pixels of width.}
+\samplecomment{When you launch the camera, you have an image from mt9 with 1280 pixels of width. The mt9 block is enabled at the beginning.}
 
 \subsubsection{setparam}
 \command{\textbf{gpnode} \textbf{setparam} -n <param-name> -v <value>}
 
-Sets the value \texttt{<value>} to the param \texttt{<param-name>}.
+Sets the value \texttt{<value>} to the param \texttt{<param-name>}. If <param-name> is a constant parameter, it sets the value. If it is a register, it sets the default value.
+
+\paramcommand{
+-n & name of the param composed by the name of the block, a (dot) and the name of the param & process1.LINEW \\ 
+\hline
+-v & value to give to the param & 1280 \newline ON \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setparam} -n usb.IN0\_NBWORDS -v 2048
@@ -285,6 +348,12 @@ Sets the value \texttt{<value>} to the param \texttt{<param-name>}.
 
 Defines the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-name>}.
 
+\paramcommand{
+-n & name of the clock composed by the name of the block, a (dot) and the name of the clock. & process1.clockimg \\ 
+\hline
+-v & frequency to give to the clock. It is possible to use multiplier suffix like 'G', 'M' or 'k'. & 0.25G \newline 62M \newline 5.5k \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setclock} -n mt9.clk\_img -v 10M
 \end{sampletitle}
@@ -294,6 +363,12 @@ Defines the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-nam
 \command{\textbf{gpnode} \textbf{setflowsize} -n <flow-name> -v <flow-size>}
 
 Redefines the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.
+
+\paramcommand{
+-n & name of the flow composed by the name of the block, a (dot) and the name of the flow & process1.in \\ 
+\hline
+-v & size in bits & 8 \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setflowsize} -n usb.in0 -v 16
@@ -306,6 +381,14 @@ Redefines the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.
 
 Adds a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}. Option -s could be used in case your flow don't have the same data width. You can choose between `msb' or `lsb' connection.
 
+\paramcommand{
+-f & name of the flow source composed by the name of the block, a (dot) and the name of the flow & process1.out \\ 
+\hline
+-t & name of the flow in & process1.in \\ 
+\hline
+-s & order & msb \newline lsb \\ 
+}
+
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{connect} -f mt9.out -t usb.in0
 \end{sampletitle}
@@ -317,6 +400,12 @@ Adds a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a
 \command{\textbf{gpnode} \textbf{unconnect} -f <flow-out> -t <flow-in>}
 
 Remove a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}.
+
+\paramcommand{
+-f & name of the flow out & process1.out \\ 
+\hline
+-t & name of the flow in & process1.in \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{unconnect} -f mt9.out -t usb.in0
@@ -351,6 +440,12 @@ connects :
 \command{\textbf{gpnode} \textbf{setclockdomain} -n <domain-name> -v <frequency>}
 
 Define a clock frequency \texttt{<frequency>} the the clock domain \texttt{<domain-name>}.
+
+\paramcommand{
+-n & name of the clock domain & clk\_proc \\ 
+\hline
+-v & frequency to give to the clock domain. It is possible to use multiplier suffix like 'G', 'M' or 'k'. & 0.25G \newline 62M \newline 5.5k \\ 
+}
 
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setclockdomain} -n clk\_proc -v 50M
