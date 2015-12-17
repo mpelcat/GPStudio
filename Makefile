@@ -7,6 +7,11 @@ doc: FORCE
 distrib: doc gui-tools-distrib FORCE
 	cd distrib/ && make -f Makefile
 
+distrib-web: distrib
+	cp doc/*.pdf /var/www/gpstudio/doc
+	cp distrib/gpstudio_linux-`cat version.txt`.tar.gz /var/www/gpstudio/download/
+	cp distrib/gpstudio_win-`cat version.txt`.zip /var/www/gpstudio/download/
+
 clean:
 	cd docsrc/ && make -f Makefile clean
 	cd distrib/ && make -f Makefile clean

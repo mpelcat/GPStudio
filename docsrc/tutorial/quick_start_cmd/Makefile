@@ -12,11 +12,11 @@ pdf: $(MAINDOC).pdf
 
 html: $(MAINDOC).html
 
-$(MAINDOC).pdf: $(MAINDOC).tex
+$(MAINDOC).pdf: $(MAINDOC).tex ../../../version.txt
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).pdf ../../../doc/
 
-$(MAINDOC).html: $(MAINDOC).tex
+$(MAINDOC).html: $(MAINDOC).tex ../../../version.txt
 	$(HTMLC) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).html $(MAINDOC).css ../../../doc/
 

@@ -14,10 +14,10 @@ pdf: $(MAINDOC).pdf
 
 html: $(MAINDOC).html
 
-$(MAINDOC).toc: $(SRC) wave.pdf
+$(MAINDOC).toc: $(SRC) wave.pdf ../../version.txt
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 
-$(MAINDOC).pdf: $(SRC) $(MAINDOC).toc
+$(MAINDOC).pdf: $(SRC) $(MAINDOC).toc ../../version.txt
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).pdf ../../doc/
 
