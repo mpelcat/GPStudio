@@ -92,6 +92,7 @@ function distrib_bin($mainoutpath, $os)
 	{
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib.bat");
+		copy_with_rights(LIB_PATH."setenv.bat", $mainoutpath."setenv.bat");
 	}
 	else
 	{
