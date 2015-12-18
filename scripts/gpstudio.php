@@ -116,6 +116,20 @@ function findproject()
 	if(count($projects)==1) return $projects[0]; else return '';
 }
 
+function findprocess()
+{
+	$process = array();
+	$files = scandir(getcwd());
+	foreach($files as $file)
+	{
+		if(substr($file,-5)===".proc")
+		{
+			$process[]=$file;
+		}
+	}
+	if(count($process)==1) return $process[0]; else return '';
+}
+
 function listprocess()
 {
 	$directory = SUPPORT_PATH."process".DIRECTORY_SEPARATOR;

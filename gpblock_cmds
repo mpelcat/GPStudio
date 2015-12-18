@@ -1,0 +1,49 @@
+# gpblock command line tool to manage a custom block (v1.0)
+
+# block driver
+gpblock newprocess -n <block-name>
+
+# files
+gpblock addfile -p <path> -t <type> -g <group> [-h <help>]
+gpblock delfile -p <path>
+gpblock showfile
+
+# flows interface
+gpblock addflow -n <flow-name> -d <direction> -s <size>
+gpblock showflow
+gpblock renameflow -n <flow-name> -v <new-name>
+gpblock setflow -n <flow-name> [-d <direction>] [-s <size>]
+gpblock delflow -n <flow-name>
+
+# params
+gpblock addparam -n <param-name>
+gpblock showparam
+gpblock renameparam -n <param-name> -v <new-name>
+gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-a <relative-address>]
+gpblock fixparam -n <param-name> -v <true/false>
+gpblock delparam -n <param-name>
+
+	# bitfields
+	gpblock addbitfield -p <param-name> -n <bitfield-name>
+
+# resets
+gpblock addreset -n <reset-name> -d <direction> -g <group>
+gpblock showreset
+gpblock renamereset -n <reset-name> -v <new-name>
+gpblock setreset -n <reset-name> [-d <direction>] [-g <group>]
+gpblock delreset -n <reset-name>
+
+# clocks
+gpblock addclock -n <clock-name> -d <direction> -g <clock-domain>
+gpblock showclock
+gpblock renameclock -n <clock-name> -v <new-name>
+gpblock setclock -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]
+gpblock delclock -n <clock-name>
+
+# properties
+gpblock addproperty -n <property-name> -v <default-value> -l <label> -t <type> -r <min:max>
+
+# global
+gpblock sethelp -n <instance-name> -h <help-text>
+
+gpblock setpropertymap -n <param/property-name> -v <property-map>

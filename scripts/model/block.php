@@ -92,6 +92,12 @@ class Block
 	*/
 	public $generatescriptfile;
 
+	/**
+	* Description of the flow (optional)
+	* @var string $desc
+	*/
+	public $desc;
+
 
 	/**
 	* Array of parameters class (can be Generic or dynamics parameter on BI)
@@ -343,6 +349,31 @@ class Block
 		return null;
 	}
 	
+	/** return a reference to the file with the path $path, if not found, return null
+	 *  @param string $path path of the file to search
+	 *  @return File found file **/
+	function getFileByPath($path)
+	{
+		foreach($this->files as $file)
+		{
+			if($file->path==$path) return $file;
+		}
+		return null;
+	}
+	
+	/** delete a file from his path
+	 *  @param string $path path of the file to delete  **/
+	function delFileByPath($path)
+	{
+		$i=0;
+		foreach($this->files as $file)
+		{
+			if($file->path==$path) {unset($this->files[$i]); return;}
+			$i++;
+		}
+		return null;
+	}
+	
 	/** Add a flow to the block 
 	 *  @param Flow $flow flow to add to the block **/
 	function addFlow($flow)
@@ -489,6 +520,7 @@ class Block
 		$this->categ = (string)$this->xml['categ'];
 		$this->configscriptfile = (string)$this->xml['configscriptfile'];
 		$this->generatescriptfile = (string)$this->xml['generatescriptfile'];
+		$this->desc = (string)$this->xml['desc'];
 		
 		// files
 		if(isset($this->xml->files))
@@ -556,7 +588,7 @@ class Block
 	
 	public function getXmlElement($xml, $format)
 	{
-		if($format=="project")
+		if($format=="project" or $format=="blockdef")
 		{
 			if($this->type()=="io" or $this->type()=="iocom") $typeName='io';
 			elseif($this->type()=="process") $typeName="process";
@@ -575,46 +607,58 @@ class Block
 		$xml_element->appendChild($att);
 		
 		// type
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
-			$att = $xml->createAttribute('type');
-			$att->value = $this->type();
-			$xml_element->appendChild($att);
-			
 			$att = $xml->createAttribute('categ');
 			$att->value = $this->categ;
 			$xml_element->appendChild($att);
 		}
 		
 		// in_lib
-		if($this->type()=="process")
+		if($this->type()=="process" and $format!="blockdef")
 		{
 			$att = $xml->createAttribute('inlib');
 			$att->value = $this->in_lib==1 ? "true" : "false";
 			$xml_element->appendChild($att);
 		}
 		
-		// driver
-		$att = $xml->createAttribute('driver');
-		$att->value = $this->driver;
-		$xml_element->appendChild($att);
+		if($format!="blockdef")
+		{
+			// driver
+			$att = $xml->createAttribute('driver');
+			$att->value = $this->driver;
+			$xml_element->appendChild($att);
+		}
 		
-		// pi information
+		// pi information & type
 		if($format=="complete")
 		{
+			// type
+			$att = $xml->createAttribute('type');
+			$att->value = $this->type();
+			$xml_element->appendChild($att);
+			
 			// addr_abs
 			$att = $xml->createAttribute('addr_abs');
 			$att->value = $this->addr_abs;
 			$xml_element->appendChild($att);
+			
+			// master_count
+			$att = $xml->createAttribute('master_count');
+			$att->value = $this->master_count;
+			$xml_element->appendChild($att);
+		}
 		
+		if($format=="complete" or $format=="blockdef")
+		{
 			// pi_size_addr_rel
 			$att = $xml->createAttribute('pi_size_addr_rel');
 			$att->value = $this->pi_size_addr_rel;
 			$xml_element->appendChild($att);
-		
-			// master_count
-			$att = $xml->createAttribute('master_count');
-			$att->value = $this->master_count;
+			
+			// desc
+			$att = $xml->createAttribute('desc');
+			$att->value = $this->desc;
 			$xml_element->appendChild($att);
 		}
 		
@@ -634,7 +678,7 @@ class Block
 			$xml_element->appendChild($att);
 		}
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			// files
 			if(!empty($this->files))
@@ -727,6 +771,11 @@ class Block
 			{
 				if($clock->direction=="out" or $clock->domain!="") $export=false;
 			}
+			elseif($format=="blockdef")
+			{
+				if($clock->name=="clk_proc") $export=false;
+			}
+			
 			if($export)
 			{
 				$xml_clocks->appendChild($clock->getXmlElement($xml, $format));
@@ -736,6 +785,17 @@ class Block
 		if($count>0) $xml_element->appendChild($xml_clocks);
 		
 		return $xml_element;
+	}
+	
+	function saveBlockDef($file)
+	{
+		$xml = new DOMDocument("1.0", "UTF-8");
+		$xml->preserveWhiteSpace = false;
+		$xml->formatOutput = true;
+		
+		$xml->appendChild($this->getXmlElement($xml, "blockdef"));
+		
+		$xml->save($file);
 	}
 }
 

@@ -1,0 +1,5 @@
+#/bin/bash
+
+DIR=$(dirname "$0")
+php "$DIR/../scripts/gpblock.php" -a $@
+

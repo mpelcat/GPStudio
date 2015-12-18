@@ -4,7 +4,7 @@ require_once("block.php");
 
 class Process extends Block
 {
-	function __construct($process_node_element)
+	function __construct($process_node_element=NULL)
 	{
 		parent::__construct();
 		
@@ -69,7 +69,7 @@ class Process extends Block
 		}
 		elseif(is_string($process_node_element))
 		{
-			if(strpos($process_node_element, "/")===false and strpos($process_node_element, "\\")===false)
+			if(strpos($process_node_element, "/")===false and strpos($process_node_element, "\\")===false and strpos($process_node_element, ".proc")===false)
 			{
 				$this->driver=$process_node_element;
 				$this->path = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
@@ -79,6 +79,8 @@ class Process extends Block
 			else
 			{
 				$process_file = $process_node_element;
+				$this->path = $process_node_element;
+				$this->name = str_replace(".proc","",basename($process_node_element));
 			}
 			
 			if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
@@ -86,6 +88,10 @@ class Process extends Block
 			
 			$this->parse_xml($this->xml);
 			$this->path = realpath(dirname($process_node_element));
+		}
+		else
+		{
+			// nothing to do
 		}
 		
 		unset($this->xml);

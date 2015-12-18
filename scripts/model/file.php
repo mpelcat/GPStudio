@@ -58,6 +58,11 @@ class File
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        return "'".$this->path."' type: '".$this->type."' group: '".$this->group."' desc: '".$this->desc."'";
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name = (string)$xml['name'];
