@@ -1,1 +1,1 @@
-php %~dp0\..\scripts\gplib.php -a %*
+php "%~dp0..\scripts\gplib.php" -a %*

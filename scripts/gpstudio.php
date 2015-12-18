@@ -155,6 +155,17 @@ function copy_with_rights($src, $dest)
 	else chmod($dest, $srcright);
 }
 
+function mkdir_rec($dir_path)
+{
+	$dir_path = str_replace("\\","/",$dir_path);
+	$dirs = explode("/",$dir_path);
+	for($i=1;$i<=count($dirs);$i++)
+	{
+		$path = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $i));
+		if(!is_dir($path)) mkdir($path);
+	}
+}
+
 function cpy_dir($source, $dest)
 {
     if(is_dir($source))

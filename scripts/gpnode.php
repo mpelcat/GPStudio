@@ -488,7 +488,7 @@ switch($action)
 		{
 			error("You should specify a board with gpnode setboard before generate."."\n",1);
 		}
-		system("mkdir -p ".$outDir);
+		mkdir_rec($outDir);
 		$toolchain->generate_project($node, $outDir);
 		$node->saveXml($outDir.DIRECTORY_SEPARATOR."node_generated.xml");
 		message("Project successfully generated ($warningCount warnings).");

@@ -1,1 +1,1 @@
-php %~dp0\..\scripts\gpnode.php -a %*
+php "%~dp0..\scripts\gpnode.php" -a %*

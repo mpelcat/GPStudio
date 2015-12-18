@@ -295,7 +295,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= "send:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
 		$content .= "view:"."\r\n";
-		if($win)	$content .= "	$(GPS_VIEWER)/bin/gpviewer node_generated.xml"."\r\n";
+		if($win)	$content .= "	$(GPS_VIEWER)".DIRECTORY_SEPARATOR."gpviewer node_generated.xml"."\r\n";
 		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER) $(GPS_VIEWER)gpviewer node_generated.xml"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "clean:"."\r\n";
