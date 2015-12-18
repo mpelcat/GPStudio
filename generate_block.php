@@ -42,13 +42,23 @@ else error('The config file is not a know extension.',1);
 
 foreach($blocks as $block)
 {
-	if($block->pi_size_addr_rel>0) array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"pi_slave",$block->pi_size_addr_rel));
+	$slave_generator = NULL;
+	if($block->pi_size_addr_rel>0)
+	{
+		array_push($block->interfaces, new InterfaceBus("bus_sl",$block->name,"pi_slave",$block->pi_size_addr_rel));
+		
+		$slave_generator = new VHDL_generator($block->name . '_slave');
+		$slave_block = new Block();
+		$slave_block->name = $block->name . '_slave';
+		$slave_block->driver = $block->name . '_slave';
+		$slave_block->clocks = array();
+		$slave_block->interfaces = $block->interfaces;
+	}
 
 	$block_generator = new VHDL_generator($block->name);
 	$block_generator->fromBlock($block);
 	if(empty($block->path)) $path=''; else $path=$block->path.DIRECTORY_SEPARATOR;
 	
-	$slave_generator = new VHDL_generator($block->name . '_slave');
 	$process_generator = new VHDL_generator($block->name . '_process');
 	
 	$process_block = new Block();
@@ -57,12 +67,6 @@ foreach($blocks as $block)
 	$process_block->clocks = array();
 	$process_block->flows = $block->flows;
 	$process_block->params = $block->params;
-	
-	$slave_block = new Block();
-	$slave_block->name = $block->name . '_slave';
-	$slave_block->driver = $block->name . '_slave';
-	$slave_block->clocks = array();
-	$slave_block->interfaces = $block->interfaces;
 	
 	// clocks
 	foreach($block->clocks as $clock)
@@ -82,13 +86,40 @@ foreach($blocks as $block)
 		$nreset->name = $reset->name;
 		$nreset->group = $reset->name;
 		array_push($process_block->resets, $nreset);
-		array_push($slave_block->resets, $nreset);
+		if($slave_generator!=NULL) array_push($slave_block->resets, $nreset);
 	}
 	
-	$slave_generator->fromBlock($slave_block);
+	if($slave_generator!=NULL) $slave_generator->fromBlock($slave_block);
 	$process_generator->fromBlock($process_block);
 	
-	$block_generator->blocks = array($process_block, $slave_block);
+	// registers
+	$slave_generator->addPortComment(str_pad(' registers output ',55,'=',STR_PAD_BOTH));
+	$process_generator->addPortComment(str_pad(' registers input ',55,'=',STR_PAD_BOTH));
+	if($slave_generator!=NULL)
+	{
+		foreach($block->params as $param)
+		{
+			if($param->hard==false)
+			{
+				if(empty($param->parambitfields))
+				{
+					echo $param->name."\n";
+					$slave_generator->addPort($param->name,32,'out');
+					$process_generator->addPort($param->name,32,'in');
+				}
+				else
+				{
+					foreach($param->parambitfields as $parambitfields)
+					{
+						
+					}
+				}
+			}
+		}
+	}
+	
+	$block_generator->addblock($process_block);
+	if($slave_generator!=NULL) $block_generator->addblock($slave_block);
 	
 	$block_generator->save_as($path.$block->name   . '.vhd');
 	$process_generator->save_as($path.$block->name . '_process.vhd');

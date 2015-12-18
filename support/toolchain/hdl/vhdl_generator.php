@@ -188,6 +188,13 @@ class VHDL_generator
 		$this->code.=$code;
 	}
 	
+	/** Add a block to list of blocks
+	 *  @param Block $block block to add to the blocks **/
+	function addBlock($block)
+	{
+		array_push($this->blocks, $block);
+	}
+	
 	function get_ports_and_generic()
 	{
 		$content = '';
