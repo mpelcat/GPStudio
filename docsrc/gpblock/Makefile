@@ -1,4 +1,4 @@
-MAINDOC=gpnode
+MAINDOC=gpblock
 
 LC=pdflatex
 LFLAGS=-interaction=nonstopmode

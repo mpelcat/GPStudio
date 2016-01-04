@@ -12,6 +12,7 @@ doc/*
 
 docsrc/gpnode/gpnode.pdf
 docsrc/gplib/gplib.pdf
+docsrc/gpblock/gpblock.pdf
 docsrc/manual/manual.pdf
 docsrc/tutorial/install_linux/install_linux.pdf
 docsrc/tutorial/quick_start_cmd/quick_start_cmd.pdf
