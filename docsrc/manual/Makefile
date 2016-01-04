@@ -14,14 +14,14 @@ pdf: $(MAINDOC).pdf
 
 html: $(MAINDOC).html
 
-$(MAINDOC).toc: $(SRC) wave.pdf ../../version.txt
+$(MAINDOC).toc: $(SRC) wave.pdf ../../version.txt ../gpstudio_doc.tex
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 
-$(MAINDOC).pdf: $(SRC) $(MAINDOC).toc ../../version.txt
+$(MAINDOC).pdf: $(SRC) $(MAINDOC).toc ../../version.txt ../gpstudio_doc.tex
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).pdf ../../doc/
 
-$(MAINDOC).html: $(SRC)
+$(MAINDOC).html: $(SRC) ../../version.txt ../gpstudio_doc.tex
 	$(HTMLC) $(MAINDOC).tex $(HTMLFLAGS) > /dev/null
 	cp $(MAINDOC).html $(MAINDOC).css ../../doc/
 
