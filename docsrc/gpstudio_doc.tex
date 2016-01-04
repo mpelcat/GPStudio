@@ -1,6 +1,6 @@
-\newcommand{\version}{\IfFileExists{../../version.txt}
-{\input{../../version.txt}}
-{\input{../../../version.txt}}
+\newcommand{\version}{\IfFileExists{../../version.txt}%
+{\input{../../version.txt}\unskip }%
+{\input{../../../version.txt}\unskip }%
 }
 
 \newcommand{\command}[1]{%

@@ -7,9 +7,20 @@
 \usepackage{amssymb}
 \usepackage{lmodern}
 \usepackage{fancyvrb}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue, % Couleur des liens internes
+    citecolor=red, % Couleur des numéros de la biblio dans le corps
+    urlcolor=blue} % Couleur des url
+
+\input{../../gpstudio_doc.tex}
 
 \author{Sebastien CAUX}
-\title{GPStudio Tutorial : \\ 1. How to install GPStudio under linux?}
+\title{GPStudio Tutorial : \\ 1. How to install GPStudio under linux? \version}
 
 \begin{document}
 \maketitle
@@ -18,7 +29,62 @@ GPStudio is a set of tools to help smart camera developers to manage complex pro
 
 This set of tools is cross platform and is available under linux and windows. This tutorial explain how to install GPStudio under linux.
 
-\section{Use}
+\section{Standard user install}
+This section helps you to install GPStudio under linux as an end user.\\
 
+After downloaded an install package at \\
+\mbox{\url{http://gpstudio.univ-bpclermont.fr/download/}}, \\
+extracts it and install it with the following commands :
+
+\begin{sample}
+> tar zxf gpstudio\_linux-\version.tar.gz \\
+> cd gpstudio\_linux \\
+> sudo ./install.sh
+\end{sample}
+
+The install command installs the dependencies and drivers for camera. This is the list of package installed :
+\begin{itemize}
+\item make
+\item php5-cli
+\item graphviz
+\end{itemize}
+
+To use the binaries in a command line, you should set the environment. Before use GPStudio in a new terminal, you just need to type :
+
+\begin{sample}
+> . \emph{<path-to-gps>}/setenv.sh
+\end{sample}
+
+Don't forget the dot and the space before setenv.sh ! If you don't want to do that each time, you can add permanently GPStudio in your path, add this to your bashrc file :
+
+\begin{sample}
+> export PATH=\$PATH:\emph{<path-to-gps>}/bin
+\end{sample}
+
+\section{Advanced user install}
+This section gives additional informations to recompile or modify the viewer. This could be useful if you need to have a customized version of gpviewer.
+
+With Qt5 :
+\begin{sample}
+> sudo apt-get install qtcreator libusb-1.0-0-dev qtbase5-dev qtbase5-dev-tools qtscript5-dev libqt5svg5-dev
+\end{sample}
+
+with Qt4 :
+\begin{sample}
+> sudo apt-get install qtcreator libusb-1.0-0-dev libqt4-dev qt4-dev-tools libqtscript4-core
+\end{sample}
+
+\section{Developer user install}
+As a developer of GPStudio, you need more package than for the advanced use.
+
+For the documentation :
+\begin{sample}
+> sudo apt-get install doxygen texlive-latex-base texlive-fonts-recommended texlive-latex-extra pgf lmodern
+\end{sample}
+
+For cross compiling :
+\begin{sample}
+> sudo apt-get install wine mingw-w64
+\end{sample}
 
 \end{document}

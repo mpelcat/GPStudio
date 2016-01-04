@@ -26,4 +26,4 @@ sh -c 'echo "ATTR{idVendor}==\"09fb\", ATTR{idProduct}==\"6001\", MODE=\"666\"" 
 udevadm trigger
 
 echo "To add permanently GPStudio in your path, add this to your bashrc file :"
-echo "export PATH=\$PATH:$(pwd)"
+echo "export PATH=\$PATH:$(pwd)/bin"
