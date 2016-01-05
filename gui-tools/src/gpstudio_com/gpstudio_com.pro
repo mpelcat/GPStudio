@@ -8,8 +8,23 @@ equals(DISTRIB, 1) {
     win32 {
         DESTDIR = ../../bin-win/
     }
-    unix {
-        DESTDIR = ../../bin-linux/
+    linux-g++-32 {
+		greaterThan(QT_MAJOR_VERSION, 4) {
+			DESTDIR = ../../bin-linux32-qt5/
+			LIBS += -L../../bin-linux32-qt5/
+		} else {
+			DESTDIR = ../../bin-linux32-qt4/
+			LIBS += -L../../bin-linux32-qt4/
+        }
+    }
+    linux-g++-64 {
+		greaterThan(QT_MAJOR_VERSION, 4) {
+			DESTDIR = ../../bin-linux64-qt5/
+			LIBS += -L../../bin-linux64-qt5/
+		} else {
+			DESTDIR = ../../bin-linux64-qt4/
+			LIBS += -L../../bin-linux64-qt4/
+        }
     }
 } else {
     DESTDIR = ../../../bin/

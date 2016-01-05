@@ -3,7 +3,9 @@ all: gui-tools
 
 gui-tools: gpnode gpviewer
 
-distrib: gpnode-win gpviewer-win gpnode-linux gpviewer-linux
+
+
+distrib: gui-tools-linux32-qt4 gui-tools-linux64-qt4 gui-tools-linux32-qt5 gui-tools-linux64-qt5
 
 
 build-win/:
@@ -22,20 +24,72 @@ gpviewer-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-
 	cd build-win/ && make -j9 -f Makefile sub-gpviewer-release
 
 
-build-linux/:
-	mkdir build-linux
-build-linux/Makefile: build-linux/ src/gpstudio.pro
-	cd build-linux/ && qmake -r ../src "DISTRIB=1" -spec linux-g++-64
-gpstudio_com-linux: build-linux/Makefile
-	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_com
-gpstudio_lib-linux: build-linux/Makefile gpstudio_com-linux
-	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_lib
-gpstudio_gui-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux
-	cd build-linux/ && make -j9 -f Makefile sub-gpstudio_gui
-gpnode-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux gpstudio_gui-linux
-	cd build-linux/ && make -j9 -f Makefile sub-gpnode
-gpviewer-linux: build-linux/Makefile gpstudio_com-linux gpstudio_lib-linux gpstudio_gui-linux
-	cd build-linux/ && make -j9 -f Makefile sub-gpviewer
+gui-tools-linux32-qt4: gpnode-linux32-qt4 gpviewer-linux32-qt4
+build-linux32-qt4/:
+	mkdir build-linux32-qt4
+build-linux32-qt4/Makefile: build-linux32-qt4/ src/gpstudio.pro
+	cd build-linux32-qt4/ && /opt/Qt4.8_32/bin/qmake -r ../src "DISTRIB=1" -spec linux-g++-32
+gpstudio_com-linux32-qt4: build-linux32-qt4/Makefile
+	cd build-linux32-qt4/ && make -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib-linux32-qt4: build-linux32-qt4/Makefile gpstudio_com-linux32-qt4
+	cd build-linux32-qt4/ && make -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui-linux32-qt4: build-linux32-qt4/Makefile gpstudio_com-linux32-qt4 gpstudio_lib-linux32-qt4
+	cd build-linux32-qt4/ && make -j9 -f Makefile sub-gpstudio_gui
+gpnode-linux32-qt4: build-linux32-qt4/Makefile gpstudio_com-linux32-qt4 gpstudio_lib-linux32-qt4 gpstudio_gui-linux32-qt4
+	cd build-linux32-qt4/ && make -j9 -f Makefile sub-gpnode
+gpviewer-linux32-qt4: build-linux32-qt4/Makefile gpstudio_com-linux32-qt4 gpstudio_lib-linux32-qt4 gpstudio_gui-linux32-qt4
+	cd build-linux32-qt4/ && make -j9 -f Makefile sub-gpviewer
+
+
+gui-tools-linux64-qt4: gpnode-linux64-qt4 gpviewer-linux64-qt4
+build-linux64-qt4/:
+	mkdir build-linux64-qt4
+build-linux64-qt4/Makefile: build-linux64-qt4/ src/gpstudio.pro
+	cd build-linux64-qt4/ && qmake-qt4 -r ../src "DISTRIB=1" -spec linux-g++-64
+gpstudio_com-linux64-qt4: build-linux64-qt4/Makefile
+	cd build-linux64-qt4/ && make -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib-linux64-qt4: build-linux64-qt4/Makefile gpstudio_com-linux64-qt4
+	cd build-linux64-qt4/ && make -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui-linux64-qt4: build-linux64-qt4/Makefile gpstudio_com-linux64-qt4 gpstudio_lib-linux64-qt4
+	cd build-linux64-qt4/ && make -j9 -f Makefile sub-gpstudio_gui
+gpnode-linux64-qt4: build-linux64-qt4/Makefile gpstudio_com-linux64-qt4 gpstudio_lib-linux64-qt4 gpstudio_gui-linux64-qt4
+	cd build-linux64-qt4/ && make -j9 -f Makefile sub-gpnode
+gpviewer-linux64-qt4: build-linux64-qt4/Makefile gpstudio_com-linux64-qt4 gpstudio_lib-linux64-qt4 gpstudio_gui-linux64-qt4
+	cd build-linux64-qt4/ && make -j9 -f Makefile sub-gpviewer
+
+
+gui-tools-linux32-qt5: gpnode-linux32-qt5 gpviewer-linux32-qt5
+build-linux32-qt5/:
+	mkdir build-linux32-qt5
+build-linux32-qt5/Makefile: build-linux32-qt5/ src/gpstudio.pro
+	cd build-linux32-qt5/ && /opt/Qt5.2_32/bin/qmake -r ../src "DISTRIB=1" -spec linux-g++-32
+gpstudio_com-linux32-qt5: build-linux32-qt5/Makefile
+	cd build-linux32-qt5/ && make -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib-linux32-qt5: build-linux32-qt5/Makefile gpstudio_com-linux32-qt5
+	cd build-linux32-qt5/ && make -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui-linux32-qt5: build-linux32-qt5/Makefile gpstudio_com-linux32-qt5 gpstudio_lib-linux32-qt5
+	cd build-linux32-qt5/ && make -j9 -f Makefile sub-gpstudio_gui
+gpnode-linux32-qt5: build-linux32-qt5/Makefile gpstudio_com-linux32-qt5 gpstudio_lib-linux32-qt5 gpstudio_gui-linux32-qt5
+	cd build-linux32-qt5/ && make -j9 -f Makefile sub-gpnode
+gpviewer-linux32-qt5: build-linux32-qt5/Makefile gpstudio_com-linux32-qt5 gpstudio_lib-linux32-qt5 gpstudio_gui-linux32-qt5
+	cd build-linux32-qt5/ && make -j9 -f Makefile sub-gpviewer
+
+
+gui-tools-linux64-qt5: gpnode-linux64-qt5 gpviewer-linux64-qt5
+build-linux64-qt5/:
+	mkdir build-linux64-qt5
+build-linux64-qt5/Makefile: build-linux64-qt5/ src/gpstudio.pro
+	cd build-linux64-qt5/ && qmake -r ../src "DISTRIB=1" -spec linux-g++-64
+gpstudio_com-linux64-qt5: build-linux64-qt5/Makefile
+	cd build-linux64-qt5/ && make -j9 -f Makefile sub-gpstudio_com
+gpstudio_lib-linux64-qt5: build-linux64-qt5/Makefile gpstudio_com-linux64-qt5
+	cd build-linux64-qt5/ && make -j9 -f Makefile sub-gpstudio_lib
+gpstudio_gui-linux64-qt5: build-linux64-qt5/Makefile gpstudio_com-linux64-qt5 gpstudio_lib-linux64-qt5
+	cd build-linux64-qt5/ && make -j9 -f Makefile sub-gpstudio_gui
+gpnode-linux64-qt5: build-linux64-qt5/Makefile gpstudio_com-linux64-qt5 gpstudio_lib-linux64-qt5 gpstudio_gui-linux64-qt5
+	cd build-linux64-qt5/ && make -j9 -f Makefile sub-gpnode
+gpviewer-linux64-qt5: build-linux64-qt5/Makefile gpstudio_com-linux64-qt5 gpstudio_lib-linux64-qt5 gpstudio_gui-linux64-qt5
+	cd build-linux64-qt5/ && make -j9 -f Makefile sub-gpviewer
 
 
 build/:
