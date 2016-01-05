@@ -3,25 +3,23 @@ all: gui-tools
 
 gui-tools: gpnode gpviewer
 
+distrib: gui-tools-win64-qt5 gui-tools-linux32-qt4 gui-tools-linux64-qt4 gui-tools-linux32-qt5 gui-tools-linux64-qt5
 
-
-distrib: gui-tools-linux32-qt4 gui-tools-linux64-qt4 gui-tools-linux32-qt5 gui-tools-linux64-qt5
-
-
-build-win/:
-	mkdir build-win
-build-win/Makefile: build-win/ src/gpstudio.pro
-	cd build-win/ && /opt/qt-5.5-win32/bin/qmake -r ../src "DISTRIB=1"
-gpstudio_com-win: build-win/Makefile
-	cd build-win/ && make -j9 -f Makefile sub-gpstudio_com-release
-gpstudio_lib-win: build-win/Makefile gpstudio_com-win
-	cd build-win/ && make -j9 -f Makefile sub-gpstudio_lib-release
-gpstudio_gui-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win
-	cd build-win/ && make -j9 -f Makefile sub-gpstudio_gui-release
-gpnode-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
-	cd build-win/ && make -j9 -f Makefile sub-gpnode-release
-gpviewer-win: build-win/Makefile gpstudio_com-win gpstudio_lib-win gpstudio_gui-win
-	cd build-win/ && make -j9 -f Makefile sub-gpviewer-release
+gui-tools-win64-qt5: gpnode-win64-qt5 gpviewer-win64-qt5
+build-win64-qt5/:
+	mkdir build-win64-qt5
+build-win64-qt5/Makefile: build-win64-qt5/ src/gpstudio.pro
+	cd build-win64-qt5/ && /opt/qt-5.5-win32/bin/qmake -r ../src "DISTRIB=1"
+gpstudio_com-win64-qt5: build-win64-qt5/Makefile
+	cd build-win64-qt5/ && make -j9 -f Makefile sub-gpstudio_com-release
+gpstudio_lib-win64-qt5: build-win64-qt5/Makefile gpstudio_com-win64-qt5
+	cd build-win64-qt5/ && make -j9 -f Makefile sub-gpstudio_lib-release
+gpstudio_gui-win64-qt5: build-win64-qt5/Makefile gpstudio_com-win64-qt5 gpstudio_lib-win64-qt5
+	cd build-win64-qt5/ && make -j9 -f Makefile sub-gpstudio_gui-release
+gpnode-win64-qt5: build-win64-qt5/Makefile gpstudio_com-win64-qt5 gpstudio_lib-win64-qt5 gpstudio_gui-win64-qt5
+	cd build-win64-qt5/ && make -j9 -f Makefile sub-gpnode-release
+gpviewer-win64-qt5: build-win64-qt5/Makefile gpstudio_com-win64-qt5 gpstudio_lib-win64-qt5 gpstudio_gui-win64-qt5
+	cd build-win64-qt5/ && make -j9 -f Makefile sub-gpviewer-release
 
 
 gui-tools-linux32-qt4: gpnode-linux32-qt4 gpviewer-linux32-qt4

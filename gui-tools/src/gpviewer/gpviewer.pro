@@ -8,8 +8,8 @@ TEMPLATE = app
 OUT_PWD = ../gpviewer/
 equals(DISTRIB, 1) {
     win32 {
-        DESTDIR = ../../bin-win/
-        LIBS += -L../../bin-win/
+        DESTDIR = ../../bin-win64-qt5/
+        LIBS += -L../../bin-win64-qt5/
     }
     linux-g++-32 {
 		greaterThan(QT_MAJOR_VERSION, 4) {

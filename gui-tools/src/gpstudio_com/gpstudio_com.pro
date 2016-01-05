@@ -6,7 +6,8 @@ TEMPLATE = lib
 OUT_PWD = ../gpstudio_com/
 equals(DISTRIB, 1) {
     win32 {
-        DESTDIR = ../../bin-win/
+        DESTDIR = ../../bin-win64-qt5/
+        LIBS += -L../../bin-win64-qt5/
     }
     linux-g++-32 {
 		greaterThan(QT_MAJOR_VERSION, 4) {
