@@ -4,7 +4,7 @@ all: doc gui-tools
 doc: FORCE
 	cd docsrc/ && make -f Makefile
 
-distrib: doc gui-tools-distrib FORCE
+distrib: FORCE
 	cd distrib/ && make -f Makefile
 
 distrib-web: distrib
@@ -24,9 +24,6 @@ gui-tools: FORCE
 	cd gui-tools/ && make -f Makefile
 
 install: gui-tools
-
-gui-tools-distrib: FORCE
-	cd gui-tools/ && make -f Makefile distrib
 
 FORCE:
 

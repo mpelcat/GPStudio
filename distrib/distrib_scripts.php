@@ -1,8 +1,8 @@
 <?php
 
-function distrib_scripts($mainoutpath, $os)
+function distrib_scripts($mainoutpath, $system, $archi, $qtver)
 {
-	echo "copying scripts files in $mainoutpath for $os..."."\n";
+	echo "copying scripts files in $mainoutpath for $system-$archi-qt$qtver..."."\n";
 	
 	// create directory
 	mkdirExists($mainoutpath."scripts");
@@ -37,9 +37,9 @@ function distrib_scripts($mainoutpath, $os)
 	echo "done."."\n";
 }
 
-function distrib_support($mainoutpath, $os)
+function distrib_support($mainoutpath, $system, $archi, $qtver)
 {
-	echo "copying support files in $mainoutpath for $os..."."\n";
+	echo "copying support files in $mainoutpath for $system-$archi-qt$qtver..."."\n";
 	
 	// create directory
 	mkdirExists($mainoutpath."support");
@@ -71,9 +71,9 @@ function distrib_support($mainoutpath, $os)
 	echo "done."."\n";
 }
 
-function distrib_doc($mainoutpath, $os)
+function distrib_doc($mainoutpath, $system, $archi, $qtver)
 {
-	echo "copying doc files in $mainoutpath for $os..."."\n";
+	echo "copying doc files in $mainoutpath for $system-$archi-qt$qtver..."."\n";
 	
 	// create directory
 	mkdirExists($mainoutpath."doc");
@@ -81,14 +81,14 @@ function distrib_doc($mainoutpath, $os)
 	echo "done."."\n";
 }
 
-function distrib_bin($mainoutpath, $os)
+function distrib_bin($mainoutpath, $system, $archi, $qtver)
 {
-	echo "copying bin files in $mainoutpath for $os..."."\n";
+	echo "copying bin files in $mainoutpath for $system-$archi-qt$qtver..."."\n";
 	
 	// create directory
 	mkdirExists($mainoutpath."bin");
 	
-	if($os=="win")
+	if($system=="win")
 	{
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib.bat");
@@ -103,11 +103,11 @@ function distrib_bin($mainoutpath, $os)
 		copy_with_rights(LIB_PATH."gpnode_completion", $mainoutpath."gpnode_completion");
 		copy_with_rights(LIB_PATH."gplib_completion", $mainoutpath."gplib_completion");
 	}
-	echo GUI_TOOLS_PATH."bin-$os";
-	cpy_dir(GUI_TOOLS_PATH."bin-$os", $mainoutpath."bin");
+	$bin_source_path="bin-".$system.$archi.'-qt'.$qtver;
+	cpy_dir(GUI_TOOLS_PATH.$bin_source_path, $mainoutpath."bin");
 	
 	// copy lib_bin
-	$lib_bin_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."lib_bin".DIRECTORY_SEPARATOR.$os;
+	$lib_bin_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."lib_bin".DIRECTORY_SEPARATOR.$system;
 	if(file_exists($lib_bin_dir))
 	{
 		cpy_dir($lib_bin_dir, $mainoutpath."bin");
@@ -116,11 +116,11 @@ function distrib_bin($mainoutpath, $os)
 	echo "done."."\n";
 }
 
-function distrib_thirdparts($mainoutpath, $os)
+function distrib_thirdparts($mainoutpath, $system, $archi, $qtver)
 {
-	echo "copying thirdparts files in $mainoutpath for $os..."."\n";
+	echo "copying thirdparts files in $mainoutpath for $system-$archi-qt$qtver..."."\n";
 	
-	$thirdparts_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."thirdparts".DIRECTORY_SEPARATOR.$os;
+	$thirdparts_dir = LIB_PATH."distrib".DIRECTORY_SEPARATOR."thirdparts".DIRECTORY_SEPARATOR.$system;
 	if(file_exists($thirdparts_dir))
 	{
 		// create directory

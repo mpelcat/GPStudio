@@ -17,10 +17,7 @@ docsrc/manual/manual.pdf
 docsrc/tutorial/install_linux/install_linux.pdf
 docsrc/tutorial/quick_start_cmd/quick_start_cmd.pdf
 
-distrib/gpstudio_linux.tar.gz
-distrib/gpstudio_win.zip
-distrib/gpstudio_win/
-distrib/gpstudio_linux/
+distrib/gpstudio_*
 
 bin/*.so*
 bin/*.a

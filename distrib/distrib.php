@@ -4,29 +4,30 @@ define("LIB_PATH", realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..').DIRECTOR
 define("GUI_TOOLS_PATH", LIB_PATH . "gui-tools" . DIRECTORY_SEPARATOR);
 define("SUPPORT_PATH", LIB_PATH . "support" . DIRECTORY_SEPARATOR);
 define("DISTRIB_PATH", realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
-define("WIN_DISTRIB_PATH", DISTRIB_PATH."gpstudio_win".DIRECTORY_SEPARATOR);
-define("LINUX_DISTRIB_PATH", DISTRIB_PATH."gpstudio_linux".DIRECTORY_SEPARATOR);
 
 include("distrib_utils.php");
 include("distrib_scripts.php");
 include(LIB_PATH."scripts".DIRECTORY_SEPARATOR."gpstudio.php");
 
-function distrib($os)
+function distrib($system, $archi, $qtver, $outdir)
 {
-	if($os=="win") $path=WIN_DISTRIB_PATH; else $path=LINUX_DISTRIB_PATH;
+	mkdirExists($outdir);
+	$outdir=realpath($outdir).DIRECTORY_SEPARATOR;
+	echo $outdir;
 	
-	mkdirExists($path);
-	
-	distrib_scripts($path, $os);
-	distrib_support($path, $os);
-	distrib_doc($path, $os);
-	distrib_bin($path, $os);
-	distrib_thirdparts($path, $os);
+	distrib_scripts($outdir, $system, $archi, $qtver);
+	distrib_support($outdir, $system, $archi, $qtver);
+	distrib_doc($outdir, $system, $archi, $qtver);
+	distrib_bin($outdir, $system, $archi, $qtver);
+	distrib_thirdparts($outdir, $system, $archi, $qtver);
 }
 
-$options = getopt("o:");
-if(array_key_exists('o',$options)) $os = $options['o']; else exit("You should specify an os with -o");
+$options = getopt("s:a:q:o:");
+if(array_key_exists('s',$options)) $system = $options['s']; else exit("You should specify a system with -s [win-linux]\n");
+if(array_key_exists('a',$options)) $archi = $options['a']; else exit("You should specify an architechture with -a [32-64]\n");
+if(array_key_exists('q',$options)) $qtver = $options['q']; else exit("You should specify a qt version with -q [4-5]\n");
+if(array_key_exists('o',$options)) $outdir = $options['o']; else exit("You should specify an output dir with -o\n");
 
-distrib($os);
+distrib($system, $archi, $qtver, $outdir);
 
 ?>

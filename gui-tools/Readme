@@ -24,11 +24,7 @@ libqt5script5
 libqt5xml5
 
 # To cross build to windows
-sudo apt-get install wine mingw-w64 qt4-qmake qt4-dev-tools libqt4-dev g++-multilib libqt4-dev:i386 libusb-1.0-0-dev
-
-# qt5-32
-sudo apt-get install libgles2-mesa-dev:i386 qtbase5-dev:i386 qtscript5-dev:i386
-
+sudo apt-get install wine mingw-w64 qt4-qmake qt4-dev-tools libqt4-dev libusb-1.0-0-dev
 
 mkdir build-win
 cd build-win
