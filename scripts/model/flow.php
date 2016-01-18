@@ -55,7 +55,7 @@ class Flow
 	
 	public function __toString()
     {
-        return $this->name." ".$this->type." ".$this->size;
+        return "'".$this->name."' direction: '".$this->type."' size: '".$this->size."' desc: '".$this->desc."'";
     }
 	
 	protected function parse_xml($xml)
@@ -90,7 +90,7 @@ class Flow
 		$att->value = $this->size;
 		$xml_element->appendChild($att);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			// type
 			$att = $xml->createAttribute('type');
@@ -101,7 +101,10 @@ class Flow
 			$att = $xml->createAttribute('desc');
 			$att->value = $this->desc;
 			$xml_element->appendChild($att);
-			
+		}
+		
+		if($format=="complete")
+		{
 			// properties
 			if(!empty($this->properties))
 			{

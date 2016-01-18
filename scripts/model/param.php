@@ -138,7 +138,7 @@ class Param
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			if($this->hard)
 			{
@@ -200,11 +200,35 @@ class Param
 		return $xml_element;
 	}
 	
+	/** Add a parambitfield to the param 
+	 *  @param ParamBitfield $parambitfield parambitfield to add to the param **/
+	function addParamBitfield($parambitfield)
+	{
+		//$parambitfield->parent = $this;
+		array_push($this->parambitfields, $parambitfield);
+	}
+	
+	/** return a reference to the bitfield with the name $name, if not found, return null
+	 *  @param string $name name of the parambitfield to search
+	 *  @return ParamBitfield found bitfield **/
 	function getParambitfield($name)
 	{
 		foreach($this->parambitfields as $parambitfield)
 		{
 			if($parambitfield->name==$name) return $parambitfield;
+		}
+		return null;
+	}
+	
+	/** delete a bitfield from his name
+	 *  @param string $name name of the bitfield to delete  **/
+	function delParambitfield($name)
+	{
+		$i=0;
+		foreach($this->parambitfields as $parambitfield)
+		{
+			if($parambitfield->name==$name) {unset($this->parambitfields[$i]); return;}
+			$i++;
 		}
 		return null;
 	}

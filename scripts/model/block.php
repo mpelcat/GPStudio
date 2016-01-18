@@ -196,8 +196,8 @@ class Block
 		$maxOutLenght=0;
 		foreach($this->flows as $flow)
 		{
-			if($flow->type=="in")  {$flowIn[]=$flow; $maxInLenght=max($maxInLenght, strlen($flow->name));}
-			if($flow->type=="out") {$flowOut[]=$flow; $maxOutLenght=max($maxOutLenght, strlen($flow->name));}
+			if($flow->type=="in")  {$flowIn[]=$flow; $maxInLenght=max($maxInLenght, strlen($flow->name.$flow->size)+3);}
+			if($flow->type=="out") {$flowOut[]=$flow; $maxOutLenght=max($maxOutLenght, strlen($flow->name.$flow->size)+3);}
 		}
 		$lenghtBlock=strlen($this->name)+8;
 		$maxInLenght+=4;
@@ -208,7 +208,7 @@ class Block
 		for($i=0;$i<$maxFlow;$i++)
 		{
 			// first in line
-			if($i<count($flowIn)) echo str_pad($flowIn[$i]->name,$maxInLenght,' ',STR_PAD_BOTH);
+			if($i<count($flowIn)) echo str_pad($flowIn[$i]->name.' ('.$flowIn[$i]->size.')',$maxInLenght,' ',STR_PAD_BOTH);
 			else echo str_repeat(' ',$maxInLenght);
 			
 			// block 1
@@ -217,7 +217,7 @@ class Block
 			echo '|';
 			
 			// first out line
-			if($i<count($flowOut)) echo str_pad($flowOut[$i]->name,$maxOutLenght,' ',STR_PAD_BOTH);
+			if($i<count($flowOut)) echo str_pad($flowOut[$i]->name.' ('.$flowOut[$i]->size.')',$maxOutLenght,' ',STR_PAD_BOTH);
 			else echo str_repeat(' ',$maxOutLenght);
 			echo "\n";
 			
@@ -290,6 +290,44 @@ class Block
 		return null;
 	}
 	
+	/** delete a param from his name
+	 *  @param string $name name of the param to delete  **/
+	function delParam($name)
+	{
+		$i=0;
+		foreach($this->params as $param)
+		{
+			if($param->name==$name) {unset($this->params[$i]); return;}
+			$i++;
+		}
+		return null;
+	}
+	
+	/** return a reference to the bitfield with the path $path, if not found, return null
+	 *  @param string $path path of the parambitfield to search (param.parambitfield)
+	 *  @return ParamBitfield found bitfield **/
+	function getParamBitField($path)
+	{
+		$subPath=explode('.',$path);
+		if(count($subPath)!=2) return NULL;
+		$param=$this->getParam($subPath[0]);
+		if($param==NULL) return NULL;
+		$paramBitField=$param->getParambitfield($subPath[1]);
+		return $paramBitField;
+	}
+	
+	/** return a reference to the bitfield with the path $path, if not found, return null
+	 *  @param string $path path of the parambitfield to search (param.parambitfield)
+	 *  @return ParamBitfield found bitfield **/
+	function delParamBitField($path)
+	{
+		$subPath=explode('.',$path);
+		if(count($subPath)!=2) return NULL;
+		$param=$this->getParam($subPath[0]);
+		if($param==NULL) return NULL;
+		return $param->delParambitfield($subPath[1]);
+	}
+	
 	/** Add a property to the block 
 	 *  @param Property $property property to add to the block **/
 	function addProperty($property)
@@ -327,6 +365,19 @@ class Block
 			if($property==null) return null;
 		}
 		return $property;
+	}
+	
+	/** delete a property from his name
+	 *  @param string $name name of the property to delete  **/
+	function delProperty($name)
+	{
+		$i=0;
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) {unset($this->properties[$i]); return;}
+			$i++;
+		}
+		return null;
 	}
 	
 	/** Add a file to the block 
@@ -394,6 +445,19 @@ class Block
 		return null;
 	}
 	
+	/** delete a flow from his name
+	 *  @param string $name name of the flow to delete  **/
+	function delFlow($name)
+	{
+		$i=0;
+		foreach($this->flows as $flow)
+		{
+			if($flow->name==$name) {unset($this->flows[$i]); return;}
+			$i++;
+		}
+		return null;
+	}
+	
 	/** Add a clock to the block 
 	 *  @param Clock $clock clock to add to the block **/
 	function addClock($clock)
@@ -414,6 +478,19 @@ class Block
 		return null;
 	}
 	
+	/** delete a clock from his name
+	 *  @param string $name name of the clock to delete  **/
+	function delClock($name)
+	{
+		$i=0;
+		foreach($this->clocks as $clock)
+		{
+			if($clock->name==$name) {unset($this->clocks[$i]); return;}
+			$i++;
+		}
+		return null;
+	}
+	
 	/** Add a reset to the block 
 	 *  @param Reset $reset reset to add to the block **/
 	function addReset($reset)
@@ -430,6 +507,19 @@ class Block
 		foreach($this->resets as $reset)
 		{
 			if($reset->name==$name) return $reset;
+		}
+		return null;
+	}
+	
+	/** delete a reset from his name
+	 *  @param string $name name of the reset to delete  **/
+	function delReset($name)
+	{
+		$i=0;
+		foreach($this->resets as $reset)
+		{
+			if($reset->name==$name) {unset($this->resets[$i]); return;}
+			$i++;
 		}
 		return null;
 	}
@@ -734,7 +824,7 @@ class Block
 		$xml_params = $xml->createElement("params");
 		foreach($this->params as $param)
 		{
-			if($format=="complete")
+			if($format=="complete" or $format=="blockdef")
 			{
 				$xml_params->appendChild($param->getXmlElement($xml, $format));
 				$count++;

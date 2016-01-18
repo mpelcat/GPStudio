@@ -104,6 +104,16 @@ class Property
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        $string=$this->name." caption:'".$this->caption."' type:'".$this->type."' value:'".$this->value."' min:'".$this->min."' max:'".$this->max."' step:'".$this->step."' desc:'".$this->desc."'".$this->path();
+        foreach($this->properties as $property)
+		{
+			$string.="\n".$property;
+		}
+        return $string;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name			= (string)$xml['name'];
@@ -152,7 +162,7 @@ class Property
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			// caption
 			$att = $xml->createAttribute('caption');
@@ -253,9 +263,17 @@ class Property
 		array_push($this->properties, $property);
 	}
 	
+	/** Add a sub-property enum to the property 
+	 *  @param Property $property sub-property enum to add to the property **/
+	function addProperty($property)
+	{
+		$property->parentProperty = $this;
+		array_push($this->properties, $property);
+	}
+	
 	/** return a reference to the property with the name $name, if not found, return false
 	 *  @param string $name name of the property enum to search
-	 *  @return Property found property enum **/
+	 *  @return Property found property **/
 	function getSubProperty($name)
 	{
 		foreach($this->properties as $property)
@@ -263,6 +281,26 @@ class Property
 			if($property->name==$name) return $property;
 		}
 		return null;
+	}
+	
+	/** return a reference to the property with the name $name, if not found, return false
+	 *  @param string $name name of the property enum to search
+	 *  @return Property found property **/
+	function getProperty($name)
+	{
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) return $property;
+		}
+		return null;
+	}
+	
+	/** return the path of the property (without the name of the block)
+	 *  @return string path of the property **/
+	function path()
+	{
+		if($this->parentProperty==NULL) return $this->name;
+		else return $this->parentProperty->path().".".$this->name;
 	}
 }
 

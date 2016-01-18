@@ -1,49 +1,57 @@
-# gpblock command line tool to manage a custom block (v1.0)
+# gpblock command line tool to manage a custom block (v0.95)
 
 # block driver
 gpblock newprocess -n <block-name>
+gpblock showblock
 
 # files
-gpblock addfile -p <path> -t <type> -g <group> [-h <help>]
+gpblock addfile -p <path> -t <type> -g <group>
 gpblock delfile -p <path>
 gpblock showfile
 
 # flows interface
 gpblock addflow -n <flow-name> -d <direction> -s <size>
+gpblock delflow -n <flow-name>
 gpblock showflow
 gpblock renameflow -n <flow-name> -v <new-name>
 gpblock setflow -n <flow-name> [-d <direction>] [-s <size>]
-gpblock delflow -n <flow-name>
 
 # params
 gpblock addparam -n <param-name>
+gpblock delparam -n <param-name>
 gpblock showparam
 gpblock renameparam -n <param-name> -v <new-name>
 gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-a <relative-address>]
-gpblock fixparam -n <param-name> -v <true/false>
-gpblock delparam -n <param-name>
+gpblock fixparam -n <param-name> [-v <true/false>]
 
 	# bitfields
-	gpblock addbitfield -p <param-name> -n <bitfield-name>
+	gpblock addbitfield -n <bitfield-name> -b <bitfield>
+	gpblock delbitfield -n <bitfield-name>
+	gpblock renamebitfield -n <bitfield-name> -v <new-name>
+	gpblock setbitfield -n <bitfield-name> -b <bitfield>
 
 # resets
 gpblock addreset -n <reset-name> -d <direction> -g <group>
+gpblock delreset -n <reset-name>
 gpblock showreset
 gpblock renamereset -n <reset-name> -v <new-name>
 gpblock setreset -n <reset-name> [-d <direction>] [-g <group>]
-gpblock delreset -n <reset-name>
 
 # clocks
-gpblock addclock -n <clock-name> -d <direction> -g <clock-domain>
+gpblock addclock -n <clock-name> -d <direction> [-g <clock-domain>]
+gpblock delclock -n <clock-name>
 gpblock showclock
 gpblock renameclock -n <clock-name> -v <new-name>
 gpblock setclock -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]
-gpblock delclock -n <clock-name>
 
 # properties
-gpblock addproperty -n <property-name> -v <default-value> -l <label> -t <type> -r <min:max>
+gpblock addproperty -n <property-name> -l <label> -t <type> [-v <default-value>]
+gpblock delproperty -n <property-name>
+gpblock showproperty
+gpblock renameproperty -n <property-name> -v <new-name>
+gpblock setproperty -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]
+gpblock setpropertymap -n <param/property-name> -v <property-map>
 
 # global
-gpblock sethelp -n <instance-name> -h <help-text>
+gpblock sethelp -n <instance-name> -v <help-text>
 
-gpblock setpropertymap -n <param/property-name> -v <property-map>

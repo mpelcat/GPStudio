@@ -178,16 +178,11 @@ class Clock
 		$att->value = $this->typical;
 		$xml_element->appendChild($att);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			// domain
 			$att = $xml->createAttribute('domain');
 			$att->value = $this->domain;
-			$xml_element->appendChild($att);
-			
-			// net
-			$att = $xml->createAttribute('net');
-			$att->value = $this->net;
 			$xml_element->appendChild($att);
 			
 			// direction
@@ -218,6 +213,14 @@ class Clock
 			// desc
 			$att = $xml->createAttribute('desc');
 			$att->value = $this->desc;
+			$xml_element->appendChild($att);
+		}
+		
+		if($format=="complete")
+		{
+			// net
+			$att = $xml->createAttribute('net');
+			$att->value = $this->net;
 			$xml_element->appendChild($att);
 		}
 		
