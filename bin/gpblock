@@ -1,5 +1,17 @@
-#/bin/bash
+#!/bin/bash
+
+args=""
+for arg in "$@"
+do
+	if [[ $arg == *" "* ]]
+	then
+		args+=" \"$arg\""
+	else
+		args+=" $arg"
+	fi
+done
 
 DIR=$(dirname "$0")
-php "$DIR/../scripts/gpblock.php" -a $@
-
+CMD="php \"$DIR/../scripts/gpblock.php\" -a "
+CMD+=$args
+eval $CMD
