@@ -23,9 +23,9 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 }
 else
 {
-    $txtred="\e[0;31m"; # Red
-	$txtorange="\e[0;33m"; # Orange
-	$txtgreen="\e[0;32m"; # Green
+	$txtred="\e[31m"; # Red
+	$txtorange="\e[33m"; # Orange
+	$txtgreen="\e[32m"; # Green
 	$txtrst="\e[0m";    # Text Reset
 }
 
