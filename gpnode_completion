@@ -2,7 +2,6 @@
 
 _gpnode()
 {
-    local sourcesdir="/etc/apt/sources.list.d"
     local cur prev words cword
     _init_completion || return
 
