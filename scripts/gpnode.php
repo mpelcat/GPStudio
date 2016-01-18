@@ -402,7 +402,7 @@ switch($action)
 			else
 			{
 				foreach($node->blocks as $block) echo $block->name.'. ';
-				exit(0);
+				exit(1);
 			}
 		}
 		else
@@ -413,11 +413,12 @@ switch($action)
 			switch($mode)
 			{
 				case "property":
+					$notended=0;
 					if(count($wordRes)==2)
 					{
 						foreach($block->properties as $property)
 						{
-							if(count($property->properties)==0) echo $blockName.'.'.$property->name.' '; else echo $blockName.'.'.$property->name.'. ';
+							if(count($property->properties)==0) echo $blockName.'.'.$property->name.' '; else {echo $blockName.'.'.$property->name.'. '; $notended=1;}
 						}
 					}
 					else
@@ -441,9 +442,10 @@ switch($action)
 						
 						foreach($property->properties as $property)
 						{
-							if(count($property->properties)==0) echo $prefix.'.'.$property->name.' '; else echo $prefix.'.'.$property->name.'. ';
+							if(count($property->properties)==0) echo $prefix.'.'.$property->name.' '; else {echo $prefix.'.'.$property->name.'. '; $notended=1;}
 						}
 					}
+					if($notended==1) exit(1);
 					
 					break;
 				case "clock":

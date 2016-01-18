@@ -58,27 +58,39 @@ _gpnode()
                         return 0
                         ;;
                     setproperty)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m property )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m property) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     setparam)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m param )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m param) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     setclock)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m clock )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m clock) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     setclockdomain)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m clockdomain )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m clockdomain) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     setflowsize)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flow )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m flow) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowout )' -- "$cur" ) ) && compopt -o nospace
+                        COMP=$( gpnode listword -w $cur -m flowout) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                 esac
@@ -106,7 +118,9 @@ _gpnode()
             6)
                 case $command in
                     connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpnode listword -w $cur -m flowin )' -- "$cur" ) ) && compopt -o nospace
+						COMP=$( gpnode listword -w $cur -m flowin) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     addprocess)
