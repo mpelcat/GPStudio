@@ -27,3 +27,4 @@ udevadm trigger
 
 echo "To add permanently GPStudio in your path, add this to your bashrc file :"
 echo "export PATH=\$PATH:$(pwd)/bin"
+echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/bin"
