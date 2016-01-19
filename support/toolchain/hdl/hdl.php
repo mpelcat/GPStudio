@@ -176,7 +176,7 @@ class HDL_toolchain extends Toolchain
 			}
 		}
 		
-		$generator->blocks = $node->blocks;
+		foreach($node->blocks as $block) $generator->addBlock($block);
 		
 		$code = "";
 		foreach($node->board->clocks as $clock)

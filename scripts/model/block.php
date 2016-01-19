@@ -676,6 +676,8 @@ class Block
 		}
 	}
 	
+	public function type() {return 'block';}
+	
 	public function getXmlElement($xml, $format)
 	{
 		if($format=="project" or $format=="blockdef")

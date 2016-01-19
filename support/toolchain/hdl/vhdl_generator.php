@@ -44,14 +44,15 @@ class VHDL_generator
 		$this->blocks=array();
 	}
 	
-	function fromBlock($block)
+	function fromBlock($block, $subblock=FALSE)
 	{
 		// generic
 		foreach($block->params as $param)
 		{
 			if($param->hard)
 			{
-				$this->addGeneric($param->name, $param->value);
+				if(!$subblock) $this->addGeneric(strtoupper($param->name), $param->value);
+				else $this->addGeneric(strtoupper($param->name), strtoupper($param->name));
 			}
 		}
 		// clocks
@@ -61,7 +62,8 @@ class VHDL_generator
 			
 			if($clock->direction=="in")
 			{
-				$this->addGeneric(strtoupper($clock->name).'_FREQ', $clock->typical);
+				if(!$subblock) $this->addGeneric(strtoupper($clock->name).'_FREQ', $clock->typical);
+				else $this->addGeneric(strtoupper($clock->name).'_FREQ', strtoupper($clock->name).'_FREQ');
 			}
 		}
 		// resets
@@ -88,7 +90,8 @@ class VHDL_generator
 				$this->addPort($flow->name . '_fv', 1, $flow->type);
 				$this->addPort($flow->name . '_dv', 1, $flow->type);
 				
-				$this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
+				if(!$subblock) $this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
+				else $this->addGeneric(strtoupper($flow->name).'_SIZE', strtoupper($flow->name).'_SIZE');
 			}
 			elseif($flow->type=='in_conn' or $flow->type=='out_conn')
 			{
@@ -98,7 +101,8 @@ class VHDL_generator
 				$this->addPort($flow->name . '_fv', 1, $direction);
 				$this->addPort($flow->name . '_dv', 1, $direction);
 				
-				$this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
+				if(!$subblock) $this->addGeneric(strtoupper($flow->name).'_SIZE', $flow->size);
+				else $this->addGeneric(strtoupper($flow->name).'_SIZE', strtoupper($flow->name).'_SIZE');
 			}
 		}
 		//interfaces
@@ -190,9 +194,9 @@ class VHDL_generator
 	
 	/** Add a block to list of blocks
 	 *  @param Block $block block to add to the blocks **/
-	function addBlock($block)
+	function addBlock($block, $subblock=FALSE)
 	{
-		array_push($this->blocks, $block);
+		array_push($this->blocks, array($block, $subblock));
 	}
 	
 	function get_ports_and_generic()
@@ -288,12 +292,14 @@ class VHDL_generator
 		$used_drivers = array();
 		if(!empty($this->blocks))
 		{
-			foreach($this->blocks as $block)
+			foreach($this->blocks as $blockpart)
 			{
+				$block = $blockpart[0];
+				$subblock = $blockpart[1];
 				if(!in_array($block->driver, $used_drivers))
 				{
 					$modgenerator = new VHDL_generator();
-					$modgenerator->fromBlock($block);
+					$modgenerator->fromBlock($block, $subblock);
 			
 					$content.='component '.$block->driver."\r\n";
 					$content.=$modgenerator->get_ports_and_generic();
@@ -341,8 +347,11 @@ class VHDL_generator
 		
 		if(!empty($this->blocks))
 		{
-			foreach($this->blocks as $block)
+			foreach($this->blocks as $blockpart)
 			{
+				$block = $blockpart[0];
+				$subblock = $blockpart[1];
+				
 			// generic map
 				$name = $block->name;
 				if($name==$block->driver) $name=$name.'_inst';
@@ -353,19 +362,28 @@ class VHDL_generator
 				{
 					if($clock->direction=="in")
 					{
-						array_push($genericmap, array(strtoupper($clock->name).'_FREQ', $clock->typical));
+						if(!$subblock) array_push($genericmap, array(strtoupper($clock->name).'_FREQ', $clock->typical));
+						else array_push($genericmap, array(strtoupper($clock->name).'_FREQ', strtoupper($clock->name).'_FREQ'));
 					}
 				}
 				foreach($block->params as $param)
 				{
 					if($param->hard)
 					{
-						array_push($genericmap, array($param->name, $param->value));
+						if(!$subblock)
+						{
+							if(!empty($param->value)) array_push($genericmap, array($param->name, $param->value));
+						}
+						else
+						{
+							array_push($genericmap, array(strtoupper($param->name), strtoupper($param->name)));
+						}
 					}
 				}
 				foreach($block->flows as $flow)
 				{
-					array_push($genericmap, array(strtoupper($flow->name).'_SIZE', $flow->size));
+					if(!$subblock) array_push($genericmap, array(strtoupper($flow->name).'_SIZE', $flow->size));
+					else array_push($genericmap, array(strtoupper($flow->name).'_SIZE', strtoupper($flow->name).'_SIZE'));
 				}
 				
 				$first=true;
@@ -404,7 +422,13 @@ class VHDL_generator
 				// flows mapping
 				foreach($block->flows as $flow)
 				{
-					if($flow->type=='in' or $flow->type=='out')
+					if($subblock)
+					{
+						array_push($portmap, array($flow->name . '_data', $flow->name . '_data'));
+						array_push($portmap, array($flow->name . '_fv', $flow->name . '_fv'));
+						array_push($portmap, array($flow->name . '_dv', $flow->name . '_dv'));
+					}
+					elseif($flow->type=='in' or $flow->type=='out')
 					{
 						array_push($portmap, array($flow->name . '_data', $block->name . '_' . $flow->name . '_data_s'));
 						array_push($portmap, array($flow->name . '_fv', $block->name . '_' . $flow->name . '_fv_s'));
