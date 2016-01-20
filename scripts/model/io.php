@@ -16,7 +16,7 @@ class IO extends Block
 	*/
 	public $ext_ports;
 	
-	function __construct($io_device_element, $io_node_element=null)
+	function __construct($io_device_element=null, $io_node_element=null)
 	{
 		$this->pins = array();
 		$this->ext_ports = array();
@@ -62,10 +62,13 @@ class IO extends Block
 			}
 		}
 		
-		if (!file_exists($io_file)) error("File $io_file doesn't exist",5,"IO");
-		if (!($this->xml = simplexml_load_file($io_file))) error("Error when parsing $io_file",5,"IO");
+		if($io_device_element!=NULL)
+		{
+			if(!file_exists($io_file)) error("File $io_file doesn't exist",5,"IO");
+			if(!($this->xml = simplexml_load_file($io_file))) error("Error when parsing $io_file",5,"IO");
 	
-		$this->parse_xml($io_device_element, $io_node_element);
+			$this->parse_xml($io_device_element, $io_node_element);
+		}
 	}
 	
 	protected function parse_xml($io_device_element, $io_node_element)
@@ -119,6 +122,46 @@ class IO extends Block
 		}
 		
 		return $xml_element;
+	}
+	
+	/** Add a pin to the block 
+	 *  @param Pin $pin pin to add to the block **/
+	function addPin($pin)
+	{
+		$pin->parentBlock = $this;
+		array_push($this->pins, $pin);
+	}
+	
+	/** return a reference to the pin with the name $name, if not found, return null
+	 *  @param string $name name of the pin to search
+	 *  @return Pin found pin **/
+	function getPin($name)
+	{
+		foreach($this->pins as $pin)
+		{
+			if($pin->name==$name) return $pin;
+		}
+		return null;
+	}
+	
+	/** Add an external port to the block 
+	 *  @param Port $extPort port to add to the block **/
+	function addExtPort($extPort)
+	{
+		$extPort->parentBlock = $this;
+		array_push($this->ext_ports, $extPort);
+	}
+	
+	/** return a reference to the external port with the name $name, if not found, return null
+	 *  @param string $name name of the external port to search
+	 *  @return Port found external port **/
+	function getExtPort($name)
+	{
+		foreach($this->ext_ports as $extPort)
+		{
+			if($extPort->name==$name) return $extPort;
+		}
+		return null;
 	}
 }
 

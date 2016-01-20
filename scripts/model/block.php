@@ -524,46 +524,6 @@ class Block
 		return null;
 	}
 	
-	/** Add a pin to the block 
-	 *  @param Pin $pin pin to add to the block **/
-	function addPin($pin)
-	{
-		$pin->parentBlock = $this;
-		array_push($this->pins, $pin);
-	}
-	
-	/** return a reference to the pin with the name $name, if not found, return null
-	 *  @param string $name name of the pin to search
-	 *  @return Pin found pin **/
-	function getPin($name)
-	{
-		foreach($this->pins as $pin)
-		{
-			if($pin->name==$name) return $pin;
-		}
-		return null;
-	}
-	
-	/** Add an external port to the block 
-	 *  @param Port $extPort port to add to the block **/
-	function addExtPort($extPort)
-	{
-		$extPort->parentBlock = $this;
-		array_push($this->ext_ports, $extPort);
-	}
-	
-	/** return a reference to the external port with the name $name, if not found, return null
-	 *  @param string $name name of the external port to search
-	 *  @return Port found external port **/
-	function getExtPort($name)
-	{
-		foreach($this->ext_ports as $extPort)
-		{
-			if($extPort->name==$name) return $extPort;
-		}
-		return null;
-	}
-	
 	/** Add an interface to the block 
 	 *  @param Interface $interface interface to add to the block **/
 	function addInterface($interface)
