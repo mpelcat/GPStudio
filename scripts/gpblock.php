@@ -83,8 +83,6 @@ switch($action)
 		$process_block->clocks = array();
 		$process_block->flows = $block->flows;
 		$process_block->params = $block->params;
-		foreach($block->params as $param) $param->value=$param->name;
-		foreach($block->flows as $flow) $flow->size=$flow->name;
 		
 		// clocks
 		foreach($block->clocks as $clock)
@@ -300,14 +298,14 @@ switch($action)
 		break;
 		
 	case "setparam":
-		$options = getopt("a:n:t:v:a:");
+		$options = getopt("a:n:t:v:r:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the param with -n"."\n",1);
 		
 		if(($param=$block->getParam($name))==NULL) error("A param does not exist with the name '$name'."."\n",1);
 		
 		if(array_key_exists('t',$options)) $type = $options['t']; else $type=$param->type;
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value=$param->value;
-		if(array_key_exists('a',$options)) $regaddr = $options['a']; else $regaddr=$param->regaddr;
+		if(array_key_exists('r',$options)) $regaddr = $options['r']; else $regaddr=$param->regaddr;
 		
 		$param->type = $type;
 		$param->value = $value;

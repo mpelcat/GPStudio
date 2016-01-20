@@ -21,7 +21,7 @@ gpblock addparam -n <param-name>
 gpblock delparam -n <param-name>
 gpblock showparam
 gpblock renameparam -n <param-name> -v <new-name>
-gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-a <relative-address>]
+gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]
 gpblock fixparam -n <param-name> [-v <true/false>]
 
 	# bitfields
