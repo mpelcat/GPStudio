@@ -22,9 +22,9 @@
 gpblock is a command line tool that permits to create new process block.
 
 \section{Use}
-gpblock always takes the project in the current directory, so you only can have one project per directory. A node project file have the `.node' extension.
+gpblock always takes the process file in the current directory, so you only can have one process per directory. A process file have the `.proc' extension.
 
-At the beginning, you need to create a project with the \emph{newproject} command. After that, you can use all the commands set on this project.
+At the beginning, you need to create a process with the \emph{newprocess} command. After that, you can use all the commands set on this process.
 
 Please read the tutorial `GPStudio command line quick start' to learn how to use this tool.
 
@@ -32,20 +32,507 @@ Under linux, you have a completion script to help you writing commands.
 
 \section{Commands}
 \subsection{project}
-\subsubsection{newproject}
-\command{\textbf{gpnode} \textbf{newproject} -n <project-name>}
+% ==============================================
+\subsubsection{newprocess}
+\command{\textbf{gpblock newprocess} -n <process-name>}
 
-Create a project file inside the current directory named `\texttt{<project-name>}.node'.
+Create a process file inside the current directory named `\texttt{<process-name>}.proc'.
 
 \paramcommand{
--n & project name without space & project1 \\ 
+-n & process name without space & my\_process \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpnode} \textbf{newproject} -n project1
+> \textbf{gpblock newprocess} -n my\_process
 \end{sampletitle}
-\samplecomment{Create a new project named \texttt{project1}. After that, you have a file project \texttt{project1.node} in the current directory.}
+\samplecomment{Create a new process named \texttt{my\_process}. After that, you have a file project \texttt{my\_process.proc} in the current directory.}
 
-\seealso{\textbf{gpnode setclockdomain}}
+\seealso{\textbf{gpblock showblock}}
+
+% ==============================================
+\subsubsection{showblock}
+\command{\textbf{gpblock showblock}}
+
+Shows all informations about the block.
+
+% ==============================================
+\subsubsection{generatetop}
+\command{\textbf{gpblock generatetop} [-o <dir>]}
+
+Generates the skeleton of the block top level in the subdirectory \texttt{build/}. This top level instantiate the process and the slave if you need. The generated file is named `<process-name>.vhd'.
+
+\paramcommand{
+-o & output directory & build \\ 
+}
+
+\begin{sampletitle}
+> \textbf{gpblock generatetop} -o build/
+\end{sampletitle}
+\samplecomment{Generates \texttt{myproc.vhd} in the subdirectory \texttt{build/}.}
+
+% ==============================================
+\subsubsection{generateslave}
+\command{\textbf{gpblock generateslave} [-o <dir>]}
+
+Generates the slave for dynamic parameters with read and write. The generated file is named `<process-name>\_slave.vhd'.
+
+\paramcommand{
+-o & output directory & build \\ 
+}
+
+\begin{sampletitle}
+> \textbf{gpblock generateslave} -o build/
+\end{sampletitle}
+\samplecomment{Generates \texttt{myproc\_slave.vhd} in the subdirectory \texttt{build/}.}
+
+% ==============================================
+\subsubsection{generateprocess}
+\command{\textbf{gpblock generateprocess} [-o <dir>]}
+
+Generates an empty skeleton to implement your custom process. The generated file is named `<process-name>\_process.vhd'.
+
+\paramcommand{
+-o & output directory & build \\ 
+}
+
+\begin{sampletitle}
+> \textbf{gpblock generateprocess} -o build/
+\end{sampletitle}
+\samplecomment{Generates \texttt{myproc\_process.vhd} in the subdirectory \texttt{build/}.}
+
+% ==============================================
+\subsubsection{generate}
+\command{\textbf{gpblock generate} [-o <dir>]}
+
+This command is an alias for the three previous command. Generates all the three files.
+
+\paramcommand{
+-o & output directory & build \\ 
+}
+
+\begin{sampletitle}
+> \textbf{gpblock generatetop} -o build/
+\end{sampletitle}
+\samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_process.vhd},  in the subdirectory \texttt{build/}.}
+
+
+\subsection{files}
+% ==============================================
+\subsubsection{addfile}
+\command{\textbf{gpblock addfile} -p <path> -t <type> -g <group>}
+
+Adds the file with the path \texttt{<path>} to the list of files of the current process block. The type and group of the file depends of the tool-chain that you use.
+
+\paramcommand{
+-p & process path relative to the file process & hdl/my\_process.vhd \\
+\hline
+-t & type of the file & [vhdl - verilog ...] \\
+\hline
+-g & group of the file & [hdl - doc ...] \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock addfile} -p hdl/my\_process.vhdl -t vhdl -g hdl
+\end{sampletitle}
+\samplecomment{Adds the file `my\_process.vhd' as a file needed by the hdl implementation of the block.}
+
+\seealso{\textbf{gpblock delfile} and \textbf{gpblock showfile}}
+
+% ==============================================
+\subsubsection{delfile}
+\command{\textbf{gpblock delfile} -p <path>}
+
+Removes the file with the path \texttt{<path>}.
+
+\paramcommand{
+-p & process path relative to the file process & hdl/my\_process.vhd \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock delfile} -p hdl/my\_process.vhd
+\end{sampletitle}
+\samplecomment{Removes the file `my\_process.vhd'.}
+
+\seealso{\textbf{gpblock addfile} and \textbf{gpblock showfile}}
+
+% ==============================================
+\subsubsection{showfile}
+\command{\textbf{gpblock showfile}}
+
+Prints the list of files in the current block project.
+
+\subsection{flows}
+% ==============================================
+\subsubsection{addflow}
+\command{\textbf{gpblock addflow} -n <flow-name> -d <direction> -s <size>}
+
+Adds a flow interface named \texttt{<flow-name>} to the list of flows. You need to specify the direction of the flow (input or output) and the default size.
+
+\paramcommand{
+-n & name of the flow & in1 \\
+\hline
+-d & direction of the flow & [in - out] \\
+\hline
+-s & default size of the flow interface in bit & 9 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock addflow} -n out0 -d out -s 8
+\end{sampletitle}
+\samplecomment{Add a new flow output named `out0' with a default size of 8 bits.}
+
+\seealso{\textbf{gpblock delflow} and \textbf{gpblock showflow}}
+
+% ==============================================
+\subsubsection{delflow}
+\command{\textbf{gpblock delflow} -n <flow-name>}
+
+Removes the file with the name \texttt{<flow-name>}.
+
+\paramcommand{
+-n & name of the flow & in1 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock delflow} -n out0
+\end{sampletitle}
+\samplecomment{Removes the flow named `out0'.}
+
+\seealso{\textbf{gpblock addflow} and \textbf{gpblock showflow}}
+
+% ==============================================
+\subsubsection{showflow}
+\command{\textbf{gpblock showflow}}
+
+Prints the list of flows in the current block project.
+
+% ==============================================
+\subsubsection{renameflow}
+\command{\textbf{gpblock renameflow} -n <flow-name> -v <new-name>}
+
+Renames the flow named \texttt{<flow-name>} with the name \texttt{<new-name>}.
+
+\paramcommand{
+-n & name of the flow & in1 \\
+\hline
+-v & new name of the flow & in0 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock renameflow} -n out0 -v out1
+\end{sampletitle}
+\samplecomment{Renames the flow `out0' to `out1'.}
+
+\seealso{\textbf{gpblock delflow}}
+
+% ==============================================
+\subsubsection{setflow}
+\command{\textbf{gpblock setflow} -n <flow-name> [-d <direction>] [-s <size>]}
+
+Permits to modify one or more flow parameters like the direction or the default size.
+
+\paramcommand{
+-n & name of the flow & in1 \\
+\hline
+-d & direction of the flow & [in - out] \\
+\hline
+-s & default size of the flow interface in bit & 9 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock setflow} -n out0 -d in \\
+> \textbf{gpblock setflow} -n out0 -s 9
+\end{sampletitle}
+\samplecomment{Sets the flow `out0' as input and then sets the default size to 9 bits.}
+
+\subsection{params}
+% ==============================================
+\subsubsection{addparam}
+\command{\textbf{gpblock addparam} -n <param-name> -d <direction> -g <group>}
+
+Adds a param named \texttt{<param-name>} to the list of params.
+
+\paramcommand{
+-n & name of the param & param0 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock addparam} -n param0
+\end{sampletitle}
+\samplecomment{Add a new param input named `param0'}
+
+\seealso{\textbf{gpblock delparam} and \textbf{gpblock showparam}}
+
+% ==============================================
+\subsubsection{delparam}
+\command{\textbf{gpblock delparam} -n <param-name>}
+
+Removes the param with the name \texttt{<param-name>}.
+
+\paramcommand{
+-n & name of the param & param0 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock delparam} -n param0
+\end{sampletitle}
+\samplecomment{Removes the param named `param0'.}
+
+\seealso{\textbf{gpblock addparam} and \textbf{gpblock showparam}}
+
+% ==============================================
+\subsubsection{showparam}
+\command{\textbf{gpblock showparam}}
+
+Prints the list of params in the current block project.
+
+% ==============================================
+\subsubsection{renameparam}
+\command{\textbf{gpblock renameparam} -n <param-name> -v <new-name>}
+
+Renames the param named \texttt{<param-name>} with the name \texttt{<new-name>}.
+
+\paramcommand{
+-n & name of the param & param0 \\
+\hline
+-v & new name of the param & param1 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock renameparam} -n param0 -v param1
+\end{sampletitle}
+\samplecomment{Renames the param `param0' to `param1'.}
+
+\seealso{\textbf{gpblock delparam}}
+
+% ==============================================
+\subsubsection{setparam}
+\command{\textbf{gpblock setparam} [-t <type>] [-v <default-value>] [-r <relative-address>]}
+
+Permits to modify one or more param parameters like the type, the default value or the relative address.
+
+\paramcommand{
+-n & name of the param & param0 \\
+\hline
+-t & type of the param for fixed param & toolchain-type \\
+\hline
+-v & default value of the param & TRUE \\
+\hline
+-r & relative address of the param for dynamic param & 2 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock setparam} -n status -v 1 -r 4 \\
+\end{sampletitle}
+\samplecomment{Sets the default value of the dynamic param (register) `status' to 1 and sets the relative adress to 4.}
+
+\begin{sampletitle}
+> \textbf{gpblock setparam} -n mode -v LINEAR -t Mode \\
+\end{sampletitle}
+\samplecomment{Sets the type of the generic `mode' to `Mode' with a default value setted to `LINEAR'}
+
+\subsection{bitfields}
+
+\subsection{resets}
+% ==============================================
+\subsubsection{addreset}
+\command{\textbf{gpblock addreset} -n <reset-name> -d <direction> -g <group>}
+
+Adds a reset named \texttt{<reset-name>} to the list of resets. You need to specify the direction of the reset (input or output) and the group. All the reset with the same group are connected to the same net.
+
+\paramcommand{
+-n & name of the reset & reset\_n \\
+\hline
+-d & direction of the reset & [in - out] \\
+\hline
+-g & group of the reset & reset\_n \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock addreset} -n reset\_n -d in -g reset\_n
+\end{sampletitle}
+\samplecomment{Add a new reset input named `reset\_n' connected to the `reset\_n' group}
+
+\seealso{\textbf{gpblock delreset} and \textbf{gpblock showreset}}
+
+% ==============================================
+\subsubsection{delreset}
+\command{\textbf{gpblock delreset} -n <reset-name>}
+
+Removes the file with the name \texttt{<reset-name>}.
+
+\paramcommand{
+-n & name of the reset & in1 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock delreset} -n out0
+\end{sampletitle}
+\samplecomment{Removes the reset named `out0'.}
+
+\seealso{\textbf{gpblock addreset} and \textbf{gpblock showreset}}
+
+% ==============================================
+\subsubsection{showreset}
+\command{\textbf{gpblock showreset}}
+
+Prints the list of resets in the current block project.
+
+% ==============================================
+\subsubsection{renamereset}
+\command{\textbf{gpblock renamereset} -n <reset-name> -v <new-name>}
+
+Renames the reset named \texttt{<reset-name>} with the name \texttt{<new-name>}.
+
+\paramcommand{
+-n & name of the reset & reset\_n \\
+\hline
+-v & new name of the reset & reset \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock renamereset} -n reset\_n -v reset
+\end{sampletitle}
+\samplecomment{Renames the reset `reset\_n' to `reset'.}
+
+\seealso{\textbf{gpblock delreset}}
+
+% ==============================================
+\subsubsection{setreset}
+\command{\textbf{gpblock setreset} -n <reset-name> [-d <direction>] [-g <group>]}
+
+Permits to modify one or more reset parameters like the direction or the group.
+
+\paramcommand{
+-n & name of the reset & reset\_n \\
+\hline
+-d & direction of the reset & [in - out] \\
+\hline
+-g & group of the reset & reset\_n \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock setreset} -n reset\_n -d out \\
+> \textbf{gpblock setreset} -n reset\_n -g reset\_all
+\end{sampletitle}
+\samplecomment{Sets the reset `reset\_n' as output and then sets the reset group to `reset\_all'.}
+
+\subsection{clocks}
+% ==============================================
+\subsubsection{addclock}
+\command{\textbf{gpblock addclock} -n <clock-name> -d <direction> [-g <clock-domain>]}
+
+Adds a clock named \texttt{<clock-name>} to the list of clocks. You need to specify the direction of the clock (input or output) and eventually the clock domain.
+
+\paramcommand{
+-n & name of the clock & clock \\
+\hline
+-d & direction of the clock & [in - out] \\
+\hline
+-g & clock domain of the clock & clk\_proc \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock addclock} -n clock -d in -g clk\_proc
+\end{sampletitle}
+\samplecomment{Add a new clock input named `clock' connected to the `clk\_proc' clock domain}
+
+\seealso{\textbf{gpblock setclock}, \textbf{gpblock delclock} and \textbf{gpblock showclock}}
+
+% ==============================================
+\subsubsection{delclock}
+\command{\textbf{gpblock delclock} -n <clock-name>}
+
+Removes the file with the name \texttt{<clock-name>}.
+
+\paramcommand{
+-n & name of the clock & clk\_proc \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock delclock} -n clk\_proc
+\end{sampletitle}
+\samplecomment{Removes the clock named `clk\_proc'.}
+
+\seealso{\textbf{gpblock addclock} and \textbf{gpblock showclock}}
+
+% ==============================================
+\subsubsection{showclock}
+\command{\textbf{gpblock showclock}}
+
+Prints the list of clocks in the current block project.
+
+% ==============================================
+\subsubsection{renameclock}
+\command{\textbf{gpblock renameclock} -n <clock-name> -v <new-name>}
+
+Renames the clock named \texttt{<clock-name>} with the name \texttt{<new-name>}.
+
+\paramcommand{
+-n & name of the clock & clock \\
+\hline
+-v & new name of the clock & clock2 \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock renameclock} -n clock -v clock2
+\end{sampletitle}
+\samplecomment{Renames the clock `clock' to `clock2'.}
+
+\seealso{\textbf{gpblock delclock}}
+
+% ==============================================
+\subsubsection{setclock}
+\command{\textbf{gpblock setclock} -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]}
+
+Permits to modify one or more clock parameters. It exists many ways to define a clock :
+\begin{itemize}
+\item defines only the clock domain to have the frequency of the clock domain specified in the final project with -g
+\item defines the clock domain and the multiplier to have the frequency of the clock domain specified in the final project multiplied by the multiplier with -g and -m
+\item directly define a fixed frequency with -f
+\item defines a range for the clock with -r. The final frequency could be set in the final project with a verification of the range or automatically chosen by the CI system
+\end{itemize}
+
+\paramcommand{
+-n & name of the clock & clock \\
+\hline
+-d & direction of the clock & [in - out] \\
+\hline
+-g & clock domain of the clock & clk\_proc \\
+\hline
+-m & multiplier of the clock in the clock domain & 0.5/2 \\
+\hline
+-f & frequency to give to the clock. It is possible to use multiplier suffix like 'G', 'M' or 'k'. & 0.25G \newline 62M \newline 5.5k \\ 
+\hline
+-r & range of the clock & 5.5k:12k \\
+}
+
+\begin{sampletitle}
+> \textbf{gpblock setclock} -n clock -d in
+\end{sampletitle}
+\samplecomment{Sets the clock `clock' as input.}
+
+\begin{sampletitle}
+> \textbf{gpblock setclock} -n clock -g clock\_img
+\end{sampletitle}
+\samplecomment{Moves it to the clock domain `clock\_img'.}
+
+\begin{sampletitle}
+> \textbf{gpblock setclock} -n clock -g clock\_img -m 2
+\end{sampletitle}
+\samplecomment{Defines the frequency to the double of the clock domain `clock\_img' frequency.}
+
+\begin{sampletitle}
+> \textbf{gpblock setclock} -n clock -f 12.3M
+\end{sampletitle}
+\samplecomment{Defines the clock frequency to 12.3MHz.}
+
+\begin{sampletitle}
+> \textbf{gpblock setclock} -n clock -r 5.5k:12k
+\end{sampletitle}
+\samplecomment{Defines the clock frequency in the range of 5.5k<f<12k.}
+
+\subsection{properties}
+\subsection{global}
 
 \end{document}
