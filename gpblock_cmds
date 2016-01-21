@@ -3,6 +3,10 @@
 # block driver
 gpblock newprocess -n <block-name>
 gpblock showblock
+gpblock generatetop [-o <dir>]
+gpblock generateslave [-o <dir>]
+gpblock generateprocess [-o <dir>]
+gpblock generate [-o <dir>]
 
 # files
 gpblock addfile -p <path> -t <type> -g <group>
@@ -23,6 +27,7 @@ gpblock showparam
 gpblock renameparam -n <param-name> -v <new-name>
 gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]
 gpblock fixparam -n <param-name> [-v <true/false>]
+gpblock setpisizeaddr -v <pi-size-addr>
 
 	# bitfields
 	gpblock addbitfield -n <bitfield-name> -b <bitfield>
@@ -54,4 +59,5 @@ gpblock setpropertymap -n <param/property-name> -v <property-map>
 
 # global
 gpblock sethelp -n <instance-name> -v <help-text>
+gpblock setblockinfo [-c <categ>] [-p <author>] [-d <draw>]
 

@@ -28,6 +28,8 @@ class VHDL_generator
 	public $signals;
 	public $ports;
 	public $params;
+	public $constants;
+	
 	public $blocks;
 	
 	public $declare;
@@ -41,6 +43,7 @@ class VHDL_generator
 		$this->signals=array();
 		$this->ports=array();
 		$this->params=array();
+		$this->constants=array();
 		$this->blocks=array();
 	}
 	
@@ -74,7 +77,8 @@ class VHDL_generator
 		// external ports
 		if(!empty($block->ext_ports))
 		{
-			$this->addPortComment(str_pad(' external ports ',55,'-',STR_PAD_BOTH));
+			if(!$subblock) $this->addPortComment(str_pad(' external ports ',55,'-',STR_PAD_BOTH));
+			else $this->addPortComment(str_pad(' dynamic parameters ports ',55,'-',STR_PAD_BOTH));
 			foreach($block->ext_ports as $port)
 			{
 				$this->addPort($port->name, $port->size, $port->type);
@@ -185,6 +189,16 @@ class VHDL_generator
 	function addGeneric($name, $value)
 	{
 		array_push($this->params, new Module_param($name, '', 'integer', $value));
+	}
+	
+	function addConstant($name, $value, $type)
+	{
+		array_push($this->constants, new Module_param($name, 0, $value, $type));
+	}
+	
+	function addConstantComment($comment)
+	{
+		array_push($this->constants, new Module_param($comment, 0, '', '', true));
 	}
 	
 	function addCode($code)
@@ -310,6 +324,28 @@ class VHDL_generator
 				}
 			}
 		}
+		
+		// constants
+		//constant ENABLE_REG_ADDR			: natural := 0;
+		$maxLenght=0;
+		foreach($this->constants as $constant)
+		{
+			if(!$constant->space)
+			{
+				if(strlen($constant->name)>$maxLenght) $maxLenght=strlen($constant->name);
+			}
+		}
+		foreach($this->constants as $constant)
+		{
+			if($constant->space)
+			{
+				$content.="\r\n".'	--'.str_pad($constant->name,$maxLenght,' ')."\r\n";
+			}
+			else
+			{
+				$content.='	constant '.str_pad($constant->name,$maxLenght,' ').' : '.$constant->type.' := '.$constant->default.';'."\r\n";
+			}
+		}
 	
 		// internal signal
 		$maxLenght=0;
@@ -416,7 +452,8 @@ class VHDL_generator
 				{
 					foreach($block->ext_ports as $port)
 					{
-						array_push($portmap, array($port->name, $block->name.'_'.$port->name));
+						if(!$subblock) array_push($portmap, array($port->name, $block->name.'_'.$port->name));
+						else array_push($portmap, array($port->name, $port->name));
 					}
 				}
 				// flows mapping
@@ -444,7 +481,23 @@ class VHDL_generator
 				// bus mapping
 				foreach($block->interfaces as $interface)
 				{
-					if($interface->type=='pi_slave')
+					if($interface->type=='pi_slave' and $subblock)
+					{
+						array_push($portmap, array('addr_rel_i', 'addr_rel_i'));
+						array_push($portmap, array('wr_i', 'wr_i'));
+						array_push($portmap, array('rd_i', 'rd_i'));
+						array_push($portmap, array('datawr_i', 'datawr_i'));
+						array_push($portmap, array('datard_o', 'datard_o'));
+					}
+					elseif($interface->type=='pi_master' and $subblock)
+					{
+						array_push($portmap, array('master_addr_o', 'master_addr_o'));
+						array_push($portmap, array('master_wr_o', 'master_wr_o'));
+						array_push($portmap, array('master_rd_o', 'master_rd_o'));
+						array_push($portmap, array('master_datawr_o', 'master_datawr_o'));
+						array_push($portmap, array('master_datard_i', 'master_datard_i'));
+					}
+					elseif($interface->type=='pi_slave')
 					{
 						array_push($portmap, array('addr_rel_i', $block->name.'_addr_rel_s'));
 						array_push($portmap, array('wr_i', $block->name.'_wr_s'));
@@ -452,7 +505,7 @@ class VHDL_generator
 						array_push($portmap, array('datawr_i', $block->name.'_datawr_s'));
 						array_push($portmap, array('datard_o', $block->name.'_datard_s'));
 					}
-					if($interface->type=='pi_master')
+					elseif($interface->type=='pi_master')
 					{
 						array_push($portmap, array('master_addr_o', $block->name.'_master_addr_s'));
 						array_push($portmap, array('master_wr_o', $block->name.'_master_wr_s'));
@@ -460,7 +513,7 @@ class VHDL_generator
 						array_push($portmap, array('master_datawr_o', $block->name.'_master_datawr_s'));
 						array_push($portmap, array('master_datard_i', $block->name.'_master_datard_s'));
 					}
-					if($interface->type=='pi_slave_conn')
+					elseif($interface->type=='pi_slave_conn')
 					{
 						array_push($portmap, array($interface->blockname.'_addr_rel_o', $interface->blockname.'_addr_rel_s'));
 						array_push($portmap, array($interface->blockname.'_wr_o', $interface->blockname.'_wr_s'));
@@ -468,7 +521,7 @@ class VHDL_generator
 						array_push($portmap, array($interface->blockname.'_datawr_o', $interface->blockname.'_datawr_s'));
 						array_push($portmap, array($interface->blockname.'_datard_i', $interface->blockname.'_datard_s'));
 					}
-					if($interface->type=='pi_master_conn')
+					elseif($interface->type=='pi_master_conn')
 					{
 						array_push($portmap, array($interface->blockname.'_master_addr_i', $interface->blockname.'_master_addr_s'));
 						array_push($portmap, array($interface->blockname.'_master_wr_i', $interface->blockname.'_master_wr_s'));

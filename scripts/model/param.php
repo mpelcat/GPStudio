@@ -90,6 +90,14 @@ class Param
 		if($this->hard) return "generic ".$this->name." type: ".$this->type." value: ".$this->value;
 		else return "register ".$this->name." regaddr: ".$this->regaddr." propertymap: ".$this->propertymap;
     }
+    
+    public static function cmp_raddr($a, $b)
+    {
+		if($a->hard) return -1;
+		if($b->hard) return -1;
+		if ($a->regaddr == $b->regaddr) return 0;
+		return ($a->regaddr < $b->regaddr) ? -1 : 1;																				
+	}
 	
 	protected function parse_xml($xml)
 	{
