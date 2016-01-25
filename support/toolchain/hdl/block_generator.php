@@ -160,7 +160,7 @@ class Block_generator
 		$this->block_generator->fromBlock($this->block);
 		$this->block_generator->addblock($this->process_block, TRUE);
 		if($this->slave_block!=NULL) $this->block_generator->addblock($this->slave_block, TRUE);
-		$this->block_generator->save_as($path.DIRECTORY_SEPARATOR.$this->block_generator->name.'.vhd');
+		$this->block_generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.$this->block_generator->name.'.vhd');
 	}
 	
 	public function generateProcess($path)
@@ -171,7 +171,7 @@ class Block_generator
 		
 		// process generation
 		$this->process_generator->fromBlock($this->process_block, TRUE);
-		$this->process_generator->save_as($path.DIRECTORY_SEPARATOR.$this->process_generator->name.'.vhd');
+		$this->process_generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.$this->process_generator->name.'.vhd');
 	}
 	
 	public function generateSlave($path)
@@ -318,7 +318,7 @@ class Block_generator
 		
 		// slave generation
 		$this->slave_generator->fromBlock($this->slave_block, TRUE);
-		$this->slave_generator->save_as($path.DIRECTORY_SEPARATOR.$this->slave_generator->name.'.vhd');
+		$this->slave_generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.$this->slave_generator->name.'.vhd');
 	}
 	
 }

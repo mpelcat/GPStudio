@@ -31,7 +31,7 @@ else
 	$blockName=findprocess();
 	if(!file_exists($blockName))
 	{
-		if(strpos($action, "list")===false) error("Cannot find a valid project in the current directory.",1);
+		if(strpos($action, "list")===false) error("Cannot find a valid block in the current directory.",1);
 	}
 	
 	$block = new Process($blockName);
@@ -74,6 +74,7 @@ switch($action)
 		$block_generator->generateProcess($outDir);
 		message($block_generator->process_generator->name.'.vhd'.' generated');
 		
+		$save=false;
 		break;
 	
 	case "generatetop":
@@ -85,6 +86,7 @@ switch($action)
 		$block_generator->generateTopBlock($outDir);
 		message($block_generator->block_generator->name.'.vhd'.' generated');
 		
+		$save=false;
 		break;
 	
 	case "generateslave":
@@ -96,6 +98,7 @@ switch($action)
 		$block_generator->generateSlave($outDir);
 		message($block_generator->slave_generator->name.'.vhd'.' generated');
 		
+		$save=false;
 		break;
 	
 	case "generateprocess":
@@ -107,6 +110,7 @@ switch($action)
 		$block_generator->generateProcess($outDir);
 		message($block_generator->process_generator->name.'.vhd'.' generated');
 		
+		$save=false;
 		break;
 		
 	case "showblock":

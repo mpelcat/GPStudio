@@ -93,10 +93,11 @@ class Param
     
     public static function cmp_raddr($a, $b)
     {
+		if($a->hard && $b->hard) return 0;
 		if($a->hard) return -1;
-		if($b->hard) return -1;
+		if($b->hard) return 1;
 		if ($a->regaddr == $b->regaddr) return 0;
-		return ($a->regaddr < $b->regaddr) ? -1 : 1;																				
+		return ($a->regaddr < $b->regaddr) ? -1 : 1;
 	}
 	
 	protected function parse_xml($xml)
