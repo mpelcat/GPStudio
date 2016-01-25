@@ -307,6 +307,7 @@ class Block_generator
 		
 		
 		$code_rd.="					when others=>"."\r\n";
+		$code_rd.="						data_out <= (others => '0');"."\r\n";
 		$code_rd.="				end case;"."\r\n";
 		$code_rd.="			end if;"."\r\n";
 		$code_rd.="		end if;"."\r\n";
