@@ -20,21 +20,35 @@ if(array_key_exists('a',$options)) $action = $options['a']; else error("You shou
 if($action=="newprocess")
 {
 	$options = getopt("a:n:");
-	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify a project name with -n"."\n",1);
+	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify a process name with -n"."\n",1);
 	
 	$block = new Process();
 	$block->name=$blockName;
 	$blockName.=".proc";
 }
+elseif($action=="newio")
+{
+	$options = getopt("a:n:");
+	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify an io name with -n"."\n",1);
+	
+	$block = new IO();
+	$block->name=$blockName;
+	$blockName.=".io";
+}
 else
 {
+	// find io or process and open it
 	$blockName=findprocess();
 	if(!file_exists($blockName))
 	{
-		if(strpos($action, "list")===false) error("Cannot find a valid block in the current directory.",1);
+		$blockName=findio();
+		if(!file_exists($blockName))
+		{
+			if(strpos($action, "list")===false) error("Cannot find a valid block (process or io) in the current directory.",1);
+		}
+		else $block = new IO($blockName);
 	}
-	
-	$block = new Process($blockName);
+	else $block = new Process($blockName);
 }
 
 $save = true;
@@ -55,6 +69,10 @@ switch($action)
 	
 	// =========================== project commands ====================
 	case "newprocess":
+		// nothing to do
+		break;
+		
+	case "newio":
 		// nothing to do
 		break;
 	
@@ -119,11 +137,10 @@ switch($action)
 	
 	// =========================== files commands ======================
 	case "addfile":
-		$options = getopt("a:p:t:g:h:");
+		$options = getopt("a:p:t:g:");
 		if(array_key_exists('p',$options)) $path = $options['p']; else error("You should specify a path for the file with -p"."\n",1);
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the file with -t"."\n",1);
 		if(array_key_exists('g',$options)) $group = $options['g']; else error("You should specify a group for the file with -g"."\n",1);
-		if(array_key_exists('h',$options)) $desc = $options['h']; $desc = "";
 		
 		if($block->getFileByPath($path)!=NULL) error("This file already exists added with the same path."."\n",1);
 		if(!file_exists($path)) warning("This file does not exist, you should create it."."\n",4);
@@ -133,7 +150,6 @@ switch($action)
 		$file->path = $path;
 		$file->type = $type;
 		$file->group = $group;
-		$file->desc = $desc;
 		
 		$block->addFile($file);
 		break;
@@ -514,6 +530,45 @@ switch($action)
 		
 		break;
 	
+	// =========================== extport commands ======================
+	case "addextport":
+		$options = getopt("a:n:t:s:");
+		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block."."\n",1);
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the external port with -n"."\n",1);
+		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the external port with -t [in-out-inout]"."\n",1);
+		if(array_key_exists('s',$options)) $size = $options['s']; else error("You should specify a size for the external port with -s"."\n",1);
+		
+		if($block->getExtPort($name)!=NULL) error("This port already exists added with the same name."."\n",1);
+		if($type!="in" and $type!="out" and $type!="out") error("You should specify a type for the external port with -t [in-out-inout]"."\n",1);
+		
+		$port = new Port();
+		$port->name = $name;
+		$port->type = $type;
+		$port->size = $size;
+		
+		$block->addExtPort($port);
+		break;
+		
+	case "delextport":
+		$options = getopt("a:n:");
+		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block."."\n",1);
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the file with -n"."\n",1);
+		
+		if($block->getExtPort($name)==NULL) error("A file does not exist with the path '$path'."."\n",1);
+		
+		$block->delExtPort($name);
+		break;
+		
+	case "showextport":
+		echo "external ports :" . "\n";
+		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block."."\n",1);
+		foreach($block->ext_ports as $ext_port)
+		{
+			echo "  + ".$ext_port. "\n";
+		}
+		$save = false;
+		break;
+	
 	// ======================= properties commands ====================
 	case "addproperty":
 		$options = getopt("a:n:l:t:v:");
@@ -639,6 +694,9 @@ switch($action)
 		else error("An instance does not exist with the name '$name'."."\n",1);
 		
 		break;
+	
+	default:
+		error("Action $action is unknow.",1);
 }
 
 if($save) $block->saveBlockDef($blockName);

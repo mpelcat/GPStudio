@@ -45,7 +45,12 @@ class IO extends Block
 		}
 		elseif(is_string($io_device_element))
 		{
-			if(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
+			if(substr($io_device_element,-3)===".io")
+			{
+				$io_file = $io_device_element;
+				$this->path = realpath(dirname($io_file));
+			}
+			elseif(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
 			{
 				$io_name = $io_device_element;
 				$io_driver = $io_node_element;
@@ -102,7 +107,7 @@ class IO extends Block
 	{
 		$xml_element = parent::getXmlElement($xml, $format);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
 			// ports
 			$xml_ports = $xml->createElement("ports");
@@ -160,6 +165,19 @@ class IO extends Block
 		foreach($this->ext_ports as $extPort)
 		{
 			if($extPort->name==$name) return $extPort;
+		}
+		return null;
+	}
+	
+	/** delete an external port from his name
+	 *  @param string $name name of the external port to delete  **/
+	function delExtPort($name)
+	{
+		$i=0;
+		foreach($this->ext_ports as $ext_port)
+		{
+			if($ext_port->name==$name) {unset($this->ext_ports[$i]); return;}
+			$i++;
 		}
 		return null;
 	}

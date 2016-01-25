@@ -38,6 +38,11 @@ class Port
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+		return "port ".$this->name." type: ".$this->type." size: ".$this->size;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name		= (string)$xml['name'];

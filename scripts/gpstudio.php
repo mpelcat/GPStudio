@@ -130,6 +130,20 @@ function findprocess()
 	if(count($process)==1) return $process[0]; else return '';
 }
 
+function findio()
+{
+	$io = array();
+	$files = scandir(getcwd());
+	foreach($files as $file)
+	{
+		if(substr($file,-3)===".io")
+		{
+			$io[]=$file;
+		}
+	}
+	if(count($io)==1) return $io[0]; else return '';
+}
+
 function listprocess()
 {
 	$directory = SUPPORT_PATH."process".DIRECTORY_SEPARATOR;
@@ -173,10 +187,10 @@ function mkdir_rec($dir_path)
 {
 	$dir_path = str_replace("\\","/",$dir_path);
 	$dirs = explode("/",$dir_path);
-	for($i=2;$i<=count($dirs);$i++)
+	for($i=1;$i<=count($dirs);$i++)
 	{
 		$path = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $i));
-		if(!is_dir($path)) mkdir($path);
+		if(!is_dir($path) and $path!="") mkdir($path);
 	}
 }
 

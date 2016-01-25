@@ -1,7 +1,8 @@
 # gpblock command line tool to manage a custom block (v0.95)
 
 # block driver
-gpblock newprocess -n <block-name>
+gpblock newprocess -n <process-name>
+gpblock newio -n <io-name>
 gpblock showblock
 gpblock generatetop [-o <dir>]
 gpblock generateslave [-o <dir>]
@@ -48,6 +49,11 @@ gpblock delclock -n <clock-name>
 gpblock showclock
 gpblock renameclock -n <clock-name> -v <new-name>
 gpblock setclock -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]
+
+# external ports (io only)
+gpblock addport -n <port-name> -t <type> -s <size>
+gpblock delport -n <port-name>
+gpblock showport
 
 # properties
 gpblock addproperty -n <property-name> -l <label> -t <type> [-v <default-value>]
