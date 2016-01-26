@@ -7,6 +7,7 @@ do
 	then
 		args+=" \"$arg\""
 	else
+		[ "$arg" = "" ] && args+=" \"\""
 		args+=" $arg"
 	fi
 done
