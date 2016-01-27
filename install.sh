@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # run as sudo !
 if [ "$(whoami)" != "root" ]; then
@@ -16,15 +16,21 @@ command -v php >/dev/null 2>&1 || { echo "installing php5-cli..."; apt-get insta
 command -v dot >/dev/null 2>&1 || { echo "installing dot..."; apt-get install --force-yes --yes graphviz >/dev/null; } && { echo "dot is installed"; }
 
 # copy bash completion file for gpnode
-echo "install bash completion";
-cp gpnode_completion /usr/share/bash-completion/completions/gpnode
-cp gplib_completion /usr/share/bash-completion/completions/gplib
+if [ -d "/usr/share/bash-completion/completions/" ]; then
+	echo "install bash completion";
+	cp gpnode_completion /usr/share/bash-completion/completions/gpnode
+	cp gplib_completion /usr/share/bash-completion/completions/gplib
+	cp gpblock_completion /usr/share/bash-completion/completions/gpblock
+	sudo -u $USER bash gpnode_completion
+	sudo -u $USER bash gplib_completion
+	sudo -u $USER bash gpblock_completion
+fi
 
 # udev rules for dreamcam
 sh -c 'echo "ATTR{idVendor}==\"04b4\", ATTR{idProduct}==\"1003\", MODE=\"666\"" > /etc/udev/rules.d/dreamcam.rules'
 sh -c 'echo "ATTR{idVendor}==\"09fb\", ATTR{idProduct}==\"6001\", MODE=\"666\"" > /etc/udev/rules.d/usb_blaster.rules'
 udevadm trigger
 
-echo "To add permanently GPStudio in your path, add this to your bashrc file :"
+echo "Type '. ./setenv.sh' to set PATH temporary or add this to your bashrc file to add permanently GPStudio in your path"
 echo "export PATH=\$PATH:$(pwd)/bin"
 echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/bin"
