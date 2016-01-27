@@ -33,6 +33,7 @@ gpblock setpisizeaddr -v <pi-size-addr>
 	# bitfields
 	gpblock addbitfield -n <bitfield-name> -b <bitfield>
 	gpblock delbitfield -n <bitfield-name>
+	gpblock showbitfield -n <param-name>
 	gpblock renamebitfield -n <bitfield-name> -v <new-name>
 	gpblock setbitfield -n <bitfield-name> -b <bitfield>
 
@@ -61,9 +62,9 @@ gpblock delproperty -n <property-name>
 gpblock showproperty
 gpblock renameproperty -n <property-name> -v <new-name>
 gpblock setproperty -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]
-gpblock setpropertymap -n <param/property-name> -v <property-map>
+gpblock setpropertymap -n <param/property/bitfield-name> -v <property-map>
 
 # global
-gpblock sethelp -n <instance-name> -v <help-text>
+gpblock sethelp [-n <instance-name>] -v <help-text>
 gpblock setblockinfo [-c <categ>] [-p <author>] [-d <draw>]
 

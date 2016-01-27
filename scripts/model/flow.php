@@ -139,6 +139,14 @@ class Flow
 		}
 		return null;
 	}
+	
+	/** alias command for getProperty
+	 *  @param string $name name of the property to search
+	 *  @return Property found property **/
+	function getSubProperty($name)
+	{
+		return getProperty($name);
+	}
 }
 
 ?>

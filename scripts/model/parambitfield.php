@@ -52,6 +52,11 @@ class ParamBitfield
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+		return "bitfield ".$this->name." bitfield: ".$this->bitfield." propertymap: ".$this->propertymap;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name			= (string)$xml['name'];

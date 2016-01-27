@@ -45,6 +45,7 @@ else
 		if(!file_exists($blockName))
 		{
 			if(strpos($action, "list")===false) error("Cannot find a valid block (process or io) in the current directory.",1);
+			else exit(1);
 		}
 		else $block = new IO($blockName);
 	}
@@ -239,7 +240,7 @@ switch($action)
 		
 		break;
 	
-	// =========================== params commands ====================
+	// =========================== params commands =====================
 	case "addparam":
 		$options = getopt("a:n:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the param with -n",1);
@@ -355,6 +356,20 @@ switch($action)
 		$block->delParamBitField($name);
 		break;
 		
+	case "showbitfield":
+		$options = getopt("a:n:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
+		
+		if(($param=$block->getParam($name))==NULL) error("A param does not exist with the name '$name'.",1);
+		
+		echo "bit fields of $param->name:" . "\n";
+		foreach($param->parambitfields as $parambitfield)
+		{
+			echo "  + ".$parambitfield. "\n";
+		}
+		$save = false;
+		break;
+		
 	case "renamebitfield":
 		$options = getopt("a:n:v:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
@@ -378,7 +393,7 @@ switch($action)
 		
 		break;
 	
-	// =========================== resets commands ====================
+	// =========================== resets commands =====================
 	case "addreset":
 		$options = getopt("a:n:d:g:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the reset with -n",1);
@@ -445,7 +460,7 @@ switch($action)
 		
 		break;
 	
-	// =========================== clocks commands ====================
+	// =========================== clocks commands =====================
 	case "addclock":
 		$options = getopt("a:n:d:g:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the clock with -n",1);
@@ -530,7 +545,7 @@ switch($action)
 		
 		break;
 	
-	// =========================== extport commands ======================
+	// ========================== extport commands =====================
 	case "addextport":
 		$options = getopt("a:n:t:s:");
 		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block.",1);
@@ -569,7 +584,7 @@ switch($action)
 		$save = false;
 		break;
 	
-	// ======================= properties commands ====================
+	// ======================= properties commands =====================
 	case "addproperty":
 		$options = getopt("a:n:l:t:v:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
@@ -678,8 +693,7 @@ switch($action)
 		
 		break;
 	
-	// ========================= global commands ======================
-		
+	// ========================= global commands =======================
 	case "sethelp":
 		$options = getopt("a:n:v:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name of the instance to set help with -n",1);
@@ -693,6 +707,107 @@ switch($action)
 		elseif(($instance=$block->getPropertyPath($name))!=NULL) $instance->desc=$desc;
 		else error("An instance does not exist with the name '$name'.",1);
 		
+		break;
+		
+	// ========================== list commands ========================
+	case "listfile":
+		foreach($block->files as $file) echo $file->path.' ';
+		$save = false;
+		break;
+		
+	case "listflow":
+		foreach($block->flows as $flow) echo $flow->name.' ';
+		$save = false;
+		break;
+		
+	case "listparam":
+		foreach($block->params as $param) echo $param->name.' ';
+		$save = false;
+		break;
+		
+	case "listparamdot":
+		foreach($block->params as $param) echo $param->name.'. ';
+		$save = false;
+		break;
+		
+	case "listreset":
+		foreach($block->resets as $reset) echo $reset->name.' ';
+		$save = false;
+		break;
+		
+	case "listclock":
+		foreach($block->clocks as $clock) echo $clock->name.' ';
+		$save = false;
+		break;
+		
+	case "listword":
+		$save = false;
+	
+		$options = getopt("a:w:m:");
+		if(array_key_exists('w',$options)) $word = $options['w']; else $word="";
+		if(array_key_exists('m',$options)) $mode = $options['m']; else $mode="";
+		
+		$wordRes = explode(".", $word);
+		
+			
+		if($mode=="property")
+		{
+			if(count($wordRes)==1)
+			{
+				foreach($block->properties as $property)
+				{
+					echo $property->name.' ';
+					if(count($property->properties)>0) echo $property->name.'. ';
+				}
+				foreach($block->flows as $flow)
+				{
+					if(count($flow->properties)>0) echo $flow->name.'. ';
+				}
+				exit(1);
+			}
+			else
+			{
+				$instance = $block->getFlow($wordRes[0]);
+				if($instance==NULL) $instance = $block->getProperty($wordRes[0]);
+				if($instance==NULL) exit(1);
+				
+				$prefix=$wordRes[0].'.';
+				for($i=1;$i<count($wordRes)-1;$i++)
+				{
+					$instance = $instance->getSubProperty($wordRes[$i]);
+					if($instance==NULL) exit(1);
+					$prefix.=$wordRes[$i].'.';
+				}
+				
+				foreach($instance->properties as $property)
+				{
+					echo $prefix.$property->name.' ';
+					if(count($property->properties)>0) echo $prefix.$property->name.'. ';
+				}
+				exit(1);
+			}
+		}
+		elseif($mode=="bitfield")
+		{
+			if(count($wordRes)==1)
+			{
+				foreach($block->params as $param)
+				{
+					if(count($param->parambitfields)>0) echo $param->name.'. ';
+				}
+				exit(1);
+			}
+			else
+			{
+				$instance = $block->getParam($wordRes[0]);
+				if($instance==NULL) exit(0);
+				
+				foreach($instance->parambitfields as $parambitfield)
+				{
+					echo $instance->name.'.'.$parambitfield->name.' ';
+				}
+			}
+		}
 		break;
 	
 	default:
