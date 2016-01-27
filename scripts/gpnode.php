@@ -32,6 +32,7 @@ else
 	if(!file_exists($project))
 	{
 		if(strpos($action, "list")===false) error("Cannot find a valid project in the current directory.",1);
+		else exit(1);
 	}
 	
 	$node = new Node($project);
@@ -82,6 +83,7 @@ switch($action)
 
 		$save = false;
 		break;
+		
 	case "-v":
 	case "--version":
 		echo "# gpnode command line tool to manage a gpstudio node (v0.9)"."\n";
@@ -92,11 +94,13 @@ switch($action)
 	case "newproject":
 		// nothing to do
 		break;
+		
 	case "setboard":
 		$options = getopt("a:n:");
 		if(array_key_exists('n',$options)) $boardName = $options['n']; else error("You should specify a board name with -n"."\n",1);
 		$node->setBoard($boardName);
 		break;
+		
 	case "showboard":
 		if(isset($node->board)) echo $node->board->name."\n";
 		else echo "No board curently set."."\n";
