@@ -6,12 +6,12 @@ _gpnode()
     _init_completion || return
 
     # see if the user selected a command already
-    local COMMANDS=("newproject" "setboard" "generate" "showboard"
-                    "addio" "delio" "showio" "listavailableio"
-                    "addprocess" "delprocess" "showprocess" "showblock"
-                    "renameblock" "setproperty" "setparam" "setclock" "setflowsize"
-                    "connect" "unconnect" "showconnect"
-                    "setclockdomain" "showclockdomain")
+    local COMMANDS=("newproject"     "setboard"    "generate"    "showboard"
+                    "addio"          "delio"       "showio"      "listavailableio"
+                    "addprocess"     "delprocess"  "showprocess" "showblock"
+                    "renameblock"    "setproperty" "setparam"    "setclock"        "setflowsize"
+                    "connect"        "unconnect"   "showconnect"
+                    "setclockdomain"               "showclockdomain")
 
     local command i
     for (( i=0; i < ${#words[@]}-1; i++ )); do
@@ -90,6 +90,10 @@ _gpnode()
                         COMP=$( gpnode listword -w $cur -m flowout) ; SPACE=$?
                         COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
                         [ $SPACE = 1 ] && compopt -o nospace
+                        return 0
+                        ;;
+                    generate)
+                        COMPREPLY=( $( compgen -o plusdirs -- "$cur" ) )
                         return 0
                         ;;
                 esac

@@ -2,17 +2,21 @@
 
 _gpblock()
 {
-    local sourcesdir="/etc/apt/sources.list.d"
     local cur prev words cword
     _init_completion || return
 
     # see if the user selected a command already
-    local COMMANDS=("newprocess"
-					"addfile" "delfile" "showfile"
-					"addflow" "showflow" "renameflow" "setflow" "delflow"
-					"addparam" "showparam" "renameparam" "setparam" "fixparam" "delparam"
-					"addreset" "showreset" "renamereset" "setreset" "delreset"
-					"addclock" "showclock" "renameclock" "setclock" "delclock"
+    local COMMANDS=("newprocess"  "newio"       "showblock"
+                    "generate"    "generatetop" "generateslave" "generateprocess"
+					"addfile"     "delfile"     "showfile"
+					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
+					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"    "fixparam"  "setpisizeaddr"
+					"addbitfield" "delbitfield" "showbitfield"  "renamebitfield" "setbitfield"
+					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
+					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
+					"addextport"  "delextport"  "showextport"
+					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
+					"sethelp"
     )
 
     local command i
@@ -30,94 +34,228 @@ _gpblock()
         case $count in
             3)
                 case $command in
-                    newproject|setboard|addio|delio|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain|showblock)
-                        COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
-                        return 0
-                        ;;
-                    generate)
+                    generate|generatetop|generateslave|generateprocess)
                         COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
                         return 0
                         ;;
-                    connect|unconnect)
-                        COMPREPLY=( $( compgen -W '-f' -- "$cur" ) )
+                    addfile|delfile)
+                        COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
+                        return 0
+                        ;;
+                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|renameproperty|setproperty|setpropertymap)
+                        COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
+                        return 0
+                        ;;
+                    sethelp)
+                        COMPREPLY=( $( compgen -W '-n -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setpisizeaddr)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;
                 esac
                 ;;
             4)
                 case $command in
-                    showblock)
-                        COMPREPLY=( $( compgen -W '$( gpblock listblock )' -- "$cur" ) )
+                    addfile)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
                         return 0
                         ;;
-                    addio)
-                        COMPREPLY=( $( compgen -W '$( gpblock listavailableio )' -- "$cur" ) )
+                    delfile)
+                        COMPREPLY=( $( compgen -W '$( gpblock listfile )' -- "$cur" ) )
                         return 0
                         ;;
-                    setboard)
-                        COMPREPLY=( $( compgen -W '$( gplib listboard )' -- "$cur" ) )
+                    delflow|renameflow|setflow)
+                        COMPREPLY=( $( compgen -W '$( gpblock listflow )' -- "$cur" ) )
                         return 0
                         ;;
-                    setproperty)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m property )' -- "$cur" ) ) && compopt -o nospace
+                    delparam|renameparam|setparam|fixparam|showbitfield)
+                        COMPREPLY=( $( compgen -W '$( gpblock listparam )' -- "$cur" ) )
                         return 0
                         ;;
-                    setparam)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m param )' -- "$cur" ) ) && compopt -o nospace
+                    addbitfield)
+                        COMPREPLY=( $( compgen -W '$( gpblock listparamdot )' -- "$cur" ) ) && compopt -o nospace
                         return 0
                         ;;
-                    setclock)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m clock )' -- "$cur" ) ) && compopt -o nospace
+                    delbitfield|renamebitfield|setbitfield)
+                        COMP=$( gpblock listword -w "$cur" -m bitfield) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
-                    setclockdomain)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m clockdomain )' -- "$cur" ) ) && compopt -o nospace
+                    delreset|renamereset|setreset)
+                        COMPREPLY=( $( compgen -W '$( gpblock listreset )' -- "$cur" ) )
                         return 0
                         ;;
-                    setflowsize)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m flow )' -- "$cur" ) ) && compopt -o nospace
+                    delclock|renameclock|setclock)
+                        COMPREPLY=( $( compgen -W '$( gpblock listclock )' -- "$cur" ) )
                         return 0
                         ;;
-                    connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m flowout )' -- "$cur" ) ) && compopt -o nospace
+                    delproperty|renameproperty|setproperty)
+                        COMP=$( gpblock listword -w "$cur" -m property) ; SPACE=$?
+                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
+                        [ $SPACE = 1 ] && compopt -o nospace
+                        return 0
+                        ;;
+                    generate|generatetop|generateslave|generateprocess)
+                        COMPREPLY=( $( compgen -o plusdirs -- "$cur" ) )
                         return 0
                         ;;
                 esac
                 ;;
-            5)
+            5) 
                 case $command in
-                    renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain)
-                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
-                        return 0
-                        ;;
-                    addprocess)
-                        COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
-                        return 0
-                        ;;
-                    connect|unconnect)
+                    addfile)
                         COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
                         return 0
                         ;;
-                    showblock)
-                        COMPREPLY=( $( compgen -W '-f' -- "$cur" ) )
+                    addflow|addreset|addclock)
+                        COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
+                        return 0
+                        ;;
+                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addbitfield|setbitfield)
+                        COMPREPLY=( $( compgen -W '-b' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setflow)
+                        COMPREPLY=( $( compgen -W '-d -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setreset)
+                        COMPREPLY=( $( compgen -W '-d -g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setclock)
+                        COMPREPLY=( $( compgen -W '-d -g -m -f -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
                         return 0
                         ;;
                 esac
                 ;;
             6)
                 case $command in
-                    connect|unconnect)
-                        COMPREPLY=( $( compgen -W '$( gpblock listword -w $cur -m flowin )' -- "$cur" ) ) && compopt -o nospace
+                    addproperty|setproperty)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                    addport|setport)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                    addclock|setclock|addreset|setreset|addflow|setflow)
+						if [ "$prev" = "-d" ]; then
+							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                esac
+                ;;
+            7)
+                case $command in
+                    addfile)
+                        COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
-                    addprocess)
-                        COMPREPLY=( $( compgen -W '$( gplib listprocess )' -- "$cur" ) )
+                    addflow|addport)
+                        COMPREPLY=( $( compgen -W '-s' -- "$cur" ) )
                         return 0
                         ;;
-                    showblock)
-                        COMPREPLY=( $( compgen -W 'clocks resets params flows' -- "$cur" ) )
+                    addreset|addclock)
+                        COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setflow)
+                        COMPREPLY=( $( compgen -W '-d -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setreset)
+                        COMPREPLY=( $( compgen -W '-d -g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setclock)
+                        COMPREPLY=( $( compgen -W '-d -g -m -f -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            8)
+                case $command in
+                    addproperty|setproperty)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                    addport|setport)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                    addclock|setclock|addreset|setreset|addflow|setflow)
+						if [ "$prev" = "-d" ]; then
+							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                esac
+                ;;
+            9)
+                case $command in
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            10)
+                case $command in
+                    addproperty|setproperty)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
+						fi
+						return 0
+						;;
                 esac
                 ;;
         esac

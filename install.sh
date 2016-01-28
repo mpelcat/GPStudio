@@ -21,9 +21,6 @@ if [ -d "/usr/share/bash-completion/completions/" ]; then
 	cp gpnode_completion /usr/share/bash-completion/completions/gpnode
 	cp gplib_completion /usr/share/bash-completion/completions/gplib
 	cp gpblock_completion /usr/share/bash-completion/completions/gpblock
-	sudo -u $USER bash gpnode_completion
-	sudo -u $USER bash gplib_completion
-	sudo -u $USER bash gpblock_completion
 fi
 
 # udev rules for dreamcam
