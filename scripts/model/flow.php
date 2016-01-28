@@ -101,10 +101,7 @@ class Flow
 			$att = $xml->createAttribute('desc');
 			$att->value = $this->desc;
 			$xml_element->appendChild($att);
-		}
-		
-		if($format=="complete")
-		{
+			
 			// properties
 			if(!empty($this->properties))
 			{
@@ -145,7 +142,19 @@ class Flow
 	 *  @return Property found property **/
 	function getSubProperty($name)
 	{
-		return getProperty($name);
+		return $this->getProperty($name);
+	}
+	
+	/** delete a property from his name
+	 *  @param string $name name of the property to delete  **/
+	function delProperty($name)
+	{
+		$i=0;
+		foreach($this->properties as $property)
+		{
+			if($property->name==$name) {unset($this->properties[$i]); return;}
+			$i++;
+		}
 	}
 }
 

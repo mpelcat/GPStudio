@@ -42,7 +42,7 @@ _gpblock()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|renameproperty|setproperty|setpropertymap)
+                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -123,7 +123,7 @@ _gpblock()
                         return 0
                         ;;
                     addproperty)
-                        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
                         return 0
                         ;;
                     setflow)
@@ -185,7 +185,7 @@ _gpblock()
                         return 0
                         ;;
                     addproperty)
-                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;
                     setflow)
@@ -234,10 +234,6 @@ _gpblock()
                 ;;
             9)
                 case $command in
-                    addproperty)
-                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
-                        return 0
-                        ;;
                     setparam)
                         COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
                         return 0

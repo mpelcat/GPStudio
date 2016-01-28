@@ -356,15 +356,15 @@ class Block
 		$subprops = explode('.', $path);
 		if(count($subprops)==0) return null;
 		
-		$property = $this->getProperty($subprops[0]);
-		if($property==null) return null;
-		
-		for($i=1; $i<count($subprops); $i++)
+		$parent=$this;
+		$i=0;
+		if(($instance=$this->getFlow($subprops[0]))!=NULL) {$parent=$instance; $i++;}
+		for(; $i<count($subprops); $i++)
 		{
-			$property = $property->getSubProperty($subprops[$i]);
-			if($property==null) return null;
+			$parent = $parent->getSubProperty($subprops[$i]);
+			if($parent==null) return null;
 		}
-		return $property;
+		return $parent;
 	}
 	
 	/** delete a property from his name
@@ -378,6 +378,24 @@ class Block
 			$i++;
 		}
 		return null;
+	}
+	
+	/** delete a property from his path
+	 *  @param string $path path of the property to delete  **/
+	function delPropertyPath($path)
+	{
+		$subprops = explode('.', $path);
+		if(count($subprops)==0) return;
+		
+		$parent=$this;
+		$i=0;
+		if(($instance=$this->getFlow($subprops[0]))!=NULL) {$parent=$instance; $i++;}
+		for(; $i<count($subprops)-1; $i++)
+		{
+			$parent = $parent->getSubProperty($subprops[$i]);
+			if($parent==null) return;
+		}
+		$parent->delProperty($subprops[count($subprops)-1]);
 	}
 	
 	/** Add a file to the block 

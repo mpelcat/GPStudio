@@ -586,20 +586,20 @@ switch($action)
 	
 	// ======================= properties commands =====================
 	case "addproperty":
-		$options = getopt("a:n:l:t:v:");
+		$options = getopt("a:n:t:v:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
-		if(array_key_exists('l',$options)) $caption = $options['l']; else error("You should specify a label for the property with -l",1);
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the property with -t",1);
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value="";
 		
-		$parent=$block;
 		$subprops = explode('.', $name);
 		if(count($subprops)==0) error("Invalid property name '$name'.",1);
 		
-		for($i=0; $i<count($subprops); $i++)
+		$parent=$block;
+		$i=0;
+		if(($instance=$block->getFlow($subprops[0]))!=NULL) {$parent=$instance; $i++;}
+		for(; $i<count($subprops); $i++)
 		{
 			$property = $parent->getProperty($subprops[$i]);
-			echo $subprops[$i];
 			if($property==null)
 			{
 				if($i<count($subprops)-1) error("Invalid property name '$name' $parent->name.",1);
@@ -613,7 +613,7 @@ switch($action)
 		
 		$property = new Property();
 		$property->name = $subprops[count($subprops)-1];
-		$property->caption = $caption;
+		$property->caption = $property->name;
 		$property->type = $type;
 		$property->value = $value;
 		
@@ -626,12 +626,26 @@ switch($action)
 		
 		if($block->getPropertyPath($name)==NULL) error("A property does not exist with the name '$name'.",1);
 		
-		$block->delProperty($name);
+		$block->delPropertyPath($name);
 		break;
 		
 	case "showproperty":
+		$options = getopt("a:n:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else $name = "";
+		
+		$subprops = explode('.', $name);
+		$parent=$block;
+		if(($instance=$block->getFlow($subprops[0]))!=NULL)
+		{
+			$parent=$instance;
+			unset($subprops[0]);
+		}
+		
+		if(count($subprops)>0 and $subprops[0]!="") $parent=$parent->getProperty(implode('.',$subprops));
+		if($parent==NULL) error("An instance does not exist with the name '$name'.",1);
+		
 		echo "properties :" . "\n";
-		foreach($block->properties as $property)
+		foreach($parent->properties as $property)
 		{
 			echo "  + ".$property. "\n";
 		}
@@ -748,7 +762,6 @@ switch($action)
 		if(array_key_exists('m',$options)) $mode = $options['m']; else $mode="";
 		
 		$wordRes = explode(".", $word);
-		
 			
 		if($mode=="property")
 		{

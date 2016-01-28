@@ -59,7 +59,7 @@ gpblock showport
 # properties
 gpblock addproperty -n <property-name> -l <label> -t <type> [-v <default-value>]
 gpblock delproperty -n <property-name>
-gpblock showproperty
+gpblock showproperty [-n <property/flow-name>]
 gpblock renameproperty -n <property-name> -v <new-name>
 gpblock setproperty -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]
 gpblock setpropertymap -n <param/property/bitfield-name> -v <property-map>

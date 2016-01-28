@@ -106,11 +106,7 @@ class Property
 	
 	public function __toString()
     {
-        $string=$this->name." caption:'".$this->caption."' type:'".$this->type."' value:'".$this->value."' min:'".$this->min."' max:'".$this->max."' step:'".$this->step."' desc:'".$this->desc."'".$this->path();
-        foreach($this->properties as $property)
-		{
-			$string.="\n".$property;
-		}
+        $string=$this->name." caption:'".$this->caption."' type:'".$this->type."' value:'".$this->value."' min:'".$this->min."' max:'".$this->max."' step:'".$this->step."' desc:'".$this->desc."'";
         return $string;
     }
 	
@@ -255,20 +251,19 @@ class Property
 		return null;
 	}
 	
-	/** Add a sub-property enum to the property 
-	 *  @param Property $property sub-property enum to add to the property **/
+	/** Add a sub-property to the property 
+	 *  @param Property $property sub-property to add to the property **/
 	function addSubProperty($property)
 	{
 		$property->parentProperty = $this;
 		array_push($this->properties, $property);
 	}
 	
-	/** Add a sub-property enum to the property 
-	 *  @param Property $property sub-property enum to add to the property **/
+	/** alias to addSubProperty($property)
+	 *  @param Property $property sub-property to add to the property **/
 	function addProperty($property)
 	{
-		$property->parentProperty = $this;
-		array_push($this->properties, $property);
+		$this->addSubProperty($property);
 	}
 	
 	/** return a reference to the property with the name $name, if not found, return false
@@ -283,16 +278,31 @@ class Property
 		return null;
 	}
 	
-	/** return a reference to the property with the name $name, if not found, return false
+	/** alias to getSubProperty($name)
 	 *  @param string $name name of the property enum to search
 	 *  @return Property found property **/
 	function getProperty($name)
 	{
+		return $this->getSubProperty($name);
+	}
+	
+	/** delete a property from his name
+	 *  @param string $name name of the property to delete  **/
+	function delSubProperty($name)
+	{
+		$i=0;
 		foreach($this->properties as $property)
 		{
-			if($property->name==$name) return $property;
+			if($property->name==$name) {unset($this->properties[$i]); return;}
+			$i++;
 		}
-		return null;
+	}
+	
+	/** alias to delSubProperty($name)
+	 *  @param string $name name of the property to delete  **/
+	function delProperty($name)
+	{
+		return $this->delSubProperty($name);
 	}
 	
 	/** return the path of the property (without the name of the block)
