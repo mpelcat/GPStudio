@@ -205,6 +205,7 @@ class Block
 		
 		echo str_repeat(' ',$maxInLenght).str_repeat('-',$lenghtBlock+2).str_repeat(' ',$maxOutLenght)."\n";
 		$maxFlow = max(count($flowIn), count($flowOut));
+		if($maxFlow==0) $maxFlow=1;
 		for($i=0;$i<$maxFlow;$i++)
 		{
 			// first in line

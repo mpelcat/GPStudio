@@ -173,7 +173,10 @@ switch($action)
 		{
 			if($block->type()=="process")
 			{
-				echo "  + ".$block->name." [".$block->driver."]" . "\n";
+				if($block->in_lib==1)
+					echo "  + ".$block->name." [".$block->driver."]" . "\n";
+				else
+					echo "  + ".$block->name." [".getRelativePath($block->path).DIRECTORY_SEPARATOR.$block->driver."]" . "\n";
 			}
 		}
 		$save = false;
@@ -189,9 +192,16 @@ switch($action)
 			echo "blocks :" . "\n";
 			foreach($node->blocks as $block)
 			{
-				if($block->type()=="process" or $block->type()=="io" or $block->type()=="iocom")
+				if($block->type()=="io" or $block->type()=="iocom")
 				{
 					echo "  + ".$block->name." [".$block->type()." - ".$block->driver."]" . "\n";
+				}
+				elseif($block->type()=="process")
+				{
+					if($block->in_lib==1)
+						echo "  + ".$block->name." [".$block->type()." - ".$block->driver."]" . "\n";
+					else
+						echo "  + ".$block->name." [".$block->type()." - ".getRelativePath($block->path).DIRECTORY_SEPARATOR.$block->driver."]" . "\n";
 				}
 			}
 		}
