@@ -180,7 +180,8 @@ switch($action)
 		if(array_key_exists('d',$options)) $direction = $options['d']; else error("You should specify a direction for the flow with -d [in-out]",1);
 		if(array_key_exists('s',$options)) $size = (int)$options['s']; else error("You should specify a size for the flow with -s",1);
 		
-		if($block->getFlow($name)!=NULL) error("This flow name already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		if($direction!="in" and $direction!="out") error("You should specify a direction for the flow with -d [in-out]",1);
 		
 		$flow = new Flow();
@@ -245,7 +246,8 @@ switch($action)
 		$options = getopt("a:n:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the param with -n",1);
 		
-		if($block->getParam($name)!=NULL) error("This param name already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		
 		$param = new Param();
 		$param->name = $name;
@@ -333,6 +335,8 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
 		if(array_key_exists('b',$options)) $bitfield = (string)$options['b']; else error("You should specify a bitfield bits selection for the bitfield with -b\nExemple: 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]",1);
 		
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		
 		$subPath=explode('.',$name);
 		if(count($subPath)!=2) error("Invalide name for a bitfield (param.parambitfield).",1);
 		$param=$block->getParam($subPath[0]);
@@ -400,7 +404,8 @@ switch($action)
 		if(array_key_exists('d',$options)) $direction = $options['d']; else error("You should specify a direction for the reset with -d [in-out]",1);
 		if(array_key_exists('g',$options)) $group = $options['g']; else error("You should specify a group for the reset with -g",1);
 		
-		if($block->getReset($name)!=NULL) error("This reset name already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		if($direction!="in" and $direction!="out") error("You should specify a direction for the reset with -d [in-out]",1);
 		
 		$reset = new Reset();
@@ -467,7 +472,8 @@ switch($action)
 		if(array_key_exists('d',$options)) $direction = $options['d']; else error("You should specify a direction for the clock with -d [in-out]",1);
 		if(array_key_exists('g',$options)) $domain = $options['g']; else $domain="";
 		
-		if($block->getClock($name)!=NULL) error("This clock name already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		if($direction!="in" and $direction!="out") error("You should specify a direction for the clock with -d [in-out]",1);
 		
 		$clock = new Clock();
@@ -553,7 +559,8 @@ switch($action)
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the external port with -t [in-out-inout]",1);
 		if(array_key_exists('s',$options)) $size = $options['s']; else error("You should specify a size for the external port with -s",1);
 		
-		if($block->getExtPort($name)!=NULL) error("This port already exists added with the same name.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		if($type!="in" and $type!="out" and $type!="out") error("You should specify a type for the external port with -t [in-out-inout]",1);
 		
 		$port = new Port();
@@ -590,6 +597,8 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the property with -t",1);
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value="";
+		
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		
 		$subprops = explode('.', $name);
 		if(count($subprops)==0) error("Invalid property name '$name'.",1);
@@ -713,14 +722,8 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name of the instance to set help with -n",1);
 		if(array_key_exists('v',$options)) $desc = $options['v']; else error("You should specify the help text with -v",1);
 		
-		if(($instance=$block->getFileByPath($name))!=NULL) $instance->desc=$desc;
-		elseif(($instance=$block->getFlow($name))!=NULL) $instance->desc=$desc;
-		elseif(($instance=$block->getParam($name))!=NULL) $instance->desc=$desc;
-		elseif(($instance=$block->getReset($name))!=NULL) $instance->desc=$desc;
-		elseif(($instance=$block->getClock($name))!=NULL) $instance->desc=$desc;
-		elseif(($instance=$block->getPropertyPath($name))!=NULL) $instance->desc=$desc;
-		else error("An instance does not exist with the name '$name'.",1);
-		
+		if(($instance=$block->getInstance($name))==NULL) error("An instance does not exist with the name '$name'.",1);
+		$instance->desc=$desc;
 		break;
 		
 	// ========================== list commands ========================

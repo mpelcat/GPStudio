@@ -578,7 +578,7 @@ class Block
 		array_push($this->attributes, $attribute);
 	}
 	
-	/** return a reference to the attribute with the name $name, if not found, return false
+	/** return a reference to the attribute with the name $name, if not found, return null
 	 *  @param string $name name of the attribute enum to search
 	 *  @return Attribute found attribute **/
 	function getAttribute($name)
@@ -587,6 +587,35 @@ class Block
 		{
 			if($attribute->name==$name) return $attribute;
 		}
+		return null;
+	}
+	
+	/** return a reference to the instance with the name $name, if not found, return null
+	 *  @param string $name name of the instance to search
+	 *  @return mixed found instance **/
+	function getInstance($name)
+	{
+		$instance = $this->getAttribute($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getClock($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getFileByPath($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getFlow($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getParam($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getPropertyPath($name);
+		if($instance!=NULL) return $instance;
+		$instance = $this->getReset($name);
+		if($instance!=NULL) return $instance;
+		
+		if($this->type()=="io" or $this->type()=="iocom")
+		{
+			$instance = $this->getExtPort($name);
+			if($instance!=NULL) return $instance;
+		}
+		
 		return null;
 	}
 	
