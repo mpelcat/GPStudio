@@ -122,7 +122,7 @@ class ClockInterconnect extends Block
 		// construct list of needed clocks for clock with a defined freq
 		foreach($this->clock_receivers as $clock)
 		{
-			if(isset($clock->typical))
+			if(isset($clock->typical) and $clock->typical!=0)
 			{
 				if(!in_array(array($clock->typical, $clock->shift), $available_freq))
 				{
@@ -135,7 +135,7 @@ class ClockInterconnect extends Block
 		// construct list of needed clocks for clock with min max interval
 		foreach($this->clock_receivers as $clock)
 		{
-			if(isset($clock->min) and isset($clock->max) and !isset($clock->typical))
+			if(isset($clock->min) and isset($clock->max) and (!isset($clock->typical) or $clock->typical==0))
 			{
 				$find=false;
 				foreach($available_freq as $freq)
