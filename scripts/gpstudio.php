@@ -232,8 +232,10 @@ function cpy_dir($source, $dest)
     }
 }
 
-function getRelativePath($path, $dir)
+function getRelativePath($path, $dir=NULL)
 {
+	if($dir==NULL) $dir=getcwd();
+	
 	$path=realpath($path);
 	$dir=realpath($dir);
 	

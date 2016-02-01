@@ -46,14 +46,14 @@ class Process extends Block
 					// process defined in external .proc local to the projet
 					if(isset($process_node_element['path']))
 					{
-						$this->path = getcwd() . DIRECTORY_SEPARATOR . (string)$process_node_element['path'];
+						$this->path = getcwd() . DIRECTORY_SEPARATOR . (string)$process_node_element['path'] . DIRECTORY_SEPARATOR;
 					}
 					else
 					{
 						$this->path = getcwd() . DIRECTORY_SEPARATOR;
 					}
 					
-					$process_file = $this->path . $this->driver . '.proc';
+					$process_file = $this->path . str_replace(".proc","",$this->driver) . '.proc';
 				
 					if (!file_exists($process_file)) error("File $process_file doesn't exist",5,"Process");
 					if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");
@@ -71,7 +71,7 @@ class Process extends Block
 		{
 			if(strpos($process_node_element, "/")===false and strpos($process_node_element, "\\")===false and strpos($process_node_element, ".proc")===false)
 			{
-				$this->driver=$process_node_element;
+				$this->driver = $process_node_element;
 				$this->path = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR . $this->driver . DIRECTORY_SEPARATOR;
 				$process_file = $this->path . $this->driver . '.proc';
 				$this->in_lib = true;
@@ -79,7 +79,9 @@ class Process extends Block
 			else
 			{
 				$process_file = $process_node_element;
-				$this->path = $process_node_element;
+				$this->driver=basename($process_node_element);
+				$this->path = getRelativePath(dirname($process_node_element));
+				$this->in_lib = false;
 				$this->name = str_replace(".proc","",basename($process_node_element));
 			}
 			
@@ -87,7 +89,7 @@ class Process extends Block
 			if (!($this->xml = simplexml_load_file($process_file))) error("Error when parsing $process_file",5,"Process");
 			
 			$this->parse_xml($this->xml);
-			$this->path = realpath(dirname($process_node_element));
+			$this->path = realpath(dirname($process_file));
 		}
 		else
 		{

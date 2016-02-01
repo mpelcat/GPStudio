@@ -348,6 +348,14 @@ class Block
 		return null;
 	}
 	
+	/** alias to getProperty($name)
+	 *  @param string $name name of the property enum to search
+	 *  @return Property found property **/
+	function getSubProperty($name)
+	{
+		return $this->getProperty($name);
+	}
+	
 	/** return a reference to the property with the access path $path, if not found, return null
 	 *  @param string $path path of the property to search, separed by . (dot)
 	 *  @return Property found property **/
@@ -690,6 +698,13 @@ class Block
 			$att = $xml->createAttribute('inlib');
 			$att->value = $this->in_lib==1 ? "true" : "false";
 			$xml_element->appendChild($att);
+			
+			if($this->in_lib!=1)
+			{
+				$att = $xml->createAttribute('path');
+				$att->value = getRelativePath($this->path);
+				$xml_element->appendChild($att);
+			}
 		}
 		
 		if($format!="blockdef")
