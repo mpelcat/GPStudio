@@ -155,6 +155,7 @@ switch($action)
 		if($node->getBlock($processName)!=NULL) error("This process name is ever added."."\n",1);
 		
 		$node->addProcess($processName, $processDriver);
+		
 		break;
 		
 	case "delprocess":
@@ -380,6 +381,11 @@ switch($action)
 		
 	case "listblock":
 		foreach($node->blocks as $block) echo $block->name.' ';
+		$save = false;
+		break;
+		
+	case "listprocess":
+		foreach($node->blocks as $block) if($block->type()=="process") echo $block->name.' ';
 		$save = false;
 		break;
 		

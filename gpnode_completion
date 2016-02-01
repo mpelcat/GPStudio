@@ -44,6 +44,10 @@ _gpnode()
                 ;;
             4)
                 case $command in
+                    delprocess)
+                        COMPREPLY=( $( compgen -W '$( gpnode listprocess )' -- "$cur" ) )
+                        return 0
+                        ;;
                     showblock)
                         COMPREPLY=( $( compgen -W '$( gpnode listblock )' -- "$cur" ) )
                         return 0
@@ -127,7 +131,7 @@ _gpnode()
                         return 0
                         ;;
                     addprocess)
-                        COMPREPLY=( $( compgen -W '$( gplib listprocess )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gplib listprocess ) $(find . -name *.proc)' -- "$cur" ) )
                         return 0
                         ;;
                     showblock)
