@@ -20,7 +20,6 @@
 			<attribute name="ERROR_CHECK_FREQUENCY_DIVISOR" value="256" type="global"/>
 			<attribute name="PARTITION_NETLIST_TYPE" value="SOURCE -section_id Top" type="global"/>
 			<attribute name="PARTITION_FITTER_PRESERVATION_LEVEL" value="PLACEMENT_AND_ROUTING -section_id Top" type="global"/>
-			<attribute name="PARTITION_HIERARCHY" value="root_partition -to | -section_id Top" type="instance"/>
 			<attribute name="UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE" value="ON" type="global"/>
 			<attribute name="OPTIMIZE_MULTI_CORNER_TIMING" value="ON" type="global"/>
 			<attribute name="ECO_REGENERATE_REPORT" value="ON" type="global"/>
