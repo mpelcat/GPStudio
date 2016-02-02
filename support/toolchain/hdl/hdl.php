@@ -183,8 +183,6 @@ class HDL_toolchain extends Toolchain
 		{
 			$code.='	'.$clock->net.'	<=	'.$clock->name.";\n";
 		}
-		//$code.="	-- WARNING!! static code only for usb project, TODO to be modified --\n";
-		//$code.="	clk_proc	<=	usb_ifclk;\n";
 		
 		$ci = $node->getBlock('ci');
 		//print_r($ci->domains);

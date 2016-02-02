@@ -308,9 +308,13 @@ class ParamInterconnect extends Block
 	
 		$file = new File();
 		$file->name = 'pi.vhd';
+		$file->path = 'pi.vhd';
 		$file->group= 'hdl';
 		$file->type = 'vhdl';
+		$file->generated = true;
 		$bi->addFile($file);
+		
+		$this->path = $path.DIRECTORY_SEPARATOR;
 		
 		$filename = $path.DIRECTORY_SEPARATOR.$file->name;
 		$generator->save_as_ifdiff($filename);

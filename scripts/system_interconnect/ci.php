@@ -245,7 +245,8 @@ class ClockInterconnect extends Block
 		// associate clock net
 		foreach($this->clock_receivers as $clockin)
 		{
-			if(empty($clockin->net))
+			if($clockin->typical==0) $clockin->net="'0'";
+			elseif(empty($clockin->net))
 			{
 				foreach($this->clock_providers as $clocksrc)
 				{
@@ -370,9 +371,13 @@ class ClockInterconnect extends Block
 	
 		$file = new File();
 		$file->name = 'ci.vhd';
+		$file->path = 'ci.vhd';
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
+		$file->generated = true;
 		$ci->addFile($file);
+		
+		$this->path = $path.DIRECTORY_SEPARATOR;
 	
 		$filename = $path.DIRECTORY_SEPARATOR.$file->name;
 		$generator->save_as_ifdiff($filename);
@@ -414,8 +419,10 @@ class ClockInterconnect extends Block
 		
 		$file = new File();
 		$file->name = $filename;
+		$file->path = $filename;
 		$file->group = 'hdl';
 		$file->type = 'sdc';
+		$file->generated = true;
 		$this->addFile($file);
 	}
 	

@@ -26,6 +26,11 @@ class Block_generator
 		if($block!=NULL) $this->fromBlock($block); else $block = NULL;
 	}
 	
+	static function hex($value, $width)
+	{
+		return 'x"'.str_pad(strtoupper(dechex($value)),ceil($width/4.0),'0',STR_PAD_LEFT).'"';
+	}
+	
 	function fromBlock($block)
 	{
 		// top block creation
@@ -199,7 +204,7 @@ class Block_generator
 					
 					// slave internal
 					$this->slave_generator->addSignal($param->name."_reg", $size, 'std_logic_vector');
-					$code_rst.="			".$param->name."_reg <= x\"".$param->value."\";"."\r\n";
+					$code_rst.="			".$param->name."_reg <= ".Block_generator::hex($param->value,$size).";"."\r\n";
 				}
 				else
 				{
@@ -271,7 +276,7 @@ class Block_generator
 		$code_rd.="	read_reg : process (clk_proc, reset_n)"."\r\n";
 		$code_rd.="	begin"."\r\n";
 		$code_rd.="		if(reset_n='0') then"."\r\n";
-		$code_rd.="			data_out <= (others => '0');"."\r\n";
+		$code_rd.="			datard_o <= (others => '0');"."\r\n";
 		$code_rd.="		elsif(rising_edge(clk_proc)) then"."\r\n";
 		$code_rd.="			if(rd_i='1') then"."\r\n";
 		$code_rd.="				case addr_rel_i is"."\r\n";
@@ -288,7 +293,7 @@ class Block_generator
 					$size_master = $this->block->pi_size_addr_rel;
 					
 					$code_rd.="					when std_logic_vector(to_unsigned(".$contant_reg_addr.", ".$size_master."))=>"."\r\n";
-					$code_rd.="						data_out <= ".$reg_name.";"."\r\n";
+					$code_rd.="						datard_o <= ".$reg_name.";"."\r\n";
 				}
 				else
 				{
@@ -307,7 +312,7 @@ class Block_generator
 		
 		
 		$code_rd.="					when others=>"."\r\n";
-		$code_rd.="						data_out <= (others => '0');"."\r\n";
+		$code_rd.="						datard_o <= (others => '0');"."\r\n";
 		$code_rd.="				end case;"."\r\n";
 		$code_rd.="			end if;"."\r\n";
 		$code_rd.="		end if;"."\r\n";

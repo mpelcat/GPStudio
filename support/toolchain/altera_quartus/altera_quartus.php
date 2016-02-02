@@ -31,8 +31,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 	public function generate_project($node, $path)
 	{
 		parent::generate_project($node, $path);
-		$this->generate_tcl($node, $path);
 		$this->generate_project_file($node, $path);
+		$this->generate_tcl($node, $path);
 		$this->generate_makefile($node, $path);
 	}
 	
@@ -43,63 +43,86 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content.="QUARTUS_VERSION = \"13.1\""."\n";
 		$content.="PROJECT_REVISION = \"$node->name\""."\n";
 		
+		$fileList = array();
+		
 		// copy all files for block declared in library
 		foreach($node->blocks as $block)
 		{
-			if($block->in_lib)
+			foreach($block->files as $file)
 			{
-				foreach($block->files as $file)
+				if($file->generated===true) continue;
+				
+				// process source file path and destination path
+				if(strpos($file->path, "hwlib:")===0)
 				{
-					if($file->generated!==true)
+					echo $file->path . "\n";
+					$filepath = str_replace("hwlib:",SUPPORT_PATH . "component" . DIRECTORY_SEPARATOR, $file->path);
+					$subpath = 'IP'.DIRECTORY_SEPARATOR.dirname(str_replace("hwlib:", "", $file->path));
+					echo $subpath . "\n";
+				}
+				else
+				{
+					if($block->in_lib)
 					{
-						if(!file_exists($block->path.$file->path))
+						$filepath = $block->path.$file->path;
+						$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
+					}
+					else
+					{
+						$filepath = $block->path.$file->path;
+						$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
+					}
+				}
+				
+				// check if file ever added
+				if(!in_array($filepath, $fileList))
+				{
+					$fileList[]=$filepath;
+					
+					if(!file_exists($filepath))
+					{
+						warning("$filepath doesn't exists",5,"Altera TCL");
+						continue;
+					}
+					
+					// create directory
+					if(!is_dir($path.DIRECTORY_SEPARATOR.$subpath)) mkdir($path.DIRECTORY_SEPARATOR.$subpath, 0777, true);
+					
+					if($file->type!="directory")
+					{
+						// check if copy is needed
+						$needToCopy = false;
+						if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
 						{
-							warning("$block->path$file->path doesn't exists",5,$block->name);
+							if(filemtime($filepath) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
+							{
+								$needToCopy = true;
+							}
 						}
 						else
 						{
-							$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
-							
-							// create directory
-							if(!is_dir($path.DIRECTORY_SEPARATOR.$subpath)) mkdir($path.DIRECTORY_SEPARATOR.$subpath, 0777, true);
-							
-							if($file->type!="directory")
+							$needToCopy = true;
+						}
+						
+						// copy if need
+						if($needToCopy)
+						{
+							if (!copy($filepath, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
 							{
-								// check if copy is needed
-								$needToCopy = false;
-								if(file_exists($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
-								{
-									if(filemtime($block->path.$file->path) > filemtime($path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
-									{
-										$needToCopy = true;
-									}
-								}
-								else
-								{
-									$needToCopy = true;
-								}
-								
-								// copy if need
-								if($needToCopy)
-								{
-									if (!copy($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name))
-									{
-										warning("failed to copy $file->name",5,$block->name);
-									}
-								}
+								warning("failed to copy $file->name",5,$block->name);
 							}
-							else
-							{
-								$dirtoCopy = $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name;
-								if(!file_exists($dirtoCopy)) mkdir($dirtoCopy);
-								cpy_dir($block->path.$file->path, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name);
-							}
-							
-							// update the path file to the new copy path relative to project
-							$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 						}
 					}
+					else
+					{
+						$dirtoCopy = $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name;
+						if(!file_exists($dirtoCopy)) mkdir($dirtoCopy);
+						cpy_dir($filepath, $path.DIRECTORY_SEPARATOR.$subpath.DIRECTORY_SEPARATOR.$file->name);
+					}
 				}
+				
+				// update the path file to the new copy path relative to project
+				$file->path=$subpath.DIRECTORY_SEPARATOR.$file->name;
 			}
 		}
 		
@@ -150,10 +173,11 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		}
 		
 		// blocks assignement
+		$fileList = array();
 		$content.="\n\n# ================================== blocks assignement ==================================\n";
 		foreach($node->blocks as $block)
 		{
-			$content.="\n# **************************************** $block->name ****************************************";
+			$content.="\n# ********************************** $block->name ($block->driver)**********************************";
 			
 			// pins
 			if(!empty($block->pins))
@@ -184,17 +208,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 					elseif($file->type=="sdc") {$type='SDC_FILE';}
 					elseif($file->type=="hex") {$type='HEX_FILE';}
 					
-					if($block->in_lib and $file->generated===false)
+					$file_path = str_replace("\\",'/',$file->path);
+					
+					if(!in_array($file_path, $fileList))
 					{
-						$subpath = 'IP'.DIRECTORY_SEPARATOR.$block->driver.DIRECTORY_SEPARATOR.dirname($file->path);
+						$fileList[]=$file_path;
+						
+						$content.="set_global_assignment -name $type ".$file_path."\n";
 					}
-					else
-					{
-						$subpath = dirname($file->path);
-					}
-					if(!empty($subpath)) $subpath .= DIRECTORY_SEPARATOR;
-					$file_path = str_replace("\\",'/',$subpath.$file->name);
-					$content.="set_global_assignment -name $type ".$file_path."\n";
 				}
 			}
 			
@@ -220,15 +241,16 @@ class Altera_quartus_toolchain extends HDL_toolchain
 			if($this->nopartitions==0)
 			{
 				$content.="\n# --------- partitions ---------\n";
-				if($block->name==$block->driver)
+				$driver = str_replace(".proc","",$block->driver);
+				if($block->name==$driver)
 				{
-					$instance=$block->driver.':'.$block->name.'_inst';
+					$instance=$driver.':'.$block->name.'_inst';
 				}
 				else
 				{
-					$instance=$block->driver.':'.$block->name;
+					$instance=$driver.':'.$block->name;
 				}
-				$partition_name = substr(str_replace('_','',$block->driver), 0, 4).'_'.substr(md5('top/'.$instance), 0, 4);
+				$partition_name = substr(str_replace('_','',$driver), 0, 4).'_'.substr(md5('top/'.$instance), 0, 4);
 				$content.="set_instance_assignment -name PARTITION_HIERARCHY $partition_name -to \"$instance\" -section_id \"$instance\""."\n";
 				$content.="set_global_assignment -name PARTITION_NETLIST_TYPE POST_SYNTH -section_id \"$instance\""."\n";
 				$content.="set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id \"$instance\""."\n";

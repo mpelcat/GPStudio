@@ -457,8 +457,12 @@ class FlowInterconnect extends Block
 	
 		$file = new File();
 		$file->name = 'fi.vhd';
+		$file->path = 'fi.vhd';
 		$file->group = 'hdl';
 		$file->type = 'vhdl';
+		$file->generated = true;
+		
+		$this->path = $path.DIRECTORY_SEPARATOR;
 	
 		array_push($fi->files, $file);
 		$filename = $path.DIRECTORY_SEPARATOR.$file->name;

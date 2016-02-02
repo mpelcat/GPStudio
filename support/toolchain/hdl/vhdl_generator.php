@@ -315,7 +315,7 @@ class VHDL_generator
 					$modgenerator = new VHDL_generator();
 					$modgenerator->fromBlock($block, $subblock);
 			
-					$content.='component '.$block->driver."\r\n";
+					$content.='component '.str_replace(".proc","",$block->driver)."\r\n";
 					$content.=$modgenerator->get_ports_and_generic();
 					$content.='end component;'."\r\n\r\n";
 			
@@ -389,9 +389,10 @@ class VHDL_generator
 				$subblock = $blockpart[1];
 				
 			// generic map
+				$driver = str_replace(".proc","",$block->driver);
 				$name = $block->name;
-				if($name==$block->driver) $name=$name.'_inst';
-				$content.='	'.$name.' : '.$block->driver."\r\n";
+				if($name==$driver) $name=$name.'_inst';
+				$content.='	'.$name.' : '.$driver."\r\n";
 				
 				$genericmap = array();
 				foreach($block->clocks as $clock)
@@ -408,7 +409,7 @@ class VHDL_generator
 					{
 						if(!$subblock)
 						{
-							if(!empty($param->value)) array_push($genericmap, array($param->name, $param->value));
+							if(!empty($param->value)) array_push($genericmap, array(strtoupper($param->name), $param->value));
 						}
 						else
 						{
