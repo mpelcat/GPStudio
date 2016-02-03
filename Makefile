@@ -18,7 +18,7 @@ clean:
 	cd gui-tools/ && make -f Makefile clean
 
 lines: FORCE
-	wc -l scripts/*.php scripts/*/*.php support/toolchain/*/*.php distrib/*.php gui-tools/src/*/*.h gui-tools/src/*/*.cpp gui-tools/src/*/*/*.h gui-tools/src/*/*/*.cpp gpnode_completion gplib_completion| sort -n -k1
+	wc -l scripts/*.php scripts/*/*.php support/toolchain/*/*.php distrib/*.php gui-tools/src/*/*.h gui-tools/src/*/*.cpp gui-tools/src/*/*/*.h gui-tools/src/*/*/*.cpp *_completion| sort -n -k1
 
 gui-tools: FORCE
 	cd gui-tools/ && make -f Makefile

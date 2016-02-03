@@ -7,11 +7,13 @@ function distrib_scripts($mainoutpath, $system, $archi, $qtver)
 	// create directory
 	mkdirExists($mainoutpath."scripts");
 	mkdirExists($mainoutpath."scripts".DIRECTORY_SEPARATOR."model");
+	mkdirExists($mainoutpath."scripts".DIRECTORY_SEPARATOR."tools");
 	mkdirExists($mainoutpath."scripts".DIRECTORY_SEPARATOR."system_interconnect");
 
 	// copy scripts and prepend license file
 	$paths = array(	'scripts'.DIRECTORY_SEPARATOR,
 					'scripts'.DIRECTORY_SEPARATOR.'model'.DIRECTORY_SEPARATOR,
+					'scripts'.DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR,
 					'scripts'.DIRECTORY_SEPARATOR.'system_interconnect'.DIRECTORY_SEPARATOR);
 	foreach($paths as $path)
 	{
@@ -44,7 +46,7 @@ function distrib_support($mainoutpath, $system, $archi, $qtver)
 	// create directory
 	mkdirExists($mainoutpath."support");
 	
-	foreach(array("board", "io", "process", "toolchain") as $dir)
+	foreach(array("board", "io", "process", "toolchain", "component") as $dir)
 	{
 		$path = $mainoutpath."support".DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR;
 		mkdirExists($path);
@@ -92,16 +94,22 @@ function distrib_bin($mainoutpath, $system, $archi, $qtver)
 	{
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode.bat");
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib.bat");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpdevice.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpdevice.bat");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpproc.bat", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpproc.bat");
 		copy_with_rights(LIB_PATH."setenv.bat", $mainoutpath."setenv.bat");
 	}
 	else
 	{
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpnode", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpnode");
 		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gplib", $mainoutpath."bin".DIRECTORY_SEPARATOR."gplib");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpdevice", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpdevice");
+		copy_with_rights(LIB_PATH."bin".DIRECTORY_SEPARATOR."gpproc", $mainoutpath."bin".DIRECTORY_SEPARATOR."gpproc");
 		copy_with_rights(LIB_PATH."setenv.sh", $mainoutpath."setenv.sh");
 		copy_with_rights(LIB_PATH."install.sh", $mainoutpath."install.sh");
 		copy_with_rights(LIB_PATH."gpnode_completion", $mainoutpath."gpnode_completion");
 		copy_with_rights(LIB_PATH."gplib_completion", $mainoutpath."gplib_completion");
+		copy_with_rights(LIB_PATH."gpdevice_completion", $mainoutpath."gpdevice_completion");
+		copy_with_rights(LIB_PATH."gpproc_completion", $mainoutpath."gpproc_completion");
 	}
 	$bin_source_path="bin-".$system.$archi.'-qt'.$qtver;
 	cpy_dir(GUI_TOOLS_PATH.$bin_source_path, $mainoutpath."bin");
