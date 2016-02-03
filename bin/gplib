@@ -13,6 +13,6 @@ do
 done
 
 DIR=$(dirname "$0")
-CMD="php \"$DIR/../scripts/gplib.php\" -a "
+CMD="php \"$DIR/../scripts/tools/gplib.php\" -a "
 CMD+=$args
 eval $CMD

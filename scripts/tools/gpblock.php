@@ -1,6 +1,6 @@
 <?php
 
-define("LIB_PATH", realpath(dirname(__FILE__)."/..").DIRECTORY_SEPARATOR);
+define("LIB_PATH", realpath(dirname(__FILE__)."/../..").DIRECTORY_SEPARATOR);
 define("SUPPORT_PATH", LIB_PATH . "support" . DIRECTORY_SEPARATOR);
 set_include_path(get_include_path().PATH_SEPARATOR.LIB_PATH);
 set_include_path(get_include_path().PATH_SEPARATOR.LIB_PATH.DIRECTORY_SEPARATOR.'scripts');
@@ -17,7 +17,7 @@ $options = getopt("a:");
 if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a",1);
 
 // new block creation
-if($action=="newprocess")
+if($action=="new" and TOOL=="gpproc")
 {
 	$options = getopt("a:n:");
 	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify a process name with -n",1);
@@ -26,7 +26,7 @@ if($action=="newprocess")
 	$block->name=$blockName;
 	$blockName.=".proc";
 }
-elseif($action=="newio")
+elseif($action=="new" and TOOL=="gpdevice")
 {
 	$options = getopt("a:n:");
 	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify an io name with -n",1);
@@ -38,18 +38,31 @@ elseif($action=="newio")
 else
 {
 	// find io or process and open it
-	$blockName=findprocess();
-	if(!file_exists($blockName))
+	if(!defined("TOOL")) error("Cannot call this script directly",1);
+	if(TOOL=="gpproc")
+	{
+		$blockName=findprocess();
+		if(!file_exists($blockName))
+		{
+			if(strpos($action, "list")===false) error("Cannot find a valid block process in the current directory.",1);
+			else exit(1);
+		}
+		else $block = new Process($blockName);
+	}
+	elseif(TOOL=="gpdevice")
 	{
 		$blockName=findio();
 		if(!file_exists($blockName))
 		{
-			if(strpos($action, "list")===false) error("Cannot find a valid block (process or io) in the current directory.",1);
+			if(strpos($action, "list")===false) error("Cannot find a valid block device in the current directory.",1);
 			else exit(1);
 		}
 		else $block = new IO($blockName);
 	}
-	else $block = new Process($blockName);
+	else
+	{
+		error("Cannot call this script without a valid tool",1);
+	}
 }
 
 $save = true;
@@ -59,12 +72,12 @@ switch($action)
 	// =========================== global commands =====================
 	case "-h":
 	case "--help":
-		echo "# gpblock command line tool to manage a gpstudio block (v0.95)"."\n";
+		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
 		$save = false;
 		break;
 	case "-v":
 	case "--version":
-		echo "# gpblock command line tool to manage a gpstudio block (v0.95)"."\n";
+		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
 		$save = false;
 		break;
 	
@@ -553,8 +566,9 @@ switch($action)
 	
 	// ========================== extport commands =====================
 	case "addextport":
+		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		
 		$options = getopt("a:n:t:s:");
-		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block.",1);
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the external port with -n",1);
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the external port with -t [in-out-inout]",1);
 		if(array_key_exists('s',$options)) $size = $options['s']; else error("You should specify a size for the external port with -s",1);
@@ -572,8 +586,9 @@ switch($action)
 		break;
 		
 	case "delextport":
+		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		
 		$options = getopt("a:n:");
-		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block.",1);
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the file with -n",1);
 		
 		if($block->getExtPort($name)==NULL) error("A file does not exist with the path '$path'.",1);
@@ -582,8 +597,9 @@ switch($action)
 		break;
 		
 	case "showextport":
+		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		
 		echo "external ports :" . "\n";
-		if($block->type()!="io" and $block->type()!="iocom") error("This command can only be used on an io block.",1);
 		foreach($block->ext_ports as $ext_port)
 		{
 			echo "  + ".$ext_port. "\n";

@@ -1,6 +1,6 @@
 <?php
 
-define("LIB_PATH", realpath(dirname(__FILE__)."/..").DIRECTORY_SEPARATOR);
+define("LIB_PATH", realpath(dirname(__FILE__)."/../..").DIRECTORY_SEPARATOR);
 define("SUPPORT_PATH", LIB_PATH . "support" . DIRECTORY_SEPARATOR);
 set_include_path(get_include_path().PATH_SEPARATOR.LIB_PATH);
 set_include_path(get_include_path().PATH_SEPARATOR.LIB_PATH.DIRECTORY_SEPARATOR.'scripts');

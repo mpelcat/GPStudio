@@ -11,31 +11,40 @@
 \usepackage{verbatim}
 \usepackage{indentfirst}
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue, % Couleur des liens internes
+    citecolor=red, % Couleur des numéros de la biblio dans le corps
+    urlcolor=blue} % Couleur des url
 
 \input{../gpstudio_doc.tex}
 
 \author{Sebastien CAUX}
-\title{gpblock reference documentation \version \\ (since 0.95)}
+\title{\tool{} reference documentation \version \\ (since 0.95)}
 
 \begin{document}
 \maketitle
 \section{Introduction}
-gpblock is a command line tool that permits to create new process block.
+\tool{} is a command line tool that permits to create new \kind{} block.
 
 \section{Use}
-gpblock always takes the process file in the current directory, so you only can have one process per directory. A process file have the `.proc' extension.
+\tool{} always takes the \kind{} file in the current directory, so you only can have one \kind{} definition per directory. A \kind{} file have the `.proc' extension.
 
-At the beginning, you need to create a process with the \emph{newprocess} command. After that, you can use all the commands set on this process.
+At the beginning, you need to create a \kind{} with the \emph{new\kind{}} command. After that, you can use all the commands set on this \kind{}.
 
 Please read the tutorial `GPStudio command line quick start' to learn how to use this tool.
 
 Under linux, you have a completion script to help you writing commands.
 
+\gpdevice{gp dev dev dev!!}
+\gpproc{gp proc proc proc!!}
+
 \section{Commands}
 % ==============================================
 \subsection{brief}
-All the commands of this tools permits to define the inputs and inputs of the block. Defining flows, PI interface with internal registers, clocks and resets. And finally you can specify the hight level properties for the controller of the block.
+All the commands of this tools permits to define the inputs and inputs of the block. Defining flows, PI interface with internal registers, \gpdevice{external ports, }clocks and resets. And finally you can specify the hight level properties for the controller of the block.
 
+\gpproc{
 \begin{figure}[h!]
 \centering
 \begin{tikzpicture}
@@ -59,10 +68,44 @@ All the commands of this tools permits to define the inputs and inputs of the bl
 \path[connect,<-] ([xshift=1cm]bloc.south) -- node[sloped,above]{reset0} ++(0,-1.2cm);
 \path[connect,<-] ([xshift=0.8cm]bloc.south) -- node[sloped,below]{reset...} ++(0,-1.2cm);
 \end{tikzpicture}
-\caption{Generic block}
+\caption{Process block}
 \end{figure}
+}
+\gpdevice{
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\node[block,rectangle,minimum height=3cm,minimum width=3cm] (bloc) {Block};
 
-Commands of gpblock always have the same naming convention. This table is brief of commands depends of the model instance that you want to modify.\\
+\path[connect,<-] ([yshift=1.1cm]bloc.west) -- node{/} node[above]{Flow In 0} ++(-2cm,0);
+\path[connect,<-] ([yshift=0.7cm]bloc.west) -- node{/} node[below]{Flow In ...} ++(-2cm,0);
+
+\path[connect,<-] ([yshift=-0.7cm]bloc.west) -- node{/} node[above]{Port In 0} ++(-2cm,0);
+\path[connect,<-] ([yshift=-1.1cm]bloc.west) -- node{/} node[below]{Port In ...} ++(-2cm,0);
+
+\path[connect,->] ([yshift=1.1cm]bloc.east) -- node{/} node[above]{Flow Out 0} ++(2cm,0);
+\path[connect,->] ([yshift=0.7cm]bloc.east) -- node{/} node[below]{Flow Out ...} ++(2cm,0);
+
+\path[connect,->] ([yshift=-0.7cm]bloc.east) -- node{/} node[above]{Port Out 0} ++(2cm,0);
+\path[connect,->] ([yshift=-1.1cm]bloc.east) -- node{/} node[below]{Port Out ...} ++(2cm,0);
+
+\path[connect,<-,double] (bloc.north) -- node[right]{PI Slave} ++(0,1cm);
+\path[connect,->,double] ([xshift=-1cm]bloc.north) -- node[left]{(PI Master)} ++(0,1cm);
+
+\draw ([xshift=-0.5cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.3cm]bloc.north);
+\draw ([xshift=-0.5cm,yshift=-0.3cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+
+\path[connect,<-] ([xshift=-1cm]bloc.south) -- node[sloped,below]{clk0} ++(0,-1.2cm);
+\path[connect,<-] ([xshift=-0.8cm]bloc.south) -- node[sloped,above]{clk...} ++(0,-1.2cm);
+
+\path[connect,<-] ([xshift=1cm]bloc.south) -- node[sloped,above]{reset0} ++(0,-1.2cm);
+\path[connect,<-] ([xshift=0.8cm]bloc.south) -- node[sloped,below]{reset...} ++(0,-1.2cm);
+\end{tikzpicture}
+\caption{Device block}
+\end{figure}
+}
+
+Commands of \tool{} always have the same naming convention. This table is brief of commands depends of the model instance that you want to modify.\\
 
 \noindent\begin{tabular}{|c|c|c|c|c|c|}
 \hline 
@@ -80,8 +123,10 @@ Commands of gpblock always have the same naming convention. This table is brief 
 \hline 
 \textbf{clock} & \hyperref[subsec:addclock]{addclock} & \hyperref[subsec:delclock]{delclock} & \hyperref[subsec:showclock]{showclock} & \hyperref[subsec:renameclock]{renameclock} & \hyperref[subsec:setclock]{setclock}  \\ 
 \hline 
+\gpdevice{
 \textbf{extport} & \hyperref[subsec:addextport]{addextport} & \hyperref[subsec:delextport]{delextport} & \hyperref[subsec:showextport]{showextport} &  &   \\ 
 \hline 
+}
 \textbf{property} & \hyperref[subsec:addproperty]{addproperty} & \hyperref[subsec:delproperty]{delproperty} & \hyperref[subsec:showproperty]{showproperty} & \hyperref[subsec:renameproperty]{renameproperty} & \hyperref[subsec:setproperty]{setproperty}  \\ 
 \hline 
 \end{tabular}\\
@@ -90,89 +135,89 @@ It exists few over commands to create the block and generate the skeleton define
 
 \subsection{project}
 % ==============================================
-\subsubsection{newprocess}
-\command{\textbf{gpblock newprocess} -n <process-name>}
+\subsubsection{new}
+\command{\textbf{\tool{} new} -n <\kind{}-name>}
 
-Create a process file inside the current directory named `\texttt{<process-name>}.proc'.\\
+Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.proc'.\\
 
 \paramcommand{
--n & process name without space & my\_process \\ 
+-n & \kind{} name without space & my\_\kind{} \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock newprocess} -n my\_process
+> \textbf{\tool{} new\kind{}} -n my\_\kind{}
 \end{sampletitle}
-\samplecomment{Create a new process named \texttt{my\_process}. After that, you have a file project \texttt{my\_process.proc} in the current directory.}
+\samplecomment{Create a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.proc} in the current directory.}
 
 % ==============================================
-\subsubsection{newio}
-\command{\textbf{gpblock newio} -n <io-name>}
+\subsubsection{new}
+\command{\textbf{\tool{} new} -n <\kind{}-name>}
 
-Create a io file inside the current directory named `\texttt{<io-name>}.io' to define a new custom io driver support.\\
+Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.\kind{}' to define a new custom \kind{} driver support.\\
 
 \paramcommand{
--n & io name without space & my\_io \\ 
+-n & \kind{} name without space & my\_\kind{} \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock newio} -n my\_io
+> \textbf{\tool{} new} -n my\_\kind{}
 \end{sampletitle}
-\samplecomment{Create a new io named \texttt{my\_io}. After that, you have a file project \texttt{my\_io.io} in the current directory.}
+\samplecomment{Create a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.io} in the current directory.}
 
 % ==============================================
 \subsubsection{showblock}
-\command{\textbf{gpblock showblock}}
+\command{\textbf{\tool{} showblock}}
 
 Shows all informations about the block.
 
 % ==============================================
 \subsubsection{generatetop}
-\command{\textbf{gpblock generatetop} [-o <dir>]}
+\command{\textbf{\tool{} generatetop} [-o <dir>]}
 
-Generates the skeleton of the block top level in the subdirectory \texttt{build/}. This top level instantiate the process and the slave if you need. The generated file is named `<process-name>.vhd'.\\
+Generates the skeleton of the block top level in the subdirectory \texttt{build/}. This top level instantiate the \kind{} and the slave if you need. The generated file is named `<\kind{}-name>.vhd'.\\
 
 \paramcommand{
 -o & output directory & build \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock generatetop} -o build/
+> \textbf{\tool{} generatetop} -o build/
 \end{sampletitle}
 \samplecomment{Generates \texttt{myproc.vhd} in the subdirectory \texttt{build/}.}
 
 % ==============================================
 \subsubsection{generateslave}
-\command{\textbf{gpblock generateslave} [-o <dir>]}
+\command{\textbf{\tool{} generateslave} [-o <dir>]}
 
-Generates the slave for dynamic parameters with read and write. The generated file is named `<process-name>\_slave.vhd'.\\
+Generates the slave for dynamic parameters with read and write. The generated file is named `<\kind{}-name>\_slave.vhd'.\\
 
 \paramcommand{
 -o & output directory & build \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock generateslave} -o build/
+> \textbf{\tool{} generateslave} -o build/
 \end{sampletitle}
 \samplecomment{Generates \texttt{myproc\_slave.vhd} in the subdirectory \texttt{build/}.}
 
 % ==============================================
-\subsubsection{generateprocess}
-\command{\textbf{gpblock generateprocess} [-o <dir>]}
+\subsubsection{generate\kind{}}
+\command{\textbf{\tool{} generate\kind{}} [-o <dir>]}
 
-Generates an empty skeleton to implement your custom process. The generated file is named `<process-name>\_process.vhd'.\\
+Generates an empty skeleton to implement your custom \kind{}. The generated file is named `<\kind{}-name>\_\kind{}.vhd'.\\
 
 \paramcommand{
 -o & output directory & build \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock generateprocess} -o build/
+> \textbf{\tool{} generate\kind{}} -o build/
 \end{sampletitle}
-\samplecomment{Generates \texttt{myproc\_process.vhd} in the subdirectory \texttt{build/}.}
+\samplecomment{Generates \texttt{myproc\_\kind{}.vhd} in the subdirectory \texttt{build/}.}
 
 % ==============================================
 \subsubsection{generate}
-\command{\textbf{gpblock generate} [-o <dir>]}
+\command{\textbf{\tool{} generate} [-o <dir>]}
 
 This command is an alias for the three previous command. Generates all the three files.\\
 
@@ -181,21 +226,21 @@ This command is an alias for the three previous command. Generates all the three
 }
 
 \begin{sampletitle}
-> \textbf{gpblock generatetop} -o build/
+> \textbf{\tool{} generatetop} -o build/
 \end{sampletitle}
-\samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_process.vhd},  in the subdirectory \texttt{build/}.}
+\samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_\kind{}.vhd},  in the subdirectory \texttt{build/}.}
 
 
 \subsection{files}
 % ==============================================
 \subsubsection{addfile}
 \label{subsec:addfile}
-\command{\textbf{gpblock addfile} -p <path> -t <type> -g <group>}
+\command{\textbf{\tool{} addfile} -p <path> -t <type> -g <group>}
 
-Adds the file with the path \texttt{<path>} to the list of files of the current process block. The type and group of the file depends of the tool-chain that you use.\\
+Adds the file with the path \texttt{<path>} to the list of files of the current \kind{} block. The type and group of the file depends of the tool-chain that you use.\\
 
 \paramcommand{
--p & process path relative to the file process & hdl/my\_process.vhd \\
+-p & \kind{} path relative to the file \kind{} & hdl/my\_\kind{}.vhd \\
 \hline
 -t & type of the file & [vhdl - verilog ...] \\
 \hline
@@ -203,34 +248,34 @@ Adds the file with the path \texttt{<path>} to the list of files of the current 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addfile} -p hdl/my\_process.vhdl -t vhdl -g hdl
+> \textbf{\tool{} addfile} -p hdl/my\_\kind{}.vhdl -t vhdl -g hdl
 \end{sampletitle}
-\samplecomment{Adds the file `my\_process.vhd' as a file needed by the hdl implementation of the block.}
+\samplecomment{Adds the file `my\_\kind{}.vhd' as a file needed by the hdl implementation of the block.}
 
-\seealso{\textbf{gpblock delfile} and \textbf{gpblock showfile}}
+\seealso{\textbf{\tool{} delfile} and \textbf{\tool{} showfile}}
 
 % ==============================================
 \subsubsection{delfile}
 \label{subsec:delfile}
-\command{\textbf{gpblock delfile} -p <path>}
+\command{\textbf{\tool{} delfile} -p <path>}
 
 Removes the file with the path \texttt{<path>}.\\
 
 \paramcommand{
--p & process path relative to the file process & hdl/my\_process.vhd \\
+-p & \kind{} path relative to the file \kind{} & hdl/my\_\kind{}.vhd \\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delfile} -p hdl/my\_process.vhd
+> \textbf{\tool{} delfile} -p hdl/my\_\kind{}.vhd
 \end{sampletitle}
-\samplecomment{Removes the file `my\_process.vhd'.}
+\samplecomment{Removes the file `my\_\kind{}.vhd'.}
 
-\seealso{\textbf{gpblock addfile} and \textbf{gpblock showfile}}
+\seealso{\textbf{\tool{} addfile} and \textbf{\tool{} showfile}}
 
 % ==============================================
 \subsubsection{showfile}
 \label{subsec:showfile}
-\command{\textbf{gpblock showfile}}
+\command{\textbf{\tool{} showfile}}
 
 Prints the list of files in the current block project.
 
@@ -238,7 +283,7 @@ Prints the list of files in the current block project.
 % ==============================================
 \subsubsection{addflow}
 \label{subsec:addflow}
-\command{\textbf{gpblock addflow} -n <flow-name> -d <direction> -s <size>}
+\command{\textbf{\tool{} addflow} -n <flow-name> -d <direction> -s <size>}
 
 Adds a flow interface named \texttt{<flow-name>} to the list of flows. You need to specify the direction of the flow (input or output) and the default size.\\
 
@@ -251,16 +296,16 @@ Adds a flow interface named \texttt{<flow-name>} to the list of flows. You need 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addflow} -n out0 -d out -s 8
+> \textbf{\tool{} addflow} -n out0 -d out -s 8
 \end{sampletitle}
 \samplecomment{Add a new flow output named `out0' with a default size of 8 bits.}
 
-\seealso{\textbf{gpblock delflow} and \textbf{gpblock showflow}}
+\seealso{\textbf{\tool{} delflow} and \textbf{\tool{} showflow}}
 
 % ==============================================
 \subsubsection{delflow}
 \label{subsec:delflow}
-\command{\textbf{gpblock delflow} -n <flow-name>}
+\command{\textbf{\tool{} delflow} -n <flow-name>}
 
 Removes the file with the name \texttt{<flow-name>}.\\
 
@@ -269,23 +314,23 @@ Removes the file with the name \texttt{<flow-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delflow} -n out0
+> \textbf{\tool{} delflow} -n out0
 \end{sampletitle}
 \samplecomment{Removes the flow named `out0'.}
 
-\seealso{\textbf{gpblock addflow} and \textbf{gpblock showflow}}
+\seealso{\textbf{\tool{} addflow} and \textbf{\tool{} showflow}}
 
 % ==============================================
 \subsubsection{showflow}
 \label{subsec:showflow}
-\command{\textbf{gpblock showflow}}
+\command{\textbf{\tool{} showflow}}
 
 Prints the list of flows in the current block project.
 
 % ==============================================
 \subsubsection{renameflow}
 \label{subsec:renameflow}
-\command{\textbf{gpblock renameflow} -n <flow-name> -v <new-name>}
+\command{\textbf{\tool{} renameflow} -n <flow-name> -v <new-name>}
 
 Renames the flow named \texttt{<flow-name>} with the name \texttt{<new-name>}.\\
 
@@ -296,16 +341,16 @@ Renames the flow named \texttt{<flow-name>} with the name \texttt{<new-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renameflow} -n out0 -v out1
+> \textbf{\tool{} renameflow} -n out0 -v out1
 \end{sampletitle}
 \samplecomment{Renames the flow `out0' to `out1'.}
 
-\seealso{\textbf{gpblock delflow}}
+\seealso{\textbf{\tool{} delflow}}
 
 % ==============================================
 \subsubsection{setflow}
 \label{subsec:setflow}
-\command{\textbf{gpblock setflow} -n <flow-name> [-d <direction>] [-s <size>]}
+\command{\textbf{\tool{} setflow} -n <flow-name> [-d <direction>] [-s <size>]}
 
 Permits to modify one or more flow parameters like the direction or the default size.\\
 
@@ -318,8 +363,8 @@ Permits to modify one or more flow parameters like the direction or the default 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setflow} -n out0 -d in \\
-> \textbf{gpblock setflow} -n out0 -s 9
+> \textbf{\tool{} setflow} -n out0 -d in \\
+> \textbf{\tool{} setflow} -n out0 -s 9
 \end{sampletitle}
 \samplecomment{Sets the flow `out0' as input and then sets the default size to 9 bits.}
 
@@ -327,7 +372,7 @@ Permits to modify one or more flow parameters like the direction or the default 
 % ==============================================
 \subsubsection{addparam}
 \label{subsec:addparam}
-\command{\textbf{gpblock addparam} -n <param-name> -d <direction> -g <group>}
+\command{\textbf{\tool{} addparam} -n <param-name> -d <direction> -g <group>}
 
 Adds a param named \texttt{<param-name>} to the list of params.\\
 
@@ -336,16 +381,16 @@ Adds a param named \texttt{<param-name>} to the list of params.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addparam} -n param0
+> \textbf{\tool{} addparam} -n param0
 \end{sampletitle}
 \samplecomment{Add a new param input named `param0'}
 
-\seealso{\textbf{gpblock delparam} and \textbf{gpblock showparam}}
+\seealso{\textbf{\tool{} delparam} and \textbf{\tool{} showparam}}
 
 % ==============================================
 \subsubsection{delparam}
 \label{subsec:delparam}
-\command{\textbf{gpblock delparam} -n <param-name>}
+\command{\textbf{\tool{} delparam} -n <param-name>}
 
 Removes the param with the name \texttt{<param-name>}.\\
 
@@ -354,23 +399,23 @@ Removes the param with the name \texttt{<param-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delparam} -n param0
+> \textbf{\tool{} delparam} -n param0
 \end{sampletitle}
 \samplecomment{Removes the param named `param0'.}
 
-\seealso{\textbf{gpblock addparam} and \textbf{gpblock showparam}}
+\seealso{\textbf{\tool{} addparam} and \textbf{\tool{} showparam}}
 
 % ==============================================
 \subsubsection{showparam}
 \label{subsec:showparam}
-\command{\textbf{gpblock showparam}}
+\command{\textbf{\tool{} showparam}}
 
 Prints the list of params in the current block project.
 
 % ==============================================
 \subsubsection{renameparam}
 \label{subsec:renameparam}
-\command{\textbf{gpblock renameparam} -n <param-name> -v <new-name>}
+\command{\textbf{\tool{} renameparam} -n <param-name> -v <new-name>}
 
 Renames the param named \texttt{<param-name>} with the name \texttt{<new-name>}.\\
 
@@ -381,16 +426,16 @@ Renames the param named \texttt{<param-name>} with the name \texttt{<new-name>}.
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renameparam} -n param0 -v param1
+> \textbf{\tool{} renameparam} -n param0 -v param1
 \end{sampletitle}
 \samplecomment{Renames the param `param0' to `param1'.}
 
-\seealso{\textbf{gpblock delparam}}
+\seealso{\textbf{\tool{} delparam}}
 
 % ==============================================
 \subsubsection{setparam}
 \label{subsec:setparam}
-\command{\textbf{gpblock setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
+\command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
 
 Permits to modify one or more param parameters like the type, the default value or the relative address.\\
 
@@ -405,23 +450,23 @@ Permits to modify one or more param parameters like the type, the default value 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setparam} -n status -v 1 -r 4 \\
+> \textbf{\tool{} setparam} -n status -v 1 -r 4 \\
 \end{sampletitle}
 \samplecomment{Sets the default value of the dynamic param (register) `status' to 1 and sets the relative address to 4.}
 
 \begin{sampletitle}
-> \textbf{gpblock setparam} -n mode -v LINEAR -t Mode \\
+> \textbf{\tool{} setparam} -n mode -v LINEAR -t Mode \\
 \end{sampletitle}
 \samplecomment{Sets the type of the generic `mode' to `Mode' with a default value setted to `LINEAR'}
 
 % ==============================================
 \subsubsection{fixparam}
-\command{\textbf{gpblock fixparam} -n <param-name> -v <true/false>}
+\command{\textbf{\tool{} fixparam} -n <param-name> -v <true/false>}
 
 Transforms a param to a fixed parameter  if -v is true or a dynamic parameter else.
 
 \begin{sampletitle}
-> \textbf{gpblock fixparam} -n mode -v true \\
+> \textbf{\tool{} fixparam} -n mode -v true \\
 \end{sampletitle}
 \samplecomment{Sets the parameter `mode' to a fixed parameter, eg generic value for a VHDL backend}
 
@@ -429,7 +474,7 @@ Transforms a param to a fixed parameter  if -v is true or a dynamic parameter el
 % ==============================================
 \subsubsection{addbitfield}
 \label{subsec:addbitfield}
-\command{\textbf{gpblock addbitfield} -n <param-name.bitfield-name> -b <bitfield>}
+\command{\textbf{\tool{} addbitfield} -n <param-name.bitfield-name> -b <bitfield>}
 
 Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name>}.\\
 
@@ -440,21 +485,21 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addbitfield} -n status.enable -b 0
+> \textbf{\tool{} addbitfield} -n status.enable -b 0
 \end{sampletitle}
 \samplecomment{Adds a bit `enable' positioned on the bit 0 in the register status}
 
 \begin{sampletitle}
-> \textbf{gpblock addbitfield} -n status.mode -b 5-3
+> \textbf{\tool{} addbitfield} -n status.mode -b 5-3
 \end{sampletitle}
 \samplecomment{Adds a bit field `mode' positioned on the bits 5 to 3 in the register status}
 
-\seealso{\textbf{gpblock delbitfield} and \textbf{gpblock showbitfield}}
+\seealso{\textbf{\tool{} delbitfield} and \textbf{\tool{} showbitfield}}
 
 % ==============================================
 \subsubsection{delbitfield}
 \label{subsec:delbitfield}
-\command{\textbf{gpblock delbitfield} -n <param-name.bitfield-name>}
+\command{\textbf{\tool{} delbitfield} -n <param-name.bitfield-name>}
 
 Removes the bit field with the name \texttt{<param-name.bitfield-name>}.\\
 
@@ -463,23 +508,23 @@ Removes the bit field with the name \texttt{<param-name.bitfield-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delbitfield} -n param0
+> \textbf{\tool{} delbitfield} -n param0
 \end{sampletitle}
 \samplecomment{Removes the param named `param0'.}
 
-\seealso{\textbf{gpblock addbitfield} and \textbf{gpblock showbitfield}}
+\seealso{\textbf{\tool{} addbitfield} and \textbf{\tool{} showbitfield}}
 
 % ==============================================
 \subsubsection{showbitfield}
 \label{subsec:showbitfield}
-\command{\textbf{gpblock showbitfield} -n <param-name>}
+\command{\textbf{\tool{} showbitfield} -n <param-name>}
 
 Prints the list of bit fields associated to the parameter\texttt{<param-name>} .
 
 % ==============================================
 \subsubsection{renamebitfield}
 \label{subsec:renamebitfield}
-\command{\textbf{gpblock renamebitfield} -n <param-name.bitfield-name> -v <new-name>}
+\command{\textbf{\tool{} renamebitfield} -n <param-name.bitfield-name> -v <new-name>}
 
 Renames the bit field named \texttt{<param-name.bitfield-name>} with the name \texttt{<new-name>}.\\
 
@@ -490,16 +535,16 @@ Renames the bit field named \texttt{<param-name.bitfield-name>} with the name \t
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renamebitfield} -n status.active -v enable
+> \textbf{\tool{} renamebitfield} -n status.active -v enable
 \end{sampletitle}
 \samplecomment{Renames the bit field `status.active' to `status.enable'.}
 
-\seealso{\textbf{gpblock delbitfield}}
+\seealso{\textbf{\tool{} delbitfield}}
 
 % ==============================================
 \subsubsection{setbitfield}
 \label{subsec:setbitfield}
-\command{\textbf{gpblock setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
+\command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
 
 Permits to modify one or more param parameters like the type, the default value or the relative address.\\
 
@@ -514,12 +559,12 @@ Permits to modify one or more param parameters like the type, the default value 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setparam} -n status -v 1 -r 4 \\
+> \textbf{\tool{} setparam} -n status -v 1 -r 4 \\
 \end{sampletitle}
 \samplecomment{Sets the default value of the dynamic param (register) `status' to 1 and sets the relative address to 4.}
 
 \begin{sampletitle}
-> \textbf{gpblock setparam} -n mode -v LINEAR -t Mode \\
+> \textbf{\tool{} setparam} -n mode -v LINEAR -t Mode \\
 \end{sampletitle}
 \samplecomment{Sets the type of the generic `mode' to `Mode' with a default value setted to `LINEAR'}
 
@@ -527,7 +572,7 @@ Permits to modify one or more param parameters like the type, the default value 
 % ==============================================
 \subsubsection{addreset}
 \label{subsec:addreset}
-\command{\textbf{gpblock addreset} -n <reset-name> -d <direction> -g <group>}
+\command{\textbf{\tool{} addreset} -n <reset-name> -d <direction> -g <group>}
 
 Adds a reset named \texttt{<reset-name>} to the list of resets. You need to specify the direction of the reset (input or output) and the group. All the reset with the same group are connected to the same net.\\
 
@@ -540,16 +585,16 @@ Adds a reset named \texttt{<reset-name>} to the list of resets. You need to spec
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addreset} -n reset\_n -d in -g reset\_n
+> \textbf{\tool{} addreset} -n reset\_n -d in -g reset\_n
 \end{sampletitle}
 \samplecomment{Add a new reset input named `reset\_n' connected to the `reset\_n' group}
 
-\seealso{\textbf{gpblock delreset} and \textbf{gpblock showreset}}
+\seealso{\textbf{\tool{} delreset} and \textbf{\tool{} showreset}}
 
 % ==============================================
 \subsubsection{delreset}
 \label{subsec:delreset}
-\command{\textbf{gpblock delreset} -n <reset-name>}
+\command{\textbf{\tool{} delreset} -n <reset-name>}
 
 Removes the reset with the name \texttt{<reset-name>}.\\
 
@@ -558,23 +603,23 @@ Removes the reset with the name \texttt{<reset-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delreset} -n out0
+> \textbf{\tool{} delreset} -n out0
 \end{sampletitle}
 \samplecomment{Removes the reset named `out0'.}
 
-\seealso{\textbf{gpblock addreset} and \textbf{gpblock showreset}}
+\seealso{\textbf{\tool{} addreset} and \textbf{\tool{} showreset}}
 
 % ==============================================
 \subsubsection{showreset}
 \label{subsec:showreset}
-\command{\textbf{gpblock showreset}}
+\command{\textbf{\tool{} showreset}}
 
 Prints the list of resets in the current block project.
 
 % ==============================================
 \subsubsection{renamereset}
 \label{subsec:renamereset}
-\command{\textbf{gpblock renamereset} -n <reset-name> -v <new-name>}
+\command{\textbf{\tool{} renamereset} -n <reset-name> -v <new-name>}
 
 Renames the reset named \texttt{<reset-name>} with the name \texttt{<new-name>}.\\
 
@@ -585,16 +630,16 @@ Renames the reset named \texttt{<reset-name>} with the name \texttt{<new-name>}.
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renamereset} -n reset\_n -v reset
+> \textbf{\tool{} renamereset} -n reset\_n -v reset
 \end{sampletitle}
 \samplecomment{Renames the reset `reset\_n' to `reset'.}
 
-\seealso{\textbf{gpblock delreset}}
+\seealso{\textbf{\tool{} delreset}}
 
 % ==============================================
 \subsubsection{setreset}
 \label{subsec:setreset}
-\command{\textbf{gpblock setreset} -n <reset-name> [-d <direction>] [-g <group>]}
+\command{\textbf{\tool{} setreset} -n <reset-name> [-d <direction>] [-g <group>]}
 
 Permits to modify one or more reset parameters like the direction or the group.\\
 
@@ -607,8 +652,8 @@ Permits to modify one or more reset parameters like the direction or the group.\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setreset} -n reset\_n -d out \\
-> \textbf{gpblock setreset} -n reset\_n -g reset\_all
+> \textbf{\tool{} setreset} -n reset\_n -d out \\
+> \textbf{\tool{} setreset} -n reset\_n -g reset\_all
 \end{sampletitle}
 \samplecomment{Sets the reset `reset\_n' as output and then sets the reset group to `reset\_all'.}
 
@@ -616,7 +661,7 @@ Permits to modify one or more reset parameters like the direction or the group.\
 % ==============================================
 \subsubsection{addclock}
 \label{subsec:addclock}
-\command{\textbf{gpblock addclock} -n <clock-name> -d <direction> [-g <clock-domain>]}
+\command{\textbf{\tool{} addclock} -n <clock-name> -d <direction> [-g <clock-domain>]}
 
 Adds a clock named \texttt{<clock-name>} to the list of clocks. You need to specify the direction of the clock (input or output) and eventually the clock domain.\\
 
@@ -629,16 +674,16 @@ Adds a clock named \texttt{<clock-name>} to the list of clocks. You need to spec
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addclock} -n clock -d in -g clk\_proc
+> \textbf{\tool{} addclock} -n clock -d in -g clk\_proc
 \end{sampletitle}
 \samplecomment{Add a new clock input named `clock' connected to the `clk\_proc' clock domain}
 
-\seealso{\textbf{gpblock setclock}, \textbf{gpblock delclock} and \textbf{gpblock showclock}}
+\seealso{\textbf{\tool{} setclock}, \textbf{\tool{} delclock} and \textbf{\tool{} showclock}}
 
 % ==============================================
 \subsubsection{delclock}
 \label{subsec:delclock}
-\command{\textbf{gpblock delclock} -n <clock-name>}
+\command{\textbf{\tool{} delclock} -n <clock-name>}
 
 Removes the file with the name \texttt{<clock-name>}.\\
 
@@ -647,23 +692,23 @@ Removes the file with the name \texttt{<clock-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delclock} -n clk\_proc
+> \textbf{\tool{} delclock} -n clk\_proc
 \end{sampletitle}
 \samplecomment{Removes the clock named `clk\_proc'.}
 
-\seealso{\textbf{gpblock addclock} and \textbf{gpblock showclock}}
+\seealso{\textbf{\tool{} addclock} and \textbf{\tool{} showclock}}
 
 % ==============================================
 \subsubsection{showclock}
 \label{subsec:showclock}
-\command{\textbf{gpblock showclock}}
+\command{\textbf{\tool{} showclock}}
 
 Prints the list of clocks in the current block project.
 
 % ==============================================
 \subsubsection{renameclock}
 \label{subsec:renameclock}
-\command{\textbf{gpblock renameclock} -n <clock-name> -v <new-name>}
+\command{\textbf{\tool{} renameclock} -n <clock-name> -v <new-name>}
 
 Renames the clock named \texttt{<clock-name>} with the name \texttt{<new-name>}.\\
 
@@ -674,16 +719,16 @@ Renames the clock named \texttt{<clock-name>} with the name \texttt{<new-name>}.
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renameclock} -n clock -v clock2
+> \textbf{\tool{} renameclock} -n clock -v clock2
 \end{sampletitle}
 \samplecomment{Renames the clock `clock' to `clock2'.}
 
-\seealso{\textbf{gpblock delclock}}
+\seealso{\textbf{\tool{} delclock}}
 
 % ==============================================
 \subsubsection{setclock}
 \label{subsec:setclock}
-\command{\textbf{gpblock setclock} -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]}
+\command{\textbf{\tool{} setclock} -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]}
 
 Permits to modify one or more clock parameters. It exists many ways to define a clock :
 \begin{itemize}
@@ -708,37 +753,38 @@ Permits to modify one or more clock parameters. It exists many ways to define a 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setclock} -n clock -d in
+> \textbf{\tool{} setclock} -n clock -d in
 \end{sampletitle}
 \samplecomment{Sets the clock `clock' as input.}
 
 \begin{sampletitle}
-> \textbf{gpblock setclock} -n clock -g clock\_img
+> \textbf{\tool{} setclock} -n clock -g clock\_img
 \end{sampletitle}
 \samplecomment{Moves it to the clock domain `clock\_img'.}
 
 \begin{sampletitle}
-> \textbf{gpblock setclock} -n clock -g clock\_img -m 2
+> \textbf{\tool{} setclock} -n clock -g clock\_img -m 2
 \end{sampletitle}
 \samplecomment{Defines the frequency to the double of the clock domain `clock\_img' frequency.}
 
 \begin{sampletitle}
-> \textbf{gpblock setclock} -n clock -f 12.3M
+> \textbf{\tool{} setclock} -n clock -f 12.3M
 \end{sampletitle}
 \samplecomment{Defines the clock frequency to 12.3MHz.}
 
 \begin{sampletitle}
-> \textbf{gpblock setclock} -n clock -r 5.5k:12k
+> \textbf{\tool{} setclock} -n clock -r 5.5k:12k
 \end{sampletitle}
 \samplecomment{Defines the clock frequency in the range of 5.5k<f<12k.}
 
+\gpdevice{
 \subsection{external ports}
 % ==============================================
 \subsubsection{addextport}
 \label{subsec:addextport}
-\command{\textbf{gpblock addextport} -n <port-name> -t <type> -s <size>}
+\command{\textbf{\tool{} addextport} -n <port-name> -t <type> -s <size>}
 
-Adds an external port named \texttt{<port-name>} to the list of external ports. You need to specify the type of the port (input, output inout) and the size in bits. This command is only available for io block.\\
+Adds an external port named \texttt{<port-name>} to the list of external ports. You need to specify the type of the port (input, output inout) and the size in bits. This command is only available for \kind{} block.\\
 
 \paramcommand{
 -n & name of the external port & data \\
@@ -749,42 +795,42 @@ Adds an external port named \texttt{<port-name>} to the list of external ports. 
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addextport} -n data\_in -t in -s 8
+> \textbf{\tool{} addextport} -n data\_in -t in -s 8
 \end{sampletitle}
 \samplecomment{Add a new external input port named `data\_in' with a width of 8 bits}
 
-\seealso{\textbf{gpblock delextport} and \textbf{gpblock showextport}}
+\seealso{\textbf{\tool{} delextport} and \textbf{\tool{} showextport}}
 
 % ==============================================
 \subsubsection{delextport}
 \label{subsec:delextport}
-\command{\textbf{gpblock delextport} -n <port-name>}
+\command{\textbf{\tool{} delextport} -n <port-name>}
 
-Removes the external port with the name \texttt{<port-name>}. This command is only available for io block.\\
+Removes the external port with the name \texttt{<port-name>}. This command is only available for \kind{} block.\\
 
 \paramcommand{
 -n & name of the external port & data\_in \\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delextport} -n data\_in
+> \textbf{\tool{} delextport} -n data\_in
 \end{sampletitle}
 \samplecomment{Removes the external port named `data\_in'.}
 
-\seealso{\textbf{gpblock addextport} and \textbf{gpblock showextport}}
+\seealso{\textbf{\tool{} addextport} and \textbf{\tool{} showextport}}
 
 % ==============================================
 \subsubsection{showextport}
 \label{subsec:showextport}
-\command{\textbf{gpblock showextport}}
+\command{\textbf{\tool{} showextport}}
 
-Prints the list of external ports in the current block project. This command is only available for io block.
-
+Prints the list of external ports in the current block project. This command is only available for \kind{} block.
+}
 \subsection{properties}
 % ==============================================
 \subsubsection{addproperty}
 \label{subsec:addproperty}
-\command{\textbf{gpblock addproperty} -n <property-name> -t <type> [-v <default-value>]}
+\command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>]}
 
 Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for hight level interface, a type to define the widget adapted to this data and optionally a default value.\\
 
@@ -797,16 +843,16 @@ Adds a property named \texttt{<property-name>} to the list of properties. You ne
 }
 
 \begin{sampletitle}
-> \textbf{gpblock addproperty} -n enable -l "enable process" -t bool -v true
+> \textbf{\tool{} addproperty} -n enable -l "enable \kind{}" -t bool -v true
 \end{sampletitle}
-\samplecomment{Add a new property to enable the process. At this point, the property is not linked to a register, you need to use \textbf{setpropertymap} to do that.}
+\samplecomment{Add a new property to enable the \kind{}. At this point, the property is not linked to a register, you need to use \textbf{setpropertymap} to do that.}
 
-\seealso{\textbf{gpblock delproperty}, \textbf{gpblock setpropertymap} and \textbf{gpblock showproperty}}
+\seealso{\textbf{\tool{} delproperty}, \textbf{\tool{} setpropertymap} and \textbf{\tool{} showproperty}}
 
 % ==============================================
 \subsubsection{delproperty}
 \label{subsec:delproperty}
-\command{\textbf{gpblock delproperty} -n <property-name>}
+\command{\textbf{\tool{} delproperty} -n <property-name>}
 
 Removes the property with the name \texttt{<property-name>}.\\
 
@@ -815,23 +861,23 @@ Removes the property with the name \texttt{<property-name>}.\\
 }
 
 \begin{sampletitle}
-> \textbf{gpblock delproperty} -n status.enable
+> \textbf{\tool{} delproperty} -n status.enable
 \end{sampletitle}
 \samplecomment{Removes the property named `enable' in the `status' property.}
 
-\seealso{\textbf{gpblock addproperty} and \textbf{gpblock showproperty}}
+\seealso{\textbf{\tool{} addproperty} and \textbf{\tool{} showproperty}}
 
 % ==============================================
 \subsubsection{showproperty}
 \label{subsec:showproperty}
-\command{\textbf{gpblock showproperty} [-n <property/flow-name>]}
+\command{\textbf{\tool{} showproperty} [-n <property/flow-name>]}
 
 Prints the list of properties of the current block project if no name is specified or of property/flow if a name is given.
 
 % ==============================================
 \subsubsection{renameproperty}
 \label{subsec:renameproperty}
-\command{\textbf{gpblock renameproperty} -n <property-name> -v <new-name>}
+\command{\textbf{\tool{} renameproperty} -n <property-name> -v <new-name>}
 
 Renames the property named \texttt{<property-name>} with the name \texttt{<new-name>}.\\
 
@@ -842,23 +888,23 @@ Renames the property named \texttt{<property-name>} with the name \texttt{<new-n
 }
 
 \begin{sampletitle}
-> \textbf{gpblock renameproperty} -n mode -v mode\_img
+> \textbf{\tool{} renameproperty} -n mode -v mode\_img
 \end{sampletitle}
 \samplecomment{Renames the property `mode' to `mode\_img'.}
 
-\seealso{\textbf{gpblock delproperty}}
+\seealso{\textbf{\tool{} delproperty}}
 
 % ==============================================
 \subsubsection{setproperty}
 \label{subsec:setproperty}
-\command{\textbf{gpblock setproperty} -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]}
+\command{\textbf{\tool{} setproperty} -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]}
 
 Permits to modify one or more property parameters like the label, the type or the default value.\\
 
 \paramcommand{
 -n & name of the flow & enable \\
 \hline
--l & hight level label property (can contain space and special chars) & "enable process" \\
+-l & hight level label property (can contain space and special chars) & "enable \kind{}" \\
 \hline
 -t & type of property & [int-sint-bool-group-matrix-enum] \\
 \hline
@@ -870,18 +916,18 @@ Permits to modify one or more property parameters like the label, the type or th
 }
 
 \begin{sampletitle}
-> \textbf{gpblock setproperty} -n threshold -t sint -v 0
+> \textbf{\tool{} setproperty} -n threshold -t sint -v 0
 \end{sampletitle}
 \samplecomment{Sets the property `threshold' to slider int type with 0 as default value.}
 
 \begin{sampletitle}
-> \textbf{gpblock setproperty} -n threshold -r 0:255 -s 2 -v 128
+> \textbf{\tool{} setproperty} -n threshold -r 0:255 -s 2 -v 128
 \end{sampletitle}
 \samplecomment{Sets the property `threshold' with a range value of 0 to 255, a step of (pair values only) and default value setted to the half range.}
 
 % ==============================================
 \subsubsection{setpropertymap}
-\command{\textbf{gpblock setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
+\command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
 
 \subsection{global}
 % ==============================================

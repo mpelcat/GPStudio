@@ -1,12 +1,12 @@
-# Debian gpblock(8) completion                             -*- shell-script -*-
+# Debian gpproc(8) completion                             -*- shell-script -*-
 
-_gpblock()
+_gpproc()
 {
     local cur prev words cword
     _init_completion || return
 
     # see if the user selected a command already
-    local COMMANDS=("newprocess"  "newio"       "showblock"
+    local COMMANDS=("new"         "showblock"
                     "generate"    "generatetop" "generateslave" "generateprocess"
 					"addfile"     "delfile"     "showfile"
 					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
@@ -14,7 +14,6 @@ _gpblock()
 					"addbitfield" "delbitfield" "showbitfield"  "renamebitfield" "setbitfield"
 					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
-					"addextport"  "delextport"  "showextport"
 					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
 					"sethelp"
     )
@@ -63,37 +62,37 @@ _gpblock()
                         return 0
                         ;;
                     delfile)
-                        COMPREPLY=( $( compgen -W '$( gpblock listfile )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listfile )' -- "$cur" ) )
                         return 0
                         ;;
                     delflow|renameflow|setflow)
-                        COMPREPLY=( $( compgen -W '$( gpblock listflow )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listflow )' -- "$cur" ) )
                         return 0
                         ;;
                     delparam|renameparam|setparam|fixparam|showbitfield)
-                        COMPREPLY=( $( compgen -W '$( gpblock listparam )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listparam )' -- "$cur" ) )
                         return 0
                         ;;
                     addbitfield)
-                        COMPREPLY=( $( compgen -W '$( gpblock listparamdot )' -- "$cur" ) ) && compopt -o nospace
+                        COMPREPLY=( $( compgen -W '$( gpproc listparamdot )' -- "$cur" ) ) && compopt -o nospace
                         return 0
                         ;;
                     delbitfield|renamebitfield|setbitfield)
-                        COMP=$( gpblock listword -w "$cur" -m bitfield) ; SPACE=$?
+                        COMP=$( gpproc listword -w "$cur" -m bitfield) ; SPACE=$?
                         COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
                         [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
                     delreset|renamereset|setreset)
-                        COMPREPLY=( $( compgen -W '$( gpblock listreset )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listreset )' -- "$cur" ) )
                         return 0
                         ;;
                     delclock|renameclock|setclock)
-                        COMPREPLY=( $( compgen -W '$( gpblock listclock )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listclock )' -- "$cur" ) )
                         return 0
                         ;;
                     delproperty|renameproperty|setproperty)
-                        COMP=$( gpblock listword -w "$cur" -m property) ; SPACE=$?
+                        COMP=$( gpproc listword -w "$cur" -m property) ; SPACE=$?
                         COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
                         [ $SPACE = 1 ] && compopt -o nospace
                         return 0
@@ -264,6 +263,6 @@ _gpblock()
 
     return 0
 } &&
-complete -F _gpblock gpblock
+complete -F _gpproc gpproc
 
 # ex: ts=4 sw=4 et filetype=sh

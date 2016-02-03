@@ -1,4 +1,4 @@
-MAINDOC=gpblock
+MAINDOC=gpdevice
 
 LC=pdflatex
 LFLAGS=-interaction=nonstopmode
@@ -12,7 +12,7 @@ pdf: $(MAINDOC).pdf
 
 html: $(MAINDOC).html
 
-$(MAINDOC).pdf: $(MAINDOC).tex ../../version.txt ../gpstudio_doc.tex
+$(MAINDOC).pdf: $(MAINDOC).tex gpblock.tex ../../version.txt ../gpstudio_doc.tex
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).pdf ../../doc/
 

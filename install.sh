@@ -20,7 +20,8 @@ if [ -d "/usr/share/bash-completion/completions/" ]; then
 	echo "install bash completion";
 	cp gpnode_completion /usr/share/bash-completion/completions/gpnode
 	cp gplib_completion /usr/share/bash-completion/completions/gplib
-	cp gpblock_completion /usr/share/bash-completion/completions/gpblock
+	cp gpproc_completion /usr/share/bash-completion/completions/gpproc
+	cp gpdevice_completion /usr/share/bash-completion/completions/gpdevice
 fi
 
 # udev rules for dreamcam
