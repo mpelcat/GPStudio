@@ -82,11 +82,7 @@ switch($action)
 		break;
 	
 	// =========================== project commands ====================
-	case "newprocess":
-		// nothing to do
-		break;
-		
-	case "newio":
+	case "new":
 		// nothing to do
 		break;
 	
@@ -101,7 +97,10 @@ switch($action)
 		message($block_generator->block_generator->name.'.vhd'.' generated');
 		
 		$block_generator->generateSlave($outDir);
-		message($block_generator->slave_generator->name.'.vhd'.' generated');
+		if(isset($block_generator->slave_generator))
+		{
+			message($block_generator->slave_generator->name.'.vhd'.' generated');
+		}
 		
 		$block_generator->generateProcess($outDir);
 		message($block_generator->process_generator->name.'.vhd'.' generated');
