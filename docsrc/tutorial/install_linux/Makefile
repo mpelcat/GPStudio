@@ -21,5 +21,5 @@ $(MAINDOC).html: $(MAINDOC).tex ../../../version.txt ../../gpstudio_doc.tex
 	cp $(MAINDOC).html $(MAINDOC).css ../../../doc/
 
 clean:
-	rm -rf *.log *.aux *.synctex.gz $(MAINDOC).pdf *.4ct *.4tc *.dvi *.html *.css *.idv *.lg *.log *.tmp *.xref *.man *.cfg *.xml *-fig*.tex *-fig*.dot *.cache
+	rm -rf *.log *.aux *.synctex.gz $(MAINDOC).pdf *.4ct *.4tc *.dvi *.html *.css *.idv *.lg *.log *.tmp *.xref *.man *.cfg *.xml *-fig*.tex *-fig*.dot *.cache *.out
 

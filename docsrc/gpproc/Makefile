@@ -12,7 +12,10 @@ pdf: $(MAINDOC).pdf
 
 html: $(MAINDOC).html
 
-$(MAINDOC).pdf: $(MAINDOC).tex ../gpdevice/gpblock.tex ../../version.txt ../gpstudio_doc.tex
+$(MAINDOC).aux: $(MAINDOC).tex ../gpdevice/gpblock.tex ../gpstudio_doc.tex
+	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
+
+$(MAINDOC).pdf: $(MAINDOC).aux $(MAINDOC).tex ../gpdevice/gpblock.tex ../../version.txt ../gpstudio_doc.tex
 	$(LC) $(LFLAGS) $(MAINDOC).tex > /dev/null
 	cp $(MAINDOC).pdf ../../doc/
 
@@ -21,5 +24,5 @@ $(MAINDOC).html: $(MAINDOC).tex ../../version.txt ../gpstudio_doc.tex
 	cp $(MAINDOC).html $(MAINDOC).css ../../doc/
 
 clean:
-	rm -rf *.log *.aux *.synctex.gz $(MAINDOC).pdf *.4ct *.4tc *.dvi *.html *.css *.idv *.lg *.log *.tmp *.xref *.man *.cfg *.xml *-fig*.tex *-fig*.dot *.cache
+	rm -rf *.log *.aux *.synctex.gz $(MAINDOC).pdf *.4ct *.4tc *.dvi *.html *.css *.idv *.lg *.log *.tmp *.xref *.man *.cfg *.xml *-fig*.tex *-fig*.dot *.cache *.out
 
