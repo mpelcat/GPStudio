@@ -29,6 +29,24 @@ In this tutorial, we create a project for a specific platform and configure it. 
 Finally, we configure the smart camera with the compiled project and check results of processing on the viewer interface.
 
 \section{Driving the flow from image sensor to USB}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=8cm]
+
+\tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=2.5cm}};
+
+% blocks
+\node[blocstyle] (bloc1) {MT9\\Image sensor};
+\node[blocstyle] (bloc2) at (7,0) {USB\\Communication};
+
+% Flow to
+\path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in0} (bloc2.west);
+
+\end{tikzpicture}
+\caption{Details on flow connexion}
+\end{figure}
+
 \subsection{Create the project and configure platform}
 
 \textbf{setenv}\\
@@ -157,6 +175,9 @@ So we want to have this graph of connection :
 \path[connect,<-] ([yshift=-0.5cm]bloc2.west) -- node[above]{in2} ++(-1,0);
 \path[connect,<-] ([yshift=-1.5cm]bloc2.west) -- node[above]{in3} ++(-1,0);
 
+\path[connect,->] ([yshift=0.5cm]bloc2.east) -- node[above]{out0} ++(1,0);
+\path[connect,->] ([yshift=-0.5cm]bloc2.east) -- node[above]{out1} ++(1,0);
+
 \end{tikzpicture}
 \caption{Details on flow connexion}
 \end{figure}
@@ -224,8 +245,15 @@ After few minutes, your project is now compile and ready to send to the camera.
 
 First of all, powered up the DreamCam. Then, connect an USB cable from your computer to the USB communication board at the rear of the camera. Connect a second one to the internal JTAG near the power board.
 
+To configure the FPGA with the generated bitstream, use the `send' rule of the Makefile :
+
 \begin{sample}
-> make send\\
+> make send
+\end{sample}
+
+This command needs only few seconds to be done. If no errors appear, camera is ready and you can launch the debugger viewer to test your project, \textbf{gpviewer}.
+
+\begin{sample}
 > make view
 \end{sample}
 
@@ -312,6 +340,44 @@ connects :
   + mt9.out -> process1.in (msb)
   + process1.magnitude -> usb.in1 (msb)
 \end{Verbatim}
+\end{sample}
+
+\section{Creating custom process}
+A tool is done for custom block process, \textbf{gpproc}. It allows to describe interfaces of your process and provide a template to fill with your code.
+
+In your node directory, create a new directory with the process name and add a process project :
+\begin{sample}
+> mkdir myprocess \\
+> cd myprocess \\
+> \textbf{gpproc new} -n myprocess
+\end{sample}
+
+Creates flow interfaces :
+\begin{sample}
+> \textbf{gpproc addflow} -n in -d in -s 8 \\
+> \textbf{gpproc addflow} -n out -d out -s 8
+\end{sample}
+
+Generates template in the directory hdl :
+\begin{sample}
+> \textbf{gpproc generate} -o hdl
+\end{sample}
+
+Adds generated files to the project :
+\begin{sample}
+> \textbf{gpproc addfile} -p hdl/myprocess.vhd -t vhdl -g hdl \\
+> \textbf{gpproc addfile} -p hdl/myprocess\_process.vhd -t vhdl -g hdl
+\end{sample}
+
+Comes back to the node project and add your process :
+\begin{sample}
+> \textbf{gpnode addprocess} -n myprocess1 -d myprocess/myprocess.proc
+\end{sample}
+
+Connects it :
+\begin{sample}
+> \textbf{gpnode connect} -f mt9.out -t myprocess1.in\\
+> \textbf{gpnode connect} -f myprocess1.out -t usb.in3
 \end{sample}
 
 \end{document}
