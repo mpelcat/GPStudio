@@ -48,6 +48,7 @@ class IO extends Block
 			if(substr($io_device_element,-3)===".io")
 			{
 				$io_file = $io_device_element;
+				$this->name = str_replace(".io","",basename($io_file));
 				$this->path = realpath(dirname($io_file));
 			}
 			elseif(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
