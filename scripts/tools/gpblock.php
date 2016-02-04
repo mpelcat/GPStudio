@@ -574,7 +574,7 @@ switch($action)
 		
 		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
-		if($type!="in" and $type!="out" and $type!="out") error("You should specify a type for the external port with -t [in-out-inout]",1);
+		if($type!="in" and $type!="out" and $type!="inout") error("You should specify a type for the external port with -t [in-out-inout]",1);
 		
 		$port = new Port();
 		$port->name = $name;
@@ -613,8 +613,6 @@ switch($action)
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the property with -t",1);
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value="";
 		
-		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
-		
 		$subprops = explode('.', $name);
 		if(count($subprops)==0) error("Invalid property name '$name'.",1);
 		
@@ -634,6 +632,9 @@ switch($action)
 				$parent = $property;
 			}
 		}
+		
+		$name = $subprops[count($subprops)-1];
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		
 		$property = new Property();
 		$property->name = $subprops[count($subprops)-1];
