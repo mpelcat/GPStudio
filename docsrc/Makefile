@@ -5,7 +5,7 @@ all: manual gpnode gplib tutorial doc-backend gpproc gpdevice
 doc:
 	mkdir -p ../doc/
 	
-clean: gpnode-clean tutorial-clean manual-clean doc-backend-clean
+clean: gpnode-clean tutorial-clean manual-clean doc-backend-clean gpproc-clean gpdevice-clean
 	rm -rf ../doc
 
 doc-backend: ../doc/backend.pdf

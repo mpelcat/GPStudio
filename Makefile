@@ -9,8 +9,11 @@ distrib: doc FORCE
 
 distrib-web: distrib
 	cp doc/*.pdf /var/www/gpstudio/doc
-	cp distrib/gpstudio_linux-`cat version.txt`.tar.gz /var/www/gpstudio/download/
-	cp distrib/gpstudio_win-`cat version.txt`.zip /var/www/gpstudio/download/
+	cp distrib/gpstudio_linux32-qt4-`cat version.txt`.tar.gz /var/www/gpstudio/download/
+	cp distrib/gpstudio_linux64-qt4-`cat version.txt`.tar.gz /var/www/gpstudio/download/
+	cp distrib/gpstudio_linux32-qt5-`cat version.txt`.tar.gz /var/www/gpstudio/download/
+	cp distrib/gpstudio_linux64-qt5-`cat version.txt`.tar.gz /var/www/gpstudio/download/
+	cp distrib/gpstudio_win64-qt5-`cat version.txt`.zip /var/www/gpstudio/download/
 
 clean:
 	cd docsrc/ && make -f Makefile clean
