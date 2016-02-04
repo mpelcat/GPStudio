@@ -41,7 +41,7 @@ Finally, we configure the smart camera with the compiled project and check resul
 \node[blocstyle] (bloc2) at (7,0) {USB\\Communication};
 
 % Flow to
-\path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in0} (bloc2.west);
+\path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in} (bloc2.west);
 
 \end{tikzpicture}
 \caption{Details on flow connexion}
@@ -260,6 +260,25 @@ This command needs only few seconds to be done. If no errors appear, camera is r
 \section{Adding a process from GPStudio library}
 In this second part, we want to add some processing between the image sensor and the communication to obtain a smart camera and not only a `webcam'.
 
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=8cm]
+
+\tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=2.5cm}};
+
+% blocks
+\node[blocstyle] (bloc1) {MT9\\Image sensor};
+\node[blocstyle] (blocproc) at (4,0) {Process};
+\node[blocstyle] (bloc2) at (8,0) {USB\\Communication};
+
+% Flow to
+\path[connect,->] (bloc1) -- (blocproc);
+\path[connect,->] (blocproc) -- (bloc2);
+
+\end{tikzpicture}
+\caption{Details on flow connexion}
+\end{figure}
+
 \subsection{Add process that you need}
 Check process that could be use :
 
@@ -293,12 +312,12 @@ process :
 > \textbf{gpnode showblock} -n process1 -f flows
 \begin{Verbatim}
 flows :
-      ------------------
-  in  |                |  magnitude
------>|                |------------>
-      |    process1    |    angle
-      |                |------------>
-      ------------------
+           ------------------
+  in (16)  |                |  magnitude (16)
+---------->|                |----------------->
+           |    process1    |    angle (16)
+           |                |----------------->
+           ------------------
 \end{Verbatim}
 \end{sample}
 
@@ -343,6 +362,7 @@ connects :
 \end{sample}
 
 \section{Creating custom process}
+\subsection{Simple process}
 A tool is done for custom block process, \textbf{gpproc}. It allows to describe interfaces of your process and provide a template to fill with your code.
 
 In your node directory, create a new directory with the process name and add a process project :
@@ -371,13 +391,33 @@ Adds generated files to the project :
 
 Comes back to the node project and add your process :
 \begin{sample}
+> cd .. \\
 > \textbf{gpnode addprocess} -n myprocess1 -d myprocess/myprocess.proc
 \end{sample}
 
 Connects it :
 \begin{sample}
-> \textbf{gpnode connect} -f mt9.out -t myprocess1.in\\
+> \textbf{gpnode connect} -f mt9.out -t myprocess1.in \\
 > \textbf{gpnode connect} -f myprocess1.out -t usb.in3
+\end{sample}
+
+\subsection{Process with dynamic parameters}
+
+Returns in the process definition directory and creates a parameter :
+\begin{sample}
+> cd myprocess \\
+> \textbf{gpproc addparam} -n thresh\_value
+\end{sample}
+
+Sets as dynamic register with a relative address 0 :
+\begin{sample}
+> \textbf{gpproc fixparam} -n thresh\_value -v false \\
+> \textbf{gpproc setparam} -n thresh\_value -r 0
+\end{sample}
+
+Sets the size of PI address bus to 2 bits :
+\begin{sample}
+> \textbf{gpproc setpisizeaddr} -v 2
 \end{sample}
 
 \end{document}
