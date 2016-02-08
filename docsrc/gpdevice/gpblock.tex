@@ -42,7 +42,7 @@ Under linux, you have a completion script to help you writing commands.
 \section{Commands}
 % ==============================================
 \subsection{brief}
-All the commands of this tools permits to define the inputs and inputs of the block. Defining flows, PI interface with internal registers, \gpdevice{external ports, }clocks and resets. And finally you can specify the hight level properties for the controller of the block.
+All the commands of this tools permits to define the inputs and inputs of the block. Defining flows, PI interface with internal registers, \gpdevice{external ports, }clocks and resets. And finally you can specify the high level properties for the controller of the block.
 
 \gpproc{
 \begin{figure}[h!]
@@ -832,7 +832,7 @@ Prints the list of external ports in the current block project. This command is 
 \label{subsec:addproperty}
 \command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>]}
 
-Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for hight level interface, a type to define the widget adapted to this data and optionally a default value.\\
+Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for high level interface, a type to define the widget adapted to this data and optionally a default value.\\
 
 \paramcommand{
 -n & name of the property. Can be  & enable \\
@@ -904,7 +904,7 @@ Permits to modify one or more property parameters like the label, the type or th
 \paramcommand{
 -n & name of the flow & enable \\
 \hline
--l & hight level label property (can contain space and special chars) & "enable \kind{}" \\
+-l & high level label property (can contain space and special chars) & "enable \kind{}" \\
 \hline
 -t & type of property & [int-sint-bool-group-matrix-enum] \\
 \hline
@@ -929,8 +929,27 @@ Permits to modify one or more property parameters like the label, the type or th
 \subsubsection{setpropertymap}
 \command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
 
+Permits to set the property map of a dynamic parameter, a property or a bit field. It's the mathematical expression to dynamically link a property value to another value. High level interface or API only have access to property, so if you need to modify a register from the external, creates a property and link his value to the register. When the property value change, the property map expression is re evaluated to set the new computed value to the register.\\
+
+This expression can be more complex than a simple mathematical expression. Can contains all the standard javascript functions.\\
+
+\paramcommand{
+-n & name of the property, register or bit field & enable\_bf \newline status\_reg \newline mode \\
+\hline
+-v & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
+}
+
 \subsection{global}
 % ==============================================
 \subsubsection{sethelp}
+\command{\textbf{\tool{} sethelp} [-n <instance-name>] -v <help-text>}
+
+Sets the help text for an instance of the block if a name is specified, or the block itself is name is omitted. This is useful for the automatic documentation generation. \\
+
+\paramcommand{
+-n & name of the property, parameter, bit field, flow, file, clock or reset & enable\_bf \newline status\_reg \newline mode \newline ... \\
+\hline
+-v & help text & "enable the process" \\
+}
 
 \end{document}

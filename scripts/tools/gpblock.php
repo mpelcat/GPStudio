@@ -731,6 +731,17 @@ switch($action)
 		$property->step = $step;
 		
 		break;
+		
+	case "setpropertymap":
+		$options = getopt("a:n:v:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
+		if(array_key_exists('v',$options)) $propertymap = $options['v']; else error("You should specify a name for the property with -v",1);
+		
+		if(($instance=$block->getPropertyPath($name))==NULL) error("A property does not exist with the name '$name'.",1);
+		
+		$instance->propertymap = $propertymap;
+		
+		break;
 	
 	// ========================= global commands =======================
 	case "sethelp":
@@ -739,7 +750,9 @@ switch($action)
 		if(array_key_exists('v',$options)) $desc = $options['v']; else error("You should specify the help text with -v",1);
 		
 		if(($instance=$block->getInstance($name))==NULL) error("An instance does not exist with the name '$name'.",1);
+		
 		$instance->desc=$desc;
+		
 		break;
 		
 	// ========================== list commands ========================
