@@ -709,10 +709,19 @@ class Block
 			$xml_element = $xml->createElement("block");
 		}
 		
-		// name
-		$att = $xml->createAttribute('name');
-		$att->value = $this->name;
-		$xml_element->appendChild($att);
+		// name or driver
+		if($typeName=='io')
+		{
+			$att = $xml->createAttribute('driver');
+			$att->value = $this->driver;
+			$xml_element->appendChild($att);
+		}
+		else
+		{
+			$att = $xml->createAttribute('name');
+			$att->value = $this->name;
+			$xml_element->appendChild($att);
+		}
 		
 		// type
 		if($format=="complete" or $format=="blockdef")

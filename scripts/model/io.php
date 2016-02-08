@@ -49,6 +49,7 @@ class IO extends Block
 			{
 				$io_file = $io_device_element;
 				$this->name = str_replace(".io","",basename($io_file));
+				$this->driver = $this->name;
 				$this->path = realpath(dirname($io_file));
 			}
 			elseif(strpos($io_device_element, "/")===false and strpos($io_device_element, "\\")===false)
