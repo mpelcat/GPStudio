@@ -25,24 +25,21 @@
 \begin{document}
 \maketitle
 \section{Introduction}
-\tool{} is a command line tool that permits to create new \kind{} block.
+\tool{} is a command line tool that allows to create new \kind{} block.
 
 \section{Use}
 \tool{} always takes the \kind{} file in the current directory, so you only can have one \kind{} definition per directory. A \kind{} file have the `.proc' extension.
 
-At the beginning, you need to create a \kind{} with the \emph{new\kind{}} command. After that, you can use all the commands set on this \kind{}.
+At the beginning, you need to create a \kind{} with the \emph{new} command. After that, you can use all the commands set on this \kind{}.
 
-Please read the tutorial `GPStudio command line quick start' to learn how to use this tool.
+Refer to the tutorial `GPStudio command line quick start' to learn how to use this tool.
 
 Under linux, you have a completion script to help you writing commands.
-
-\gpdevice{gp dev dev dev!!}
-\gpproc{gp proc proc proc!!}
 
 \section{Commands}
 % ==============================================
 \subsection{brief}
-All the commands of this tools permits to define the inputs and inputs of the block. Defining flows, PI interface with internal registers, \gpdevice{external ports, }clocks and resets. And finally you can specify the high level properties for the controller of the block.
+The commands of this tools are used to define inputs and outputs of the block, flows, Parameter Interconnect interface with internal registers, \gpdevice{external ports, }clocks and resets. Finally, high level properties for the controller of the block can be specified.
 
 \gpproc{
 \begin{figure}[h!]
@@ -105,7 +102,7 @@ All the commands of this tools permits to define the inputs and inputs of the bl
 \end{figure}
 }
 
-Commands of \tool{} always have the same naming convention. This table is brief of commands depends of the model instance that you want to modify.\\
+Commands of \tool{} always have the same naming convention. This table is a brief commands list depending on the model instance to be modified.\\
 
 \noindent\begin{tabular}{|c|c|c|c|c|c|}
 \hline 
@@ -119,6 +116,8 @@ Commands of \tool{} always have the same naming convention. This table is brief 
 \hline 
 \textbf{bitfield} & \hyperref[subsec:addbitfield]{addbitfield} & \hyperref[subsec:delbitfield]{delbitfield} & \hyperref[subsec:showbitfield]{showbitfield} & \hyperref[subsec:renamebitfield]{renamebitfield} & \hyperref[subsec:setbitfield]{setbitfield}  \\ 
 \hline 
+\textbf{property} & \hyperref[subsec:addproperty]{addproperty} & \hyperref[subsec:delproperty]{delproperty} & \hyperref[subsec:showproperty]{showproperty} & \hyperref[subsec:renameproperty]{renameproperty} & \hyperref[subsec:setproperty]{setproperty}  \\ 
+\hline 
 \textbf{reset} & \hyperref[subsec:addreset]{addreset} & \hyperref[subsec:delreset]{delreset} & \hyperref[subsec:showreset]{showreset} & \hyperref[subsec:renamereset]{renamereset} & \hyperref[subsec:setreset]{setreset}  \\ 
 \hline 
 \textbf{clock} & \hyperref[subsec:addclock]{addclock} & \hyperref[subsec:delclock]{delclock} & \hyperref[subsec:showclock]{showclock} & \hyperref[subsec:renameclock]{renameclock} & \hyperref[subsec:setclock]{setclock}  \\ 
@@ -127,18 +126,17 @@ Commands of \tool{} always have the same naming convention. This table is brief 
 \textbf{extport} & \hyperref[subsec:addextport]{addextport} & \hyperref[subsec:delextport]{delextport} & \hyperref[subsec:showextport]{showextport} &  &   \\ 
 \hline 
 }
-\textbf{property} & \hyperref[subsec:addproperty]{addproperty} & \hyperref[subsec:delproperty]{delproperty} & \hyperref[subsec:showproperty]{showproperty} & \hyperref[subsec:renameproperty]{renameproperty} & \hyperref[subsec:setproperty]{setproperty}  \\ 
-\hline 
 \end{tabular}\\
 
-It exists few over commands to create the block and generate the skeleton defined in project section. The command sethelp is useful to document the block. setpropertymap permits to define link of properties.
+Few over commands can be used to create the block and generate the skeleton defined in project section. The command \textbf{sethelp} is useful to document the block. \textbf{setpropertymap} defines link of properties.
 
 \subsection{project}
 % ==============================================
+\gpproc{
 \subsubsection{new}
 \command{\textbf{\tool{} new} -n <\kind{}-name>}
 
-Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.proc'.\\
+Creates a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.proc'.\\
 
 \paramcommand{
 -n & \kind{} name without space & my\_\kind{} \\ 
@@ -147,13 +145,15 @@ Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>
 \begin{sampletitle}
 > \textbf{\tool{} new\kind{}} -n my\_\kind{}
 \end{sampletitle}
-\samplecomment{Create a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.proc} in the current directory.}
+\samplecomment{Creates a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.proc} in the current directory.}
+}
 
 % ==============================================
+\gpdevice{
 \subsubsection{new}
 \command{\textbf{\tool{} new} -n <\kind{}-name>}
 
-Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.\kind{}' to define a new custom \kind{} driver support.\\
+Creates a \kind{} file inside the current directory named `\texttt{<\kind{}-name>}.\kind{}' to define a new custom \kind{} driver support.\\
 
 \paramcommand{
 -n & \kind{} name without space & my\_\kind{} \\ 
@@ -162,8 +162,8 @@ Create a \kind{} file inside the current directory named `\texttt{<\kind{}-name>
 \begin{sampletitle}
 > \textbf{\tool{} new} -n my\_\kind{}
 \end{sampletitle}
-\samplecomment{Create a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.io} in the current directory.}
-
+\samplecomment{Creates a new \kind{} named \texttt{my\_\kind{}}. After that, you have a file project \texttt{my\_\kind{}.io} in the current directory.}
+}
 % ==============================================
 \subsubsection{showblock}
 \command{\textbf{\tool{} showblock}}
@@ -201,25 +201,25 @@ Generates the slave for dynamic parameters with read and write. The generated fi
 \samplecomment{Generates \texttt{myproc\_slave.vhd} in the subdirectory \texttt{build/}.}
 
 % ==============================================
-\subsubsection{generate\kind{}}
-\command{\textbf{\tool{} generate\kind{}} [-o <dir>]}
+\subsubsection{generateprocess}
+\command{\textbf{\tool{} generateprocess} [-o <dir>]}
 
-Generates an empty skeleton to implement your custom \kind{}. The generated file is named `<\kind{}-name>\_\kind{}.vhd'.\\
+Generates an empty skeleton to implement your custom \kind{}. The generated file is named `<\kind{}-name>\_process.vhd'.\\
 
 \paramcommand{
 -o & output directory & build \\ 
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} generate\kind{}} -o build/
+> \textbf{\tool{} generateprocess} -o build/
 \end{sampletitle}
-\samplecomment{Generates \texttt{myproc\_\kind{}.vhd} in the subdirectory \texttt{build/}.}
+\samplecomment{Generates \texttt{myproc\_process.vhd} in the subdirectory \texttt{build/}.}
 
 % ==============================================
 \subsubsection{generate}
 \command{\textbf{\tool{} generate} [-o <dir>]}
 
-This command is an alias for the three previous command. Generates all the three files.\\
+This command is an alias for the three previous command. Generates all the tree files.\\
 
 \paramcommand{
 -o & output directory & build \\ 
@@ -228,7 +228,7 @@ This command is an alias for the three previous command. Generates all the three
 \begin{sampletitle}
 > \textbf{\tool{} generatetop} -o build/
 \end{sampletitle}
-\samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_\kind{}.vhd},  in the subdirectory \texttt{build/}.}
+\samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_process.vhd} and \texttt{myproc\_slave.vhd} in the subdirectory \texttt{build/}.}
 
 
 \subsection{files}
@@ -237,7 +237,7 @@ This command is an alias for the three previous command. Generates all the three
 \label{subsec:addfile}
 \command{\textbf{\tool{} addfile} -p <path> -t <type> -g <group>}
 
-Adds the file with the path \texttt{<path>} to the list of files of the current \kind{} block. The type and group of the file depends of the tool-chain that you use.\\
+Adds the file with the path \texttt{<path>} to the list of files of the current \kind{} block. The type and group of the file depends of the tool-chain that you use. If the file does not exist, prints a warning.\\
 
 \paramcommand{
 -p & \kind{} path relative to the file \kind{} & hdl/my\_\kind{}.vhd \\
@@ -248,7 +248,7 @@ Adds the file with the path \texttt{<path>} to the list of files of the current 
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} addfile} -p hdl/my\_\kind{}.vhdl -t vhdl -g hdl
+> \textbf{\tool{} addfile} -p hdl/my\_\kind{}.vhd -t vhdl -g hdl
 \end{sampletitle}
 \samplecomment{Adds the file `my\_\kind{}.vhd' as a file needed by the hdl implementation of the block.}
 
@@ -298,7 +298,7 @@ Adds a flow interface named \texttt{<flow-name>} to the list of flows. You need 
 \begin{sampletitle}
 > \textbf{\tool{} addflow} -n out0 -d out -s 8
 \end{sampletitle}
-\samplecomment{Add a new flow output named `out0' with a default size of 8 bits.}
+\samplecomment{Adds a new flow output named `out0' with a default size of 8 bits.}
 
 \seealso{\textbf{\tool{} delflow} and \textbf{\tool{} showflow}}
 
@@ -352,7 +352,7 @@ Renames the flow named \texttt{<flow-name>} with the name \texttt{<new-name>}.\\
 \label{subsec:setflow}
 \command{\textbf{\tool{} setflow} -n <flow-name> [-d <direction>] [-s <size>]}
 
-Permits to modify one or more flow parameters like the direction or the default size.\\
+Allows to modify one or more flow parameters like the direction or the default size.\\
 
 \paramcommand{
 -n & name of the flow & in1 \\
@@ -383,7 +383,7 @@ Adds a param named \texttt{<param-name>} to the list of params.\\
 \begin{sampletitle}
 > \textbf{\tool{} addparam} -n param0
 \end{sampletitle}
-\samplecomment{Add a new param input named `param0'}
+\samplecomment{Adds a new param input named `param0'}
 
 \seealso{\textbf{\tool{} delparam} and \textbf{\tool{} showparam}}
 
@@ -437,7 +437,7 @@ Renames the param named \texttt{<param-name>} with the name \texttt{<new-name>}.
 \label{subsec:setparam}
 \command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
 
-Permits to modify one or more param parameters like the type, the default value or the relative address.\\
+Allows to modify one or more param parameters like the type, the default value or the relative address.\\
 
 \paramcommand{
 -n & name of the param & param0 \\
@@ -449,15 +449,15 @@ Permits to modify one or more param parameters like the type, the default value 
 -r & relative address of the param for dynamic param & 2 \\
 }
 
-\begin{sampletitle}
+\begin{sampletitle}[1]
 > \textbf{\tool{} setparam} -n status -v 1 -r 4 \\
 \end{sampletitle}
 \samplecomment{Sets the default value of the dynamic param (register) `status' to 1 and sets the relative address to 4.}
 
-\begin{sampletitle}
+\begin{sampletitle}[2]
 > \textbf{\tool{} setparam} -n mode -v LINEAR -t Mode \\
 \end{sampletitle}
-\samplecomment{Sets the type of the generic `mode' to `Mode' with a default value setted to `LINEAR'}
+\samplecomment{Sets the type of the generic `mode' to `Mode' with a default value set to `LINEAR'}
 
 % ==============================================
 \subsubsection{fixparam}
@@ -484,15 +484,15 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 -b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
 }
 
-\begin{sampletitle}
+\begin{sampletitle}[1]
 > \textbf{\tool{} addbitfield} -n status.enable -b 0
 \end{sampletitle}
 \samplecomment{Adds a bit `enable' positioned on the bit 0 in the register status}
 
-\begin{sampletitle}
+\begin{sampletitle}[2]
 > \textbf{\tool{} addbitfield} -n status.mode -b 5-3
 \end{sampletitle}
-\samplecomment{Adds a bit field `mode' positioned on the bits 5 to 3 in the register status}
+\samplecomment{Adds a bit field `mode' positioned on the bits 5 downto 3 in the register status}
 
 \seealso{\textbf{\tool{} delbitfield} and \textbf{\tool{} showbitfield}}
 
@@ -544,29 +544,144 @@ Renames the bit field named \texttt{<param-name.bitfield-name>} with the name \t
 % ==============================================
 \subsubsection{setbitfield}
 \label{subsec:setbitfield}
-\command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
+\command{\textbf{\tool{} setbitfield} -n <bitfield-name> -b <bitfield>}
 
-Permits to modify one or more param parameters like the type, the default value or the relative address.\\
+Allows to modify bit field bits selection.\\
 
 \paramcommand{
--n & name of the param & param0 \\
+-n & name of the bit field & param0.bf0 \\
 \hline
--t & type of the param for fixed param & toolchain-type \\
-\hline
--v & default value of the param & TRUE \\
-\hline
--r & relative address of the param for dynamic param & 2 \\
+-b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} setparam} -n status -v 1 -r 4 \\
+> \textbf{\tool{} setparam} -n param0.bf0 -b 0-2 \\
 \end{sampletitle}
-\samplecomment{Sets the default value of the dynamic param (register) `status' to 1 and sets the relative address to 4.}
+\samplecomment{Sets the bit selection of `param0.bf0' to bits 2 downto 0.}
+
+\subsection{properties}
+% ==============================================
+\subsubsection{addproperty}
+\label{subsec:addproperty}
+\command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>]}
+
+Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for high level interface, a type to define the widget adapted to this data and optionally a default value.\\
+
+\paramcommand{
+-n & name of the property. Can be  & enable \\
+\hline
+-t & type of property & [int-sint-bool-group-matrix-enum] \\
+\hline
+-v & default value at the beginning of the program & true \\
+}
 
 \begin{sampletitle}
-> \textbf{\tool{} setparam} -n mode -v LINEAR -t Mode \\
+> \textbf{\tool{} addproperty} -n enable -l "enable \kind{}" -t bool -v true
 \end{sampletitle}
-\samplecomment{Sets the type of the generic `mode' to `Mode' with a default value setted to `LINEAR'}
+\samplecomment{Adds a new property to enable the \kind{}. At this point, the property is not linked to a register, you need to use \textbf{setpropertymap} to do that.}
+
+\seealso{\textbf{\tool{} delproperty}, \textbf{\tool{} setpropertymap} and \textbf{\tool{} showproperty}}
+
+% ==============================================
+\subsubsection{delproperty}
+\label{subsec:delproperty}
+\command{\textbf{\tool{} delproperty} -n <property-name>}
+
+Removes the property with the name \texttt{<property-name>}.\\
+
+\paramcommand{
+-n & name of the property & enable \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} delproperty} -n status.enable
+\end{sampletitle}
+\samplecomment{Removes the property named `enable' in the `status' property.}
+
+\seealso{\textbf{\tool{} addproperty} and \textbf{\tool{} showproperty}}
+
+% ==============================================
+\subsubsection{showproperty}
+\label{subsec:showproperty}
+\command{\textbf{\tool{} showproperty} [-n <property/flow-name>]}
+
+Prints the list of properties of the current block project if no name is specified. If a name is given, list the properties of the given property/flow.
+
+% ==============================================
+\subsubsection{renameproperty}
+\label{subsec:renameproperty}
+\command{\textbf{\tool{} renameproperty} -n <property-name> -v <new-name>}
+
+Renames the property named \texttt{<property-name>} with the name \texttt{<new-name>}.\\
+
+\paramcommand{
+-n & name of the property & mode \\
+\hline
+-v & new name of the property & mode\_img \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} renameproperty} -n mode -v mode\_img
+\end{sampletitle}
+\samplecomment{Renames the property `mode' to `mode\_img'.}
+
+\seealso{\textbf{\tool{} delproperty}}
+
+% ==============================================
+\subsubsection{setproperty}
+\label{subsec:setproperty}
+\command{\textbf{\tool{} setproperty} -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]}
+
+Allows to modify one or more property parameters like the label, the type or the default value.\\
+
+\paramcommand{
+-n & name of the flow & enable \\
+\hline
+-l & high level label property (can contain space and special characters) & "enable \kind{}" \\
+\hline
+-t & type of property & [int-sint-bool-group-matrix-enum] \\
+\hline
+-v & default value at the beginning of the program & true \\
+\hline
+-r & range of the value (for int or sint type) & 0:100 \\
+\hline
+-s & step of the value (for int or sint type) & 2 \\
+}
+
+\begin{sampletitle}[1]
+> \textbf{\tool{} setproperty} -n threshold -t sint -v 0
+\end{sampletitle}
+\samplecomment{Sets the property `threshold' to slider int type with 0 as default value.}
+
+\begin{sampletitle}[2]
+> \textbf{\tool{} setproperty} -n threshold -r 0:255 -s 2 -v 128
+\end{sampletitle}
+\samplecomment{Sets the property `threshold' with a range value of 0 to 255, a step of (pair values only) and default value setted to the half range.}
+
+% ==============================================
+\subsubsection{setpropertymap}
+\command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
+
+Allows to set the property map of a dynamic parameter, a property or a bit field. It's the mathematical expression to dynamically link a property value to another value. High level interface or API only have access to property, so if you need to modify a register from the external, creates a property and link his value to the register. When the property value change, the property map expression is re evaluated to set the new computed value to the register.\\
+
+This expression can be more complex than a simple mathematical expression. Can contains all the standard javascript functions.\\
+
+\paramcommand{
+-n & name of the property, register or bit field & enable\_bf \newline status\_reg \newline mode \\
+\hline
+-v & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
+}
+
+\begin{sampletitle}[1]
+> \textbf{\tool{} setpropertymap} -n status.enablebit -v enable.value
+\end{sampletitle}
+\samplecomment{Sets the bit field `enablebit' of the register `status' linked to the value of the `enable' property. When this property change, the new value of the property will be set in the register.}
+
+\begin{sampletitle}[2]
+> \textbf{\tool{} setpropertymap} -n out.width -v "in.width.value-2"
+> \textbf{\tool{} setpropertymap} -n out.height -v "in.height.value-2"
+\end{sampletitle}
+\samplecomment{Sets the bit field `enablebit' of the register `status' linked to the value of the `enable' property. When this property change, the new value of the property will be set in the register.}
 
 \subsection{resets}
 % ==============================================
@@ -574,7 +689,7 @@ Permits to modify one or more param parameters like the type, the default value 
 \label{subsec:addreset}
 \command{\textbf{\tool{} addreset} -n <reset-name> -d <direction> -g <group>}
 
-Adds a reset named \texttt{<reset-name>} to the list of resets. You need to specify the direction of the reset (input or output) and the group. All the reset with the same group are connected to the same net.\\
+Adds a reset named \texttt{<reset-name>} to the list of resets. You need to specify the direction of the reset (input or output) and the group. All resets with the same group are connected to the same net.\\
 
 \paramcommand{
 -n & name of the reset & reset\_n \\
@@ -587,7 +702,7 @@ Adds a reset named \texttt{<reset-name>} to the list of resets. You need to spec
 \begin{sampletitle}
 > \textbf{\tool{} addreset} -n reset\_n -d in -g reset\_n
 \end{sampletitle}
-\samplecomment{Add a new reset input named `reset\_n' connected to the `reset\_n' group}
+\samplecomment{Adds a new reset input named `reset\_n' connected to the `reset\_n' group}
 
 \seealso{\textbf{\tool{} delreset} and \textbf{\tool{} showreset}}
 
@@ -641,7 +756,7 @@ Renames the reset named \texttt{<reset-name>} with the name \texttt{<new-name>}.
 \label{subsec:setreset}
 \command{\textbf{\tool{} setreset} -n <reset-name> [-d <direction>] [-g <group>]}
 
-Permits to modify one or more reset parameters like the direction or the group.\\
+Allows to modify one or more reset parameters like the direction or the group.\\
 
 \paramcommand{
 -n & name of the reset & reset\_n \\
@@ -676,7 +791,7 @@ Adds a clock named \texttt{<clock-name>} to the list of clocks. You need to spec
 \begin{sampletitle}
 > \textbf{\tool{} addclock} -n clock -d in -g clk\_proc
 \end{sampletitle}
-\samplecomment{Add a new clock input named `clock' connected to the `clk\_proc' clock domain}
+\samplecomment{Adds a new clock input named `clock' connected to the `clk\_proc' clock domain}
 
 \seealso{\textbf{\tool{} setclock}, \textbf{\tool{} delclock} and \textbf{\tool{} showclock}}
 
@@ -730,11 +845,11 @@ Renames the clock named \texttt{<clock-name>} with the name \texttt{<new-name>}.
 \label{subsec:setclock}
 \command{\textbf{\tool{} setclock} -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]}
 
-Permits to modify one or more clock parameters. It exists many ways to define a clock :
+Allows to modify one or more clock parameters. It exists many ways to define a clock :
 \begin{itemize}
-\item defines only the clock domain to have the frequency of the clock domain specified in the final project with -g
-\item defines the clock domain and the multiplier to have the frequency of the clock domain specified in the final project multiplied by the multiplier with -g and -m
-\item directly define a fixed frequency with -f
+\item defines only the clock domain to have the clock domain frequency specified in the final project with -g
+\item defines the clock domain and the multiplier to have the clock domain frequency specified in the final project multiplied by the multiplier with -g and -m
+\item directly defines a fixed frequency with -f
 \item defines a range for the clock with -r. The final frequency could be set in the final project with a verification of the range or automatically chosen by the CI system
 \end{itemize}
 
@@ -752,27 +867,27 @@ Permits to modify one or more clock parameters. It exists many ways to define a 
 -r & range of the clock & 5.5k:12k \\
 }
 
-\begin{sampletitle}
+\begin{sampletitle}[1]
 > \textbf{\tool{} setclock} -n clock -d in
 \end{sampletitle}
 \samplecomment{Sets the clock `clock' as input.}
 
-\begin{sampletitle}
+\begin{sampletitle}[2]
 > \textbf{\tool{} setclock} -n clock -g clock\_img
 \end{sampletitle}
 \samplecomment{Moves it to the clock domain `clock\_img'.}
 
-\begin{sampletitle}
+\begin{sampletitle}[3]
 > \textbf{\tool{} setclock} -n clock -g clock\_img -m 2
 \end{sampletitle}
 \samplecomment{Defines the frequency to the double of the clock domain `clock\_img' frequency.}
 
-\begin{sampletitle}
+\begin{sampletitle}[4]
 > \textbf{\tool{} setclock} -n clock -f 12.3M
 \end{sampletitle}
 \samplecomment{Defines the clock frequency to 12.3MHz.}
 
-\begin{sampletitle}
+\begin{sampletitle}[5]
 > \textbf{\tool{} setclock} -n clock -r 5.5k:12k
 \end{sampletitle}
 \samplecomment{Defines the clock frequency in the range of 5.5k<f<12k.}
@@ -784,7 +899,7 @@ Permits to modify one or more clock parameters. It exists many ways to define a 
 \label{subsec:addextport}
 \command{\textbf{\tool{} addextport} -n <port-name> -t <type> -s <size>}
 
-Adds an external port named \texttt{<port-name>} to the list of external ports. You need to specify the type of the port (input, output inout) and the size in bits. This command is only available for \kind{} block.\\
+Adds an external port named \texttt{<port-name>} to the list of external ports. You need to specify the type of the port (input, output or inout) and the size in bits.\\
 
 \paramcommand{
 -n & name of the external port & data \\
@@ -797,7 +912,7 @@ Adds an external port named \texttt{<port-name>} to the list of external ports. 
 \begin{sampletitle}
 > \textbf{\tool{} addextport} -n data\_in -t in -s 8
 \end{sampletitle}
-\samplecomment{Add a new external input port named `data\_in' with a width of 8 bits}
+\samplecomment{Adds a new external input port named `data\_in' with a width of 8 bits}
 
 \seealso{\textbf{\tool{} delextport} and \textbf{\tool{} showextport}}
 
@@ -806,7 +921,7 @@ Adds an external port named \texttt{<port-name>} to the list of external ports. 
 \label{subsec:delextport}
 \command{\textbf{\tool{} delextport} -n <port-name>}
 
-Removes the external port with the name \texttt{<port-name>}. This command is only available for \kind{} block.\\
+Removes the external port with the name \texttt{<port-name>}.\\
 
 \paramcommand{
 -n & name of the external port & data\_in \\
@@ -824,119 +939,7 @@ Removes the external port with the name \texttt{<port-name>}. This command is on
 \label{subsec:showextport}
 \command{\textbf{\tool{} showextport}}
 
-Prints the list of external ports in the current block project. This command is only available for \kind{} block.
-}
-\subsection{properties}
-% ==============================================
-\subsubsection{addproperty}
-\label{subsec:addproperty}
-\command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>]}
-
-Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for high level interface, a type to define the widget adapted to this data and optionally a default value.\\
-
-\paramcommand{
--n & name of the property. Can be  & enable \\
-\hline
--t & type of property & [int-sint-bool-group-matrix-enum] \\
-\hline
--v & default value at the beginning of the program & true \\
-}
-
-\begin{sampletitle}
-> \textbf{\tool{} addproperty} -n enable -l "enable \kind{}" -t bool -v true
-\end{sampletitle}
-\samplecomment{Add a new property to enable the \kind{}. At this point, the property is not linked to a register, you need to use \textbf{setpropertymap} to do that.}
-
-\seealso{\textbf{\tool{} delproperty}, \textbf{\tool{} setpropertymap} and \textbf{\tool{} showproperty}}
-
-% ==============================================
-\subsubsection{delproperty}
-\label{subsec:delproperty}
-\command{\textbf{\tool{} delproperty} -n <property-name>}
-
-Removes the property with the name \texttt{<property-name>}.\\
-
-\paramcommand{
--n & name of the property & enable \\
-}
-
-\begin{sampletitle}
-> \textbf{\tool{} delproperty} -n status.enable
-\end{sampletitle}
-\samplecomment{Removes the property named `enable' in the `status' property.}
-
-\seealso{\textbf{\tool{} addproperty} and \textbf{\tool{} showproperty}}
-
-% ==============================================
-\subsubsection{showproperty}
-\label{subsec:showproperty}
-\command{\textbf{\tool{} showproperty} [-n <property/flow-name>]}
-
-Prints the list of properties of the current block project if no name is specified or of property/flow if a name is given.
-
-% ==============================================
-\subsubsection{renameproperty}
-\label{subsec:renameproperty}
-\command{\textbf{\tool{} renameproperty} -n <property-name> -v <new-name>}
-
-Renames the property named \texttt{<property-name>} with the name \texttt{<new-name>}.\\
-
-\paramcommand{
--n & name of the property & mode \\
-\hline
--v & new name of the property & mode\_img \\
-}
-
-\begin{sampletitle}
-> \textbf{\tool{} renameproperty} -n mode -v mode\_img
-\end{sampletitle}
-\samplecomment{Renames the property `mode' to `mode\_img'.}
-
-\seealso{\textbf{\tool{} delproperty}}
-
-% ==============================================
-\subsubsection{setproperty}
-\label{subsec:setproperty}
-\command{\textbf{\tool{} setproperty} -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]}
-
-Permits to modify one or more property parameters like the label, the type or the default value.\\
-
-\paramcommand{
--n & name of the flow & enable \\
-\hline
--l & high level label property (can contain space and special chars) & "enable \kind{}" \\
-\hline
--t & type of property & [int-sint-bool-group-matrix-enum] \\
-\hline
--v & default value at the beginning of the program & true \\
-\hline
--r & range of the value (for int or sint type) & 0:100 \\
-\hline
--s & step of the value (for int or sint type) & 2 \\
-}
-
-\begin{sampletitle}
-> \textbf{\tool{} setproperty} -n threshold -t sint -v 0
-\end{sampletitle}
-\samplecomment{Sets the property `threshold' to slider int type with 0 as default value.}
-
-\begin{sampletitle}
-> \textbf{\tool{} setproperty} -n threshold -r 0:255 -s 2 -v 128
-\end{sampletitle}
-\samplecomment{Sets the property `threshold' with a range value of 0 to 255, a step of (pair values only) and default value setted to the half range.}
-
-% ==============================================
-\subsubsection{setpropertymap}
-\command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
-
-Permits to set the property map of a dynamic parameter, a property or a bit field. It's the mathematical expression to dynamically link a property value to another value. High level interface or API only have access to property, so if you need to modify a register from the external, creates a property and link his value to the register. When the property value change, the property map expression is re evaluated to set the new computed value to the register.\\
-
-This expression can be more complex than a simple mathematical expression. Can contains all the standard javascript functions.\\
-
-\paramcommand{
--n & name of the property, register or bit field & enable\_bf \newline status\_reg \newline mode \\
-\hline
--v & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
+Prints the list of external ports in the current block project.
 }
 
 \subsection{global}
@@ -947,9 +950,16 @@ This expression can be more complex than a simple mathematical expression. Can c
 Sets the help text for an instance of the block if a name is specified, or the block itself is name is omitted. This is useful for the automatic documentation generation. \\
 
 \paramcommand{
--n & name of the property, parameter, bit field, flow, file, clock or reset & enable\_bf \newline status\_reg \newline mode \newline ... \\
+-n & name of the property, parameter, bit field, flow, file, \gpdevice{external ports, }clock or reset & enable\_bf \newline status\_reg \newline mode \newline ... \\
 \hline
 -v & help text & "enable the process" \\
 }
+
+\begin{sampletitle}
+> \textbf{\tool{} sethelp} -v "Process to remove the noise in the input image." \\
+> \textbf{\tool{} sethelp} -n in -v "input image flow" \\
+> \textbf{\tool{} sethelp} -n out -v "output image flow"
+\end{sampletitle}
+\samplecomment{Few documentation for the block.}
 
 \end{document}

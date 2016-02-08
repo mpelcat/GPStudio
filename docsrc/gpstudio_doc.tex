@@ -20,8 +20,8 @@
 \fcolorbox{black}{lightgray}{\usebox{\FVerbBox}}
 \vspace{0.2cm}}
 
-\newenvironment{sampletitle}
-{\vspace{0.2cm} \noindent\textbf{Example} :
+\newenvironment{sampletitle}[1][\unskip]{%
+\vspace{0.2cm} \noindent\textbf{Example #1}:
 \begin{sample}}
 {\end{sample}}
 
