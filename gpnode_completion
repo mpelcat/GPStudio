@@ -7,7 +7,7 @@ _gpnode()
 
     # see if the user selected a command already
     local COMMANDS=("newproject"     "setboard"    "generate"    "showboard"
-                    "addio"          "delio"       "showio"      "listavailableio"
+                    "adddevice"      "deldevice"   "showdevice"  "listavailabledevice"
                     "addprocess"     "delprocess"  "showprocess" "showblock"
                     "renameblock"    "setproperty" "setparam"    "setclock"        "setflowsize"
                     "connect"        "unconnect"   "showconnect"
@@ -28,7 +28,7 @@ _gpnode()
         case $count in
             3)
                 case $command in
-                    newproject|setboard|addio|delio|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain|showblock)
+                    newproject|setboard|adddevice|deldevice|addprocess|delprocess|renameblock|setproperty|setparam|setclock|setflowsize|setclockdomain|showblock)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -52,8 +52,8 @@ _gpnode()
                         COMPREPLY=( $( compgen -W '$( gpnode listblock )' -- "$cur" ) )
                         return 0
                         ;;
-                    addio)
-                        COMPREPLY=( $( compgen -W '$( gpnode listavailableio )' -- "$cur" ) )
+                    adddevice)
+                        COMPREPLY=( $( compgen -W '$( gpnode listavailabledevice )' -- "$cur" ) )
                         return 0
                         ;;
                     setboard)

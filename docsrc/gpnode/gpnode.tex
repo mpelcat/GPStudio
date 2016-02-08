@@ -37,7 +37,7 @@ Under linux, you have a completion script to help you writing commands.
 \subsubsection{newproject}
 \command{\textbf{gpnode} \textbf{newproject} -n <project-name>}
 
-Create a project file inside the current directory named `\texttt{<project-name>}.node'.
+Create a project file inside the current directory named `\texttt{<project-name>}.node'.\\
 
 \paramcommand{
 -n & project name without space & project1 \\ 
@@ -51,7 +51,7 @@ Create a project file inside the current directory named `\texttt{<project-name>
 \subsubsection{setboard}
 \command{\textbf{gpnode} \textbf{setboard} -n <board-name>}
 
-You need to specify a for the used board board before setting up any io in the project.
+You need to specify a for the used board board before setting up any device in the project.\\
 
 \paramcommand{
 -n & board name support, contained in library & dreamcam\_c3 \\ 
@@ -81,7 +81,7 @@ dreamcam_c3
 \subsubsection{generate}
 \command{\textbf{gpnode} \textbf{generate} [-o <dir>]}
 
-Generates all the files needed for the specified toolchain and Makefile. After that, you just need to call `make compile' in the directory \texttt{build/} to compile the project with specific tools needed by the node.
+Generates all the files needed for the specified toolchain and Makefile. After that, you just need to call `make compile' in the directory \texttt{build/} to compile the project with specific tools needed by the node.\\
 
 \paramcommand{
 -o & output directory & build \\ 
@@ -94,18 +94,18 @@ Generates all the files needed for the specified toolchain and Makefile. After t
 \end{sampletitle}
 \samplecomment{Generates the project in the subdirectory \texttt{build/} with a Makefile. In this directory, you can execute make compile to call the compiler for the specified platform.}
 
-\subsection{io}
-\subsubsection{addio}
-\command{\textbf{gpnode} \textbf{addio} -n <io-name>}
+\subsection{device}
+\subsubsection{adddevice}
+\command{\textbf{gpnode} \textbf{adddevice} -n <device-name>}
 
-Adds IP support in the project to manage \texttt{<io-name>}. \texttt{<io-name>} must be define in the board file definition.
+Adds IP support in the project to manage \texttt{<device-name>}. \texttt{<device-name>} must be define in the board file definition.\\
 
 \paramcommand{
--n & io name specified in the support board package & mt9 \\ 
+-n & device name specified in the support board package & mt9 \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpnode} \textbf{addio} -n mt9\\
+> \textbf{gpnode} \textbf{adddevice} -n mt9\\
 > \textbf{gpnode} \textbf{showblock}
 \begin{Verbatim}
 blocks :
@@ -114,45 +114,45 @@ blocks :
 \end{sampletitle}
 \samplecomment{Adds the support for mt9 image sensor. You have a block named mt9 in the project.}
 
-\seealso{\textbf{gpnode showio}, \textbf{gpnode delio} and \textbf{gpnode listavailableio}}
+\seealso{\textbf{gpnode showdevice}, \textbf{gpnode deldevice} and \textbf{gpnode listavailabledevice}}
 
-\subsubsection{delio}
-\command{\textbf{gpnode} \textbf{delio} -n <io-name>}
+\subsubsection{deldevice}
+\command{\textbf{gpnode} \textbf{deldevice} -n <device-name>}
 
-Removes io support named \texttt{<io-name>}.
+Removes device support named \texttt{<device-name>}.\\
 
 \paramcommand{
--n & io name almost added & mt9 \\ 
+-n & device name almost added & mt9 \\ 
 }
 
 \begin{sampletitle}
-> \textbf{gpnode} \textbf{delio} -n mt9
+> \textbf{gpnode} \textbf{deldevice} -n mt9
 \end{sampletitle}
 \samplecomment{Removes the `mt9' block with its support and all the flow connection from it.}
 
-\seealso{\textbf{gpnode showio} and \textbf{gpnode addio}}
+\seealso{\textbf{gpnode showdevice} and \textbf{gpnode adddevice}}
 
-\subsubsection{showio}
-\command{\textbf{gpnode} \textbf{showio}}
+\subsubsection{showdevice}
+\command{\textbf{gpnode} \textbf{showdevice}}
 
-Prints the list of all the io support in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-driver>}]
+Prints the list of all the device support in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-driver>}]
 
 \begin{sampletitle}
-> \textbf{gpnode} \textbf{showio}
+> \textbf{gpnode} \textbf{showdevice}
 \begin{Verbatim}
-ios :
+devices :
   + mt9 [mt9]
   + usb [usb_cypress_CY7C68014A]
 \end{Verbatim}
 \end{sampletitle}
 
-\subsubsection{listavailableio}
-\command{\textbf{gpnode} \textbf{listavailableio}}
+\subsubsection{listavailabledevice}
+\command{\textbf{gpnode} \textbf{listavailabledevice}}
 
-Prints the list of all available ios for the platform that you have specified before.
+Prints the list of all available devices for the platform that you have specified before.
 
 \begin{sampletitle}
-> \textbf{gpnode listavailableio}
+> \textbf{gpnode listavailabledevice}
 \begin{Verbatim}
 led mt9 e2v ethernet usb
 \end{Verbatim}
@@ -162,7 +162,7 @@ led mt9 e2v ethernet usb
 \subsubsection{addprocess}
 \command{\textbf{gpnode} \textbf{addprocess} -n \emph{<process-name>} -d \emph{<driver-name>}}
 
-Adds a process named \texttt{<process-name>} as an instance of \texttt{<driver-name>} IP in the library or the project dir.
+Adds a process named \texttt{<process-name>} as an instance of \texttt{<driver-name>} IP in the library or the project dir.\\
 
 \paramcommand{
 -n & name of the process instance & process1 \\ 
@@ -185,7 +185,7 @@ process :
 \subsubsection{delprocess}
 \command{\textbf{gpnode} \textbf{delprocess} -n <process-name>}
 
-Removes process \texttt{<process-name>} and all the connections to or from it.
+Removes process \texttt{<process-name>} and all the connections to or from it.\\
 
 \paramcommand{
 -n & process name almost added & process1 \\ 
@@ -215,7 +215,7 @@ process :
 \subsubsection{showblock}
 \command{\textbf{gpnode} \textbf{showblock} $\big[$-n \emph{<process-name>} [-d \emph{<driver-name>}]$\big]$}
 
-If -n option is not set, it prints the list of processes and io in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-type>} - \texttt{<block-driver>}]
+If -n option is not set, it prints the list of processes and device in the current project. The output format is : + \texttt{<block-name>} [\texttt{<block-type>} - \texttt{<block-driver>}]\\
 
 \paramcommand{
 -n & name of the process instance to show and only this one & process1 \\ 
@@ -227,9 +227,9 @@ If -n option is not set, it prints the list of processes and io in the current p
 > \textbf{gpnode} \textbf{showblock}
 \begin{Verbatim}
 blocks :
-  + led [io - leds]
-  + mt9 [io - mt9]
-  + usb [iocom - usbcypressCY7C68014A]
+  + led [device - leds]
+  + mt9 [device - mt9]
+  + usb [devicecom - usbcypressCY7C68014A]
   + process1 [process - gradienthw]
   + conv [process - conv]
   + lbp [process - lbp]
@@ -297,7 +297,7 @@ params :
 \subsubsection{renameblock}
 \command{\textbf{gpnode} \textbf{renameblock} -n <block-name> -v <new-name>}
 
-Renames block the block named \texttt{<block-name>} with the name \texttt{<new-name>}. Please notify that io block could not be renamed.
+Renames block the block named \texttt{<block-name>} with the name \texttt{<new-name>}. Please notify that device block could not be renamed.\\
 
 \paramcommand{
 -n & name of the process instance to rename & process1 \\ 
@@ -313,7 +313,7 @@ Renames block the block named \texttt{<block-name>} with the name \texttt{<new-n
 \subsubsection{setproperty}
 \command{\textbf{gpnode} \textbf{setproperty} -n <property-name> -v <default-value>}
 
-Defines a default value \texttt{<default-value>} to the property \texttt{<property-name>}.
+Defines a default value \texttt{<default-value>} to the property \texttt{<property-name>}.\\
 
 \paramcommand{
 -n & name of the property composed by the name of the block, a (dot) and the name of the property. A property could be a subproperty of another, in this case, name of the block, (dot), name of the parent property, (dot) and name of the child property. & process1.prop \newline process1.prop.prop2 \\ 
@@ -330,7 +330,7 @@ Defines a default value \texttt{<default-value>} to the property \texttt{<proper
 \subsubsection{setparam}
 \command{\textbf{gpnode} \textbf{setparam} -n <param-name> -v <value>}
 
-Sets the value \texttt{<value>} to the param \texttt{<param-name>}. If <param-name> is a constant parameter, it sets the value. If it is a register, it sets the default value.
+Sets the value \texttt{<value>} to the param \texttt{<param-name>}. If <param-name> is a constant parameter, it sets the value. If it is a register, it sets the default value.\\
 
 \paramcommand{
 -n & name of the param composed by the name of the block, a (dot) and the name of the param & process1.LINEW \\ 
@@ -346,7 +346,7 @@ Sets the value \texttt{<value>} to the param \texttt{<param-name>}. If <param-na
 \subsubsection{setclock}
 \command{\textbf{gpnode} \textbf{setclock} -n <clock-name> -v <frequency>}
 
-Defines the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-name>}.
+Defines the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-name>}.\\
 
 \paramcommand{
 -n & name of the clock composed by the name of the block, a (dot) and the name of the clock. & process1.clockimg \\ 
@@ -357,12 +357,12 @@ Defines the clock frequency \texttt{<frequency>} to the clock \texttt{<clock-nam
 \begin{sampletitle}
 > \textbf{gpnode} \textbf{setclock} -n mt9.clk\_img -v 10M
 \end{sampletitle}
-\samplecomment{Redefines the input pixel clock of mt9 io block.}
+\samplecomment{Redefines the input pixel clock of mt9 device block.}
 
 \subsubsection{setflowsize}
 \command{\textbf{gpnode} \textbf{setflowsize} -n <flow-name> -v <flow-size>}
 
-Redefines the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.
+Redefines the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.\\
 
 \paramcommand{
 -n & name of the flow composed by the name of the block, a (dot) and the name of the flow & process1.in \\ 
@@ -379,7 +379,7 @@ Redefines the flow size \texttt{<flow-size>} to the flow \texttt{<flow-name>}.
 \subsubsection{connect}
 \command{\textbf{gpnode} \textbf{connect} -f <flow-out> -t <flow-in> [-s <bit-shift>]}
 
-Adds a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}. Option -s could be used in case your flow don't have the same data width. You can choose between `msb' or `lsb' connection.
+Adds a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}. Option -s could be used in case your flow don't have the same data width. You can choose between `msb' or `lsb' connection.\\
 
 \paramcommand{
 -f & name of the flow source composed by the name of the block, a (dot) and the name of the flow & process1.out \\ 
@@ -399,7 +399,7 @@ Adds a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a
 \subsubsection{unconnect}
 \command{\textbf{gpnode} \textbf{unconnect} -f <flow-out> -t <flow-in>}
 
-Remove a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}.
+Remove a flow connection between a flow out \texttt{<flow-out>} (ex: mt9.out) to a flow in \texttt{<flow-in>}.\\
 
 \paramcommand{
 -f & name of the flow out & process1.out \\ 
@@ -439,7 +439,7 @@ connects :
 \subsubsection{setclockdomain}
 \command{\textbf{gpnode} \textbf{setclockdomain} -n <domain-name> -v <frequency>}
 
-Define a clock frequency \texttt{<frequency>} the the clock domain \texttt{<domain-name>}.
+Define a clock frequency \texttt{<frequency>} the the clock domain \texttt{<domain-name>}.\\
 
 \paramcommand{
 -n & name of the clock domain & clk\_proc \\ 

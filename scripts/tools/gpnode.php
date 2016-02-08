@@ -12,7 +12,7 @@ require_once("node.php");
 require_once("gpstudio.php");
 
 $options = getopt("a:");
-if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a"."\n",1);
+if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a",1);
 
 if(strrpos($action, "list", -strlen($action)) !== FALSE) setVerbosity(false);
 
@@ -20,7 +20,7 @@ if(strrpos($action, "list", -strlen($action)) !== FALSE) setVerbosity(false);
 if($action=="newproject")
 {
 	$options = getopt("a:n:");
-	if(array_key_exists('n',$options)) $project=$options['n']; else error("You should specify a project name with -n"."\n",1);
+	if(array_key_exists('n',$options)) $project=$options['n']; else error("You should specify a project name with -n",1);
 	
 	$node = new Node();
 	$node->name=$project;
@@ -46,7 +46,7 @@ switch($action)
 	// =========================== global commands =========================== 
 	case "-h":
 	case "--help":
-		echo "# gpnode command line tool to manage a gpstudio node (v0.9)"."\n";
+		echo "# gpnode command line tool to manage a gpstudio node (v0.95)"."\n";
 		echo ""."\n";
 		echo "# === project ==="."\n";
 		echo "gpnode newproject -n <project-name>    # create a directory named <project-name> with a project file inside named <project-name>.node"."\n";
@@ -54,10 +54,10 @@ switch($action)
 		echo "gpnode showboard                       # print the name of the board in the project"."\n";
 		echo "gpnode generate [-o <dir>]             # generate all files needed for the specified toolchain and Makefile"."\n";
 		echo ""."\n";
-		echo "# === io ==="."\n";
-		echo "gpnode addio -n <io-name>              # add IP support in the project to manage <io-name>. <io-name> must be define in the board file definition"."\n";
-		echo "gpnode delio -n <io-name>              # remove io support"."\n";
-		echo "gpnode showio                          # print the list of io support in the current project"."\n";
+		echo "# === device ==="."\n";
+		echo "gpnode adddevice -n <device-name>      # add IP support in the project to manage <device-name>. <device-name> must be define in the board file definition"."\n";
+		echo "gpnode deldevice -n <device-name>      # remove device support"."\n";
+		echo "gpnode showdevice                      # print the list of device support in the current project"."\n";
 		echo ""."\n";
 		echo "# === process ==="."\n";
 		echo "gpnode addprocess -n <process-name> -d <driver-name>       # add a process named <process-name> as an instance of <driver-name> IP in the library or the project dir."."\n";
@@ -86,7 +86,7 @@ switch($action)
 		
 	case "-v":
 	case "--version":
-		echo "# gpnode command line tool to manage a gpstudio node (v0.9)"."\n";
+		echo "# gpnode command line tool to manage a gpstudio node (v0.95)"."\n";
 		$save = false;
 		break;
 	
@@ -97,7 +97,7 @@ switch($action)
 		
 	case "setboard":
 		$options = getopt("a:n:");
-		if(array_key_exists('n',$options)) $boardName = $options['n']; else error("You should specify a board name with -n"."\n",1);
+		if(array_key_exists('n',$options)) $boardName = $options['n']; else error("You should specify a board name with -n",1);
 		$node->setBoard($boardName);
 		break;
 		
@@ -113,29 +113,35 @@ switch($action)
 		$save=false;
 		break;
 		
-	// =========================== io commands =========================== 
+	// ========================= device commands =======================
 	case "addio":
+		warning("addio is a deprecated command, please use adddevice instead.",1);
+	case "adddevice":
 		$options = getopt("a:n:");
-		if(array_key_exists('n',$options)) $ioName = $options['n']; else error("You should specify an io name with -n"."\n",1);
+		if(array_key_exists('n',$options)) $deviceName = $options['n']; else error("You should specify an device name with -n",1);
 		
-		if(!isset($node->board)) error("You should specify a board with gpnode setboard before add io."."\n",1);
-		if($node->getBlock($ioName)!=NULL) error("This io name is ever added."."\n",1);
+		if(!isset($node->board)) error("You should specify a board with gpnode setboard before add device.",1);
+		if($node->getBlock($deviceName)!=NULL) error("This device name is ever added.",1);
 		
-		$node->addIo($ioName);
+		$node->addIo($deviceName);
 		break;
 		
-	case "delio":
+	case "addio":
+		warning("delio is a deprecated command, please use deldevice instead.",1);
+	case "deldevice":
 		$options = getopt("a:n:");
-		if(array_key_exists('n',$options)) $ioName = $options['n']; else error("You should specify an io name with -n"."\n",1);
+		if(array_key_exists('n',$options)) $deviceName = $options['n']; else error("You should specify an device name with -n",1);
 		
-		if(!isset($node->board)) error("You should specify a board with gpnode setboard before del io."."\n",1);
-		if($node->getBlock($ioName)==NULL) error("This io name '$ioName' doesn't exists."."\n",1);
+		if(!isset($node->board)) error("You should specify a board with gpnode setboard before del device.",1);
+		if($node->getBlock($deviceName)==NULL) error("This device name '$deviceName' doesn't exists.",1);
 		break;
 		
 	case "showio":
+		warning("addio is a deprecated command, please use showdevice instead.",1);
+	case "showdevice":
 		$options = getopt("a:");
 		
-		echo "ios :" . "\n";
+		echo "devices :" . "\n";
 		foreach($node->blocks as $block)
 		{
 			if($block->type()=="io" or $block->type()=="iocom")
@@ -149,10 +155,10 @@ switch($action)
 	// =========================== process commands =========================== 
 	case "addprocess":
 		$options = getopt("a:d:n:");
-		if(array_key_exists('d',$options)) $processDriver = $options['d']; else error("You should specify a process driver with -d"."\n",1);
+		if(array_key_exists('d',$options)) $processDriver = $options['d']; else error("You should specify a process driver with -d",1);
 		if(array_key_exists('n',$options)) $processName = $options['n']; else $processName = $processDriver;
 		
-		if($node->getBlock($processName)!=NULL) error("This process name is ever added."."\n",1);
+		if($node->getBlock($processName)!=NULL) error("This process name is ever added.",1);
 		
 		$node->addProcess($processName, $processDriver);
 		
@@ -160,9 +166,9 @@ switch($action)
 		
 	case "delprocess":
 		$options = getopt("a:n:");
-		if(array_key_exists('n',$options)) $processName = $options['n']; else error("You should specify an process name with -n"."\n",1);
+		if(array_key_exists('n',$options)) $processName = $options['n']; else error("You should specify an process name with -n",1);
 		
-		if($node->getBlock($processName)==NULL) error("This process name '$processName' doesn't exists."."\n",1);
+		if($node->getBlock($processName)==NULL) error("This process name '$processName' doesn't exists.",1);
 		break;
 		
 	case "showprocess":
@@ -208,7 +214,7 @@ switch($action)
 		else				// list content of blockName
 		{
 			$block = $node->getBlock($blockName);
-			if($block==NULL) error("Block '".$blockName."' doesn't exists."."\n",1);
+			if($block==NULL) error("Block '".$blockName."' doesn't exists.",1);
 			
 			// flows
 			if($filter=="" or $filter=="flows" or $filter=="flow" or $filter=="f")
@@ -252,25 +258,25 @@ switch($action)
 	case "connect":
 	case "unconnect":
 		$options = getopt("a:f:t:s:");
-		if(array_key_exists('f',$options)) $from = $options['f'];	else error("You should specify a source flow with -f"."\n",1);
-		if(array_key_exists('t',$options)) $to = $options['t'];		else error("You should specify a sink flow with -t"."\n",1);
+		if(array_key_exists('f',$options)) $from = $options['f'];	else error("You should specify a source flow with -f",1);
+		if(array_key_exists('t',$options)) $to = $options['t'];		else error("You should specify a sink flow with -t",1);
 		if(array_key_exists('s',$options)) $shift = $options['s'];	else $shift = 'msb';
 		
 		$fromRes = explode(".", $from, 2);
-		if(count($fromRes)!=2) error("Malformed expression from flow -f."."\n",1);
+		if(count($fromRes)!=2) error("Malformed expression from flow -f.",1);
 		$fromBlock = $node->getBlock($fromRes[0]);
-		if($fromBlock==NULL) error("Block '".$fromRes[0]."' doesn't exists."."\n",1);
+		if($fromBlock==NULL) error("Block '".$fromRes[0]."' doesn't exists.",1);
 		$fromFlow = $fromBlock->getFlow($fromRes[1]);
-		if($fromFlow==NULL) error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' doesn't exists."."\n",1);
-		if($fromFlow->type!="out") error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' isn't a flow out."."\n",1);
+		if($fromFlow==NULL) error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' doesn't exists.",1);
+		if($fromFlow->type!="out") error("Flow '".$fromRes[1]."' in '".$fromRes[0]."' isn't a flow out.",1);
 		
 		$toRes = explode(".", $to, 2);
-		if(count($toRes)!=2) error("Malformed expression to flow -t."."\n",1);
+		if(count($toRes)!=2) error("Malformed expression to flow -t.",1);
 		$toBlock = $node->getBlock($toRes[0]);
-		if($toBlock==NULL) error("Block '".$toRes[0]."' doesn't exists."."\n",1);
+		if($toBlock==NULL) error("Block '".$toRes[0]."' doesn't exists.",1);
 		$toFlow = $toBlock->getFlow($toRes[1]);
-		if($toFlow==NULL) error("Flow '".$toRes[1]."' in '".$toRes[0]."' doesn't exists."."\n",1);
-		if($toFlow->type!="in") error("Flow '".$toRes[1]."' in '".$toRes[0]."' isn't a flow in."."\n",1);
+		if($toFlow==NULL) error("Flow '".$toRes[1]."' in '".$toRes[0]."' doesn't exists.",1);
+		if($toFlow->type!="in") error("Flow '".$toRes[1]."' in '".$toRes[0]."' isn't a flow in.",1);
 		break;
 		
 	case "showconnect":
@@ -281,8 +287,8 @@ switch($action)
 	// =========================== clock domain commands =========================== 
 	case "setclockdomain":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $clockName = $options['n'];	else error("You should specify the name of the clock domain with -n"."\n",1);
-		if(array_key_exists('v',$options)) $value = Clock::convert($options['v']);	else error("You should specify the frequency of the clock domain with -v"."\n",1);
+		if(array_key_exists('n',$options)) $clockName = $options['n'];	else error("You should specify the name of the clock domain with -n",1);
+		if(array_key_exists('v',$options)) $value = Clock::convert($options['v']);	else error("You should specify the frequency of the clock domain with -v",1);
 		break;
 		
 	case "showclockdomain":
@@ -293,36 +299,36 @@ switch($action)
 	// =========================== block attributes commands =========================== 
 	case "renameblock":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $blockName = $options['n'];	else error("You should specify the name of the block to rename with -n"."\n",1);
-		if(array_key_exists('v',$options)) $newName = $options['v'];	else error("You should specify the new name of the block to rename with -v"."\n",1);
+		if(array_key_exists('n',$options)) $blockName = $options['n'];	else error("You should specify the name of the block to rename with -n",1);
+		if(array_key_exists('v',$options)) $newName = $options['v'];	else error("You should specify the new name of the block to rename with -v",1);
 		
 		$block = $node->getBlock($blockName);
-		if($block==NULL) error("This process '$blockName' name doesn't exists."."\n",1);
+		if($block==NULL) error("This process '$blockName' name doesn't exists.",1);
 		$block->name = $newName;
 		break;
 		
 	case "setproperty":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $propertyName = $options['n'];	else error("You should specify the name of the property with -n"."\n",1);
-		if(array_key_exists('v',$options)) $value = $options['v'];	else error("You should specify the value of the property with -v"."\n",1);
+		if(array_key_exists('n',$options)) $propertyName = $options['n'];	else error("You should specify the name of the property with -n",1);
+		if(array_key_exists('v',$options)) $value = $options['v'];	else error("You should specify the value of the property with -v",1);
 		
 		$propertyRes = explode(".", $propertyName);
-		if(count($propertyRes)<2) error("Malformed expression property name -n."."\n",1);
+		if(count($propertyRes)<2) error("Malformed expression property name -n.",1);
 		
 		$blockName = $propertyRes[0];
 		$block = $node->getBlock($blockName);
-		if($block==NULL) error("This process named '$blockName' doesn't exists."."\n",1);
+		if($block==NULL) error("This process named '$blockName' doesn't exists.",1);
 		
 		$propertyName = $propertyRes[1];
 		$property = $block->getProperty($propertyName);
-		if($property==NULL) error("This property name '$propertyName' doesn't exists in '$blockName'."."\n",1);
+		if($property==NULL) error("This property name '$propertyName' doesn't exists in '$blockName'.",1);
 		
 		unset($propertyRes[0]);
 		unset($propertyRes[1]);
 		foreach($propertyRes as $propertyName)
 		{
 			$property = $property->getSubProperty($propertyName);
-			if($property==NULL) error("This property name '$propertyName' doesn't exists in '$blockName'."."\n",1);
+			if($property==NULL) error("This property name '$propertyName' doesn't exists in '$blockName'.",1);
 		}
 		
 		$property->value = $value;
@@ -330,56 +336,56 @@ switch($action)
 		
 	case "setparam":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $paramName = $options['n'];	else error("You should specify the name of the param with -n"."\n",1);
-		if(array_key_exists('v',$options)) $value = $options['v'];	else error("You should specify the value of the param with -v"."\n",1);
+		if(array_key_exists('n',$options)) $paramName = $options['n'];	else error("You should specify the name of the param with -n",1);
+		if(array_key_exists('v',$options)) $value = $options['v'];	else error("You should specify the value of the param with -v",1);
 		
 		$paramRes = explode(".", $paramName);
-		if(count($paramRes)!=2) error("Malformed expression param name -n."."\n",1);
+		if(count($paramRes)!=2) error("Malformed expression param name -n.",1);
 		
 		$blockName = $paramRes[0];
 		$block = $node->getBlock($blockName);
-		if($block==NULL) error("This process named '$blockName' doesn't exists."."\n",1);
+		if($block==NULL) error("This process named '$blockName' doesn't exists.",1);
 		$paramName = $paramRes[1];
 		$param = $block->getParam($paramName);
-		if($param==NULL) error("This param name '$param' doesn't exists in '$blockName'."."\n",1);
+		if($param==NULL) error("This param name '$param' doesn't exists in '$blockName'.",1);
 		
 		$param->value = $value;
 		break;
 		
 	case "setclock":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $clockName = $options['n'];	else error("You should specify the name of the clock with -n"."\n",1);
-		if(array_key_exists('v',$options)) $value = Clock::convert($options['v']);	else error("You should specify the frequency of the clock with -v"."\n",1);
+		if(array_key_exists('n',$options)) $clockName = $options['n'];	else error("You should specify the name of the clock with -n",1);
+		if(array_key_exists('v',$options)) $value = Clock::convert($options['v']);	else error("You should specify the frequency of the clock with -v",1);
 		
 		$clockRes = explode(".", $clockName);
-		if(count($clockRes)!=2) error("Malformed expression clock name -n."."\n",1);
+		if(count($clockRes)!=2) error("Malformed expression clock name -n.",1);
 		
 		$blockName = $clockRes[0];
 		$block = $node->getBlock($blockName);
-		if($block==NULL) error("This process name '$blockName' doesn't exists."."\n",1);
+		if($block==NULL) error("This process name '$blockName' doesn't exists.",1);
 		
 		$clockName = $clockRes[1];
 		$clock = $block->getClock($clockName);
-		if($clock==NULL) error("This clock name '$clockName' doesn't exists in '$blockName'."."\n",1);
+		if($clock==NULL) error("This clock name '$clockName' doesn't exists in '$blockName'.",1);
 		
 		$clock->typical = $value;
 		break;
 		
 	case "setflowsize":
 		$options = getopt("a:n:v:");
-		if(array_key_exists('n',$options)) $flowName = $options['n'];	else error("You should specify the name of the flow with -n"."\n",1);
-		if(array_key_exists('v',$options)) $flowsize = $options['v'];	else error("You should specify the size of the flow with -v"."\n",1);
+		if(array_key_exists('n',$options)) $flowName = $options['n'];	else error("You should specify the name of the flow with -n",1);
+		if(array_key_exists('v',$options)) $flowsize = $options['v'];	else error("You should specify the size of the flow with -v",1);
 		
 		$flowRes = explode(".", $flowName);
-		if(count($flowRes)!=2) error("Malformed expression clock name -n."."\n",1);
+		if(count($flowRes)!=2) error("Malformed expression clock name -n.",1);
 		
 		$blockName = $flowRes[0];
 		$block = $node->getBlock($blockName);
-		if($block==NULL) error("This process name '$blockName' doesn't exists."."\n",1);
+		if($block==NULL) error("This process name '$blockName' doesn't exists.",1);
 		
 		$flowName = $flowRes[1];
 		$flow = $block->getFlow($flowName);
-		if($flow==NULL) error("This flow name '$flowName' doesn't exists in '$blockName'."."\n",1);
+		if($flow==NULL) error("This flow name '$flowName' doesn't exists in '$blockName'.",1);
 		
 		$flow->size = $flowsize;
 		break;
@@ -399,7 +405,7 @@ switch($action)
 		$save = false;
 		break;
 		
-	case "listavailableio":
+	case "listavailabledevice":
 		if(!isset($node->board)) exit(0);
 		echo implode(" ",$node->board->availableIosName())."\n";
 		$save = false;
@@ -508,7 +514,7 @@ switch($action)
 	case "generate":
 		if(!isset($toolchain))
 		{
-			error("You should specify a board with gpnode setboard before generate."."\n",1);
+			error("You should specify a board with gpnode setboard before generate.",1);
 		}
 		mkdir_rec($outDir);
 		$toolchain->generate_project($node, $outDir);
@@ -530,13 +536,13 @@ switch($action)
 		
 	case "connect":
 		$fi = $node->getBlock("fi");
-		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)!=NULL) error("This flow name connexion ever exists."."\n",1);
+		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)!=NULL) error("This flow name connexion ever exists.",1);
 		$fi->addFlowConnect(new FlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name, $shift));
 		break;
 		
 	case "unconnect":
 		$fi = $node->getBlock("fi");
-		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)==NULL) error("This flow name connexion doesn't exists."."\n",1);
+		if($fi->getFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name)==NULL) error("This flow name connexion doesn't exists.",1);
 		$fi->delFlowConnect($fromBlock->name, $fromFlow->name, $toBlock->name, $toFlow->name);
 		break;
 		
