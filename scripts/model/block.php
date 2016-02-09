@@ -710,7 +710,7 @@ class Block
 		}
 		
 		// name or driver
-		if($typeName=='io')
+		if($typeName=='io' and $format=="blockdef")
 		{
 			$att = $xml->createAttribute('driver');
 			$att->value = $this->driver;
