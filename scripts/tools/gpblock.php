@@ -737,7 +737,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
 		if(array_key_exists('v',$options)) $propertymap = $options['v']; else error("You should specify a name for the property with -v",1);
 		
-		if(($instance=$block->getPropertyPath($name))==NULL) error("A property does not exist with the name '$name'.",1);
+		$instance=$block->getPropertyPath($name);
+		if($instance==NULL) $instance=$block->getParam($name);
+		if($instance==NULL) $instance=$block->getParamBitField($name);
+		if($instance==NULL) error("A property/bitfield/param does not exist with the name '$name'.",1);
 		
 		$instance->propertymap = $propertymap;
 		
