@@ -196,7 +196,8 @@ class Block_generator
 		{
 			if($param->hard==false)
 			{
-				$this->slave_generator->addConstant(strtoupper($param->name)."_REG_ADDR", "natural", $param->regaddr);
+				if($param->regaddr!='') $regaddr=$param->regaddr; else $regaddr=0;
+				$this->slave_generator->addConstant(strtoupper($param->name)."_REG_ADDR", "natural", $regaddr);
 				
 				if(empty($param->parambitfields))
 				{
@@ -319,8 +320,27 @@ class Block_generator
 		$code_rd.="	end process;"."\r\n";
 		$code_rd.=""."\r\n";
 		
+		// output connexions
+		$code_connect='';
+		foreach($this->block->params as $param)
+		{
+			if($param->hard==false)
+			{
+				if(empty($param->parambitfields))
+				{
+					$reg_name = $param->name."_reg";
+					$code_connect.="	$param->name <= $reg_name;"."\r\n";
+				}
+				else
+				{
+					
+				}
+			}
+		}
+		
 		$this->slave_generator->addCode($code_wr);
 		$this->slave_generator->addCode($code_rd);
+		$this->slave_generator->addCode($code_connect);
 		
 		// slave generation
 		$this->slave_generator->fromBlock($this->slave_block, TRUE);
