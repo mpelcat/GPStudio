@@ -696,12 +696,12 @@ class Block
 	
 	public function getXmlElement($xml, $format)
 	{
+		if($this->type()=="io" or $this->type()=="iocom") $typeName='io';
+		elseif($this->type()=="process") $typeName="process";
+		else $typeName="";
+		
 		if($format=="project" or $format=="blockdef")
 		{
-			if($this->type()=="io" or $this->type()=="iocom") $typeName='io';
-			elseif($this->type()=="process") $typeName="process";
-			else $typeName="";
-			
 			if($typeName!="") $xml_element = $xml->createElement($typeName);
 		}
 		else

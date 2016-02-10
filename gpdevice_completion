@@ -114,7 +114,7 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
                         return 0
                         ;;
-                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp)
+                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;

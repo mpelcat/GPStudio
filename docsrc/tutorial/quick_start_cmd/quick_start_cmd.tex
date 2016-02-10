@@ -401,23 +401,50 @@ Connects it :
 > \textbf{gpnode connect} -f myprocess1.out -t usb.in3
 \end{sample}
 
+Tests it :
+\begin{sample}
+> cd build \\
+> make generate compile send view
+\end{sample}
+
+
 \subsection{Process with dynamic parameters}
 
 Returns in the process definition directory and creates a parameter :
 \begin{sample}
 > cd myprocess \\
-> \textbf{gpproc addparam} -n thresh\_value
+> \textbf{gpproc addparam} -n threshold\_reg
 \end{sample}
 
-Sets as dynamic register with a relative address 0 :
+A parameter is set by default as dynamic register, you just need to set a relative address :
 \begin{sample}
-> \textbf{gpproc fixparam} -n thresh\_value -v false \\
-> \textbf{gpproc setparam} -n thresh\_value -r 0
+> \textbf{gpproc setparam} -n threshold\_reg -r 0 \\
+Warning (1) : Your relative adress is greater than the range of relative address (0 bits). \\
+Please specify a new PI size address with : \\
+gpproc setpisizeaddr -v 2
 \end{sample}
 
 Sets the size of PI address bus to 2 bits :
 \begin{sample}
 > \textbf{gpproc setpisizeaddr} -v 2
+\end{sample}
+
+Adds a property and link the register to this property :
+\begin{sample}
+> \textbf{gpproc addproperty} -n threshold -t int \\
+> \textbf{gpproc setpropertymap} -n threshold\_reg -v threshold.value
+\end{sample}
+
+Generates template in the directory hdl and add the slave block :
+\begin{sample}
+> \textbf{gpproc generate} -o hdl \\
+> \textbf{gpproc addfile} -p hdl/myprocess\_slave.vhd -t vhdl -g hdl
+\end{sample}
+
+Tests it :
+\begin{sample}
+> cd ../build \\
+> make generate compile send view
 \end{sample}
 
 \end{document}

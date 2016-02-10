@@ -29,10 +29,11 @@ if($action=="new" and TOOL=="gpproc")
 elseif($action=="new" and TOOL=="gpdevice")
 {
 	$options = getopt("a:n:");
-	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify an io name with -n",1);
+	if(array_key_exists('n',$options)) $blockName=$options['n']; else error("You should specify a device name with -n",1);
 	
 	$block = new IO();
 	$block->name=$blockName;
+	$block->driver=$blockName;
 	$blockName.=".io";
 }
 else
@@ -61,7 +62,7 @@ else
 	}
 	else
 	{
-		error("Cannot call this script without a valid tool",1);
+		error("Cannot call this script without a valid tool.",1);
 	}
 }
 
@@ -263,7 +264,7 @@ switch($action)
 		
 		$param = new Param();
 		$param->name = $name;
-		$param->hard = true;
+		$param->hard = false;
 		$param->default = 0;
 		$param->value = 0;
 		
@@ -284,6 +285,13 @@ switch($action)
 		foreach($block->params as $param)
 		{
 			echo "  + ".$param. "\n";
+			if(!empty($param->parambitfields))
+			{
+				foreach($param->parambitfields as $parambitfield)
+				{
+					echo "    * ".$parambitfield. "\n";
+				}
+			}
 		}
 		$save = false;
 		break;
@@ -309,6 +317,14 @@ switch($action)
 		if(array_key_exists('t',$options)) $type = $options['t']; else $type=$param->type;
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value=$param->value;
 		if(array_key_exists('r',$options)) $regaddr = $options['r']; else $regaddr=$param->regaddr;
+		
+		if(isset($regaddr) and $param->hard==false)
+		{
+			if(log($regaddr, 2)>$block->pi_size_addr_rel or $block->pi_size_addr_rel==0)
+			{
+				warning("Your relative adress is greater than the range of relative address ($block->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n".TOOL." setpisizeaddr -v ".( ($regaddr==0)? 1 : (floor(log($regaddr, 2))+1)),1);
+			}
+		}
 		
 		$param->type = $type;
 		$param->default = $value;

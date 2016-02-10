@@ -87,8 +87,8 @@ class Param
 	
 	public function __toString()
     {
-		if($this->hard) return "generic ".$this->name." type: ".$this->type." value: ".$this->value;
-		else return "register ".$this->name." regaddr: ".$this->regaddr." propertymap: ".$this->propertymap;
+		if($this->hard) return "constant ".$this->name." type: ".$this->type." value: ".$this->value;
+		else return "register ".$this->name." regaddr: ".$this->regaddr." propertymap: '".$this->propertymap."'";
     }
     
     public static function cmp_raddr($a, $b)

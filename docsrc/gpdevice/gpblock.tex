@@ -678,10 +678,15 @@ This expression can be more complex than a simple mathematical expression. Can c
 \samplecomment{Sets the bit field `enablebit' of the register `status' linked to the value of the `enable' property. When this property change, the new value of the property will be set in the register.}
 
 \begin{sampletitle}[2]
-> \textbf{\tool{} setpropertymap} -n out.width -v "in.width.value-2"
+> \textbf{\tool{} setpropertymap} -n out.width -v "in.width.value-2" \\
 > \textbf{\tool{} setpropertymap} -n out.height -v "in.height.value-2"
 \end{sampletitle}
-\samplecomment{Sets the bit field `enablebit' of the register `status' linked to the value of the `enable' property. When this property change, the new value of the property will be set in the register.}
+\samplecomment{Sets property map on the flow `out'. The output image size is the size of the input minus 2.}
+
+\begin{sampletitle}[3]
+> \textbf{\tool{} setpropertymap} -n shift\_reg -v "Math.floor(Math.log2(div.value))+1"
+\end{sampletitle}
+\samplecomment{Sets property map on the flow `out'. The output image size is the size of the input minus 2.}
 
 \subsection{resets}
 % ==============================================
