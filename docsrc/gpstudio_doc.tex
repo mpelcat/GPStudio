@@ -1,10 +1,24 @@
+% style
+\usepackage{xcolor}
+\usepackage{sectsty}
+\definecolor{orange}{rgb}{1,0.4,0}
+\sectionfont{\color{orange}}
+\definecolor{orange2}{rgb}{1,0.5,0.2}
+\subsectionfont{\color{orange2}}
+\definecolor{orange3}{rgb}{1,0.6,0.3}
+\subsubsectionfont{\color{orange3}}
+
+% margins
+\usepackage[left=3.3cm,right=3.3cm,top=3cm]{geometry}
+
 \newcommand{\version}{\IfFileExists{../../version.txt}%
 {\input{../../version.txt}\unskip }%
 {\input{../../../version.txt}\unskip }%
 }
 
 \newcommand{\command}[1]{%
-\indent \fcolorbox{black}{white}{%
+\setlength{\fboxrule}{0.5mm}
+\indent \fcolorbox{orange}{white}{%
    \begin{minipage}{\dimexpr\textwidth-\parindent\relax}%
       #1
    \end{minipage}%
@@ -17,7 +31,8 @@
 \begin{minipage}{\dimexpr\textwidth-\parindent\relax}}
 {\end{minipage}
 \end{lrbox}
-\fcolorbox{black}{lightgray}{\usebox{\FVerbBox}}
+\setlength{\fboxrule}{0.2mm}
+\fcolorbox{orange2}{orange!3}{\usebox{\FVerbBox}}
 \vspace{0.2cm}}
 
 \newenvironment{sampletitle}[1][\unskip]{%
@@ -33,7 +48,7 @@
 \newcommand{\seealso}[1]{\vspace{0.2cm} \noindent\textbf{See also} :\par #1}
 
 \newcommand{\paramcommand}[1]{
-\begin{tabular}{|p{1.5cm}|p{6cm}|p{3cm}|}
+\begin{tabular}{|p{1.5cm}|p{7cm}|p{4.4cm}|}
 \hline 
 \textbf{Option} & \textbf{Description} & \textbf{Example} \\ 
 \hline
@@ -47,5 +62,5 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{shadows}
 
-\tikzset{block/.style={draw, text centered, fill=gray!10,drop shadow}}
-\tikzset{connect/.style={draw, line width=1 pt}}
+\tikzset{block/.style={draw, text centered, text=orange2, color=orange2, line width=1 pt, fill=orange!10,drop shadow={fill=orange!40}}}
+\tikzset{connect/.style={draw, line width=2 pt}}

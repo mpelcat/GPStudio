@@ -45,7 +45,7 @@ The commands of this tools are used to define inputs and outputs of the block, f
 \begin{figure}[h!]
 \centering
 \begin{tikzpicture}
-\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {Block};
+\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {\textbf{Process}};
 
 \path[connect,<-] ([yshift=0.2cm]bloc.west) -- node{/} node[above]{Flow In 0} ++(-2cm,0);
 \path[connect,<-] ([yshift=-0.2cm]bloc.west) -- node{/} node[below]{Flow In ...} ++(-2cm,0);
@@ -56,8 +56,8 @@ The commands of this tools are used to define inputs and outputs of the block, f
 \path[connect,<-,double] (bloc.north) -- node[right]{PI Slave} ++(0,1cm);
 \path[connect,->,double] ([xshift=-1cm]bloc.north) -- node[left]{(PI Master)} ++(0,1cm);
 
-\draw ([xshift=-0.5cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.3cm]bloc.north);
-\draw ([xshift=-0.5cm,yshift=-0.3cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+\draw[color=orange] ([xshift=-0.5cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.3cm]bloc.north);
+\draw[color=orange] ([xshift=-0.5cm,yshift=-0.3cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
 
 \path[connect,<-] ([xshift=-1cm]bloc.south) -- node[sloped,below]{clk0} ++(0,-1.2cm);
 \path[connect,<-] ([xshift=-0.8cm]bloc.south) -- node[sloped,above]{clk...} ++(0,-1.2cm);
@@ -72,7 +72,7 @@ The commands of this tools are used to define inputs and outputs of the block, f
 \begin{figure}[h!]
 \centering
 \begin{tikzpicture}
-\node[block,rectangle,minimum height=3cm,minimum width=3cm] (bloc) {Block};
+\node[block,rectangle,minimum height=3cm,minimum width=3cm] (bloc) {\textbf{Device}};
 
 \path[connect,<-] ([yshift=1.1cm]bloc.west) -- node{/} node[above]{Flow In 0} ++(-2cm,0);
 \path[connect,<-] ([yshift=0.7cm]bloc.west) -- node{/} node[below]{Flow In ...} ++(-2cm,0);
@@ -89,8 +89,8 @@ The commands of this tools are used to define inputs and outputs of the block, f
 \path[connect,<-,double] (bloc.north) -- node[right]{PI Slave} ++(0,1cm);
 \path[connect,->,double] ([xshift=-1cm]bloc.north) -- node[left]{(PI Master)} ++(0,1cm);
 
-\draw ([xshift=-0.5cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.3cm]bloc.north);
-\draw ([xshift=-0.5cm,yshift=-0.3cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+\draw[color=orange] ([xshift=-0.5cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.3cm]bloc.north);
+\draw[color=orange] ([xshift=-0.5cm,yshift=-0.3cm]bloc.north) rectangle ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
 
 \path[connect,<-] ([xshift=-1cm]bloc.south) -- node[sloped,below]{clk0} ++(0,-1.2cm);
 \path[connect,<-] ([xshift=-0.8cm]bloc.south) -- node[sloped,above]{clk...} ++(0,-1.2cm);
@@ -555,7 +555,7 @@ Allows to modify bit field bits selection.\\
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} setparam} -n param0.bf0 -b 0-2 \\
+> \textbf{\tool{} setparam} -n param0.bf0 -b 0-2
 \end{sampletitle}
 \samplecomment{Sets the bit selection of `param0.bf0' to bits 2 downto 0.}
 

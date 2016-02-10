@@ -37,8 +37,8 @@ Finally, we configure the smart camera with the compiled project and check resul
 \tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=2.5cm}};
 
 % blocks
-\node[blocstyle] (bloc1) {MT9\\Image sensor};
-\node[blocstyle] (bloc2) at (7,0) {USB\\Communication};
+\node[blocstyle] (bloc1) {\textbf{MT9}\\Image sensor};
+\node[blocstyle] (bloc2) at (7,0) {\textbf{USB}\\Communication};
 
 % Flow to
 \path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in} (bloc2.west);
@@ -166,8 +166,8 @@ So we want to have this graph of connection :
 \tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=2.5cm}};
 
 % blocks
-\node[blocstyle] (bloc1) {MT9\\Image sensor};
-\node[blocstyle,minimum height=4cm] (bloc2) at (7,-1.5) {USB\\Communication};
+\node[blocstyle] (bloc1) {\textbf{MT9}\\Image sensor};
+\node[blocstyle,minimum height=4cm] (bloc2) at (7,-1.5) {\textbf{USB}\\Communication};
 
 % Flow to
 \path[connect,->] (bloc1.east) -- node[above,pos=0.2]{out} node[above,pos=0.85]{in0} ([yshift=1.5cm]bloc2.west);
@@ -267,9 +267,9 @@ In this second part, we want to add some processing between the image sensor and
 \tikzset{blocstyle/.style={block,rectangle,minimum height=1.5cm,text width=2.5cm}};
 
 % blocks
-\node[blocstyle] (bloc1) {MT9\\Image sensor};
-\node[blocstyle] (blocproc) at (4,0) {Process};
-\node[blocstyle] (bloc2) at (8,0) {USB\\Communication};
+\node[blocstyle] (bloc1) {\textbf{MT9}\\Image sensor};
+\node[blocstyle] (blocproc) at (4,0) {\textbf{Process}};
+\node[blocstyle] (bloc2) at (8,0) {\textbf{USB}\\Communication};
 
 % Flow to
 \path[connect,->] (bloc1) -- (blocproc);
@@ -282,12 +282,12 @@ In this second part, we want to add some processing between the image sensor and
 \subsection{Add process that you need}
 Check process that could be use :
 
-\begin{sampletitle}
+\begin{sample}
 > \textbf{gplib listprocess}
 \begin{Verbatim}
 conv gradienthw histogramhw hog lbp normhw roi slidevm
 \end{Verbatim}
-\end{sampletitle}
+\end{sample}
 
 For example, we add a gradienthw as process block and we call it `process1' :
 
