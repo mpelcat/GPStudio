@@ -435,7 +435,7 @@ switch($action)
 	case "addreset":
 		$options = getopt("a:n:d:g:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the reset with -n",1);
-		if(array_key_exists('d',$options)) $direction = $options['d']; else error("You should specify a direction for the reset with -d [in-out]",1);
+		if(array_key_exists('d',$options)) $direction = $options['d']; else $direction="in";
 		if(array_key_exists('g',$options)) $group = $options['g']; else error("You should specify a group for the reset with -g",1);
 		
 		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
@@ -505,7 +505,7 @@ switch($action)
 	case "addclock":
 		$options = getopt("a:n:d:g:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the clock with -n",1);
-		if(array_key_exists('d',$options)) $direction = $options['d']; else error("You should specify a direction for the clock with -d [in-out]",1);
+		if(array_key_exists('d',$options)) $direction = $options['d']; else  $direction="in";
 		if(array_key_exists('g',$options)) $domain = $options['g']; else $domain="";
 		
 		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
