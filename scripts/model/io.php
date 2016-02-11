@@ -141,12 +141,23 @@ class IO extends Block
 	
 	/** return a reference to the pin with the name $name, if not found, return null
 	 *  @param string $name name of the pin to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Pin found pin **/
-	function getPin($name)
+	function getPin($name, $casesens=true)
 	{
-		foreach($this->pins as $pin)
+		if($casesens)
 		{
-			if($pin->name==$name) return $pin;
+			foreach($this->pins as $pin)
+			{
+				if($pin->name==$name) return $pin;
+			}
+		}
+		else
+		{
+			foreach($this->pins as $pin)
+			{
+				if(strcasecmp($pin->name,$name)==0) return $pin;
+			}
 		}
 		return null;
 	}
@@ -161,12 +172,23 @@ class IO extends Block
 	
 	/** return a reference to the external port with the name $name, if not found, return null
 	 *  @param string $name name of the external port to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Port found external port **/
-	function getExtPort($name)
+	function getExtPort($name, $casesens=true)
 	{
-		foreach($this->ext_ports as $extPort)
+		if($casesens)
 		{
-			if($extPort->name==$name) return $extPort;
+			foreach($this->ext_ports as $extPort)
+			{
+				if($extPort->name==$name) return $extPort;
+			}
+		}
+		else
+		{
+			foreach($this->ext_ports as $extPort)
+			{
+				if(strcasecmp($extPort->name,$name)==0) return $extPort;
+			}
 		}
 		return null;
 	}

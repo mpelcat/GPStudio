@@ -44,17 +44,24 @@ class ParamBitfield
 	* @var array|int $bitfieldlist
 	*/
 	public $bitfieldlist;
+
+	/**
+	* Reference to the associated parent Param
+	* @var Param $parentParam
+	*/
+	public $parentParam;
 	
 	function __construct($xml=null)
 	{
 		$this->bitfieldlist = array();
 		$this->paramenums = array();
+		$this->parentParam = NULL;
 		if($xml) $this->parse_xml($xml);
 	}
 	
 	public function __toString()
     {
-		return "bitfield ".$this->name." bitfield: ".$this->bitfield." propertymap: ".$this->propertymap;
+		return "bitfield ".$this->name." bitfield: ".$this->bitfield." propertymap: '".$this->propertymap."'";
     }
 	
 	protected function parse_xml($xml)

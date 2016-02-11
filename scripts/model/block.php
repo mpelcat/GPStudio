@@ -281,12 +281,23 @@ class Block
 	
 	/** return a reference to the parameter with the name $name, if not found, return null
 	 *  @param string $name name of the parameter to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Param found parameter **/
-	function getParam($name)
+	function getParam($name, $casesens=true)
 	{
-		foreach($this->params as $param)
+		if($casesens)
 		{
-			if($param->name==$name) return $param;
+			foreach($this->params as $param)
+			{
+				if($param->name==$name) return $param;
+			}
+		}
+		else
+		{
+			foreach($this->params as $param)
+			{
+				if(strcasecmp($param->name,$name)==0) return $param;
+			}
 		}
 		return null;
 	}
@@ -306,14 +317,15 @@ class Block
 	
 	/** return a reference to the bitfield with the path $path, if not found, return null
 	 *  @param string $path path of the parambitfield to search (param.parambitfield)
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return ParamBitfield found bitfield **/
-	function getParamBitField($path)
+	function getParamBitField($path, $casesens=true)
 	{
 		$subPath=explode('.',$path);
 		if(count($subPath)!=2) return NULL;
-		$param=$this->getParam($subPath[0]);
+		$param=$this->getParam($subPath[0], $casesens);
 		if($param==NULL) return NULL;
-		$paramBitField=$param->getParambitfield($subPath[1]);
+		$paramBitField=$param->getParambitfield($subPath[1], $casesens);
 		return $paramBitField;
 	}
 	
@@ -339,38 +351,51 @@ class Block
 	
 	/** return a reference to the property with the name $name, if not found, return null
 	 *  @param string $name name of the property to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Property found property **/
-	function getProperty($name)
+	function getProperty($name, $casesens=true)
 	{
-		foreach($this->properties as $property)
+		if($casesens)
 		{
-			if($property->name==$name) return $property;
+			foreach($this->properties as $property)
+			{
+				if($property->name==$name) return $property;
+			}
+		}
+		else
+		{
+			foreach($this->properties as $property)
+			{
+				if(strcasecmp($property->name,$name)==0) return $property;
+			}
 		}
 		return null;
 	}
 	
-	/** alias to getProperty($name)
+	/** alias to getProperty($name, $casesens)
 	 *  @param string $name name of the property enum to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Property found property **/
-	function getSubProperty($name)
+	function getSubProperty($name, $casesens=true)
 	{
-		return $this->getProperty($name);
+		return $this->getProperty($name, $casesens);
 	}
 	
 	/** return a reference to the property with the access path $path, if not found, return null
 	 *  @param string $path path of the property to search, separed by . (dot)
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Property found property **/
-	function getPropertyPath($path)
+	function getPropertyPath($path, $casesens=true)
 	{
 		$subprops = explode('.', $path);
 		if(count($subprops)==0) return null;
 		
 		$parent=$this;
 		$i=0;
-		if(($instance=$this->getFlow($subprops[0]))!=NULL) {$parent=$instance; $i++;}
+		if(($instance=$this->getFlow($subprops[0], $casesens))!=NULL) {$parent=$instance; $i++;}
 		for(; $i<count($subprops); $i++)
 		{
-			$parent = $parent->getSubProperty($subprops[$i]);
+			$parent = $parent->getSubProperty($subprops[$i], $casesens);
 			if($parent==null) return null;
 		}
 		return $parent;
@@ -462,12 +487,23 @@ class Block
 	
 	/** return a reference to the flow with the name $name, if not found, return null
 	 *  @param string $name name of the flow to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Flow found flow **/
-	function getFlow($name)
+	function getFlow($name, $casesens=true)
 	{
-		foreach($this->flows as $flow)
+		if($casesens)
 		{
-			if($flow->name==$name) return $flow;
+			foreach($this->flows as $flow)
+			{
+				if($flow->name==$name) return $flow;
+			}
+		}
+		else
+		{
+			foreach($this->flows as $flow)
+			{
+				if(strcasecmp($flow->name,$name)==0) return $flow;
+			}
 		}
 		return null;
 	}
@@ -495,12 +531,23 @@ class Block
 	
 	/** return a reference to the clock with the name $name, if not found, return null
 	 *  @param string $name name of the clock to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Clock found clock **/
-	function getClock($name)
+	function getClock($name, $casesens=true)
 	{
-		foreach($this->clocks as $clock)
+		if($casesens)
 		{
-			if($clock->name==$name) return $clock;
+			foreach($this->clocks as $clock)
+			{
+				if($clock->name==$name) return $clock;
+			}
+		}
+		else
+		{
+			foreach($this->clocks as $clock)
+			{
+				if(strcasecmp($clock->name,$name)==0) return $clock;
+			}
 		}
 		return null;
 	}
@@ -528,12 +575,23 @@ class Block
 	
 	/** return a reference to the reset with the name $name, if not found, return null
 	 *  @param string $name name of the reset to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Reset found reset **/
-	function getReset($name)
+	function getReset($name, $casesens=true)
 	{
-		foreach($this->resets as $reset)
+		if($casesens)
 		{
-			if($reset->name==$name) return $reset;
+			foreach($this->resets as $reset)
+			{
+				if($reset->name==$name) return $reset;
+			}
+		}
+		else
+		{
+			foreach($this->resets as $reset)
+			{
+				if(strcasecmp($reset->name,$name)==0) return $reset;
+			}
 		}
 		return null;
 	}
@@ -561,12 +619,23 @@ class Block
 	
 	/** return a reference to the interface with the name $name, if not found, return null
 	 *  @param string $name name of the interface to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Interface found interface **/
-	function getInterface($name)
+	function getInterface($name, $casesens=true)
 	{
-		foreach($this->interfaces as $interface)
+		if($casesens)
 		{
-			if($interface->name==$name) return $interface;
+			foreach($this->interfaces as $interface)
+			{
+				if($interface->name==$name) return $interface;
+			}
+		}
+		else
+		{
+			foreach($this->interfaces as $interface)
+			{
+				if(strcasecmp($interface->name,$name)==0) return $interface;
+			}
 		}
 		return null;
 	}
@@ -580,39 +649,51 @@ class Block
 	
 	/** return a reference to the attribute with the name $name, if not found, return null
 	 *  @param string $name name of the attribute enum to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Attribute found attribute **/
-	function getAttribute($name)
+	function getAttribute($name, $casesens=true)
 	{
-		foreach($this->attributes as $attribute)
+		if($casesens)
 		{
-			if($attribute->name==$name) return $attribute;
+			foreach($this->attributes as $attribute)
+			{
+				if($attribute->name==$name) return $attribute;
+			}
+		}
+		else
+		{
+			foreach($this->attributes as $attribute)
+			{
+				if(strcasecmp($attribute->name,$name)==0) return $attribute;
+			}
 		}
 		return null;
 	}
 	
 	/** return a reference to the instance with the name $name, if not found, return null
 	 *  @param string $name name of the instance to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return mixed found instance **/
-	function getInstance($name)
+	function getInstance($name, $casesens=true)
 	{
-		$instance = $this->getAttribute($name);
+		$instance = $this->getAttribute($name, $casesens);
 		if($instance!=NULL) return $instance;
-		$instance = $this->getClock($name);
+		$instance = $this->getClock($name, $casesens);
 		if($instance!=NULL) return $instance;
 		$instance = $this->getFileByPath($name);
 		if($instance!=NULL) return $instance;
-		$instance = $this->getFlow($name);
+		$instance = $this->getFlow($name, $casesens);
 		if($instance!=NULL) return $instance;
-		$instance = $this->getParam($name);
+		$instance = $this->getParam($name, $casesens);
 		if($instance!=NULL) return $instance;
-		$instance = $this->getPropertyPath($name);
+		$instance = $this->getPropertyPath($name, $casesens);
 		if($instance!=NULL) return $instance;
-		$instance = $this->getReset($name);
+		$instance = $this->getReset($name, $casesens);
 		if($instance!=NULL) return $instance;
 		
 		if($this->type()=="io" or $this->type()=="iocom")
 		{
-			$instance = $this->getExtPort($name);
+			$instance = $this->getExtPort($name, $casesens);
 			if($instance!=NULL) return $instance;
 		}
 		

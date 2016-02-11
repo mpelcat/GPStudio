@@ -268,22 +268,34 @@ class Property
 	
 	/** return a reference to the property with the name $name, if not found, return false
 	 *  @param string $name name of the property enum to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Property found property **/
-	function getSubProperty($name)
+	function getSubProperty($name, $casesens=true)
 	{
-		foreach($this->properties as $property)
+		if($casesens)
 		{
-			if($property->name==$name) return $property;
+			foreach($this->properties as $property)
+			{
+				if($property->name==$name) return $property;
+			}
+		}
+		else
+		{
+			foreach($this->properties as $property)
+			{
+				if(strcasecmp($property->name,$name)==0) return $property;
+			}
 		}
 		return null;
 	}
 	
-	/** alias to getSubProperty($name)
+	/** alias to getSubProperty($name, $casesens)
 	 *  @param string $name name of the property enum to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return Property found property **/
-	function getProperty($name)
+	function getProperty($name, $casesens=true)
 	{
-		return $this->getSubProperty($name);
+		return $this->getSubProperty($name, $casesens);
 	}
 	
 	/** delete a property from his name

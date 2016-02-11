@@ -119,7 +119,7 @@ class Param
 		{
 			foreach($xml->bitfields->bitfield as $bitfield)
 			{
-				array_push($this->parambitfields, new ParamBitfield($bitfield));
+				$this->addParamBitfield(new ParamBitfield($bitfield));
 			}
 		}
 		
@@ -213,24 +213,35 @@ class Param
 	 *  @param ParamBitfield $parambitfield parambitfield to add to the param **/
 	function addParamBitfield($parambitfield)
 	{
-		//$parambitfield->parent = $this;
+		$parambitfield->parentParam = $this;
 		array_push($this->parambitfields, $parambitfield);
 	}
 	
 	/** return a reference to the bitfield with the name $name, if not found, return null
 	 *  @param string $name name of the parambitfield to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return ParamBitfield found bitfield **/
-	function getParambitfield($name)
+	function getParambitfield($name, $casesens=true)
 	{
-		foreach($this->parambitfields as $parambitfield)
+		if($casesens)
 		{
-			if($parambitfield->name==$name) return $parambitfield;
+			foreach($this->parambitfields as $parambitfield)
+			{
+				if($parambitfield->name==$name) return $parambitfield;
+			}
+		}
+		else
+		{
+			foreach($this->parambitfields as $parambitfield)
+			{
+				if(strcasecmp($parambitfield->name,$name)==0) return $parambitfield;
+			}
 		}
 		return null;
 	}
 	
 	/** delete a bitfield from his name
-	 *  @param string $name name of the bitfield to delete  **/
+	 *  @param string $name name of the bitfield to delete **/
 	function delParambitfield($name)
 	{
 		$i=0;

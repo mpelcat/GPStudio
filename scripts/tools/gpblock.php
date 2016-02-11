@@ -194,7 +194,7 @@ switch($action)
 		if(array_key_exists('s',$options)) $size = (int)$options['s']; else error("You should specify a size for the flow with -s",1);
 		
 		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
-		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
+		if($block->getInstance($name,false)!=NULL) error("This instance name already exists (insensitive case).",1);
 		if($direction!="in" and $direction!="out") error("You should specify a direction for the flow with -d [in-out]",1);
 		
 		$flow = new Flow();
@@ -228,8 +228,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the flow with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the flow with -v",1);
 		
-		if($block->getFlow($newname)!=NULL) error("This flow name '$newname' already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if(($flow=$block->getFlow($name))==NULL) error("A flow does not exist with the name '$name'.",1);
+		$check=$block->getFlow($newname,false);
+		if($check!=$flow and $check!=NULL) error("This flow name '$check->name' already exists (insensitive case).",1);
 		
 		$flow->name = $newname;
 		
@@ -301,8 +303,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the param with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the param with -v",1);
 		
-		if($block->getParam($newname)!=NULL) error("This param name '$newname' already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if(($param=$block->getParam($name))==NULL) error("A param does not exist with the name '$name'.",1);
+		$check=$block->getParam($newname,false);
+		if($check!=$param and $check!=NULL) error("This param name '$check->name' already exists (insensitive case).",1);
 		
 		$param->name = $newname;
 		
@@ -362,13 +366,13 @@ switch($action)
 		$options = getopt("a:n:b:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
 		if(array_key_exists('b',$options)) $bitfield = (string)$options['b']; else error("You should specify a bitfield bits selection for the bitfield with -b\nExemple: 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]",1);
-		
-		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
-		
+				
 		$subPath=explode('.',$name);
 		if(count($subPath)!=2) error("Invalide name for a bitfield (param.parambitfield).",1);
 		$param=$block->getParam($subPath[0]);
 		if($param==NULL) error("Unknow param name '".$subPath[0]."'.",1);
+		
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $subPath[1])) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		$paramBitField=$param->getParambitfield($subPath[1]);
 		if($paramBitField!=NULL) error("This bitfield name already exists.",1);
 		
@@ -407,8 +411,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the bitfield with -v",1);
 		
-		if($block->getParambitfield($newname)!=NULL) error("This bitfield name '$newname' already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if(($bitfield=$block->getParambitfield($name))==NULL) error("A bitfield does not exist with the name '$name'.",1);
+		$check=$bitfield->parentParam->getParambitfield($newname,false);
+		if($check!=$bitfield and $check!=NULL) error("This bitfield name '$check->name' already exists (insensitive case).",1);
 		
 		$bitfield->name = $newname;
 		
@@ -467,8 +473,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the reset with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the reset with -v",1);
 		
-		if($block->getReset($newname)!=NULL) error("This reset name '$newname' already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if(($reset=$block->getReset($name))==NULL) error("A reset does not exist with the name '$name'.",1);
+		$check=$block->getReset($newname,false);
+		if($check!=$reset and $check!=NULL) error("This reset name '$check->name' already exists (insensitive case).",1);
 		
 		$reset->name = $newname;
 		
@@ -535,8 +543,10 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the clock with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the clock with -v",1);
 		
-		if($block->getClock($newname)!=NULL) error("This clock name '$newname' already exists.",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if(($clock=$block->getClock($name))==NULL) error("A clock does not exist with the name '$name'.",1);
+		$check=$block->getClock($newname,false);
+		if($check!=$clock and $check!=NULL) error("This clock name '$check->name' already exists (insensitive case).",1);
 		
 		$clock->name = $newname;
 		
@@ -581,7 +591,7 @@ switch($action)
 	
 	// ========================== extport commands =====================
 	case "addextport":
-		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		if(TOOL!="gpdevice") error("This command can only be used on a device block.",1);
 		
 		$options = getopt("a:n:t:s:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the external port with -n",1);
@@ -601,7 +611,7 @@ switch($action)
 		break;
 		
 	case "delextport":
-		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		if(TOOL!="gpdevice") error("This command can only be used on a device block.",1);
 		
 		$options = getopt("a:n:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the file with -n",1);
@@ -612,7 +622,7 @@ switch($action)
 		break;
 		
 	case "showextport":
-		if(TOOL!="gpdevice") error("This command can only be used on an io block.",1);
+		if(TOOL!="gpdevice") error("This command can only be used on a device block.",1);
 		
 		echo "external ports :" . "\n";
 		foreach($block->ext_ports as $ext_port)
@@ -634,10 +644,10 @@ switch($action)
 		
 		$parent=$block;
 		$i=0;
-		if(($instance=$block->getFlow($subprops[0]))!=NULL) {$parent=$instance; $i++;}
+		if(($instance=$block->getFlow($subprops[0],false))!=NULL) {$parent=$instance; $i++;}
 		for(; $i<count($subprops); $i++)
 		{
-			$property = $parent->getProperty($subprops[$i]);
+			$property = $parent->getProperty($subprops[$i],false);
 			if($property==null)
 			{
 				if($i<count($subprops)-1) error("Invalid property name '$name' $parent->name.",1);
@@ -699,17 +709,17 @@ switch($action)
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
 		if(array_key_exists('v',$options)) $newname = $options['v']; else error("You should specify a new name for the property with -v",1);
 		
-		if(strpos($newname, '.')!==false) error("Property name cannot contains . (dot)",1);
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname)) echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		
 		if(($property=$block->getPropertyPath($name))==NULL) error("A property does not exist with the name '$name'.",1);
 		if($property->parentProperty==NULL)
 		{
-			if($block->getProperty($newname)!=NULL) error("This property name '$newname' already exists.",1);
+			if($block->getProperty($newname,false)!=NULL) error("This property name '$newname' already exists.",1);
 		}
 		else
 		{
 			$newpath=$property->parentProperty->path().".".$newname;
-			if($block->getPropertyPath($newpath)!=NULL) error("This property name '$newpath' already exists.",1);
+			if($block->getPropertyPath($newpath,false)!=NULL) error("This property name '$newpath' already exists.",1);
 		}
 		
 		$property->name = $newname;
