@@ -372,20 +372,33 @@ Allows to modify one or more flow parameters like the direction or the default s
 % ==============================================
 \subsubsection{addparam}
 \label{subsec:addparam}
-\command{\textbf{\tool{} addparam} -n <param-name> -d <direction> -g <group>}
+\command{\textbf{\tool{} addparam} -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>] [-m <property-map>]}
 
 Adds a param named \texttt{<param-name>} to the list of params.\\
 
 \paramcommand{
 -n & name of the param & param0 \\
+\hline
+-t & type of the param for fixed param & toolchain-type \\
+\hline
+-r & relative address of the param for dynamic param & 2 \\
+\hline
+-v & default value of the param & TRUE \newline 1024 \\
+\hline
+-m & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
 }
 
-\begin{sampletitle}
-> \textbf{\tool{} addparam} -n param0
+\begin{sampletitle}[1]
+> \textbf{\tool{} addparam} -n MAX\_LINE\_WIDTH -t INTEGER -v 1280
 \end{sampletitle}
-\samplecomment{Adds a new param input named `param0'}
+\samplecomment{Adds a new fixed param named `MAX\_LINE\_WIDTH' of type INTEGER with a default value of 1280. This example is typically used to define the size of internal buffer when you have to save a complete line of picture in your process.}
 
-\seealso{\textbf{\tool{} delparam} and \textbf{\tool{} showparam}}
+\begin{sampletitle}[2]
+> \textbf{\tool{} addparam} -n offset\_reg -r 1 -m offset.value
+\end{sampletitle}
+\samplecomment{Adds a new register named `offset\_reg' with the relative address 1. The value of the register is linked to the value of the property `offset'.}
+
+\seealso{\textbf{\tool{} delparam}, \textbf{\tool{} showparam} and \textbf{\tool{} setpropertymap}}
 
 % ==============================================
 \subsubsection{delparam}
@@ -435,7 +448,7 @@ Renames the param named \texttt{<param-name>} with the name \texttt{<new-name>}.
 % ==============================================
 \subsubsection{setparam}
 \label{subsec:setparam}
-\command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]}
+\command{\textbf{\tool{} setparam} -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>]}
 
 Allows to modify one or more param parameters like the type, the default value or the relative address.\\
 
@@ -444,9 +457,9 @@ Allows to modify one or more param parameters like the type, the default value o
 \hline
 -t & type of the param for fixed param & toolchain-type \\
 \hline
--v & default value of the param & TRUE \\
-\hline
 -r & relative address of the param for dynamic param & 2 \\
+\hline
+-v & default value of the param & TRUE \\
 }
 
 \begin{sampletitle}[1]
@@ -474,7 +487,7 @@ Transforms a param to a fixed parameter  if -v is true or a dynamic parameter el
 % ==============================================
 \subsubsection{addbitfield}
 \label{subsec:addbitfield}
-\command{\textbf{\tool{} addbitfield} -n <param-name.bitfield-name> -b <bitfield>}
+\command{\textbf{\tool{} addbitfield} -n <param-name.bitfield-name> -b <bitfield> [-m <property-map>]}
 
 Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name>}.\\
 
@@ -482,6 +495,8 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 -n & name of the bit field composed by the param name, a dot and the bits field name & param.b0 \\
 \hline
 -b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
+\hline
+-m & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
 }
 
 \begin{sampletitle}[1]
@@ -494,7 +509,7 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 \end{sampletitle}
 \samplecomment{Adds a bit field `mode' positioned on the bits 5 downto 3 in the register status}
 
-\seealso{\textbf{\tool{} delbitfield} and \textbf{\tool{} showbitfield}}
+\seealso{\textbf{\tool{} delbitfield}, \textbf{\tool{} showbitfield} and \textbf{\tool{} setpropertymap}}
 
 % ==============================================
 \subsubsection{delbitfield}
@@ -563,7 +578,7 @@ Allows to modify bit field bits selection.\\
 % ==============================================
 \subsubsection{addproperty}
 \label{subsec:addproperty}
-\command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>]}
+\command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>] [-m <property-map>]}
 
 Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for high level interface, a type to define the widget adapted to this data and optionally a default value.\\
 
@@ -573,6 +588,8 @@ Adds a property named \texttt{<property-name>} to the list of properties. You ne
 -t & type of property & [int-sint-bool-group-matrix-enum] \\
 \hline
 -v & default value at the beginning of the program & true \\
+\hline
+-m & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
 }
 
 \begin{sampletitle}
@@ -580,7 +597,7 @@ Adds a property named \texttt{<property-name>} to the list of properties. You ne
 \end{sampletitle}
 \samplecomment{Adds a new property to enable the \kind{}. At this point, the property is not linked to a register, you need to use \textbf{setpropertymap} to do that.}
 
-\seealso{\textbf{\tool{} delproperty}, \textbf{\tool{} setpropertymap} and \textbf{\tool{} showproperty}}
+\seealso{\textbf{\tool{} delproperty}, \textbf{\tool{} showproperty} and \textbf{\tool{} setpropertymap}}
 
 % ==============================================
 \subsubsection{delproperty}

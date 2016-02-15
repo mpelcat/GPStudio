@@ -258,17 +258,27 @@ switch($action)
 	
 	// =========================== params commands =====================
 	case "addparam":
-		$options = getopt("a:n:");
+		$options = getopt("a:n:t:v:r:m:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the param with -n",1);
 		
 		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
 		if($block->getInstance($name)!=NULL) error("This instance name already exists.",1);
 		
+		if(array_key_exists('t',$options)) $type = $options['t']; else $type='';
+		if(array_key_exists('v',$options)) $value = $options['v']; else $value='';
+		if(array_key_exists('r',$options)) $regaddr = $options['r']; else $regaddr='';
+		if(array_key_exists('m',$options)) $propertymap = $options['m']; else $propertymap='';
+		
+		if(array_key_exists('t',$options) and array_key_exists('r',$options)) error("You could not define a relative address and a type for a parameter.",1);
+		
 		$param = new Param();
 		$param->name = $name;
-		$param->hard = false;
-		$param->default = 0;
-		$param->value = 0;
+		if($type!='') $param->hard = true; else $param->hard = false;
+		$param->default = $value;
+		$param->value = $value;
+		$param->type = $type;
+		$param->regaddr = $regaddr;
+		$param->propertymap = $propertymap;
 		
 		$block->addParam($param);
 		break;
@@ -322,6 +332,8 @@ switch($action)
 		if(array_key_exists('v',$options)) $value = $options['v']; else $value=$param->value;
 		if(array_key_exists('r',$options)) $regaddr = $options['r']; else $regaddr=$param->regaddr;
 		
+		if(array_key_exists('t',$options) and array_key_exists('r',$options)) error("You could not define a relative address and a type for a parameter.",1);
+		
 		if(isset($regaddr) and $param->hard==false)
 		{
 			if(log($regaddr, 2)>$block->pi_size_addr_rel or $block->pi_size_addr_rel==0)
@@ -363,9 +375,10 @@ switch($action)
 	
 	// ========================= bitfields commands ====================
 	case "addbitfield":
-		$options = getopt("a:n:b:");
+		$options = getopt("a:n:b:m:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the bitfield with -n",1);
 		if(array_key_exists('b',$options)) $bitfield = (string)$options['b']; else error("You should specify a bitfield bits selection for the bitfield with -b\nExemple: 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]",1);
+		if(array_key_exists('m',$options)) $propertymap = $options['m']; else $propertymap='';
 				
 		$subPath=explode('.',$name);
 		if(count($subPath)!=2) error("Invalide name for a bitfield (param.parambitfield).",1);
@@ -379,6 +392,7 @@ switch($action)
 		$paramBitField = new ParamBitfield();
 		$paramBitField->name = $subPath[1];
 		$paramBitField->bitfield = $bitfield;
+		$paramBitField->propertymap = $propertymap;
 		
 		$param->addParamBitfield($paramBitField);
 		break;
@@ -634,17 +648,23 @@ switch($action)
 	
 	// ======================= properties commands =====================
 	case "addproperty":
-		$options = getopt("a:n:t:v:");
+		$options = getopt("a:n:t:v:m:");
 		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the property with -n",1);
 		if(array_key_exists('t',$options)) $type = $options['t']; else error("You should specify a type for the property with -t",1);
-		if(array_key_exists('v',$options)) $value = $options['v']; else $value="";
+		if(array_key_exists('v',$options)) $value = $options['v']; else $value='';
+		if(array_key_exists('m',$options)) $propertymap = $options['m']; else $propertymap='';
 		
 		$subprops = explode('.', $name);
 		if(count($subprops)==0) error("Invalid property name '$name'.",1);
 		
 		$parent=$block;
 		$i=0;
-		if(($instance=$block->getFlow($subprops[0],false))!=NULL) {$parent=$instance; $i++;}
+		if(($instance=$block->getFlow($subprops[0],false))!=NULL)
+		{
+			$parent=$instance;
+			$i++;
+			if($instance->type!='out') error("It's forbiden to add property to an input flow.",1);
+		}
 		for(; $i<count($subprops); $i++)
 		{
 			$property = $parent->getProperty($subprops[$i],false);
@@ -667,6 +687,7 @@ switch($action)
 		$property->caption = $property->name;
 		$property->type = $type;
 		$property->value = $value;
+		$property->propertymap = $propertymap;
 		
 		$parent->addProperty($property);
 		break;

@@ -22,16 +22,16 @@ gpblock renameflow -n <flow-name> -v <new-name>
 gpblock setflow -n <flow-name> [-d <direction>] [-s <size>]
 
 # params
-gpblock addparam -n <param-name>
+gpblock addparam -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>] [-m <property-map>]
 gpblock delparam -n <param-name>
 gpblock showparam
 gpblock renameparam -n <param-name> -v <new-name>
-gpblock setparam -n <param-name> [-t <type>] [-v <default-value>] [-r <relative-address>]
+gpblock setparam -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>]
 gpblock fixparam -n <param-name> [-v <true/false>]
 gpblock setpisizeaddr -v <pi-size-addr>
 
 	# bitfields
-	gpblock addbitfield -n <bitfield-name> -b <bitfield>
+	gpblock addbitfield -n <bitfield-name> -b <bitfield> [-m <property-map>]
 	gpblock delbitfield -n <bitfield-name>
 	gpblock showbitfield -n <param-name>
 	gpblock renamebitfield -n <bitfield-name> -v <new-name>
@@ -57,7 +57,7 @@ gpblock delport -n <port-name>
 gpblock showport
 
 # properties
-gpblock addproperty -n <property-name> -l <label> -t <type> [-v <default-value>]
+gpblock addproperty -n <property-name> -l <label> -t <type> [-v <default-value>] [-m <property-map>]
 gpblock delproperty -n <property-name>
 gpblock showproperty [-n <property/flow-name>]
 gpblock renameproperty -n <property-name> -v <new-name>
