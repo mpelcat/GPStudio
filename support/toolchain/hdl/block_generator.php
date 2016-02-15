@@ -31,6 +31,11 @@ class Block_generator
 		return 'x"'.str_pad(strtoupper(dechex($value)),ceil($width/4.0),'0',STR_PAD_LEFT).'"';
 	}
 	
+	static function bin($value, $width)
+	{
+		return '"'.str_pad(strtoupper(decbin($value)),$width,'0',STR_PAD_LEFT).'"';
+	}
+	
 	function fromBlock($block)
 	{
 		// top block creation
@@ -219,6 +224,14 @@ class Block_generator
 							
 							// slave internal
 							$this->slave_generator->addSignal($param->name."_".$parambitfield->name."_reg", $size, $type);
+							if($size==1)
+							{
+								$code_rst.="			".$param->name."_".$parambitfield->name."_reg <= '".(int)$parambitfield->value."';"."\r\n";
+							}
+							else
+							{
+								$code_rst.="			".$param->name."_".$parambitfield->name."_reg <= ".Block_generator::bin($parambitfield->value,$size).";"."\r\n";
+							}
 						}
 					}
 				}
