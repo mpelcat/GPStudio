@@ -179,6 +179,25 @@ class Block_generator
 		
 		$this->process_generator = new VHDL_generator($this->block->name.'_process');
 		
+		$code='';
+		$code.="	data_process : process (clk_proc, reset_n)"."\r\n";
+		$code.="	begin"."\r\n";
+		$code.="		if(reset_n='0') then"."\r\n";
+		$code.="			out_data <= (others => '0');"."\r\n";
+		$code.="			out_dv <= '0';"."\r\n";
+		$code.="			out_fv <= '0';"."\r\n";
+		$code.="		elsif(rising_edge(clk_proc)) then"."\r\n";
+		$code.="			out_dv <= in_dv;"."\r\n";
+		$code.="			out_fv <= in_fv;"."\r\n";
+		$code.="\r\n";
+		$code.="			if(in_dv='1' and in_fv='1') then"."\r\n";
+		$code.="				out_data <= in_data;"."\r\n";
+		$code.="			end if;"."\r\n";
+		$code.="		end if;"."\r\n";
+		$code.="	end process;";
+		
+		$this->process_generator->addCode($code);
+		
 		// process generation
 		$this->process_generator->fromBlock($this->process_block, TRUE);
 		$this->process_generator->save_as_ifdiff($path.DIRECTORY_SEPARATOR.$this->process_generator->name.'.vhd');
