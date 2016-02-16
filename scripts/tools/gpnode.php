@@ -14,33 +14,6 @@ require_once("gpstudio.php");
 $options = getopt("a:");
 if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a",1);
 
-if(strrpos($action, "list", -strlen($action)) !== FALSE) setVerbosity(false);
-
-// new project creation
-if($action=="newproject")
-{
-	$options = getopt("a:n:");
-	if(array_key_exists('n',$options)) $project=$options['n']; else error("You should specify a project name with -n",1);
-	
-	$node = new Node();
-	$node->name=$project;
-	$project.=".node";
-}
-else
-{
-	$project=findproject();
-	if(!file_exists($project))
-	{
-		if(strpos($action, "list")===false) error("Cannot find a valid project in the current directory.",1);
-		else exit(1);
-	}
-	
-	$node = new Node($project);
-}
-
-$save = true;
-
-// process action, pre config
 switch($action)
 {
 	// =========================== global commands =========================== 
@@ -80,16 +53,43 @@ switch($action)
 		echo "# === clock interconnect ==="."\n";
 		echo "gpnode setclockdomain -n <domain-name> -v <frequency>      # define a clock frequency <frequency> the the clock domain <domain-name>"."\n";
 		echo "gpnode showclockdomain                                     # print the list of clock domains in the current project"."\n";
-
-		$save = false;
-		break;
+		exit(0);
 		
 	case "-v":
 	case "--version":
 		echo "# gpnode command line tool to manage a gpstudio node (v0.95)"."\n";
-		$save = false;
-		break;
+		exit(0);
+}
+
+if(strrpos($action, "list", -strlen($action)) !== FALSE) setVerbosity(false);
+
+// new project creation
+if($action=="newproject")
+{
+	$options = getopt("a:n:");
+	if(array_key_exists('n',$options)) $project=$options['n']; else error("You should specify a project name with -n",1);
 	
+	$node = new Node();
+	$node->name=$project;
+	$project.=".node";
+}
+else
+{
+	$project=findproject();
+	if(!file_exists($project))
+	{
+		if(strpos($action, "list")===false) error("Cannot find a valid project in the current directory.",1);
+		else exit(1);
+	}
+	
+	$node = new Node($project);
+}
+
+$save = true;
+
+// process action, pre config
+switch($action)
+{
 	// =========================== project commands =========================== 
 	case "newproject":
 		// nothing to do

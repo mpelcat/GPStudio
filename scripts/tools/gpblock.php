@@ -16,6 +16,22 @@ require_once('toolchain'.DIRECTORY_SEPARATOR.'hdl'.DIRECTORY_SEPARATOR."block_ge
 $options = getopt("a:");
 if(array_key_exists('a',$options)) $action = $options['a']; else error("You should specify an action with -a",1);
 
+switch($action)
+{
+	// =========================== global commands =====================
+	case "-h":
+	case "--help":
+		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
+		// TODO complete
+		exit(0);
+		break;
+	case "-v":
+	case "--version":
+		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
+		exit(0);
+		break;
+}
+
 // new block creation
 if($action=="new" and TOOL=="gpproc")
 {
@@ -70,18 +86,6 @@ $save = true;
 
 switch($action)
 {
-	// =========================== global commands =====================
-	case "-h":
-	case "--help":
-		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
-		$save = false;
-		break;
-	case "-v":
-	case "--version":
-		echo "# ".TOOL." command line tool to manage a gpstudio block (v0.95)"."\n";
-		$save = false;
-		break;
-	
 	// =========================== project commands ====================
 	case "new":
 		// nothing to do
