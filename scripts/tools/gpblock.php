@@ -280,6 +280,14 @@ switch($action)
 		$param->regaddr = $regaddr;
 		$param->propertymap = $propertymap;
 		
+		if($regaddr!='' and $param->hard==false)
+		{
+			if(log($regaddr, 2)>$block->pi_size_addr_rel or $block->pi_size_addr_rel==0)
+			{
+				warning("Your relative adress is greater than the range of relative address ($block->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n".TOOL." setpisizeaddr -v ".( ($regaddr==0)? 1 : (floor(log($regaddr, 2))+1)),1);
+			}
+		}
+		
 		$block->addParam($param);
 		break;
 		
