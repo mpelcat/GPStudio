@@ -241,14 +241,37 @@ class Property
 	
 	/** return a reference to the property enum with the name $name, if not found, return false
 	 *  @param string $name name of the property enum to search
+	 *  @param bool $casesens take care or not of the case of the name
 	 *  @return PropertyEnum found property enum **/
-	function getPropertyEnum($name)
+	function getPropertyEnum($name, $casesens=true)
 	{
-		foreach($this->propertyenums as $propertyenum)
+		if($casesens)
 		{
-			if($propertyenum->name==$name) return $propertyenum;
+			foreach($this->propertyenums as $propertyenum)
+			{
+				if($propertyenum->name==$name) return $propertyenum;
+			}
+		}
+		else
+		{
+			foreach($this->propertyenums as $propertyenum)
+			{
+				if(strcasecmp($propertyenum->name,$name)==0) return $propertyenum;
+			}
 		}
 		return null;
+	}
+	
+	/** delete a property enum from his name
+	 *  @param string $name name of the property enum to delete  **/
+	function delPropertyEnum($name)
+	{
+		$i=0;
+		foreach($this->propertyenums as $propertyenum)
+		{
+			if($propertyenum->name==$name) {unset($this->propertyenums[$i]); return;}
+			$i++;
+		}
 	}
 	
 	/** Add a sub-property to the property 

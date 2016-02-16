@@ -64,6 +64,11 @@ gpblock renameproperty -n <property-name> -v <new-name>
 gpblock setproperty -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]
 gpblock setpropertymap -n <param/property/bitfield-name> -v <property-map>
 
+	# enums
+	gpblock addenum -n <enum-name> -v <value> [-l <label>]
+	gpblock delenum -n <enum-name>
+	gpblock showenum -n <property-name>
+
 # global
 gpblock sethelp [-n <instance-name>] -v <help-text>
 gpblock setblockinfo [-c <categ>] [-p <author>] [-d <draw>]

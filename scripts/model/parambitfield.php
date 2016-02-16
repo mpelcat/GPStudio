@@ -73,40 +73,53 @@ class ParamBitfield
 		$this->propertymap	= (string)$xml['propertymap'];
 		$this->desc			= (string)$xml['desc'];
 		
-		// bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
 		if(isset($xml['bitfield']))
 		{
 			$bitfield = (string)$xml['bitfield'];
 			if(!empty($bitfield) or $bitfield=="0")
 			{
 				$this->bitfield		= $bitfield;
-				preg_match_all("|([-,]?)([0-9])|", $bitfield, $out, PREG_SET_ORDER);
-				
-				$prev=-1;
-				$lastsymbole='';
-				foreach($out as $bitdesc)
-				{
-					$bit = $bitdesc[2];
-					$symbole = $bitdesc[1];
-					
-					if($bit > 31) break;
-					
-					if($symbole==',')
-					{
-						if($lastsymbole==',' or $lastsymbole=='') array_push($this->bitfieldlist, $prev);
-					}
-					elseif($symbole=='-')
-					{
-						if($prev<$bit) break;
-						for($i=$prev; $i>=$bit; $i--) array_push($this->bitfieldlist, $i);
-					}
-					
-					$prev = $bit;
-					$lastsymbole = $symbole;
-				}
-				if(($lastsymbole==',' or $lastsymbole=='') and $prev!=-1) array_push($this->bitfieldlist, $prev);
+				$this->bitfieldlist = ParamBitfield::decodeBitField($bitfield);
 			}
 		}
+	}
+	
+	public static function decodeBitField($string)
+	{
+		$bitfieldlist = array();
+		// bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
+		preg_match_all("|([-,]?)([0-9])|", $string, $out, PREG_SET_ORDER);
+		
+		$prev=-1;
+		$lastsymbole='';
+		foreach($out as $bitdesc)
+		{
+			$bit = $bitdesc[2];
+			$symbole = $bitdesc[1];
+			
+			if($bit > 31) break;
+			
+			if($symbole==',')
+			{
+				if($lastsymbole==',' or $lastsymbole=='') array_push($bitfieldlist, $prev);
+			}
+			elseif($symbole=='-')
+			{
+				if($prev<$bit)
+				{
+					for($i=$prev; $i<=$bit; $i++) array_push($bitfieldlist, $i);
+				}
+				else
+				{
+					for($i=$prev; $i>=$bit; $i--) array_push($bitfieldlist, $i);
+				}
+			}
+			
+			$prev = $bit;
+			$lastsymbole = $symbole;
+		}
+		if(($lastsymbole==',' or $lastsymbole=='') and $prev!=-1) array_push($bitfieldlist, $prev);
+		return $bitfieldlist;
 	}
 	
 	public function getXmlElement($xml, $format)

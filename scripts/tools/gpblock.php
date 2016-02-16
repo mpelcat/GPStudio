@@ -793,6 +793,61 @@ switch($action)
 		
 		break;
 	
+	// ========================= enums commands ========================
+	case "addenum":
+		$options = getopt("a:n:v:l:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the enum with -n",1);
+		if(array_key_exists('v',$options)) $value = $options['v']; else error("You should specify a value for the enum with -v",1);
+		if(array_key_exists('l',$options)) $caption = $options['l']; else $caption = '';
+		
+		$subprops = explode('.', $name);
+		if(count($subprops)==0) error("Invalid enum name '$name'.",1);
+		
+		$name = $subprops[count($subprops)-1];
+		$propertyPath = array_slice($subprops, 0, count($subprops)-1);
+		$propertyPath = implode('.', $propertyPath);
+		$property = $block->getPropertyPath($propertyPath);
+		if($property==NULL) error("This property name '$propertyPath' does not exist.",1);
+		
+		if($property->getPropertyEnum($name, false)!=NULL) error("This instance name already exists.",1);
+		
+		if(!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name)) echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).",1);
+		
+		if($caption=='') $caption = $name;
+		
+		$propertyEnum = new PropertyEnum();
+		$propertyEnum->name = $name;
+		$propertyEnum->caption = $caption;
+		$propertyEnum->value = $value;
+		
+		$property->type = "enum";
+		$property->addPropertyEnum($propertyEnum);
+		break;
+		
+	case "delenum":
+		$options = getopt("a:n:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name for the enum with -n",1);
+		
+		if($block->getPropertyEnumPath($name)==NULL) error("A enum does not exist with the name '$name'.",1);
+		
+		$block->delPropertyEnumPath($name);
+		break;
+		
+	case "showenum":
+		$options = getopt("a:n:");
+		if(array_key_exists('n',$options)) $name = $options['n']; else error("You should specify a name of a property with -n",1);
+		
+		$property = $block->getPropertyPath($name);
+		if($property==NULL) error("A property does not exist with the name '$name'.",1);
+		
+		echo "enums :" . "\n";
+		foreach($property->propertyenums as $propertyenum)
+		{
+			echo "  + ".$propertyenum. "\n";
+		}
+		
+		break;
+	
 	// ========================= global commands =======================
 	case "sethelp":
 		$options = getopt("a:n:v:");

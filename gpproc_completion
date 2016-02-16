@@ -15,6 +15,7 @@ _gpproc()
 					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
 					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
+					"addenum"     "delenum"     "showenum"
 					"sethelp"
     )
 
@@ -41,7 +42,7 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap)
+                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -113,8 +114,12 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
                         return 0
                         ;;
-                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap)
+                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap|addenum)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
                         return 0
                         ;;
                     addbitfield|setbitfield)
@@ -183,8 +188,20 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addbitfield)
+                        COMPREPLY=( $( compgen -W '-m' -- "$cur" ) )
+                        return 0
+                        ;;
                     addproperty)
-                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addenum)
+                        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
                         return 0
                         ;;
                     setflow)
@@ -237,8 +254,16 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
                         return 0
                         ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
                     setproperty)
                         COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -251,6 +276,18 @@ _gpproc()
 						fi
 						return 0
 						;;
+                esac
+                ;;
+            11)
+                case $command in
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
         esac

@@ -16,6 +16,7 @@ _gpdevice()
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
 					"addextport"  "delextport"  "showextport"
 					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
+					"addenum"     "delenum"     "showenum"
 					"sethelp"
     )
 
@@ -42,7 +43,7 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap)
+                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -114,8 +115,12 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
                         return 0
                         ;;
-                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap)
+                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap|addenum)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
                         return 0
                         ;;
                     addbitfield|setbitfield)
@@ -184,8 +189,20 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addbitfield)
+                        COMPREPLY=( $( compgen -W '-m' -- "$cur" ) )
+                        return 0
+                        ;;
                     addproperty)
-                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addenum)
+                        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
                         return 0
                         ;;
                     setflow)
@@ -238,8 +255,16 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
                         return 0
                         ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
                     setproperty)
                         COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -252,6 +277,18 @@ _gpdevice()
 						fi
 						return 0
 						;;
+                esac
+                ;;
+            11)
+                case $command in
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
         esac

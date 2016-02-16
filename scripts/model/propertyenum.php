@@ -7,6 +7,12 @@ class PropertyEnum
 	* @var string $name
 	*/
 	public $name;
+	
+	/**
+	* Caption of the property for high level interface (can contain space)
+	* @var string $caption
+	*/
+	public $caption;
 
 	/**
 	* Coresponding value of the enum when this enum is chosen
@@ -33,9 +39,17 @@ class PropertyEnum
 		if($xml) $this->parse_xml($xml);
 	}
 	
+	public function __toString()
+    {
+        $string=$this->name." caption:'".$this->caption."' value:'".$this->value."' desc:'".$this->desc."'";
+        return $string;
+    }
+	
 	protected function parse_xml($xml)
 	{
 		$this->name		= (string)$xml['name'];
+		$this->caption	= (string)$xml['caption'];
+		if($this->caption=='') $this->caption = $this->name;
 		$this->value	= (string)$xml['value'];
 		$this->desc		= (string)$xml['desc'];
 	}
@@ -54,8 +68,13 @@ class PropertyEnum
 		$att->value = $this->value;
 		$xml_element->appendChild($att);
 		
-		if($format=="complete")
+		if($format=="complete" or $format=="blockdef")
 		{
+			// caption
+			$att = $xml->createAttribute('caption');
+			$att->value = $this->caption;
+			$xml_element->appendChild($att);
+		
 			// desc
 			$att = $xml->createAttribute('desc');
 			$att->value = $this->desc;

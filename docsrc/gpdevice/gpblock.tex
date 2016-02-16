@@ -118,6 +118,8 @@ Commands of \tool{} always have the same naming convention. This table is a brie
 \hline 
 \textbf{property} & \hyperref[subsec:addproperty]{addproperty} & \hyperref[subsec:delproperty]{delproperty} & \hyperref[subsec:showproperty]{showproperty} & \hyperref[subsec:renameproperty]{renameproperty} & \hyperref[subsec:setproperty]{setproperty}  \\ 
 \hline 
+\textbf{enum} & \hyperref[subsec:addenum]{addenum} & \hyperref[subsec:delenum]{delenum} & \hyperref[subsec:showenum]{showenum} &  &  \\ 
+\hline 
 \textbf{reset} & \hyperref[subsec:addreset]{addreset} & \hyperref[subsec:delreset]{delreset} & \hyperref[subsec:showreset]{showreset} & \hyperref[subsec:renamereset]{renamereset} & \hyperref[subsec:setreset]{setreset}  \\ 
 \hline 
 \textbf{clock} & \hyperref[subsec:addclock]{addclock} & \hyperref[subsec:delclock]{delclock} & \hyperref[subsec:showclock]{showclock} & \hyperref[subsec:renameclock]{renameclock} & \hyperref[subsec:setclock]{setclock}  \\ 
@@ -580,7 +582,7 @@ Allows to modify bit field bits selection.\\
 \label{subsec:addproperty}
 \command{\textbf{\tool{} addproperty} -n <property-name> -t <type> [-v <default-value>] [-m <property-map>]}
 
-Adds a property named \texttt{<property-name>} to the list of properties. You need to specify a label for high level interface, a type to define the widget adapted to this data and optionally a default value.\\
+Adds a property named \texttt{<property-name>} to the list of properties. You need to define a type to define the widget adapted to this data and optionally a default value. You can also specify a label for high level interface.\\
 
 \paramcommand{
 -n & name of the property. Can be  & enable \\
@@ -704,6 +706,57 @@ This expression can be more complex than a simple mathematical expression. Can c
 > \textbf{\tool{} setpropertymap} -n shift\_reg -v "Math.floor(Math.log2(div.value))+1"
 \end{sampletitle}
 \samplecomment{Sets property map on the flow `out'. The output image size is the size of the input minus 2.}
+
+\subsection{enums}
+% ==============================================
+\subsubsection{addenum}
+\label{subsec:addenum}
+\command{\textbf{\tool{} addenum} -n <enum-name> -v <value> [-l <label>]}
+
+Adds a new enumeration item named \texttt{<enum-name>} to the list of enums in the property. The associated value will be set to the parent property when the enum will chosen. You can also specify a label for high level interface.\\
+
+\paramcommand{
+-n & property path with a dot following by the name of the enum item & mode.erode \\
+\hline
+-v & value of the enum item & 2 \\
+\hline
+-l & label of the enum item (optional, take the value of the name) & "Erode mode" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} addproperty} -n width -l "image width" -t enum -m width\_reg \\
+> \textbf{\tool{} addenum} -n width.w480 -l "480 px" -v 0 \\
+> \textbf{\tool{} addenum} -n width.w640 -l "640 px" -v 1 \\
+> \textbf{\tool{} addenum} -n width.w860 -l "860 px" -v 2
+\end{sampletitle}
+\samplecomment{Adds a new property `width' associated to the register `width\_reg' and three enumeration items to it.}
+
+\seealso{\textbf{\tool{} delenum} and \textbf{\tool{} showenum}}
+
+% ==============================================
+\subsubsection{delenum}
+\label{subsec:delenum}
+\command{\textbf{\tool{} delenum} -n <enum-name>}
+
+Removes the enum with the name \texttt{<enum-name>}.\\
+
+\paramcommand{
+-n & name of the enum & mode.erode \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} delenum} -n mode.erode
+\end{sampletitle}
+\samplecomment{Removes the enum named `erode' in the `mode' enum.}
+
+\seealso{\textbf{\tool{} addenum} and \textbf{\tool{} showenum}}
+
+% ==============================================
+\subsubsection{showenum}
+\label{subsec:showenum}
+\command{\textbf{\tool{} showenum} [-n <property-name>]}
+
+Prints the list of enumeration item in the property \texttt{<property-name>} of the current block project if no name is specified. If a name is given, list the enums of the given property.
 
 \subsection{resets}
 % ==============================================

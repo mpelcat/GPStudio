@@ -432,6 +432,40 @@ class Block
 		$parent->delProperty($subprops[count($subprops)-1]);
 	}
 	
+	/** return a reference to the property with the access path $path, if not found, return null
+	 *  @param string $path path of the property to search, separed by . (dot)
+	 *  @param bool $casesens take care or not of the case of the name
+	 *  @return Property found property **/
+	function getPropertyEnumPath($path, $casesens=true)
+	{
+		$subprops = explode('.', $path);
+		if(count($subprops)==0) return NULL;
+		
+		$name = $subprops[count($subprops)-1];
+		$propertyPath = array_slice($subprops, 0, count($subprops)-1);
+		$propertyPath = implode('.', $propertyPath);
+		$property = $this->getPropertyPath($propertyPath, $casesens);
+		if($property==NULL) return NULL;
+		
+		return $property->getPropertyEnum($name, $casesens);
+	}
+	
+	/** delete a property enum from his path
+	 *  @param string $path path of the property to delete  **/
+	function delPropertyEnumPath($path)
+	{
+		$subprops = explode('.', $path);
+		if(count($subprops)==0) return;
+		
+		$name = $subprops[count($subprops)-1];
+		$propertyPath = array_slice($subprops, 0, count($subprops)-1);
+		$propertyPath = implode('.', $propertyPath);
+		$property = $this->getPropertyPath($propertyPath);
+		if($property==NULL) return;
+		
+		$property->delPropertyEnum($name);
+	}
+	
 	/** Add a file to the block 
 	 *  @param File $file file to add to the block **/
 	function addFile($file)
