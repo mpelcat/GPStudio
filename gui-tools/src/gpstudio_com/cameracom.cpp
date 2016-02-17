@@ -95,11 +95,14 @@ void CameraCom::run()
             {
                 if(_inputFlow[i]->idFlow()==idFlow)
                 {
-                    if(prev_numpacket[idFlow]+1 != numpacket)
+                    if(prev_numpacket[idFlow]!=-1)
                     {
-                        int miss_packet = numpacket-prev_numpacket[idFlow]-1;
-                        qDebug()<<"miss"<<miss_packet<<numpacket;
-                        for(int j=0; j<miss_packet; j++) _inputFlow[i]->appendData(QByteArray(512,0));
+                        if(prev_numpacket[idFlow]+1 != numpacket)
+                        {
+                            int miss_packet = numpacket-prev_numpacket[idFlow]-1;
+                            qDebug()<<"miss"<<miss_packet<<numpacket;
+                            for(int j=0; j<miss_packet; j++) _inputFlow[i]->appendData(QByteArray(512,0));
+                        }
                     }
                     _inputFlow[i]->appendData(packet);
                     prev_numpacket[idFlow] = numpacket;
