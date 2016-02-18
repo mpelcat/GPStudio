@@ -55,10 +55,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
 				// process source file path and destination path
 				if(strpos($file->path, "hwlib:")===0)
 				{
-					echo $file->path . "\n";
 					$filepath = str_replace("hwlib:",SUPPORT_PATH . "component" . DIRECTORY_SEPARATOR, $file->path);
 					$subpath = 'IP'.DIRECTORY_SEPARATOR.dirname(str_replace("hwlib:", "", $file->path));
-					echo $subpath . "\n";
 				}
 				else
 				{
