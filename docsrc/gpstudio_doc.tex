@@ -11,11 +11,13 @@
 % margins
 \usepackage[left=3.3cm,right=3.3cm,top=3cm]{geometry}
 
+% version
 \newcommand{\version}{\IfFileExists{../../version.txt}%
 {\input{../../version.txt}\unskip }%
 {\input{../../../version.txt}\unskip }%
 }
 
+% command definition
 \newcommand{\command}[1]{%
 \setlength{\fboxrule}{0.5mm}
 \indent \fcolorbox{orange}{white}{%
@@ -25,37 +27,45 @@
 }
 }
 
+% sample box
 \newsavebox{\FVerbBox}
 \newenvironment{sample}
-{\par \vspace{0.2cm} \begin{lrbox}{\FVerbBox}
+{\par \vspace{0.1cm} \begin{lrbox}{\FVerbBox}
 \begin{minipage}{\dimexpr\textwidth-\parindent\relax}}
 {\end{minipage}
 \end{lrbox}
 \setlength{\fboxrule}{0.2mm}
 \fcolorbox{orange2}{orange!3}{\usebox{\FVerbBox}}
-\vspace{0.2cm}}
+\vspace{0.1cm}}
 
+% sample box with title
 \newenvironment{sampletitle}[1][\unskip]{%
-\vspace{0.2cm} \noindent\textbf{Example #1}:
+\vspace{0.2cm} \noindent\textcolor{orange}{$\bullet$} \textbf{Example #1}:
 \begin{sample}}
 {\end{sample}}
 
+% sample comment
 \newcommand{\samplecomment}[1]{%
 
 \textit{#1}
 }
 
+% see also
 \newcommand{\seealso}[1]{\vspace{0.2cm} \noindent\textbf{See also} :\par #1}
 
+% param table
 \newcommand{\paramcommand}[1]{
 \begin{tabular}{|p{1.5cm}|p{7cm}|p{4.4cm}|}
-\hline 
-\textbf{Option} & \textbf{Description} & \textbf{Example} \\ 
+%\hline 
+\textbf{\textcolor{orange}{Option}} & \textbf{\textcolor{orange}{Description}} & \textbf{\textcolor{orange}{Example}} \\ 
 \hline
 #1
 \hline 
 \end{tabular}
 }
+
+% itemize label style
+\renewcommand\labelitemi{\textcolor{orange}{$\blacktriangleright$}}
 
 % tikz
 \usetikzlibrary{calc}
