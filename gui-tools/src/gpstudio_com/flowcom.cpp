@@ -62,19 +62,19 @@ QByteArray FlowCom::dataToSend(const int size)
     return dataToSend;
 }
 
-void FlowCom::send(const FlowData &flowData)
+void FlowCom::send(const FlowPackage &flowData)
 {
     _flowDataToSend.append(flowData);
 }
 
 void FlowCom::send(const QImage &image)
 {
-    send(FlowData(image));
+    send(FlowPackage(image));
 }
 
 void FlowCom::send(const QByteArray &data)
 {
-    send(FlowData(data));
+    send(FlowPackage(data));
 }
 
 void FlowCom::appendData(const QByteArray &data)
@@ -82,7 +82,7 @@ void FlowCom::appendData(const QByteArray &data)
     _current.appendData(data.mid(4));
 }
 
-FlowData FlowCom::getData()
+FlowPackage FlowCom::getData()
 {
     QMutexLocker locker(&_mutexDataRead);
     return _lastFlowData;

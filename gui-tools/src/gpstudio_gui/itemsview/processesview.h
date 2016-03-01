@@ -8,7 +8,7 @@
 #include "processesscene.h"
 class ProcessItem;
 
-#include "model/node.h"
+#include "model/model_node.h"
 #include "lib_parser/lib.h"
 
 class GPSTUDIO_GUI_EXPORT ProcessesView : public QGraphicsView
@@ -20,7 +20,7 @@ public:
     Lib *lib() const;
     void setLib(Lib *lib);
 
-    bool loadFromNode(Node *node);
+    bool loadFromNode(ModelNode *node);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

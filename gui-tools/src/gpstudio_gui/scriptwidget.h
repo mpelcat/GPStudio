@@ -19,9 +19,6 @@ public:
     explicit ScriptWidget(QWidget *parent = 0);
     virtual ~ScriptWidget();
 
-    ScriptEngine *engine() const;
-    void setEngine(ScriptEngine *engine);
-
 signals:
 
 public slots:
@@ -32,7 +29,6 @@ private slots:
     void down();
 
 private:
-    ScriptEngine *_engine;
     QPlainTextEdit *_textEdit;
     ScriptLineEdit *_lineEdit;
     QPushButton *_execButton;

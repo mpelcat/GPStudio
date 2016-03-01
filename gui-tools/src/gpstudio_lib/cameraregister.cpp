@@ -4,8 +4,8 @@
 #include <QRegExp>
 #include <QStringList>
 
-#include "model/param.h"
-#include "model/block.h"
+#include "model/model_param.h"
+#include "model/model_block.h"
 
 #include "camera.h"
 
@@ -62,7 +62,7 @@ void CameraRegister::eval()
 {
     if(_camera)
     {
-        setValue(_camera->evalPropertyMap(_propertyMap, _blockName));
+        setValue(_camera->evalPropertyMap(_propertyMap));
     }
 }
 
@@ -119,13 +119,13 @@ const QList<CameraRegisterBitField *> &CameraRegister::bitFields() const
     return _bitFields;
 }
 
-CameraRegister *CameraRegister::fromParam(const Param *param)
+CameraRegister *CameraRegister::fromParam(const ModelParam *param)
 {
     CameraRegister *cameraRegister = new CameraRegister(param->name(), param->absoluteAddr());
     cameraRegister->setPropertyMap(param->propertyMap());
     if(param->parent()) cameraRegister->setBlockName(param->parent()->name());
 
-    foreach(ParamBitField *bitField, param->paramBitFields())
+    foreach(ModelParamBitField *bitField, param->paramBitFields())
     {
         CameraRegisterBitField *camBitField = CameraRegisterBitField::fromParamBitField(bitField);
         cameraRegister->addBitField(camBitField);

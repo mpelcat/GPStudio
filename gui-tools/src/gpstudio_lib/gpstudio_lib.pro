@@ -45,24 +45,6 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/iolib.h \
     lib_parser/ioboardlib.h \
     lib_parser/iolibgroup.h \
-    model/node.h \
-    model/block.h \
-    model/io.h \
-    model/process.h \
-    model/piblock.h \
-    model/fiblock.h \
-    model/ciblock.h \
-    model/file.h \
-    model/param.h \
-    model/flow.h \
-    model/clock.h \
-    model/reset.h \
-    model/port.h \
-    model/pin.h \
-    model/parambitfield.h \
-    model/attribute.h \
-    model/blockpropertyenum.h \
-    model/blockproperty.h \
     camera.h \
     property.h \
     cameraregister.h \
@@ -78,11 +60,30 @@ HEADERS += gpstudio_lib_common.h \
     gpnodeproject.h \
     flowmanager.h \
     flowconnection.h \
-    model/iocom.h \
-    model/comconnect.h \
-    model/flowconnect.h \
-    model/treeconnect.h \
-    model/treeitem.h
+    flowviewerinterface.h \
+    model/model_attribute.h \
+    model/model_block.h \
+    model/model_ciblock.h \
+    model/model_clock.h \
+    model/model_comconnect.h \
+    model/model_fiblock.h \
+    model/model_file.h \
+    model/model_flow.h \
+    model/model_flowconnect.h \
+    model/model_io.h \
+    model/model_iocom.h \
+    model/model_node.h \
+    model/model_param.h \
+    model/model_parambitfield.h \
+    model/model_piblock.h \
+    model/model_pin.h \
+    model/model_port.h \
+    model/model_process.h \
+    model/model_reset.h \
+    model/model_treeconnect.h \
+    model/model_treeitem.h \
+    model/model_property.h \
+    model/model_propertyenum.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -91,24 +92,6 @@ SOURCES += \
     lib_parser/iolib.cpp \
     lib_parser/ioboardlib.cpp \
     lib_parser/iolibgroup.cpp \
-    model/node.cpp \
-    model/block.cpp \
-    model/io.cpp \
-    model/process.cpp \
-    model/piblock.cpp \
-    model/fiblock.cpp \
-    model/ciblock.cpp \
-    model/file.cpp \
-    model/param.cpp \
-    model/flow.cpp \
-    model/clock.cpp \
-    model/reset.cpp \
-    model/port.cpp \
-    model/pin.cpp \
-    model/parambitfield.cpp \
-    model/attribute.cpp \
-    model/blockpropertyenum.cpp \
-    model/blockproperty.cpp \
     camera.cpp \
     property.cpp \
     cameraregister.cpp \
@@ -124,13 +107,35 @@ SOURCES += \
     gpnodeproject.cpp \
     flowmanager.cpp \
     flowconnection.cpp \
-    model/iocom.cpp \
-    model/comconnect.cpp \
-    model/flowconnect.cpp \
-    model/treeconnect.cpp \
-    model/treeitem.cpp
+    flowviewerinterface.cpp \
+    model/model_attribute.cpp \
+    model/model_block.cpp \
+    model/model_ciblock.cpp \
+    model/model_clock.cpp \
+    model/model_comconnect.cpp \
+    model/model_fiblock.cpp \
+    model/model_file.cpp \
+    model/model_flow.cpp \
+    model/model_flowconnect.cpp \
+    model/model_io.cpp \
+    model/model_iocom.cpp \
+    model/model_node.cpp \
+    model/model_param.cpp \
+    model/model_parambitfield.cpp \
+    model/model_piblock.cpp \
+    model/model_pin.cpp \
+    model/model_port.cpp \
+    model/model_process.cpp \
+    model/model_reset.cpp \
+    model/model_treeconnect.cpp \
+    model/model_treeitem.cpp \
+    model/model_property.cpp \
+    model/model_propertyenum.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
 DEPENDPATH += $$PWD/../gpstudio_com
 LIBS += -lgpstudio_com
+
+DISTFILES += \
+    flowviewermodel.qmodel

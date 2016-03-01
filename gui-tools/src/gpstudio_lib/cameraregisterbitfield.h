@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QList>
 
-class ParamBitField;
+class ModelParamBitField;
 class Camera;
 class CameraRegister;
 
@@ -37,7 +37,7 @@ public:
     const QList<uint> &bits() const;
 
 public:
-    static CameraRegisterBitField *fromParamBitField(const ParamBitField *paramBitField);
+    static CameraRegisterBitField *fromParamBitField(const ModelParamBitField *paramBitField);
 
 signals:
     void bitfieldChange(uint mask, uint value);

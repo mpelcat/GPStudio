@@ -1,8 +1,8 @@
 #include "cameraregisterbitfield.h"
 
-#include "model/parambitfield.h"
-#include "model/param.h"
-#include "model/block.h"
+#include "model/model_parambitfield.h"
+#include "model/model_param.h"
+#include "model/model_block.h"
 
 #include "cameraregister.h"
 
@@ -90,7 +90,7 @@ const QList<uint> &CameraRegisterBitField::bits() const
     return _bits;
 }
 
-CameraRegisterBitField *CameraRegisterBitField::fromParamBitField(const ParamBitField *paramBitField)
+CameraRegisterBitField *CameraRegisterBitField::fromParamBitField(const ModelParamBitField *paramBitField)
 {
     CameraRegisterBitField *cameraRegisterBitField = new CameraRegisterBitField();
     cameraRegisterBitField->setPropertyMap(paramBitField->propertyMap());
@@ -99,7 +99,7 @@ CameraRegisterBitField *CameraRegisterBitField::fromParamBitField(const ParamBit
         if(paramBitField->parent()->parent()) cameraRegisterBitField->setBlockName(paramBitField->parent()->parent()->name());
     }
 
-    cameraRegisterBitField->_bits=ParamBitField::listBitFromBitField(paramBitField->bitfield());
+    cameraRegisterBitField->_bits=ModelParamBitField::listBitFromBitField(paramBitField->bitfield());
 
     uint mask = 0;
     foreach(uint bit, cameraRegisterBitField->_bits)
@@ -117,7 +117,7 @@ void CameraRegisterBitField::eval()
     {
         if(_parent->camera())
         {
-            setValue(_parent->camera()->evalPropertyMap(_propertyMap, _blockName));
+            setValue(_parent->camera()->evalPropertyMap(_propertyMap));
         }
     }
 }

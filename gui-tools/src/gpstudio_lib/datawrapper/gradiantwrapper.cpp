@@ -13,7 +13,7 @@ GradiantWrapper::~GradiantWrapper()
 
 }
 
-QImage *GradiantWrapper::transform(const FlowData &data)
+QImage *GradiantWrapper::transform(const FlowPackage &data)
 {
     QImage *visu = new QImage(_wimg, _himg, QImage::Format_RGB16);
     QImage *input = data.toImage(_wimg/_cellSize*_nbBins, _himg/_cellSize, 16);

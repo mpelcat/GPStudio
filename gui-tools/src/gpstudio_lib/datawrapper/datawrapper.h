@@ -12,7 +12,7 @@ public:
     DataWrapper();
     virtual ~DataWrapper();
 
-    virtual QImage *transform(const FlowData &data) =0;
+    virtual QImage *transform(const FlowPackage &data) =0;
 };
 
 #endif // DATAWRAPPER_H

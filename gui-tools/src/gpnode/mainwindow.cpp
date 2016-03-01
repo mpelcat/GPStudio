@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "model/node.h"
-#include "model/parambitfield.h"
+#include "model/model_node.h"
+#include "model/model_parambitfield.h"
 
 #include <QDebug>
 #include <QRegExp>

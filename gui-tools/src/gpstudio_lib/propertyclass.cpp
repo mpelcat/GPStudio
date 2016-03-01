@@ -31,6 +31,9 @@ PropertyClass::~PropertyClass()
 
 QString PropertyClass::name() const
 {
+#ifdef __PROP_DEBUG__
+    qDebug()<<'\t'<<"name call $$$$";
+#endif
     return "property";
 }
 
@@ -58,6 +61,16 @@ QScriptClass::QueryFlags PropertyClass::queryProperty(const QScriptValue & objec
     return flags;
 }
 
+static QScriptValue getSetFoo(QScriptContext *context, QScriptEngine *engine)
+{
+    /*QScriptValue callee = context->callee();
+    if (context->argumentCount() == 1) // writing?
+        callee.setProperty("value", context->argument(0));
+    return callee.property("value");*/
+    //qDebug()<<context->callee().property("value");
+    return context->callee().property("name");
+}
+
 QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptString &name, uint id)
 {
     Q_UNUSED(id);
@@ -69,9 +82,12 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
 
     if(name.toString()=="toString")
     {
-        return engine()->newVariant(object, _linkedProperty->value().toString());
+        QScriptValue value = engine()->newFunction(getSetFoo);
+        return value;
+        //return engine()->newVariant(object, _linkedProperty->value().toString());
         //return QScriptValue(_linkedProperty->name()+": "+_linkedProperty->value().toString());
     }
+
     if(name.toString()=="value" || name.toString()=="valueOf")
     {
         switch (_linkedProperty->type())
@@ -79,27 +95,51 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
         case Property::Int:
         case Property::SInt:
             return QScriptValue(_linkedProperty->value().toInt());
+        case Property::Enum:
+            return QScriptValue(_linkedProperty->value().toString());
         case Property::Bool:
             return QScriptValue(_linkedProperty->value().toBool());
+        case Property::Matrix:
+            if(_linkedProperty->value().type()==QVariant::List)
+            {
+                QList<QList<QVariant> > lines;
+                for(int x=0;x<3;x++)
+                {
+                    QList<QVariant> line;
+                    for(int y=0;y<3;y++)
+                    {
+                        QString key = QString("m%1%2").arg(x).arg(y);
+                        if(_linkedProperty->subProperties().propertiesMap().contains(key)) line.append(_linkedProperty->subProperties().propertiesMap()[key]->value());
+                    }
+                    lines.append(line);
+                }
+                return qScriptValueFromSequence(engine(),lines);
+            }
+            return QScriptValue(_linkedProperty->value().toInt());
         default:
             return QScriptValue(_linkedProperty->value().toInt());
         }
     }
+
     if(name.toString()=="bits")
     {
         return QScriptValue(_linkedProperty->bits());
     }
-    if(_subPropertiesClasses.contains(name.toString()))
+
+    QString filteredName = name.toString();
+    if(filteredName=="__in") filteredName="in";
+
+    if(_subPropertiesClasses.contains(filteredName))
     {
-        PropertyClass *prop=_subPropertiesClasses[name.toString()];
+        PropertyClass *prop=_subPropertiesClasses[filteredName];
         return engine()->newObject(prop);
     }
     else
     {
-        if(_linkedProperty->subProperties().propertiesMap().contains(name.toString()))
+        if(_linkedProperty->subProperties().propertiesMap().contains(filteredName))
         {
-            PropertyClass *prop=new PropertyClass(engine(), &(*_linkedProperty)[name.toString()]);
-            _subPropertiesClasses.insert(name.toString(), prop);
+            PropertyClass *prop=new PropertyClass(engine(), &(*_linkedProperty)[filteredName]);
+            _subPropertiesClasses.insert(filteredName, prop);
             return engine()->newObject(prop);
         }
     }

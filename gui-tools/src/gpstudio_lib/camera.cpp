@@ -14,7 +14,7 @@ Camera::Camera(const QString &fileCameraConfig)
     _paramsBlocks = NULL;
     _node = NULL;
     _com = NULL;
-    setNode(Node::readFromFile(fileCameraConfig));
+    setNode(ModelNode::readFromFile(fileCameraConfig));
 }
 
 Camera::~Camera()
@@ -24,12 +24,12 @@ Camera::~Camera()
     delete _com;
 }
 
-Node *Camera::node() const
+ModelNode *Camera::node() const
 {
     return _node;
 }
 
-void Camera::setNode(Node *node)
+void Camera::setNode(ModelNode *node)
 {
     if(_node) delete _node;
     _node = node;
@@ -37,26 +37,26 @@ void Camera::setNode(Node *node)
     if(_paramsBlocks) delete _paramsBlocks;
     _paramsBlocks = new Property();
 
-    foreach (Block *block, _node->blocks())
+    foreach (ModelBlock *block, _node->blocks())
     {
         Property *propBlock = new Property(block->name());
         propBlock->setCaption(block->name() + " (" + block->driver() + ")");
         propBlock->setType(Property::Group);
-        foreach (BlockProperty *property, block->properties())
+        foreach (ModelProperty *property, block->properties())
         {
             Property *paramprop = Property::fromBlockProperty(property);
             propBlock->addSubProperty(paramprop);
         }
-        foreach (Flow *flow, block->flows())
+        foreach (ModelFlow *flow, block->flows())
         {
             Property *flowprop = Property::fromFlow(flow);
             propBlock->addSubProperty(flowprop);
         }
 
         _paramsBlocks->addSubProperty(propBlock);
-        _engine.addProperty(propBlock);
+        ScriptEngine::getEngine().addProperty(propBlock);
 
-        foreach (Param *param, block->params())
+        foreach (ModelParam *param, block->params())
         {
             if(param->isDynamicParam())
             {
@@ -66,12 +66,9 @@ void Camera::setNode(Node *node)
         }
     }
 
-    foreach (Property *property, _paramsBlocks->subProperties().properties())
-    {
-        property->computePropertyMap(_paramsBlocks);
-    }
+    ScriptEngine::getEngine().setCamera(this);
 
-    int maxAddr=0;
+    uint maxAddr=0;
     QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
     while (it.hasNext())
     {
@@ -85,7 +82,7 @@ void Camera::setNode(Node *node)
             const QStringList &deps = cameraRegister->dependsProperties();
             foreach (QString propName, deps)
             {
-                Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
+                Property *prop = _paramsBlocks->path(propName);
                 if(prop) connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
             }
         }
@@ -96,7 +93,7 @@ void Camera::setNode(Node *node)
                 const QStringList &deps = bitField->dependsProperties();
                 foreach (QString propName, deps)
                 {
-                    Property *prop = _paramsBlocks->path(cameraRegister->blockName()+"."+propName);
+                    Property *prop = _paramsBlocks->path(propName);
                     if(prop) connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
                 }
             }
@@ -119,14 +116,9 @@ CameraRegistersMap &Camera::registers()
     return _registers;
 }
 
-ScriptEngine *Camera::engine()
+uint Camera::evalPropertyMap(const QString &propertyMap)
 {
-    return &_engine;
-}
-
-uint Camera::evalPropertyMap(const QString &propertyMap, const QString &blockContext)
-{
-    return _engine.evalPropertyMap(propertyMap, blockContext);
+    return ScriptEngine::getEngine().evalPropertyMap(propertyMap).toUInt();
 }
 
 void Camera::setRegister(uint addr, uint value)

@@ -40,7 +40,6 @@ QMAKE_CFLAGS_RELEASE = -O2
 
 SOURCES += viewmodelwidget/camtreeview.cpp \
     viewmodelwidget/caminfoitemmodel.cpp \
-    imageview.cpp \
     propertywidgets/propertywidget.cpp \
     propertywidgets/propertygroupwidget.cpp \
     propertywidgets/propertyintwidget.cpp \
@@ -55,12 +54,14 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     itemsview/processesscene.cpp \
     itemsview/processitem.cpp \
     itemsview/processconnectoritem.cpp \
-    propertywidgets/propertymatrixwidget.cpp
+    propertywidgets/propertymatrixwidget.cpp \
+    flowviewerwidget/flowviewerwidget.cpp \
+    flowviewerwidget/abstractviewer.cpp \
+    flowviewerwidget/imageview.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
     viewmodelwidget/caminfoitemmodel.h \
-    imageview.h \
     gpstudio_gui_common.h \
     propertywidgets/propertywidgets.h \
     propertywidgets/propertywidget.h \
@@ -77,10 +78,13 @@ HEADERS  += \
     itemsview/processesscene.h \
     itemsview/processitem.h \
     itemsview/processconnectoritem.h \
-    propertywidgets/propertymatrixwidget.h
+    propertywidgets/propertymatrixwidget.h \
+    flowviewerwidget/flowviewerwidget.h \
+    flowviewerwidget/abstractviewer.h \
+    flowviewerwidget/imageview.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
-# include(../../thirdparts/qcustomplot/qcustomplot.pri)
+include(../../thirdparts/qcustomplot/qcustomplot.pri)
 
 # gpstudio_lib lib
 INCLUDEPATH += $$PWD/../gpstudio_lib

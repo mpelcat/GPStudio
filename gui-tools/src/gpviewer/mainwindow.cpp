@@ -40,7 +40,7 @@ MainWindow::MainWindow(QStringList args) :
         if(QFile::exists(args[1])) openNodeGeneratedFile(args[1]);
     }
 
-    ui->scriptDock->close();
+    //ui->scriptDock->close();
 }
 
 MainWindow::~MainWindow()
@@ -150,7 +150,6 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     if(_cam) delete _cam;
 
     _cam = new Camera(fileName);
-    ui->scriptWidget->setEngine(_cam->engine());
 
     foreach (Property *property, _cam->paramsBlocks()->subProperties().properties())
     {
@@ -190,80 +189,6 @@ void MainWindow::connectCam()
             }
         }
     }
-}
-
-void MainWindow::viewFlow(int flow)
-{
-    int w = (*_cam->paramsBlocks())["mt9"]["roi1"]["w"].value().toInt();
-    int h = (*_cam->paramsBlocks())["mt9"]["roi1"]["h"].value().toInt();
-    int binning = (*_cam->paramsBlocks())["mt9"]["binning"].value().toInt();
-    if(binning==1)
-    {
-        w/=2;
-        h/=2;
-    }
-
-    if(flow>=_viewers.size()) return;
-
-    if(flow==0)
-    {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
-        _viewers[0]->showImage(*image);
-        delete image;
-    }
-    if(flow==1)
-    {
-        QImage *image = _cam->com()->inputFlow()[flow]->getData().toImage(w, h, 8);
-        _viewers[1]->showImage(*image);
-        delete image;
-    }
-    if(flow==2)
-    {
-        GradiantWrapper grad;
-        grad.setWimg(w);
-        grad.setHimg(h);
-
-        int nbin = (*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
-        grad.setNbBins(nbin);
-        int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
-        grad.setCellSize(cellsize);
-
-        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
-        QImage *gradImg = grad.transform(flowData);
-
-        _viewers[2]->showImage(*gradImg);
-        delete gradImg;
-    }
-    if(flow==3)
-    {
-        Harriswrapper harris;
-
-        harris.setHimg(h);
-        harris.setWimg(w);
-
-        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
-        QImage *harrisImg = harris.transform(flowData);
-
-         _viewers[3]->showImage(*harrisImg);
-        delete harrisImg;
-
-//        GradiantWrapper grad;
-//        grad.setWimg(w);
-//        grad.setHimg(h);
-
-//        int nbin = (*_cam->paramsBlocks())["histogramhw0"]["nbin"].value().toInt();
-//        grad.setNbBins(nbin);
-//        int cellsize = (*_cam->paramsBlocks())["histogramhw0"]["cellwidth"].value().toInt();
-//        grad.setCellSize(cellsize);
-
-//        const FlowData &flowData = _cam->com()->inputFlow()[flow]->getData();
-//        QImage *gradImg = grad.transform(flowData);
-
-//         _view3->showImage(*gradImg);
-//        delete gradImg;
-    }
-
-    showFps();
 }
 
 void MainWindow::setBiSpace()
@@ -318,31 +243,24 @@ void MainWindow::updateWindowsMenu()
     }
 }
 
-void MainWindow::showFps()
-{
-    QString text;
-    QTextStream stream(&text);
-
-    foreach (FlowConnection *flowConnection, _cam->flowManager()->flowConnectionsID())
-    {
-        stream << flowConnection->flow()->name() << " : " << flowConnection->fps() << " fps\t";
-    }
-    ui->statusBar->showMessage(text);
-}
-
 void MainWindow::setupViewers(int count)
 {
     ui->mdiArea->closeAllSubWindows();
     _viewers.clear();
 
-    for(int i=count-1; i>=0; i--)
+    int i=0;
+    foreach (FlowConnection *connection, _cam->flowManager()->flowConnectionsID())
     {
-        ImageView *viewer = new ImageView();
-        viewer->setWindowTitle(QString("Flow %1").arg(i));
-        viewer->setFlowNumber(i);
-        _viewers.insert(i, viewer);
-        QMdiSubWindow * windows = ui->mdiArea->addSubWindow(viewer);
-        windows->show();
+        if(connection->flow()->type()=="in")
+        {
+            FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(*connection));
+            ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));
+            viewer->setWindowTitle(QString("Flow %1").arg(connection->flow()->name()));
+            _viewers.insert(i, viewer);
+            QMdiSubWindow * windows = ui->mdiArea->addSubWindow(viewer);
+            windows->show();
+            i++;
+        }
     }
 
     ui->mdiArea->tileSubWindows();

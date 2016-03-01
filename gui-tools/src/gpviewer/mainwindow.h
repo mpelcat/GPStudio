@@ -5,7 +5,7 @@
 #include <QMdiSubWindow>
 
 #include "camera.h"
-#include "imageview.h"
+#include "flowviewerwidget/flowviewerwidget.h"
 #include "lib_parser/lib.h"
 
 namespace Ui {
@@ -29,7 +29,6 @@ private slots:
     void openNode();
 
     void connectCam();
-    void viewFlow(int flow);
 
     void setBiSpace();
 
@@ -38,7 +37,6 @@ private slots:
     void fourViewer();
 
     void updateWindowsMenu();
-    void showFps();
 
 private:
     Ui::MainWindow *ui;
@@ -47,7 +45,7 @@ private:
 
     // viewer
     void setupViewers(int count);
-    QMap<int, ImageView *> _viewers;
+    QMap<int, FlowViewerWidget *> _viewers;
 
     Lib *_lib;
 

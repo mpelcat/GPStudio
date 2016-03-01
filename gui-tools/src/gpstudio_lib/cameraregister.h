@@ -9,7 +9,7 @@
 
 #include "cameraregisterbitfield.h"
 
-class Param;
+class ModelParam;
 class Camera;
 
 class GPSTUDIO_LIB_EXPORT CameraRegister : public QObject
@@ -41,7 +41,7 @@ public:
     const QList<CameraRegisterBitField *> &bitFields() const;
 
 public:
-    static CameraRegister *fromParam(const Param *param);
+    static CameraRegister *fromParam(const ModelParam *param);
 
 signals:
     void registerChange(uint addr, uint value);

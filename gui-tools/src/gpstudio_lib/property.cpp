@@ -7,7 +7,6 @@ Property::Property(QString name)
 {
     _parent = NULL;
     _type = Group;
-    _engine = NULL;
 }
 
 Property::Property(const Property &other)
@@ -27,7 +26,6 @@ Property &Property::operator =(const Property &other)
     _parent = other._parent;
     _enums = other._enums;
     _subProperties = other._subProperties;
-    _engine = other._engine;
     return (*this);
 }
 
@@ -73,24 +71,46 @@ void Property::setValue(int value)
 
 void Property::setValue(const QVariant &value)
 {
-    _value = value;
-    if(!_enums.isEmpty())
+    if(_type==Matrix)
     {
-        if(_enumsMap.contains(value.toString()))
+        if(value.type()==QVariant::List)
         {
-            setBits(_enumsMap[value.toString()]->value().toUInt());
+            int x=0;
+            foreach (QVariant line, value.toList())
+            {
+                if(line.type()==QVariant::List)
+                {
+                    int y=0;
+                    foreach (QVariant item, line.toList())
+                    {
+                        QString key = QString("m%1%2").arg(x).arg(y);
+                        if(_subProperties.propertiesMap().contains(key)) _subProperties.propertiesMap()[key]->setValue(item.toInt());
+                        y++;
+                    }
+                }
+                x++;
+            }
         }
     }
     else
     {
-        setBits(_value.toUInt());
+        if(!_enums.isEmpty())
+        {
+            if(_enumsMap.contains(value.toString()))
+            {
+                setBits(_enumsMap[value.toString()]->value().toUInt());
+            }
+        }
+        else
+        {
+            setBits(value.toUInt());
+        }
     }
-    emit valueChanged(QVariant(value));
 
-    if(_engine)
-    {
-        _engine->evalPropertyMap(_onchange, _blockName);
-    }
+    if(value != _value && _value.isValid()) emit valueChanged(QVariant(value));
+    _value = value;
+
+    ScriptEngine::getEngine().evalPropertyMap(_onchange);
 }
 
 uint Property::bits() const
@@ -100,13 +120,13 @@ uint Property::bits() const
 
 void Property::setBits(const uint bits)
 {
+    if(bits != _bits) emit bitsChanged(bits);
     _bits = bits;
-    emit bitsChanged(bits);
 }
 
 void Property::eval()
 {
-    setValue(QVariant(_engine->evalPropertyMap(_propertyMap, _blockName)));
+    setValue(ScriptEngine::getEngine().evalPropertyMap(_propertyMap));
 }
 
 QVariant Property::min() const
@@ -159,16 +179,6 @@ void Property::setType(const Property::Type &type)
     _type = type;
 }
 
-QString Property::blockName() const
-{
-    return _blockName;
-}
-
-void Property::setBlockName(const QString &blockName)
-{
-    _blockName = blockName;
-}
-
 QString Property::propertymap() const
 {
     return _propertyMap;
@@ -187,20 +197,6 @@ QString Property::onchange() const
 void Property::setOnchange(const QString &onchange)
 {
     _onchange = onchange;
-}
-
-ScriptEngine *Property::engine() const
-{
-    return _engine;
-}
-
-void Property::setEngine(ScriptEngine *engine)
-{
-    _engine = engine;
-    foreach (Property *property, _subProperties.properties())
-    {
-        property->setEngine(_engine);
-    }
 }
 
 Property &Property::operator[](const QString &name)
@@ -236,21 +232,6 @@ QStringList Property::dependsProperties() const
     return ScriptEngine::dependsProperties(_propertyMap);
 }
 
-void Property::computePropertyMap(Property *paramsProps)
-{
-    foreach (Property *property, _subProperties.properties())
-    {
-        const QStringList &deps = property->dependsProperties();
-        foreach (QString propName, deps)
-        {
-            Property *prop = paramsProps->path(property->blockName()+"."+propName);
-            if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), property, SLOT(eval()));
-        }
-
-        property->computePropertyMap(paramsProps);
-    }
-}
-
 const PropertiesMap &Property::subProperties() const
 {
     return _subProperties;
@@ -262,19 +243,15 @@ void Property::addSubProperty(Property *property)
     _subProperties.addProperty(property);
 }
 
-Property *Property::fromBlockProperty(BlockProperty *blockProperty)
+Property *Property::fromBlockProperty(ModelProperty *blockProperty)
 {
     Property *paramprop = new Property(blockProperty->name());
     paramprop->setCaption(blockProperty->caption());
     paramprop->setOnchange(blockProperty->onchange());
-    if(blockProperty->parent())
-    {
-        paramprop->setBlockName(blockProperty->parent()->name());
-    }
     paramprop->setPropertymap(blockProperty->propertymap());
     if(!blockProperty->propertyEnums().empty())
     {
-        foreach (BlockPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
+        foreach (ModelPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
         {
             PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->value());
             paramprop->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
@@ -305,7 +282,7 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
     if(blockProperty->type()=="group") paramprop->setType(Group);
 
     // sub properties
-    foreach (BlockProperty *subBlockProperty, blockProperty->properties())
+    foreach (ModelProperty *subBlockProperty, blockProperty->properties())
     {
         paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
     }
@@ -313,18 +290,14 @@ Property *Property::fromBlockProperty(BlockProperty *blockProperty)
     return paramprop;
 }
 
-Property *Property::fromFlow(Flow *flow)
+Property *Property::fromFlow(ModelFlow *flow)
 {
     Property *flowprop = new Property(flow->name());
     flowprop->setCaption(flow->name());
-    if(flow->parent())
-    {
-        flowprop->setBlockName(flow->parent()->name());
-    }
     flowprop->setType(FlowType);
 
     // sub properties
-    foreach (BlockProperty *subBlockProperty, flow->properties())
+    foreach (ModelProperty *subBlockProperty, flow->properties())
     {
         flowprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
     }

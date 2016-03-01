@@ -2,23 +2,24 @@
 
 #include <QDebug>
 
-FlowData::FlowData(const QByteArray &data)
+FlowPackage::FlowPackage(const QByteArray &data)
     : _data(data)
 {
 }
 
-FlowData::FlowData(const FlowData &other)
+FlowPackage::FlowPackage(const FlowPackage &other)
     : _data(other._data)
 {
     // qDebug()<<"copy FLOWDATA"<<other._data.size();
 }
 
-const FlowData &FlowData::operator=(const FlowData &other)
+const FlowPackage &FlowPackage::operator=(const FlowPackage &other)
 {
     _data = other._data;
+    return other;
 }
 
-FlowData::FlowData(const QImage &image, const int bitCount, const FlowData::ImageMode imageMode)
+FlowPackage::FlowPackage(const QImage &image, const int bitCount, const FlowPackage::ImageMode imageMode)
 {
     Q_UNUSED(bitCount);
 
@@ -39,34 +40,34 @@ FlowData::FlowData(const QImage &image, const int bitCount, const FlowData::Imag
     }
 }
 
-const QByteArray &FlowData::data() const
+const QByteArray &FlowPackage::data() const
 {
     return _data;
 }
 
-QByteArray FlowData::getPart(const int size)
+QByteArray FlowPackage::getPart(const int size)
 {
     QByteArray part = _data.left(size);
     _data.remove(0,size);
     return part;
 }
 
-bool FlowData::empty() const
+bool FlowPackage::empty() const
 {
     return _data.size()==0;
 }
 
-void FlowData::clear()
+void FlowPackage::clear()
 {
     _data.clear();
 }
 
-void FlowData::appendData(const QByteArray &data)
+void FlowPackage::appendData(const QByteArray &data)
 {
     _data.append(data);
 }
 
-QImage *FlowData::toImage(const int width, const int height, const int dataSize) const
+QImage *FlowPackage::toImage(const int width, const int height, const int dataSize) const
 {
     //Q_UNUSED(dataSize);
 
@@ -116,7 +117,7 @@ QImage *FlowData::toImage(const int width, const int height, const int dataSize)
     return img;
 }
 
-QImage *FlowData::toImage(const QSize size, const int dataSize) const
+QImage *FlowPackage::toImage(const QSize size, const int dataSize) const
 {
     return toImage(size.width(), size.height(), dataSize);
 }

@@ -186,15 +186,6 @@ void CameraCom::writeParam(const unsigned int addr, const unsigned int *data, co
     _paramFlow->send(paramFlow);
 }
 
-void CameraCom::askStatus()
-{
-    // TODO to be removed
-    QByteArray byte;
-    byte.append((char)0x00);
-    byte.append((char)0xFD);
-    _cameraIO->write(byte);
-}
-
 const QList<FlowCom*> &CameraCom::outputFlow() const
 {
     return _outputFlow;

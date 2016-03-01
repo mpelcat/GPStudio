@@ -60,7 +60,7 @@ Harriswrapper::Harriswrapper()
 
 //}
 
-QImage *Harriswrapper::transform(const FlowData &data)
+QImage *Harriswrapper::transform(const FlowPackage &data)
 {
     QImage *visu = new QImage(_wimg, _himg, QImage::Format_RGB16);
 

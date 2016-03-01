@@ -3,10 +3,15 @@
 #include <QDebug>
 
 #include "property.h"
+#include "camera.h"
+
+ScriptEngine *ScriptEngine::_instance = NULL;
 
 ScriptEngine::ScriptEngine(QObject *parent) : QObject(parent)
 {
+    _camera = NULL;
 
+    _engine.evaluate("Math.__proto__.log2=function(x){ return this.log(x) / this.log(2); }");
 }
 
 ScriptEngine::~ScriptEngine()
@@ -22,31 +27,44 @@ QScriptEngine *ScriptEngine::engine()
 void ScriptEngine::addProperty(Property *property)
 {
     PropertyClass *prop=new PropertyClass(&_engine, property);
-    property->setEngine(this);
     QScriptValue value = _engine.newObject(prop);
     _engine.globalObject().setProperty(property->name(), value);
 }
 
-uint ScriptEngine::evalPropertyMap(const QString &propertyMap, const QString &blockContext)
+void ScriptEngine::setCamera(Camera *camera)
 {
-    QScriptValue global;
-    if(!blockContext.isEmpty())
+    _camera = camera;
+
+    foreach (Property *property, camera->paramsBlocks()->subProperties().properties())
     {
-        global = _engine.globalObject();
-        _engine.currentContext()->setThisObject(_engine.globalObject().property(blockContext));
+        computePropertyMap(property, _camera->paramsBlocks());
+    }
+}
+
+QScriptValue ScriptEngine::eval(const QString &propertyMap)
+{
+    QString toEval = propertyMap;
+    toEval.replace(".in.",".__in.");
+
+    const QScriptValue &result = _engine.evaluate(toEval);
+    if(result.isError())
+    {
+        QString error = result.toString();
+        error.replace("__in","in");
+        qDebug()<<"Script engine: error evaluating "<<propertyMap<<error;
     }
 
-    const QScriptValue &result = _engine.evaluate(propertyMap);
-    if(result.isError()) qDebug()<<"Script engine: error evaluating "<<propertyMap<<result.toString();
+    return result;
+}
 
-    if(!blockContext.isEmpty()) _engine.setGlobalObject(global);
-
-    return result.toUInt32();
+QVariant ScriptEngine::evalPropertyMap(const QString &propertyMap)
+{
+    return eval(propertyMap).toVariant();
 }
 
 QStringList ScriptEngine::dependsProperties(const QString &expression)
 {
-    QRegExp exp("([a-zA-Z0-9_]+\\.?)+");
+    QRegExp exp("([a-zA-Z_]+[a-zA-Z0-9_]*\\.?)+");
     int pos=0;
     QStringList props;
     while((pos = exp.indexIn(expression, pos)) != -1)
@@ -56,4 +74,19 @@ QStringList ScriptEngine::dependsProperties(const QString &expression)
     }
     props.removeDuplicates();
     return props;
+}
+
+void ScriptEngine::computePropertyMap(Property *property, Property *paramsProps)
+{
+    foreach (Property *subProperty, property->subProperties().properties())
+    {
+        const QStringList &deps = subProperty->dependsProperties();
+        foreach (QString propPath, deps)
+        {
+            Property *prop = paramsProps->path(propPath);
+            if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), subProperty, SLOT(eval()));
+        }
+
+        computePropertyMap(subProperty, paramsProps);
+    }
 }

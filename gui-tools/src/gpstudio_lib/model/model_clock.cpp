@@ -1,0 +1,134 @@
+#include "model_clock.h"
+
+#include "model_block.h"
+
+ModelClock::ModelClock(ModelBlock *parent)
+    : _parent(parent)
+{
+    _parent = NULL;
+}
+
+ModelClock::~ModelClock()
+{
+}
+
+QString ModelClock::name() const
+{
+    return _name;
+}
+
+void ModelClock::setName(const QString &name)
+{
+    _name = name;
+}
+
+QString ModelClock::group() const
+{
+    return _group;
+}
+
+void ModelClock::setGroup(const QString &group)
+{
+    _group = group;
+}
+
+qint16 ModelClock::shift() const
+{
+    return _shift;
+}
+
+void ModelClock::setShift(const qint16 &shift)
+{
+    _shift = shift;
+}
+
+qint32 ModelClock::min() const
+{
+    return _min;
+}
+
+void ModelClock::setMin(const qint32 &min)
+{
+    _min = min;
+}
+
+qint32 ModelClock::max() const
+{
+    return _max;
+}
+
+void ModelClock::setMax(const qint32 &max)
+{
+    _max = max;
+}
+
+qint32 ModelClock::typical() const
+{
+    return _typical;
+}
+
+void ModelClock::setTypical(const qint32 &typical)
+{
+    _typical = typical;
+}
+
+QString ModelClock::description() const
+{
+    return _description;
+}
+
+void ModelClock::setDescription(const QString &desc)
+{
+    _description = desc;
+}
+
+ModelBlock *ModelClock::parent() const
+{
+    return _parent;
+}
+
+void ModelClock::setParent(ModelBlock *parent)
+{
+    _parent = parent;
+}
+
+ModelClock *ModelClock::fromNodeGenerated(const QDomElement &domElement)
+{
+    ModelClock *clock=new ModelClock();
+    bool ok=false;
+
+    clock->setName(domElement.attribute("name","no_name"));
+    clock->setGroup(domElement.attribute("group",""));
+
+    int shift = domElement.attribute("shift","0").toInt(&ok);
+    if(ok) clock->setShift(shift); else clock->setShift(0);
+
+    int min = domElement.attribute("min","0").toInt(&ok);
+    if(ok) clock->setMin(min); else clock->setMin(0);
+
+    int max = domElement.attribute("max","0").toInt(&ok);
+    if(ok) clock->setMax(max); else clock->setMax(0);
+
+    int typical = domElement.attribute("typical","0").toInt(&ok);
+    if(ok) clock->setTypical(typical); else clock->setTypical(0);
+
+    clock->setDescription(domElement.attribute("desc",""));
+
+    return clock;
+}
+
+QList<ModelClock *> ModelClock::listFromNodeGenerated(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<ModelClock *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="clock") list.append(ModelClock::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}

@@ -105,12 +105,12 @@ void ProcessesView::setLib(Lib *lib)
     _lib = lib;
 }
 
-bool ProcessesView::loadFromNode(Node *node)
+bool ProcessesView::loadFromNode(ModelNode *node)
 {
     _scene->clear();
     if(_lib==NULL) return false;
 
-    foreach (Block *block, node->blocks())
+    foreach (ModelBlock *block, node->blocks())
     {
         if(block->type()=="io")
         {

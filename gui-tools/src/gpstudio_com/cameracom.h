@@ -19,7 +19,7 @@ public:
     bool isConnected() const;
     void stop();
 
-    //Camera(const CameraInfo &info); TODO
+    //Camera(const CameraInfo &info);
 
     // void sendFlow(const Flow &flow);
     // bool getFlow(Flow &flow);
@@ -35,8 +35,6 @@ public:
 
     void writeParam(const unsigned int addr, const unsigned int value);
     void writeParam(const unsigned int addr, const unsigned int * data, const unsigned size);
-
-    void askStatus();
 
 signals:
     void flowReadyToRead(int flow);

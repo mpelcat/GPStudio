@@ -8,15 +8,15 @@
 
 #include "gpstudio_com_common.h"
 
-class GPSTUDIO_COM_EXPORT FlowData
+class GPSTUDIO_COM_EXPORT FlowPackage
 {
 public:
-    FlowData(const QByteArray &data=QByteArray());
-    FlowData(const FlowData &other);
-    const FlowData &operator= (const FlowData &other);
+    FlowPackage(const QByteArray &data=QByteArray());
+    FlowPackage(const FlowPackage &other);
+    const FlowPackage &operator= (const FlowPackage &other);
 
     enum ImageMode {ImageModeGray, ImageModeColor};
-    FlowData(const QImage &image, const int bitCount=8, const ImageMode imageMode=ImageModeGray);
+    FlowPackage(const QImage &image, const int bitCount=8, const ImageMode imageMode=ImageModeGray);
 
     const QByteArray &data() const;
     QByteArray getPart(const int size);
@@ -33,6 +33,6 @@ private:
     QByteArray _data;
 };
 
-Q_DECLARE_METATYPE(FlowData)
+Q_DECLARE_METATYPE(FlowPackage)
 
 #endif // FLOWDATA_H

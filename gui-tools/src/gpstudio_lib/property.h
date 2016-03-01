@@ -12,9 +12,7 @@
 #include "propertiesmap.h"
 #include "propertyenum.h"
 
-#include "model/blockproperty.h"
-
-class ScriptEngine;
+#include "model/model_property.h"
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
@@ -54,9 +52,6 @@ public:
     Type type() const;
     void setType(const Type &type);
 
-    QString blockName() const;
-    void setBlockName(const QString &blockName);
-
     QString propertymap() const;
     void setPropertymap(const QString &propertymap);
 
@@ -72,11 +67,7 @@ public:
 
     Property *path(QString path);
 
-    ScriptEngine *engine() const;
-    void setEngine(ScriptEngine *engine);
-
     QStringList dependsProperties() const;
-    void computePropertyMap(Property *paramsProps);
 
 signals:
     void valueChanged(QVariant value);
@@ -92,8 +83,8 @@ public slots:
     void eval();
 
 public:
-    static Property *fromBlockProperty(BlockProperty *blockProperty);
-    static Property *fromFlow(Flow *flow);
+    static Property *fromBlockProperty(ModelProperty *blockProperty);
+    static Property *fromFlow(ModelFlow *flow);
 
 protected:
     QString _name;
@@ -105,8 +96,6 @@ protected:
     QVariant _step;
     Type _type;
 
-    QString _blockName;
-    ScriptEngine *_engine;
     QString _propertyMap;
     QString _onchange;
 

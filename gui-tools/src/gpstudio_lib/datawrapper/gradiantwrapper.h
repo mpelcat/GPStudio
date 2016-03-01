@@ -11,7 +11,7 @@ public:
     GradiantWrapper();
     ~GradiantWrapper();
 
-    virtual QImage *transform(const FlowData &data);
+    virtual QImage *transform(const FlowPackage &data);
 
     int nbBins() const;
     void setNbBins(int nbBins);

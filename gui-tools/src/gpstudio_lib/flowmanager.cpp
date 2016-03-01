@@ -2,19 +2,19 @@
 
 #include <QDebug>
 
-FlowManager::FlowManager(Node *node, Property *paramProperties)
+FlowManager::FlowManager(ModelNode *node, Property *paramProperties)
 {
     _com = NULL;
     _paramProperties = paramProperties;
     setNode(node);
 }
 
-Node *FlowManager::node() const
+ModelNode *FlowManager::node() const
 {
     return _node;
 }
 
-void FlowManager::setNode(Node *node)
+void FlowManager::setNode(ModelNode *node)
 {
     _node = node;
     if(node==NULL) return;
@@ -26,26 +26,24 @@ void FlowManager::setNode(Node *node)
     {
         for(int i=0; i<_blockCom->comConnects().size(); i++)
         {
-            ComConnect *comConnect=_blockCom->comConnects().at(i);
+            ModelComConnect *comConnect=_blockCom->comConnects().at(i);
             if(comConnect->type()=="flow")
             {
                 FlowConnection *flowConnection = new FlowConnection();
                 flowConnection->setFlowId(comConnect->id().toInt());
                 flowConnection->setFlow(_blockCom->getFlow(comConnect->link()));
-                flowConnection->setWrapper(NULL);
-                flowConnection->setFlowViewer(NULL);
                 addFlowConnection(flowConnection);
-                //qDebug()<<flowConnection->flow()->name();
+                //qDebug()<<flowConnection->flow()->name()<<flowConnection->flowId();
             }
         }
     }
 
     if(_fi)
     {
-        foreach(TreeConnect *treeConnect, _fi->treeConnects())
+        foreach(ModelTreeConnect *treeConnect, _fi->treeConnects())
         {
             //qDebug()<<treeConnect->toblock()<<treeConnect->toflow();
-            foreach(TreeItem *treeItem, treeConnect->treeitems())
+            foreach(ModelTreeItem *treeItem, treeConnect->treeitems())
             {
                 //qDebug()<<"\t"<<treeItem->fromblock()<<treeItem->fromflow();
             }
@@ -54,13 +52,13 @@ void FlowManager::setNode(Node *node)
             {
                 Property *propIn = _paramProperties->path(treeConnect->toblock()+"."+treeConnect->toflow());
 
-                TreeItem *treeItem = treeConnect->treeitems()[0];
+                ModelTreeItem *treeItem = treeConnect->treeitems()[0];
                 Property *propOut = _paramProperties->path(treeItem->fromblock()+"."+treeItem->fromflow());
-                //qDebug()<<"rrr "<<propIn->name();
+                //qDebug()<<"rrr "<<propOut->parent()->name()<<propOut->name()<<propIn->parent()->name()<<propIn->name();
 
                 foreach (Property *subBlockProperty, propOut->subProperties().properties())
                 {
-                    //qDebug()<<subBlockProperty->name();
+                    //qDebug()<<subBlockProperty->parent()->name()<<subBlockProperty->name();
                     //propIn->addSubProperty(subBlockProperty);
                 }
             }

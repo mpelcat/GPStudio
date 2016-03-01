@@ -8,7 +8,7 @@
 
 #include "scriptengine.h"
 
-#include "model/node.h"
+#include "model/model_node.h"
 #include "property.h"
 #include "cameraregistersmap.h"
 
@@ -22,13 +22,11 @@ public:
     Camera(const QString &fileCameraConfig);
     ~Camera();
 
-    Node *node() const;
-    void setNode(Node *node);
+    ModelNode *node() const;
+    void setNode(ModelNode *node);
 
     Property *paramsBlocks() const;
     CameraRegistersMap &registers();
-
-    ScriptEngine *engine();
 
     bool isConnected() const;
     void connectCam(const CameraInfo &cameraInfo);
@@ -42,17 +40,16 @@ signals:
     void registerDataChanged();
 
 public slots:
-    uint evalPropertyMap(const QString &propertyMap, const QString &blockContext);
+    uint evalPropertyMap(const QString &propertyMap);
     void setRegister(uint addr, uint value);
 
 private:
-    Node *_node;
+    ModelNode *_node;
 
     Property *_paramsBlocks;
     CameraRegistersMap _registers;
+    // TODO remove _registerData and put into CameraRegistersMap
     QByteArray _registerData;
-
-    ScriptEngine _engine;
 
     CameraCom *_com;
 

@@ -4,33 +4,40 @@
 #include "gpstudio_lib_common.h"
 
 #include <QObject>
-
 #include <QScriptEngine>
 
 #include "propertyclass.h"
+class Camera;
 
 class GPSTUDIO_LIB_EXPORT ScriptEngine : public QObject
 {
     Q_OBJECT
-public:
+    Q_DISABLE_COPY(ScriptEngine)
+
+private:
     explicit ScriptEngine(QObject *parent = 0);
+
+public:
     ~ScriptEngine();
 
     QScriptEngine *engine();
 
     void addProperty(Property *property);
+    void setCamera(Camera *camera);
 
-    uint evalPropertyMap(const QString &propertyMap, const QString &blockContext);
+    QScriptValue eval(const QString &propertyMap);
+    QVariant evalPropertyMap(const QString &propertyMap);
 
     static QStringList dependsProperties(const QString &expression);
-signals:
+    static inline ScriptEngine &getEngine() {if(!_instance) _instance = new ScriptEngine(); return *_instance;}
 
-public slots:
+private:
+    static void computePropertyMap(Property *property, Property *paramsProps);
 
 private:
     QScriptEngine _engine;
-
-    QList<Property *> _properties;
+    static ScriptEngine *_instance;
+    Camera *_camera;
 };
 
 #endif // SCRIPTENGINE_H

@@ -38,22 +38,10 @@ ScriptWidget::~ScriptWidget()
 {
 }
 
-ScriptEngine *ScriptWidget::engine() const
-{
-    return _engine;
-}
-
-void ScriptWidget::setEngine(ScriptEngine *engine)
-{
-    _engine = engine;
-}
-
 void ScriptWidget::exec()
 {
-    if(!_engine) return;
-
     _textEdit->appendPlainText("> "+_lineEdit->text());
-    QScriptValue value = _engine->engine()->evaluate(_lineEdit->text());
+    QScriptValue value = ScriptEngine::getEngine().eval(_lineEdit->text());
     if(value.isError())
     {
         _textEdit->appendHtml("<pre style=\"color:red\">"+value.toString()/*.toHtmlEscaped()*/+"</pre>");

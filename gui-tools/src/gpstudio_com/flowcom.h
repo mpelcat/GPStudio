@@ -23,7 +23,7 @@ public:
     bool readyToSend() const;
     QByteArray dataToSend(const int size);
 
-    void send(const FlowData &flowData);
+    void send(const FlowPackage &flowData);
 
     void send(const QImage &image);
     void send(const QByteArray &data);
@@ -33,7 +33,7 @@ public:
     // Flow IN
     void appendData(const QByteArray &data);
 
-    FlowData getData();
+    FlowPackage getData();
     void validate();
     unsigned getSize() const;
 
@@ -41,10 +41,10 @@ private:
     unsigned char _idFlow;
     unsigned int _numPacket;
 
-    QQueue<FlowData> _flowDataToSend;     // flowData to send
+    QQueue<FlowPackage> _flowDataToSend;     // flowData to send
 
-    FlowData _current;              // flowData currently received
-    FlowData _lastFlowData;              // flowData currently received
+    FlowPackage _current;              // flowData currently received
+    FlowPackage _lastFlowData;              // flowData currently received
     QMutex _mutexDataRead;
 };
 
