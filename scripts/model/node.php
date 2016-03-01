@@ -276,6 +276,8 @@ class Node
 	function addBlock($block)
 	{
 		$block->parentNode = $this;
+		$block->toGlobalPropertyPath();
+		
 		array_push($this->blocks, $block);
 	}
 	
@@ -289,6 +291,16 @@ class Node
 			if($block->name==$name) return $block;
 		}
 		return null;
+	}
+	
+	function getFlow($name)
+	{
+		$subPath=explode('.',$name);
+		if(count($subPath)!=2) return NULL;
+		$block=$this->getBlock($subPath[0]);
+		if($block==NULL) return NULL;
+		$flow=$block->getFlow($subPath[1]);
+		return $flow;
 	}
 }
 

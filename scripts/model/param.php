@@ -252,6 +252,16 @@ class Param
 		}
 		return null;
 	}
+	
+	function toGlobalPropertyPath($blockName)
+	{
+		$this->propertymap = Property::localToGlobalPropertyPath($this->propertymap, $blockName);
+		
+		foreach($this->parambitfields as $parambitfield)
+		{
+			$parambitfield->propertymap = Property::localToGlobalPropertyPath($parambitfield->propertymap, $blockName);
+		}
+	}
 }
 
 ?>

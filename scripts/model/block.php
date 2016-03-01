@@ -1036,6 +1036,25 @@ class Block
 		
 		$xml->save($file);
 	}
+	
+	function toGlobalPropertyPath()
+	{
+		foreach($this->properties as $property)
+		{
+			$property->toGlobalPropertyPath($this->name);
+		}
+		foreach($this->params as $param)
+		{
+			$param->toGlobalPropertyPath($this->name);
+		}
+		foreach($this->flows as $flow)
+		{
+			foreach($flow->properties as $property)
+			{
+				$property->toGlobalPropertyPath($this->name);
+			}
+		}
+	}
 }
 
 ?>

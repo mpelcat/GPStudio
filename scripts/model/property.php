@@ -347,6 +347,47 @@ class Property
 		if($this->parentProperty==NULL) return $this->name;
 		else return $this->parentProperty->path().".".$this->name;
 	}
+	
+	function completePath()
+	{
+		if($this->parentProperty==NULL)
+		{
+			if(get_class($this->parentBlock)=="Flow") return $this->parentBlock->parentBlock->name.".".$this->parentBlock->name.".".$this->name;
+			else return $this->parentBlock->name.".".$this->name;
+		}
+		else return $this->parentProperty->path().".".$this->name;
+	}
+	
+	static function dependsProperties($expression)
+	{
+		preg_match_all("/([a-zA-Z_]+[a-zA-Z0-9_]*\\.?)+/x", $expression, $matches);
+		$depends=array();
+		foreach($matches[0] as $match)
+		{
+			if(substr($match,-6)===".value" or substr($match,-5)===".bits") array_push($depends, $match);
+		}
+		return array_unique($depends);
+	}
+	
+	static function localToGlobalPropertyPath($expression, $blockName)
+	{
+		foreach(Property::dependsProperties($expression) as $depend)
+		{
+			$expression = str_replace($depend, $blockName .'.'. $depend, $expression);
+		}
+		return $expression;
+	}
+	
+	function toGlobalPropertyPath($blockName)
+	{
+		$this->propertymap = Property::localToGlobalPropertyPath($this->propertymap, $blockName);
+		$this->onchange = Property::localToGlobalPropertyPath($this->onchange, $blockName);
+		
+		foreach($this->properties as $property)
+		{
+			$property->toGlobalPropertyPath($blockName);
+		}
+	}
 }
 
 ?>

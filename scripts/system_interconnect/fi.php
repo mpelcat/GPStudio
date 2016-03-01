@@ -208,6 +208,73 @@ class FlowInterconnect extends Block
 		
 		if($count_param==1) $this->pi_size_addr_rel=1;
 		else $this->pi_size_addr_rel = ceil(log($count_param, 2));
+		
+		// process properties on input flow
+		foreach($this->tree_connects as $treeconnect)
+		{
+			$flowIn = $node->getFlow($treeconnect->toblock.'.'.$treeconnect->toflow);
+			
+			// direct connection
+			if(count($treeconnect->treeitems)==1)
+			{
+				$flowOut = $node->getFlow($treeconnect->treeitems[0]->fromblock.'.'.$treeconnect->treeitems[0]->fromflow);
+				
+				foreach($flowOut->properties as $propertyOut)
+				{
+					$propertyIn = new Property();
+					$propertyIn->name = $propertyOut->name;
+					$propertyIn->type = $propertyOut->type;
+					$propertyIn->value = $propertyOut->value;
+					$propertyIn->propertymap = $propertyOut->completePath().".value";
+					$flowIn->addProperty($propertyIn);
+				}
+			}
+			// multiple connection with mux
+			elseif(count($treeconnect->treeitems)>1)
+			{
+				$dependingPropertyName = "fi.".$treeconnect->muxname.".bits";
+				$propsFlowBase = array();
+				foreach($treeconnect->treeitems as $treeitem)
+				{
+					$propsFlowBase[$treeitem->muxvalue]='';
+				}
+				
+				$propsFlow = array();
+				
+				foreach($treeconnect->treeitems as $treeitem)
+				{
+					$flowOut = $node->getFlow($treeitem->fromblock.'.'.$treeitem->fromflow);
+					
+					foreach($flowOut->properties as $propertyOut)
+					{
+						if(!array_key_exists($propertyOut->name, $propsFlow)) $propsFlow[$propertyOut->name]=$propsFlowBase;
+						$propsFlow[$propertyOut->name][$treeitem->muxvalue]=$propertyOut->completePath().".value";
+					}
+				}
+				//echo $treeconnect->toblock.'.'.$treeconnect->toflow.' ';
+				//print_r($propsFlow);
+				
+				// add all properties in
+				foreach($propsFlow as $propName => $props)
+				{
+					$flowOut = $node->getFlow($treeitem->fromblock.'.'.$treeitem->fromflow);
+					
+					$code="switch(".$dependingPropertyName."){";
+					foreach($props as $key => $prop)
+					{
+						$code.="case ".$key.":".$prop."; break;";
+					}
+					$code.="}";
+					
+					$propertyIn = new Property();
+					$propertyIn->name = $propName;
+					$propertyIn->type = $propertyOut->type;
+					$propertyIn->value = $propertyOut->value;
+					$propertyIn->propertymap = $code;
+					$flowIn->addProperty($propertyIn);
+				}
+			}
+		}
 	}
 	
 	function create_dot_file($node, $filename)
