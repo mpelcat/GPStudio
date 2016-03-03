@@ -8,14 +8,14 @@
 
 #include <QDateTime>
 
-#include "property.h"
+#include "camera/property.h"
 #include "propertywidgets/propertywidgets.h"
 #include "connectnodedialog.h"
 
 #include "cameracom.h"
 #include "flowcom.h"
 #include "flowdata.h"
-#include "flowmanager.h"
+#include "camera/flowmanager.h"
 
 #include "datawrapper/gradiantwrapper.h"
 #include "datawrapper/harriswrapper.h"
@@ -151,9 +151,9 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     _cam = new Camera(fileName);
 
-    foreach (Property *property, _cam->paramsBlocks()->subProperties().properties())
+    foreach (Property *property, _cam->paramsBlocks()->subProperties())
     {
-        if(property->type()==Property::Group && property->subProperties().properties().count()>0)
+        if(property->type()==Property::Group && property->subProperties().count()>0)
         {
             PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
             ui->paramsLayout->addWidget(propertyWidget);

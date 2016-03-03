@@ -1,4 +1,4 @@
-#include "imageview.h"
+#include "layerviewer.h"
 
 #include <QWheelEvent>
 #include <qmath.h>

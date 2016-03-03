@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-#include "property.h"
-#include "camera.h"
+#include "camera/property.h"
+#include "camera/camera.h"
 
 ScriptEngine *ScriptEngine::_instance = NULL;
 
@@ -35,7 +35,7 @@ void ScriptEngine::setCamera(Camera *camera)
 {
     _camera = camera;
 
-    foreach (Property *property, camera->paramsBlocks()->subProperties().properties())
+    foreach (Property *property, camera->paramsBlocks()->subProperties())
     {
         computePropertyMap(property, _camera->paramsBlocks());
     }
@@ -78,7 +78,7 @@ QStringList ScriptEngine::dependsProperties(const QString &expression)
 
 void ScriptEngine::computePropertyMap(Property *property, Property *paramsProps)
 {
-    foreach (Property *subProperty, property->subProperties().properties())
+    foreach (Property *subProperty, property->subProperties())
     {
         const QStringList &deps = subProperty->dependsProperties();
         foreach (QString propPath, deps)

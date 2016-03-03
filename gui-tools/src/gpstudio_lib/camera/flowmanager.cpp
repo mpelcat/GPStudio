@@ -56,7 +56,7 @@ void FlowManager::setNode(ModelNode *node)
                 Property *propOut = _paramProperties->path(treeItem->fromblock()+"."+treeItem->fromflow());
                 //qDebug()<<"rrr "<<propOut->parent()->name()<<propOut->name()<<propIn->parent()->name()<<propIn->name();
 
-                foreach (Property *subBlockProperty, propOut->subProperties().properties())
+                foreach (Property *subBlockProperty, propOut->subProperties())
                 {
                     //qDebug()<<subBlockProperty->parent()->name()<<subBlockProperty->name();
                     //propIn->addSubProperty(subBlockProperty);

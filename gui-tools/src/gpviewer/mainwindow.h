@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QMdiSubWindow>
 
-#include "camera.h"
+#include "camera/camera.h"
 #include "flowviewerwidget/flowviewerwidget.h"
 #include "lib_parser/lib.h"
 

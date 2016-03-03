@@ -84,7 +84,7 @@ void Property::setValue(const QVariant &value)
                     foreach (QVariant item, line.toList())
                     {
                         QString key = QString("m%1%2").arg(x).arg(y);
-                        if(_subProperties.propertiesMap().contains(key)) _subProperties.propertiesMap()[key]->setValue(item.toInt());
+                        if(_subProperties.contains(key)) _subProperties[key]->setValue(item.toInt());
                         y++;
                     }
                 }
@@ -201,7 +201,7 @@ void Property::setOnchange(const QString &onchange)
 
 Property &Property::operator[](const QString &name)
 {
-    return *_subProperties.propertiesMap()[name];
+    return *_subProperties[name];
 }
 
 Property *Property::parent() const
@@ -220,10 +220,10 @@ Property *Property::path(QString path)
     int index = path.indexOf(".");
     if(index==-1)
     {
-        if(_subProperties.propertiesMap().contains(path)) return _subProperties.propertiesMap()[path];
+        if(_subProperties.contains(path)) return _subProperties[path];
         else return NULL;
     }
-    if(_subProperties.propertiesMap().contains(path.left(index))) return _subProperties.propertiesMap()[path.left(index)]->path(path.mid(index+1));
+    if(_subProperties.contains(path.left(index))) return _subProperties[path.left(index)]->path(path.mid(index+1));
     return NULL;
 }
 
@@ -232,7 +232,7 @@ QStringList Property::dependsProperties() const
     return ScriptEngine::dependsProperties(_propertyMap);
 }
 
-const PropertiesMap &Property::subProperties() const
+const QMap<QString, Property *> &Property::subProperties() const
 {
     return _subProperties;
 }
@@ -240,7 +240,7 @@ const PropertiesMap &Property::subProperties() const
 void Property::addSubProperty(Property *property)
 {
     property->setParent(this);
-    _subProperties.addProperty(property);
+    _subProperties.insert(property->name(), property);
 }
 
 Property *Property::fromBlockProperty(ModelProperty *blockProperty)

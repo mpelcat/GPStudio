@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QList>
 
-#include "flowconnection.h"
+#include "camera/flowconnection.h"
 
 class GPSTUDIO_LIB_EXPORT FlowViewerInterface : public QObject
 {
@@ -17,6 +17,9 @@ public:
     ~FlowViewerInterface();
 
     const QList<FlowConnection> &flowConnections() const;
+
+signals:
+    void dataTypeChanged();
 
 private:
     QList<FlowConnection> _flowConnections;

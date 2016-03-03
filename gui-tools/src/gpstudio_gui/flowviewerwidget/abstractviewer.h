@@ -5,7 +5,7 @@
 
 #include <QWidget>
 
-#include "property.h"
+#include "camera/property.h"
 
 class GPSTUDIO_GUI_EXPORT AbstractViewer
 {

@@ -4,7 +4,7 @@
 #include <QScriptString>
 #include <QScriptEngine>
 
-#include "property.h"
+#include "camera/property.h"
 
 //#define __PROP_DEBUG__
 
@@ -109,7 +109,7 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
                     for(int y=0;y<3;y++)
                     {
                         QString key = QString("m%1%2").arg(x).arg(y);
-                        if(_linkedProperty->subProperties().propertiesMap().contains(key)) line.append(_linkedProperty->subProperties().propertiesMap()[key]->value());
+                        if(_linkedProperty->subProperties().contains(key)) line.append(_linkedProperty->subProperties()[key]->value());
                     }
                     lines.append(line);
                 }
@@ -136,7 +136,7 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
     }
     else
     {
-        if(_linkedProperty->subProperties().propertiesMap().contains(filteredName))
+        if(_linkedProperty->subProperties().contains(filteredName))
         {
             PropertyClass *prop=new PropertyClass(engine(), &(*_linkedProperty)[filteredName]);
             _subPropertiesClasses.insert(filteredName, prop);

@@ -45,21 +45,20 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/iolib.h \
     lib_parser/ioboardlib.h \
     lib_parser/iolibgroup.h \
-    camera.h \
-    property.h \
-    cameraregister.h \
-    propertiesmap.h \
+    camera/camera.h \
+    camera/property.h \
+    camera/cameraregister.h \
     propertyclass.h \
-    cameraregistersmap.h \
-    cameraregisterbitfield.h \
+    camera/cameraregistersmap.h \
+    camera/cameraregisterbitfield.h \
     scriptengine.h \
-    propertyenum.h \
+    camera/propertyenum.h \
     datawrapper/datawrapper.h \
     datawrapper/gradiantwrapper.h \
     datawrapper/harriswrapper.h \
     gpnodeproject.h \
-    flowmanager.h \
-    flowconnection.h \
+    camera/flowmanager.h \
+    camera/flowconnection.h \
     flowviewerinterface.h \
     model/model_attribute.h \
     model/model_block.h \
@@ -92,21 +91,20 @@ SOURCES += \
     lib_parser/iolib.cpp \
     lib_parser/ioboardlib.cpp \
     lib_parser/iolibgroup.cpp \
-    camera.cpp \
-    property.cpp \
-    cameraregister.cpp \
-    propertiesmap.cpp \
+    camera/camera.cpp \
+    camera/property.cpp \
+    camera/cameraregister.cpp \
     propertyclass.cpp \
-    cameraregistersmap.cpp \
-    cameraregisterbitfield.cpp \
+    camera/cameraregistersmap.cpp \
+    camera/cameraregisterbitfield.cpp \
     scriptengine.cpp \
-    propertyenum.cpp \
+    camera/propertyenum.cpp \
     datawrapper/datawrapper.cpp \
     datawrapper/gradiantwrapper.cpp \
     datawrapper/harriswrapper.cpp \
     gpnodeproject.cpp \
-    flowmanager.cpp \
-    flowconnection.cpp \
+    camera/flowmanager.cpp \
+    camera/flowconnection.cpp \
     flowviewerinterface.cpp \
     model/model_attribute.cpp \
     model/model_block.cpp \

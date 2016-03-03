@@ -28,7 +28,7 @@ void PropertyGroupWidget::createWidget()
     layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layoutPanel->setSpacing(6);
 
-    foreach (Property *property, _linkedProperty->subProperties().properties())
+    foreach (Property *property, _linkedProperty->subProperties())
     {
         PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
         if(propertyWidget)

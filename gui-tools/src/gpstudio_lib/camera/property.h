@@ -9,7 +9,6 @@
 #include <QList>
 
 #include "camera.h"
-#include "propertiesmap.h"
 #include "propertyenum.h"
 
 #include "model/model_property.h"
@@ -17,10 +16,11 @@
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(Property)
 public:
     Property(QString name=QString());
-    Property(const Property &other);
-    Property &operator =(const Property &other);
+    //Property(const Property &other);
+    //Property &operator =(const Property &other);
     virtual ~Property();
 
     QString name() const;
@@ -59,7 +59,7 @@ public:
     void setOnchange(const QString &onchange);
 
     Property &operator[](const QString &name);
-    const PropertiesMap &subProperties() const;
+    const QMap<QString, Property* > &subProperties() const;
     void addSubProperty(Property *property);
 
     Property *parent() const;
@@ -103,7 +103,7 @@ protected:
     QMap<QString, PropertyEnum* > _enumsMap;
     QList<PropertyEnum*> _enums;
 
-    PropertiesMap _subProperties;
+    QMap<QString, Property* > _subProperties;
 
 };
 

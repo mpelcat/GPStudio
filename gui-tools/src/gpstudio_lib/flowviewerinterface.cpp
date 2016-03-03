@@ -5,18 +5,18 @@
 FlowViewerInterface::FlowViewerInterface(const FlowConnection &flowConnection)
 {
     _flowConnections.append(flowConnection);
-    qDebug()<<"construct interface";
+    //qDebug()<<"construct interface";
 }
 
 FlowViewerInterface::FlowViewerInterface(const QList<FlowConnection> &flowConnections)
 {
     _flowConnections.append(flowConnections);
-    qDebug()<<"construct interface";
+    //qDebug()<<"construct interface";
 }
 
 FlowViewerInterface::~FlowViewerInterface()
 {
-    qDebug()<<"destruct interface";
+    //qDebug()<<"destruct interface";
 }
 
 const QList<FlowConnection> &FlowViewerInterface::flowConnections() const
