@@ -1,5 +1,5 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef MODEL_FILE_H
+#define MODEL_FILE_H
 
 #include "gpstudio_lib_common.h"
 
@@ -46,4 +46,4 @@ protected:
     ModelBlock *_parent;
 };
 
-#endif // FILE_H
+#endif // MODEL_FILE_H

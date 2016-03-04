@@ -1,5 +1,5 @@
-#ifndef PARAM_H
-#define PARAM_H
+#ifndef MODEL_PARAM_H
+#define MODEL_PARAM_H
 
 #include "gpstudio_lib_common.h"
 
@@ -80,4 +80,4 @@ protected:
     QList<ModelParamBitField *> _parambitfields;
 };
 
-#endif // PARAM_H
+#endif // MODEL_PARAM_H

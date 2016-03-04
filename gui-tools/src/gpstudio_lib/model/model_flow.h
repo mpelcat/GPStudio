@@ -1,5 +1,5 @@
-#ifndef FLOW_H
-#define FLOW_H
+#ifndef MODEL_FLOW_H
+#define MODEL_FLOW_H
 
 #include "gpstudio_lib_common.h"
 
@@ -52,4 +52,4 @@ protected:
     ModelBlock *_parent;
 };
 
-#endif // FLOW_H
+#endif // MODEL_FLOW_H

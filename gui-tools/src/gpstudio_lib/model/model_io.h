@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef MODEL_IO_H
+#define MODEL_IO_H
 
 #include "gpstudio_lib_common.h"
 
@@ -17,4 +17,4 @@ public:
     static ModelIO *fromNodeGenerated(const QDomElement &domElement, ModelIO *io=NULL);
 };
 
-#endif // IO_H
+#endif // MODEL_IO_H

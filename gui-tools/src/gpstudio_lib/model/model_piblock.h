@@ -1,5 +1,5 @@
-#ifndef PIBLOCK_H
-#define PIBLOCK_H
+#ifndef MODEL_PIBLOCK_H
+#define MODEL_PIBLOCK_H
 
 #include "gpstudio_lib_common.h"
 
@@ -19,4 +19,4 @@ public:
     static ModelPIBlock *fromNodeGenerated(const QDomElement &domElement, ModelPIBlock *piBlock=NULL);
 };
 
-#endif // PIBLOCK_H
+#endif // MODEL_PIBLOCK_H

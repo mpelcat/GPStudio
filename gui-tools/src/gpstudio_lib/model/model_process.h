@@ -1,5 +1,5 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#ifndef MODEL_PROCESS_H
+#define MODEL_PROCESS_H
 
 #include "gpstudio_lib_common.h"
 
@@ -19,4 +19,4 @@ public:
     static ModelProcess *fromNodeGenerated(const QDomElement &domElement, ModelProcess *process=NULL);
 };
 
-#endif // PROCESS_H
+#endif // MODEL_PROCESS_H

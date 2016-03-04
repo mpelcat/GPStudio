@@ -1,5 +1,5 @@
-#ifndef RESET_H
-#define RESET_H
+#ifndef MODEL_RESET_H
+#define MODEL_RESET_H
 
 #include "gpstudio_lib_common.h"
 
@@ -44,4 +44,4 @@ protected:
     ModelBlock *_parent;
 };
 
-#endif // RESET_H
+#endif // MODEL_RESET_H

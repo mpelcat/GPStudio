@@ -1,5 +1,5 @@
-#ifndef ATTRIBUTE_H
-#define ATTRIBUTE_H
+#ifndef MODEL_ATTRIBUTE_H
+#define MODEL_ATTRIBUTE_H
 
 #include "gpstudio_lib_common.h"
 
@@ -31,4 +31,4 @@ protected:
     QString _type;
 };
 
-#endif // ATTRIBUTE_H
+#endif // MODEL_ATTRIBUTE_H

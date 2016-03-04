@@ -1,5 +1,5 @@
-#ifndef PORT_H
-#define PORT_H
+#ifndef MODEL_PORT_H
+#define MODEL_PORT_H
 
 #include "gpstudio_lib_common.h"
 
@@ -42,4 +42,4 @@ protected:
     ModelBlock *_parent;
 };
 
-#endif // PORT_H
+#endif // MODEL_PORT_H

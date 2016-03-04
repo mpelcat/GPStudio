@@ -1,5 +1,5 @@
-#ifndef PIN_H
-#define PIN_H
+#ifndef MODEL_PIN_H
+#define MODEL_PIN_H
 
 #include "gpstudio_lib_common.h"
 
@@ -43,4 +43,4 @@ protected:
     QList<ModelAttribute *> _attributes;
 };
 
-#endif // PIN_H
+#endif // MODEL_PIN_H

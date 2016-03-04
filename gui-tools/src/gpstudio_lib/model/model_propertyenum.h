@@ -1,5 +1,5 @@
-#ifndef BLOCKPROPERTYENUM_H
-#define BLOCKPROPERTYENUM_H
+#ifndef MODEL_BLOCKPROPERTYENUM_H
+#define MODEL_BLOCKPROPERTYENUM_H
 
 #include "gpstudio_lib_common.h"
 
@@ -32,4 +32,4 @@ protected:
     QString _description;
 };
 
-#endif // BLOCKPROPERTYENUM_H
+#endif // MODEL_BLOCKPROPERTYENUM_H

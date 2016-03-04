@@ -1,5 +1,5 @@
-#ifndef FLOWCONNECT_H
-#define FLOWCONNECT_H
+#ifndef MODEL_FLOWCONNECT_H
+#define MODEL_FLOWCONNECT_H
 
 #include "gpstudio_lib_common.h"
 
@@ -39,4 +39,4 @@ protected:
     QString _order;
 };
 
-#endif // FLOWCONNECT_H
+#endif // MODEL_FLOWCONNECT_H

@@ -1,5 +1,5 @@
-#ifndef FIBLOCK_H
-#define FIBLOCK_H
+#ifndef MODEL_FIBLOCK_H
+#define MODEL_FIBLOCK_H
 
 #include "gpstudio_lib_common.h"
 
@@ -35,4 +35,4 @@ protected:
     QList<ModelTreeConnect *> _treeConnects;
 };
 
-#endif // FIBLOCK_H
+#endif // MODEL_FIBLOCK_H

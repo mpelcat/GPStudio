@@ -1,5 +1,5 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef MODEL_NODE_H
+#define MODEL_NODE_H
 
 #include "gpstudio_lib_common.h"
 
@@ -45,4 +45,4 @@ protected:
     QList<ModelBlock *> _blocks;
 };
 
-#endif // NODE_H
+#endif // MODEL_NODE_H

@@ -1,5 +1,5 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef MODEL_BLOCK_H
+#define MODEL_BLOCK_H
 
 #include "gpstudio_lib_common.h"
 
@@ -130,4 +130,4 @@ protected:
     QList<ModelReset *> _resets;
 };
 
-#endif // BLOCK_H
+#endif // MODEL_BLOCK_H

@@ -1,5 +1,5 @@
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef MODEL_CLOCK_H
+#define MODEL_CLOCK_H
 
 #include "gpstudio_lib_common.h"
 
@@ -54,4 +54,4 @@ protected:
     ModelBlock *_parent;
 };
 
-#endif // CLOCK_H
+#endif // MODEL_CLOCK_H

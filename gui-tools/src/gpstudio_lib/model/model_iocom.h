@@ -1,5 +1,5 @@
-#ifndef IOCOM_H
-#define IOCOM_H
+#ifndef MODEL_IOCOM_H
+#define MODEL_IOCOM_H
 
 #include "gpstudio_lib_common.h"
 
@@ -32,4 +32,4 @@ protected:
     QList<ModelComConnect *> _comConnects;
 };
 
-#endif // IOCOM_H
+#endif // MODEL_IOCOM_H

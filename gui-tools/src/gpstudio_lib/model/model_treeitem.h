@@ -1,5 +1,5 @@
-#ifndef TREEITEM_H
-#define TREEITEM_H
+#ifndef MODEL_TREEITEM_H
+#define MODEL_TREEITEM_H
 
 #include "gpstudio_lib_common.h"
 
@@ -39,4 +39,4 @@ protected:
     uint _muxvalue;
 };
 
-#endif // TREEITEM_H
+#endif // MODEL_TREEITEM_H

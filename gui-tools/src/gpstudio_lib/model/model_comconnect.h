@@ -1,5 +1,5 @@
-#ifndef COMCONNECT_H
-#define COMCONNECT_H
+#ifndef MODEL_COMCONNECT_H
+#define MODEL_COMCONNECT_H
 
 #include "gpstudio_lib_common.h"
 
@@ -31,4 +31,4 @@ protected:
     QString _type;
 };
 
-#endif // COMCONNECT_H
+#endif // MODEL_COMCONNECT_H

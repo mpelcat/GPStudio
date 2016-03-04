@@ -1,5 +1,5 @@
-#ifndef CIBLOCK_H
-#define CIBLOCK_H
+#ifndef MODEL_CIBLOCK_H
+#define MODEL_CIBLOCK_H
 
 #include "gpstudio_lib_common.h"
 
@@ -19,4 +19,4 @@ public:
     static ModelCIBlock *fromNodeGenerated(const QDomElement &domElement, ModelCIBlock *ciBlock=NULL);
 };
 
-#endif // CIBLOCK_H
+#endif // MODEL_CIBLOCK_H

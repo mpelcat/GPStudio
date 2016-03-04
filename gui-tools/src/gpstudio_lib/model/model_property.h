@@ -1,5 +1,5 @@
-#ifndef BLOCKPROPERTY_H
-#define BLOCKPROPERTY_H
+#ifndef MODEL_BLOCKPROPERTY_H
+#define MODEL_BLOCKPROPERTY_H
 
 #include "gpstudio_lib_common.h"
 
@@ -84,4 +84,4 @@ protected:
     QList<ModelPropertyEnum *> _propertyEnums;
 };
 
-#endif // BLOCKPROPERTY_H
+#endif // MODEL_BLOCKPROPERTY_H

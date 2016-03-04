@@ -1,5 +1,5 @@
-#ifndef TREECONNECT_H
-#define TREECONNECT_H
+#ifndef MODEL_TREECONNECT_H
+#define MODEL_TREECONNECT_H
 
 #include "gpstudio_lib_common.h"
 
@@ -49,4 +49,4 @@ protected:
     QList<ModelTreeItem *> _treeitems;
 };
 
-#endif // TREECONNECT_H
+#endif // MODEL_TREECONNECT_H

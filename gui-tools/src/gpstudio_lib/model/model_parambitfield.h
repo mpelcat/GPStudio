@@ -1,5 +1,5 @@
-#ifndef PARAMBITFIELD_H
-#define PARAMBITFIELD_H
+#ifndef MODEL_PARAMBITFIELD_H
+#define MODEL_PARAMBITFIELD_H
 
 #include "gpstudio_lib_common.h"
 
@@ -53,4 +53,4 @@ protected:
     ModelParam *_parent;
 };
 
-#endif // PARAMBITFIELD_H
+#endif // MODEL_PARAMBITFIELD_H
