@@ -8,10 +8,12 @@
 #include <QMap>
 #include <QList>
 
-#include "camera.h"
 #include "propertyenum.h"
 
-#include "model/model_property.h"
+class Camera;
+
+class ModelProperty;
+class ModelFlow;
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
@@ -23,39 +25,39 @@ public:
     //Property &operator =(const Property &other);
     virtual ~Property();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
     Q_PROPERTY(QString name READ name WRITE setName SCRIPTABLE true)
 
-    QString caption() const;
+    const QString &caption() const;
     void setCaption(const QString &caption);
 
-    QVariant &value();
+    const QVariant &value() const;
     Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged SCRIPTABLE true)
 
     uint bits() const;
     Q_PROPERTY(uint bits READ bits WRITE setBits NOTIFY bitsChanged SCRIPTABLE true)
 
-    QVariant min() const;
+    const QVariant &min() const;
     void setMin(const QVariant &min);
 
-    QVariant max() const;
+    const  QVariant &max() const;
     void setMax(const QVariant &max);
 
-    QVariant step() const;
+    const QVariant &step() const;
     void setStep(const QVariant &step);
 
     const QMap<QString, PropertyEnum *> &enumsMap() const;
-    const QList<PropertyEnum *> &enums() const;
+    const QList<PropertyEnum *> enums() const;
 
     enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType};
     Type type() const;
     void setType(const Type &type);
 
-    QString propertymap() const;
+    const QString &propertymap() const;
     void setPropertymap(const QString &propertymap);
 
-    QString onchange() const;
+    const QString &onchange() const;
     void setOnchange(const QString &onchange);
 
     Property &operator[](const QString &name);
@@ -65,7 +67,7 @@ public:
     Property *parent() const;
     void setParent(Property *parent);
 
-    Property *path(QString path);
+    const Property *path(const QString &path) const;
 
     QStringList dependsProperties() const;
 
@@ -83,25 +85,26 @@ public slots:
     void eval();
 
 public:
-    static Property *fromBlockProperty(ModelProperty *blockProperty);
-    static Property *fromFlow(ModelFlow *flow);
+    static Property *fromModelProperty(ModelProperty *modelProperty);
+    static Property *fromFlow(ModelFlow *modelFlow);
 
 protected:
     QString _name;
     QString _caption;
     QVariant _value;
     uint _bits;
+    Type _type;
+
+    // TODO move these attributes to sub-properties
     QVariant _min;
     QVariant _max;
     QVariant _step;
-    Type _type;
 
     QString _propertyMap;
     QString _onchange;
 
     Property *_parent;
     QMap<QString, PropertyEnum* > _enumsMap;
-    QList<PropertyEnum*> _enums;
 
     QMap<QString, Property* > _subProperties;
 

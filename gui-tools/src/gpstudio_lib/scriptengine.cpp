@@ -9,14 +9,13 @@ ScriptEngine *ScriptEngine::_instance = NULL;
 
 ScriptEngine::ScriptEngine(QObject *parent) : QObject(parent)
 {
-    _camera = NULL;
+    _rootProperty = NULL;
 
     _engine.evaluate("Math.__proto__.log2=function(x){ return this.log(x) / this.log(2); }");
 }
 
 ScriptEngine::~ScriptEngine()
 {
-
 }
 
 QScriptEngine *ScriptEngine::engine()
@@ -24,20 +23,27 @@ QScriptEngine *ScriptEngine::engine()
     return &_engine;
 }
 
-void ScriptEngine::addProperty(Property *property)
+const Property *ScriptEngine::path(const QString &path) const
 {
-    PropertyClass *prop=new PropertyClass(&_engine, property);
-    QScriptValue value = _engine.newObject(prop);
-    _engine.globalObject().setProperty(property->name(), value);
+    if(_rootProperty) return _rootProperty->path(path);
 }
 
-void ScriptEngine::setCamera(Camera *camera)
+const Property *ScriptEngine::rootProperty() const
 {
-    _camera = camera;
+    return _rootProperty;
+}
 
-    foreach (Property *property, camera->paramsBlocks()->subProperties())
+void ScriptEngine::setRootProperty(Property *rootProperty)
+{
+    _rootProperty = rootProperty;
+
+    foreach (Property *property, _rootProperty->subProperties())
     {
-        computePropertyMap(property, _camera->paramsBlocks());
+        computePropertyMap(property, _rootProperty);
+
+        PropertyClass *prop=new PropertyClass(&_engine, property);
+        QScriptValue value = _engine.newObject(prop);
+        _engine.globalObject().setProperty(property->name(), value);
     }
 }
 
@@ -83,7 +89,7 @@ void ScriptEngine::computePropertyMap(Property *property, Property *paramsProps)
         const QStringList &deps = subProperty->dependsProperties();
         foreach (QString propPath, deps)
         {
-            Property *prop = paramsProps->path(propPath);
+            const Property *prop = paramsProps->path(propPath);
             if(prop) connect(prop, SIGNAL(valueChanged(QVariant)), subProperty, SLOT(eval()));
         }
 

@@ -47,10 +47,7 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/iolibgroup.h \
     camera/camera.h \
     camera/property.h \
-    camera/cameraregister.h \
     propertyclass.h \
-    camera/cameraregistersmap.h \
-    camera/cameraregisterbitfield.h \
     scriptengine.h \
     camera/propertyenum.h \
     datawrapper/datawrapper.h \
@@ -82,7 +79,12 @@ HEADERS += gpstudio_lib_common.h \
     model/model_treeconnect.h \
     model/model_treeitem.h \
     model/model_property.h \
-    model/model_propertyenum.h
+    model/model_propertyenum.h \
+    camera/registermanager.h \
+    camera/registerbitfield.h \
+    camera/register.h \
+    camera/flow.h \
+    camera/block.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -93,10 +95,7 @@ SOURCES += \
     lib_parser/iolibgroup.cpp \
     camera/camera.cpp \
     camera/property.cpp \
-    camera/cameraregister.cpp \
     propertyclass.cpp \
-    camera/cameraregistersmap.cpp \
-    camera/cameraregisterbitfield.cpp \
     scriptengine.cpp \
     camera/propertyenum.cpp \
     datawrapper/datawrapper.cpp \
@@ -128,7 +127,12 @@ SOURCES += \
     model/model_treeconnect.cpp \
     model/model_treeitem.cpp \
     model/model_property.cpp \
-    model/model_propertyenum.cpp
+    model/model_propertyenum.cpp \
+    camera/registermanager.cpp \
+    camera/registerbitfield.cpp \
+    camera/register.cpp \
+    camera/flow.cpp \
+    camera/block.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

@@ -52,8 +52,8 @@ void ScriptWidget::exec()
     }
 
     _histo.append(_lineEdit->text());
-    _lineEdit->clear();
     _histoIndex = _histo.count();
+    _lineEdit->clear();
 }
 
 void ScriptWidget::up()
@@ -65,7 +65,8 @@ void ScriptWidget::up()
 
 void ScriptWidget::down()
 {
-    if(_histoIndex > 0 && _histoIndex>=_histo.count()-1) return;
+    if(_histo.empty()) return;
+    if(_histoIndex>=_histo.count()-1) return;
     _histoIndex++;
     _lineEdit->setText(_histo[_histoIndex]);
 }

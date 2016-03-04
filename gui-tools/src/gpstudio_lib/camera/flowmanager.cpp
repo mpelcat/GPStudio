@@ -50,10 +50,10 @@ void FlowManager::setNode(ModelNode *node)
 
             if(treeConnect->treeitems().count()==1) // direct connection
             {
-                Property *propIn = _paramProperties->path(treeConnect->toblock()+"."+treeConnect->toflow());
+                const Property *propIn = _paramProperties->path(treeConnect->toblock()+"."+treeConnect->toflow());
 
                 ModelTreeItem *treeItem = treeConnect->treeitems()[0];
-                Property *propOut = _paramProperties->path(treeItem->fromblock()+"."+treeItem->fromflow());
+                const Property *propOut = _paramProperties->path(treeItem->fromblock()+"."+treeItem->fromflow());
                 //qDebug()<<"rrr "<<propOut->parent()->name()<<propOut->name()<<propIn->parent()->name()<<propIn->name();
 
                 foreach (Property *subBlockProperty, propOut->subProperties())

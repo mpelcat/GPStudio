@@ -7,17 +7,17 @@
 #include <QString>
 #include <QList>
 
-#include "cameraregisterbitfield.h"
+#include "registerbitfield.h"
 
 class ModelParam;
 class Camera;
 
-class GPSTUDIO_LIB_EXPORT CameraRegister : public QObject
+class GPSTUDIO_LIB_EXPORT Register : public QObject
 {
     Q_OBJECT
 public:
-    CameraRegister(const QString &name=QString(), const uint &addr=0);
-    ~CameraRegister();
+    Register(const QString &name=QString(), const uint &addr=0);
+    ~Register();
 
     QString name() const;
     void setName(const QString &name);
@@ -37,11 +37,11 @@ public:
     Camera *camera() const;
     void setCamera(Camera *camera);
 
-    void addBitField(CameraRegisterBitField *bitField);
-    const QList<CameraRegisterBitField *> &bitFields() const;
+    void addBitField(RegisterBitField *bitField);
+    const QList<RegisterBitField *> &bitFields() const;
 
 public:
-    static CameraRegister *fromParam(const ModelParam *param);
+    static Register *fromParam(const ModelParam *param);
 
 signals:
     void registerChange(uint addr, uint value);
@@ -61,7 +61,7 @@ private:
     QString _propertyMap;
 
     Camera *_camera;
-    QList<CameraRegisterBitField *> _bitFields;
+    QList<RegisterBitField *> _bitFields;
 };
 
 #endif // CAMERAREGISTER_H

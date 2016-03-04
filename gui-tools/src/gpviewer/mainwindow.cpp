@@ -41,6 +41,7 @@ MainWindow::MainWindow(QStringList args) :
     }
 
     //ui->scriptDock->close();
+    //tabifyDockWidget(ui->paramsDock, ui->scriptDock);
 }
 
 MainWindow::~MainWindow()
@@ -151,7 +152,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     _cam = new Camera(fileName);
 
-    foreach (Property *property, _cam->paramsBlocks()->subProperties())
+    foreach (Property *property, _cam->rootProperty()->subProperties())
     {
         if(property->type()==Property::Group && property->subProperties().count()>0)
         {
@@ -194,7 +195,6 @@ void MainWindow::connectCam()
 void MainWindow::setBiSpace()
 {
     if(!_cam) return;
-    if(!_cam->com()) return;
     ui->piSpaceHex->setData(_cam->registerData());
 }
 

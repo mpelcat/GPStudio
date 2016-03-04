@@ -4,6 +4,7 @@
 #include "gpstudio_gui_common.h"
 
 #include <QLineEdit>
+#include <QCompleter>
 
 class GPSTUDIO_GUI_EXPORT ScriptLineEdit : public QLineEdit
 {
@@ -21,6 +22,8 @@ protected:
 
 public slots:
 
+private:
+    QCompleter* _completer;
 };
 
 #endif // SCRIPTLINEEDIT_H

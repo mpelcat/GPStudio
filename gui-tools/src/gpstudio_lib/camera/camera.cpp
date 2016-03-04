@@ -7,9 +7,10 @@
 #include "propertyclass.h"
 
 #include "flowmanager.h"
+#include "cameracom.h"
 
 Camera::Camera(const QString &fileCameraConfig)
-    : _registers(this)
+    : _registermanager(this)
 {
     _paramsBlocks = NULL;
     _node = NULL;
@@ -34,86 +35,69 @@ void Camera::setNode(ModelNode *node)
     if(_node) delete _node;
     _node = node;
 
+    if(!_node) return;
+
     if(_paramsBlocks) delete _paramsBlocks;
     _paramsBlocks = new Property();
 
-    foreach (ModelBlock *block, _node->blocks())
+    foreach (ModelBlock *modelBlock, _node->blocks())
     {
-        Property *propBlock = new Property(block->name());
-        propBlock->setCaption(block->name() + " (" + block->driver() + ")");
+        Property *propBlock = new Property(modelBlock->name());
+        propBlock->setCaption(modelBlock->name() + " (" + modelBlock->driver() + ")");
         propBlock->setType(Property::Group);
-        foreach (ModelProperty *property, block->properties())
+
+        // block property
+        foreach (ModelProperty *property, modelBlock->properties())
         {
-            Property *paramprop = Property::fromBlockProperty(property);
+            Property *paramprop = Property::fromModelProperty(property);
             propBlock->addSubProperty(paramprop);
         }
-        foreach (ModelFlow *flow, block->flows())
+
+        // flow property
+        foreach (ModelFlow *flow, modelBlock->flows())
         {
             Property *flowprop = Property::fromFlow(flow);
             propBlock->addSubProperty(flowprop);
         }
 
-        _paramsBlocks->addSubProperty(propBlock);
-        ScriptEngine::getEngine().addProperty(propBlock);
-
-        foreach (ModelParam *param, block->params())
+        // registers and const values
+        foreach (ModelParam *param, modelBlock->params())
         {
+            // register
             if(param->isDynamicParam())
             {
-                CameraRegister *cameraRegister = CameraRegister::fromParam(param);
-                _registers.addRegister(cameraRegister);
+                Register *cameraRegister = Register::fromParam(param);
+                _registermanager.addRegister(cameraRegister);
+            }
+            // const values
+            else
+            {
+                // TODO add const value as RO property
             }
         }
+
+        Block *block = Block::fromModelBlock(modelBlock);
+        block->setAssocProperty(propBlock);
+        _blocks.insert(block->name(), block);
+
+        _paramsBlocks->addSubProperty(propBlock);
     }
 
-    ScriptEngine::getEngine().setCamera(this);
+    ScriptEngine::getEngine().setRootProperty(_paramsBlocks);
 
-    uint maxAddr=0;
-    QMapIterator<uint, CameraRegister *> it(_registers.registersMap());
-    while (it.hasNext())
-    {
-        it.next();
-        CameraRegister *cameraRegister = it.value();
-
-        if(cameraRegister->addr()>maxAddr) maxAddr=cameraRegister->addr();
-
-        //if(cameraRegister->bitFields().count())
-        {
-            const QStringList &deps = cameraRegister->dependsProperties();
-            foreach (QString propName, deps)
-            {
-                Property *prop = _paramsBlocks->path(propName);
-                if(prop) connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
-            }
-        }
-        //else
-        {
-            foreach (CameraRegisterBitField *bitField, cameraRegister->bitFields())
-            {
-                const QStringList &deps = bitField->dependsProperties();
-                foreach (QString propName, deps)
-                {
-                    Property *prop = _paramsBlocks->path(propName);
-                    if(prop) connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
-                }
-            }
-        }
-
-        _registerData.fill(0,(maxAddr+1)*4);
-        connect(cameraRegister, SIGNAL(registerChange(uint,uint)), this, SLOT(setRegister(uint,uint)));
-    }
+    _registermanager.start();
 
     _flowManager = new FlowManager(_node, _paramsBlocks);
 }
 
-Property *Camera::paramsBlocks() const
+Property *Camera::rootProperty() const
 {
     return _paramsBlocks;
 }
 
-CameraRegistersMap &Camera::registers()
+RegisterManager &Camera::registers()
 {
-    return _registers;
+    return _registermanager;
 }
 
 uint Camera::evalPropertyMap(const QString &propertyMap)
@@ -123,26 +107,18 @@ uint Camera::evalPropertyMap(const QString &propertyMap)
 
 void Camera::setRegister(uint addr, uint value)
 {
-    qDebug()<<"setReg"<<addr<<value;
-    if(_com)
-    {
-        if(_com->isConnected())
-        {
-            _com->writeParam(addr, value);
+    _registermanager.setRegister(addr, value);
+    emit registerDataChanged();
+}
 
-            _registerData.data()[addr*4+0]=value>>24;
-            _registerData.data()[addr*4+1]=value>>16;
-            _registerData.data()[addr*4+2]=value>>8;
-            _registerData.data()[addr*4+3]=value;
-
-            emit registerDataChanged();
-        }
-    }
+const QMap<QString, Block*> &Camera::blocks() const
+{
+    return _blocks;
 }
 
 QByteArray Camera::registerData() const
 {
-    return _registerData;
+    return _registermanager.registerData();
 }
 
 CameraCom *Camera::com() const
@@ -170,7 +146,7 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
 
     if(_com->isConnected())
     {
-        _registers.evalAll();
+        _registermanager.evalAll();
     }
 
     _flowManager->setCom(_com);

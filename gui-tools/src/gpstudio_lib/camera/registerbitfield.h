@@ -9,14 +9,14 @@
 
 class ModelParamBitField;
 class Camera;
-class CameraRegister;
+class Register;
 
-class CameraRegisterBitField : public QObject
+class RegisterBitField : public QObject
 {
     Q_OBJECT
 public:
-    CameraRegisterBitField();
-    ~CameraRegisterBitField();
+    RegisterBitField();
+    ~RegisterBitField();
 
     uint mask() const;
     void setMask(const uint &mask);
@@ -31,13 +31,13 @@ public:
     void setPropertyMap(const QString &propertyMap);
     QStringList dependsProperties() const;
 
-    CameraRegister *parent() const;
-    void setParent(CameraRegister *parent);
+    Register *parent() const;
+    void setParent(Register *parent);
 
     const QList<uint> &bits() const;
 
 public:
-    static CameraRegisterBitField *fromParamBitField(const ModelParamBitField *paramBitField);
+    static RegisterBitField *fromParamBitField(const ModelParamBitField *paramBitField);
 
 signals:
     void bitfieldChange(uint mask, uint value);
@@ -53,7 +53,7 @@ private:
 
     QList<uint> _bits;
 
-    CameraRegister *_parent;
+    Register *_parent;
 };
 
 #endif // CAMERAREGISTERBITFIELD_H

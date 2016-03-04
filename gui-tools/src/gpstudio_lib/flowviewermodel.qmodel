@@ -51,7 +51,7 @@
                          <context>Gpstudio Lib</context>
                          <name>FlowConnection</name>
                          <pos>x:650;y:470</pos>
-                         <rect>x:-50;y:-30;w:100;h:60</rect>
+                         <rect>x:-45;y:-30;w:90;h:60</rect>
                          <visual-role>6</visual-role>
                         </DObject>
                        </base-DObject>
@@ -93,7 +93,7 @@
                          <context>Flowviewerwidget</context>
                          <name>AbstractViewer</name>
                          <pos>x:630;y:105</pos>
-                         <rect>x:-50;y:-30;w:100;h:60</rect>
+                         <rect>x:-45;y:-30;w:90;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
@@ -114,7 +114,7 @@
                          <context>Flowviewerwidget</context>
                          <name>FlowViewerWidget</name>
                          <pos>x:335;y:110</pos>
-                         <rect>x:-60;y:-30;w:120;h:60</rect>
+                         <rect>x:-55;y:-30;w:110;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>

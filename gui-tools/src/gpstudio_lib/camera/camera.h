@@ -6,27 +6,29 @@
 #include <QObject>
 #include <QMap>
 
+#include "block.h"
 #include "scriptengine.h"
 
 #include "model/model_node.h"
 #include "property.h"
-#include "cameraregistersmap.h"
+#include "registermanager.h"
 
-#include "cameracom.h"
+class CameraCom;
+class CameraInfo;
 class FlowManager;
 
 class GPSTUDIO_LIB_EXPORT Camera : public QObject
 {
     Q_OBJECT
 public:
-    Camera(const QString &fileCameraConfig);
+    Camera(const QString &fileCameraConfig=QString());
     ~Camera();
 
     ModelNode *node() const;
     void setNode(ModelNode *node);
 
-    Property *paramsBlocks() const;
-    CameraRegistersMap &registers();
+    Property *rootProperty() const;
+    RegisterManager &registers();
 
     bool isConnected() const;
     void connectCam(const CameraInfo &cameraInfo);
@@ -35,6 +37,8 @@ public:
     FlowManager *flowManager() const;
 
     QByteArray registerData() const;
+
+    const QMap<QString, Block*> &blocks() const;
 
 signals:
     void registerDataChanged();
@@ -47,13 +51,12 @@ private:
     ModelNode *_node;
 
     Property *_paramsBlocks;
-    CameraRegistersMap _registers;
-    // TODO remove _registerData and put into CameraRegistersMap
-    QByteArray _registerData;
+    RegisterManager _registermanager;
+    FlowManager *_flowManager;
 
     CameraCom *_com;
 
-    FlowManager *_flowManager;
+    QMap<QString, Block*> _blocks;
 };
 
 #endif // CAMERA_H

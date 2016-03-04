@@ -22,8 +22,9 @@ public:
 
     QScriptEngine *engine();
 
-    void addProperty(Property *property);
-    void setCamera(Camera *camera);
+    const Property *path(const QString &path) const;
+    const Property *rootProperty() const;
+    void setRootProperty(Property *rootProperty);
 
     QScriptValue eval(const QString &propertyMap);
     QVariant evalPropertyMap(const QString &propertyMap);
@@ -37,7 +38,8 @@ private:
 private:
     QScriptEngine _engine;
     static ScriptEngine *_instance;
-    Camera *_camera;
+
+    Property *_rootProperty;
 };
 
 #endif // SCRIPTENGINE_H

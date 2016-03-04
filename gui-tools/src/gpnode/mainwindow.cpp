@@ -66,8 +66,8 @@ void MainWindow::createToolBarAndMenu()
     ui->mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
 
-    QMenu *viewMenu = ui->menuBar->addMenu("&View");
-    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
+    /*QMenu *viewMenu = */ui->menuBar->addMenu("&View");
+    /*QMenu *helpMenu = */ui->menuBar->addMenu("&Help");
 }
 
 void MainWindow::configNode()

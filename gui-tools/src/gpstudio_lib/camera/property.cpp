@@ -2,6 +2,11 @@
 
 #include <QDebug>
 
+#include "model/model_property.h"
+#include "model/model_flow.h"
+
+#include "camera.h"
+
 Property::Property(QString name)
     : _name(name)
 {
@@ -9,7 +14,7 @@ Property::Property(QString name)
     _type = Group;
 }
 
-Property::Property(const Property &other)
+/*Property::Property(const Property &other)
     : QObject(), _name(other._name), _caption(other._caption), _value(other._value), _min(other._min), _max(other._max),
       _type(other._type), _parent(other._parent), _enums(other._enums), _subProperties(other._subProperties)
 {
@@ -27,14 +32,14 @@ Property &Property::operator =(const Property &other)
     _enums = other._enums;
     _subProperties = other._subProperties;
     return (*this);
-}
+}*/
 
 Property::~Property()
 {
-    foreach (PropertyEnum *propertyEnum, _enums) delete propertyEnum;
+    foreach (PropertyEnum *propertyEnum, _enumsMap) delete propertyEnum;
 }
 
-QString Property::name() const
+const QString &Property::name() const
 {
     return _name;
 }
@@ -44,7 +49,7 @@ void Property::setName(const QString &name)
     _name = name;
 }
 
-QString Property::caption() const
+const QString &Property::caption() const
 {
     return _caption;
 }
@@ -54,7 +59,7 @@ void Property::setCaption(const QString &caption)
     _caption = caption;
 }
 
-QVariant &Property::value()
+const QVariant &Property::value() const
 {
     return _value;
 }
@@ -71,6 +76,10 @@ void Property::setValue(int value)
 
 void Property::setValue(const QVariant &value)
 {
+    bool valueChangedb = false;
+    if(value != _value && _value.isValid()) valueChangedb=true;
+    _value=value;
+
     if(_type==Matrix)
     {
         if(value.type()==QVariant::List)
@@ -94,7 +103,7 @@ void Property::setValue(const QVariant &value)
     }
     else
     {
-        if(!_enums.isEmpty())
+        if(!_enumsMap.isEmpty())
         {
             if(_enumsMap.contains(value.toString()))
             {
@@ -107,8 +116,7 @@ void Property::setValue(const QVariant &value)
         }
     }
 
-    if(value != _value && _value.isValid()) emit valueChanged(QVariant(value));
-    _value = value;
+    if(valueChangedb) emit valueChanged(QVariant(value));
 
     ScriptEngine::getEngine().evalPropertyMap(_onchange);
 }
@@ -120,8 +128,12 @@ uint Property::bits() const
 
 void Property::setBits(const uint bits)
 {
-    if(bits != _bits) emit bitsChanged(bits);
-    _bits = bits;
+    if(bits != _bits)
+    {
+        _bits = bits;
+        emit bitsChanged(bits);
+    }
+    else _bits = bits;
 }
 
 void Property::eval()
@@ -129,7 +141,7 @@ void Property::eval()
     setValue(ScriptEngine::getEngine().evalPropertyMap(_propertyMap));
 }
 
-QVariant Property::min() const
+const QVariant &Property::min() const
 {
     return _min;
 }
@@ -139,7 +151,7 @@ void Property::setMin(const QVariant &min)
     _min = min;
 }
 
-QVariant Property::max() const
+const QVariant &Property::max() const
 {
     return _max;
 }
@@ -149,7 +161,7 @@ void Property::setMax(const QVariant &max)
     _max = max;
 }
 
-QVariant Property::step() const
+const QVariant &Property::step() const
 {
     return _step;
 }
@@ -164,9 +176,9 @@ const QMap<QString, PropertyEnum *> &Property::enumsMap() const
     return _enumsMap;
 }
 
-const QList<PropertyEnum *> &Property::enums() const
+const QList<PropertyEnum *> Property::enums() const
 {
-    return _enums;
+    return _enumsMap.values();
 }
 
 Property::Type Property::type() const
@@ -179,7 +191,7 @@ void Property::setType(const Property::Type &type)
     _type = type;
 }
 
-QString Property::propertymap() const
+const QString &Property::propertymap() const
 {
     return _propertyMap;
 }
@@ -189,7 +201,7 @@ void Property::setPropertymap(const QString &propertymap)
     _propertyMap = propertymap;
 }
 
-QString Property::onchange() const
+const QString &Property::onchange() const
 {
     return _onchange;
 }
@@ -214,7 +226,7 @@ void Property::setParent(Property *parent)
     _parent = parent;
 }
 
-Property *Property::path(QString path)
+const Property *Property::path(const QString &path) const
 {
     if(path.isEmpty() || path==_name || path=="value" || path=="bits") return this;
     int index = path.indexOf(".");
@@ -243,63 +255,62 @@ void Property::addSubProperty(Property *property)
     _subProperties.insert(property->name(), property);
 }
 
-Property *Property::fromBlockProperty(ModelProperty *blockProperty)
+Property *Property::fromModelProperty(ModelProperty *modelProperty)
 {
-    Property *paramprop = new Property(blockProperty->name());
-    paramprop->setCaption(blockProperty->caption());
-    paramprop->setOnchange(blockProperty->onchange());
-    paramprop->setPropertymap(blockProperty->propertymap());
-    if(!blockProperty->propertyEnums().empty())
+    Property *paramprop = new Property(modelProperty->name());
+    paramprop->setCaption(modelProperty->caption());
+    paramprop->setOnchange(modelProperty->onchange());
+    paramprop->setPropertymap(modelProperty->propertymap());
+    if(!modelProperty->propertyEnums().empty())
     {
-        foreach (ModelPropertyEnum *blockPropertyEnum, blockProperty->propertyEnums())
+        foreach (ModelPropertyEnum *blockPropertyEnum, modelProperty->propertyEnums())
         {
             PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->value());
             paramprop->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
-            paramprop->_enums.append(propertyEnum);
         }
         paramprop->setType(Property::Enum);
-        paramprop->setValue(blockProperty->value());
+        paramprop->setValue(modelProperty->value());
     }
-    if(blockProperty->type()=="int" || blockProperty->type()=="sint")
+    if(modelProperty->type()=="int" || modelProperty->type()=="sint")
     {
-        if(blockProperty->type()=="int") paramprop->setType(Int);
-        if(blockProperty->type()=="sint") paramprop->setType(SInt);
-        paramprop->setValue(blockProperty->value().toInt());
-        paramprop->setMin(blockProperty->min());
-        paramprop->setMax(blockProperty->max());
-        paramprop->setStep(blockProperty->step().toInt());
+        if(modelProperty->type()=="int") paramprop->setType(Int);
+        if(modelProperty->type()=="sint") paramprop->setType(SInt);
+        paramprop->setValue(modelProperty->value().toInt());
+        paramprop->setMin(modelProperty->min());
+        paramprop->setMax(modelProperty->max());
+        paramprop->setStep(modelProperty->step().toInt());
     }
-    if(blockProperty->type()=="matrix")
+    if(modelProperty->type()=="matrix")
     {
         paramprop->setType(Matrix);
-        paramprop->setValue(QVariant(blockProperty->value()).toInt());
+        paramprop->setValue(QVariant(modelProperty->value()).toInt());
     }
-    if(blockProperty->type()=="bool")
+    if(modelProperty->type()=="bool")
     {
         paramprop->setType(Bool);
-        paramprop->setValue(QVariant(blockProperty->value()).toBool());
+        paramprop->setValue(QVariant(modelProperty->value()).toBool());
     }
-    if(blockProperty->type()=="group") paramprop->setType(Group);
+    if(modelProperty->type()=="group") paramprop->setType(Group);
 
     // sub properties
-    foreach (ModelProperty *subBlockProperty, blockProperty->properties())
+    foreach (ModelProperty *subBlockProperty, modelProperty->properties())
     {
-        paramprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
+        paramprop->addSubProperty(Property::fromModelProperty(subBlockProperty));
     }
 
     return paramprop;
 }
 
-Property *Property::fromFlow(ModelFlow *flow)
+Property *Property::fromFlow(ModelFlow *modelFlow)
 {
-    Property *flowprop = new Property(flow->name());
-    flowprop->setCaption(flow->name());
+    Property *flowprop = new Property(modelFlow->name());
+    flowprop->setCaption(modelFlow->name());
     flowprop->setType(FlowType);
 
     // sub properties
-    foreach (ModelProperty *subBlockProperty, flow->properties())
+    foreach (ModelProperty *subBlockProperty, modelFlow->properties())
     {
-        flowprop->addSubProperty(Property::fromBlockProperty(subBlockProperty));
+        flowprop->addSubProperty(Property::fromModelProperty(subBlockProperty));
     }
 
     return flowprop;
