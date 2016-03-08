@@ -14,6 +14,7 @@ class Camera;
 
 class ModelProperty;
 class ModelFlow;
+class ModelBlock;
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
@@ -21,8 +22,6 @@ class GPSTUDIO_LIB_EXPORT Property : public QObject
     Q_DISABLE_COPY(Property)
 public:
     Property(QString name=QString());
-    //Property(const Property &other);
-    //Property &operator =(const Property &other);
     virtual ~Property();
 
     const QString &name() const;
@@ -39,35 +38,30 @@ public:
     Q_PROPERTY(uint bits READ bits WRITE setBits NOTIFY bitsChanged SCRIPTABLE true)
 
     const QVariant &min() const;
-    void setMin(const QVariant &min);
-
-    const  QVariant &max() const;
-    void setMax(const QVariant &max);
-
+    const QVariant &max() const;
     const QVariant &step() const;
-    void setStep(const QVariant &step);
 
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> enums() const;
 
-    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType};
+    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType, BlockType};
     Type type() const;
-    void setType(const Type &type);
 
     const QString &propertymap() const;
-    void setPropertymap(const QString &propertymap);
-
     const QString &onchange() const;
-    void setOnchange(const QString &onchange);
 
     Property &operator[](const QString &name);
-    const QMap<QString, Property* > &subProperties() const;
+    const QList<Property* > &subProperties() const;
+    const QMap<QString, Property* > &subPropertiesMap() const;
     void addSubProperty(Property *property);
+    void removeAllSubProperties();
 
     Property *parent() const;
-    void setParent(Property *parent);
 
-    const Property *path(const QString &path) const;
+    int row() const;
+    void setRow(int row);
+
+    Property *path(const QString &path);
 
     QStringList dependsProperties() const;
 
@@ -85,8 +79,21 @@ public slots:
     void eval();
 
 public:
-    static Property *fromModelProperty(ModelProperty *modelProperty);
-    static Property *fromFlow(ModelFlow *modelFlow);
+    static Property *fromModelProperty(const ModelProperty *modelProperty);
+    static Property *fromModelFlow(const ModelFlow *modelFlow);
+    static Property *fromModelBlock(const ModelBlock *modelBlock);
+
+protected:
+
+    void setMin(const QVariant &min);
+    void setMax(const QVariant &max);
+    void setStep(const QVariant &step);
+
+    void setType(const Type &type);
+    void setPropertymap(const QString &propertymap);
+    void setOnchange(const QString &onchange);
+
+    void setParent(Property *parent);
 
 protected:
     QString _name;
@@ -103,11 +110,13 @@ protected:
     QString _propertyMap;
     QString _onchange;
 
+    int _row;
     Property *_parent;
+
     QMap<QString, PropertyEnum* > _enumsMap;
 
-    QMap<QString, Property* > _subProperties;
-
+    QMap<QString, Property* > _subPropertiesMap;
+    QList<Property*> _subProperties;
 };
 
 #endif // PROPERTY_H

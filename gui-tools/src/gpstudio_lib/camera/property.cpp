@@ -12,30 +12,12 @@ Property::Property(QString name)
 {
     _parent = NULL;
     _type = Group;
+    _row = 0;
 }
-
-/*Property::Property(const Property &other)
-    : QObject(), _name(other._name), _caption(other._caption), _value(other._value), _min(other._min), _max(other._max),
-      _type(other._type), _parent(other._parent), _enums(other._enums), _subProperties(other._subProperties)
-{
-}
-
-Property &Property::operator =(const Property &other)
-{
-    _name = other._name;
-    _caption = other._caption;
-    _value = other._value;
-    _min = other._min;
-    _max = other._max;
-    _type = other._type;
-    _parent = other._parent;
-    _enums = other._enums;
-    _subProperties = other._subProperties;
-    return (*this);
-}*/
 
 Property::~Property()
 {
+    foreach (Property *property, _subProperties) delete property;
     foreach (PropertyEnum *propertyEnum, _enumsMap) delete propertyEnum;
 }
 
@@ -93,7 +75,7 @@ void Property::setValue(const QVariant &value)
                     foreach (QVariant item, line.toList())
                     {
                         QString key = QString("m%1%2").arg(x).arg(y);
-                        if(_subProperties.contains(key)) _subProperties[key]->setValue(item.toInt());
+                        if(_subPropertiesMap.contains(key)) _subPropertiesMap[key]->setValue(item.toInt());
                         y++;
                     }
                 }
@@ -213,7 +195,12 @@ void Property::setOnchange(const QString &onchange)
 
 Property &Property::operator[](const QString &name)
 {
-    return *_subProperties[name];
+    return *path(name);
+}
+
+const QList<Property *> &Property::subProperties() const
+{
+    return _subProperties;
 }
 
 Property *Property::parent() const
@@ -226,16 +213,26 @@ void Property::setParent(Property *parent)
     _parent = parent;
 }
 
-const Property *Property::path(const QString &path) const
+int Property::row() const
+{
+    return _row;
+}
+
+void Property::setRow(int row)
+{
+    _row = row;
+}
+
+Property *Property::path(const QString &path)
 {
     if(path.isEmpty() || path==_name || path=="value" || path=="bits") return this;
     int index = path.indexOf(".");
     if(index==-1)
     {
-        if(_subProperties.contains(path)) return _subProperties[path];
+        if(_subPropertiesMap.contains(path)) return _subPropertiesMap[path];
         else return NULL;
     }
-    if(_subProperties.contains(path.left(index))) return _subProperties[path.left(index)]->path(path.mid(index+1));
+    if(_subPropertiesMap.contains(path.left(index))) return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
     return NULL;
 }
 
@@ -244,18 +241,27 @@ QStringList Property::dependsProperties() const
     return ScriptEngine::dependsProperties(_propertyMap);
 }
 
-const QMap<QString, Property *> &Property::subProperties() const
+const QMap<QString, Property *> &Property::subPropertiesMap() const
 {
-    return _subProperties;
+    return _subPropertiesMap;
 }
 
 void Property::addSubProperty(Property *property)
 {
     property->setParent(this);
-    _subProperties.insert(property->name(), property);
+    property->setRow(_subProperties.count());
+    _subPropertiesMap.insert(property->name(), property);
+    _subProperties.append(property);
 }
 
-Property *Property::fromModelProperty(ModelProperty *modelProperty)
+void Property::removeAllSubProperties()
+{
+    foreach (Property *property, _subProperties) delete property;
+    _subPropertiesMap.clear();
+    _subProperties.clear();
+}
+
+Property *Property::fromModelProperty(const ModelProperty *modelProperty)
 {
     Property *paramprop = new Property(modelProperty->name());
     paramprop->setCaption(modelProperty->caption());
@@ -301,7 +307,7 @@ Property *Property::fromModelProperty(ModelProperty *modelProperty)
     return paramprop;
 }
 
-Property *Property::fromFlow(ModelFlow *modelFlow)
+Property *Property::fromModelFlow(const ModelFlow *modelFlow)
 {
     Property *flowprop = new Property(modelFlow->name());
     flowprop->setCaption(modelFlow->name());
@@ -314,4 +320,13 @@ Property *Property::fromFlow(ModelFlow *modelFlow)
     }
 
     return flowprop;
+}
+
+Property *Property::fromModelBlock(const ModelBlock *modelBlock)
+{
+    Property *propBlock = new Property(modelBlock->name());
+    propBlock->setCaption(modelBlock->name() + " (" + modelBlock->driver() + ")");
+    propBlock->setType(BlockType);
+
+    return propBlock;
 }

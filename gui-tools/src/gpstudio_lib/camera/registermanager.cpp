@@ -86,7 +86,7 @@ void RegisterManager::start()
             const QStringList &deps = cameraRegister->dependsProperties();
             foreach (QString propName, deps)
             {
-                const Property *prop = _camera->rootProperty()->path(propName);
+                const Property *prop = _camera->rootProperty().path(propName);
                 if(prop) QObject::connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
             }
         }
@@ -97,7 +97,7 @@ void RegisterManager::start()
                 const QStringList &deps = bitField->dependsProperties();
                 foreach (QString propName, deps)
                 {
-                    const Property *prop = _camera->rootProperty()->path(propName);
+                    const Property *prop = _camera->rootProperty().path(propName);
                     if(prop) QObject::connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
                 }
             }

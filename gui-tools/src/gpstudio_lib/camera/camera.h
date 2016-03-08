@@ -7,10 +7,12 @@
 #include <QMap>
 
 #include "block.h"
+#include "flow.h"
+#include "property.h"
+
 #include "scriptengine.h"
 
 #include "model/model_node.h"
-#include "property.h"
 #include "registermanager.h"
 
 class CameraCom;
@@ -24,21 +26,22 @@ public:
     Camera(const QString &fileCameraConfig=QString());
     ~Camera();
 
-    ModelNode *node() const;
-    void setNode(ModelNode *node);
+    const ModelNode *node() const;
 
-    Property *rootProperty() const;
+    Property &rootProperty();
     RegisterManager &registers();
 
-    bool isConnected() const;
     void connectCam(const CameraInfo &cameraInfo);
+    bool isConnected() const;
 
     CameraCom *com() const;
     FlowManager *flowManager() const;
 
     QByteArray registerData() const;
 
-    const QMap<QString, Block*> &blocks() const;
+    const QList<Block *> &blocks() const;
+    Block *block(QString name) const;
+    Block *block(int i) const;
 
 signals:
     void registerDataChanged();
@@ -47,16 +50,19 @@ public slots:
     uint evalPropertyMap(const QString &propertyMap);
     void setRegister(uint addr, uint value);
 
-private:
+protected:
+    void setNode(ModelNode *node);
     ModelNode *_node;
 
-    Property *_paramsBlocks;
+    Property _paramsBlocks;
     RegisterManager _registermanager;
     FlowManager *_flowManager;
 
     CameraCom *_com;
 
-    QMap<QString, Block*> _blocks;
+    // blocks conntainers
+    QList<Block*> _blocks;
+    QMap<QString, Block*> _blocksMap;
 };
 
 #endif // CAMERA_H
