@@ -33,7 +33,7 @@ void PropertyMatrixWidget::createWidget()
         int find=0;
         for(int y=0; y<_linkedProperty->value().toInt(); y++)
         {
-            Property *property = _linkedProperty->subProperties()[QString("m%1%2").arg(x).arg(y)];
+            Property *property = _linkedProperty->subPropertiesMap()[QString("m%1%2").arg(x).arg(y)];
             if(property)
             {
                 PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);

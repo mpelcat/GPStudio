@@ -11,7 +11,7 @@
 #include "flowviewerinterface.h"
 #include "abstractviewer.h"
 
-class GPSTUDIO_GUI_EXPORT FlowViewerWidget : public QWidget
+class GPSTUDIO_GUI_EXPORT   FlowViewerWidget : public QWidget
 {
     Q_OBJECT
 public:

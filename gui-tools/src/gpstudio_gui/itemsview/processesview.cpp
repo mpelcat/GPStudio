@@ -105,7 +105,7 @@ void ProcessesView::setLib(Lib *lib)
     _lib = lib;
 }
 
-bool ProcessesView::loadFromNode(ModelNode *node)
+bool ProcessesView::loadFromNode(const ModelNode *node)
 {
     _scene->clear();
     if(_lib==NULL) return false;

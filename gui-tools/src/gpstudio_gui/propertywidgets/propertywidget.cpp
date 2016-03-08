@@ -44,6 +44,7 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(Property *property)
     switch (property->type())
     {
     case Property::Group:
+    case Property::BlockType:
         widget = new PropertyGroupWidget();
         break;
     case Property::Int:

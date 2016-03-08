@@ -26,6 +26,7 @@ QScriptEngine *ScriptEngine::engine()
 const Property *ScriptEngine::path(const QString &path) const
 {
     if(_rootProperty) return _rootProperty->path(path);
+    return NULL;
 }
 
 const Property *ScriptEngine::rootProperty() const
@@ -57,7 +58,7 @@ QScriptValue ScriptEngine::eval(const QString &propertyMap)
     {
         QString error = result.toString();
         error.replace("__in","in");
-        qDebug()<<"Script engine: error evaluating "<<propertyMap<<error;
+        //qDebug()<<"Script engine: error evaluating "<<propertyMap<<error;
     }
 
     return result;
@@ -84,7 +85,7 @@ QStringList ScriptEngine::dependsProperties(const QString &expression)
 
 void ScriptEngine::computePropertyMap(Property *property, Property *paramsProps)
 {
-    foreach (Property *subProperty, property->subProperties())
+    foreach (Property *subProperty, property->subPropertiesMap())
     {
         const QStringList &deps = subProperty->dependsProperties();
         foreach (QString propPath, deps)

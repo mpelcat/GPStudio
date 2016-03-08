@@ -20,7 +20,7 @@ public:
     Lib *lib() const;
     void setLib(Lib *lib);
 
-    bool loadFromNode(ModelNode *node);
+    bool loadFromNode(const ModelNode *node);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
