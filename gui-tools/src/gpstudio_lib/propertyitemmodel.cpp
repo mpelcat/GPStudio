@@ -3,6 +3,7 @@
 #include <camera/property.h>
 
 #include <QDebug>
+#include <QStringList>
 
 PropertyItemModelNoSorted::PropertyItemModelNoSorted(QObject *parent)
     : QAbstractItemModel(parent)
@@ -153,7 +154,7 @@ bool PropertyItemModelNoSorted::setData(const QModelIndex &index, const QVariant
 
         property->setValue(value);
 
-        emit dataChanged(index, index, QVector<int>() << role);
+        emit dataChanged(index, index);
         return true;
     }
     return false;
