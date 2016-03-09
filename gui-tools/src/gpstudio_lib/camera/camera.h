@@ -28,6 +28,7 @@ public:
 
     const ModelNode *node() const;
 
+    const Property &rootProperty() const;
     Property &rootProperty();
     RegisterManager &registers();
 

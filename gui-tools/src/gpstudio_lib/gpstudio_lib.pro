@@ -84,7 +84,10 @@ HEADERS += gpstudio_lib_common.h \
     camera/registerbitfield.h \
     camera/register.h \
     camera/flow.h \
-    camera/block.h
+    camera/block.h \
+    cameraitemmodel.h \
+    cameraitem.h \
+    propertyitemmodel.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -132,7 +135,10 @@ SOURCES += \
     camera/registerbitfield.cpp \
     camera/register.cpp \
     camera/flow.cpp \
-    camera/block.cpp
+    camera/block.cpp \
+    cameraitemmodel.cpp \
+    cameraitem.cpp \
+    propertyitemmodel.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
@@ -141,3 +147,6 @@ LIBS += -lgpstudio_com
 
 DISTFILES += \
     flowviewermodel.qmodel
+
+RESOURCES += \
+    connecttypes.qrc

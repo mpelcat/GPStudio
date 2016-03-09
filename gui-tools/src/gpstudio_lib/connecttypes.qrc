@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+    <file>../img/usb.png</file>
+    <file>../img/flow-out.png</file>
+    <file>../img/flow-in.png</file>
+    </qresource>
+</RCC>

@@ -72,6 +72,11 @@ void Camera::setNode(ModelNode *node)
     _flowManager = new FlowManager(_node, &_paramsBlocks);
 }
 
+const Property &Camera::rootProperty() const
+{
+    return _paramsBlocks;
+}
+
 Property &Camera::rootProperty()
 {
     return _paramsBlocks;

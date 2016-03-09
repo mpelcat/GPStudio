@@ -1,0 +1,210 @@
+#include "propertyitemmodel.h"
+
+#include <camera/property.h>
+
+#include <QDebug>
+
+PropertyItemModelNoSorted::PropertyItemModelNoSorted(QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    _rootProperty = NULL;
+}
+
+PropertyItemModelNoSorted::PropertyItemModelNoSorted(Property *property, QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    _rootProperty = NULL;
+    setRootProperty(property);
+}
+
+QVariant PropertyItemModelNoSorted::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if(orientation==Qt::Vertical) return QVariant();
+    switch (role)
+    {
+    case Qt::DisplayRole:
+        switch (section)
+        {
+        case Name:
+            return QVariant("Name");
+        case Value:
+            return QVariant("Value");
+        default:
+            return QVariant();
+        }
+        break;
+    }
+    return QVariant();
+}
+
+QModelIndex PropertyItemModelNoSorted::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!_rootProperty)
+        return QModelIndex();
+
+    if (!hasIndex(row, column, parent))
+            return QModelIndex();
+
+    const Property *parentItem;
+
+    if (!parent.isValid())
+        parentItem = _rootProperty;
+    else
+        parentItem = static_cast<Property*>(parent.internalPointer());
+
+    if(row < parentItem->subProperties().count())
+    {
+        const Property *childItem = parentItem->subProperties()[row];
+        return createIndex(row, column, (void*)childItem);
+    }
+    return QModelIndex();
+}
+
+QModelIndex PropertyItemModelNoSorted::parent(const QModelIndex &child) const
+{
+    if (!_rootProperty)
+        return QModelIndex();
+
+    if (!child.isValid())
+        return QModelIndex();
+
+    Property *childItem = static_cast<Property*>(child.internalPointer());
+    Property *parentItem = childItem->parent();
+
+    if (parentItem == _rootProperty)
+        return QModelIndex();
+
+    return createIndex(parentItem->row(), 0, parentItem);
+}
+
+int PropertyItemModelNoSorted::rowCount(const QModelIndex &parent) const
+{
+    if (!_rootProperty)
+        return 0;
+
+    if (!parent.isValid())
+        return _rootProperty->subProperties().count();
+
+    Property *parentItem = static_cast<Property*>(parent.internalPointer());
+    return parentItem->subProperties().count();
+}
+
+int PropertyItemModelNoSorted::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return ColumnCount;
+}
+
+QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) const
+{
+    if (!_rootProperty)
+        return QVariant();
+
+    if(_rootProperty->subProperties().count()==0) return QVariant();
+
+    Property *property = static_cast<Property*>(index.internalPointer());
+
+    QStringList enumsList;
+
+    switch (role)
+    {
+    case Qt::DisplayRole:
+        switch (index.column())
+        {
+        case Name:
+            return QVariant(property->name());
+        case Value:
+            return property->value();
+        default:
+            return QVariant();
+        }
+    case Qt::EditRole:
+        switch (index.column())
+        {
+        case Value:
+            switch (property->type())
+            {
+            case Property::Group:
+            case Property::FlowType:
+            case Property::BlockType:
+                return QVariant();
+            case Property::Int:
+            case Property::SInt:
+            case Property::Bool:
+                return property->value();
+            case Property::Enum:
+                foreach (PropertyEnum *penum, property->enums()) enumsList << penum->name();
+                return QVariant(enumsList);
+            case Property::Matrix:
+                return QVariant();
+            }
+        default:
+            return QVariant();
+        }
+    }
+    return QVariant();
+}
+
+bool PropertyItemModelNoSorted::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (data(index, role) != value)
+    {
+        Property *property = static_cast<Property*>(index.internalPointer());
+
+        property->setValue(value);
+
+        emit dataChanged(index, index, QVector<int>() << role);
+        return true;
+    }
+    return false;
+}
+
+Qt::ItemFlags PropertyItemModelNoSorted::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    if (index.column() == Value)
+        return Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+const Property *PropertyItemModelNoSorted::rootProperty() const
+{
+    return _rootProperty;
+}
+
+void PropertyItemModelNoSorted::setRootProperty(const Property *rootProperty)
+{
+    emit layoutAboutToBeChanged();
+    _rootProperty = rootProperty;
+    emit layoutChanged();
+}
+
+
+// =============== sorted model ====================
+
+PropertyItemModel::PropertyItemModel(QObject *parent)
+{
+    _modelProperty = new PropertyItemModelNoSorted(parent);
+    setSourceModel(_modelProperty);
+}
+
+PropertyItemModel::PropertyItemModel(Property *property, QObject *parent)
+{
+    _modelProperty = new PropertyItemModelNoSorted(property, parent);
+    setSourceModel(_modelProperty);
+}
+
+const Property *PropertyItemModel::rootProperty() const
+{
+    return _modelProperty->rootProperty();
+}
+
+void PropertyItemModel::setRootProperty(const Property *rootProperty)
+{
+    emit layoutAboutToBeChanged();
+    _modelProperty->setRootProperty(rootProperty);
+    emit layoutChanged();
+}

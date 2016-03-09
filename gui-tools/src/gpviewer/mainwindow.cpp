@@ -20,6 +20,10 @@
 #include "datawrapper/gradiantwrapper.h"
 #include "datawrapper/harriswrapper.h"
 
+#include <QTreeView>
+#include "cameraitemmodel.h"
+
+#include "propertyitemmodel.h"
 
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
@@ -108,6 +112,7 @@ void MainWindow::createToolBarAndMenu()
     viewMenu->addSeparator();
     viewMenu->addAction(ui->paramsDock->toggleViewAction());
     viewMenu->addAction(ui->scriptDock->toggleViewAction());
+    viewMenu->addAction(ui->camExplorerDock->toggleViewAction());
 
     // ============= Windows =============
     _winMenu = ui->menuBar->addMenu("&Windows");
@@ -152,9 +157,9 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     _cam = new Camera(fileName);
 
-    foreach (Property *property, _cam->rootProperty()->subProperties())
+    foreach (Property *property, _cam->rootProperty().subProperties())
     {
-        if(property->type()==Property::Group && property->subProperties().count()>0)
+        if(property->type()==Property::BlockType && property->subProperties().count()>0)
         {
             PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
             ui->paramsLayout->addWidget(propertyWidget);
@@ -166,6 +171,9 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     setupViewers(2);
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
+
+    ui->camExplorerWidget->setCamera(_cam);
+    //tabifyDockWidget(ui->paramsDock, ui->camTreeView);
 
     connectCam();
 }

@@ -73,7 +73,7 @@
      <x>0</x>
      <y>0</y>
      <width>1103</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -107,7 +107,7 @@
           <x>0</x>
           <y>0</y>
           <width>348</width>
-          <height>598</height>
+          <height>169</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -151,6 +151,21 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <widget class="QDockWidget" name="camExplorerDock">
+   <property name="windowTitle">
+    <string>Cam explorer</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="CamExplorerWidget" name="camExplorerWidget" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -169,6 +184,12 @@
    <class>ProcessesView</class>
    <extends>QGraphicsView</extends>
    <header>itemsview/processesview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CamExplorerWidget</class>
+   <extends>QWidget</extends>
+   <header>camexplorerwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
