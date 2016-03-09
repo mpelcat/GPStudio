@@ -48,20 +48,15 @@ void CamExplorerWidget::updateRootProperty(QModelIndex index)
 {
     CameraItem *item = static_cast<CameraItem*>(_camItemModel->mapToSource(index).internalPointer());
 
-    qDebug()<<_camItemModel->sourceModel()->data(_camItemModel->mapToSource(index))<<item->type();
-
     switch (item->type())
     {
     case CameraItem::CameraType:
-        qDebug()<<"select cam";
         _propertyItemModel->setRootProperty(&item->camera()->rootProperty());
         break;
     case CameraItem::BlockType:
-        qDebug()<<"select block";
         _propertyItemModel->setRootProperty(item->block()->assocProperty());
         break;
     case CameraItem::FlowType:
-        qDebug()<<"select flow";
         _propertyItemModel->setRootProperty(item->flow()->assocProperty());
         break;
     default:
