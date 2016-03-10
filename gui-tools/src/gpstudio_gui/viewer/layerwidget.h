@@ -10,17 +10,15 @@
 #include <opencv2/core/core.hpp>
 #endif
 
-#include "abstractviewer.h"
-
 /**
  * @brief The LayerViewer class is a QGraphicsView to which show a cv::Mat with capabilities of zoom and move into image.
  * Signal slot viewMoved and setView can be used to syncronize two viewers.
  */
-class GPSTUDIO_GUI_EXPORT LayerViewer : public QGraphicsView, public AbstractViewer
+class GPSTUDIO_GUI_EXPORT LayerWidget : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit LayerViewer(QWidget *parent = 0);
+    explicit LayerWidget(QWidget *parent = 0);
 
     enum ViewProperty {All              = 0xFF};
 

@@ -57,7 +57,7 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     propertywidgets/propertymatrixwidget.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
-    flowviewerwidget/layerviewer.cpp \
+    viewer/layerwidget.cpp \
     camexplorerwidget.cpp
 
 HEADERS  += \
@@ -82,7 +82,7 @@ HEADERS  += \
     propertywidgets/propertymatrixwidget.h \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \
-    flowviewerwidget/layerviewer.h \
+    viewer/layerwidget.h \
     camexplorerwidget.h
 
 include(../../thirdparts/hexedit/hexedit.pri)

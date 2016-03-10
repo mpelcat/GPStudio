@@ -1,4 +1,4 @@
-#include "layerviewer.h"
+#include "layerwidget.h"
 
 #include <QWheelEvent>
 #include <qmath.h>
@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-LayerViewer::LayerViewer(QWidget *parent) :
+LayerWidget::LayerWidget(QWidget *parent) :
     QGraphicsView(parent)
 {
     _scene = new QGraphicsScene();
@@ -23,7 +23,7 @@ LayerViewer::LayerViewer(QWidget *parent) :
 
 #ifdef __USE_OPEN_CV__
 using namespace cv;
-void ImageView::showImage(const Mat &image, const QString &title)
+void LayerWidget::showImage(const Mat &image, const QString &title)
 {
 
     if(image.type()==CV_8U)
@@ -75,12 +75,12 @@ void ImageView::showImage(const Mat &image, const QString &title)
 }
 #endif
 
-void LayerViewer::showImage(const QImage &image, const QString &title)
+void LayerWidget::showImage(const QImage &image, const QString &title)
 {
     showImage(QPixmap::fromImage(image), title);
 }
 
-void LayerViewer::showImage(const QPixmap &image, const QString &title)
+void LayerWidget::showImage(const QPixmap &image, const QString &title)
 {
     _pixmapItem->setPixmap(image);
 
@@ -89,7 +89,7 @@ void LayerViewer::showImage(const QPixmap &image, const QString &title)
     _titleItem->setPos((_pixmapItem->pixmap().width()-_titleItem->boundingRect().width())/2, -_titleItem->boundingRect().height()-10);
 }
 
-void LayerViewer::wheelEvent(QWheelEvent *event)
+void LayerWidget::wheelEvent(QWheelEvent *event)
 {
     int numDegrees = event->delta() / 8;
     int numSteps = numDegrees / 15;
@@ -102,7 +102,7 @@ void LayerViewer::wheelEvent(QWheelEvent *event)
     emit viewMoved(viewRect);
 }
 
-void LayerViewer::mouseMoveEvent(QMouseEvent *event)
+void LayerWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if(event->buttons() & Qt::LeftButton)
     {
@@ -115,7 +115,7 @@ void LayerViewer::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
-void LayerViewer::mousePressEvent(QMouseEvent *event)
+void LayerWidget::mousePressEvent(QMouseEvent *event)
 {
     if(event->buttons() & Qt::LeftButton)
     {
@@ -131,7 +131,7 @@ void LayerViewer::mousePressEvent(QMouseEvent *event)
     QGraphicsView::mousePressEvent(event);
 }
 
-void LayerViewer::mouseReleaseEvent(QMouseEvent *event)
+void LayerWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() & Qt::RightButton)
     {
@@ -141,27 +141,27 @@ void LayerViewer::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-int LayerViewer::flowNumber() const
+int LayerWidget::flowNumber() const
 {
     return _flowNumber;
 }
 
-void LayerViewer::setFlowNumber(int flowNumber)
+void LayerWidget::setFlowNumber(int flowNumber)
 {
     _flowNumber = flowNumber;
 }
 
-unsigned int LayerViewer::propertyView() const
+unsigned int LayerWidget::propertyView() const
 {
     return _propertyView;
 }
 
-void LayerViewer::setPropertyView(unsigned int propertyView)
+void LayerWidget::setPropertyView(unsigned int propertyView)
 {
     _propertyView = propertyView;
 }
 
-void LayerViewer::setView(const QRect &viewRect)
+void LayerWidget::setView(const QRect &viewRect)
 {
     fitInView(viewRect, Qt::KeepAspectRatio);
 }
