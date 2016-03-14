@@ -11,7 +11,7 @@ public:
     LayerViewer(FlowViewerInterface *flowViewerInterface);
 
 protected:
-    void setupWidgets();
+    virtual void setupWidgets();
 };
 
 #endif // LAYERVIEWER_H

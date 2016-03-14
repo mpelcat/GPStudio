@@ -5,3 +5,8 @@ LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
 {
 
 }
+
+void LayerViewer::setupWidgets()
+{
+
+}

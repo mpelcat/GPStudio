@@ -18,7 +18,7 @@ class GPSTUDIO_GUI_EXPORT LayerWidget : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit LayerWidget(QWidget *parent = 0);
+    LayerWidget(QWidget *parent = 0);
 
     enum ViewProperty {All              = 0xFF};
 
