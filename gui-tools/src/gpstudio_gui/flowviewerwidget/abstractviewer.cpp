@@ -1,7 +1,8 @@
 #include "abstractviewer.h"
 
-AbstractViewer::AbstractViewer()
+AbstractViewer::AbstractViewer(FlowViewerInterface *flowViewerInterface)
 {
+
 }
 
 AbstractViewer *AbstractViewer::fromDataTypeName(const QString &dataTypeName)

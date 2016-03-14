@@ -11,6 +11,9 @@ class Flow;
 
 class ModelBlock;
 
+/**
+ * @brief The Block class is part of the run time model and represent a block with the list of flow interfaces
+ */
 class GPSTUDIO_LIB_EXPORT Block
 {
 public:

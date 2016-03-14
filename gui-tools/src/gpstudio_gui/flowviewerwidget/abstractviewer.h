@@ -7,14 +7,21 @@
 
 #include "camera/property.h"
 
-class GPSTUDIO_GUI_EXPORT AbstractViewer
-{
-public:
-    AbstractViewer();
+class FlowViewerInterface;
 
-    static AbstractViewer *fromDataTypeName(const QString &dataTypeName);
+class GPSTUDIO_GUI_EXPORT AbstractViewer : public QWidget
+{
+    Q_OBJECT
+public:
+    AbstractViewer(FlowViewerInterface *flowViewerInterface);
 
     const Property &properties() const;
+
+public:
+    static AbstractViewer *fromDataTypeName(const QString &dataTypeName);
+
+protected:
+    virtual void setupWidgets() =0;
 
 protected:
     Property _properties;

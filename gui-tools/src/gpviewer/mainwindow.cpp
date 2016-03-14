@@ -257,7 +257,7 @@ void MainWindow::setupViewers(int count)
     _viewers.clear();
 
     int i=0;
-    foreach (FlowConnection *connection, _cam->flowManager()->flowConnectionsID())
+    foreach (FlowConnection *connection, _cam->flowManager()->flowConnections())
     {
         if(connection->flow()->type()=="in")
         {

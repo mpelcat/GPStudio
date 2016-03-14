@@ -20,6 +20,7 @@ public:
 
 signals:
     void dataTypeChanged();
+    void dataReceived();
 
 private:
     QList<FlowConnection> _flowConnections;

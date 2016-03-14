@@ -8,10 +8,13 @@
 #include <QMutex>
 #include <QMutexLocker>
 
+#include <QLabel>
+#include <QComboBox>
+
 #include "flowviewerinterface.h"
 #include "abstractviewer.h"
 
-class GPSTUDIO_GUI_EXPORT   FlowViewerWidget : public QWidget
+class GPSTUDIO_GUI_EXPORT FlowViewerWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -25,10 +28,19 @@ signals:
 
 public slots:
 
-private:
+protected:
+    void setupWidgets();
+
+protected:
     QSharedPointer<FlowViewerInterface> _flowViewerInterface;
-    AbstractViewer *_viewer;
     QMutex _viewerMutex;
+
+    QLayout *_layout;
+    QWidget *_viewer;
+
+    QLayout *_statusLayout;
+    QLabel *_statusLabel;
+    QComboBox *_typeComboBox;
 };
 
 #endif // FLOWVIEWERWIDGET_H

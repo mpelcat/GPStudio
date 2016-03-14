@@ -9,6 +9,9 @@
 
 class ModelFlow;
 
+/**
+ * @brief The Flow class is part of the run time model and represent a flow interface in a block.
+ */
 class GPSTUDIO_LIB_EXPORT Flow
 {
 public:

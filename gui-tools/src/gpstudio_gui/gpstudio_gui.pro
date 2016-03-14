@@ -58,7 +58,8 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
     viewer/layerwidget.cpp \
-    camexplorerwidget.cpp
+    camexplorerwidget.cpp \
+    flowviewerwidget/layerviewer.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -83,7 +84,8 @@ HEADERS  += \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \
     viewer/layerwidget.h \
-    camexplorerwidget.h
+    camexplorerwidget.h \
+    flowviewerwidget/layerviewer.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)

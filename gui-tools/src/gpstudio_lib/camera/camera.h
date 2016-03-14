@@ -19,6 +19,10 @@ class CameraCom;
 class CameraInfo;
 class FlowManager;
 
+/**
+ * @brief The Camera class is part of the run time model and represent the main camera.
+ * Camera could be created from a node_generated.xml file. After that you can connect to a real camera with connectCam method.
+ */
 class GPSTUDIO_LIB_EXPORT Camera : public QObject
 {
     Q_OBJECT

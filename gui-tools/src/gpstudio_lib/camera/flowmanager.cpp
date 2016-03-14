@@ -68,7 +68,8 @@ void FlowManager::setNode(ModelNode *node)
 
 void FlowManager::addFlowConnection(FlowConnection *flowConnection)
 {
-    _flowConnectionsID.insert(flowConnection->flowId(), flowConnection);
+    _flowConnectionsMap.insert(flowConnection->flowId(), flowConnection);
+    _flowConnections.append(flowConnection);
 }
 
 CameraCom *FlowManager::com() const
@@ -81,15 +82,20 @@ void FlowManager::setCom(CameraCom *com)
     _com = com;
 }
 
-const QMap<int, FlowConnection *> FlowManager::flowConnectionsID() const
+const QMap<int, FlowConnection *> FlowManager::flowConnectionsMap() const
 {
-    return _flowConnectionsID;
+    return _flowConnectionsMap;
+}
+
+const QList<FlowConnection *> FlowManager::flowConnections() const
+{
+    return _flowConnections;
 }
 
 void FlowManager::processFlow(int idFlow)
 {
     int id = _com->inputFlow()[idFlow]->idFlow();
     //qDebug()<<id;
-    _flowConnectionsID[id]->recImg();
+    _flowConnectionsMap[id]->recImg();
 }
 
