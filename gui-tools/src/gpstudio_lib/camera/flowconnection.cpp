@@ -15,12 +15,12 @@ void FlowConnection::setFlowId(int flowId)
     _flowId = flowId;
 }
 
-ModelFlow *FlowConnection::flow() const
+Flow *FlowConnection::flow() const
 {
     return _flow;
 }
 
-void FlowConnection::setFlow(ModelFlow *flow)
+void FlowConnection::setFlow(Flow *flow)
 {
     _flow = flow;
 }

@@ -259,7 +259,7 @@ void MainWindow::setupViewers(int count)
     int i=0;
     foreach (FlowConnection *connection, _cam->flowManager()->flowConnections())
     {
-        if(connection->flow()->type()=="in")
+        if(connection->flow()->type()==Flow::Input)
         {
             FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(connection));
             ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));

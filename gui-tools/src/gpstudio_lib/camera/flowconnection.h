@@ -4,7 +4,7 @@
 #include "gpstudio_lib_common.h"
 
 #include <QWidget>
-#include "model/model_flow.h"
+#include "flow.h"
 #include "datawrapper/datawrapper.h"
 #include <QDateTime>
 
@@ -16,15 +16,15 @@ public:
     int flowId() const;
     void setFlowId(int flowId);
 
-    ModelFlow *flow() const;
-    void setFlow(ModelFlow *flow);
+    Flow *flow() const;
+    void setFlow(Flow *flow);
 
     void recImg();
     float fps() const;
 
 private:
     int _flowId;
-    ModelFlow *_flow;
+    Flow *_flow;
 
     QDateTime _prevImgReceive;
     float _fps;
