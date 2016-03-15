@@ -9,7 +9,10 @@ FlowViewerInterface::FlowViewerInterface(FlowConnection *flowConnection)
 
 FlowViewerInterface::FlowViewerInterface(const QList<FlowConnection *> &flowConnections)
 {
-    _flowConnections.append(flowConnections);
+    foreach (FlowConnection *flowConnection, flowConnections)
+    {
+        addFlowConnection(flowConnection);
+    }
 }
 
 FlowViewerInterface::~FlowViewerInterface()
