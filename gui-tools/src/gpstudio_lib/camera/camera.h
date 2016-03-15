@@ -34,19 +34,23 @@ public:
 
     const Property &rootProperty() const;
     Property &rootProperty();
-    RegisterManager &registers();
 
     void connectCam(const CameraInfo &cameraInfo);
     bool isConnected() const;
 
     CameraCom *com() const;
     FlowManager *flowManager() const;
-
+    RegisterManager &registers();
     QByteArray registerData() const;
 
+    // blocks access
     const QList<Block *> &blocks() const;
     Block *block(QString name) const;
     Block *block(int i) const;
+
+    // special blocks access
+    Block *comBlock() const;
+    Block *fiBlock() const;
 
 signals:
     void registerDataChanged();
@@ -68,6 +72,10 @@ protected:
     // blocks conntainers
     QList<Block*> _blocks;
     QMap<QString, Block*> _blocksMap;
+
+    // special blocks
+    Block *_comBlock;
+    Block *_fiBlock;
 };
 
 #endif // CAMERA_H

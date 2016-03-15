@@ -9,11 +9,17 @@
 #include "flowmanager.h"
 #include "cameracom.h"
 
+#include <model/model_iocom.h>
+
 Camera::Camera(const QString &fileCameraConfig)
     : _registermanager(this)
 {
     _node = NULL;
     _com = NULL;
+
+    _comBlock = NULL;
+    _fiBlock = NULL;
+
     setNode(ModelNode::readFromFile(fileCameraConfig));
 }
 
@@ -65,11 +71,24 @@ void Camera::setNode(ModelNode *node)
         }
     }
 
+    ModelIOCom *iOCom = node->getIOCom();
+    if(iOCom) _comBlock = block(iOCom->name());
+
     ScriptEngine::getEngine().setRootProperty(&_paramsBlocks);
 
     _registermanager.start();
 
-    _flowManager = new FlowManager(_node, &_paramsBlocks);
+    _flowManager = new FlowManager(this);
+}
+
+Block *Camera::fiBlock() const
+{
+    return _fiBlock;
+}
+
+Block *Camera::comBlock() const
+{
+    return _comBlock;
 }
 
 const Property &Camera::rootProperty() const
@@ -149,6 +168,5 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
         _registermanager.evalAll();
     }
 
-    _flowManager->setCom(_com);
     connect(_com, SIGNAL(flowReadyToRead(int)), _flowManager, SLOT(processFlow(int)));
 }
