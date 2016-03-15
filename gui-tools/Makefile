@@ -110,7 +110,7 @@ clean:
 	rm -rf build/
 	rm -rf build-linux/
 	rm -rf build-win/
-
+	rm -f ../bin/*.so* ../bin/*.dll
 
 FORCE:
 
