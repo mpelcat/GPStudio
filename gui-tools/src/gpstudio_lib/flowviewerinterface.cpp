@@ -2,33 +2,48 @@
 
 #include <QDebug>
 
-FlowViewerInterface::FlowViewerInterface(const FlowConnection &flowConnection)
+FlowViewerInterface::FlowViewerInterface(FlowConnection *flowConnection)
 {
-    _flowConnections.append(flowConnection);
-    //qDebug()<<"construct interface";
+    addFlowConnection(flowConnection);
 }
 
-FlowViewerInterface::FlowViewerInterface(const QList<FlowConnection> &flowConnections)
+FlowViewerInterface::FlowViewerInterface(const QList<FlowConnection *> &flowConnections)
 {
     _flowConnections.append(flowConnections);
-    //qDebug()<<"construct interface";
 }
 
 FlowViewerInterface::~FlowViewerInterface()
 {
-    //qDebug()<<"destruct interface";
 }
 
-const QList<FlowConnection> &FlowViewerInterface::flowConnections() const
+const QList<FlowConnection *> &FlowViewerInterface::flowConnections() const
 {
     return _flowConnections;
 }
 
-void FlowViewerInterface::updateFlowConnection()
+void FlowViewerInterface::addFlowConnection(FlowConnection *flowConnection)
 {
-    foreach (const FlowConnection &flowConnection, _flowConnections)
+    _flowConnections.append(flowConnection);
+    // flow connect
+}
+
+void FlowViewerInterface::removeFlowConnection(FlowConnection *flowConnection)
+{
+    _flowConnections.removeOne(flowConnection);
+}
+
+void FlowViewerInterface::moveFlowConnection(FlowConnection *flowConnection, int index)
+{
+    int find;
+    if((find=_flowConnections.indexOf(flowConnection))>=0)
     {
-        //flowConnection.flow()->properties();
+        if(index>=_flowConnections.count())
+            return;
+        _flowConnections.move(find, index);
     }
 }
 
+void FlowViewerInterface::changeDataType()
+{
+
+}

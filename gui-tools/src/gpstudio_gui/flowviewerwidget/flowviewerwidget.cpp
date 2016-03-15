@@ -5,6 +5,14 @@
 
 #include <QDebug>
 
+FlowViewerWidget::FlowViewerWidget(const QSharedPointer<FlowViewerInterface> &flowViewerInterface) :
+    QWidget(NULL),
+    _flowViewerInterface(flowViewerInterface),
+    _viewer(NULL)
+{
+    setupWidgets();
+}
+
 FlowViewerWidget::FlowViewerWidget(FlowViewerInterface *flowViewerInterface) :
     QWidget(NULL),
     _flowViewerInterface(flowViewerInterface),

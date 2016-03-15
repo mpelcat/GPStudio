@@ -18,7 +18,8 @@ class GPSTUDIO_GUI_EXPORT FlowViewerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FlowViewerWidget(FlowViewerInterface *flowViewerInterface);
+    explicit FlowViewerWidget(const QSharedPointer<FlowViewerInterface> &flowViewerInterface);
+    FlowViewerWidget(FlowViewerInterface *flowViewerInterface);
     FlowViewerWidget(const FlowViewerWidget &other);
     ~FlowViewerWidget();
 

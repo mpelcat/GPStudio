@@ -261,7 +261,7 @@ void MainWindow::setupViewers(int count)
     {
         if(connection->flow()->type()=="in")
         {
-            FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(*connection));
+            FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(connection));
             ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));
             viewer->setWindowTitle(QString("Flow %1").arg(connection->flow()->name()));
             _viewers.insert(i, viewer);
