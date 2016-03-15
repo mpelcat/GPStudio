@@ -14,7 +14,7 @@
 Camera::Camera(const QString &fileCameraConfig)
     : _registermanager(this)
 {
-    _node = NULL;
+    _modelNode = NULL;
     _com = NULL;
 
     _comBlock = NULL;
@@ -25,26 +25,26 @@ Camera::Camera(const QString &fileCameraConfig)
 
 Camera::~Camera()
 {
-    delete _node;
+    delete _modelNode;
     delete _com;
 }
 
 const ModelNode *Camera::node() const
 {
-    return _node;
+    return _modelNode;
 }
 
 void Camera::setNode(ModelNode *node)
 {
-    if(_node) delete _node;
-    _node = node;
+    if(_modelNode) delete _modelNode;
+    _modelNode = node;
 
-    if(!_node) return;
+    if(!_modelNode) return;
 
     _paramsBlocks.removeAllSubProperties();
     _paramsBlocks.setName(node->name());
 
-    foreach (ModelBlock *modelBlock, _node->blocks())
+    foreach (ModelBlock *modelBlock, _modelNode->blocks())
     {
         Block *block = Block::fromModelBlock(modelBlock);
 

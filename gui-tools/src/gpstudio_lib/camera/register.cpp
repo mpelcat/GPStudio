@@ -69,6 +69,11 @@ void Register::setField(uint value, uint mask)
     setValue(((~mask)&_value)|(mask&value));
 }
 
+const ModelParam *Register::modelParam() const
+{
+    return _modelParam;
+}
+
 QString Register::blockName() const
 {
     return _blockName;
@@ -116,13 +121,14 @@ const QList<RegisterBitField *> &Register::bitFields() const
     return _bitFields;
 }
 
-Register *Register::fromParam(const ModelParam *param)
+Register *Register::fromParam(const ModelParam *modelParam)
 {
-    Register *cameraRegister = new Register(param->name(), param->absoluteAddr());
-    cameraRegister->setPropertyMap(param->propertyMap());
-    if(param->parent()) cameraRegister->setBlockName(param->parent()->name());
+    Register *cameraRegister = new Register(modelParam->name(), modelParam->absoluteAddr());
+    cameraRegister->_modelParam = modelParam;
+    cameraRegister->setPropertyMap(modelParam->propertyMap());
+    if(modelParam->parent()) cameraRegister->setBlockName(modelParam->parent()->name());
 
-    foreach(ModelParamBitField *bitField, param->paramBitFields())
+    foreach(ModelParamBitField *bitField, modelParam->paramBitFields())
     {
         RegisterBitField *camBitField = RegisterBitField::fromParamBitField(bitField);
         cameraRegister->addBitField(camBitField);

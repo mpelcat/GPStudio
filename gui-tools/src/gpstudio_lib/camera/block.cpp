@@ -23,6 +23,7 @@ Property *Block::assocProperty() const
 Block *Block::fromModelBlock(const ModelBlock *modelBlock)
 {
     Block *block = new Block();
+    block->_modelBlock = modelBlock;
     block->setName(modelBlock->name());
 
     Property *propBlock = Property::fromModelBlock(modelBlock);
@@ -45,6 +46,11 @@ Block *Block::fromModelBlock(const ModelBlock *modelBlock)
     }
 
     return block;
+}
+
+const ModelBlock *Block::modelBlock() const
+{
+    return _modelBlock;
 }
 
 void Block::setName(const QString &name)

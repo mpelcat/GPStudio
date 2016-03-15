@@ -21,11 +21,13 @@ public:
 
     QString name() const;
 
-    Property *assocProperty() const;
-
     const QList<Flow *> &flows() const;
     Flow *flow(int i) const;
     Flow *flow(QString name) const;
+
+    Property *assocProperty() const;
+
+    const ModelBlock *modelBlock() const;
 
 protected:
     void setName(const QString &name);
@@ -40,6 +42,8 @@ protected:
     QMap<QString, Flow*> _flowsMap;
 
     Property *_assocProperty;
+
+    const ModelBlock *_modelBlock;
 };
 
 #endif // BLOCK_H

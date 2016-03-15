@@ -24,6 +24,8 @@ public:
 
     Property *assocProperty() const;
 
+    const ModelFlow *modelFlow() const;
+
 protected:
     void setName(const QString &name);
     void setType(const Type &type);
@@ -36,6 +38,8 @@ protected:
     Type _type;
 
     Property *_assocProperty;
+
+    const ModelFlow *_modelFlow;
 };
 
 #endif // FLOW_H

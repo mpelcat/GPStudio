@@ -40,8 +40,10 @@ public:
     void addBitField(RegisterBitField *bitField);
     const QList<RegisterBitField *> &bitFields() const;
 
+    const ModelParam *modelParam() const;
+
 public:
-    static Register *fromParam(const ModelParam *param);
+    static Register *fromParam(const ModelParam *modelParam);
 
 signals:
     void registerChange(uint addr, uint value);
@@ -62,6 +64,8 @@ private:
 
     Camera *_camera;
     QList<RegisterBitField *> _bitFields;
+
+    const ModelParam *_modelParam;
 };
 
 #endif // CAMERAREGISTER_H

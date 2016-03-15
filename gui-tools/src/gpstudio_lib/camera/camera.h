@@ -61,7 +61,7 @@ public slots:
 
 protected:
     void setNode(ModelNode *node);
-    ModelNode *_node;
+    ModelNode *_modelNode;
 
     Property _paramsBlocks;
     RegisterManager _registermanager;

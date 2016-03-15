@@ -22,6 +22,7 @@ void Flow::setName(const QString &name)
 Flow *Flow::fromModelFlow(const ModelFlow *modelFlow)
 {
     Flow *flow = new Flow();
+    flow->_modelFlow = modelFlow;
     flow->setName(modelFlow->name());
     if(modelFlow->type()=="in")
         flow->setType(Input);
@@ -32,6 +33,11 @@ Flow *Flow::fromModelFlow(const ModelFlow *modelFlow)
     flow->_assocProperty = flowprop;
 
     return flow;
+}
+
+const ModelFlow *Flow::modelFlow() const
+{
+    return _modelFlow;
 }
 
 Flow::Type Flow::type() const
