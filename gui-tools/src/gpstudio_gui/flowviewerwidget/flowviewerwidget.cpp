@@ -11,6 +11,8 @@ FlowViewerWidget::FlowViewerWidget(const QSharedPointer<FlowViewerInterface> &fl
     _viewer(NULL)
 {
     setupWidgets();
+    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    changeType();
 }
 
 FlowViewerWidget::FlowViewerWidget(FlowViewerInterface *flowViewerInterface) :
@@ -19,6 +21,8 @@ FlowViewerWidget::FlowViewerWidget(FlowViewerInterface *flowViewerInterface) :
     _viewer(NULL)
 {
     setupWidgets();
+    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    changeType();
 }
 
 FlowViewerWidget::FlowViewerWidget(const FlowViewerWidget &other) :
@@ -27,6 +31,8 @@ FlowViewerWidget::FlowViewerWidget(const FlowViewerWidget &other) :
     _viewer(other._viewer)
 {
     setupWidgets();
+    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    changeType();
 }
 
 FlowViewerWidget::~FlowViewerWidget()
@@ -37,6 +43,11 @@ FlowViewerWidget &FlowViewerWidget::operator=(const FlowViewerWidget &other)
 {
     _flowViewerInterface = other._flowViewerInterface;
     return *this;
+}
+
+void FlowViewerWidget::changeType()
+{
+    _statusLabel->setText(_flowViewerInterface.data()->dataType());
 }
 
 void FlowViewerWidget::setupWidgets()

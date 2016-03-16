@@ -22,6 +22,8 @@ public:
     void removeFlowConnection(FlowConnection *flowConnection);
     void moveFlowConnection(FlowConnection *flowConnection, int index);
 
+    QString dataType() const;
+
 signals:
     void dataTypeChanged();
     void dataReceived(int index);
@@ -35,6 +37,7 @@ protected:
 
 private:
     QList<FlowConnection *> _flowConnections;
+    QString _dataType;
 };
 
 #endif // FLOWVIEWERINTERFACE_H

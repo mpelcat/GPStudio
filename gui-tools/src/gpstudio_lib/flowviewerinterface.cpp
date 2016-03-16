@@ -38,7 +38,7 @@ void FlowViewerInterface::addFlowConnection(FlowConnection *flowConnection)
 
     foreach (Property *property, flowConnection->flow()->assocProperty()->subProperties())
     {
-        qDebug()<<property->name();
+        //qDebug()<<property->name();
     }
     changeDataType();
 }
@@ -71,6 +71,9 @@ void FlowViewerInterface::changeDataType()
     if(!dataTypeProperty)
         return;
 
+    _dataType = dataTypeProperty->value().toString();
+    emit dataTypeChanged();
+
     qDebug()<<Q_FUNC_INFO<<dataTypeProperty->value();
 }
 
@@ -92,4 +95,9 @@ void FlowViewerInterface::processData(FlowPackage data)
 FlowConnection *FlowViewerInterface::objectToFlowConnection(QObject *object)
 {
     return qobject_cast<FlowConnection *>(object);
+}
+
+QString FlowViewerInterface::dataType() const
+{
+    return _dataType;
 }

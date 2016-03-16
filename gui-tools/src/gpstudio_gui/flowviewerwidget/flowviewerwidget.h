@@ -27,7 +27,8 @@ public:
 
 signals:
 
-public slots:
+protected slots:
+    void changeType();
 
 protected:
     void setupWidgets();
