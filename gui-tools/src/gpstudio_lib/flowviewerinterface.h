@@ -24,10 +24,14 @@ public:
 
 signals:
     void dataTypeChanged();
-    void dataReceived();
+    void dataReceived(int index);
 
 protected slots:
     void changeDataType();
+    void processData(FlowPackage data);
+
+protected:
+    FlowConnection *objectToFlowConnection(QObject *object);
 
 private:
     QList<FlowConnection *> _flowConnections;

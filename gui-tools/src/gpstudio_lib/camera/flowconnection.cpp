@@ -25,13 +25,18 @@ void FlowConnection::setFlow(Flow *flow)
     _flow = flow;
 }
 
-void FlowConnection::recImg()
+void FlowConnection::recImg(FlowPackage data)
 {
+    // fps calculation
     if(_prevImgReceive.isValid())
     {
         _fps = 1.0 / (QDateTime::currentDateTime().toMSecsSinceEpoch() - _prevImgReceive.toMSecsSinceEpoch()) * 1000.0;
     }
     _prevImgReceive = QDateTime::currentDateTime();
+
+    // rec notification
+    _lastData = data;
+    emit flowReceived(data);
 }
 
 float FlowConnection::fps() const

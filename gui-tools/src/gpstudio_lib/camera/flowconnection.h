@@ -3,13 +3,15 @@
 
 #include "gpstudio_lib_common.h"
 
-#include <QWidget>
-#include "flow.h"
-#include "datawrapper/datawrapper.h"
+#include <QObject>
 #include <QDateTime>
 
-class GPSTUDIO_LIB_EXPORT FlowConnection
+#include "flow.h"
+#include "flowpackage.h"
+
+class GPSTUDIO_LIB_EXPORT FlowConnection : public QObject
 {
+    Q_OBJECT
 public:
     FlowConnection();
 
@@ -19,12 +21,17 @@ public:
     Flow *flow() const;
     void setFlow(Flow *flow);
 
-    void recImg();
+    void recImg(FlowPackage data);
     float fps() const;
+
+signals:
+    void flowReceived(FlowPackage data);
 
 private:
     int _flowId;
     Flow *_flow;
+
+    FlowPackage _lastData;
 
     QDateTime _prevImgReceive;
     float _fps;

@@ -3,12 +3,12 @@
 #include <QDebug>
 
 #include "model/model_node.h"
+#include "model/model_fiblock.h"
+#include "model/model_iocom.h"
+
 #include "flowconnection.h"
 #include "camera.h"
 #include "cameracom.h"
-
-#include "model/model_fiblock.h"
-#include "model/model_iocom.h"
 
 FlowManager::FlowManager(Camera *camera)
 {
@@ -26,9 +26,18 @@ void FlowManager::setCamera(Camera *camera)
     if(camera==NULL) return;
 
     _blockCom=_camera->comBlock();
-    _fi=_camera->fiBlock();
-
     ModelIOCom *iOCom = camera->node()->getIOCom();
+
+    foreach (Block *block, camera->blocks())
+    {
+        foreach (Flow *flow, block->flows())
+        {
+            foreach (Property *property, flow->assocProperty()->subProperties())
+            {
+                property->eval();
+            }
+        }
+    }
 
     if(iOCom)
     {
@@ -49,6 +58,7 @@ void FlowManager::setCamera(Camera *camera)
         }
     }
 
+    _fi=_camera->fiBlock();
     ModelFIBlock *fIBlock = camera->node()->getFIBlock();
 
     if(fIBlock)
@@ -97,8 +107,11 @@ const QList<FlowConnection *> FlowManager::flowConnections() const
 
 void FlowManager::processFlow(int idFlow)
 {
-    int id = _camera->com()->inputFlow()[idFlow]->idFlow();
-    //qDebug()<<id;
-    _flowConnectionsMap[id]->recImg();
-}
+    if(idFlow>=_camera->com()->inputFlow().count()) return;
 
+    int id = _camera->com()->inputFlow()[idFlow]->idFlow();
+    FlowPackage data = _camera->com()->inputFlow()[idFlow]->getData();
+    FlowConnection *flowConnection = _flowConnectionsMap[id];
+    flowConnection->recImg(data);
+    qDebug()<<Q_FUNC_INFO<<id<<flowConnection->flow()->name();
+}

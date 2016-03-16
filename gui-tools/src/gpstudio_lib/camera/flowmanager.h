@@ -25,7 +25,7 @@ public:
 private:
     void addFlowConnection(FlowConnection *flowConnection);
 
-public slots:
+protected slots:
     void processFlow(int idFlow);
 
 private:
