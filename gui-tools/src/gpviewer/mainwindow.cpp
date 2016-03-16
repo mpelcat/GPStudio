@@ -14,7 +14,7 @@
 
 #include "cameracom.h"
 #include "flowcom.h"
-#include "flowdata.h"
+#include "flowpackage.h"
 #include "camera/flowmanager.h"
 
 #include "datawrapper/gradiantwrapper.h"

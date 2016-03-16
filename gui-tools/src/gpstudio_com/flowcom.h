@@ -6,7 +6,7 @@
 #include <QMutex>
 
 #include "gpstudio_com_common.h"
-#include "flowdata.h"
+#include "flowpackage.h"
 
 class GPSTUDIO_COM_EXPORT FlowCom
 {

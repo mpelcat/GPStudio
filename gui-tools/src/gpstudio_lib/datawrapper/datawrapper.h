@@ -4,7 +4,7 @@
 #include "gpstudio_lib_common.h"
 
 #include <QImage>
-#include <flowdata.h>
+#include <flowpackage.h>
 
 class GPSTUDIO_LIB_EXPORT DataWrapper
 {

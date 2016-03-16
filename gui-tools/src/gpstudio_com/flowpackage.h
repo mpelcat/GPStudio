@@ -1,5 +1,5 @@
-#ifndef FLOWDATA_H
-#define FLOWDATA_H
+#ifndef FLOWPACKAGE_H
+#define FLOWPACKAGE_H
 
 #include <QByteArray>
 #include <QList>
@@ -35,4 +35,4 @@ private:
 
 Q_DECLARE_METATYPE(FlowPackage)
 
-#endif // FLOWDATA_H
+#endif // FLOWPACKAGE_H
