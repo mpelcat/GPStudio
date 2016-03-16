@@ -167,6 +167,7 @@ class FlowInterconnect extends Block
 				$param = new Param();
 				$param->name = $property->name.'_param';
 				$param->regaddr = $count_param;
+				$param->value = 0;
 				$param->default = 0;
 				$param->hard = false;
 				$param->desc = 'Mux control for '.$treeconnect->toblock.'.'.$treeconnect->toflow.' flow input';
