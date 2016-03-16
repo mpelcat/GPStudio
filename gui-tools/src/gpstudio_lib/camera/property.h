@@ -44,7 +44,7 @@ public:
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> enums() const;
 
-    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType, BlockType};
+    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType, BlockType, String, FlowDataType};
     Type type() const;
 
     const QString &propertymap() const;

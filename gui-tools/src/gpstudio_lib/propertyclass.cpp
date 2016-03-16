@@ -92,6 +92,16 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
     {
         switch (_linkedProperty->type())
         {
+        case Property::Group:
+            break;
+        case Property::FlowType:
+            break;
+        case Property::BlockType:
+            break;
+        case Property::String:
+            return QScriptValue(_linkedProperty->value().toString());
+        case Property::FlowDataType:
+            return QScriptValue(_linkedProperty->value().toString());
         case Property::Int:
         case Property::SInt:
             return QScriptValue(_linkedProperty->value().toInt());

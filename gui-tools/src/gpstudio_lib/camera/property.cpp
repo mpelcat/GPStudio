@@ -59,7 +59,7 @@ void Property::setValue(int value)
 void Property::setValue(const QVariant &value)
 {
     bool valueChangedb = false;
-    if(value != _value && _value.isValid()) valueChangedb=true;
+    /*if(value != _value && _value.isValid())*/ valueChangedb=true;
     _value=value;
 
     if(_type==Matrix)
@@ -101,6 +101,10 @@ void Property::setValue(const QVariant &value)
     if(valueChangedb) emit valueChanged(QVariant(value));
 
     ScriptEngine::getEngine().evalPropertyMap(_onchange);
+
+    /*if(_parent)
+        if(_parent->parent())
+            qDebug()<<Q_FUNC_INFO<<_parent->parent()->name()<<parent()->name()<<_name<<_value<<_bits;*/
 }
 
 uint Property::bits() const
@@ -120,7 +124,12 @@ void Property::setBits(const uint bits)
 
 void Property::eval()
 {
-    setValue(ScriptEngine::getEngine().evalPropertyMap(_propertyMap));
+    if(_propertyMap.isEmpty())
+        return;
+
+    QScriptValue value = ScriptEngine::getEngine().eval(_propertyMap);
+    if(!value.isError())
+        setValue(value.toVariant());
 }
 
 const QVariant &Property::min() const
@@ -297,6 +306,16 @@ Property *Property::fromModelProperty(const ModelProperty *modelProperty)
         paramprop->setValue(QVariant(modelProperty->value()).toBool());
     }
     if(modelProperty->type()=="group") paramprop->setType(Group);
+    if(modelProperty->type()=="string")
+    {
+        paramprop->setType(String);
+        paramprop->setValue(modelProperty->value());
+    }
+    if(modelProperty->type()=="flowtype")
+    {
+        paramprop->setType(FlowDataType);
+        paramprop->setValue(modelProperty->value());
+    }
 
     // sub properties
     foreach (ModelProperty *subBlockProperty, modelProperty->properties())
