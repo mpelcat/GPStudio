@@ -75,6 +75,9 @@ QModelIndex PropertyItemModelNoSorted::parent(const QModelIndex &child) const
     if (parentItem == _rootProperty)
         return QModelIndex();
 
+    if (!parentItem)
+        return QModelIndex();
+
     return createIndex(parentItem->row(), 0, parentItem);
 }
 

@@ -46,7 +46,13 @@ void CamExplorerWidget::setCamera(Camera *camera)
 
 void CamExplorerWidget::updateRootProperty(QModelIndex index)
 {
-    CameraItem *item = static_cast<CameraItem*>(_camItemModel->mapToSource(index).internalPointer());
+    QModelIndex localMapToSource = _camItemModel->mapToSource(index);
+    if(!localMapToSource.isValid())
+        _propertyItemModel->setRootProperty(NULL);
+
+    CameraItem *item = static_cast<CameraItem*>(localMapToSource.internalPointer());
+    if(!item)
+        _propertyItemModel->setRootProperty(NULL);
 
     switch (item->type())
     {
