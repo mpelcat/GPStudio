@@ -18,10 +18,10 @@ command -v dot >/dev/null 2>&1 || { echo "installing dot..."; apt-get install --
 # copy bash completion file for gpnode
 if [ -d "/usr/share/bash-completion/completions/" ]; then
 	echo "install bash completion";
-	cp gpnode_completion /usr/share/bash-completion/completions/gpnode
-	cp gplib_completion /usr/share/bash-completion/completions/gplib
-	cp gpproc_completion /usr/share/bash-completion/completions/gpproc
-	cp gpdevice_completion /usr/share/bash-completion/completions/gpdevice
+	cp share/pnode_completion /usr/share/bash-completion/completions/gpnode
+	cp share/gplib_completion /usr/share/bash-completion/completions/gplib
+	cp share/gpproc_completion /usr/share/bash-completion/completions/gpproc
+	cp share/gpdevice_completion /usr/share/bash-completion/completions/gpdevice
 fi
 
 # udev rules for dreamcam
