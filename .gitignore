@@ -34,3 +34,4 @@ gui-tools/win
 *.autosave
 *.user
 
+nbproject/
