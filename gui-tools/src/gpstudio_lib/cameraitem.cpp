@@ -131,6 +131,11 @@ CameraItem *CameraItem::append(const Flow *flow)
     return item;
 }
 
+void CameraItem::clear()
+{
+    _childrens.clear();
+}
+
 int CameraItem::row()
 {
     return _row;

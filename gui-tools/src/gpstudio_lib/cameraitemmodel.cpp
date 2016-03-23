@@ -59,7 +59,7 @@ QModelIndex CameraItemModelNoSorted::index(int row, int column, const QModelInde
 
 QModelIndex CameraItemModelNoSorted::parent(const QModelIndex &child) const
 {
-    if (!child.isValid())
+    if (!child.isValid() || child.internalPointer()==NULL)
         return QModelIndex();
 
     CameraItem *childItem = static_cast<CameraItem*>(child.internalPointer());
@@ -83,7 +83,8 @@ int CameraItemModelNoSorted::rowCount(const QModelIndex &parent) const
     else
     {
         CameraItem *item = static_cast<CameraItem*>(parent.internalPointer());
-        return item->count();
+        if(item)
+            return item->count();
     }
     return 0;
 }
@@ -96,7 +97,8 @@ int CameraItemModelNoSorted::columnCount(const QModelIndex &parent) const
 
 QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
 {
-    if(_rootItem->count()==0) return QVariant();
+    if(_rootItem->count()==0)
+        return QVariant();
 
     CameraItem *item = static_cast<CameraItem*>(index.internalPointer());
     // ============== cam mode ==============
@@ -192,6 +194,13 @@ void CameraItemModelNoSorted::addCamera(const Camera *camera)
     emit layoutChanged();
 }
 
+void CameraItemModelNoSorted::clearAll()
+{
+    emit layoutAboutToBeChanged();
+    _rootItem->clear();
+    emit layoutChanged();
+}
+
 
 // =============== sorted model ====================
 CameraItemModel::CameraItemModel(QObject *parent)
@@ -209,7 +218,14 @@ CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
 
 void CameraItemModel::addCamera(const Camera *camera)
 {
-    emit layoutAboutToBeChanged();
+    //emit layoutAboutToBeChanged();
     _modelCam->addCamera(camera);
-    emit layoutChanged();
+    //emit layoutChanged();
+}
+
+void CameraItemModel::clearAll()
+{
+    //emit layoutAboutToBeChanged();
+    _modelCam->clearAll();
+    //emit layoutChanged();
 }

@@ -44,6 +44,7 @@ public:
     };
 
     void addCamera(const Camera *camera);
+    void clearAll();
 
     // QAbstractItemModel interface
 public:
@@ -71,6 +72,7 @@ public:
     CameraItemModel(Camera *camera, QObject *parent = 0);
 
     void addCamera(const Camera *camera);
+    void clearAll();
 
 private:
     CameraItemModelNoSorted *_modelCam;

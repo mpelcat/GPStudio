@@ -59,6 +59,7 @@ public:
     CameraItem *append(const Camera *camera);
     CameraItem *append(const Block *block);
     CameraItem *append(const Flow *flow);
+    void clear();
 
     int row();
     void *ptr() const;

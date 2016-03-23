@@ -228,7 +228,7 @@ const Property *PropertyItemModel::rootProperty() const
 
 void PropertyItemModel::setRootProperty(const Property *rootProperty)
 {
-    emit layoutAboutToBeChanged();
+    //emit layoutAboutToBeChanged();
     _modelProperty->setRootProperty(rootProperty);
-    emit layoutChanged();
+    //emit layoutChanged();
 }
