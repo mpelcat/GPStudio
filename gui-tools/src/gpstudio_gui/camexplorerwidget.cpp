@@ -20,34 +20,135 @@
 
 #include "camexplorerwidget.h"
 
-#include <QBoxLayout>
-
 #include "camera/camera.h"
 
 #include <QDebug>
+#include <QFormLayout>
+#include <QLabel>
+#include <QSplitter>
+
+#include <propertywidgets/propertywidget.h>
 
 CamExplorerWidget::CamExplorerWidget(QWidget *parent)
     : QWidget(parent)
 {
+    setCamera(NULL);
+    setModeView(WidgetsMode);
+}
+
+CamExplorerWidget::CamExplorerWidget(Camera *camera, QWidget *parent)
+    : QWidget(parent)
+{
+    setCamera(camera);
+    setModeView(WidgetsMode);
+}
+
+CamExplorerWidget::CamExplorerWidget(Camera *camera, CamExplorerWidget::Mode modeView, QWidget *parent)
+    : QWidget(parent)
+{
+    setCamera(camera);
+    setModeView(modeView);
+}
+
+void CamExplorerWidget::setupWidgets()
+{
+    if(layout())
+        layout()->deleteLater();
+
     QLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0,0,0,0);
 
-    _camItemModel = new CameraItemModel();
+    QSplitter *splitter = new QSplitter();
+    splitter->setOrientation(Qt::Vertical);
+    layout->addWidget(splitter);
+
+    _camItemModel = new CameraItemModelNoSorted();
     _camTreeView = new QTreeView();
     _camTreeView->setModel(_camItemModel);
     _camTreeView->setSortingEnabled(true);
-    layout->addWidget(_camTreeView);
-
-    _propertyItemModel = new PropertyItemModel();
-    _propertyTreeView = new QTreeView();
-    _propertyTreeView->setModel(_propertyItemModel);
-    _propertyTreeView->setSortingEnabled(true);
-    layout->addWidget(_propertyTreeView);
+    splitter->addWidget(_camTreeView);
 
     connect(_camTreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateRootProperty(QModelIndex)));
     connect(_camTreeView, SIGNAL(activated(QModelIndex)), this, SLOT(updateRootProperty(QModelIndex)));
 
+    switch (_modeView)
+    {
+    case CamExplorerWidget::TreeViewMode:
+        _propertyItemModel = new PropertyItemModelNoSorted();
+        _propertyTreeView = new QTreeView();
+        _propertyTreeView->setModel(_propertyItemModel);
+        _propertyTreeView->setSortingEnabled(true);
+        splitter->addWidget(_propertyTreeView);
+        break;
+    case CamExplorerWidget::WidgetsMode:
+    {
+        _propertyWidget = new QScrollArea();
+        _propertyWidget->setWidgetResizable(true);
+        splitter->addWidget(_propertyWidget);
+        break;
+    }
+    default:
+        break;
+    }
+
     setLayout(layout);
+}
+
+void CamExplorerWidget::setRootProperty(const Property *property)
+{
+    switch (_modeView)
+    {
+    case CamExplorerWidget::WidgetsMode:
+        {
+            QWidget *widget = new QWidget();
+            widget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+            QFormLayout *layoutPanel = new QFormLayout();
+            layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+            layoutPanel->setSpacing(6);
+
+            if(property)
+            {
+                foreach (Property *subProperty, property->subPropertiesMap())
+                {
+                    PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(subProperty);
+                    if(propertyWidget)
+                    {
+                        if(propertyWidget->type()==PropertyWidget::Field)
+                        {
+                            layoutPanel->addRow(subProperty->caption(), propertyWidget);
+                        }
+                        else
+                        {
+                            layoutPanel->setWidget(layoutPanel->count(), QFormLayout::SpanningRole, propertyWidget);
+                        }
+                    }
+                }
+            }
+
+            // TODO get internal size
+            widget->setMinimumWidth(_propertyWidget->width()-30);
+            widget->setLayout(layoutPanel);
+
+            _propertyWidget->setWidget(widget);
+
+            break;
+        }
+    case CamExplorerWidget::TreeViewMode:
+        _propertyItemModel->setRootProperty(property);
+        break;
+    }
+}
+
+CamExplorerWidget::Mode CamExplorerWidget::modeView() const
+{
+    return _modeView;
+}
+
+void CamExplorerWidget::setModeView(const Mode &modeView)
+{
+    _modeView = modeView;
+    setupWidgets();
 }
 
 Camera *CamExplorerWidget::camera() const
@@ -58,35 +159,52 @@ Camera *CamExplorerWidget::camera() const
 void CamExplorerWidget::setCamera(Camera *camera)
 {
     _camera = camera;
-    _camItemModel->addCamera(camera);
-    _camTreeView->expandToDepth(0);
-    _camTreeView->resizeColumnToContents(0);
-    _propertyItemModel->setRootProperty(&_camera->rootProperty());
+    if(_camera)
+    {
+        _camItemModel->clearAll();
+        _camItemModel->addCamera(camera);
+        _camTreeView->expandToDepth(0);
+        _camTreeView->resizeColumnToContents(0);
+
+        //setRootProperty(NULL);
+    }
 }
 
 void CamExplorerWidget::updateRootProperty(QModelIndex index)
 {
-    QModelIndex localMapToSource = _camItemModel->mapToSource(index);
+    if(!index.isValid() || index.model()!=_camItemModel)
+    {
+        setRootProperty(NULL);
+        return;
+    }
+
+    QModelIndex localMapToSource = index;/*_camItemModel->mapToSource(index);
     if(!localMapToSource.isValid())
-        _propertyItemModel->setRootProperty(NULL);
+    {
+        setRootProperty(NULL);
+        return;
+    }*/
 
     CameraItem *item = static_cast<CameraItem*>(localMapToSource.internalPointer());
     if(!item)
-        _propertyItemModel->setRootProperty(NULL);
+    {
+        setRootProperty(NULL);
+        return;
+    }
 
     switch (item->type())
     {
     case CameraItem::CameraType:
-        _propertyItemModel->setRootProperty(&item->camera()->rootProperty());
+        setRootProperty(&item->camera()->rootProperty());
         break;
     case CameraItem::BlockType:
-        _propertyItemModel->setRootProperty(item->block()->assocProperty());
+        setRootProperty(item->block()->assocProperty());
         break;
     case CameraItem::FlowType:
-        _propertyItemModel->setRootProperty(item->flow()->assocProperty());
+        setRootProperty(item->flow()->assocProperty());
         break;
     default:
-        _propertyItemModel->setRootProperty(NULL);
+        setRootProperty(NULL);
         break;
     }
 }

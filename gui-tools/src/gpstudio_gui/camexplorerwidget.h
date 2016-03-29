@@ -27,28 +27,47 @@
 
 #include "propertyitemmodel.h"
 #include "cameraitemmodel.h"
+
 #include <QTreeView>
+#include <QBoxLayout>
+#include <QScrollArea>
 
 class GPSTUDIO_GUI_EXPORT CamExplorerWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum Mode {
+        TreeViewMode,
+        WidgetsMode
+    };
+
     CamExplorerWidget(QWidget *parent=0);
+    CamExplorerWidget(Camera *camera, QWidget *parent=0);
+    CamExplorerWidget(Camera *camera, Mode modeView, QWidget *parent=0);
 
     Camera *camera() const;
     void setCamera(Camera *camera);
+
+    Mode modeView() const;
+    void setModeView(const Mode &modeView);
 
 protected slots:
     void updateRootProperty(QModelIndex index);
 
 private:
+    void setupWidgets();
+    void setRootProperty(const Property *property);
+
     QTreeView *_camTreeView;
-    CameraItemModel *_camItemModel;
+    CameraItemModelNoSorted *_camItemModel;
 
     QTreeView *_propertyTreeView;
-    PropertyItemModel *_propertyItemModel;
+    PropertyItemModelNoSorted *_propertyItemModel;
+    QScrollArea *_propertyWidget;
 
     Camera *_camera;
+
+    Mode _modeView;
 };
 
 #endif // CAMEXPLORERWIDGET_H
