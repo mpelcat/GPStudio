@@ -52,20 +52,21 @@ MainWindow::MainWindow(QStringList args) :
     _cam = NULL;
 
     ui->setupUi(this);
-    createToolBarAndMenu();
-    QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-    QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
 
     _lib = new Lib("../");
-    ui->blocksView->setLib(_lib);
+    createDocks();
+    createToolBarAndMenu();
 
     if(args.size()>1)
     {
         if(QFile::exists(args[1])) openNodeGeneratedFile(args[1]);
     }
 
-    //ui->scriptDock->close();
-    //tabifyDockWidget(ui->paramsDock, ui->scriptDock);
+    // show tabs
+    _camExplorerDock->show();
+    _camExplorerDock->raise();
+    _scriptDock->show();
+    _scriptDock->raise();
 }
 
 MainWindow::~MainWindow()
@@ -130,9 +131,11 @@ void MainWindow::createToolBarAndMenu()
     connect(fourViewer, SIGNAL(triggered()), this, SLOT(fourViewer()));
 
     viewMenu->addSeparator();
-    viewMenu->addAction(ui->paramsDock->toggleViewAction());
-    viewMenu->addAction(ui->scriptDock->toggleViewAction());
-    viewMenu->addAction(ui->camExplorerDock->toggleViewAction());
+    viewMenu->addAction(_scriptDock->toggleViewAction());
+    viewMenu->addAction(_camExplorerDock->toggleViewAction());
+    viewMenu->addSeparator();
+    viewMenu->addAction(_piSpaceDock->toggleViewAction());
+    viewMenu->addAction(_blocksViewDock->toggleViewAction());
 
     // ============= Windows =============
     _winMenu = ui->menuBar->addMenu("&Windows");
@@ -171,28 +174,67 @@ void MainWindow::createToolBarAndMenu()
     ui->mainToolBar->addSeparator();
 }
 
+void MainWindow::createDocks()
+{
+    // settings of mdi area
+    QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+
+    // cam explorer dock
+    _camExplorerDock = new QDockWidget("Camera Explorer", this);
+    QWidget *camExplorerContent = new QWidget(_camExplorerDock);
+    QLayout *camExplorerLayout = new QVBoxLayout();
+    _camExplorerWidget = new CamExplorerWidget();
+    camExplorerLayout->addWidget(_camExplorerWidget);
+    camExplorerContent->setLayout(camExplorerLayout);
+    _camExplorerDock->setWidget(camExplorerContent);
+    addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
+
+    // pi space dock
+    _piSpaceDock = new QDockWidget("PI space", this);
+    QWidget *piSpaceWidgetContent = new QWidget(_piSpaceDock);
+    QLayout *piSpaceWidgetLayout = new QVBoxLayout();
+    _piSpaceHex = new QHexEdit(piSpaceWidgetContent);
+    piSpaceWidgetLayout->addWidget(_piSpaceHex);
+    piSpaceWidgetContent->setLayout(piSpaceWidgetLayout);
+    _piSpaceDock->setWidget(piSpaceWidgetContent);
+    tabifyDockWidget(_camExplorerDock, _piSpaceDock);
+
+    // script dock
+    _scriptDock = new QDockWidget("Blocks view", this);
+    QWidget *scriptContent = new QWidget(_piSpaceDock);
+    QLayout *scriptLayout = new QVBoxLayout();
+    _scriptWidget = new ScriptWidget(scriptContent);
+    scriptLayout->addWidget(_scriptWidget);
+    scriptContent->setLayout(scriptLayout);
+    _scriptDock->setWidget(scriptContent);
+    addDockWidget(Qt::BottomDockWidgetArea, _scriptDock);
+
+    // blocks view dock
+    _blocksViewDock = new QDockWidget("Blocks view", this);
+    QWidget *blocksViewContent = new QWidget(_piSpaceDock);
+    QLayout *blocksViewLayout = new QVBoxLayout();
+    _blocksView = new ProcessesView(blocksViewContent);
+    _blocksView->setLib(_lib);
+    blocksViewLayout->addWidget(_blocksView);
+    blocksViewContent->setLayout(blocksViewLayout);
+    _blocksViewDock->setWidget(blocksViewContent);
+    tabifyDockWidget(_scriptDock, _blocksViewDock);
+}
+
 void MainWindow::openNodeGeneratedFile(const QString fileName)
 {
     if(_cam) delete _cam;
 
     _cam = new Camera(fileName);
 
-    foreach (Property *property, _cam->rootProperty().subProperties())
-    {
-        if(property->type()==Property::BlockType && property->subProperties().count()>0)
-        {
-            PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
-            ui->paramsLayout->addWidget(propertyWidget);
-        }
-    }
-
-    ui->blocksView->loadFromNode(_cam->node());
+    _blocksView->loadFromNode(_cam->node());
 
     setupViewers(2);
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
-    ui->camExplorerWidget->setCamera(_cam);
+    _camExplorerWidget->setCamera(_cam);
     //tabifyDockWidget(ui->paramsDock, ui->camTreeView);
 
     connectCam();
@@ -223,7 +265,7 @@ void MainWindow::connectCam()
 void MainWindow::setBiSpace()
 {
     if(!_cam) return;
-    ui->piSpaceHex->setData(_cam->registerData());
+    _piSpaceHex->setData(_cam->registerData());
 }
 
 void MainWindow::oneViewer()
@@ -235,13 +277,11 @@ void MainWindow::oneViewer()
 void MainWindow::twoViewer()
 {
     setupViewers(2);
-    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::fourViewer()
 {
     setupViewers(4);
-    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::updateWindowsMenu()

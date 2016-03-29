@@ -14,55 +14,21 @@
    <string>GPViewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>0</number>
+     <widget class="QMdiArea" name="mdiArea">
+      <property name="activationOrder">
+       <enum>QMdiArea::CreationOrder</enum>
       </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Viewer</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QMdiArea" name="mdiArea">
-          <property name="activationOrder">
-           <enum>QMdiArea::CreationOrder</enum>
-          </property>
-          <property name="tabsClosable">
-           <bool>true</bool>
-          </property>
-          <property name="tabsMovable">
-           <bool>true</bool>
-          </property>
-          <property name="tabPosition">
-           <enum>QTabWidget::South</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_3">
-       <attribute name="title">
-        <string>Blocks</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
-        <item>
-         <widget class="ProcessesView" name="blocksView"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>PI space</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QHexEdit" name="piSpaceHex" native="true"/>
-        </item>
-       </layout>
-      </widget>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="tabsMovable">
+       <bool>true</bool>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::South</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -81,65 +47,6 @@
    </property>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="paramsDock">
-   <property name="windowTitle">
-    <string>Parameters</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QScrollArea" name="scrollArea">
-       <property name="minimumSize">
-        <size>
-         <width>350</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>348</width>
-          <height>169</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <layout class="QVBoxLayout" name="paramsLayout"/>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="scriptDock">
-   <property name="windowIcon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/icons/img/term.png</normaloff>:/icons/img/term.png</iconset>
-   </property>
-   <property name="windowTitle">
-    <string>Scripts</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="ScriptWidget" name="scriptWidget" native="true"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -151,49 +58,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QDockWidget" name="camExplorerDock">
-   <property name="windowTitle">
-    <string>Cam explorer</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="CamExplorerWidget" name="camExplorerWidget" native="true"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ScriptWidget</class>
-   <extends>QWidget</extends>
-   <header>scriptwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QHexEdit</class>
-   <extends>QWidget</extends>
-   <header>../../thirdparts/hexedit/qhexedit.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ProcessesView</class>
-   <extends>QGraphicsView</extends>
-   <header>itemsview/processesview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>CamExplorerWidget</class>
-   <extends>QWidget</extends>
-   <header>camexplorerwidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

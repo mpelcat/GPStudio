@@ -21,12 +21,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDockWidget>
 #include <QMainWindow>
 #include <QMdiSubWindow>
+#include <scriptwidget.h>
 
 #include "camera/camera.h"
 #include "flowviewerwidget/flowviewerwidget.h"
+#include "camexplorerwidget.h"
 #include "lib_parser/lib.h"
+
+#include "../../thirdparts/hexedit/qhexedit.h"
+#include "itemsview/processesview.h"
 
 namespace Ui {
 class MainWindow;
@@ -68,6 +74,21 @@ private:
     QMap<int, FlowViewerWidget *> _viewers;
 
     Lib *_lib;
+
+    // docks
+    void createDocks();
+
+    QDockWidget *_piSpaceDock;
+    QHexEdit *_piSpaceHex;
+
+    QDockWidget *_blocksViewDock;
+    ProcessesView *_blocksView;
+
+    QDockWidget *_camExplorerDock;
+    CamExplorerWidget *_camExplorerWidget;
+
+    QDockWidget *_scriptDock;
+    ScriptWidget *_scriptWidget;
 
     // menu and toolbar
     void createToolBarAndMenu();
