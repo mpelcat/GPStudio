@@ -25,6 +25,11 @@ PropertyEnum::PropertyEnum(const QString &name, const QVariant &value)
 {
 }
 
+PropertyEnum::PropertyEnum(const QString &name, const QString &caption, const QVariant &value)
+    : _name(name), _caption(caption), _value(value)
+{
+}
+
 PropertyEnum::~PropertyEnum()
 {
 }
@@ -37,6 +42,16 @@ QString PropertyEnum::name() const
 void PropertyEnum::setName(const QString &name)
 {
     _name = name;
+}
+
+QString PropertyEnum::caption() const
+{
+    return _caption;
+}
+
+void PropertyEnum::setCaption(const QString &caption)
+{
+    _caption = caption;
 }
 
 QVariant PropertyEnum::value() const

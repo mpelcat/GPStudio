@@ -36,6 +36,9 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    QString caption() const;
+    void setCaption(const QString &caption);
+
     QVariant value() const;
     void setValue(const QVariant &value);
 
@@ -48,6 +51,7 @@ public:
 
 protected:
     QString _name;
+    QString _caption;
     QVariant _value;
     QString _description;
 };

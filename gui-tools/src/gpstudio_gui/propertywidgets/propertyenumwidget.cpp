@@ -46,7 +46,7 @@ void PropertyEnumWidget::createWidget()
 
     foreach (PropertyEnum *propertyEnum, _linkedProperty->enums())
     {
-        _comboBox->addItem(propertyEnum->name(), propertyEnum->value());
+        _comboBox->addItem(propertyEnum->caption(), propertyEnum->name());
     }
 
     connect(_comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(wrapValue(int)));
@@ -66,7 +66,7 @@ void PropertyEnumWidget::destroyWidget()
 
 void PropertyEnumWidget::setValue(QVariant value)
 {
-    int index = _comboBox->findText(value.toString());
+    int index = _comboBox->findData(value.toString());
     //qDebug()<<"combo"<<value<<index;
     if(index!=-1)
     {
@@ -79,5 +79,5 @@ void PropertyEnumWidget::setValue(QVariant value)
 void PropertyEnumWidget::wrapValue(int value)
 {
     //qDebug()<<"wrapValue"<<value<<_comboBox->currentText();
-    emit(valueChanged(_comboBox->currentText()));
+    emit(valueChanged(_comboBox->currentData()));
 }

@@ -30,16 +30,21 @@ class GPSTUDIO_LIB_EXPORT PropertyEnum
 {
 public:
     PropertyEnum(const QString &name=QString(), const QVariant &value=QVariant());
+    PropertyEnum(const QString &name=QString(), const QString &caption=QString(), const QVariant &value=QVariant());
     ~PropertyEnum();
 
     QString name() const;
     void setName(const QString &name);
+
+    QString caption() const;
+    void setCaption(const QString &caption);
 
     QVariant value() const;
     void setValue(const QVariant &value);
 
 private:
     QString _name;
+    QString _caption;
     QVariant _value;
 };
 

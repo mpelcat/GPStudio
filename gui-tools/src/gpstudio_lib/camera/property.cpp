@@ -300,7 +300,7 @@ Property *Property::fromModelProperty(const ModelProperty *modelProperty)
     {
         foreach (ModelPropertyEnum *blockPropertyEnum, modelProperty->propertyEnums())
         {
-            PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->value());
+            PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->caption(), blockPropertyEnum->value());
             paramprop->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
         }
         paramprop->setType(Property::Enum);

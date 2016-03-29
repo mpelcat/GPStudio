@@ -38,6 +38,16 @@ void ModelPropertyEnum::setName(const QString &name)
     _name = name;
 }
 
+QString ModelPropertyEnum::caption() const
+{
+    return _caption;
+}
+
+void ModelPropertyEnum::setCaption(const QString &caption)
+{
+    _caption = caption;
+}
+
 QVariant ModelPropertyEnum::value() const
 {
     return _value;
@@ -63,6 +73,7 @@ ModelPropertyEnum *ModelPropertyEnum::fromNodeGenerated(const QDomElement &domEl
     ModelPropertyEnum *blockPropertyEnum=new ModelPropertyEnum();
 
     blockPropertyEnum->setName(domElement.attribute("name","no_name"));
+    blockPropertyEnum->setCaption(domElement.attribute("caption",blockPropertyEnum->name()));
 
     QVariant value = domElement.attribute("value","");
     blockPropertyEnum->setValue(value);
