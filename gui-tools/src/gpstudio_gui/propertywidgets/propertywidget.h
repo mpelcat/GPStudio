@@ -34,14 +34,14 @@ public:
     PropertyWidget();
     virtual ~PropertyWidget();
 
-    Property *linkedProperty() const;
-    virtual void setLinkedProperty(Property *linkedProperty);
+    const Property *linkedProperty() const;
+    virtual void setLinkedProperty(const Property *linkedProperty);
 
     enum Type {Field, SimpleField, Group};
     virtual Type type() const =0;
 
 public:
-    static PropertyWidget *getWidgetFromProperty(Property *property);
+    static PropertyWidget *getWidgetFromProperty(const Property *property);
 
 protected:
     virtual void createWidget() =0;
@@ -54,7 +54,7 @@ public slots:
     virtual void setValue(QVariant value) =0;
 
 protected:
-    Property *_linkedProperty;
+    const Property *_linkedProperty;
 };
 
 #endif // PROPERTYWIDGET_H

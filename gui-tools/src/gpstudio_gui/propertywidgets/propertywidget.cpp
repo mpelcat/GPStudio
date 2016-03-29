@@ -34,12 +34,12 @@ PropertyWidget::~PropertyWidget()
 
 }
 
-Property *PropertyWidget::linkedProperty() const
+const Property *PropertyWidget::linkedProperty() const
 {
     return _linkedProperty;
 }
 
-void PropertyWidget::setLinkedProperty(Property *linkedProperty)
+void PropertyWidget::setLinkedProperty(const Property *linkedProperty)
 {
     destroyWidget();
 
@@ -57,7 +57,7 @@ void PropertyWidget::setLinkedProperty(Property *linkedProperty)
     }
 }
 
-PropertyWidget *PropertyWidget::getWidgetFromProperty(Property *property)
+PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
 {
     PropertyWidget *widget = NULL;
     //Group, Int, Enum
