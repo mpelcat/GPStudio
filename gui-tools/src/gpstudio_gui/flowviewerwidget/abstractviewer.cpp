@@ -20,15 +20,26 @@
 
 #include "abstractviewer.h"
 
-AbstractViewer::AbstractViewer(FlowViewerInterface *flowViewerInterface)
-{
+#include <QDebug>
 
+AbstractViewer::AbstractViewer(FlowViewerInterface *flowViewerInterface)
+    : _flowViewerInterface(flowViewerInterface)
+{
+}
+
+AbstractViewer::~AbstractViewer()
+{
 }
 
 AbstractViewer *AbstractViewer::fromDataTypeName(const QString &dataTypeName)
 {
 
     return NULL;
+}
+
+void AbstractViewer::setupWidgets()
+{
+
 }
 
 const Property &AbstractViewer::properties() const

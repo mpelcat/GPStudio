@@ -34,6 +34,7 @@ class GPSTUDIO_GUI_EXPORT AbstractViewer : public QWidget
     Q_OBJECT
 public:
     AbstractViewer(FlowViewerInterface *flowViewerInterface);
+    virtual ~AbstractViewer();
 
     const Property &properties() const;
 
@@ -41,10 +42,12 @@ public:
     static AbstractViewer *fromDataTypeName(const QString &dataTypeName);
 
 protected:
-    virtual void setupWidgets() =0;
+    virtual void setupWidgets();
 
 protected:
     Property _properties;
+
+    FlowViewerInterface *_flowViewerInterface;
 };
 
 #endif // ABSTRACTVIEWER_H

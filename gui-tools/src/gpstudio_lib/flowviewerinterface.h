@@ -42,7 +42,13 @@ public:
     void removeFlowConnection(FlowConnection *flowConnection);
     void moveFlowConnection(FlowConnection *flowConnection, int index);
 
-    QString dataType() const;
+    enum FlowDataType {
+        ImageFlowType,
+        UnknowFlowType
+    };
+
+    FlowDataType dataType() const;
+    QString statusText() const;
 
 signals:
     void dataTypeChanged();
@@ -57,7 +63,7 @@ protected:
 
 private:
     QList<FlowConnection *> _flowConnections;
-    QString _dataType;
+    FlowDataType _dataType;
 };
 
 #endif // FLOWVIEWERINTERFACE_H

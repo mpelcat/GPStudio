@@ -49,16 +49,17 @@ signals:
 
 protected slots:
     void changeType();
+    void dataReceive(int flowId);
 
 protected:
-    void setupWidgets();
+    void setupWidgets(AbstractViewer *viewer);
+    void setFlowViewerInterface(const QSharedPointer<FlowViewerInterface> &flowViewerInterface);
 
 protected:
     QSharedPointer<FlowViewerInterface> _flowViewerInterface;
     QMutex _viewerMutex;
 
-    QLayout *_layout;
-    QWidget *_viewer;
+    AbstractViewer *_viewer;
 
     QLayout *_statusLayout;
     QLabel *_statusLabel;

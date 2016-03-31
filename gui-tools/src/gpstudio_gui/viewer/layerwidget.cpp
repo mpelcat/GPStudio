@@ -41,6 +41,11 @@ LayerWidget::LayerWidget(QWidget *parent) :
     _titleItem = _scene->addSimpleText(QString());
 }
 
+LayerWidget::~LayerWidget()
+{
+    qDebug()<<"del layer";
+}
+
 #ifdef __USE_OPEN_CV__
 using namespace cv;
 void LayerWidget::showImage(const Mat &image, const QString &title)

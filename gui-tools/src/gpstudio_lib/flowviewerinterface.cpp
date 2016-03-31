@@ -87,14 +87,21 @@ void FlowViewerInterface::changeDataType()
     if(_flowConnections.empty())
         return;
 
+    QString dataTypeStr;
     Property *dataTypeProperty = _flowConnections[0]->flow()->assocProperty()->path("datatype");
     if(!dataTypeProperty)
-        return;
+        dataTypeStr="";
+    else
+        dataTypeStr = dataTypeProperty->value().toString();
 
-    _dataType = dataTypeProperty->value().toString();
+    if(dataTypeStr=="image")
+        _dataType = ImageFlowType;
+    else
+        _dataType = UnknowFlowType;
+
     emit dataTypeChanged();
 
-    qDebug()<<Q_FUNC_INFO<<dataTypeProperty->value();
+    //qDebug()<<Q_FUNC_INFO<<dataTypeProperty->value();
 }
 
 void FlowViewerInterface::processData(FlowPackage data)
@@ -109,7 +116,7 @@ void FlowViewerInterface::processData(FlowPackage data)
 
     emit dataReceived(index);
 
-    qDebug()<<Q_FUNC_INFO<<data.data().size()<<connection->flow()->name();
+    //qDebug()<<Q_FUNC_INFO<<data.data().size()<<connection->flow()->name();
 }
 
 FlowConnection *FlowViewerInterface::objectToFlowConnection(QObject *object)
@@ -117,7 +124,31 @@ FlowConnection *FlowViewerInterface::objectToFlowConnection(QObject *object)
     return qobject_cast<FlowConnection *>(object);
 }
 
-QString FlowViewerInterface::dataType() const
+FlowViewerInterface::FlowDataType FlowViewerInterface::dataType() const
 {
     return _dataType;
+}
+
+QString FlowViewerInterface::statusText() const
+{
+    QString statusText;
+
+    Property *flowProp = _flowConnections[0]->flow()->assocProperty();
+
+    switch (_dataType)
+    {
+    case FlowViewerInterface::ImageFlowType:
+        statusText = QString("image %1*%2px at %3 fps")
+                .arg(flowProp->property("width").toInt())
+                .arg(flowProp->property("height").toInt())
+                .arg(_flowConnections[0]->fps());
+
+        break;
+    case FlowViewerInterface::UnknowFlowType:
+        break;
+    default:
+        break;
+    }
+
+    return statusText;
 }

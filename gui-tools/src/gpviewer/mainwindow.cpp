@@ -177,11 +177,12 @@ void MainWindow::createToolBarAndMenu()
 void MainWindow::createDocks()
 {
     // settings of mdi area
-    QMainWindow::setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-    QMainWindow::setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
 
     // cam explorer dock
-    _camExplorerDock = new QDockWidget("Camera Explorer", this);
+    _camExplorerDock = new QDockWidget("CamExplorer", this);
     QWidget *camExplorerContent = new QWidget(_camExplorerDock);
     QLayout *camExplorerLayout = new QVBoxLayout();
     _camExplorerWidget = new CamExplorerWidget();
@@ -191,7 +192,7 @@ void MainWindow::createDocks()
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
     // pi space dock
-    _piSpaceDock = new QDockWidget("PI space", this);
+    _piSpaceDock = new QDockWidget("PI", this);
     QWidget *piSpaceWidgetContent = new QWidget(_piSpaceDock);
     QLayout *piSpaceWidgetLayout = new QVBoxLayout();
     _piSpaceHex = new QHexEdit(piSpaceWidgetContent);
@@ -201,7 +202,7 @@ void MainWindow::createDocks()
     tabifyDockWidget(_camExplorerDock, _piSpaceDock);
 
     // script dock
-    _scriptDock = new QDockWidget("Blocks view", this);
+    _scriptDock = new QDockWidget("Scripts", this);
     QWidget *scriptContent = new QWidget(_piSpaceDock);
     QLayout *scriptLayout = new QVBoxLayout();
     _scriptWidget = new ScriptWidget(scriptContent);
@@ -252,11 +253,6 @@ void MainWindow::connectCam()
             if(cameraInfo.isValid())
             {
                 _cam->connectCam(cameraInfo);
-
-                if(_cam->isConnected())
-                {
-                    connect(_cam->com(), SIGNAL(flowReadyToRead(int)), this, SLOT(viewFlow(int)));
-                }
             }
         }
     }

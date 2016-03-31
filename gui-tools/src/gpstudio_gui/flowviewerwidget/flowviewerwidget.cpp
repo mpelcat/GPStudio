@@ -25,33 +25,32 @@
 
 #include <QDebug>
 
+#include "layerviewer.h"
+
 FlowViewerWidget::FlowViewerWidget(const QSharedPointer<FlowViewerInterface> &flowViewerInterface) :
     QWidget(NULL),
-    _flowViewerInterface(flowViewerInterface),
     _viewer(NULL)
 {
-    setupWidgets();
-    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    setupWidgets(NULL);
+    setFlowViewerInterface(flowViewerInterface);
     changeType();
 }
 
 FlowViewerWidget::FlowViewerWidget(FlowViewerInterface *flowViewerInterface) :
     QWidget(NULL),
-    _flowViewerInterface(flowViewerInterface),
     _viewer(NULL)
 {
-    setupWidgets();
-    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    setupWidgets(NULL);
+    setFlowViewerInterface(QSharedPointer<FlowViewerInterface>(flowViewerInterface));
     changeType();
 }
 
 FlowViewerWidget::FlowViewerWidget(const FlowViewerWidget &other) :
     QWidget(NULL),
-    _flowViewerInterface(other._flowViewerInterface),
     _viewer(other._viewer)
 {
-    setupWidgets();
-    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    setupWidgets(NULL);
+    setFlowViewerInterface(other._flowViewerInterface);
     changeType();
 }
 
@@ -61,28 +60,75 @@ FlowViewerWidget::~FlowViewerWidget()
 
 FlowViewerWidget &FlowViewerWidget::operator=(const FlowViewerWidget &other)
 {
-    _flowViewerInterface = other._flowViewerInterface;
+    setFlowViewerInterface(other._flowViewerInterface);
     return *this;
 }
 
 void FlowViewerWidget::changeType()
 {
-    _statusLabel->setText(_flowViewerInterface.data()->dataType());
+    FlowViewerInterface::FlowDataType dataType = _flowViewerInterface.data()->dataType();
+
+    if(dataType==FlowViewerInterface::ImageFlowType)
+    {
+        setupWidgets(new LayerViewer(_flowViewerInterface.data()));
+    }
+    else
+        setupWidgets(NULL);
 }
 
-void FlowViewerWidget::setupWidgets()
+void FlowViewerWidget::dataReceive(int flowId)
 {
-    _layout = new QVBoxLayout();
-    _layout->setContentsMargins(0,0,0,0);
+    if(_statusLabel)
+    {
+        _statusLabel->setText(_flowViewerInterface.data()->statusText());
 
-    _viewer = new QWidget();
-    _layout->addWidget(_viewer);
+        // 22 fps image 320*240px
+    }
+}
+
+void FlowViewerWidget::setupWidgets(AbstractViewer *viewer)
+{
+    if(layout())
+    {
+        QLayoutItem *child;
+        while ((child = layout()->takeAt(0)) != 0)
+        {
+            if(child->widget())
+            {
+                child->widget()->hide();
+                child->widget()->deleteLater();
+            }
+            if(child->layout())
+            {
+                QLayoutItem *child2;
+                while ((child2 = child->layout()->takeAt(0)) != 0)
+                {
+                    if(child2->widget())
+                    {
+                        child2->widget()->hide();
+                        child2->widget()->deleteLater();
+                    }
+                    delete child2;
+                }
+            }
+            delete child;
+        }
+        delete layout();
+    }
+    QLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0,0,0,0);
+
+    if(viewer==NULL)
+        viewer = new AbstractViewer(new FlowViewerInterface);
+
+    layout->addWidget(viewer);
+    _viewer = viewer;
 
     // status
     _statusLayout = new QHBoxLayout();
     _statusLayout->setContentsMargins(0,0,0,0);
 
-    _statusLabel = new QLabel("22 fps image 320*240px");
+    _statusLabel = new QLabel("");
     _statusLayout->addWidget(_statusLabel);
 
     _typeComboBox = new QComboBox();
@@ -90,9 +136,16 @@ void FlowViewerWidget::setupWidgets()
     _typeComboBox->addItem("image");
     _typeComboBox->addItem("hexa");
 
-    _layout->addItem(_statusLayout);
+    layout->addItem(_statusLayout);
 
-    setLayout(_layout);
+    setLayout(layout);
+}
+
+void FlowViewerWidget::setFlowViewerInterface(const QSharedPointer<FlowViewerInterface> &flowViewerInterface)
+{
+    _flowViewerInterface = flowViewerInterface;
+    connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
+    connect(_flowViewerInterface.data(), SIGNAL(dataReceived(int)), this, SLOT(dataReceive(int)));
 }
 
 //QMutexLocker _viewerLock;

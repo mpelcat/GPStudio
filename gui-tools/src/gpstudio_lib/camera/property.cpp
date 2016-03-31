@@ -252,9 +252,9 @@ void Property::setRow(int row)
     _row = row;
 }
 
-Property *Property::path(const QString &path)
+Property *Property::path(const QString &path) const
 {
-    if(path.isEmpty() || path==_name || path=="value" || path=="bits") return this;
+    if(path.isEmpty() || path==_name || path=="value" || path=="bits") return (Property *)this;
     int index = path.indexOf(".");
     if(index==-1)
     {
@@ -263,6 +263,14 @@ Property *Property::path(const QString &path)
     }
     if(_subPropertiesMap.contains(path.left(index))) return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
     return NULL;
+}
+
+QVariant Property::property(const QString &path) const
+{
+    Property *prop = this->path(path);
+    if(prop)
+        return prop->value();
+    return QVariant();
 }
 
 QStringList Property::dependsProperties() const

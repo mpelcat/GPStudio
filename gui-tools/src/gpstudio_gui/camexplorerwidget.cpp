@@ -127,7 +127,7 @@ void CamExplorerWidget::setRootProperty(const Property *property)
             }
 
             // TODO get internal size
-            widget->setMinimumWidth(_propertyWidget->width()-30);
+            widget->setMinimumWidth(_propertyWidget->viewport()->width()-30);
             widget->setLayout(layoutPanel);
 
             _propertyWidget->setWidget(widget);

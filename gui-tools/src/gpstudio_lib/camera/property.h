@@ -81,7 +81,8 @@ public:
     int row() const;
     void setRow(int row);
 
-    Property *path(const QString &path);
+    Property *path(const QString &path) const;
+    QVariant property(const QString &path=QString()) const;
 
     QStringList dependsProperties() const;
 

@@ -44,6 +44,8 @@ public:
     void recImg(FlowPackage data);
     float fps() const;
 
+    const FlowPackage &lastData() const;
+
 signals:
     void flowReceived(FlowPackage data);
 

@@ -20,13 +20,41 @@
 
 #include "layerviewer.h"
 
+#include <QDebug>
+#include <QVBoxLayout>
+
+#include "flowviewerinterface.h"
+
 LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
+    setupWidgets();
+    connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
+}
 
+LayerViewer::~LayerViewer()
+{
+}
+
+void LayerViewer::showFlowConnection(int flowId)
+{
+    const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
+    Property *flowProp = _flowViewerInterface->flowConnections()[flowId]->flow()->assocProperty();
+
+    int width = flowProp->property("width").toInt();
+    int height = flowProp->property("height").toInt();
+
+    _widget->showImage(*flowPackage.toImage(width, height, 8));
 }
 
 void LayerViewer::setupWidgets()
 {
+    QLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0,0,0,0);
 
+    _widget = new LayerWidget();
+
+    layout->addWidget(_widget);
+
+    setLayout(layout);
 }

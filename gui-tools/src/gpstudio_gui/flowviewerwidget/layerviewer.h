@@ -25,13 +25,22 @@
 
 #include "abstractviewer.h"
 
+#include "viewer/layerwidget.h"
+
 class GPSTUDIO_GUI_EXPORT LayerViewer : public AbstractViewer
 {
+    Q_OBJECT
 public:
     LayerViewer(FlowViewerInterface *flowViewerInterface);
+    ~LayerViewer();
+
+protected slots:
+    void showFlowConnection(int flowId);
 
 protected:
     virtual void setupWidgets();
+
+    LayerWidget *_widget;
 };
 
 #endif // LAYERVIEWER_H

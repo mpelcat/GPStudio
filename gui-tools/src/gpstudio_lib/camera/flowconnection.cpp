@@ -63,3 +63,8 @@ float FlowConnection::fps() const
 {
     return _fps;
 }
+
+const FlowPackage &FlowConnection::lastData() const
+{
+    return _lastData;
+}
