@@ -18,27 +18,22 @@
 **
 ****************************************************************************/
 
-#ifndef BLOCKITEM_H
-#define BLOCKITEM_H
+#ifndef BLOCKPORTITEM_H
+#define BLOCKPORTITEM_H
 
 #include "gpstudio_gui_common.h"
 
 #include <QGraphicsItem>
-#include <QSvgRenderer>
 
-class ProcessLib;
-class IOLib;
+class BlockConnectorItem;
 
-class BlockPortItem;
-
-class GPSTUDIO_GUI_EXPORT BlockItem : public QGraphicsItem
+class GPSTUDIO_GUI_EXPORT BlockPortItem : public QGraphicsItem
 {
 public:
-    BlockItem(ProcessLib *processLib=NULL);
-    BlockItem(IOLib *ioLib=NULL);
-    ~BlockItem();
+    BlockPortItem();
+    ~BlockPortItem();
 
-    enum { Type = UserType + 1 };
+    enum { Type = UserType + 3 };
     int type() const;
 
     QRectF boundingRect() const;
@@ -50,10 +45,7 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    void update(ProcessLib *processLib);
-    void update(IOLib *ioLib);
-
-    void addPort(BlockPortItem *connectItem);
+    void addConnect(BlockConnectorItem *connectItem);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -62,10 +54,7 @@ private:
     QString _processName;
     QString _name;
 
-    QRectF _boundingRect;
-    QSvgRenderer _svgRenderer;
-
-    QList<BlockPortItem *> _connects;
+    QList<BlockConnectorItem *> _connects;
 };
 
-#endif // BLOCKITEM_H
+#endif // BLOCKPORTITEM_H

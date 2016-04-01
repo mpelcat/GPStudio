@@ -20,8 +20,10 @@
 
 #include "blockconnectoritem.h"
 #include "blockitem.h"
+#include "blockportitem.h"
 
 #include <QPainter>
+#include <QDebug>
 
 #include "lib_parser/processlib.h"
 #include "lib_parser/iolib.h"
@@ -62,7 +64,8 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     if(_svgRenderer.isValid())
     {
-        _svgRenderer.render(painter, boundingRect());
+        _svgRenderer.render(painter, _svgRenderer.viewBox());
+        painter->drawRect(_svgRenderer.viewBox());
     }
     else
     {
@@ -120,19 +123,21 @@ void BlockItem::update(IOLib *ioLib)
     }
 }
 
-void BlockItem::addConnect(BlockConnectorItem *connectItem)
+void BlockItem::addPort(BlockPortItem *connectItem)
 {
+    connectItem->setParentItem(this);
+    connectItem->setPos(0,30);
     _connects.append(connectItem);
 }
 
 QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    if (change == ItemPositionChange && scene())
+    /*if (change == ItemPositionChange && scene())
     {
         foreach (BlockConnectorItem *connectItem, _connects)
         {
             connectItem->update();
         }
-    }
+    }*/
     return QGraphicsItem::itemChange(change, value);
 }

@@ -42,6 +42,8 @@ public:
 
     bool loadFromNode(const ModelNode *node);
 
+    BlockScene *blockScene() const;
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);

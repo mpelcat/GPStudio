@@ -39,6 +39,9 @@ BlockView::BlockView(QWidget *parent)
     setScene(_scene);
 
     setAcceptDrops(true);
+    setRenderHint(QPainter::Antialiasing, true);
+    setRenderHint(QPainter::SmoothPixmapTransform, true);
+    setRenderHint(QPainter::TextAntialiasing, true);
 }
 
 BlockView::~BlockView()
@@ -77,7 +80,7 @@ void BlockView::mousePressEvent(QMouseEvent *event)
             _startConnectItem = processItem;
             _lineConector = new QGraphicsLineItem();
             _lineConector->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
-            scene()->addItem(_lineConector);
+            blockScene()->addItem(_lineConector);
         }
     }
 }
@@ -98,7 +101,7 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
 
-    if(_startConnectItem)
+    /*if(_startConnectItem)
     {
         BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
         if(processItem)
@@ -112,7 +115,12 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
         scene()->removeItem(_lineConector);
         _startConnectItem = NULL;
         _lineConector = NULL;
-    }
+    }*/
+}
+
+BlockScene *BlockView::blockScene() const
+{
+    return _scene;
 }
 
 Lib *BlockView::lib() const

@@ -32,6 +32,10 @@
 
 #include "confignodedialog.h"
 
+#include "itemsview/blockitem.h"
+
+#include <itemsview/blockportitem.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -45,6 +49,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->libTreeView->setLib(_project->lib());
     ui->processView->setLib(_project->lib());
+
+    // tests
+    BlockItem *hog1 = new BlockItem(_project->lib()->process("HOG"));
+    hog1->addPort(new BlockPortItem());
+    ui->processView->blockScene()->addItem(hog1);
+    BlockItem *hog2 = new BlockItem(_project->lib()->process("HOG"));
+    hog2->setPos(300, 0);
+    ui->processView->blockScene()->addItem(hog2);
 }
 
 MainWindow::~MainWindow()

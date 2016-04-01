@@ -60,6 +60,7 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     itemsview/blockitem.cpp \
     itemsview/blockscene.cpp \
     itemsview/blockconnectoritem.cpp \
+    itemsview/blockportitem.cpp \
     itemsview/blockview.cpp
 
 HEADERS  += \
@@ -87,6 +88,7 @@ HEADERS  += \
     itemsview/blockitem.h \
     itemsview/blockscene.h \
     itemsview/blockconnectoritem.h \
+    itemsview/blockportitem.h \
     itemsview/blockview.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
