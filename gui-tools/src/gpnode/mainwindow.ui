@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="ProcessesView" name="processView"/>
+     <widget class="BlockView" name="processView"/>
     </item>
    </layout>
   </widget>
@@ -69,9 +69,9 @@
    <header>viewmodelwidget/libtreeview.h</header>
   </customwidget>
   <customwidget>
-   <class>ProcessesView</class>
+   <class>BlockView</class>
    <extends>QGraphicsView</extends>
-   <header>itemsview/processesview.h</header>
+   <header>itemsview/blockview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

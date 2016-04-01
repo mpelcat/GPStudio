@@ -18,29 +18,29 @@
 **
 ****************************************************************************/
 
-#include "processconnectoritem.h"
+#include "blockconnectoritem.h"
 
-#include "processitem.h"
+#include "blockitem.h"
 
 #include <QDebug>
 #include <QPainter>
 
-ProcessConnectorItem::ProcessConnectorItem(ProcessItem *itemOut, ProcessItem *itemIn)
+BlockConnectorItem::BlockConnectorItem(BlockItem *itemOut, BlockItem *itemIn)
     : _itemOut(itemOut), _itemIn(itemIn)
 {
 
 }
 
-ProcessConnectorItem::~ProcessConnectorItem()
+BlockConnectorItem::~BlockConnectorItem()
 {
 }
 
-int ProcessConnectorItem::type() const
+int BlockConnectorItem::type() const
 {
     return Type;
 }
 
-QRectF ProcessConnectorItem::boundingRect() const
+QRectF BlockConnectorItem::boundingRect() const
 {
     if(_itemOut!=NULL && _itemIn!=NULL)
     {
@@ -49,7 +49,7 @@ QRectF ProcessConnectorItem::boundingRect() const
     return QRectF();
 }
 
-void ProcessConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if(_itemOut && _itemIn)
     {

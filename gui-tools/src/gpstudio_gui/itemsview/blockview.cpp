@@ -18,20 +18,20 @@
 **
 ****************************************************************************/
 
-#include "processesview.h"
+#include "blockview.h"
 
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMimeData>
 
-#include "processitem.h"
-#include "processconnectoritem.h"
+#include "blockitem.h"
+#include "blockconnectoritem.h"
 
-ProcessesView::ProcessesView(QWidget *parent)
+BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
 {
     _lib = NULL;
-    _scene = new ProcessesScene();
+    _scene = new BlockScene();
 
     _startConnectItem = NULL;
     _lineConector = NULL;
@@ -41,37 +41,37 @@ ProcessesView::ProcessesView(QWidget *parent)
     setAcceptDrops(true);
 }
 
-ProcessesView::~ProcessesView()
+BlockView::~BlockView()
 {
 }
 
-void ProcessesView::dragEnterEvent(QDragEnterEvent *event)
-{
-    event->accept();
-}
-
-void ProcessesView::dragMoveEvent(QDragMoveEvent *event)
+void BlockView::dragEnterEvent(QDragEnterEvent *event)
 {
     event->accept();
 }
 
-void ProcessesView::dropEvent(QDropEvent *event)
+void BlockView::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->accept();
+}
+
+void BlockView::dropEvent(QDropEvent *event)
 {
     if(!_lib) return;
     QString blockType = event->mimeData()->text();
-    ProcessItem *proc = new ProcessItem(_lib->process(blockType));
+    BlockItem *proc = new BlockItem(_lib->process(blockType));
     proc->setPos(mapToScene(event->pos()));
     proc->setName(blockType);
     _scene->addItem(proc);
 }
 
-void ProcessesView::mousePressEvent(QMouseEvent *event)
+void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
     if(event->button() == Qt::RightButton)
     {
-        ProcessItem *processItem = qgraphicsitem_cast<ProcessItem*>(itemAt(event->pos()));
+        BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
         if(processItem)
         {
             _startConnectItem = processItem;
@@ -82,7 +82,7 @@ void ProcessesView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void ProcessesView::mouseMoveEvent(QMouseEvent *event)
+void BlockView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
 
@@ -94,16 +94,16 @@ void ProcessesView::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void ProcessesView::mouseReleaseEvent(QMouseEvent *event)
+void BlockView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
 
     if(_startConnectItem)
     {
-        ProcessItem *processItem = qgraphicsitem_cast<ProcessItem*>(itemAt(event->pos()));
+        BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
         if(processItem)
         {
-            ProcessConnectorItem *connectItem = new ProcessConnectorItem(_startConnectItem, processItem);
+            BlockConnectorItem *connectItem = new BlockConnectorItem(_startConnectItem, processItem);
             scene()->addItem(connectItem);
             _startConnectItem->addConnect(connectItem);
             processItem->addConnect(connectItem);
@@ -115,17 +115,17 @@ void ProcessesView::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-Lib *ProcessesView::lib() const
+Lib *BlockView::lib() const
 {
     return _lib;
 }
 
-void ProcessesView::setLib(Lib *lib)
+void BlockView::setLib(Lib *lib)
 {
     _lib = lib;
 }
 
-bool ProcessesView::loadFromNode(const ModelNode *node)
+bool BlockView::loadFromNode(const ModelNode *node)
 {
     _scene->clear();
     if(_lib==NULL) return false;
@@ -137,7 +137,7 @@ bool ProcessesView::loadFromNode(const ModelNode *node)
             IOLib *ioLib = _lib->io(block->driver());
             if(ioLib)
             {
-                ProcessItem *proc = new ProcessItem(ioLib);
+                BlockItem *proc = new BlockItem(ioLib);
                 proc->setName(block->name());
                 proc->setPos(block->xPos(), block->yPos());
                 _scene->addItem(proc);
@@ -148,7 +148,7 @@ bool ProcessesView::loadFromNode(const ModelNode *node)
             ProcessLib *processLib = _lib->process(block->driver());
             if(processLib)
             {
-                ProcessItem *proc = new ProcessItem(processLib);
+                BlockItem *proc = new BlockItem(processLib);
                 proc->setName(block->name());
                 proc->setPos(block->xPos(), block->yPos());
                 _scene->addItem(proc);

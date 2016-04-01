@@ -18,20 +18,20 @@
 **
 ****************************************************************************/
 
-#ifndef PROCESSCONNECTORITEM_H
-#define PROCESSCONNECTORITEM_H
+#ifndef BLOCKCONNECTORITEM_H
+#define BLOCKCONNECTORITEM_H
 
 #include "gpstudio_gui_common.h"
 
 #include <QGraphicsItem>
 
-class ProcessItem;
+class BlockItem;
 
-class GPSTUDIO_GUI_EXPORT ProcessConnectorItem : public QGraphicsItem
+class GPSTUDIO_GUI_EXPORT BlockConnectorItem : public QGraphicsItem
 {
 public:
-    ProcessConnectorItem(ProcessItem *itemOut, ProcessItem *itemIn);
-    ~ProcessConnectorItem();
+    BlockConnectorItem(BlockItem *itemOut, BlockItem *itemIn);
+    ~BlockConnectorItem();
 
     enum { Type = UserType + 2 };
     int type() const;
@@ -40,8 +40,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    ProcessItem *_itemOut;
-    ProcessItem *_itemIn;
+    BlockItem *_itemOut;
+    BlockItem *_itemIn;
 };
 
-#endif // PROCESSCONNECTORITEM_H
+#endif // BLOCKCONNECTORITEM_H

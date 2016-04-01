@@ -50,17 +50,17 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     scriptlineedit.cpp \
     viewmodelwidget/libitemmodel.cpp \
     viewmodelwidget/libtreeview.cpp \
-    itemsview/processesview.cpp \
-    itemsview/processesscene.cpp \
-    itemsview/processitem.cpp \
-    itemsview/processconnectoritem.cpp \
     propertywidgets/propertymatrixwidget.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
     viewer/layerwidget.cpp \
     camexplorerwidget.cpp \
     flowviewerwidget/layerviewer.cpp \
-    flowviewerwidget/hexviewer.cpp
+    flowviewerwidget/hexviewer.cpp \
+    itemsview/blockitem.cpp \
+    itemsview/blockscene.cpp \
+    itemsview/blockconnectoritem.cpp \
+    itemsview/blockview.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -77,17 +77,17 @@ HEADERS  += \
     scriptlineedit.h \
     viewmodelwidget/libitemmodel.h \
     viewmodelwidget/libtreeview.h \
-    itemsview/processesview.h \
-    itemsview/processesscene.h \
-    itemsview/processitem.h \
-    itemsview/processconnectoritem.h \
     propertywidgets/propertymatrixwidget.h \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \
     viewer/layerwidget.h \
     camexplorerwidget.h \
     flowviewerwidget/layerviewer.h \
-    flowviewerwidget/hexviewer.h
+    flowviewerwidget/hexviewer.h \
+    itemsview/blockitem.h \
+    itemsview/blockscene.h \
+    itemsview/blockconnectoritem.h \
+    itemsview/blockview.h
 
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)

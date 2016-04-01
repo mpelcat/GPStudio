@@ -32,7 +32,7 @@
 #include "lib_parser/lib.h"
 
 #include "../../thirdparts/hexedit/qhexedit.h"
-#include "itemsview/processesview.h"
+#include "itemsview/blockview.h"
 
 namespace Ui {
 class MainWindow;
@@ -82,7 +82,7 @@ private:
     QHexEdit *_piSpaceHex;
 
     QDockWidget *_blocksViewDock;
-    ProcessesView *_blocksView;
+    BlockView *_blocksView;
 
     QDockWidget *_camExplorerDock;
     CamExplorerWidget *_camExplorerWidget;

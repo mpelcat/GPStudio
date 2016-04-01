@@ -18,24 +18,24 @@
 **
 ****************************************************************************/
 
-#ifndef PROCESSESVIEW_H
-#define PROCESSESVIEW_H
+#ifndef BLOCKVIEW_H
+#define BLOCKVIEW_H
 
 #include "gpstudio_gui_common.h"
 
 #include <QGraphicsView>
 
-#include "processesscene.h"
-class ProcessItem;
+#include "blockscene.h"
+class BlockItem;
 
 #include "model/model_node.h"
 #include "lib_parser/lib.h"
 
-class GPSTUDIO_GUI_EXPORT ProcessesView : public QGraphicsView
+class GPSTUDIO_GUI_EXPORT BlockView : public QGraphicsView
 {
 public:
-    ProcessesView(QWidget *parent);
-    ~ProcessesView();
+    BlockView(QWidget *parent);
+    ~BlockView();
 
     Lib *lib() const;
     void setLib(Lib *lib);
@@ -52,12 +52,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    ProcessesScene *_scene;
+    BlockScene *_scene;
     Lib *_lib;
 
     // connector system
-    ProcessItem *_startConnectItem;
+    BlockItem *_startConnectItem;
     QGraphicsLineItem *_lineConector;
 };
 
-#endif // PROCESSESVIEW_H
+#endif // BLOCKVIEW_H

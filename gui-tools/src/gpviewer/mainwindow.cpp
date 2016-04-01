@@ -215,7 +215,7 @@ void MainWindow::createDocks()
     _blocksViewDock = new QDockWidget("Blocks view", this);
     QWidget *blocksViewContent = new QWidget(_piSpaceDock);
     QLayout *blocksViewLayout = new QVBoxLayout();
-    _blocksView = new ProcessesView(blocksViewContent);
+    _blocksView = new BlockView(blocksViewContent);
     _blocksView->setLib(_lib);
     blocksViewLayout->addWidget(_blocksView);
     blocksViewContent->setLayout(blocksViewLayout);

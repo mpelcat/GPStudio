@@ -18,15 +18,15 @@
 **
 ****************************************************************************/
 
-#include "processconnectoritem.h"
-#include "processitem.h"
+#include "blockconnectoritem.h"
+#include "blockitem.h"
 
 #include <QPainter>
 
 #include "lib_parser/processlib.h"
 #include "lib_parser/iolib.h"
 
-ProcessItem::ProcessItem(ProcessLib *processLib)
+BlockItem::BlockItem(ProcessLib *processLib)
 {
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
@@ -34,7 +34,7 @@ ProcessItem::ProcessItem(ProcessLib *processLib)
     update(processLib);
 }
 
-ProcessItem::ProcessItem(IOLib *ioLib)
+BlockItem::BlockItem(IOLib *ioLib)
 {
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
@@ -42,21 +42,21 @@ ProcessItem::ProcessItem(IOLib *ioLib)
     update(ioLib);
 }
 
-ProcessItem::~ProcessItem()
+BlockItem::~BlockItem()
 {
 }
 
-int ProcessItem::type() const
+int BlockItem::type() const
 {
     return Type;
 }
 
-QRectF ProcessItem::boundingRect() const
+QRectF BlockItem::boundingRect() const
 {
     return _boundingRect;
 }
 
-void ProcessItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option); Q_UNUSED(widget);
 
@@ -70,27 +70,27 @@ void ProcessItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     }
 }
 
-QString ProcessItem::processName() const
+QString BlockItem::processName() const
 {
     return _processName;
 }
 
-void ProcessItem::setProcessName(const QString &processName)
+void BlockItem::setProcessName(const QString &processName)
 {
     _processName = processName;
 }
 
-QString ProcessItem::name() const
+QString BlockItem::name() const
 {
     return _name;
 }
 
-void ProcessItem::setName(const QString &name)
+void BlockItem::setName(const QString &name)
 {
     _name = name;
 }
 
-void ProcessItem::update(ProcessLib *processLib)
+void BlockItem::update(ProcessLib *processLib)
 {
     if(!processLib) return;
     _svgRenderer.load(processLib->draw().toUtf8());
@@ -105,7 +105,7 @@ void ProcessItem::update(ProcessLib *processLib)
     }
 }
 
-void ProcessItem::update(IOLib *ioLib)
+void BlockItem::update(IOLib *ioLib)
 {
     if(!ioLib) return;
     _svgRenderer.load(ioLib->draw().toUtf8());
@@ -120,16 +120,16 @@ void ProcessItem::update(IOLib *ioLib)
     }
 }
 
-void ProcessItem::addConnect(ProcessConnectorItem *connectItem)
+void BlockItem::addConnect(BlockConnectorItem *connectItem)
 {
     _connects.append(connectItem);
 }
 
-QVariant ProcessItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange && scene())
     {
-        foreach (ProcessConnectorItem *connectItem, _connects)
+        foreach (BlockConnectorItem *connectItem, _connects)
         {
             connectItem->update();
         }

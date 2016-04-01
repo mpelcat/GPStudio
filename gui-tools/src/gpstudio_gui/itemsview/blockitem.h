@@ -18,8 +18,8 @@
 **
 ****************************************************************************/
 
-#ifndef PROCESSITEM_H
-#define PROCESSITEM_H
+#ifndef BLOCKITEM_H
+#define BLOCKITEM_H
 
 #include "gpstudio_gui_common.h"
 
@@ -29,14 +29,14 @@
 class ProcessLib;
 class IOLib;
 
-class ProcessConnectorItem;
+class BlockConnectorItem;
 
-class GPSTUDIO_GUI_EXPORT ProcessItem : public QGraphicsItem
+class GPSTUDIO_GUI_EXPORT BlockItem : public QGraphicsItem
 {
 public:
-    ProcessItem(ProcessLib *processLib=NULL);
-    ProcessItem(IOLib *ioLib=NULL);
-    ~ProcessItem();
+    BlockItem(ProcessLib *processLib=NULL);
+    BlockItem(IOLib *ioLib=NULL);
+    ~BlockItem();
 
     enum { Type = UserType + 1 };
     int type() const;
@@ -53,7 +53,7 @@ public:
     void update(ProcessLib *processLib);
     void update(IOLib *ioLib);
 
-    void addConnect(ProcessConnectorItem *connectItem);
+    void addConnect(BlockConnectorItem *connectItem);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -65,7 +65,7 @@ private:
     QRectF _boundingRect;
     QSvgRenderer _svgRenderer;
 
-    QList<ProcessConnectorItem *> _connects;
+    QList<BlockConnectorItem *> _connects;
 };
 
-#endif // PROCESSITEM_H
+#endif // BLOCKITEM_H

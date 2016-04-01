@@ -18,18 +18,14 @@
 **
 ****************************************************************************/
 
-#ifndef PROCESSESSCENE_H
-#define PROCESSESSCENE_H
+#include "blockscene.h"
 
-#include "gpstudio_gui_common.h"
+#include "blockitem.h"
 
-#include <QGraphicsScene>
-
-class GPSTUDIO_GUI_EXPORT ProcessesScene : public QGraphicsScene
+BlockScene::BlockScene()
 {
-public:
-    ProcessesScene();
-    ~ProcessesScene();
-};
+}
 
-#endif // PROCESSESSCENE_H
+BlockScene::~BlockScene()
+{
+}
