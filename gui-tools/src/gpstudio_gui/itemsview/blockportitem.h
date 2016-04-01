@@ -47,6 +47,8 @@ public:
 
     void addConnect(BlockConnectorItem *connectItem);
 
+    const QList<BlockConnectorItem *> &connects() const;
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 

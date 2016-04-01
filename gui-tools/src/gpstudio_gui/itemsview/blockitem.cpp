@@ -28,10 +28,13 @@
 #include "lib_parser/processlib.h"
 #include "lib_parser/iolib.h"
 
+#include "blockconnectoritem.h"
+
 BlockItem::BlockItem(ProcessLib *processLib)
 {
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
+    setFlag(ItemSendsScenePositionChanges, true);
 
     update(processLib);
 }
@@ -123,21 +126,23 @@ void BlockItem::update(IOLib *ioLib)
     }
 }
 
-void BlockItem::addPort(BlockPortItem *connectItem)
+void BlockItem::addPort(BlockPortItem *portItem)
 {
-    connectItem->setParentItem(this);
-    connectItem->setPos(0,30);
-    _connects.append(connectItem);
+    portItem->setParentItem(this);
+    _ports.append(portItem);
 }
 
 QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    /*if (change == ItemPositionChange && scene())
+    if (change == ItemPositionChange && scene())
     {
-        foreach (BlockConnectorItem *connectItem, _connects)
+        foreach (BlockPortItem *portItem, _ports)
         {
-            connectItem->update();
+            foreach (BlockConnectorItem *connectItem, portItem->connects())
+            {
+                connectItem->updateShape();
+            }
         }
-    }*/
+    }
     return QGraphicsItem::itemChange(change, value);
 }

@@ -33,8 +33,8 @@
 #include "confignodedialog.h"
 
 #include "itemsview/blockitem.h"
-
-#include <itemsview/blockportitem.h>
+#include "itemsview/blockportitem.h"
+#include "itemsview/blockconnectoritem.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,11 +52,26 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // tests
     BlockItem *hog1 = new BlockItem(_project->lib()->process("HOG"));
-    hog1->addPort(new BlockPortItem());
+    BlockPortItem *portItem = new BlockPortItem();
+    portItem->setPos(5,30);
+    hog1->addPort(portItem);
+    BlockPortItem *portItem2 = new BlockPortItem();
+    portItem2->setPos(5,70);
+    hog1->addPort(portItem2);
+    BlockPortItem *portItem3 = new BlockPortItem();
+    portItem3->setPos(155,50);
+    hog1->addPort(portItem3);
     ui->processView->blockScene()->addItem(hog1);
-    BlockItem *hog2 = new BlockItem(_project->lib()->process("HOG"));
+
+    BlockItem *hog2 = new BlockItem(_project->lib()->process("conv"));
+    BlockPortItem *portItem4 = new BlockPortItem();
+    portItem4->setPos(5,50);
+    hog2->addPort(portItem4);
     hog2->setPos(300, 0);
     ui->processView->blockScene()->addItem(hog2);
+
+    BlockConnectorItem *connector = new BlockConnectorItem(portItem3 ,portItem4);
+    ui->processView->blockScene()->addItem(connector);
 }
 
 MainWindow::~MainWindow()

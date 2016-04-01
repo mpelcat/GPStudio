@@ -93,12 +93,17 @@ void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
 
 QVariant BlockPortItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    if (change == ItemPositionChange && scene())
+    /*if (change == ItemScenePositionHasChanged && scene())
     {
         foreach (BlockConnectorItem *connectItem, _connects)
         {
-            connectItem->update();
+            connectItem->updateShape();
         }
-    }
+    }*/
     return QGraphicsItem::itemChange(change, value);
+}
+
+const QList<BlockConnectorItem *> &BlockPortItem::connects() const
+{
+    return _connects;
 }

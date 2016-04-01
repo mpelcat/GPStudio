@@ -20,15 +20,20 @@
 
 #include "blockconnectoritem.h"
 
-#include "blockitem.h"
+#include "blockportitem.h"
 
 #include <QDebug>
 #include <QPainter>
+#include <QGraphicsScene>
 
-BlockConnectorItem::BlockConnectorItem(BlockItem *itemOut, BlockItem *itemIn)
-    : _itemOut(itemOut), _itemIn(itemIn)
+BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn)
+    : _portItemOut(portItemOut), _portItemIn(portItemIn)
 {
-
+    if(_portItemOut)
+        _portItemOut->addConnect(this);
+    if(_portItemIn)
+        _portItemIn->addConnect(this);
+    setZValue(-1);
 }
 
 BlockConnectorItem::~BlockConnectorItem()
@@ -42,19 +47,33 @@ int BlockConnectorItem::type() const
 
 QRectF BlockConnectorItem::boundingRect() const
 {
-    if(_itemOut!=NULL && _itemIn!=NULL)
+    if(_portItemOut!=NULL && _portItemIn!=NULL)
     {
-        return QRectF(_itemOut->pos(), _itemIn->pos()).normalized();
+        return QRectF(_portItemOut->scenePos(), _portItemIn->scenePos()).normalized();
     }
     return QRectF();
 }
 
 void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if(_itemOut && _itemIn)
+    if(_portItemOut && _portItemIn)
     {
         painter->setPen(QPen(Qt::black, 3));
-        painter->drawLine(_itemOut->pos(), _itemIn->pos());
+
+        QRectF rect = QRectF(_portItemOut->scenePos(), _portItemIn->scenePos()).normalized();
+        QPainterPath path;
+        path.moveTo(_portItemOut->scenePos());
+        path.lineTo(rect.center().x(), rect.top());
+        path.lineTo(rect.center().x(), rect.bottom());
+        path.lineTo(rect.bottomRight());
+
+        painter->drawPath(path);
     }
 }
+
+void BlockConnectorItem::updateShape()
+{
+    prepareGeometryChange();
+}
+
 

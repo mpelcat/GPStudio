@@ -53,7 +53,7 @@ public:
     void update(ProcessLib *processLib);
     void update(IOLib *ioLib);
 
-    void addPort(BlockPortItem *connectItem);
+    void addPort(BlockPortItem *portItem);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -65,7 +65,7 @@ private:
     QRectF _boundingRect;
     QSvgRenderer _svgRenderer;
 
-    QList<BlockPortItem *> _connects;
+    QList<BlockPortItem *> _ports;
 };
 
 #endif // BLOCKITEM_H

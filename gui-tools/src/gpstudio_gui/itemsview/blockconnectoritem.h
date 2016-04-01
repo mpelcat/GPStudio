@@ -25,12 +25,12 @@
 
 #include <QGraphicsItem>
 
-class BlockItem;
+class BlockPortItem;
 
 class GPSTUDIO_GUI_EXPORT BlockConnectorItem : public QGraphicsItem
 {
 public:
-    BlockConnectorItem(BlockItem *itemOut, BlockItem *itemIn);
+    BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn);
     ~BlockConnectorItem();
 
     enum { Type = UserType + 2 };
@@ -39,9 +39,11 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    void updateShape();
+
 private:
-    BlockItem *_itemOut;
-    BlockItem *_itemIn;
+    BlockPortItem *_portItemOut;
+    BlockPortItem *_portItemIn;
 };
 
 #endif // BLOCKCONNECTORITEM_H
