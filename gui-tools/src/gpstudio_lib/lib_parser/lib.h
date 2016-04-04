@@ -34,8 +34,12 @@
 
 class GPSTUDIO_LIB_EXPORT Lib
 {
+    Q_DISABLE_COPY(Lib)
+
+private:
+    Lib();
+
 public:
-    Lib(const QString &libPath);
     ~Lib();
 
     void reloadProcess();
@@ -55,6 +59,8 @@ public:
 
     void reloadLib();
 
+    static inline Lib &getLib() {if(!_instance) _instance = new Lib(); return *_instance;}
+
 private:
     void closeProcess();
     void closeIos();
@@ -71,6 +77,8 @@ private:
     QMap<QString, BoardLib*> _boardsMap;
 
     QString _path;
+
+    static Lib *_instance;
 };
 
 #endif // LIB_H

@@ -134,7 +134,7 @@ void FlowViewerWidget::setupViewer(AbstractViewer *viewer)
                 child->widget()->deleteLater();
             }
 
-            // TODO don't delete _statusLayout
+            // don't delete _statusLayout
             if(child->layout()!=_statusLayout) delete child;
         }
         delete layout();

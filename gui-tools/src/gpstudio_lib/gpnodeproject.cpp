@@ -23,17 +23,10 @@
 GPNodeProject::GPNodeProject()
 {
     //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
-    _lib = new Lib("../");
 }
 
 GPNodeProject::~GPNodeProject()
 {
-    delete _lib;
-}
-
-Lib *GPNodeProject::lib() const
-{
-    return _lib;
 }
 
 QString GPNodeProject::name() const

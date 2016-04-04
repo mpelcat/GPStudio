@@ -24,9 +24,11 @@
 #include <QDir>
 #include <QCoreApplication>
 
-Lib::Lib(const QString &libPath)
+Lib *Lib::_instance = NULL;
+
+Lib::Lib()
 {
-    QDir dir(QCoreApplication::applicationDirPath()+'/'+libPath+"/support");
+    QDir dir(QCoreApplication::applicationDirPath()+"/../support");
     _path = dir.absolutePath();
 
     reloadLib();

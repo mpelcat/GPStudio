@@ -53,7 +53,6 @@ MainWindow::MainWindow(QStringList args) :
 
     ui->setupUi(this);
 
-    _lib = new Lib("../");
     createDocks();
     createToolBarAndMenu();
 
@@ -216,7 +215,6 @@ void MainWindow::createDocks()
     QWidget *blocksViewContent = new QWidget(_piSpaceDock);
     QLayout *blocksViewLayout = new QVBoxLayout();
     _blocksView = new BlockView(blocksViewContent);
-    _blocksView->setLib(_lib);
     blocksViewLayout->addWidget(_blocksView);
     blocksViewContent->setLayout(blocksViewLayout);
     _blocksViewDock->setWidget(blocksViewContent);

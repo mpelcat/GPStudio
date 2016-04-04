@@ -31,13 +31,10 @@ public:
     GPNodeProject();
     ~GPNodeProject();
 
-    Lib *lib() const;
-
     QString name() const;
     void setName(const QString &name);
 
 private:
-    Lib *_lib;
     QString _name;
 };
 

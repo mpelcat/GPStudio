@@ -73,8 +73,6 @@ private:
     void setupViewers(int count);
     QMap<int, FlowViewerWidget *> _viewers;
 
-    Lib *_lib;
-
     // docks
     void createDocks();
 

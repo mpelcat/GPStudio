@@ -49,7 +49,7 @@ void ConfigNodeDialog::setProject(GPNodeProject *project)
 {
     _project = project;
 
-    foreach (BoardLib *board, _project->lib()->boards())
+    foreach (BoardLib *board, Lib::getLib().boards())
     {
         ui->boardComboBox->addItem(board->name());
     }
@@ -62,7 +62,7 @@ void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
         delete ui->iosLayout->itemAt(0)->widget();
     }
 
-    BoardLib *board = _project->lib()->board(arg1);
+    BoardLib *board = Lib::getLib().board(arg1);
     if(!board) return;
 
     QMapIterator<QString, IOLibGroup> i(board->iosGroups());

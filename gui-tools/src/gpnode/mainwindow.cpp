@@ -47,11 +47,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _project = new GPNodeProject();
 
-    ui->libTreeView->setLib(_project->lib());
-    ui->processView->setLib(_project->lib());
+    ui->libTreeView->setLib(&Lib::getLib());
+    ui->processView->setLib(&Lib::getLib());
 
     // tests
-    BlockItem *hog1 = BlockItem::fromProcessLib(_project->lib()->process("HOG"));
+    BlockItem *hog1 = BlockItem::fromProcessLib(Lib::getLib().process("HOG"));
     BlockPortItem *portItem = new BlockPortItem();
     portItem->setPos(5,30);
     hog1->addPort(portItem);
@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     hog1->addPort(portItem3);
     ui->processView->blockScene()->addItem(hog1);
 
-    BlockItem *hog2 = BlockItem::fromProcessLib(_project->lib()->process("conv"));
+    BlockItem *hog2 = BlockItem::fromProcessLib(Lib::getLib().process("conv"));
     BlockPortItem *portItem4 = new BlockPortItem();
     portItem4->setPos(5,50);
     hog2->addPort(portItem4);
