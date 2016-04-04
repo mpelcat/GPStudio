@@ -1,3 +1,11 @@
+--------------------------------------------------------
+-- UART receiver block. It detects the falling edge of
+-- the signal from RXD pin and start acquiring data. 
+-- If the NMEA $GNGGA sequence is detected, the data are
+-- written in the FIFO.
+--------------------------------------------------------
+
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -47,7 +55,7 @@ begin
 			RXD_s <= RXD;
 			
 			case(state_rec) is 
-			
+				----- Detecting the beginning of a communication
 				when(idle) => 
 				
 						gngga_flag 	<= '0';
@@ -57,7 +65,8 @@ begin
 							state_rec 		<= start;
 							rst_count_bd 	<= '1';
 						end if;
-			
+				
+				----- Start bit is read
 				when(start) =>
 				
 						rst_count_bd <='0';
@@ -66,7 +75,8 @@ begin
 							state_rec 		<= data;	
 							rst_count_bd 	<= '1';
 						end if;
-						
+				
+				----- 8 bits of data are read (LSB first)		
 				when(data) =>		
 						
 						rst_count_bd <='0';
@@ -81,6 +91,7 @@ begin
 							end if;	
 						end if;
 						
+				----- Stop bit, the detection of the NMEA $GNGGA sequence is check
 				when(stop) =>		
 				
 					data_out <= data_out_s;

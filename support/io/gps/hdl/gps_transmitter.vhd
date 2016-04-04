@@ -1,3 +1,8 @@
+-----------------------------------------------------------------------
+-- UART transmitter block. It sends the data to the GPS at the baud rate 
+-- defined. The data are sent following the Skytraq binary protocol.
+-----------------------------------------------------------------------
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -49,7 +54,7 @@ begin
 		if enable='1' then
 			
 			case(state) is 
-			
+				----- Starting a communication
 				when(idle) => 
 				
 					done			<= '0';
@@ -61,7 +66,8 @@ begin
 						data_to_send 	<= data_in;
 						rst_count_bd 	<= '1';							
 					end if;
-			
+				
+				----- Writing start bit
 				when(start) =>
 			
 					rst_count_bd 	<= '0';
@@ -74,6 +80,7 @@ begin
 						number_of_bits <= x"0";
 					end if;
 						
+				----- Writing the 8 bits of data (LSB first)
 				when(data) =>	
 			
 					TXD_r <= data_to_send(0);
@@ -87,6 +94,7 @@ begin
 						end if;
 					end if;
 						
+				----- Write stop bit
 				when(stop) =>		
 						
 					TXD_r <= '1';
@@ -103,6 +111,7 @@ begin
 						end if;
 					end if;
 					
+				----- Full sequence sended, waiting before sending a new one
 				when wait_st =>
 				
 					TXD_r <= '1';

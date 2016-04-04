@@ -128,7 +128,9 @@ clk_gen_inst : entity work.clk_gen(RTL)
 		);
 ---------------------------------------------------------------
 
-	
+
+
+---------------------Receiver controller-----------------------	
 process(clk,enable,reset)
 begin
 	if reset='0' then
@@ -148,7 +150,7 @@ begin
 			rd_data_valid 	<= rd_en;
 			
 			case(state) is 
-			
+				----- NMEA $GNGGA sequence detected, starting acquisition
 				when idle =>
 				
 					wr_en <= '0';
@@ -163,11 +165,12 @@ begin
 						state <= idle;
 					end if;
 					
+				----- Write data into FIFO when the full byte have been read from receiver
 				when data_state =>
 				
 					if data_ready_dl='1' and data_ready_dl2='0'then
 						
-						if data = x"0D" then											
+						if data = x"0D" then		----- Detecting end of sequence, read data from FIFO and send them to usb block
 							rd_en 	<= '1';
 							state 	<= idle;
 							wr_en 	<= '1';
@@ -191,6 +194,7 @@ begin
 end process;
 
 
+---------------------Set configuration settings-----------------------	
 process(clk,reset,enable)
 begin
 	if reset='0' then
@@ -201,7 +205,7 @@ begin
 			
 	elsif clk'event and clk='1' and enable='1' then
 		if enable='1' then
-		  
+		  	----- Set Mode (GPS or GPS/Glonass)
 			if count_config=x"0" then	
 				PL_length 			<= ZERO & LEN_5;
 				ID 		 			<= ID_MODE;
@@ -214,12 +218,14 @@ begin
 					checksum 		<= ID_MODE(15 DOWNTO 8) xor ID_MODE(7 DOWNTO 0) xor MODE_GPS;
 				end if;
 			
+			----- Set baud rate (9600 default, set to 921600)
 			elsif count_config=x"1" then	
 				PL_length 			<= ZERO & LEN_4;
 				ID 					<= ID_BAUD_RATE;
 				checksum 			<= ID_BAUD_RATE(15 DOWNTO 8) xor BAUD_RATE_MAX;
 				PL(15 downto 0)	<= BAUD_RATE_MAX & ZERO;
 		
+			----- Set update rate (from 1Hz to 40Hz)
 			elsif count_config=x"2" then
 				PL_length 			<= ZERO & LEN_3;
 				ID(7 downto 0) 	<= ID_UPDATE_RATE;
@@ -252,7 +258,7 @@ begin
 	end if;
 end process;
 
-
+---------------------Set configuration settings-----------------------
 process(clk,enable,reset)
 begin
 		if reset='0' then
@@ -275,21 +281,24 @@ begin
 			case(state_transmitter) is
 				
 			when idle =>
-				
+				----- Modification of the configuration detected
 				if trig_conf_dl='1' or count_config/=x"0" then
 					state_transmitter	<= send;
 					start_flag 			<= '1';
 					
+					----- Writing the new Mode
 					if count_config=x"0" then
 						data_to_send(175 downto 80) <= START_BYTES & PL_length & ID & PL & checksum & END_BYTES;
 						bytes				<= LEN_CONF_MODE;
 						count_config 	<= count_config+1;
 						
+					----- Writing the new baud rate
 					elsif count_config=x"1" then
 						data_to_send(175 downto 88) <= START_BYTES & PL_length & ID & PL(15 downto 0) & checksum & END_BYTES;
 						bytes				<= LEN_CONF_BD_RATE;
 						count_config 	<= count_config+1;	
 					
+					----- Writing the new update rate
 					elsif count_config=x"2" then
 						data_to_send(175 downto 96) <= START_BYTES & PL_length & ID(7 downto 0) & PL(15 downto 0) & checksum & END_BYTES; 
 						bytes				<= LEN_CONF_UPDATE;
@@ -299,6 +308,7 @@ begin
 							count_config 	<= count_config+1;
 						end if;
 						
+					----- Restart ony once after changing baud rate
 					elsif count_config=x"3" then
 						data_to_send <= START_BYTES & RESTART & END_BYTES;
 						bytes 			<= LEN_CONF_RESTART;
@@ -314,11 +324,12 @@ begin
 				end if;
 				
 			when send =>
-			
+				----- Shift to send the next byte of data
 				if done = '1' and done_dl='0' then
 					data_to_send	<= data_to_send(167 downto 0) & data_to_send(175 downto 168);
 				end if;
 				
+				----- Detect end of configuration, set new baud rate couter
 				if done_send='1' and done_send_dl='0' then
 					state_transmitter 	<= idle;
 					if bytes=LEN_CONF_RESTART then
@@ -335,6 +346,7 @@ begin
 	end if;
 end process;
 
+----- Read user settings
 enable 			<= parameters(31);
 acqui  			<= parameters(30);
 sat_conf  		<= parameters(29);
@@ -342,6 +354,7 @@ update_rate  	<= parameters(28 downto 21);
 
 rst_count_bd <= rst_count_bd_s1 or rst_count_bd_s2;
 	
+----- Detect a modification on the actual configuration
 trig_conf 		<= '1' when (update_rate_dl/=update_rate or sat_conf_dl/=sat_conf) and enable='1' and enable_dl='1'
 							 else '0';
 					  
