@@ -61,6 +61,11 @@
 						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
 					</attributes>
 				</pin>
+				<pin name="PIN_H6" mapto="TXD">
+					<attributes>
+						<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+					</attributes>
+				</pin>
 			</pins>
 		</io>
 		<io name="mpu" type="imu_data" driver="mpu" optional="true" description="mpu6050">
