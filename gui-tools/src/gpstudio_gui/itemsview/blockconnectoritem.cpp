@@ -56,16 +56,31 @@ QRectF BlockConnectorItem::boundingRect() const
 
 void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     if(_portItemOut && _portItemIn)
     {
         painter->setPen(QPen(Qt::black, 3));
 
         QRectF rect = QRectF(_portItemOut->scenePos(), _portItemIn->scenePos()).normalized();
+
+        int y1, y2;
+        if(_portItemOut->scenePos().y() > _portItemIn->scenePos().y())
+        {
+            y1 = rect.bottom();
+            y2 = rect.top();
+        }
+        else
+        {
+            y1 = rect.top();
+            y2 = rect.bottom();
+        }
         QPainterPath path;
         path.moveTo(_portItemOut->scenePos());
-        path.lineTo(rect.center().x(), rect.top());
-        path.lineTo(rect.center().x(), rect.bottom());
-        path.lineTo(rect.bottomRight());
+        //path.lineTo(QPoint(rect.center().x(), y1));
+        //path.lineTo(QPoint(rect.center().x(), y2));
+        //path.lineTo(_portItemIn->scenePos());
+        path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _portItemIn->scenePos());
 
         painter->drawPath(path);
     }
