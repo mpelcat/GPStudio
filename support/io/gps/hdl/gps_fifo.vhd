@@ -39,7 +39,7 @@ USE ieee.std_logic_1164.all;
 LIBRARY altera_mf;
 USE altera_mf.all;
 
-ENTITY gps_fifo IS
+ENTITY fifo_gps IS
 	PORT
 	(
 		clock		: IN STD_LOGIC ;
@@ -51,10 +51,10 @@ ENTITY gps_fifo IS
 		q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
 		usedw		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
 	);
-END gps_fifo;
+END fifo_gps;
 
 
-ARCHITECTURE SYN OF gps_fifo  IS
+ARCHITECTURE SYN OF fifo_gps IS
 
 	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (7 DOWNTO 0);
 	SIGNAL sub_wire1	: STD_LOGIC ;

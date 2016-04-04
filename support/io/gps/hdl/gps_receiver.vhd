@@ -3,112 +3,106 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
-entity gps_receiver is
+entity GPS_receiver is
 	port(
-			clk	: in std_logic;
-			reset : in std_logic;
-			enable : in std_logic;
-			RXD	: in std_logic;
-			data_ready	: out std_logic;
-			data_out		: out std_logic_vector(7 downto 0);
-			gngga_flag			: out std_logic
+			clk				: in std_logic;
+			reset 			: in std_logic;
+			enable 			: in std_logic;
+			RXD				: in std_logic;
+			data_ready		: out std_logic;
+			data_out			: out std_logic_vector(7 downto 0);
+			count_bd			: in unsigned(15 downto 0);
+			count_max		: in unsigned(15 downto 0);
+			rst_count_bd	: out std_logic;	
+			gngga_flag		: out std_logic
 		 );
-end gps_receiver;
+end GPS_receiver;
 
 
-architecture RTL of gps_receiver is
+architecture RTL of GPS_receiver is
 
-signal count_sample		: unsigned(3 downto 0);
 signal number_of_bits	: unsigned(3 downto 0);
-signal clk_slow			: std_logic;
-signal full_spl_flag		: std_logic;
 signal data_out_s			: std_logic_vector(7 downto 0);
 signal gngga				: std_logic_vector(55 downto 0);
+signal RXD_s				: std_logic;
 
-type type_state is (idle, start, data,stop);
-signal state : type_state;
+type type_state is (idle, start, data, stop);
+signal state_rec : type_state;
+
 
 begin
 
-process(clk)
-variable count_clk : integer range 0 to 400 := 0;
-begin
-	if reset='0' then
-			count_clk:=0;
-			clk_slow <= '0';
-	
-	elsif clk'event and clk='1' and enable='1' then
-		count_clk := count_clk +1;
-		if count_clk=163 then	--326/2 pour 9600 bauds
-			clk_slow <= not clk_slow;
-			count_clk:=0;
-		end if;
-	end if;
-end process;
-
-
-process(clk_slow)
+process(clk,reset)
 begin
 	if reset='0' then
-			state <= idle;
-			gngga_flag <= '0';
-			data_ready <= '0';
-					
-	elsif clk_slow'event and clk_slow='1' and enable ='1' then
 	
-			count_sample <= count_sample+1;
-		
-		case(state) is 
-		
-			when(idle) => 
-					gngga_flag <= '0';
-					data_ready <= '0';
-					if RXD = '0' then
-						state <= start;
-						count_sample <= x"0";
-					end if;
-		
-			when(start) =>
+			state_rec 		<= idle;
+			gngga_flag 		<= '0';
+			data_ready 		<= '0';
+			rst_count_bd 	<= '0';
+
+	elsif clk'event and clk='1' then
+		if enable='1' then
+	  
+			RXD_s <= RXD;
 			
-					if count_sample=x"7" then
-						state <= data;
-						count_sample <= x"0";
-					else
-						state <= start;
-					end if;
-					
-			when(data) =>
-					
-					if count_sample=x"F" then
-						data_out_s <= RXD & data_out_s(7 downto 1); --on reçoit le LSB en premier
-						number_of_bits <= number_of_bits +1;
-						if number_of_bits = x"7" then
-							state <= stop;
-							number_of_bits <= x"0";
-						end if;						
-					end if;
-					
-			when(stop) =>
-					
-					if count_sample=x"F" then
-						state <= idle;
-						data_out <= data_out_s;
-						gngga <= gngga(47 downto 0) & data_out_s;
-						data_ready <= '1';
+			case(state_rec) is 
+			
+				when(idle) => 
+				
+						gngga_flag 	<= '0';
+						data_ready 	<= '0';
 						
-						if gngga=x"24474E4747412C" then
-							gngga_flag<= '1';
+						if RXD = '0' or RXD_s='0' then
+							state_rec 		<= start;
+							rst_count_bd 	<= '1';
 						end if;
-					end if;
+			
+				when(start) =>
+				
+						rst_count_bd <='0';
+						
+						if count_bd>=count_max/2 then
+							state_rec 		<= data;	
+							rst_count_bd 	<= '1';
+						end if;
+						
+				when(data) =>		
+						
+						rst_count_bd <='0';
+						
+						if count_bd=count_max then
+							data_out_s 		<= RXD & data_out_s(7 downto 1); 
+							number_of_bits <= number_of_bits +1;
+							
+							if number_of_bits = x"7" then
+								state_rec 		<= stop;
+								number_of_bits <= x"0";
+							end if;	
+						end if;
+						
+				when(stop) =>		
+				
+					data_out <= data_out_s;
 					
-			when others =>
-						state <= idle;
-		end case;
-		
+					if count_bd+1>=count_max then		
+						state_rec <= idle;
+						
+						if gngga=x"24474E4747412C" or gngga(15 downto 0)=x"A0A1" then
+							gngga_flag		<= '1';
+							data_ready 		<= '0';
+						else
+							data_ready 		<= '1';
+						end if;
+						
+					elsif count_bd=count_max-5 then 
+							gngga <= gngga(47 downto 0) & data_out_s;
+					end if;
+						
+			end case;
+
+		end if;	
 	end if;
 end process;
-
-
-
 
 end RTL;
