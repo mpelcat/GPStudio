@@ -30,7 +30,6 @@
 BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
 {
-    _lib = NULL;
     _scene = new BlockScene();
 
     _startConnectItem = NULL;
@@ -60,9 +59,9 @@ void BlockView::dragMoveEvent(QDragMoveEvent *event)
 
 void BlockView::dropEvent(QDropEvent *event)
 {
-    if(!_lib) return;
+    if(!_scene->lib()) return;
     QString blockType = event->mimeData()->text();
-    BlockItem *proc = new BlockItem(_lib->process(blockType));
+    BlockItem *proc = new BlockItem(_scene->lib()->process(blockType));
     proc->setPos(mapToScene(event->pos()));
     proc->setName(blockType);
     _scene->addItem(proc);
@@ -118,6 +117,12 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     }*/
 }
 
+void BlockView::setBlockScene(BlockScene *scene)
+{
+    _scene = scene;
+    setScene(scene);
+}
+
 BlockScene *BlockView::blockScene() const
 {
     return _scene;
@@ -125,44 +130,15 @@ BlockScene *BlockView::blockScene() const
 
 Lib *BlockView::lib() const
 {
-    return _lib;
+    return _scene->lib();
 }
 
 void BlockView::setLib(Lib *lib)
 {
-    _lib = lib;
+    _scene->setLib(lib);
 }
 
 bool BlockView::loadFromNode(const ModelNode *node)
 {
-    _scene->clear();
-    if(_lib==NULL) return false;
-
-    foreach (ModelBlock *block, node->blocks())
-    {
-        if(block->type()=="io")
-        {
-            IOLib *ioLib = _lib->io(block->driver());
-            if(ioLib)
-            {
-                BlockItem *proc = new BlockItem(ioLib);
-                proc->setName(block->name());
-                proc->setPos(block->xPos(), block->yPos());
-                _scene->addItem(proc);
-            }
-        }
-        if(block->type()=="process")
-        {
-            ProcessLib *processLib = _lib->process(block->driver());
-            if(processLib)
-            {
-                BlockItem *proc = new BlockItem(processLib);
-                proc->setName(block->name());
-                proc->setPos(block->xPos(), block->yPos());
-                _scene->addItem(proc);
-            }
-        }
-    }
-
-    return true;
+    return _scene->loadFromNode(node);
 }

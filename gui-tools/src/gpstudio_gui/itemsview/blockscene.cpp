@@ -24,8 +24,53 @@
 
 BlockScene::BlockScene()
 {
+    _lib = NULL;
 }
 
 BlockScene::~BlockScene()
 {
+}
+
+Lib *BlockScene::lib() const
+{
+    return _lib;
+}
+
+void BlockScene::setLib(Lib *lib)
+{
+    _lib = lib;
+}
+
+bool BlockScene::loadFromNode(const ModelNode *node)
+{
+    clear();
+    if(_lib==NULL) return false;
+
+    foreach (ModelBlock *block, node->blocks())
+    {
+        if(block->type()=="io")
+        {
+            IOLib *ioLib = _lib->io(block->driver());
+            if(ioLib)
+            {
+                BlockItem *proc = new BlockItem(ioLib);
+                proc->setName(block->name());
+                proc->setPos(block->xPos(), block->yPos());
+                addItem(proc);
+            }
+        }
+        if(block->type()=="process")
+        {
+            ProcessLib *processLib = _lib->process(block->driver());
+            if(processLib)
+            {
+                BlockItem *proc = new BlockItem(processLib);
+                proc->setName(block->name());
+                proc->setPos(block->xPos(), block->yPos());
+                addItem(proc);
+            }
+        }
+    }
+
+    return true;
 }

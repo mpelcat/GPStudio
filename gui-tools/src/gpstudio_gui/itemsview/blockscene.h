@@ -25,11 +25,23 @@
 
 #include <QGraphicsScene>
 
+#include <model/model_node.h>
+
+#include <lib_parser/lib.h>
+
 class GPSTUDIO_GUI_EXPORT BlockScene : public QGraphicsScene
 {
 public:
     BlockScene();
     ~BlockScene();
+
+    Lib *lib() const;
+    void setLib(Lib *lib);
+
+    bool loadFromNode(const ModelNode *node);
+
+protected:
+    Lib *_lib;
 };
 
 #endif // BLOCKSCENE_H

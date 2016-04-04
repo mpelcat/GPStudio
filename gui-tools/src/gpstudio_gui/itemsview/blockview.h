@@ -43,6 +43,7 @@ public:
     bool loadFromNode(const ModelNode *node);
 
     BlockScene *blockScene() const;
+    void setBlockScene(BlockScene *scene);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -55,7 +56,6 @@ protected:
 
 private:
     BlockScene *_scene;
-    Lib *_lib;
 
     // connector system
     BlockItem *_startConnectItem;
