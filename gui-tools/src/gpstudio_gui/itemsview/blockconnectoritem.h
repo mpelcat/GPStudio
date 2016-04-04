@@ -36,6 +36,13 @@ public:
     enum { Type = UserType + 2 };
     int type() const;
 
+    enum DrawStyle {
+        LineDraw,
+        CubicDraw
+    };
+    DrawStyle style() const;
+    void setStyle(const DrawStyle &style);
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -44,6 +51,8 @@ public:
 private:
     BlockPortItem *_portItemOut;
     BlockPortItem *_portItemIn;
+
+    DrawStyle _style;
 };
 
 #endif // BLOCKCONNECTORITEM_H

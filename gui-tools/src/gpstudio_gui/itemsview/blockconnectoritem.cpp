@@ -34,6 +34,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     if(_portItemIn)
         _portItemIn->addConnect(this);
     setZValue(-1);
+    _style=LineDraw;
 }
 
 BlockConnectorItem::~BlockConnectorItem()
@@ -43,6 +44,17 @@ BlockConnectorItem::~BlockConnectorItem()
 int BlockConnectorItem::type() const
 {
     return Type;
+}
+
+BlockConnectorItem::DrawStyle BlockConnectorItem::style() const
+{
+    return _style;
+}
+
+void BlockConnectorItem::setStyle(const BlockConnectorItem::DrawStyle &style)
+{
+    _style = style;
+    update();
 }
 
 QRectF BlockConnectorItem::boundingRect() const
@@ -77,10 +89,16 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
         }
         QPainterPath path;
         path.moveTo(_portItemOut->scenePos());
-        //path.lineTo(QPoint(rect.center().x(), y1));
-        //path.lineTo(QPoint(rect.center().x(), y2));
-        //path.lineTo(_portItemIn->scenePos());
-        path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _portItemIn->scenePos());
+        if(_style==LineDraw)
+        {
+            path.lineTo(QPoint(rect.center().x(), y1));
+            path.lineTo(QPoint(rect.center().x(), y2));
+            path.lineTo(_portItemIn->scenePos());
+        }
+        else
+        {
+            path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _portItemIn->scenePos());
+        }
 
         painter->drawPath(path);
     }
