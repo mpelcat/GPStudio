@@ -26,12 +26,13 @@
 #include <QDebug>
 
 #include "layerviewer.h"
+#include "hexviewer.h"
 
 FlowViewerWidget::FlowViewerWidget(const QSharedPointer<FlowViewerInterface> &flowViewerInterface) :
     QWidget(NULL),
     _viewer(NULL)
 {
-    setupWidgets(NULL);
+    setupWidgets();
     setFlowViewerInterface(flowViewerInterface);
     changeType();
 }
@@ -40,7 +41,7 @@ FlowViewerWidget::FlowViewerWidget(FlowViewerInterface *flowViewerInterface) :
     QWidget(NULL),
     _viewer(NULL)
 {
-    setupWidgets(NULL);
+    setupWidgets();
     setFlowViewerInterface(QSharedPointer<FlowViewerInterface>(flowViewerInterface));
     changeType();
 }
@@ -49,7 +50,7 @@ FlowViewerWidget::FlowViewerWidget(const FlowViewerWidget &other) :
     QWidget(NULL),
     _viewer(other._viewer)
 {
-    setupWidgets(NULL);
+    setupWidgets();
     setFlowViewerInterface(other._flowViewerInterface);
     changeType();
 }
@@ -68,25 +69,59 @@ void FlowViewerWidget::changeType()
 {
     FlowViewerInterface::FlowDataType dataType = _flowViewerInterface.data()->dataType();
 
-    if(dataType==FlowViewerInterface::ImageFlowType)
+    _typeComboBox->clear();
+    QList<AbstractViewer::ViewerType> viewersTypes = AbstractViewer::viewer2Type(dataType);
+    foreach (AbstractViewer::ViewerType type, viewersTypes)
     {
-        setupWidgets(new LayerViewer(_flowViewerInterface.data()));
+        _typeComboBox->addItem(AbstractViewer::nameViewerType(type), (int)type);
     }
+
+    if(!viewersTypes.empty())
+        setupViewer(AbstractViewer::fromDataTypeName(viewersTypes.at(0), _flowViewerInterface.data()));
     else
-        setupWidgets(NULL);
+        setupViewer(NULL);
 }
 
-void FlowViewerWidget::dataReceive(int flowId)
+void FlowViewerWidget::changeViewer()
+{
+    AbstractViewer::ViewerType viewerType;
+    viewerType = (AbstractViewer::ViewerType)_typeComboBox->itemData(_typeComboBox->currentIndex()).toInt();
+    setupViewer(AbstractViewer::fromDataTypeName(viewerType, _flowViewerInterface.data()));
+}
+
+void FlowViewerWidget::dataReceive()
 {
     if(_statusLabel)
     {
         _statusLabel->setText(_flowViewerInterface.data()->statusText());
-
-        // 22 fps image 320*240px
     }
 }
 
-void FlowViewerWidget::setupWidgets(AbstractViewer *viewer)
+void FlowViewerWidget::setupWidgets()
+{
+    QLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0,0,0,0);
+
+    AbstractViewer *viewer = new AbstractViewer(new FlowViewerInterface);
+    layout->addWidget(viewer);
+
+    // status
+    _statusLayout = new QHBoxLayout();
+    _statusLayout->setContentsMargins(0,0,0,0);
+
+    _statusLabel = new QLabel("");
+    _statusLayout->addWidget(_statusLabel);
+
+    _typeComboBox = new QComboBox();
+    _statusLayout->addWidget(_typeComboBox);
+    connect(_typeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changeViewer()));
+
+    layout->addItem(_statusLayout);
+
+    setLayout(layout);
+}
+
+void FlowViewerWidget::setupViewer(AbstractViewer *viewer)
 {
     if(layout())
     {
@@ -98,20 +133,9 @@ void FlowViewerWidget::setupWidgets(AbstractViewer *viewer)
                 child->widget()->hide();
                 child->widget()->deleteLater();
             }
-            if(child->layout())
-            {
-                QLayoutItem *child2;
-                while ((child2 = child->layout()->takeAt(0)) != 0)
-                {
-                    if(child2->widget())
-                    {
-                        child2->widget()->hide();
-                        child2->widget()->deleteLater();
-                    }
-                    delete child2;
-                }
-            }
-            delete child;
+
+            // TODO don't delete _statusLayout
+            if(child->layout()!=_statusLayout) delete child;
         }
         delete layout();
     }
@@ -124,18 +148,6 @@ void FlowViewerWidget::setupWidgets(AbstractViewer *viewer)
     layout->addWidget(viewer);
     _viewer = viewer;
 
-    // status
-    _statusLayout = new QHBoxLayout();
-    _statusLayout->setContentsMargins(0,0,0,0);
-
-    _statusLabel = new QLabel("");
-    _statusLayout->addWidget(_statusLabel);
-
-    _typeComboBox = new QComboBox();
-    _statusLayout->addWidget(_typeComboBox);
-    _typeComboBox->addItem("image");
-    _typeComboBox->addItem("hexa");
-
     layout->addItem(_statusLayout);
 
     setLayout(layout);
@@ -145,7 +157,7 @@ void FlowViewerWidget::setFlowViewerInterface(const QSharedPointer<FlowViewerInt
 {
     _flowViewerInterface = flowViewerInterface;
     connect(_flowViewerInterface.data(), SIGNAL(dataTypeChanged()), this, SLOT(changeType()));
-    connect(_flowViewerInterface.data(), SIGNAL(dataReceived(int)), this, SLOT(dataReceive(int)));
+    connect(_flowViewerInterface.data(), SIGNAL(dataReceived(int)), this, SLOT(dataReceive()));
 }
 
 //QMutexLocker _viewerLock;

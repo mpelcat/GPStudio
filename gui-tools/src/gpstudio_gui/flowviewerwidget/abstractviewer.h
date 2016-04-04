@@ -27,7 +27,7 @@
 
 #include "camera/property.h"
 
-class FlowViewerInterface;
+#include "flowviewerinterface.h"
 
 class GPSTUDIO_GUI_EXPORT AbstractViewer : public QWidget
 {
@@ -36,10 +36,19 @@ public:
     AbstractViewer(FlowViewerInterface *flowViewerInterface);
     virtual ~AbstractViewer();
 
+    enum ViewerType {
+        LayerViewerType,
+        HewViewerType,
+        PlotsViewerType
+    };
+
     const Property &properties() const;
 
 public:
-    static AbstractViewer *fromDataTypeName(const QString &dataTypeName);
+    static QList<AbstractViewer::ViewerType> viewer2Type(FlowViewerInterface::FlowDataType dataType);
+
+    static QString nameViewerType(AbstractViewer::ViewerType viewerType);
+    static AbstractViewer *fromDataTypeName(AbstractViewer::ViewerType viewerType, FlowViewerInterface *flowViewerInterface);
 
 protected:
     virtual void setupWidgets();

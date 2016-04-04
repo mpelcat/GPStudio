@@ -20,6 +20,9 @@
 
 #include "abstractviewer.h"
 
+#include "layerviewer.h"
+#include "hexviewer.h"
+
 #include <QDebug>
 
 AbstractViewer::AbstractViewer(FlowViewerInterface *flowViewerInterface)
@@ -31,18 +34,59 @@ AbstractViewer::~AbstractViewer()
 {
 }
 
-AbstractViewer *AbstractViewer::fromDataTypeName(const QString &dataTypeName)
-{
-
-    return NULL;
-}
-
 void AbstractViewer::setupWidgets()
 {
-
 }
 
 const Property &AbstractViewer::properties() const
 {
     return _properties;
+}
+
+AbstractViewer *AbstractViewer::fromDataTypeName(ViewerType viewerType, FlowViewerInterface *flowViewerInterface)
+{
+    switch (viewerType)
+    {
+    case AbstractViewer::LayerViewerType:
+        return new LayerViewer(flowViewerInterface);
+    case AbstractViewer::HewViewerType:
+        return new HexViewer(flowViewerInterface);
+    case AbstractViewer::PlotsViewerType:
+        return NULL;
+    default:
+        return NULL;
+    }
+}
+
+QList<AbstractViewer::ViewerType> AbstractViewer::viewer2Type(FlowViewerInterface::FlowDataType dataType)
+{
+    QList<AbstractViewer::ViewerType> list;
+
+    switch (dataType)
+    {
+    case FlowViewerInterface::ImageFlowType:
+        list << LayerViewerType;
+        list << HewViewerType;
+        break;
+    case FlowViewerInterface::UnknowFlowType:
+    default:
+        break;
+    }
+
+    return list;
+}
+
+QString AbstractViewer::nameViewerType(AbstractViewer::ViewerType viewerType)
+{
+    switch (viewerType)
+    {
+    case AbstractViewer::LayerViewerType:
+        return QString("LayerViewer");
+    case AbstractViewer::HewViewerType:
+        return QString("HewViewer");
+    case AbstractViewer::PlotsViewerType:
+        return QString("PlotsViewer");
+    default:
+        return QString("Unknow");
+    }
 }
