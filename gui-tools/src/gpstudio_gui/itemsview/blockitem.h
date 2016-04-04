@@ -28,14 +28,15 @@
 
 class ProcessLib;
 class IOLib;
+class ModelBlock;
+class Block;
 
 class BlockPortItem;
 
 class GPSTUDIO_GUI_EXPORT BlockItem : public QGraphicsItem
 {
 public:
-    BlockItem(ProcessLib *processLib=NULL);
-    BlockItem(IOLib *ioLib=NULL);
+    BlockItem();
     ~BlockItem();
 
     enum { Type = UserType + 1 };
@@ -50,10 +51,20 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    void update(ProcessLib *processLib);
-    void update(IOLib *ioLib);
+    void update();
 
     void addPort(BlockPortItem *portItem);
+
+public:
+    // lib
+    static BlockItem *fromIoLib(const IOLib *ioLib, BlockItem *item = NULL);
+    static BlockItem *fromProcessLib(const ProcessLib *processLib, BlockItem *item = NULL);
+
+    // model
+    static BlockItem *fromModelBlock(const ModelBlock *modelBlock, BlockItem *item = NULL);
+
+    // camera model
+    static BlockItem *fromBlock(const Block *block, BlockItem *item = NULL);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

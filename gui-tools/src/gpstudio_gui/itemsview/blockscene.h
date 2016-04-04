@@ -25,9 +25,10 @@
 
 #include <QGraphicsScene>
 
-#include <model/model_node.h>
+#include "lib_parser/lib.h"
 
-#include <lib_parser/lib.h>
+#include "model/model_node.h"
+#include "camera/camera.h"
 
 class GPSTUDIO_GUI_EXPORT BlockScene : public QGraphicsScene
 {
@@ -39,6 +40,7 @@ public:
     void setLib(Lib *lib);
 
     bool loadFromNode(const ModelNode *node);
+    bool loadFromCamera(const Camera *camera);
 
 protected:
     Lib *_lib;

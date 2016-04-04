@@ -53,7 +53,7 @@ bool BlockScene::loadFromNode(const ModelNode *node)
             IOLib *ioLib = _lib->io(block->driver());
             if(ioLib)
             {
-                BlockItem *proc = new BlockItem(ioLib);
+                BlockItem *proc = BlockItem::fromIoLib(ioLib);
                 proc->setName(block->name());
                 proc->setPos(block->xPos(), block->yPos());
                 addItem(proc);
@@ -64,12 +64,25 @@ bool BlockScene::loadFromNode(const ModelNode *node)
             ProcessLib *processLib = _lib->process(block->driver());
             if(processLib)
             {
-                BlockItem *proc = new BlockItem(processLib);
+                BlockItem *proc = BlockItem::fromProcessLib(processLib);
                 proc->setName(block->name());
                 proc->setPos(block->xPos(), block->yPos());
                 addItem(proc);
             }
         }
+    }
+
+    return true;
+}
+
+bool BlockScene::loadFromCamera(const Camera *camera)
+{
+    clear();
+    if(_lib==NULL) return false;
+
+    foreach (Block *block, camera->blocks())
+    {
+        //block->
     }
 
     return true;

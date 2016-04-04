@@ -61,7 +61,7 @@ void BlockView::dropEvent(QDropEvent *event)
 {
     if(!_scene->lib()) return;
     QString blockType = event->mimeData()->text();
-    BlockItem *proc = new BlockItem(_scene->lib()->process(blockType));
+    BlockItem *proc = BlockItem::fromProcessLib(_scene->lib()->process(blockType));
     proc->setPos(mapToScene(event->pos()));
     proc->setName(blockType);
     _scene->addItem(proc);

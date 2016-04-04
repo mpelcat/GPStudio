@@ -25,26 +25,36 @@
 #include <QPainter>
 #include <QDebug>
 
-#include "lib_parser/processlib.h"
-#include "lib_parser/iolib.h"
-
 #include "blockconnectoritem.h"
 
-BlockItem::BlockItem(ProcessLib *processLib)
+#include "lib_parser/lib.h"
+
+#include <QGraphicsScene>
+#include <QGraphicsProxyWidget>
+#include <QCheckBox>
+#include <QSlider>
+
+BlockItem::BlockItem()
 {
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
 
-    update(processLib);
-}
+    QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
+    QCheckBox *checkBox = new QCheckBox("en");
+    checkBox->setGeometry(5,5,50,20);
+    checkBox->setAutoFillBackground(false);
+    checkBox->setAttribute(Qt::WA_NoSystemBackground);
+    widget->setWidget(checkBox);
 
-BlockItem::BlockItem(IOLib *ioLib)
-{
-    setFlag(ItemIsMovable, true);
-    setFlag(ItemIsSelectable, true);
+    QGraphicsProxyWidget *widget2 = new QGraphicsProxyWidget(this);
+    QSlider *slider = new QSlider(Qt::Horizontal);
+    slider->setGeometry(10,40,100,30);
+    slider->setAutoFillBackground(false);
+    slider->setAttribute(Qt::WA_NoSystemBackground);
+    widget2->setWidget(slider);
 
-    update(ioLib);
+    update();
 }
 
 BlockItem::~BlockItem()
@@ -96,26 +106,8 @@ void BlockItem::setName(const QString &name)
     _name = name;
 }
 
-void BlockItem::update(ProcessLib *processLib)
+void BlockItem::update()
 {
-    if(!processLib) return;
-    _svgRenderer.load(processLib->draw().toUtf8());
-
-    if(_svgRenderer.isValid())
-    {
-        _boundingRect = _svgRenderer.viewBoxF().adjusted(-10,-10,10,10);
-    }
-    else
-    {
-        _boundingRect = QRectF(0,0,125,50).adjusted(-10,-10,10,10);
-    }
-}
-
-void BlockItem::update(IOLib *ioLib)
-{
-    if(!ioLib) return;
-    _svgRenderer.load(ioLib->draw().toUtf8());
-
     if(_svgRenderer.isValid())
     {
         _boundingRect = _svgRenderer.viewBoxF().adjusted(-10,-10,10,10);
@@ -145,4 +137,42 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         }
     }
     return QGraphicsItem::itemChange(change, value);
+}
+
+BlockItem *BlockItem::fromIoLib(const IOLib *ioLib, BlockItem *item)
+{
+    if(!ioLib)
+        return NULL;
+
+    if(!item)
+        item = new BlockItem();
+
+    item->_svgRenderer.load(ioLib->draw().toUtf8());
+    item->update();
+
+    return item;
+}
+
+BlockItem *BlockItem::fromProcessLib(const ProcessLib *processLib, BlockItem *item)
+{
+    if(!processLib)
+        return NULL;
+
+    if(!item)
+        item = new BlockItem();
+
+    item->_svgRenderer.load(processLib->draw().toUtf8());
+    item->update();
+
+    return item;
+}
+
+BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *item)
+{
+
+}
+
+BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
+{
+
 }
