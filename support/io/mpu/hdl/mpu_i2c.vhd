@@ -1,3 +1,10 @@
+--------------------------------------------------------------------------------------
+-- This bloc handles the control of the i2c communication block (mpu_i2c_master.vhd)
+-- It receive the data and place them into a FIFO. When a full sample is detected,
+-- data are sent to usb block.
+--------------------------------------------------------------------------------------
+
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 USE ieee.std_logic_unsigned.all;
@@ -125,7 +132,7 @@ begin
 			   
 			   if en='1' then
 
-					if ((busy_s='0' and (trig='1' or op_counter/=x"00")) or reset_fifo_flag='1') then	
+					if ((busy_s='0' and (trig='1' or op_counter/=x"00")) or reset_fifo_flag='1') then		----- Start of communication detected	
 						state <= init;
 					else
 						state <= idle;
@@ -138,10 +145,10 @@ begin
 				ena_s 		<= '1';
 				data_wr_s 	<= register_number;
 				
-				if state_conf=config or reset_fifo_buffer='1' then
+				if state_conf=config or reset_fifo_buffer='1' then		----- Write mode : configuration
 							state <= write_state;
 				else
-						if end_rw_s = '1' then
+						if end_rw_s = '1' then		----- Read mode : data acquisition
 							state <= read_state;
 						end if;
 						
@@ -159,7 +166,7 @@ begin
 							state 	 <= read_state;
 						end if;
 									
-						if count_ack=x"14" then  		--nombre de read a effectuer en hexa
+						if count_ack=x"14" then		----- Full sample detected in the FIFO
 							state 		<= idle;
 							ena_s 		<= '0';
 							count_ack 	<= x"00";
@@ -171,13 +178,13 @@ begin
 			
 					rw_s <= '0';	
 					
-					if end_rw_s='1' and prev_end_rw='0' then		---Compteur d'acknowledge
+					if end_rw_s='1' and prev_end_rw='0' then		----- Counting acknowledges
 						count_ack 	<= count_ack +1;
 						state 		<= write_state;
 					end if;
 					
-					if count_ack =x"01" then							---Envoi des donn�es � �crire dans le registre APRES
-						data_wr_s 	<= data_to_w;							---l'envoi de l'adresse du registre
+					if count_ack =x"01" then							
+						data_wr_s 	<= data_to_w;		----- Sending data to write in the MPU internal register							
 						
 					elsif count_ack=x"02" then 
 						state 		<= idle;
@@ -185,7 +192,7 @@ begin
 						count_ack 	<= x"00";
 					
 					else 
-						data_wr_s 	<= register_number;
+						data_wr_s 	<= register_number;		----- Sending the internal register ID
 					end if;
 					
 				
@@ -207,10 +214,10 @@ begin
 		
 	elsif clk'event and clk='1' then	
 	
-	------Compteur d'operations pour la config
-		op_counter_f_dl <= op_counter_f;
+		----- Counting configuration operations 
+		op_counter_f_dl <= op_counter_f;		
 		if op_counter_f='1' and op_counter_f_dl='0' then
-			if (op_counter < x"10") then
+			if (op_counter < x"11") then
 				op_counter <= op_counter +1;
 			else
 				op_counter <= x"00";
@@ -224,18 +231,20 @@ begin
 			when waiting => 
 			
 						op_counter 			<= x"00";
-				
-					if reset_fifo_buffer='1' then
+					----- Reset fifo buffer to avoid latence issues
+					if reset_fifo_buffer='1' then		
 						addr_s 				<= ADDR_I2C_MPU;
 						register_number 	<= USER_CTRL;
 						data_to_w 			<= x"64";
 					
+					----- Reading data from the internal FIFO of the MPU-6050
 					else
 						addr_s 				<= ADDR_I2C_MPU;
 						register_number 	<= FIFO_READ;
 						data_to_w 			<= x"00";
 					end if;
 					
+					----- Modification of the configuration settings detected, starting a configuration sequence
 					if config_button = '1' then
 						state_conf			<= config;
 					else	
@@ -244,93 +253,93 @@ begin
 			
 			when config =>
 					
-									-----Configuration des registres de l'IMU
-						----Sortie du mode "Pause"
+									
+						----- Sortie du mode "Pause"
 						if op_counter=x"00" then
 							addr_s 				<= ADDR_I2C_MPU;
 							register_number 	<= PWR_MGMT_1;
 							data_to_w     		<= x"01";
 						
-						----FIFO enable
+						----- FIFO enable
 						elsif op_counter=x"01" then			
 							register_number 	<= USER_CTRL;
 							data_to_w			<= x"40";
 							
-						----Configuration de l'accelerometre	
+						----- Accelerometer configuration	
 						elsif op_counter=x"02" then			
 							register_number	<= ACCEL_CONFIG_REG;
 							data_to_w			<= "000" & accel_config & "000";
 						
-						------Sample rate	
+						------ Sample rate	
 						elsif op_counter=x"03" then
 							register_number 	<= SMPLRT_DIV;	
 							data_to_w			<= spl_rate;
 							
-						-----Choix des données de l'IMU à placer dans la FIFO	
+						----- Data to place in internal FIFO	
 						elsif op_counter = x"04" then
 							register_number 	<= FIFO_EN;
 							data_to_w 			<= x"F9";---x"F8" sans compass
 							
-						-----Configuration du gyromètre
+						----- Gyroscope configuration
 						elsif op_counter=x"05" then
 							register_number	<= GYRO_CONFIG_REG;
 							data_to_w			<= "000" & gyro_config & "000";	
 							
-						-----Bypass du MPU : on communique directement avec le compass	
+						----- Bypassing MPU : I2C bus directly connected to compass	
 						elsif op_counter=x"06" then			
 							register_number 	<= BYPASS_MPU;
 							data_to_w			<= x"02";
 							
-						-----Frequence d'acquisition des données du compass
+						----- Compass sample rate
 						elsif op_counter=x"07" then			
 							addr_s 				<= ADDR_I2C_COMPASS;
 							register_number 	<= COMPASS_CONF_A;
 							data_to_w			<= "011" & freq_compass & "00";
 							
-						-----Activation du mode automatique du compass
+						----- Compass automatic mode activation
 						elsif op_counter=x"08" then			
 							register_number 	<= COMPASS_MODE;
 							data_to_w			<= x"00";
 							
-						-----Valeur du gain fixée à +/- 1.3 Gauss
+						----- Compass gain value
 						elsif op_counter=x"09" then
 							register_number 	<= COMPASS_CONF_B;
 							data_to_w 			<= gain_compass & "00000";
 							
-						-----Désactivation du bypass (plus de communication FPGA/compass possible)
+						----- Disable bypass
 						elsif op_counter=x"0A" then	
 							addr_s 				<= ADDR_I2C_MPU;		
 							register_number 	<= BYPASS_MPU;
 							data_to_w			<= x"00";
 							
-						-----Le MPU est passé en maitre sur son bus auxiliaire 	
+						----- MPU set to master on his auxiliary I2C bus 	
 						elsif op_counter=x"0B" then			
 							register_number 	<= USER_CTRL;
 							data_to_w			<= x"60";
 							
-						-----Fréquence du bus I2C auxiliaire mise à 400kHz	
+						----- Auxiliary I2C bus frequency set to 400kHz	
 						elsif op_counter=x"0C" then			
 							register_number 	<= I2C_MST_CTRL;
 							data_to_w			<= x"0D";
 							
-						-----Adresse I2C du compass + bit de lecture
+						----- I2C address of compass + mode read
 						elsif op_counter=x"0D" then			
 							register_number 	<= I2C_SLV0_ADDR;
 							data_to_w			<= x"9E";
 							
-						-----Registre interne du compass à partir duquel commencera la lecture des données	
+						----- Internal register from compass from which the data will be read	
 						elsif op_counter=x"0E" then			
 							register_number 	<= I2C_SLV0_REG;
 							data_to_w			<= x"03";
 							
-						-----Activation de l'acquisition des données du compass + indique qu'il faut lire 6 octets
+						----- Enable the acquisition of the 6 bytes of data from compass
 						elsif op_counter=x"0F" then			
 							register_number 	<= I2C_SLV0_CTRL;
 							data_to_w			<= x"86";
 
-						--elsif op_counter=x"10" then
-						--	register_number 	<= USER_CTRL;
-						--	data_to_w			<= x"64";
+						elsif op_counter=x"10" then
+							register_number 	<= USER_CTRL;
+							data_to_w			<= x"64";
 							state_conf			<= waiting;
 							
 						else

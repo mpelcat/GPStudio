@@ -1,3 +1,7 @@
+--------------------------------------------------------------------
+-- Package containing several constant data
+--------------------------------------------------------------------
+
 library ieee;
 USE ieee.std_logic_1164.all;
 
@@ -22,7 +26,7 @@ package mpu_pkg is
 	constant I2C_SLV0_CTRL			: STD_LOGIC_VECTOR(7 DOWNTO 0) := x"27";
 	constant FIFO_READ				: STD_LOGIC_VECTOR(7 DOWNTO 0) := x"74";
 	constant COUNT_INIT				: INTEGER RANGE 0 TO 16_000:=15_000;
-	constant COUNT_FIFO_RST			: INTEGER RANGE 0 TO 32_000:=25_000;
+	constant COUNT_FIFO_RST			: INTEGER RANGE 0 TO 64_000:=45_000;
 	constant COUNT_ONE_ACQUI		: INTEGER RANGE 0 TO 1_700_000:=1_600_000;
 	constant COUNT_START_ACQUI		: INTEGER RANGE 0 TO 64_000:=50_000;
 	constant COUNT_START_FIFO_RST	: INTEGER RANGE 0 TO 32_000:=20_000;

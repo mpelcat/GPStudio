@@ -1,3 +1,9 @@
+--------------------------------------------------------------------------------------
+-- The configuration settings choose by the user are read here. If a modification is
+-- detected, a configuration is started with the new values.
+-- This bloc generates the triggers to acquire data at the sample rate define by user. 
+--------------------------------------------------------------------------------------
+
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
 USE ieee.std_logic_unsigned.all;
@@ -49,8 +55,9 @@ signal gyro_config_dl	: std_logic_vector(1 downto 0);
 signal accel_config_dl	: std_logic_vector(1 downto 0);
 signal gain_compass_dl	: std_logic_vector(2 downto 0);
 signal freq_compass_dl	: std_logic_vector(2 downto 0);
+signal mode_auto_dl		: std_logic;
 
-signal config_init		: std_logic;
+signal config_init,config_init_dl		: std_logic;
 
 type data_type is
 	record
@@ -80,6 +87,7 @@ begin
 		config_init 		<= '0';
 		
 	elsif clk_proc'event and clk_proc='1' then
+		config_init_dl <= config_init;
 		
 		if mode_auto='1' then
 			count_param 	:= count_param + 1;
@@ -171,7 +179,7 @@ begin
 			gyro_config_dl <= gyro_config;
 			gain_compass_dl <= gain_compass;
 			freq_compass_dl <= freq_compass;
-			
+			mode_auto_dl 	 <= mode_auto;
 			
 			
 		-----Assignations des données paramètres
@@ -197,7 +205,8 @@ begin
 end process;
 
 config_change <= '1' when ((spl_rate/=spl_rate_dl or gyro_config/=gyro_config_dl or accel_config/=accel_config_dl 
-									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) and mode_auto='0') or config_init='1'
+									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) and mode_auto='0') or (config_init='1' and config_init_dl='0')
+									or mode_auto/=mode_auto_dl
 					else '0';
 
 
