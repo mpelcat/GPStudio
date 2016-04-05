@@ -303,6 +303,9 @@ class FlowInterconnect extends Block
 				}
 			}
 		}
+		
+		// transform toGlobalPropertyPath
+		$this->toGlobalPropertyPath("fi");
 	}
 	
 	function create_dot_file($node, $filename)
