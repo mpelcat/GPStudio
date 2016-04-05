@@ -44,7 +44,9 @@ void LayerViewer::showFlowConnection(int flowId)
     int width = flowProp->property("width").toInt();
     int height = flowProp->property("height").toInt();
 
-    _widget->showImage(*flowPackage.toImage(width, height, 8));
+    QImage *image = flowPackage.toImage(width, height, 8);
+    _widget->showImage(*image);
+    delete image;
 }
 
 void LayerViewer::setupWidgets()
