@@ -268,28 +268,36 @@ class FlowInterconnect extends Block
 					foreach($flowOut->properties as $propertyOut)
 					{
 						if(!array_key_exists($propertyOut->name, $propsFlow)) $propsFlow[$propertyOut->name]=$propsFlowBase;
-						$propsFlow[$propertyOut->name][$treeitem->muxvalue]=$propertyOut->completePath().".value";
+						$propsFlow[$propertyOut->name][$treeitem->muxvalue]=$propertyOut;
 					}
 				}
-				//echo $treeconnect->toblock.'.'.$treeconnect->toflow.' ';
-				//print_r($propsFlow);
 				
 				// add all properties in
 				foreach($propsFlow as $propName => $props)
 				{
-					$flowOut = $node->getFlow($treeitem->fromblock.'.'.$treeitem->fromflow);
+					$type = '';
+					$value = '';
 					
 					$code="switch(".$dependingPropertyName."){";
 					foreach($props as $key => $prop)
 					{
-						$code.="case ".$key.":".$prop."; break;";
+						if(is_object($prop) and get_class($prop)==="Property")
+						{
+							$code.="case ".$key.":".$prop->completePath().".value"."; break;";
+							$type = $prop->type;
+							$value = $prop->value;
+						}
+						else
+						{
+							$code.="case ".$key.":"."; break;";
+						}
 					}
 					$code.="}";
 					
 					$propertyIn = new Property();
 					$propertyIn->name = $propName;
-					$propertyIn->type = $propertyOut->type;
-					$propertyIn->value = $propertyOut->value;
+					$propertyIn->type = $type;
+					$propertyIn->value = $value;
 					$propertyIn->propertymap = $code;
 					$flowIn->addProperty($propertyIn);
 				}
