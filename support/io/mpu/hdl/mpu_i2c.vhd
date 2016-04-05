@@ -26,6 +26,7 @@ ENTITY mpu_i2c IS
 	 gain_compass			: in std_logic_vector(2 downto 0);
 	 freq_compass			: in std_logic_vector(2 downto 0);
     reset_fifo_buffer	: in std_logic;   							--Reset le buffer de la FIFO
+	 run_conf				: out std_logic;
     sda       				: INOUT STD_LOGIC;                     --serial data output of i2c bus
     scl       				: INOUT STD_LOGIC                      --serial clock output of i2c bus
 	 );
@@ -84,6 +85,7 @@ signal op_counter	   	: std_logic_vector(7 downto 0);
 
 signal reset_fifo_flag 	: std_logic;
 signal reset_fifo_dl   	: std_logic;
+signal run_conf_s			: std_logic;
 
 begin
 
@@ -131,8 +133,8 @@ begin
 			when idle =>
 			   
 			   if en='1' then
-
-					if ((busy_s='0' and (trig='1' or op_counter/=x"00")) or reset_fifo_flag='1') then		----- Start of communication detected	
+															
+					if ((busy_s='0' and (trig='1' or run_conf_s='1')) or reset_fifo_flag='1') then		----- Start of communication detected	
 						state <= init;
 					else
 						state <= idle;
@@ -211,6 +213,7 @@ begin
 		data_to_w			<= x"00";
 		op_counter			<= x"00";
 		addr_s 				<= ADDR_I2C_MPU;
+		run_conf_s				<= '0';
 		
 	elsif clk'event and clk='1' then	
 	
@@ -231,6 +234,7 @@ begin
 			when waiting => 
 			
 						op_counter 			<= x"00";
+						
 					----- Reset fifo buffer to avoid latence issues
 					if reset_fifo_buffer='1' then		
 						addr_s 				<= ADDR_I2C_MPU;
@@ -249,6 +253,7 @@ begin
 						state_conf			<= config;
 					else	
 						state_conf			<= waiting;
+						run_conf_s				<= '0';
 					end if;
 			
 			when config =>
@@ -259,7 +264,8 @@ begin
 							addr_s 				<= ADDR_I2C_MPU;
 							register_number 	<= PWR_MGMT_1;
 							data_to_w     		<= x"01";
-						
+							run_conf_s				<= '1';
+							
 						----- FIFO enable
 						elsif op_counter=x"01" then			
 							register_number 	<= USER_CTRL;
@@ -341,7 +347,7 @@ begin
 							register_number 	<= USER_CTRL;
 							data_to_w			<= x"64";
 							state_conf			<= waiting;
-							
+							run_conf_s				<= '0';
 						else
 							register_number 	<= x"00";
 						end if;
@@ -352,9 +358,8 @@ begin
 				
 		end case;
 	end if;
-
-
 end process;
 
+run_conf <= run_conf_s;
 
 end behavioral;
