@@ -25,6 +25,8 @@
 
 #include "flowviewerinterface.h"
 
+#include "scriptengine.h"
+
 PlotViewer::PlotViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
@@ -42,19 +44,28 @@ void PlotViewer::showFlowConnection(int flowId)
 
     QByteArray data = flowPackage.data();
 
-    short ax = ((short)((char)data[0])<<8) + data[1];
-    float axf = ax / 16384.0;
-    short ay = ((short)((char)data[2])<<8) + data[3];
-    float ayf = ay / 16384.0;
-    short az = ((short)((char)data[4])<<8) + data[5];
-    float azf = az / 16384.0;
+    QScriptValue function = ScriptEngine::getEngine().engine()->evaluate("(function(x){ return x / 16384.0;})");
 
-    _widget->graph(0)->addData(QCPData(QDateTime::currentMSecsSinceEpoch(), axf));
-    _widget->graph(1)->addData(QCPData(QDateTime::currentMSecsSinceEpoch(), ayf));
-    _widget->graph(2)->addData(QCPData(QDateTime::currentMSecsSinceEpoch(), azf));
-    _widget->graph(0)->rescaleAxes();
-    _widget->graph(1)->rescaleAxes();
-    _widget->graph(2)->rescaleAxes();
+    for(int i=0; i<data.size(); i+=2)
+    {
+        if(i>6) break;
+        short dataItem = ((short)((char)data[i])<<8) + data[i+1];
+        QScriptValueList args;
+        args << dataItem;
+
+        if(_widget->graphCount()<i+1)
+        {
+            _widget->addGraph();
+            _widget->graph(i/2)->setName(QString("plot%1").arg(i));
+            _widget->graph(i/2)->setPen(QColor::fromHsv(i*10,255,255));
+            _widget->graph(i/2)->setAdaptiveSampling(true);
+        }
+
+        float value = function.call(QScriptValue(), args).toNumber();
+        _widget->graph(i/2)->addData(QCPData(QDateTime::currentMSecsSinceEpoch(), value));
+    }
+    _widget->xAxis->setRange(_widget->graph(0)->data()->first().key, QDateTime::currentMSecsSinceEpoch());
+
     _widget->replot();
 }
 
@@ -64,16 +75,10 @@ void PlotViewer::setupWidgets()
     layout->setContentsMargins(0,0,0,0);
 
     _widget = new QCustomPlot();
-    _widget->addGraph();
-    _widget->graph(0)->setName("x");
-    _widget->graph(0)->setPen(QColor(Qt::red));
-    _widget->addGraph();
-    _widget->graph(1)->setName("y");
-    _widget->graph(1)->setPen(QColor(Qt::blue));
-    _widget->addGraph();
-    _widget->graph(2)->setName("z");
-    _widget->graph(2)->setPen(QColor(Qt::black));
     _widget->yAxis->setRange(-2,2);
+    _widget->legend->setVisible(true);
+    _widget->xAxis->setTickLabelType(QCPAxis::ltDateTime);
+    _widget->xAxis->setDateTimeFormat("HH:mm:ss");
 
     layout->addWidget(_widget);
 
