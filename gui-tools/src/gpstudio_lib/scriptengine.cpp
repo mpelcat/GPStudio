@@ -27,11 +27,27 @@
 
 ScriptEngine *ScriptEngine::_instance = NULL;
 
+QScriptValue ScriptEngine::echo(QScriptContext *context, QScriptEngine *)
+{
+    if(context->argumentCount()==0)
+        qDebug() << "script echo:";
+    for(int i=0; i<context->argumentCount(); i++)
+    {
+        qDebug() << "script echo:" << context->argument(i).toString();
+    }
+    return QScriptValue();
+}
+
 ScriptEngine::ScriptEngine(QObject *parent) : QObject(parent)
 {
     _rootProperty = NULL;
 
+    // log2 function
     _engine.evaluate("Math.__proto__.log2=function(x){ return this.log(x) / this.log(2); }");
+
+    // echo funtion
+    QScriptValue echoFunction = _engine.newFunction(echo);
+    _engine.globalObject().setProperty("echo", echoFunction);
 }
 
 ScriptEngine::~ScriptEngine()

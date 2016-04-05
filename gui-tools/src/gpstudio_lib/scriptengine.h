@@ -52,6 +52,8 @@ public:
     static QStringList dependsProperties(const QString &expression);
     static inline ScriptEngine &getEngine() {if(!_instance) _instance = new ScriptEngine(); return *_instance;}
 
+    static QScriptValue echo(QScriptContext *context, QScriptEngine *);
+
 private:
     static void computePropertyMap(Property *property, Property *paramsProps);
 
