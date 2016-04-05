@@ -13,7 +13,14 @@
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
   </resets>
   <flows>
-    <flow name="data_out" size="8" type="out" desc=""/>
+    <flow name="data_out" size="8" type="out" desc="">
+		<properties>
+			<property name="datatype" value="vector" type="flowtype"/>
+			<property name="itemdatatype" value="s16" type="hwtype"/>
+			<property name="swtype" value="float" type="swtype"/>
+			<property name="scaling" value="item.value*2" type="function"/>
+		</properties>
+	</flow>
   </flows>
   <params>
     <param name="enable_reg" value="" regaddr="0" propertymap="Enable.value" default="" min="" max="" desc=""/>

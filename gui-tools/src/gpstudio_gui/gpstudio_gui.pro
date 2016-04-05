@@ -57,6 +57,7 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     camexplorerwidget.cpp \
     flowviewerwidget/layerviewer.cpp \
     flowviewerwidget/hexviewer.cpp \
+    flowviewerwidget/plotviewer.cpp \
     itemsview/blockitem.cpp \
     itemsview/blockscene.cpp \
     itemsview/blockconnectoritem.cpp \
@@ -85,6 +86,7 @@ HEADERS  += \
     camexplorerwidget.h \
     flowviewerwidget/layerviewer.h \
     flowviewerwidget/hexviewer.h \
+    flowviewerwidget/plotviewer.h \
     itemsview/blockitem.h \
     itemsview/blockscene.h \
     itemsview/blockconnectoritem.h \

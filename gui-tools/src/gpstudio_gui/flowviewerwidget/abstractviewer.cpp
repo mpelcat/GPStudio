@@ -22,6 +22,7 @@
 
 #include "layerviewer.h"
 #include "hexviewer.h"
+#include "plotviewer.h"
 
 #include <QDebug>
 
@@ -52,7 +53,7 @@ AbstractViewer *AbstractViewer::fromDataTypeName(ViewerType viewerType, FlowView
     case AbstractViewer::HewViewerType:
         return new HexViewer(flowViewerInterface);
     case AbstractViewer::PlotsViewerType:
-        return NULL;
+        return new PlotViewer(flowViewerInterface);
     default:
         return NULL;
     }
@@ -66,6 +67,10 @@ QList<AbstractViewer::ViewerType> AbstractViewer::viewer2Type(FlowViewerInterfac
     {
     case FlowViewerInterface::ImageFlowType:
         list << LayerViewerType;
+        list << HewViewerType;
+        break;
+    case FlowViewerInterface::VectorFlowType:
+        list << PlotsViewerType;
         list << HewViewerType;
         break;
     case FlowViewerInterface::UnknowFlowType:
@@ -83,7 +88,7 @@ QString AbstractViewer::nameViewerType(AbstractViewer::ViewerType viewerType)
     case AbstractViewer::LayerViewerType:
         return QString("LayerViewer");
     case AbstractViewer::HewViewerType:
-        return QString("HewViewer");
+        return QString("HexViewer");
     case AbstractViewer::PlotsViewerType:
         return QString("PlotsViewer");
     default:

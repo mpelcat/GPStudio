@@ -44,6 +44,7 @@ public:
 
     enum FlowDataType {
         ImageFlowType,
+        VectorFlowType,
         UnknowFlowType
     };
 

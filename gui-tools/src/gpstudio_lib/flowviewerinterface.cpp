@@ -96,12 +96,14 @@ void FlowViewerInterface::changeDataType()
 
     if(dataTypeStr=="image")
         _dataType = ImageFlowType;
+    else if(dataTypeStr=="vector")
+        _dataType = VectorFlowType;
     else
         _dataType = UnknowFlowType;
 
     emit dataTypeChanged();
 
-    //qDebug()<<Q_FUNC_INFO<<dataTypeProperty->value();
+    //qDebug()<<Q_FUNC_INFO<<dataTypeStr;
 }
 
 void FlowViewerInterface::processData(FlowPackage data)
@@ -137,6 +139,12 @@ QString FlowViewerInterface::statusText() const
 
     switch (_dataType)
     {
+    case FlowViewerInterface::VectorFlowType:
+        statusText = QString("vector %1 item at %2 fps")
+                .arg(_flowConnections[0]->lastData().data().size())
+                .arg(_flowConnections[0]->fps());
+
+        break;
     case FlowViewerInterface::ImageFlowType:
         statusText = QString("image %1*%2px at %3 fps")
                 .arg(flowProp->property("width").toInt())
