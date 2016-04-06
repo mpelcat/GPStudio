@@ -54,7 +54,7 @@ void PlotViewer::showFlowConnection(int flowId)
         QScriptValueList args;
         args << dataItem;
 
-        if(_widget->graphCount()<i+1)
+        if(_widget->graphCount()<i/2+1)
         {
             _widget->addGraph();
             _widget->graph(i/2)->setName(QString("plot%1").arg(i));
