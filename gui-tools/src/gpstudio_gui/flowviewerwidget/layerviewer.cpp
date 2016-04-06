@@ -29,6 +29,7 @@ LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
     setupWidgets();
+    showFlowConnection(0);
     connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
 }
 
@@ -38,6 +39,9 @@ LayerViewer::~LayerViewer()
 
 void LayerViewer::showFlowConnection(int flowId)
 {
+    if(flowId>=_flowViewerInterface->flowConnections().size())
+        return;
+
     const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
     Property *flowProp = _flowViewerInterface->flowConnections()[flowId]->flow()->assocProperty();
 

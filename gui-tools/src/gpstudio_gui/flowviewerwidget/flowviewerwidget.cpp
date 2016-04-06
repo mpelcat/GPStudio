@@ -87,6 +87,7 @@ void FlowViewerWidget::changeViewer()
     AbstractViewer::ViewerType viewerType;
     viewerType = (AbstractViewer::ViewerType)_typeComboBox->itemData(_typeComboBox->currentIndex()).toInt();
     setupViewer(AbstractViewer::fromDataTypeName(viewerType, _flowViewerInterface.data()));
+    dataReceive();
 }
 
 void FlowViewerWidget::dataReceive()

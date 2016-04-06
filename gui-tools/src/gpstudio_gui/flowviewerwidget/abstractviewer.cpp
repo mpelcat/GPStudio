@@ -39,6 +39,11 @@ void AbstractViewer::setupWidgets()
 {
 }
 
+void AbstractViewer::showFlowConnection(int flowId)
+{
+    Q_UNUSED(flowId)
+}
+
 const Property &AbstractViewer::properties() const
 {
     return _properties;

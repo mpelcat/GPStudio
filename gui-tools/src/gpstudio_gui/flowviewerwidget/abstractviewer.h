@@ -53,6 +53,9 @@ public:
 protected:
     virtual void setupWidgets();
 
+protected slots:
+    virtual void showFlowConnection(int flowId);
+
 protected:
     Property _properties;
 

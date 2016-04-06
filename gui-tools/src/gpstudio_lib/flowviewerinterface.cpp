@@ -133,27 +133,29 @@ FlowViewerInterface::FlowDataType FlowViewerInterface::dataType() const
 
 QString FlowViewerInterface::statusText() const
 {
-    QString statusText;
+    QString statusText = "unknow type";
+
+    if(_flowConnections.size()==0)
+        return statusText;
 
     Property *flowProp = _flowConnections[0]->flow()->assocProperty();
 
     switch (_dataType)
     {
     case FlowViewerInterface::VectorFlowType:
-        statusText = QString("vector %1 item at %2 fps")
+        statusText = QString("vector %1 item(s) at %2 fps")
                 .arg(_flowConnections[0]->lastData().data().size())
-                .arg(_flowConnections[0]->fps());
+                .arg(QString::number(_flowConnections[0]->fps(), 'f', 1));
 
         break;
     case FlowViewerInterface::ImageFlowType:
         statusText = QString("image %1*%2px at %3 fps")
                 .arg(flowProp->property("width").toInt())
                 .arg(flowProp->property("height").toInt())
-                .arg(_flowConnections[0]->fps());
+                .arg(QString::number(_flowConnections[0]->fps(), 'f', 1));
 
         break;
     case FlowViewerInterface::UnknowFlowType:
-        break;
     default:
         break;
     }

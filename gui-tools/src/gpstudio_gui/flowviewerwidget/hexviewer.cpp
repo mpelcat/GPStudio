@@ -29,6 +29,7 @@ HexViewer::HexViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
     setupWidgets();
+    showFlowConnection(0);
     connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
 }
 
@@ -38,6 +39,9 @@ HexViewer::~HexViewer()
 
 void HexViewer::showFlowConnection(int flowId)
 {
+    if(flowId>=_flowViewerInterface->flowConnections().size())
+        return;
+
     const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
 
     _widget->setData(flowPackage.data());
