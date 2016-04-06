@@ -21,10 +21,12 @@ port (
 		accelero_fv 	: out std_logic;
 		accelero_dv 	: out std_logic;
 		accelero_data 	: out std_logic_vector(7 downto 0);
-		
-		gyroscope_fv 			: out std_logic;
-		gyroscope_dv 			: out std_logic;
-		gyroscope_data 		: out std_logic_vector(7 downto 0)
+		gyroscope_fv 	: out std_logic;
+		gyroscope_dv 	: out std_logic;
+		gyroscope_data : out std_logic_vector(7 downto 0);
+		compass_fv		: out std_logic;
+		compass_dv		: out std_logic;
+		compass_data	: out std_logic_vector(7 downto 0)
 		
 );
 end mpu_acqui;
@@ -68,6 +70,8 @@ signal config_init,config_init_dl		: std_logic;
 signal not_reset			: std_logic;
 signal data_fifo_out		: std_logic_vector(7 downto 0);
 signal rd_accel,rd_gyro	: std_logic;
+signal rd_comp				: std_logic;
+
 begin
 
 AD0 			<= '0';
@@ -86,7 +90,7 @@ begin
 		count_rst_fifo		:= 0;
 		config_init 		<= '0';
 		
-	elsif clk_proc'event and clk_proc='1' then
+	elsif clk_proc'event and clk_proc='1' then		----- Generates triggers for read data from mpu
 		if en='1' then 
 			config_init_dl <= config_init;
 			
@@ -125,7 +129,7 @@ begin
 				end if;
 			else
 				count_rst_fifo		:= 0;
-				count_param			:= COUNT_START_FIFO_RST;--COUNT_START_ACQUI; 
+				count_param			:= COUNT_START_FIFO_RST;
 				trigger_auto 	<= '0';
 				reset_fifo_buffer <= '0';
 
@@ -175,6 +179,8 @@ begin
 			rd_en 	 	<= '0';
 			rd_accel		<= '0';
 			rd_gyro		<= '0';
+			rd_comp		<= '0';
+			
 		elsif clk_proc'event and clk_proc='1' then
 		
 			rd_en_dl 			<= rd_en;
@@ -187,19 +193,19 @@ begin
 			mode_auto_dl 		<= mode_auto;
 			en_dl					<= en;
 			
-		-----Assignations des données paramètres
+		----- Assignation of the parameters
 			en 				<= parameters(31);
 			spl_rate 		<= parameters(30 downto 23);
 			gyro_config 	<= parameters(22 downto 21);
 			accel_config 	<= parameters(20 downto 19);
 			trigger_reg		<= parameters(18);
-			config_button	<= config_change;--parameters(17);
+			config_button	<= config_change;
 			reset_imu		<= parameters(16);
 			mode_auto		<= parameters(15);
 			gain_compass	<= parameters(14 downto 12);
 			freq_compass	<= parameters(11 downto 9);
 
-			if count_fifo = "010100" and rd_en='0' then		----Nombre de données à lire dans la Fifo
+			if count_fifo = "010100" and rd_en='0' then	----- Reading FIFO and set data_valid and flow_valid for each flow
 				rd_en			<= '1';
 				rd_accel		<= '0';
 				rd_gyro		<= '0';
@@ -210,17 +216,20 @@ begin
 			elsif count_fifo = "001101" and rd_en='1' then
 				rd_gyro		<= '1';
 			elsif count_fifo = "000111" and rd_en='1' then
+				rd_comp 		<= '1';
 				rd_gyro		<= '0';
-			elsif count_fifo = "000010" and rd_en='1' then ----Fifo vide, fin du read 
+			elsif count_fifo = "000010" and rd_en='1' then  
 				rd_en			<= '0';
 				rd_accel		<= '0';
 				rd_gyro		<= '0';
+			elsif count_fifo = "000001" and rd_en='0' then
+				rd_comp 		<= '0';
 			end if;
 			
 		end if;
 
 end process;
-
+----- Detecting a modification of the configuration
 config_change <= '1' when (spl_rate/=spl_rate_dl or gyro_config/=gyro_config_dl or accel_config/=accel_config_dl 
 									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) or (config_init='1' and config_init_dl='0')
 									or en/=en_dl
@@ -233,19 +242,23 @@ begin
 	if reset = '0' then
 		wr_en_dl 	<= '0';
 		wr_en_flag  <= '0';	
-	elsif clk_proc'event and clk_proc = '1' then
-		wr_en_dl 	<= wr_en;						----Flag d'ecriture dans la fifo
+	elsif clk_proc'event and clk_proc = '1' then		----- Generate write enable flag for the FIFO
+		wr_en_dl 	<= wr_en;
 		wr_en_flag  <= wr_en and not wr_en_dl;
 	end if;
 end process;
 
-accelero_dv 	<= rd_accel;--rd_en_dl;
-accelero_fv 	<= rd_accel;--rd_en or rd_en_dl2;
+accelero_dv 	<= rd_accel;
+accelero_fv 	<= rd_accel;
 accelero_data  <= data_fifo_out;
 
-gyroscope_dv 			<= rd_gyro;--rd_en_dl;
-gyroscope_fv 			<= rd_gyro;--rd_en or rd_en_dl2;
+gyroscope_dv 			<= rd_gyro;
+gyroscope_fv 			<= rd_gyro;
 gyroscope_data  		<= data_fifo_out;
+
+compass_dv 			<= rd_comp;
+compass_fv 			<= rd_comp;
+compass_data  		<= data_fifo_out;
 
 trigger <= trigger_auto when en='1' else
 			  trigger_reg;

@@ -22,7 +22,7 @@ entity mpu_slave is
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i       : in std_logic_vector(11 downto 0);
+		addr_rel_i       : in std_logic_vector(3 downto 0);
 		wr_i             : in std_logic;
 		rd_i             : in std_logic;
 		datawr_i         : in std_logic_vector(31 downto 0);
@@ -61,17 +61,17 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 4))=>
 						enable_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 4))=>
 						gyro_config_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 4))=>
 						accel_config_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 4))=>
 						spl_rate_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 4))=>
 						gain_compass_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 4))=>
 						fz_compass_reg_reg <= datawr_i;
 					when others=>
 				end case;
@@ -86,17 +86,17 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(rd_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 4))=>
 						datard_o <= enable_reg_reg;
-					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 4))=>
 						datard_o <= gyro_config_reg_reg;
-					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 4))=>
 						datard_o <= accel_config_reg_reg;
-					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 4))=>
 						datard_o <= spl_rate_reg_reg;
-					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 4))=>
 						datard_o <= gain_compass_reg_reg;
-					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 12))=>
+					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 4))=>
 						datard_o <= fz_compass_reg_reg;
 					when others=>
 						datard_o <= (others => '0');
