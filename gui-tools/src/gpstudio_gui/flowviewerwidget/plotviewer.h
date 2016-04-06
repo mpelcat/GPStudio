@@ -41,6 +41,7 @@ protected:
     virtual void setupWidgets();
 
     QCustomPlot *_widget;
+    qint64 _startDate;
 };
 
 #endif // PLOTVIEWER_H

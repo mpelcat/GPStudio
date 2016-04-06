@@ -64,7 +64,12 @@ void PlotViewer::showFlowConnection(int flowId)
         float value = function.call(QScriptValue(), args).toNumber();
         _widget->graph(i/2)->addData(QCPData(QDateTime::currentMSecsSinceEpoch(), value));
     }
-    _widget->xAxis->setRange(_widget->graph(0)->data()->first().key, QDateTime::currentMSecsSinceEpoch());
+
+    if(_startDate==0)
+    {
+        _startDate = QDateTime::currentMSecsSinceEpoch();
+    }
+    _widget->xAxis->setRange(_startDate, QDateTime::currentMSecsSinceEpoch());
 
     _widget->replot();
 }
