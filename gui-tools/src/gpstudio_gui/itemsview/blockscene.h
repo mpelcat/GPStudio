@@ -24,6 +24,7 @@
 #include "gpstudio_gui_common.h"
 
 #include <QGraphicsScene>
+#include "blockitem.h"
 
 #include "lib_parser/lib.h"
 
@@ -36,14 +37,11 @@ public:
     BlockScene();
     ~BlockScene();
 
-    Lib *lib() const;
-    void setLib(Lib *lib);
-
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
 protected:
-    Lib *_lib;
+    QMap<QString, BlockItem* > _blocks;
 };
 
 #endif // BLOCKSCENE_H

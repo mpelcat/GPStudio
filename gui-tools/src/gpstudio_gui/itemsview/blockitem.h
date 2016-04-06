@@ -25,6 +25,7 @@
 
 #include <QGraphicsItem>
 #include <QSvgRenderer>
+#include <QMap>
 
 class ProcessLib;
 class IOLib;
@@ -51,9 +52,10 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    void update();
+    void updateBlock();
 
     void addPort(BlockPortItem *portItem);
+    const QMap<QString, BlockPortItem *> &ports() const;
 
 public:
     // lib
@@ -76,7 +78,7 @@ private:
     QRectF _boundingRect;
     QSvgRenderer _svgRenderer;
 
-    QList<BlockPortItem *> _ports;
+    QMap<QString, BlockPortItem *> _ports;
 };
 
 #endif // BLOCKITEM_H

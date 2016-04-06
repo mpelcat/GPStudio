@@ -34,7 +34,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     if(_portItemIn)
         _portItemIn->addConnect(this);
     setZValue(-1);
-    _style=LineDraw;
+    _style=CubicDraw;
 }
 
 BlockConnectorItem::~BlockConnectorItem()

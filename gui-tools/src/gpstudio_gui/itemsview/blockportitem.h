@@ -26,6 +26,7 @@
 #include <QGraphicsItem>
 
 class BlockConnectorItem;
+class ModelFlow;
 
 class GPSTUDIO_GUI_EXPORT BlockPortItem : public QGraphicsItem
 {
@@ -37,24 +38,29 @@ public:
     int type() const;
 
     QRectF boundingRect() const;
+    QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-    QString processName() const;
-    void setProcessName(const QString &processName);
 
     QString name() const;
     void setName(const QString &name);
+
+    enum Direction {
+        Input,
+        Output
+    };
+    Direction direction() const;
+    void setDirection(const Direction &direction);
 
     void addConnect(BlockConnectorItem *connectItem);
 
     const QList<BlockConnectorItem *> &connects() const;
 
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+public:
+    static BlockPortItem *fromModelFlow(const ModelFlow *modelFlow);
 
 private:
-    QString _processName;
     QString _name;
+    Direction _direction;
 
     QList<BlockConnectorItem *> _connects;
 };

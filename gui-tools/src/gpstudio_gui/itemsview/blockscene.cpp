@@ -20,56 +20,55 @@
 
 #include "blockscene.h"
 
-#include "blockitem.h"
+#include "model/model_fiblock.h"
+
+#include <QDebug>
+#include <QMap>
+
+#include "blockconnectoritem.h"
 
 BlockScene::BlockScene()
 {
-    _lib = NULL;
 }
 
 BlockScene::~BlockScene()
 {
 }
 
-Lib *BlockScene::lib() const
-{
-    return _lib;
-}
-
-void BlockScene::setLib(Lib *lib)
-{
-    _lib = lib;
-}
-
 bool BlockScene::loadFromNode(const ModelNode *node)
 {
     clear();
-    if(_lib==NULL) return false;
 
     foreach (ModelBlock *block, node->blocks())
     {
-        if(block->type()=="io")
+        if(block->name()!="pi" && block->name()!="fi" && block->name()!="ci")
         {
-            IOLib *ioLib = _lib->io(block->driver());
-            if(ioLib)
-            {
-                BlockItem *proc = BlockItem::fromIoLib(ioLib);
-                proc->setName(block->name());
-                proc->setPos(block->xPos(), block->yPos());
-                addItem(proc);
-            }
+            BlockItem *blockItem = BlockItem::fromModelBlock(block);
+            _blocks.insert(block->name(), blockItem);
+            addItem(blockItem);
         }
-        if(block->type()=="process")
-        {
-            ProcessLib *processLib = _lib->process(block->driver());
-            if(processLib)
-            {
-                BlockItem *proc = BlockItem::fromProcessLib(processLib);
-                proc->setName(block->name());
-                proc->setPos(block->xPos(), block->yPos());
-                addItem(proc);
-            }
-        }
+    }
+
+    foreach (ModelFlowConnect *flowConnect, node->getFIBlock()->flowConnects())
+    {
+        QMap<QString, BlockItem* >::const_iterator fromblockIt = _blocks.find(flowConnect->fromblock());
+        if(fromblockIt==_blocks.end()) continue;
+        BlockItem *fromblockItem = fromblockIt.value();
+
+        QMap<QString, BlockPortItem* >::const_iterator fromflowIt = fromblockItem->ports().find(flowConnect->fromflow());
+        if(fromflowIt==fromblockItem->ports().end()) continue;
+        BlockPortItem *fromflowItem = fromflowIt.value();
+
+        QMap<QString, BlockItem* >::const_iterator toblockIt = _blocks.find(flowConnect->toblock());
+        if(toblockIt==_blocks.end()) continue;
+        BlockItem *toblockItem = toblockIt.value();
+
+        QMap<QString, BlockPortItem* >::const_iterator toflowIt = toblockItem->ports().find(flowConnect->toflow());
+        if(toflowIt==fromblockItem->ports().end()) continue;
+        BlockPortItem *toflowItem = toflowIt.value();
+
+        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
+        addItem(connectorItem);
     }
 
     return true;
@@ -78,7 +77,6 @@ bool BlockScene::loadFromNode(const ModelNode *node)
 bool BlockScene::loadFromCamera(const Camera *camera)
 {
     clear();
-    if(_lib==NULL) return false;
 
     foreach (Block *block, camera->blocks())
     {

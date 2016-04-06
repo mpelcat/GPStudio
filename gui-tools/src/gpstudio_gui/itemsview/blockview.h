@@ -37,9 +37,6 @@ public:
     BlockView(QWidget *parent);
     ~BlockView();
 
-    Lib *lib() const;
-    void setLib(Lib *lib);
-
     bool loadFromNode(const ModelNode *node);
 
     BlockScene *blockScene() const;

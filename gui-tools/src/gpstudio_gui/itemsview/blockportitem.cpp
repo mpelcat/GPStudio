@@ -22,13 +22,17 @@
 #include "blockportitem.h"
 
 #include <QPainter>
+#include <QDebug>
 
 #include "lib_parser/processlib.h"
 #include "lib_parser/iolib.h"
 
+#include "model/model_flow.h"
+
 BlockPortItem::BlockPortItem()
 {
     setFlag(ItemIsSelectable, true);
+    _direction = Input;
 }
 
 BlockPortItem::~BlockPortItem()
@@ -42,7 +46,15 @@ int BlockPortItem::type() const
 
 QRectF BlockPortItem::boundingRect() const
 {
-    return QRectF(-10,-10,20,20);
+    if(_direction==Input)
+        return QRectF(-10,-10,90,20);
+    else
+        return QRectF(-40,-10,90,20);
+}
+
+QPainterPath BlockPortItem::shape() const
+{
+    return QPainterPath();
 }
 
 void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -64,16 +76,12 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setBrush(grad);
 
     painter->drawPath(path);
-}
 
-QString BlockPortItem::processName() const
-{
-    return _processName;
-}
-
-void BlockPortItem::setProcessName(const QString &processName)
-{
-    _processName = processName;
+    painter->setPen(QPen());
+    if(_direction==Input)
+        painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
+    else
+        painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
 }
 
 QString BlockPortItem::name() const
@@ -84,6 +92,18 @@ QString BlockPortItem::name() const
 void BlockPortItem::setName(const QString &name)
 {
     _name = name;
+    update();
+}
+
+BlockPortItem::Direction BlockPortItem::direction() const
+{
+    return _direction;
+}
+
+void BlockPortItem::setDirection(const BlockPortItem::Direction &direction)
+{
+    _direction = direction;
+    update();
 }
 
 void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
@@ -91,19 +111,20 @@ void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
     _connects.append(connectItem);
 }
 
-QVariant BlockPortItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    /*if (change == ItemScenePositionHasChanged && scene())
-    {
-        foreach (BlockConnectorItem *connectItem, _connects)
-        {
-            connectItem->updateShape();
-        }
-    }*/
-    return QGraphicsItem::itemChange(change, value);
-}
-
 const QList<BlockConnectorItem *> &BlockPortItem::connects() const
 {
     return _connects;
+}
+
+BlockPortItem *BlockPortItem::fromModelFlow(const ModelFlow *modelFlow)
+{
+    BlockPortItem *item = new BlockPortItem();
+
+    item->_name = modelFlow->name();
+    if(modelFlow->type()=="in")
+        item->_direction = Input;
+    else
+        item->_direction = Output;
+
+    return item;
 }

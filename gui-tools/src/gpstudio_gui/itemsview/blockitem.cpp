@@ -34,13 +34,15 @@
 #include <QCheckBox>
 #include <QSlider>
 
+#include <model/model_block.h>
+
 BlockItem::BlockItem()
 {
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
 
-    QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
+    /*QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
     QCheckBox *checkBox = new QCheckBox("en");
     checkBox->setGeometry(5,5,50,20);
     checkBox->setAutoFillBackground(false);
@@ -52,7 +54,7 @@ BlockItem::BlockItem()
     slider->setGeometry(10,40,100,30);
     slider->setAutoFillBackground(false);
     slider->setAttribute(Qt::WA_NoSystemBackground);
-    widget2->setWidget(slider);
+    widget2->setWidget(slider);*/
 
     update();
 }
@@ -68,7 +70,7 @@ int BlockItem::type() const
 
 QRectF BlockItem::boundingRect() const
 {
-    return _boundingRect;
+    return _boundingRect.adjusted(-2,-2,2,15);
 }
 
 void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -84,6 +86,10 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     {
         painter->drawRect(QRect(0,0,125,50));
     }
+
+    // block name
+    QRectF textRect = QRectF(_boundingRect.x(), _boundingRect.height(), _boundingRect.width(), 15);
+    painter->drawText(textRect, Qt::AlignRight | Qt::AlignBottom, _name);
 }
 
 QString BlockItem::processName() const
@@ -106,22 +112,45 @@ void BlockItem::setName(const QString &name)
     _name = name;
 }
 
-void BlockItem::update()
+void BlockItem::updateBlock()
 {
     if(_svgRenderer.isValid())
     {
-        _boundingRect = _svgRenderer.viewBoxF().adjusted(-10,-10,10,10);
+        _boundingRect = _svgRenderer.viewBoxF();
     }
     else
     {
-        _boundingRect = QRectF(0,0,125,50).adjusted(-10,-10,10,10);
+        _boundingRect = QRectF(0,0,125,50);
+    }
+
+    // port placement
+    int inCount=0, outCount=0;
+    foreach (BlockPortItem *portItem, _ports)
+    {
+        if(portItem->direction()==BlockPortItem::Output)
+            outCount++;
+        else
+            inCount++;
+    }
+    int inId=0, outId=0;
+    foreach (BlockPortItem *portItem, _ports)
+    {
+        if(portItem->direction()==BlockPortItem::Output)
+            portItem->setPos(_boundingRect.width(), (_boundingRect.height()/(outCount+1))*(++outId));
+        else
+            portItem->setPos(0, (_boundingRect.height()/(inCount+1))*(++inId));
     }
 }
 
 void BlockItem::addPort(BlockPortItem *portItem)
 {
     portItem->setParentItem(this);
-    _ports.append(portItem);
+    _ports.insert(portItem->name(), portItem);
+}
+
+const QMap<QString, BlockPortItem *> &BlockItem::ports() const
+{
+    return _ports;
 }
 
 QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
@@ -148,7 +177,8 @@ BlockItem *BlockItem::fromIoLib(const IOLib *ioLib, BlockItem *item)
         item = new BlockItem();
 
     item->_svgRenderer.load(ioLib->draw().toUtf8());
-    item->update();
+    item->setName(ioLib->name());
+    item->updateBlock();
 
     return item;
 }
@@ -162,17 +192,45 @@ BlockItem *BlockItem::fromProcessLib(const ProcessLib *processLib, BlockItem *it
         item = new BlockItem();
 
     item->_svgRenderer.load(processLib->draw().toUtf8());
-    item->update();
+    item->setName(processLib->name());
+    item->updateBlock();
 
     return item;
 }
 
 BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *item)
 {
+    if(!modelBlock)
+        return NULL;
 
+    if(modelBlock->type()=="process")
+    {
+        item = fromProcessLib(Lib::getLib().process(modelBlock->driver()));
+    }
+    else
+    {
+        item = fromIoLib(Lib::getLib().io(modelBlock->driver()));
+    }
+
+    if(!item)
+        item = new BlockItem();
+
+    foreach (ModelFlow *flow, modelBlock->flows())
+    {
+        item->addPort(BlockPortItem::fromModelFlow(flow));
+    }
+    item->setPos(modelBlock->xPos(), modelBlock->yPos());
+    item->setName(modelBlock->name());
+
+    item->updateBlock();
+
+    return item;
 }
 
 BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
 {
+    if(!item)
+        item = new BlockItem();
 
+    return item;
 }

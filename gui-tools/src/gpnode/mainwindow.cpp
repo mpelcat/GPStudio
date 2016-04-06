@@ -48,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _project = new GPNodeProject();
 
     ui->libTreeView->setLib(&Lib::getLib());
-    ui->processView->setLib(&Lib::getLib());
 
     // tests
     BlockItem *hog1 = BlockItem::fromProcessLib(Lib::getLib().process("HOG"));

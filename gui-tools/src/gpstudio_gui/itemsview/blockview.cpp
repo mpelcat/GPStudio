@@ -59,9 +59,8 @@ void BlockView::dragMoveEvent(QDragMoveEvent *event)
 
 void BlockView::dropEvent(QDropEvent *event)
 {
-    if(!_scene->lib()) return;
     QString blockType = event->mimeData()->text();
-    BlockItem *proc = BlockItem::fromProcessLib(_scene->lib()->process(blockType));
+    BlockItem *proc = BlockItem::fromProcessLib(Lib::getLib().process(blockType));
     proc->setPos(mapToScene(event->pos()));
     proc->setName(blockType);
     _scene->addItem(proc);
@@ -126,16 +125,6 @@ void BlockView::setBlockScene(BlockScene *scene)
 BlockScene *BlockView::blockScene() const
 {
     return _scene;
-}
-
-Lib *BlockView::lib() const
-{
-    return _scene->lib();
-}
-
-void BlockView::setLib(Lib *lib)
-{
-    _scene->setLib(lib);
 }
 
 bool BlockView::loadFromNode(const ModelNode *node)
