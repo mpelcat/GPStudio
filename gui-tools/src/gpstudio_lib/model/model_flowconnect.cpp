@@ -78,7 +78,7 @@ ModelFlowConnect *ModelFlowConnect::fromNodeGenerated(const QDomElement &domElem
 {
     ModelFlowConnect *flowConnect=new ModelFlowConnect();
 
-    flowConnect->setFromflow(domElement.attribute("fromblock",""));
+    flowConnect->setFromblock(domElement.attribute("fromblock",""));
     flowConnect->setFromflow(domElement.attribute("fromflow",""));
     flowConnect->setToblock(domElement.attribute("toblock",""));
     flowConnect->setToflow(domElement.attribute("toflow",""));
