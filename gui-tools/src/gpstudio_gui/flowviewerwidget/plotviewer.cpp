@@ -31,6 +31,7 @@ PlotViewer::PlotViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
     setupWidgets();
+    _startDate = 0;
     connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
 }
 
