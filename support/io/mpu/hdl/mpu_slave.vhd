@@ -13,8 +13,6 @@ entity mpu_slave is
 
 		---------------- dynamic parameters ports ---------------
 		enable_reg       : out std_logic_vector(31 downto 0);
-		trigger_reg      : out std_logic_vector(31 downto 0);
-		auto_reg         : out std_logic_vector(31 downto 0);
 		gyro_config_reg  : out std_logic_vector(31 downto 0);
 		accel_config_reg : out std_logic_vector(31 downto 0);
 		spl_rate_reg     : out std_logic_vector(31 downto 0);
@@ -24,7 +22,7 @@ entity mpu_slave is
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i       : in std_logic_vector(9 downto 0);
+		addr_rel_i       : in std_logic_vector(11 downto 0);
 		wr_i             : in std_logic;
 		rd_i             : in std_logic;
 		datawr_i         : in std_logic_vector(31 downto 0);
@@ -36,18 +34,14 @@ architecture rtl of mpu_slave is
 
 	-- Registers address       
 	constant ENABLE_REG_REG_ADDR       : natural := 0;
-	constant TRIGGER_REG_REG_ADDR      : natural := 2;
-	constant AUTO_REG_REG_ADDR         : natural := 3;
-	constant GYRO_CONFIG_REG_REG_ADDR  : natural := 4;
-	constant ACCEL_CONFIG_REG_REG_ADDR : natural := 5;
-	constant SPL_RATE_REG_REG_ADDR     : natural := 6;
-	constant GAIN_COMPASS_REG_REG_ADDR : natural := 7;
-	constant FZ_COMPASS_REG_REG_ADDR   : natural := 8;
+	constant GYRO_CONFIG_REG_REG_ADDR  : natural := 1;
+	constant ACCEL_CONFIG_REG_REG_ADDR : natural := 2;
+	constant SPL_RATE_REG_REG_ADDR     : natural := 3;
+	constant GAIN_COMPASS_REG_REG_ADDR : natural := 4;
+	constant FZ_COMPASS_REG_REG_ADDR   : natural := 5;
 
 	-- Internal registers 
 	signal enable_reg_reg       : std_logic_vector (31 downto 0);
-	signal trigger_reg_reg      : std_logic_vector (31 downto 0);
-	signal auto_reg_reg         : std_logic_vector (31 downto 0);
 	signal gyro_config_reg_reg  : std_logic_vector (31 downto 0);
 	signal accel_config_reg_reg : std_logic_vector (31 downto 0);
 	signal spl_rate_reg_reg     : std_logic_vector (31 downto 0);
@@ -59,8 +53,6 @@ begin
 	begin
 		if(reset_n='0') then
 			enable_reg_reg <= x"00000000";
-			trigger_reg_reg <= x"00000000";
-			auto_reg_reg <= x"00000000";
 			gyro_config_reg_reg <= x"00000000";
 			accel_config_reg_reg <= x"00000000";
 			spl_rate_reg_reg <= x"00000000";
@@ -69,21 +61,17 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 12))=>
 						enable_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(TRIGGER_REG_REG_ADDR, 10))=>
-						trigger_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(AUTO_REG_REG_ADDR, 10))=>
-						auto_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 12))=>
 						gyro_config_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 12))=>
 						accel_config_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 12))=>
 						spl_rate_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 12))=>
 						gain_compass_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 12))=>
 						fz_compass_reg_reg <= datawr_i;
 					when others=>
 				end case;
@@ -98,21 +86,17 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(rd_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 12))=>
 						datard_o <= enable_reg_reg;
-					when std_logic_vector(to_unsigned(TRIGGER_REG_REG_ADDR, 10))=>
-						datard_o <= trigger_reg_reg;
-					when std_logic_vector(to_unsigned(AUTO_REG_REG_ADDR, 10))=>
-						datard_o <= auto_reg_reg;
-					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(GYRO_CONFIG_REG_REG_ADDR, 12))=>
 						datard_o <= gyro_config_reg_reg;
-					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(ACCEL_CONFIG_REG_REG_ADDR, 12))=>
 						datard_o <= accel_config_reg_reg;
-					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(SPL_RATE_REG_REG_ADDR, 12))=>
 						datard_o <= spl_rate_reg_reg;
-					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(GAIN_COMPASS_REG_REG_ADDR, 12))=>
 						datard_o <= gain_compass_reg_reg;
-					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 10))=>
+					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 12))=>
 						datard_o <= fz_compass_reg_reg;
 					when others=>
 						datard_o <= (others => '0');
@@ -122,8 +106,6 @@ begin
 	end process;
 
 	enable_reg <= enable_reg_reg;
-	trigger_reg <= trigger_reg_reg;
-	auto_reg <= auto_reg_reg;
 	gyro_config_reg <= gyro_config_reg_reg;
 	accel_config_reg <= accel_config_reg_reg;
 	spl_rate_reg <= spl_rate_reg_reg;

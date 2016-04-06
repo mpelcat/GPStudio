@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="mpu" categ="" pi_size_addr_rel="10" desc="">
+<io driver="mpu" categ="" pi_size_addr_rel="12" desc="">
   <files>
     <file name="mpu_acqui.vhd" type="vhdl" group="hdl" path="hdl/mpu_acqui.vhd" desc=""/>
     <file name="mpu_i2c.vhd" type="vhdl" group="hdl" path="hdl/mpu_i2c.vhd" desc=""/>
@@ -13,28 +13,26 @@
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
   </resets>
   <flows>
-    <flow name="data_out" size="8" type="out" desc="">
-		<properties>
-			<property name="datatype" value="vector" type="flowtype"/>
-			<property name="itemdatatype" value="s16" type="hwtype"/>
-			<property name="swtype" value="float" type="swtype"/>
-			<property name="scaling" value="item.value*2" type="function"/>
-		</properties>
-	</flow>
+    <flow name="mpu_out" size="8" type="out" desc="">
+      <properties>
+        <property name="datatype" value="vector" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="itemdatatype" value="s16" caption="itemdatatype" type="hwtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="swtype" value="float" caption="swtype" type="swtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="scaling" value="item.value*2" caption="scaling" type="function" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+      </properties>
+    </flow>
   </flows>
   <params>
-    <param name="enable_reg" value="" regaddr="0" propertymap="Enable.value" default="" min="" max="" desc=""/>
-    <param name="auto_reg" value="" regaddr="3" propertymap="Mode_auto.value" default="" min="" max="" desc=""/>
-    <param name="gyro_config_reg" value="" regaddr="4" propertymap="gyro_config.bits" default="" min="" max="" desc=""/>
-    <param name="accel_config_reg" value="" regaddr="5" propertymap="accel_config.bits" default="" min="" max="" desc=""/>
-    <param name="spl_rate_reg" value="" regaddr="6" propertymap="Sample_rate.value" default="" min="" max="" desc=""/>
-    <param name="gain_compass_reg" value="" regaddr="7" propertymap="gain_compass.bits" default="" min="" max="" desc=""/>
-    <param name="fz_compass_reg" value="" regaddr="8" propertymap="fz_compass.bits" default="" min="" max="" desc=""/>
+    <param name="enable_reg" value="" regaddr="0" propertymap="enable.value" default="" min="" max="" desc=""/>
+    <param name="gyro_config_reg" value="" regaddr="1" propertymap="gyro_config.bits" default="" min="" max="" desc=""/>
+    <param name="accel_config_reg" value="" regaddr="2" propertymap="accel_config.bits" default="" min="" max="" desc=""/>
+    <param name="spl_rate_reg" value="" regaddr="3" propertymap="sample_rate.value" default="" min="" max="" desc=""/>
+    <param name="gain_compass_reg" value="" regaddr="4" propertymap="gain_compass.bits" default="" min="" max="" desc=""/>
+    <param name="fz_compass_reg" value="" regaddr="5" propertymap="fz_compass.bits" default="" min="" max="" desc=""/>
   </params>
   <properties>
-    <property name="Enable" value="" caption="Enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="Mode_auto" value="" caption="Mode_auto" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="gyro_config" value="" caption="Gyroscope configuration" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
+    <property name="enable" value="" caption="Enable device" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="gyro_config" value="" caption="Gyroscope sensibility" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <enums>
         <enum name="g0" value="0" caption="± 250 °/s" desc=""/>
         <enum name="g1" value="1" caption="± 500 °/s" desc=""/>
@@ -42,7 +40,7 @@
         <enum name="g3" value="3" caption="± 2000 °/s" desc=""/>
       </enums>
     </property>
-    <property name="accel_config" value="" caption="Accelerometer configuration" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
+    <property name="accel_config" value="" caption="Accelerometer sensibility" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <enums>
         <enum name="a0" value="0" caption="± 2g" desc=""/>
         <enum name="a1" value="1" caption="± 4g" desc=""/>
@@ -50,8 +48,8 @@
         <enum name="a3" value="3" caption="± 16g" desc=""/>
       </enums>
     </property>
-    <property name="Sample_rate" value="255" caption="Sample_rate" type="int" min="7" max="255" step="1" assert="" propertymap="" onchange="" desc=""/>
-    <property name="gain_compass" value="" caption="Compass range" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
+    <property name="sample_rate" value="255" caption="Sample rate" type="int" min="7" max="255" step="1" assert="" propertymap="" onchange="" desc=""/>
+    <property name="gain_compass" value="" caption="Compass sensibility" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <enums>
         <enum name="c0" value="0" caption="± 0.88 Ga" desc=""/>
         <enum name="c1" value="1" caption="± 1.3 Ga" desc=""/>

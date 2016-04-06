@@ -49,16 +49,16 @@ signal mode_auto			: std_logic;
 signal trigger_reg		: std_logic;
 signal trigger_auto 		: std_logic;
 signal config_change		: std_logic;
-
+signal en_dl				: std_logic;
 signal spl_rate_dl		: std_logic_vector(7 downto 0);
 signal gyro_config_dl	: std_logic_vector(1 downto 0);
 signal accel_config_dl	: std_logic_vector(1 downto 0);
 signal gain_compass_dl	: std_logic_vector(2 downto 0);
 signal freq_compass_dl	: std_logic_vector(2 downto 0);
 signal mode_auto_dl		: std_logic;
-
+signal run_conf			: std_logic;
 signal config_init,config_init_dl		: std_logic;
-
+signal not_reset			: std_logic;
 type data_type is
 	record
 		data	: std_logic_vector(7 downto 0);
@@ -73,6 +73,7 @@ begin
 
 AD0 			<= '0';
 reset_i2c 	<= reset and reset_imu;
+not_reset   <= not reset;
 
 process(clk_proc,reset,mode_auto)
 variable count_param		: integer range 0 TO 1_700_000;
@@ -87,48 +88,49 @@ begin
 		config_init 		<= '0';
 		
 	elsif clk_proc'event and clk_proc='1' then
-		config_init_dl <= config_init;
-		
-		if mode_auto='1' then
-			count_param 	:= count_param + 1;
+		if en='1' then 
+			config_init_dl <= config_init;
 			
-			if count_param < COUNT_INIT then
-					config_init <= '1';
-					
-			elsif count_param < COUNT_FIFO_RST then
-				config_init <= '0';
-				reset_fifo_buffer <= '1';		
+			if run_conf='0' then
+				count_param 	:= count_param + 1;
 				
-			elsif count_param < COUNT_END_FIFO_RST then
-			
-				if count_rst_fifo /= 0 then
-					trigger_auto 	<= '1';
-				else
-					trigger_auto 	<= '0';
-				end if;
-				   reset_fifo_buffer <= '0';
-				
-			elsif count_param <= COUNT_ONE_ACQUI+COUNT_START_ACQUI then  
-				trigger_auto 		<= '0';
-				
-				if count_param = COUNT_ONE_ACQUI+COUNT_START_ACQUI then
-					count_rst_fifo := count_rst_fifo+1;
-					
-					if count_rst_fifo = 2 then				
-						count_param		:= COUNT_START_FIFO_RST;
-						count_rst_fifo	:= 0;
+				if count_param < COUNT_INIT then
+						config_init <= '1';
 						
+				elsif count_param < COUNT_FIFO_RST then
+					config_init <= '0';
+					reset_fifo_buffer <= '1';		
+					
+				elsif count_param < COUNT_END_FIFO_RST then
+				
+					if count_rst_fifo /= 0 then
+						trigger_auto 	<= '1';
 					else
-						count_param		:= COUNT_START_ACQUI; 
+						trigger_auto 	<= '0';
+					end if;
+						reset_fifo_buffer <= '0';
+					
+				elsif count_param <= COUNT_ONE_ACQUI+COUNT_START_ACQUI then  
+					trigger_auto 		<= '0';
+					if count_param = COUNT_ONE_ACQUI+COUNT_START_ACQUI then
+						count_rst_fifo := count_rst_fifo+1;
+						
+						if count_rst_fifo = 2 then				
+							count_param		:= COUNT_START_FIFO_RST;
+							count_rst_fifo	:= 0;
+							
+						else
+							count_param		:= COUNT_START_ACQUI; 
+						end if;
 					end if;
 				end if;
-			end if;
-		else
-			count_rst_fifo		:= 0;
-			count_param			:= COUNT_START_ACQUI; 
-			trigger_auto 	<= '0';
-			reset_fifo_buffer <= '0';
+			else
+				count_rst_fifo		:= 0;
+				count_param			:= COUNT_START_FIFO_RST;--COUNT_START_ACQUI; 
+				trigger_auto 	<= '0';
+				reset_fifo_buffer <= '0';
 
+			end if;
 		end if;
 	end if;
 end process;
@@ -148,11 +150,13 @@ mpu_i2c_inst : entity work.mpu_i2c(behavioral) port map (
 	gain_compass		=> gain_compass,
 	freq_compass		=> freq_compass,
 	reset_fifo_buffer => reset_fifo_buffer,
+	run_conf				=> run_conf,
 	sda 					=> sda,
 	scl 					=> scl
 	);
 	
 mpu_fifo_inst_1 : entity work.mpu_fifo(syn) port map (
+		aclr			=> not_reset,
 		data			=> data_fifo_in,
 		rdclk			=> clk_proc,
 		rdreq			=> rd_en,
@@ -172,15 +176,15 @@ begin
 			rd_en 	 	<= '0';
 		elsif clk_proc'event and clk_proc='1' then
 		
-			rd_en_dl 	<= rd_en;
-			rd_en_dl2 	<= rd_en_dl;
-			spl_rate_dl <= spl_rate;
-			accel_config_dl <= accel_config;
-			gyro_config_dl <= gyro_config;
-			gain_compass_dl <= gain_compass;
-			freq_compass_dl <= freq_compass;
-			mode_auto_dl 	 <= mode_auto;
-			
+			rd_en_dl 			<= rd_en;
+			rd_en_dl2 			<= rd_en_dl;
+			spl_rate_dl 		<= spl_rate;
+			accel_config_dl 	<= accel_config;
+			gyro_config_dl 	<= gyro_config;
+			gain_compass_dl 	<= gain_compass;
+			freq_compass_dl 	<= freq_compass;
+			mode_auto_dl 		<= mode_auto;
+			en_dl					<= en;
 			
 		-----Assignations des données paramètres
 			en 				<= parameters(31);
@@ -204,9 +208,9 @@ begin
 
 end process;
 
-config_change <= '1' when ((spl_rate/=spl_rate_dl or gyro_config/=gyro_config_dl or accel_config/=accel_config_dl 
-									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) and mode_auto='0') or (config_init='1' and config_init_dl='0')
-									or mode_auto/=mode_auto_dl
+config_change <= '1' when (spl_rate/=spl_rate_dl or gyro_config/=gyro_config_dl or accel_config/=accel_config_dl 
+									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) or (config_init='1' and config_init_dl='0')
+									or en/=en_dl
 					else '0';
 
 
@@ -226,7 +230,7 @@ outdata.dv <= rd_en_dl;
 outdata.fv <= rd_en or rd_en_dl2;
 data_out   <= outdata.fv & outdata.dv & outdata.data;
 
-trigger <= trigger_auto when mode_auto='1' else
+trigger <= trigger_auto when en='1' else
 			  trigger_reg;
 
 end RTL;
