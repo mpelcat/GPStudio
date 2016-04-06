@@ -21,6 +21,7 @@
 #include "flowpackage.h"
 
 #include <QDebug>
+#include <QDateTime>
 
 FlowPackage::FlowPackage(const QByteArray &data)
     : _data(data)
@@ -89,50 +90,28 @@ void FlowPackage::appendData(const QByteArray &data)
 
 QImage *FlowPackage::toImage(const int width, const int height, const int dataSize) const
 {
-    //Q_UNUSED(dataSize);
+    QImage *img = new QImage(width, height, QImage::Format_RGB32);
 
-    QImage *img = new QImage(width, height, QImage::Format_Indexed8);
-    QVector<QRgb> colors;
-    for(int i=0; i<256; i++) colors.append(qRgb(i,i,i));
-    img->setColorTable(colors);
-
-    //qDebug()<<_data.size()<<width*height;
-
-    /*for(int y=0; y<height; y++)
+    if(dataSize==8)
     {
-        for(int x=0; x<width; x++)
-        {
-            if(((x+y*width)*2+1)<_data.size())
-            {
-                unsigned value = (unsigned char)_data.data()[(x+y*width)*2+1];
+        const char *ptr = _data.data();
+        const char *ptrEnd = _data.data()+_data.size();
 
-                //if(value==1) value = 255;
-                img.setPixel(x,y,value);
-            }
-        }
-    }*/
+        int x, y;
+        int rwidth = width;
+        int rheight = _data.size()/width;
 
-    //qDebug() << _data.size() << width * height;
-    const char *ptr = _data.data();
-    if(dataSize==16) ptr++;
-    const char *ptrEnd = _data.data()+_data.size();
-    for(int y=0; y<height; y++)
-    {
-        for(int x=0; x<width; x++)
+        for(y=0; y<rheight; y++)
         {
-            if(ptr<ptrEnd)
+            QRgb *line = (QRgb*)img->scanLine(y);
+            for(x=0; x<width; x++)
             {
-                img->setPixel(x,y,(unsigned char)(*ptr));
-                ptr+=dataSize/8;
-            }
-            else
-            {
-                img->setPixel(x,y,255);
+                //img->setPixel(x,y,qRgb(*ptr,*ptr,*ptr));
+                line[x]=qRgb(*ptr,*ptr,*ptr);
+                ptr++;
             }
         }
     }
-
-    //memcpy(img->bits(), _data.data(), _data.size());
 
     return img;
 }
