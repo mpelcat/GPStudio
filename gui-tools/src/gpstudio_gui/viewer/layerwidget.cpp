@@ -43,7 +43,6 @@ LayerWidget::LayerWidget(QWidget *parent) :
 
 LayerWidget::~LayerWidget()
 {
-    qDebug()<<"del layer";
 }
 
 #ifdef __USE_OPEN_CV__
