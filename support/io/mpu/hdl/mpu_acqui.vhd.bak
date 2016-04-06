@@ -199,18 +199,16 @@ begin
 			gain_compass	<= parameters(14 downto 12);
 			freq_compass	<= parameters(11 downto 9);
 
-			if count_fifo = "010100" and rd_en='0' then		----Nombre de données à lire dans la Fifo
+			if count_fifo = "010100" then		----Nombre de données à lire dans la Fifo
 				rd_en			<= '1';
-				rd_accel		<= '0';
-				rd_gyro		<= '0';
-			elsif count_fifo = "010100" and rd_en='1' then
 				rd_accel		<= '1';
-			elsif count_fifo = "001111" and rd_en='1' then
-				rd_accel		<= '0';
-			elsif count_fifo = "001101" and rd_en='1' then
-				rd_gyro		<= '1';
-			elsif count_fifo = "000111" and rd_en='1' then
 				rd_gyro		<= '0';
+			--elsif count_fifo = "010001" and rd_en='1' then
+				--rd_accel		<= '1';
+				--rd_gyro		<= '0';
+			elsif count_fifo = "010000" and rd_en='1' then
+				rd_accel		<= '0';
+				rd_gyro		<= '1';
 			elsif count_fifo = "000010" and rd_en='1' then ----Fifo vide, fin du read 
 				rd_en			<= '0';
 				rd_accel		<= '0';

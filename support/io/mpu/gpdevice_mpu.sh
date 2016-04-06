@@ -12,14 +12,19 @@
 	gpdevice addfile -p hdl/mpu_slave.vhd -t vhdl -g hdl
 	
 	#Flows
-	gpdevice addflow -n mpu_out -d out -s 8
-	
-	#Flow properties
-	gpdevice addproperty -n mpu_out.datatype -t flowtype -v vector
-	gpdevice addproperty -n mpu_out.itemdatatype -t hwtype -v s16
-	gpdevice addproperty -n mpu_out.swtype -t swtype -v float
-	gpdevice addproperty -n mpu_out.scaling -t function -v item.value*2
+	gpdevice addflow -n accelero -d out -s 8
+	gpdevice addflow -n gyroscope -d out -s 8	
 
+	#Flow properties
+	gpdevice addproperty -n accelero.datatype -t flowtype -v vector
+	gpdevice addproperty -n accelero.itemdatatype -t hwtype -v s16
+	gpdevice addproperty -n accelero.swtype -t swtype -v float
+	gpdevice addproperty -n accelero.scaling -t function -v item.value*2
+
+	gpdevice addproperty -n gyroscope.datatype -t flowtype -v vector
+	gpdevice addproperty -n gyroscope.itemdatatype -t hwtype -v s16
+	gpdevice addproperty -n gyroscope.swtype -t swtype -v float
+	gpdevice addproperty -n gyroscope.scaling -t function -v item.value*2
 	#Reset
 	gpdevice addreset -n reset_n -d in -g reset_n
 

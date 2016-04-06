@@ -13,7 +13,15 @@
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
   </resets>
   <flows>
-    <flow name="mpu_out" size="8" type="out" desc="">
+    <flow name="accelero" size="8" type="out" desc="">
+      <properties>
+        <property name="datatype" value="vector" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="itemdatatype" value="s16" caption="itemdatatype" type="hwtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="swtype" value="float" caption="swtype" type="swtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="scaling" value="item.value*2" caption="scaling" type="function" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+      </properties>
+    </flow>
+    <flow name="gyroscope" size="8" type="out" desc="">
       <properties>
         <property name="datatype" value="vector" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
         <property name="itemdatatype" value="s16" caption="itemdatatype" type="hwtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
