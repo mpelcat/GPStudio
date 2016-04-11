@@ -938,6 +938,12 @@ class Block
 		
 		if($format=="complete" or $format=="blockdef")
 		{
+			// SVG draw
+			if(isset($this->xml->svg))
+			{
+				$xml_element->appendChild($xml->importNode(dom_import_simplexml($this->xml->svg), true));
+			}
+			
 			// files
 			if(!empty($this->files))
 			{
