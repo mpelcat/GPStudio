@@ -304,11 +304,11 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= ""."\r\n";
 		$content .= "all: generate compile send view"."\r\n";
 		$content .= ""."\r\n";
-		$content .= "generate: ".getRelativePath($node->node_file, $path)."\r\n";
+		$content .= "generate: ".str_replace("\\",'/',getRelativePath($node->node_file, $path))."\r\n";
 		if(dirname($node->node_file)==realpath($path))
 			$content .= "	gpnode generate \${OPT}"."\r\n";
 		else
-			$content .= "	cd \"".getRelativePath(dirname($node->node_file), $path)."\" && gpnode generate -o \"".getRelativePath($path, dirname($node->node_file))."\" \${OPT}"."\r\n";
+			$content .= "	cd \"".str_replace("\\",'/',getRelativePath(dirname($node->node_file), $path))."\" && gpnode generate -o \"".str_replace("\\",'/',getRelativePath($path, dirname($node->node_file)))."\" \${OPT}"."\r\n";
 		$content .= ""."\r\n";
 		$content .= "compile:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $nodename.qpf"."\r\n";
