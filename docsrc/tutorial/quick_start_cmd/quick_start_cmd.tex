@@ -216,6 +216,7 @@ After that, a subdirectory `build' is created in your project directory with the
 \dirtree{%
 .1 tuto1/.
    .2 tuto1.node\DTcomment{project file}.
+   .2 Makefile\DTcomment{Helper Makefile to call the built Makefile}.
    .2 \bfseries build/\DTcomment{output directory}.
         .3 top.vhd\DTcomment{generated top level}.
         .3 ci.vhd\DTcomment{generated CI block}.
@@ -230,7 +231,7 @@ After that, a subdirectory `build' is created in your project directory with the
            .4 IP2.
            .4 IP....
 }
-\caption{Files tree of the main distribution of GPStudio}
+\caption{Files tree of the project and generated files}
 \label{fig:archivetree}
 \end{figure}
 
@@ -242,10 +243,9 @@ The produced Makefile offers you several commands:
 \item \textbf{view}: launch the viewer
 \end{itemize}
 
-To launch the compilation process, go into the build directory, and start the command `compile'
+To launch the compilation process, call make with the rule `compile'
 
 \begin{sample}
-> cd build/\\
 > make compile
 \end{sample}
 
@@ -642,7 +642,6 @@ Like that, you obtain
 
 Test it
 \begin{sample}
-> cd build \\
 > make generate compile send view
 \end{sample}
 
@@ -741,7 +740,7 @@ To enable the threshold value that could change dynamically, get the `threshold\
 
 Test it
 \begin{sample}
-> cd ../build \\
+> cd .. \\
 > make generate compile send view
 \end{sample}
 
