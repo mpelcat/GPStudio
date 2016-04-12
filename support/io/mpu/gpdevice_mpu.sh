@@ -72,7 +72,7 @@
 	#Sample_rate
 	gpdevice addparam -n spl_rate_reg -r 3 -m sample_rate.value
 	gpdevice addproperty -n sample_rate -t int
-	gpdevice setproperty -n sample_rate -v 255 -r 7:255 -s 1 
+	gpdevice setproperty -n sample_rate -v 30 -r 1:100 -s 1 
 	gpdevice setproperty -n sample_rate -l "Sample rate"
 	
 	#Compass gain

@@ -27,6 +27,7 @@ ENTITY mpu_i2c IS
 	 freq_compass			: in std_logic_vector(2 downto 0);
     reset_fifo_buffer	: in std_logic;   							--Reset le buffer de la FIFO
 	 run_conf				: out std_logic;
+	 rd_fifo_count 		: in std_LOGIC;
     sda       				: INOUT STD_LOGIC;                     --serial data output of i2c bus
     scl       				: INOUT STD_LOGIC                      --serial clock output of i2c bus
 	 );
@@ -86,6 +87,7 @@ signal op_counter	   	: std_logic_vector(7 downto 0);
 signal reset_fifo_flag 	: std_logic;
 signal reset_fifo_dl   	: std_logic;
 signal run_conf_s			: std_logic;
+signal rd_fifo_count_dl : std_logic;
 
 begin
 
@@ -126,7 +128,8 @@ begin
 			trig 					<= trigger and not trig_read_dl;
 			prev_end_rw 		<= end_rw_s;
 			reset_fifo_dl 		<= reset_fifo_buffer;
-			reset_fifo_flag 	<= reset_fifo_buffer and not reset_fifo_dl;
+			reset_fifo_flag 	<= (reset_fifo_buffer and not reset_fifo_dl) or (rd_fifo_count and not rd_fifo_count_dl);
+			rd_fifo_count_dl  <= rd_fifo_count;
 			
 		case (state) is
 		
@@ -134,7 +137,7 @@ begin
 			   
 			   if en='1' then
 															
-					if ((busy_s='0' and (trig='1' or run_conf_s='1')) or reset_fifo_flag='1') then		----- Start of communication detected	
+					if (busy_s='0' and (trig='1' or run_conf_s='1')) or reset_fifo_flag='1' then		----- Start of communication detected	
 						state <= init;
 					else
 						state <= idle;
@@ -168,7 +171,7 @@ begin
 							state 	 <= read_state;
 						end if;
 									
-						if count_ack=x"14" then		----- Full sample detected in the FIFO
+						if count_ack=x"14" or (count_ack=x"2" and rd_fifo_count='1')  then		----- Full sample detected in the FIFO
 							state 		<= idle;
 							ena_s 		<= '0';
 							count_ack 	<= x"00";
@@ -220,7 +223,7 @@ begin
 		----- Counting configuration operations 
 		op_counter_f_dl <= op_counter_f;		
 		if op_counter_f='1' and op_counter_f_dl='0' then
-			if (op_counter < x"11") then
+			if (op_counter < x"12") then
 				op_counter <= op_counter +1;
 			else
 				op_counter <= x"00";
@@ -242,6 +245,11 @@ begin
 						data_to_w 			<= x"64";
 					
 					----- Reading data from the internal FIFO of the MPU-6050
+					elsif rd_fifo_count='1' then
+						addr_s 				<= ADDR_I2C_MPU;
+						register_number 	<= x"72";--3A int status
+						data_to_w 			<= x"00";
+						
 					else
 						addr_s 				<= ADDR_I2C_MPU;
 						register_number 	<= FIFO_READ;
@@ -342,8 +350,13 @@ begin
 						elsif op_counter=x"0F" then			
 							register_number 	<= I2C_SLV0_CTRL;
 							data_to_w			<= x"86";
+							
+						----- Enable data ready interrupt
+						elsif op_counter=x"10" then			
+							register_number 	<= x"38";
+							data_to_w			<= x"01";
 
-						elsif op_counter=x"10" then
+						elsif op_counter=x"11" then
 							register_number 	<= USER_CTRL;
 							data_to_w			<= x"64";
 							state_conf			<= waiting;

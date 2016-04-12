@@ -66,11 +66,22 @@ signal gain_compass_dl	: std_logic_vector(2 downto 0);
 signal freq_compass_dl	: std_logic_vector(2 downto 0);
 signal mode_auto_dl		: std_logic;
 signal run_conf			: std_logic;
-signal config_init,config_init_dl		: std_logic;
 signal not_reset			: std_logic;
 signal data_fifo_out		: std_logic_vector(7 downto 0);
 signal rd_accel,rd_gyro	: std_logic;
 signal rd_comp				: std_logic;
+signal count_rst_fifo   : unsigned(3 downto 0);
+signal count_param		: integer range 0 TO 30_000_000;
+signal spl_ratex2			: unsigned(8 downto 0);--8
+signal clk_50M				: unsigned(27 downto 0);
+signal COUNT_ONE_ACQUI	: INTEGER RANGE 0 TO 30_000_000;
+signal spl_rate_mpu		: std_logic_vector(7 downto 0);
+signal rd_fifo_count		: std_logic;
+signal rd_comp_dl			: std_logic;
+signal ready 				: std_logic;
+signal rd_ready_f			: std_logic;
+signal fifo_mpu_count	: std_logic_vector(15 downto 0);
+signal fifo_mpu_res		: unsigned(15 downto 0);
 
 begin
 
@@ -78,62 +89,80 @@ AD0 			<= '0';
 reset_i2c 	<= reset and reset_imu;
 not_reset   <= not reset;
 
-process(clk_proc,reset,mode_auto)
-variable count_param		: integer range 0 TO 1_700_000;
-variable count_rst_fifo : integer range 0 TO 20;
-begin
+spl_ratex2			<= unsigned(spl_rate)&'0';
+clk_50M				<= x"2FAF080";
+COUNT_ONE_ACQUI  	<= to_integer(clk_50M/spl_ratex2);
 	
+process(clk_proc,reset,mode_auto)
+begin
 	if reset='0' then
 		trigger_auto 		<= '0';
 		reset_fifo_buffer <= '0';
-		count_param			:= 0;
-		count_rst_fifo		:= 0;
-		config_init 		<= '0';
+		count_param			<= 0;
+		count_rst_fifo		<= x"0";
+		rd_fifo_count 		<= '0';
 		
-	elsif clk_proc'event and clk_proc='1' then		----- Generates triggers for read data from mpu
+	elsif clk_proc'event and clk_proc='1' then		----- Generates triggers for reading data from mpu
 		if en='1' then 
-			config_init_dl <= config_init;
+			
+			if spl_rate <= x"0F" then --15
+				spl_rate_mpu	<= x"84"; --60.15hz
+			elsif spl_rate <= x"1E" then --30
+				spl_rate_mpu	<= x"57"; --90.9hz  
+			elsif  spl_rate <= x"3C" then --60
+				spl_rate_mpu	<= x"34"; --150.9hz
+			else
+				spl_rate_mpu	<= x"19"; --307.7hz
+			end if;
 			
 			if run_conf='0' then
-				count_param 	:= count_param + 1;
+				count_param 	<= count_param + 1;
+
+				if count_param < COUNT_ONE_ACQUI-20000 then 
 				
-				if count_param < COUNT_INIT then
-						config_init <= '1';
-						
-				elsif count_param < COUNT_FIFO_RST then
-					config_init <= '0';
-					reset_fifo_buffer <= '1';		
-					
-				elsif count_param < COUNT_END_FIFO_RST then
-				
-					if count_rst_fifo /= 0 then
-						trigger_auto 	<= '1';
-					else
-						trigger_auto 	<= '0';
-					end if;
+					if count_rst_fifo = x"1" then
+						trigger_auto 		<= '1';
 						reset_fifo_buffer <= '0';
+						rd_fifo_count		<= '0';
+					else
+						trigger_auto 		<= '0';
+						reset_fifo_buffer <= '1';
+						rd_fifo_count		<= '0';
+					end if;
 					
-				elsif count_param <= COUNT_ONE_ACQUI+COUNT_START_ACQUI then  
-					trigger_auto 		<= '0';
-					if count_param = COUNT_ONE_ACQUI+COUNT_START_ACQUI then
-						count_rst_fifo := count_rst_fifo+1;
+				elsif count_param <= COUNT_ONE_ACQUI-8000 then  	
+						reset_fifo_buffer <= '0';
+						trigger_auto 	<= '0';
+						if count_rst_fifo=x"0" then
+							rd_fifo_count		<= '1';
+						end if;
 						
-						if count_rst_fifo = 2 then				
-							count_param		:= COUNT_START_FIFO_RST;
-							count_rst_fifo	:= 0;
-							
-						else
-							count_param		:= COUNT_START_ACQUI; 
+				elsif count_param <= COUNT_ONE_ACQUI then  
+					
+					if count_param = COUNT_ONE_ACQUI then  
+						count_rst_fifo <= count_rst_fifo+1;
+						count_param		<= 0;
+						
+						if count_rst_fifo = x"1" then				
+							count_rst_fifo	<= x"0";	
 						end if;
 					end if;
 				end if;
 			else
-				count_rst_fifo		:= 0;
-				count_param			:= COUNT_START_FIFO_RST;
-				trigger_auto 	<= '0';
+				count_rst_fifo		<= x"0";
+				count_param			<= 0;
+				trigger_auto 		<= '0';
 				reset_fifo_buffer <= '0';
-
+				rd_fifo_count		<= '0';
 			end if;
+		
+		else
+			count_rst_fifo		<= x"0";
+			count_param			<= 0;
+			trigger_auto 		<= '0';
+			reset_fifo_buffer <= '0';
+			rd_fifo_count		<= '0';
+		
 		end if;
 	end if;
 end process;
@@ -147,13 +176,14 @@ mpu_i2c_inst : entity work.mpu_i2c(behavioral) port map (
 	trigger 				=> trigger,
 	data_read 			=> data_fifo_in,
 	fifo_wr_en			=> wr_en,
-	spl_rate				=> spl_rate,
+	spl_rate				=> spl_rate_mpu,
 	gyro_config			=> gyro_config,
 	accel_config		=> accel_config,
 	gain_compass		=> gain_compass,
 	freq_compass		=> freq_compass,
 	reset_fifo_buffer => reset_fifo_buffer,
 	run_conf				=> run_conf,
+	rd_fifo_count 		=> rd_fifo_count,
 	sda 					=> sda,
 	scl 					=> scl
 	);
@@ -192,6 +222,7 @@ begin
 			freq_compass_dl 	<= freq_compass;
 			mode_auto_dl 		<= mode_auto;
 			en_dl					<= en;
+			rd_comp_dl			<= rd_comp;
 			
 		----- Assignation of the parameters
 			en 				<= parameters(31);
@@ -205,25 +236,30 @@ begin
 			gain_compass	<= parameters(14 downto 12);
 			freq_compass	<= parameters(11 downto 9);
 
-			if count_fifo = "010100" and rd_en='0' then	----- Reading FIFO and set data_valid and flow_valid for each flow
+			if count_fifo = "010100" and rd_en='0' and rd_fifo_count='0' then	----- Reading FIFO and set data_valid and flow_valid for each flow
 				rd_en			<= '1';
-				rd_accel		<= '0';
-				rd_gyro		<= '0';
-			elsif count_fifo = "010100" and rd_en='1' then
+--				rd_accel		<= '0';
+--				rd_gyro		<= '0';
+			elsif count_fifo = "010100" and rd_en='1' and rd_fifo_count='0' then
 				rd_accel		<= '1';
-			elsif count_fifo = "001111" and rd_en='1' then
+			elsif count_fifo = "001111" and rd_en='1' and rd_fifo_count='0' then
 				rd_accel		<= '0';
-			elsif count_fifo = "001101" and rd_en='1' then
+			elsif count_fifo = "001101" and rd_en='1' and rd_fifo_count='0' then
 				rd_gyro		<= '1';
-			elsif count_fifo = "000111" and rd_en='1' then
+			elsif count_fifo = "000111" and rd_en='1' and rd_fifo_count='0' then
 				rd_comp 		<= '1';
 				rd_gyro		<= '0';
-			elsif count_fifo = "000010" and rd_en='1' then  
+			elsif count_fifo = "000010" and rd_en='1' and rd_fifo_count='0' then  
 				rd_en			<= '0';
-				rd_accel		<= '0';
+--				rd_accel		<= '0';
 				rd_gyro		<= '0';
-			elsif count_fifo = "000001" and rd_en='0' then
-				rd_comp 		<= '0';
+			elsif count_fifo = "000000" and rd_en='0' and rd_fifo_count='0' then
+				rd_comp 		<= '0';				
+				
+			elsif count_fifo = "000010" and rd_fifo_count='1' then
+				rd_en			<= '1';
+			elsif count_fifo = "000001" and rd_fifo_count='1' then	
+				rd_en			<= '0';
 			end if;
 			
 		end if;
@@ -231,36 +267,54 @@ begin
 end process;
 ----- Detecting a modification of the configuration
 config_change <= '1' when (spl_rate/=spl_rate_dl or gyro_config/=gyro_config_dl or accel_config/=accel_config_dl 
-									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) or (config_init='1' and config_init_dl='0')
-									or en/=en_dl
+									or gain_compass/=gain_compass_dl or freq_compass/=freq_compass_dl) or en/=en_dl
 					else '0';
 
 
 process(clk_proc,reset)
-variable count : integer range 0 to 50_000;
 begin
 	if reset = '0' then
-		wr_en_dl 	<= '0';
-		wr_en_flag  <= '0';	
+		wr_en_dl 		<= '0';
+		wr_en_flag  	<= '0';	
+		ready				<= '0';
+		fifo_mpu_res	<= x"0000";
+		fifo_mpu_count <= x"0000";
+		
 	elsif clk_proc'event and clk_proc = '1' then		----- Generate write enable flag for the FIFO
 		wr_en_dl 	<= wr_en;
 		wr_en_flag  <= wr_en and not wr_en_dl;
+		
+		
+		if rd_ready_f='1' then
+			fifo_mpu_count <= fifo_mpu_count(7 downto 0) & data_fifo_out;
+		else
+			fifo_mpu_res <= unsigned(fifo_mpu_count) rem 20;
+		end if;
+		
+		if fifo_mpu_res=x"0000" then
+			ready <= '1';
+		else
+			ready <= '0';
+		end if;
+		
+		
 	end if;
 end process;
 
-accelero_dv 	<= rd_accel;
-accelero_fv 	<= rd_accel;
-accelero_data  <= data_fifo_out;
+accelero_dv 		<= rd_accel and ready;
+accelero_fv 		<= rd_accel and ready;
+accelero_data  	<= data_fifo_out;
 
-gyroscope_dv 			<= rd_gyro;
-gyroscope_fv 			<= rd_gyro;
-gyroscope_data  		<= data_fifo_out;
+gyroscope_dv 		<= rd_gyro and ready;
+gyroscope_fv 		<= rd_gyro and ready;
+gyroscope_data  	<= data_fifo_out;
 
-compass_dv 			<= rd_comp;
-compass_fv 			<= rd_comp;
+compass_dv 			<= rd_comp and rd_en_dl and ready;
+compass_fv 			<= rd_comp and rd_en_dl and ready;
 compass_data  		<= data_fifo_out;
 
-trigger <= trigger_auto when en='1' else
-			  trigger_reg;
+trigger <= trigger_auto when en='1' else trigger_reg;
 
+rd_ready_f <= rd_en_dl and rd_fifo_count and rd_en;
+			  
 end RTL;
