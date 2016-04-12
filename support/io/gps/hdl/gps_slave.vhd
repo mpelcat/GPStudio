@@ -20,7 +20,7 @@ entity gps_slave is
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i : in std_logic_vector(7 downto 0);
+		addr_rel_i : in std_logic_vector(2 downto 0);
 		wr_i       : in std_logic;
 		rd_i       : in std_logic;
 		datawr_i   : in std_logic_vector(31 downto 0);
@@ -53,13 +53,13 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 3))=>
 						enable_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(ACQUI_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(ACQUI_REG_REG_ADDR, 3))=>
 						acqui_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(SAT_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(SAT_REG_REG_ADDR, 3))=>
 						sat_reg_reg <= datawr_i;
-					when std_logic_vector(to_unsigned(UPDATE_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(UPDATE_REG_REG_ADDR, 3))=>
 						update_reg_reg <= datawr_i;
 					when others=>
 				end case;
@@ -74,13 +74,13 @@ begin
 		elsif(rising_edge(clk_proc)) then
 			if(rd_i='1') then
 				case addr_rel_i is
-					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(ENABLE_REG_REG_ADDR, 3))=>
 						datard_o <= enable_reg_reg;
-					when std_logic_vector(to_unsigned(ACQUI_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(ACQUI_REG_REG_ADDR, 3))=>
 						datard_o <= acqui_reg_reg;
-					when std_logic_vector(to_unsigned(SAT_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(SAT_REG_REG_ADDR, 3))=>
 						datard_o <= sat_reg_reg;
-					when std_logic_vector(to_unsigned(UPDATE_REG_REG_ADDR, 8))=>
+					when std_logic_vector(to_unsigned(UPDATE_REG_REG_ADDR, 3))=>
 						datard_o <= update_reg_reg;
 					when others=>
 						datard_o <= (others => '0');

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="gps" categ="" pi_size_addr_rel="8" desc="">
+<io driver="gps" categ="" pi_size_addr_rel="3" desc="">
   <files>
     <file name="gps_acqui.vhd" type="vhdl" group="hdl" path="hdl/gps_acqui.vhd" desc=""/>
     <file name="gps_receiver.vhd" type="vhdl" group="hdl" path="hdl/gps_receiver.vhd" desc=""/>
@@ -14,17 +14,24 @@
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
   </resets>
   <flows>
-    <flow name="gps_out" size="8" type="out" desc=""/>
+    <flow name="out" size="8" type="out" desc="">
+      <properties>
+        <property name="datatype" value="vector" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="itemdatatype" value="s16" caption="itemdatatype" type="hwtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="swtype" value="float" caption="swtype" type="swtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="scaling" value="item.value*2" caption="scaling" type="function" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+      </properties>
+    </flow>
   </flows>
   <params>
-    <param name="enable_reg" value="" regaddr="0" propertymap="Enable.value" default="" min="" max="" desc=""/>
+    <param name="enable_reg" value="" regaddr="0" propertymap="enable.value" default="" min="" max="" desc=""/>
     <param name="acqui_reg" value="" regaddr="1" propertymap="acqui.value" default="" min="" max="" desc=""/>
     <param name="sat_reg" value="" regaddr="2" propertymap="sat_mode.bits" default="" min="" max="" desc=""/>
     <param name="update_reg" value="" regaddr="3" propertymap="update.bits" default="" min="" max="" desc=""/>
   </params>
   <properties>
-    <property name="Enable" value="" caption="Enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="acqui" value="" caption="acqui" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="enable" value="" caption="Enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="acqui" value="" caption="Acquisition" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
     <property name="sat_mode" value="" caption="Mode" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <enums>
         <enum name="s0" value="0" caption="GPS/Glonass" desc=""/>

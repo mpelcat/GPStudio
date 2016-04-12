@@ -6,29 +6,29 @@ library std;
 entity gps is
 	generic (
 		CLK_PROC_FREQ : integer;
-		GPS_OUT_SIZE  : integer
+		OUT_SIZE      : integer
 	);
 	port (
-		clk_proc     : in std_logic;
-		reset_n      : in std_logic;
+		clk_proc   : in std_logic;
+		reset_n    : in std_logic;
 
 		--------------------- external ports --------------------
-		RXD          : in std_logic;
-		TXD          : out std_logic;
+		RXD        : in std_logic;
+		TXD        : out std_logic;
 
-		---------------------- gps_out flow ---------------------
-		gps_out_data : out std_logic_vector(GPS_OUT_SIZE-1 downto 0);
-		gps_out_fv   : out std_logic;
-		gps_out_dv   : out std_logic;
+		------------------------ out flow -----------------------
+		out_data   : out std_logic_vector(OUT_SIZE-1 downto 0);
+		out_fv     : out std_logic;
+		out_dv     : out std_logic;
 
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i   : in std_logic_vector(7 downto 0);
-		wr_i         : in std_logic;
-		rd_i         : in std_logic;
-		datawr_i     : in std_logic_vector(31 downto 0);
-		datard_o     : out std_logic_vector(31 downto 0)
+		addr_rel_i : in std_logic_vector(2 downto 0);
+		wr_i       : in std_logic;
+		rd_i       : in std_logic;
+		datawr_i   : in std_logic_vector(31 downto 0);
+		datard_o   : out std_logic_vector(31 downto 0)
 	);
 end gps;
 
@@ -41,16 +41,12 @@ component top_GPS
 			reset : in std_logic;
 			RXD	: in std_logic;
 			TXD	: out std_logic;
-			
 			parameters : in std_logic_vector(31 downto 0);
-			
 			data_out	: out std_logic_vector(7 downto 0);
 			flow_valid : out std_logic;
 			data_valid : out std_logic
 		 );
 end component;
-
-
 
 component gps_slave
 	generic (
@@ -69,7 +65,7 @@ component gps_slave
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i : in std_logic_vector(7 downto 0);
+		addr_rel_i : in std_logic_vector(2 downto 0);
 		wr_i       : in std_logic;
 		rd_i       : in std_logic;
 		datawr_i   : in std_logic_vector(31 downto 0);
@@ -82,8 +78,8 @@ end component;
 	signal sat_reg    : std_logic_vector (31 downto 0);
 	signal update_reg : std_logic_vector (31 downto 0);
 	signal parameters : std_logic_vector (31 downto 0);
-
 begin
+
 
 	gps_slave_inst : gps_slave
     generic map (
@@ -112,9 +108,9 @@ top_GPS_inst : top_GPS
 			TXD	=> TXD,			
 			parameters => parameters,
 			
-			data_out   => gps_out_data ,
-			flow_valid => gps_out_fv ,
-			data_valid => gps_out_dv 
+			data_out   => out_data ,
+			flow_valid => out_fv ,
+			data_valid => out_dv 
 		 );
 
 parameters(31 downto 21) <= enable_reg(0) & acqui_reg(0) & sat_reg(0) & update_reg(7 downto 0);
