@@ -290,4 +290,26 @@ function getRelativePath($path, $dir=NULL)
 	return $path;
 }
 
+function saveIfDifferent($fileName, $content)
+{
+	// save file if it's different
+	$needToReplace = false;
+	if(file_exists($fileName))
+	{
+		$handle = fopen($fileName, 'r');
+		$actualContent = fread($handle, filesize($fileName));
+		fclose($handle);
+		if($actualContent != $content) $needToReplace = true;
+	}
+	else $needToReplace = true;
+
+	if($needToReplace)
+	{
+		$handle = null;
+		if (!$handle = fopen($fileName, 'w')) error("$filename cannot be openned",5,"GPStudio");
+		if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"GPStudio");
+		fclose($handle);
+	}
+}
+
 ?>

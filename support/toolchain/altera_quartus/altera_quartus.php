@@ -304,54 +304,47 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		$content .= ""."\r\n";
 		$content .= "all: generate compile send view"."\r\n";
 		$content .= ""."\r\n";
+		
+		// generate
 		$content .= "generate: ".str_replace("\\",'/',getRelativePath($node->node_file, $path))."\r\n";
 		if(dirname($node->node_file)==realpath($path))
 			$content .= "	gpnode generate \${OPT}"."\r\n";
 		else
 			$content .= "	cd \"".str_replace("\\",'/',getRelativePath(dirname($node->node_file), $path))."\" && gpnode generate -o \"".str_replace("\\",'/',getRelativePath($path, dirname($node->node_file)))."\" \${OPT}"."\r\n";
 		$content .= ""."\r\n";
+		
+		// compile
 		$content .= "compile:"."\r\n";
 		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_sh --flow compile $nodename.qpf"."\r\n";
+		
+		// send
 		$content .= "send:"."\r\n";
-		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 ".$node->name.".cdf"."\r\n";
+		$content .= "	$(QUARTUS_TOOLS_PATH)quartus_pgm -m jtag -c1 -o 'P;output_files/".$node->name.".sof'"."\r\n";
+		
+		// view
 		$content .= "view:"."\r\n";
-		if($win)	$content .= "	$(GPS_VIEWER)".DIRECTORY_SEPARATOR."gpviewer node_generated.xml"."\r\n";
+		if($win)	$content .= "	$(GPS_VIEWER)/gpviewer node_generated.xml"."\r\n";
 		else		$content .= "	LD_LIBRARY_PATH=$(GPS_VIEWER) $(GPS_VIEWER)gpviewer node_generated.xml"."\r\n";
 		$content .= ""."\r\n";
+		
+		// clean
 		$content .= "clean:"."\r\n";
 		$content .= "	$rmreq output_files incremental_db db IP greybox_tmp"."\r\n";
 		$content .= "	$rm top.vhd pi.vhd fi.vhd ci.vhd"."\r\n";
 		$content .= "	$rm node_generated.xml PLLJ_PLLSPE_INFO.txt fi.dot fi.png params.h"."\r\n";
 		$content .= "	$rm $nodename.qpf $nodename.qsf $nodename.qws $nodename.sdc $nodename.cdf"."\r\n";
 
+		// printfi
 		$content .= "printfi:"."\r\n";
 		$content .= "	dot -Tpng -o fi.png fi.dot"."\r\n";
 		$content .= "	xdg-open fi.png"."\r\n";
 		
 		$filename = "Makefile";
-
-		// save file if it's different
-		$needToReplace = false;
-		if(file_exists($path.DIRECTORY_SEPARATOR.$filename))
-		{
-			$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'r');
-			$actualContent = fread($handle, filesize($path.DIRECTORY_SEPARATOR.$filename));
-			fclose($handle);
-			if($actualContent != $content) $needToReplace = true;
-		}
-		else $needToReplace = true;
-	
-		if($needToReplace)
-		{
-			$handle = null;
-			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
-			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
-			fclose($handle);
-		}
+		saveIfDifferent($path.DIRECTORY_SEPARATOR.$filename, $content);
 		
 		// makefile local
 		$content =  "GPS_LIB=".LIB_PATH."\r\n";
-		$content .=  "GPS_VIEWER=".LIB_PATH."bin/\r\n";
+		$content .= "GPS_VIEWER=".LIB_PATH."bin/\r\n";
 		$content .= "QUARTUS_TOOLS_PATH="."\r\n";
 		$content .= ""."\r\n";
 		
@@ -360,6 +353,41 @@ class Altera_quartus_toolchain extends HDL_toolchain
 		{
 			$handle = null;
 			if (!$handle = fopen($path.DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
+			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
+			fclose($handle);
+		}
+		
+		// makefile src
+		$content =  "OUT_PWD := build/"."\r\n";
+		// generate
+		$content .= "generate: ".$node->node_file."\r\n";
+		$content .= "	gpnode generate -o $(OUT_PWD) \${OPT}"."\r\n"."\r\n";
+		
+		// compile
+		$content .= "compile:"."\r\n";
+		$content .= "	cd $(OUT_PWD) && make -f Makefile compile"."\r\n"."\r\n";
+		
+		// send
+		$content .= "send:"."\r\n";
+		$content .= "	cd $(OUT_PWD) && make -f Makefile send"."\r\n"."\r\n";
+		
+		// view
+		$content .= "view:"."\r\n";
+		$content .= "	cd $(OUT_PWD) && make -f Makefile view"."\r\n"."\r\n";
+		
+		// clean
+		$content .= "clean:"."\r\n";
+		$content .= "	cd $(OUT_PWD) && make -f Makefile clean"."\r\n"."\r\n";
+
+		// printfi
+		$content .= "printfi:"."\r\n";
+		$content .= "	cd $(OUT_PWD) && make -f Makefile printfi"."\r\n"."\r\n";
+		
+		$filename = "Makefile";
+		if(!file_exists(dirname($node->node_file).DIRECTORY_SEPARATOR.$filename))
+		{
+			$handle = null;
+			if (!$handle = fopen(dirname($node->node_file).DIRECTORY_SEPARATOR.$filename, 'w')) error("$filename cannot be openned",5,"Toolchain");
 			if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"Vhdl Gen");
 			fclose($handle);
 		}
