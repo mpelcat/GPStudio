@@ -38,7 +38,7 @@ signal data_ready_dl2 			: std_logic;
 signal wr_en,rd_en				: std_logic;
 signal fifo_empty   				: std_logic;
 signal gngga_flag_dl				: std_logic;
-signal rd_data_valid,rd_test 	: std_logic;
+signal rd_en_dl,rd_en_dl2	 	: std_logic;
 signal start_flag					: std_logic;
 signal done							: std_logic;
 signal data_in						: std_logic_vector(7 downto 0);
@@ -50,7 +50,6 @@ signal PL_length					: std_logic_vector(15 downto 0);
 signal ID							: std_logic_vector(15 downto 0);
 signal PL       					: std_logic_vector(23 downto 0);
 signal enable, enable_dl	 	: std_logic;
-signal acqui				 		: std_logic;
 signal sat_conf,sat_conf_dl 	: std_logic;
 signal update_rate 				: std_logic_vector(7 downto 0);
 signal update_rate_dl 			: std_logic_vector(7 downto 0);
@@ -64,6 +63,9 @@ signal rst_count_bd_s2			: std_logic;
 signal rst_count_bd 				: std_logic;
 signal update_rate_s  			: std_logic_vector(7 downto 0);
 signal restart_done				: std_logic;
+signal fifo_count					: std_logic_vector(7 downto 0);
+signal data_fifo_o				: std_logic_vector(7 downto 0);
+signal rd_coord					: std_logic;
 
 type state_type is (idle, data_state);
 signal state : state_type;
@@ -113,8 +115,8 @@ fifo_gps_inst : entity work.fifo_gps(SYN)
 		data 				=> data,
 		full 				=> open,
 		empty 			=> fifo_empty,
-		q 					=> data_out, 
-		usedw				=> open	
+		q 					=> data_fifo_o,--data_out, 
+		usedw				=> fifo_count	
 		);
 
 clk_gen_inst : entity work.clk_gen(RTL)
@@ -137,9 +139,10 @@ begin
 			wr_en 			<= '0';
 			rd_en 			<= '0';
 			data_ready_dl	<= '0';
-			rd_data_valid	<= '0';
+			rd_en_dl	<= '0';
 			gngga_flag_dl 	<= '0';
 			data_ready_dl2 <= '0';
+			rd_coord			<= '0';
 			
 	elsif clk'event and clk='1'then
 		if enable='1' then
@@ -147,7 +150,13 @@ begin
 			data_ready_dl 	<= data_ready;
 			data_ready_dl2 <= data_ready_dl;
 			gngga_flag_dl 	<= gngga_flag;
-			rd_data_valid 	<= rd_en;
+			rd_en_dl 		<= rd_en;
+			rd_en_dl2		<= rd_en_dl; 
+			
+			
+			flow_valid 		<= rd_coord;--rd_en or rd_en_dl2;--
+			data_valid 		<= rd_coord;--rd_en_dl;--
+			data_out			<= data_fifo_o;			
 			
 			case(state) is 
 				----- NMEA $GNGGA sequence detected, starting acquisition
@@ -155,11 +164,15 @@ begin
 				
 					wr_en <= '0';
 					
-					if fifo_empty ='1' then 
+					if fifo_count=x"01" and rd_en='1' then 
 						rd_en 	<= '0';
+					elsif fifo_count=x"36" and rd_en='1' then
+						rd_coord <= '1';
+					elsif fifo_count=x"1E" and rd_en ='1' then
+						rd_coord	<= '0';
 					end if;
-										
-					if gngga_flag='1' and gngga_flag_dl='0' and (acqui='1' or count_config/=x"0")then
+																	  
+					if gngga_flag='1' and gngga_flag_dl='0' then
 						state 	<= data_state;
 					else
 						state <= idle;
@@ -173,7 +186,6 @@ begin
 						if data = x"0D" then		----- Detecting end of sequence, read data from FIFO and send them to usb block
 							rd_en 	<= '1';
 							state 	<= idle;
-							wr_en 	<= '1';
 						else
 							wr_en 	<= '1';
 						end if;
@@ -185,7 +197,7 @@ begin
 					
 				when others =>
 					wr_en 			<= '0';
-					rd_data_valid	<= '0';
+					rd_en_dl	<= '0';
 					state 			<= idle;
 			end case;
 			
@@ -263,7 +275,7 @@ process(clk,enable,reset)
 begin
 		if reset='0' then
 			count_max 			<= COUNT_BD_RATE_DEFAULT;
-			bytes					<= LEN_CONF_MODE;
+			bytes					<= x"00";
 			count_config 		<= x"0";
 			restart_done 		<= '0';
 			
@@ -308,7 +320,7 @@ begin
 							count_config 	<= count_config+1;
 						end if;
 						
-					----- Restart ony once after changing baud rate
+					----- Restart only once after changing baud rate
 					elsif count_config=x"3" then
 						data_to_send <= START_BYTES & RESTART & END_BYTES;
 						bytes 			<= LEN_CONF_RESTART;
@@ -329,10 +341,10 @@ begin
 					data_to_send	<= data_to_send(167 downto 0) & data_to_send(175 downto 168);
 				end if;
 				
-				----- Detect end of configuration, set new baud rate couter
+				----- Detect end of configuration, set new baud rate counter
 				if done_send='1' and done_send_dl='0' then
 					state_transmitter 	<= idle;
-					if bytes=LEN_CONF_RESTART then
+					if bytes=LEN_CONF_BD_RATE then
 						count_max 	<= COUNT_BD_RATE_MAX;
 					end if;
 				end if;
@@ -348,17 +360,14 @@ end process;
 
 ----- Read user settings
 enable 			<= parameters(31);
-acqui  			<= parameters(30);
-sat_conf  		<= parameters(29);
-update_rate  	<= parameters(28 downto 21);
+sat_conf  		<= parameters(30);
+update_rate  	<= parameters(29 downto 22);
 
 rst_count_bd <= rst_count_bd_s1 or rst_count_bd_s2;
 	
 ----- Detect a modification on the actual configuration
-trig_conf 		<= '1' when (update_rate_dl/=update_rate or sat_conf_dl/=sat_conf) and enable='1' and enable_dl='1'
+trig_conf 		<= '1' when ((update_rate_dl/=update_rate or sat_conf_dl/=sat_conf) and enable='1') or (enable='1' and enable_dl='0') 
 							 else '0';
 					  
-flow_valid 		<= rd_en or rd_data_valid;
-data_valid 		<= rd_data_valid and rd_en;
 
 end RTL;

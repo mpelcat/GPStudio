@@ -99,7 +99,7 @@ begin
 					if count_bd+1>=count_max then		
 						state_rec <= idle;
 						
-						if gngga=x"24474E4747412C" or gngga(15 downto 0)=x"A0A1" then
+						if gngga=x"24474E4747412C" or gngga(15 downto 0)=x"A0A1" then --or gngga=x"24474E4753412C"then
 							gngga_flag		<= '1';
 							data_ready 		<= '0';
 						else

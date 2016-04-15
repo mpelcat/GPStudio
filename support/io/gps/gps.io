@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="gps" categ="" pi_size_addr_rel="3" desc="">
+<io driver="gps" categ="" pi_size_addr_rel="2" desc="">
+  <svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">GPS</text>
+  </svg>
   <files>
     <file name="gps_acqui.vhd" type="vhdl" group="hdl" path="hdl/gps_acqui.vhd" desc=""/>
     <file name="gps_receiver.vhd" type="vhdl" group="hdl" path="hdl/gps_receiver.vhd" desc=""/>
@@ -25,13 +29,11 @@
   </flows>
   <params>
     <param name="enable_reg" value="" regaddr="0" propertymap="enable.value" default="" min="" max="" desc=""/>
-    <param name="acqui_reg" value="" regaddr="1" propertymap="acqui.value" default="" min="" max="" desc=""/>
-    <param name="sat_reg" value="" regaddr="2" propertymap="sat_mode.bits" default="" min="" max="" desc=""/>
-    <param name="update_reg" value="" regaddr="3" propertymap="update.bits" default="" min="" max="" desc=""/>
+    <param name="sat_reg" value="" regaddr="1" propertymap="sat_mode.bits" default="" min="" max="" desc=""/>
+    <param name="update_reg" value="" regaddr="2" propertymap="update.bits" default="" min="" max="" desc=""/>
   </params>
   <properties>
     <property name="enable" value="" caption="Enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="acqui" value="" caption="Acquisition" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
     <property name="sat_mode" value="" caption="Mode" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <enums>
         <enum name="s0" value="0" caption="GPS/Glonass" desc=""/>

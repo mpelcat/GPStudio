@@ -23,6 +23,7 @@ end clk_gen;
 architecture RTL of clk_gen is
 
 signal count_bd_s 		: unsigned(15 downto 0);
+signal rst_count_bd_dl	: std_logic;
 
 begin
 
@@ -33,8 +34,9 @@ begin
 	
 	elsif clk_50M'event and clk_50M='1'then		
 		if enable='1' then
-			
-			if rst_count_bd='1' or count_bd_s=count_max then		----- Reset the counter only when it reaches the max count defined by baud rate
+		
+			rst_count_bd_dl <= rst_count_bd;
+			if (rst_count_bd='1' and rst_count_bd_dl='0') or count_bd_s=count_max then		----- Reset the counter only when it reaches the max count defined by baud rate
 				count_bd_s <= x"0000";					----- or when a reset is asked by UART blocks
 			else
 				count_bd_s <= count_bd_s +1;

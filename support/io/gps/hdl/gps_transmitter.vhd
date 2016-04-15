@@ -6,7 +6,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+use work.gps_pkg.all;
 
 entity gps_transmitter is
 	port(
@@ -103,8 +103,12 @@ begin
 						done				<= '1';
 						number_of_bits <= x"0";
 						count_bytes 	<= count_bytes +1;
-						if count_bytes=bytes-1 then   
-							count_wait 	<= x"0000";
+						if count_bytes=bytes-1 then
+							if count_max=COUNT_BD_RATE_MAX then
+								count_wait 	<= x"0000";
+							else
+								count_wait 	<= x"7000";
+							end if;
 							state 		<= wait_st;
 						else	
 							state 	<= start;			
@@ -118,7 +122,7 @@ begin
 					
 					if count_bd=count_max then
 						count_wait <= count_wait +1;
-					elsif count_wait=x"1FFF" then 
+					elsif count_wait=x"FFFF" then 
 						state 		<= idle;
 						count_bytes <= x"00";
 						done_send 	<= '1';
@@ -128,7 +132,12 @@ begin
 						TXD_r 		<= '1';
 						state 		<= idle;
 			end case;
-			
+		
+		else
+			rst_count_bd <='0';
+			number_of_bits <= x"0";
+			TXD_r <= '1';
+			state <= idle;
 		end if;
 	end if;
 end process;

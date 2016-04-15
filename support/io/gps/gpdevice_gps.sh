@@ -28,27 +28,22 @@
 	gpdevice addextport -n RXD -t in -s 1
 	gpdevice addextport -n TXD -t out -s 1
 
-	gpdevice setpisizeaddr -v 3
+	gpdevice setpisizeaddr -v 2
 	
 	#Enable
 	gpdevice addparam -n enable_reg -r 0 -m enable.value
 	gpdevice addproperty -n enable -t bool
 	gpdevice setproperty -n enable -l "Enable"
-	
-	#Acquisition
-	gpdevice addparam -n acqui_reg -r 1 -m acqui.value
-	gpdevice addproperty -n acqui -t bool
-	gpdevice setproperty -n acqui -l "Acquisition"
 
 	#Satellite mode
-	gpdevice addparam -n sat_reg -r 2 -m sat_mode.bits
+	gpdevice addparam -n sat_reg -r 1 -m sat_mode.bits
 	gpdevice addproperty -n sat_mode -t enum
 	gpdevice addenum -n sat_mode.s0 -l "GPS/Glonass" -v 0 
 	gpdevice addenum -n sat_mode.s1 -l "GPS" -v 1 
 	gpdevice setproperty -n sat_mode -l "Mode"
 
 	#Update rate
-	gpdevice addparam -n update_reg -r 3 -m update.bits
+	gpdevice addparam -n update_reg -r 2 -m update.bits
 	gpdevice addproperty -n update -t enum
 	gpdevice addenum -n update.u1 -l "1 Hz" -v 1 
 	gpdevice addenum -n update.u2 -l "2 Hz" -v 2 
