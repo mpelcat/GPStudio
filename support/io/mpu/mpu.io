@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <io driver="mpu" categ="" pi_size_addr_rel="4" desc="">
-  <svg width="160" height="110">
-		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-		<text x="50" y="50">MPU</text>
-  </svg>
   <files>
     <file name="mpu_acqui.vhd" type="vhdl" group="hdl" path="hdl/mpu_acqui.vhd" desc=""/>
     <file name="mpu_i2c.vhd" type="vhdl" group="hdl" path="hdl/mpu_i2c.vhd" desc=""/>
@@ -12,6 +8,7 @@
     <file name="mpu_pkg.vhd" type="vhdl" group="hdl" path="hdl/mpu_pkg.vhd" desc=""/>
     <file name="mpu.vhd" type="vhdl" group="hdl" path="hdl/mpu.vhd" desc=""/>
     <file name="mpu_slave.vhd" type="vhdl" group="hdl" path="hdl/mpu_slave.vhd" desc=""/>
+    <file name="mpu_offset_correction.vhd" type="vhdl" group="hdl" path="hdl/mpu_offset_correction.vhd" desc=""/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
@@ -49,6 +46,12 @@
     <param name="spl_rate_reg" value="" regaddr="3" propertymap="sample_rate.value" default="" min="" max="" desc=""/>
     <param name="gain_compass_reg" value="" regaddr="4" propertymap="comp.gain_compass.bits" default="" min="" max="" desc=""/>
     <param name="fz_compass_reg" value="" regaddr="5" propertymap="comp.fz_compass.bits" default="" min="" max="" desc=""/>
+    <param name="accel_off_x_reg" value="" regaddr="6" propertymap="accel.accel_offx.value" default="" min="" max="" desc=""/>
+    <param name="accel_off_y_reg" value="" regaddr="7" propertymap="accel.accel_offy.value" default="" min="" max="" desc=""/>
+    <param name="accel_off_z_reg" value="" regaddr="8" propertymap="accel.accel_offz.value" default="" min="" max="" desc=""/>
+    <param name="gyro_off_x_reg" value="" regaddr="9" propertymap="gyro.gyro_offx.value" default="" min="" max="" desc=""/>
+    <param name="gyro_off_y_reg" value="" regaddr="10" propertymap="gyro.gyro_offy.value" default="" min="" max="" desc=""/>
+    <param name="gyro_off_z_reg" value="" regaddr="11" propertymap="gyro.gyro_offz.value" default="" min="" max="" desc=""/>
   </params>
   <properties>
     <property name="enable" value="" caption="Enable device" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
@@ -62,6 +65,9 @@
             <enum name="g3" value="3" caption="± 2000 °/s" desc=""/>
           </enums>
         </property>
+        <property name="gyro_offx" value="0" caption="Offset X" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
+        <property name="gyro_offy" value="0" caption="Offset Y" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
+        <property name="gyro_offz" value="0" caption="Offset Z" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
       </properties>
     </property>
     <property name="accel" value="" caption="Accelerometer" type="group" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
@@ -74,9 +80,12 @@
             <enum name="a3" value="3" caption="± 16g" desc=""/>
           </enums>
         </property>
+        <property name="accel_offx" value="0" caption="Offset X" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
+        <property name="accel_offy" value="0" caption="Offset Y" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
+        <property name="accel_offz" value="0" caption="Offset Z" type="int" min="-16384" max="+16384" step="1" assert="" propertymap="" onchange="" desc=""/>
       </properties>
     </property>
-    <property name="sample_rate" value="20" caption="Sample rate" type="int" min="1" max="100" step="1" assert="" propertymap="" onchange="" desc=""/>
+    <property name="sample_rate" value="30" caption="Sample rate" type="int" min="1" max="100" step="1" assert="" propertymap="" onchange="" desc=""/>
     <property name="comp" value="" caption="Compass" type="group" min="" max="" step="" assert="" propertymap="" onchange="" desc="">
       <properties>
         <property name="gain_compass" value="" caption="Sensibility" type="enum" min="" max="" step="" assert="" propertymap="" onchange="" desc="">

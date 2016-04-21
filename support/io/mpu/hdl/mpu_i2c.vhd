@@ -7,7 +7,7 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
-USE ieee.std_logic_unsigned.all;
+--USE ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 use work.mpu_pkg.all;
 
@@ -37,57 +37,36 @@ END mpu_i2c;
 
 ARCHITECTURE behavioral OF mpu_i2c IS
 
-type state_fsm is (idle,init,read_state, write_state);
-signal state : state_fsm;
-
-type state_config is (waiting, config);
-signal state_conf : state_config;
-
-component mpu_i2c_master IS
-  PORT(
-    clk       			: IN     STD_LOGIC;                    
-    reset_n   			: IN     STD_LOGIC;                    
-    end_rw				: out std_logic;
-    master_ack_flag  : out std_logic;
-    op_counter			: out std_logic;
-    fifo_wr_en			: out std_logic;
-    ena       			: IN     STD_LOGIC;                    
-    addr      			: IN     STD_LOGIC_VECTOR(6 DOWNTO 0); 
-    rw        			: IN     STD_LOGIC;                    
-    data_wr   			: IN     STD_LOGIC_VECTOR(7 DOWNTO 0); 
-    busy      			: OUT    STD_LOGIC;                    
-    data_rd   			: OUT    STD_LOGIC_VECTOR(7 DOWNTO 0); 
-    ack_error 			: BUFFER STD_LOGIC;                    
-    sda       			: INOUT  STD_LOGIC;                    
-    scl       			: INOUT  STD_LOGIC);
-END component;
-
-signal clk_s 		   : std_logic;
-signal reset_n_s 	   : std_logic;
-signal ena_s 		   : std_logic;
-signal rw_s 		   : std_logic;
-signal data_wr_s 	   : std_logic_vector(7 downto 0);
-signal addr_s 		   : std_logic_vector(6 downto 0);
-signal busy_s 	  	   : std_logic;
-signal data_rd_s 	   : std_logic_vector(7 downto 0);
-signal end_rw_s 	   : std_logic;
-
+signal clk_s 		   	: std_logic;
+signal reset_n_s 	   	: std_logic;
+signal ena_s 		   	: std_logic;
+signal rw_s 		   	: std_logic;
+signal data_wr_s 	   	: std_logic_vector(7 downto 0);
+signal addr_s 		   	: std_logic_vector(6 downto 0);
+signal busy_s 	  	   	: std_logic;
+signal data_rd_s 	   	: std_logic_vector(7 downto 0);
+signal end_rw_s 	   	: std_logic;
 signal master_ack_flag 	: std_logic;
 signal register_number 	: std_logic_vector(7 downto 0);
 signal data_to_w 	   	: std_logic_vector(7 downto 0);
 signal prev_end_rw 	   : std_logic;
-signal count_ack 	   	: std_logic_vector(7 downto 0);
+signal count_ack 	   	: unsigned(7 downto 0);
 signal detect_config   	: std_logic;
 signal trig_read_dl	   : std_logic;
 signal trig		   	   : std_logic;
 signal op_counter_f    	: std_logic;
 signal op_counter_f_dl 	: std_logic;
-signal op_counter	   	: std_logic_vector(7 downto 0);
-
+signal op_counter	   	: unsigned(7 downto 0);
 signal reset_fifo_flag 	: std_logic;
 signal reset_fifo_dl   	: std_logic;
 signal run_conf_s			: std_logic;
 signal rd_fifo_count_dl : std_logic;
+
+type state_fsm is (idle,init,read_state, write_state);
+signal state : state_fsm;
+
+type state_config is (waiting, config);
+signal state_conf : state_config;
 
 begin
 
@@ -112,7 +91,7 @@ port map(
 
 );
 
-
+------ I2C controller
 process(clk,reset_n)
 begin
 	
@@ -122,8 +101,7 @@ begin
 		ena_s <= '0';
 
 	elsif clk'event and clk='1' then
-		
-	
+
 			trig_read_dl 		<= trigger;
 			trig 					<= trigger and not trig_read_dl;
 			prev_end_rw 		<= end_rw_s;
@@ -135,8 +113,7 @@ begin
 		
 			when idle =>
 			   
-			   if en='1' then
-															
+			   if en='1' then										
 					if (busy_s='0' and (trig='1' or run_conf_s='1')) or reset_fifo_flag='1' then		----- Start of communication detected	
 						state <= init;
 					else
@@ -151,18 +128,16 @@ begin
 				data_wr_s 	<= register_number;
 				
 				if state_conf=config or reset_fifo_buffer='1' then		----- Write mode : configuration
-							state <= write_state;
+					state <= write_state;
 				else
 						if end_rw_s = '1' then		----- Read mode : data acquisition
 							state <= read_state;
 						end if;
-						
 				end if;
 
 			when read_state =>
 			
 					rw_s <= '1';
-					
 					if master_ack_flag = '1' then			
 						data_read <= data_rd_s;
 						
@@ -176,39 +151,34 @@ begin
 							ena_s 		<= '0';
 							count_ack 	<= x"00";
 						end if;
-						
 					end if;
 					
 			when write_state =>
 			
 					rw_s <= '0';	
-					
 					if end_rw_s='1' and prev_end_rw='0' then		----- Counting acknowledges
 						count_ack 	<= count_ack +1;
 						state 		<= write_state;
 					end if;
 					
 					if count_ack =x"01" then							
-						data_wr_s 	<= data_to_w;		----- Sending data to write in the MPU internal register							
-						
+						data_wr_s 	<= data_to_w;		----- Sending data to write in the MPU internal register
 					elsif count_ack=x"02" then 
 						state 		<= idle;
 						ena_s 		<= '0';
 						count_ack 	<= x"00";
-					
 					else 
 						data_wr_s 	<= register_number;		----- Sending the internal register ID
 					end if;
-					
 				
 			when others => 
 					state <= idle;
 		end case;	
 	end if;
-	
 end process;
 
 
+------ Configuration step by step of the MPU-6050 with user settings
 process(clk, reset_n)
 begin
 	if reset_n ='0' then
@@ -228,14 +198,11 @@ begin
 			else
 				op_counter <= x"00";
 			end if;
-			
 		end if;
-		
 		
 		case(state_conf) is 
 		
 			when waiting => 
-			
 						op_counter 			<= x"00";
 						
 					----- Reset fifo buffer to avoid latence issues
@@ -264,8 +231,7 @@ begin
 						run_conf_s				<= '0';
 					end if;
 			
-			when config =>
-					
+			when config =>			
 									
 						----- Sortie du mode "Pause"
 						if op_counter=x"00" then
@@ -365,10 +331,8 @@ begin
 							register_number 	<= x"00";
 						end if;
 						
-						
 				when others =>
 						state_conf <= waiting;
-				
 		end case;
 	end if;
 end process;

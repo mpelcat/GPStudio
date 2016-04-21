@@ -10,8 +10,10 @@
 	gpdevice addfile -p hdl/mpu_pkg.vhd -t vhdl -g hdl
 	gpdevice addfile -p hdl/mpu.vhd -t vhdl -g hdl
 	gpdevice addfile -p hdl/mpu_slave.vhd -t vhdl -g hdl
-	
+	gpdevice addfile -p hdl/mpu_offset_correction.vhd -t vhdl -g hdl
+
 	#Flows
+
 	gpdevice addflow -n accelero -d out -s 8
 	gpdevice addflow -n gyroscope -d out -s 8	
 	gpdevice addflow -n compass -d out -s 8
@@ -102,53 +104,53 @@
 	gpdevice addenum -n comp.fz_compass.c6 -l "75 Hz" -v 6
 	gpdevice setproperty -n comp.fz_compass -l "Update rate"
 
-#	#Offset accelero X
-#	gpdevice addparam -n accel_off_x_reg
-#	gpdevice fixparam -n accel_off_x_reg -v false
-#	gpdevice setparam -n accel_off_x_reg -r 6
-#	gpdevice addproperty -n accel_offx -t int -v 0 -l "Accelero offset X"
-#	gpdevice setproperty -n accel_offx -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n accel_off_x_reg -v accel_offx.value
+	#Offset accelero X
+	gpdevice addparam -n accel_off_x_reg -m accel.accel_offx.value
+	gpdevice fixparam -n accel_off_x_reg -v false
+	gpdevice setparam -n accel_off_x_reg -r 6
+	gpdevice addproperty -n accel.accel_offx -t int -v 0
+	gpdevice setproperty -n accel.accel_offx -l "Offset X"
+	gpdevice setproperty -n accel.accel_offx -r -16384:+16384 -s 1
 	
 	#Offset accelero Y
-#	gpdevice addparam -n accel_off_y_reg
-#	gpdevice fixparam -n accel_off_y_reg -v false
-#	gpdevice setparam -n accel_off_y_reg -r 7
-#	gpdevice addproperty -n accel_offy -t int -v 0 -l "Accelero offset Y"
-#	gpdevice setproperty -n accel_offy -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n accel_off_y_reg -v accel_offy.value
+	gpdevice addparam -n accel_off_y_reg -m accel.accel_offy.value
+	gpdevice fixparam -n accel_off_y_reg -v false
+	gpdevice setparam -n accel_off_y_reg -r 7
+	gpdevice addproperty -n accel.accel_offy -t int -v 0
+	gpdevice setproperty -n accel.accel_offy -l "Offset Y"
+	gpdevice setproperty -n accel.accel_offy -r -16384:+16384 -s 1
 
 	#Offset accelero Z
-#	gpdevice addparam -n accel_off_z_reg
-#	gpdevice fixparam -n accel_off_z_reg -v false
-#	gpdevice setparam -n accel_off_z_reg -r 8
-#	gpdevice addproperty -n accel_offz -t int -v 0 -l "Accelero offset Z"
-#	gpdevice setproperty -n accel_offz -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n accel_off_z_reg -v accel_offz.value
+	gpdevice addparam -n accel_off_z_reg -m accel.accel_offz.value
+	gpdevice fixparam -n accel_off_z_reg -v false
+	gpdevice setparam -n accel_off_z_reg -r 8
+	gpdevice addproperty -n accel.accel_offz -t int -v 0
+	gpdevice setproperty -n accel.accel_offz -l "Offset Z"
+	gpdevice setproperty -n accel.accel_offz -r -16384:+16384 -s 1
 
 	#Offset gyro X
-#	gpdevice addparam -n gyro_off_x_reg
-#	gpdevice fixparam -n gyro_off_x_reg -v false
-#	gpdevice setparam -n gyro_off_x_reg -r 9
-#	gpdevice addproperty -n gyro_offx -t int -v 0 -l "Gyro offset X"
-#	gpdevice setproperty -n gyro_offx -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n gyro_off_x_reg -v gyro_offx.value	
+	gpdevice addparam -n gyro_off_x_reg -m gyro.gyro_offx.value
+	gpdevice fixparam -n gyro_off_x_reg -v false
+	gpdevice setparam -n gyro_off_x_reg -r 9
+	gpdevice addproperty -n gyro.gyro_offx -t int -v 0
+	gpdevice setproperty -n gyro.gyro_offx -l "Offset X"
+	gpdevice setproperty -n gyro.gyro_offx -r -16384:+16384 -s 1	
 	
 	#Offset gyro Y
-#	gpdevice addparam -n gyro_off_y_reg
-#	gpdevice fixparam -n gyro_off_y_reg -v false
-#	gpdevice setparam -n gyro_off_y_reg -r 10
-#	gpdevice addproperty -n gyro_offy -t int -v 0 -l "Gyro offset Y"
-#	gpdevice setproperty -n gyro_offy -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n gyro_off_y_reg -v gyro_offy.value
+	gpdevice addparam -n gyro_off_y_reg -m gyro.gyro_offy.value
+	gpdevice fixparam -n gyro_off_y_reg -v false
+	gpdevice setparam -n gyro_off_y_reg -r 10
+	gpdevice addproperty -n gyro.gyro_offy -t int -v 0
+	gpdevice setproperty -n gyro.gyro_offy -l "Offset Y"
+	gpdevice setproperty -n gyro.gyro_offy -r -16384:+16384 -s 1
 
-	#Offset gyro X
-#	gpdevice addparam -n gyro_off_z_reg
-#	gpdevice fixparam -n gyro_off_z_reg -v false
-#	gpdevice setparam -n gyro_off_z_reg -r 11
-#	gpdevice addproperty -n gyro_offz -t int -v 0 -l "Gyro offset Z"
-#	gpdevice setproperty -n gyro_offz -r -16384:+16384 -s 1
-#	gpdevice setpropertymap -n gyro_off_z_reg -v gyro_offz.value
+	#Offset gyro Z
+	gpdevice addparam -n gyro_off_z_reg -m gyro.gyro_offz.value
+	gpdevice fixparam -n gyro_off_z_reg -v false
+	gpdevice setparam -n gyro_off_z_reg -r 11
+	gpdevice addproperty -n gyro.gyro_offz -t int -v 0
+	gpdevice setproperty -n gyro.gyro_offz -l "Offset Z"
+	gpdevice setproperty -n gyro.gyro_offz -r -16384:+16384 -s 1
 
 
 	#Generate device

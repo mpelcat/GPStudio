@@ -18,6 +18,12 @@ entity mpu_slave is
 		spl_rate_reg     : out std_logic_vector(31 downto 0);
 		gain_compass_reg : out std_logic_vector(31 downto 0);
 		fz_compass_reg   : out std_logic_vector(31 downto 0);
+		accel_off_x_reg  : out std_logic_vector(31 downto 0);
+		accel_off_y_reg  : out std_logic_vector(31 downto 0);
+		accel_off_z_reg  : out std_logic_vector(31 downto 0);
+		gyro_off_x_reg   : out std_logic_vector(31 downto 0);
+		gyro_off_y_reg   : out std_logic_vector(31 downto 0);
+		gyro_off_z_reg   : out std_logic_vector(31 downto 0);
 
 		--======================= Slaves ========================
 
@@ -39,6 +45,12 @@ architecture rtl of mpu_slave is
 	constant SPL_RATE_REG_REG_ADDR     : natural := 3;
 	constant GAIN_COMPASS_REG_REG_ADDR : natural := 4;
 	constant FZ_COMPASS_REG_REG_ADDR   : natural := 5;
+	constant ACCEL_OFF_X_REG_REG_ADDR  : natural := 6;
+	constant ACCEL_OFF_Y_REG_REG_ADDR  : natural := 7;
+	constant ACCEL_OFF_Z_REG_REG_ADDR  : natural := 8;
+	constant GYRO_OFF_X_REG_REG_ADDR   : natural := 9;
+	constant GYRO_OFF_Y_REG_REG_ADDR   : natural := 10;
+	constant GYRO_OFF_Z_REG_REG_ADDR   : natural := 11;
 
 	-- Internal registers 
 	signal enable_reg_reg       : std_logic_vector (31 downto 0);
@@ -47,6 +59,12 @@ architecture rtl of mpu_slave is
 	signal spl_rate_reg_reg     : std_logic_vector (31 downto 0);
 	signal gain_compass_reg_reg : std_logic_vector (31 downto 0);
 	signal fz_compass_reg_reg   : std_logic_vector (31 downto 0);
+	signal accel_off_x_reg_reg  : std_logic_vector (31 downto 0);
+	signal accel_off_y_reg_reg  : std_logic_vector (31 downto 0);
+	signal accel_off_z_reg_reg  : std_logic_vector (31 downto 0);
+	signal gyro_off_x_reg_reg   : std_logic_vector (31 downto 0);
+	signal gyro_off_y_reg_reg   : std_logic_vector (31 downto 0);
+	signal gyro_off_z_reg_reg   : std_logic_vector (31 downto 0);
 
 begin
 	write_reg : process (clk_proc, reset_n)
@@ -58,6 +76,12 @@ begin
 			spl_rate_reg_reg <= x"00000000";
 			gain_compass_reg_reg <= x"00000000";
 			fz_compass_reg_reg <= x"00000000";
+			accel_off_x_reg_reg <= x"00000000";
+			accel_off_y_reg_reg <= x"00000000";
+			accel_off_z_reg_reg <= x"00000000";
+			gyro_off_x_reg_reg <= x"00000000";
+			gyro_off_y_reg_reg <= x"00000000";
+			gyro_off_z_reg_reg <= x"00000000";
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
@@ -73,6 +97,18 @@ begin
 						gain_compass_reg_reg <= datawr_i;
 					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 4))=>
 						fz_compass_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_X_REG_REG_ADDR, 4))=>
+						accel_off_x_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_Y_REG_REG_ADDR, 4))=>
+						accel_off_y_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_Z_REG_REG_ADDR, 4))=>
+						accel_off_z_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(GYRO_OFF_X_REG_REG_ADDR, 4))=>
+						gyro_off_x_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(GYRO_OFF_Y_REG_REG_ADDR, 4))=>
+						gyro_off_y_reg_reg <= datawr_i;
+					when std_logic_vector(to_unsigned(GYRO_OFF_Z_REG_REG_ADDR, 4))=>
+						gyro_off_z_reg_reg <= datawr_i;
 					when others=>
 				end case;
 			end if;
@@ -98,6 +134,18 @@ begin
 						datard_o <= gain_compass_reg_reg;
 					when std_logic_vector(to_unsigned(FZ_COMPASS_REG_REG_ADDR, 4))=>
 						datard_o <= fz_compass_reg_reg;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_X_REG_REG_ADDR, 4))=>
+						datard_o <= accel_off_x_reg_reg;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_Y_REG_REG_ADDR, 4))=>
+						datard_o <= accel_off_y_reg_reg;
+					when std_logic_vector(to_unsigned(ACCEL_OFF_Z_REG_REG_ADDR, 4))=>
+						datard_o <= accel_off_z_reg_reg;
+					when std_logic_vector(to_unsigned(GYRO_OFF_X_REG_REG_ADDR, 4))=>
+						datard_o <= gyro_off_x_reg_reg;
+					when std_logic_vector(to_unsigned(GYRO_OFF_Y_REG_REG_ADDR, 4))=>
+						datard_o <= gyro_off_y_reg_reg;
+					when std_logic_vector(to_unsigned(GYRO_OFF_Z_REG_REG_ADDR, 4))=>
+						datard_o <= gyro_off_z_reg_reg;
 					when others=>
 						datard_o <= (others => '0');
 				end case;
@@ -111,5 +159,11 @@ begin
 	spl_rate_reg <= spl_rate_reg_reg;
 	gain_compass_reg <= gain_compass_reg_reg;
 	fz_compass_reg <= fz_compass_reg_reg;
+	accel_off_x_reg <= accel_off_x_reg_reg;
+	accel_off_y_reg <= accel_off_y_reg_reg;
+	accel_off_z_reg <= accel_off_z_reg_reg;
+	gyro_off_x_reg <= gyro_off_x_reg_reg;
+	gyro_off_y_reg <= gyro_off_y_reg_reg;
+	gyro_off_z_reg <= gyro_off_z_reg_reg;
 
 end rtl;
