@@ -55,6 +55,7 @@ void PlotViewer::showFlowConnection(int flowId)
     {
         if(i>6) break;
         short dataItem = ((short)((char)data[i])<<8) + data[i+1];
+        if ((short)((char)data[i+1])<0) dataItem +=256;
         QScriptValueList args;
         args << dataItem;
 
