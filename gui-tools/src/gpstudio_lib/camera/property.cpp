@@ -33,6 +33,7 @@ Property::Property(QString name)
     _parent = NULL;
     _type = Group;
     _row = 0;
+    _bits = 0;
 }
 
 Property::~Property()
@@ -121,10 +122,6 @@ void Property::setValue(const QVariant &value)
     if(valueChangedb) emit valueChanged(QVariant(value));
 
     ScriptEngine::getEngine().evalPropertyMap(_onchange);
-
-    /*if(_parent)
-        if(_parent->parent())
-            qDebug()<<Q_FUNC_INFO<<_parent->parent()->name()<<parent()->name()<<_name<<_value<<_bits;*/
 }
 
 uint Property::bits() const
