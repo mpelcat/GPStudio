@@ -90,3 +90,9 @@ void ScriptWidget::down()
     _histoIndex++;
     _lineEdit->setText(_histo[_histoIndex]);
 }
+
+
+QSize ScriptWidget::sizeHint() const
+{
+    return QSize(300,100);
+}

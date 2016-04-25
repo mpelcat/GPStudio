@@ -55,6 +55,10 @@ private:
 
     QStringList _histo;
     int _histoIndex;
+
+    // QWidget interface
+public:
+    QSize sizeHint() const;
 };
 
 #endif // SCRIPTWIDGET_H

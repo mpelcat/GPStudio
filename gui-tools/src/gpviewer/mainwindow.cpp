@@ -37,9 +37,6 @@
 #include "flowpackage.h"
 #include "camera/flowmanager.h"
 
-#include "datawrapper/gradiantwrapper.h"
-#include "datawrapper/harriswrapper.h"
-
 #include <QTreeView>
 #include "cameraitemmodel.h"
 
@@ -52,6 +49,9 @@ MainWindow::MainWindow(QStringList args) :
     _cam = NULL;
 
     ui->setupUi(this);
+
+    // create block view
+    _blocksView = new BlockView(this);
 
     createDocks();
     createToolBarAndMenu();
@@ -134,7 +134,6 @@ void MainWindow::createToolBarAndMenu()
     viewMenu->addAction(_camExplorerDock->toggleViewAction());
     viewMenu->addSeparator();
     viewMenu->addAction(_piSpaceDock->toggleViewAction());
-    viewMenu->addAction(_blocksViewDock->toggleViewAction());
 
     // ============= Windows =============
     _winMenu = ui->menuBar->addMenu("&Windows");
@@ -190,19 +189,9 @@ void MainWindow::createDocks()
     _camExplorerDock->setWidget(camExplorerContent);
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
-    // pi space dock
-    _piSpaceDock = new QDockWidget("PI", this);
-    QWidget *piSpaceWidgetContent = new QWidget(_piSpaceDock);
-    QLayout *piSpaceWidgetLayout = new QVBoxLayout();
-    _piSpaceHex = new QHexEdit(piSpaceWidgetContent);
-    piSpaceWidgetLayout->addWidget(_piSpaceHex);
-    piSpaceWidgetContent->setLayout(piSpaceWidgetLayout);
-    _piSpaceDock->setWidget(piSpaceWidgetContent);
-    tabifyDockWidget(_camExplorerDock, _piSpaceDock);
-
     // script dock
     _scriptDock = new QDockWidget("Scripts", this);
-    QWidget *scriptContent = new QWidget(_piSpaceDock);
+    QWidget *scriptContent = new QWidget(_scriptDock);
     QLayout *scriptLayout = new QVBoxLayout();
     _scriptWidget = new ScriptWidget(scriptContent);
     scriptLayout->addWidget(_scriptWidget);
@@ -210,15 +199,15 @@ void MainWindow::createDocks()
     _scriptDock->setWidget(scriptContent);
     addDockWidget(Qt::BottomDockWidgetArea, _scriptDock);
 
-    // blocks view dock
-    _blocksViewDock = new QDockWidget("Blocks view", this);
-    QWidget *blocksViewContent = new QWidget(_piSpaceDock);
-    QLayout *blocksViewLayout = new QVBoxLayout();
-    _blocksView = new BlockView(blocksViewContent);
-    blocksViewLayout->addWidget(_blocksView);
-    blocksViewContent->setLayout(blocksViewLayout);
-    _blocksViewDock->setWidget(blocksViewContent);
-    tabifyDockWidget(_scriptDock, _blocksViewDock);
+    // pi space dock
+    _piSpaceDock = new QDockWidget("PI space", this);
+    QWidget *piSpaceWidgetContent = new QWidget(_piSpaceDock);
+    QLayout *piSpaceWidgetLayout = new QVBoxLayout();
+    _piSpaceHex = new QHexEdit(piSpaceWidgetContent);
+    piSpaceWidgetLayout->addWidget(_piSpaceHex);
+    piSpaceWidgetContent->setLayout(piSpaceWidgetLayout);
+    _piSpaceDock->setWidget(piSpaceWidgetContent);
+    tabifyDockWidget(_scriptDock, _piSpaceDock);
 }
 
 void MainWindow::openNodeGeneratedFile(const QString fileName)
@@ -227,7 +216,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     _cam = new Camera(fileName);
 
-    _blocksView->loadFromNode(_cam->node());
+    _blocksView->loadFromCam(_cam);
 
     setupViewers(2);
 
@@ -319,11 +308,21 @@ void MainWindow::setupViewers(int count)
             ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));
             viewer->setWindowTitle(QString("Flow %1").arg(connection->flow()->name()));
             _viewers.insert(i, viewer);
-            QMdiSubWindow * windows = ui->mdiArea->addSubWindow(viewer);
-            windows->show();
             i++;
         }
     }
+
+    // adding flow view (reverse order to have alphabetic order)
+    for(i=_viewers.count()-1; i>=0; i--)
+    {
+        QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_viewers[i]);
+        windows->show();
+    }
+
+    // adding block view
+    QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_blocksView);
+    windows->setWindowTitle("Blocks view");
+    windows->show();
 
     ui->mdiArea->tileSubWindows();
 }
