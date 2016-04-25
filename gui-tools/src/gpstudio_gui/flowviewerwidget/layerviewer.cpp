@@ -29,7 +29,7 @@ LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
 {
     setupWidgets();
-    showFlowConnection(0);
+    //showFlowConnection(0);
     connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
 }
 

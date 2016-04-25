@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ PlotViewer::PlotViewer(FlowViewerInterface *flowViewerInterface)
 {
     setupWidgets();
     _startDate = 0;
-    showFlowConnection(0);
+    //showFlowConnection(0);
     connect((QObject*)_flowViewerInterface, SIGNAL(dataReceived(int)), this, SLOT(showFlowConnection(int)));
 }
 
@@ -42,8 +42,8 @@ PlotViewer::~PlotViewer()
 
 void PlotViewer::showFlowConnection(int flowId)
 {
-    if(flowId>=_flowViewerInterface->flowConnections().size())
-        return;
+    /*if(flowId>=_flowViewerInterface->flowConnections().size())
+        return;*/
 
     const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
 
