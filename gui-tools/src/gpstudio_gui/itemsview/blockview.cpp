@@ -31,6 +31,7 @@ BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
 {
     _scene = new BlockScene();
+    scale(0.75, 0.75);
 
     _startConnectItem = NULL;
     _lineConector = NULL;
@@ -130,4 +131,9 @@ BlockScene *BlockView::blockScene() const
 bool BlockView::loadFromNode(const ModelNode *node)
 {
     return _scene->loadFromNode(node);
+}
+
+bool BlockView::loadFromCam(const Camera *camera)
+{
+    return _scene->loadFromCamera(camera);
 }

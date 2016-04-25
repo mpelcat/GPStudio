@@ -35,6 +35,9 @@
 #include <QSlider>
 
 #include <model/model_block.h>
+#include <camera/block.h>
+
+#include "propertywidgets/propertywidgets.h"
 
 BlockItem::BlockItem()
 {
@@ -219,7 +222,7 @@ BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *it
     {
         item->addPort(BlockPortItem::fromModelFlow(flow));
     }
-    item->setPos(modelBlock->xPos(), modelBlock->yPos());
+    item->setPos(modelBlock->xPos(), -modelBlock->yPos());
     item->setName(modelBlock->name());
 
     item->updateBlock();
@@ -230,7 +233,27 @@ BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *it
 BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
 {
     if(!item)
-        item = new BlockItem();
+        item = BlockItem::fromModelBlock(block->modelBlock());
+
+    /*QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
+    QCheckBox *checkBox = new QCheckBox("en");
+    checkBox->setGeometry(5,5,50,20);
+    checkBox->setAutoFillBackground(false);
+    checkBox->setAttribute(Qt::WA_NoSystemBackground);
+    widget->setWidget(checkBox);*/
+
+    Property *propertyEnable = NULL;
+    qDebug()<<"proxytrtr";
+    propertyEnable = block->assocProperty()->path("enable");
+    if(propertyEnable)
+    {
+        QWidget *propertyEnableWidget = PropertyWidget::getWidgetFromProperty(propertyEnable);
+        QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
+        propertyEnableWidget->setGeometry(5,5,50,20);
+        propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
+        proxy->setWidget(propertyEnableWidget);
+        qDebug()<<"proxy";
+    }
 
     return item;
 }

@@ -80,7 +80,34 @@ bool BlockScene::loadFromCamera(const Camera *camera)
 
     foreach (Block *block, camera->blocks())
     {
-        //block->
+        if(block->name()!="pi" && block->name()!="fi" && block->name()!="ci")
+        {
+            BlockItem *blockItem = BlockItem::fromBlock(block);
+            _blocks.insert(block->name(), blockItem);
+            addItem(blockItem);
+        }
+    }
+
+    foreach (ModelFlowConnect *flowConnect, camera->node()->getFIBlock()->flowConnects())
+    {
+        QMap<QString, BlockItem* >::const_iterator fromblockIt = _blocks.find(flowConnect->fromblock());
+        if(fromblockIt==_blocks.end()) continue;
+        BlockItem *fromblockItem = fromblockIt.value();
+
+        QMap<QString, BlockPortItem* >::const_iterator fromflowIt = fromblockItem->ports().find(flowConnect->fromflow());
+        if(fromflowIt==fromblockItem->ports().end()) continue;
+        BlockPortItem *fromflowItem = fromflowIt.value();
+
+        QMap<QString, BlockItem* >::const_iterator toblockIt = _blocks.find(flowConnect->toblock());
+        if(toblockIt==_blocks.end()) continue;
+        BlockItem *toblockItem = toblockIt.value();
+
+        QMap<QString, BlockPortItem* >::const_iterator toflowIt = toblockItem->ports().find(flowConnect->toflow());
+        if(toflowIt==fromblockItem->ports().end()) continue;
+        BlockPortItem *toflowItem = toflowIt.value();
+
+        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
+        addItem(connectorItem);
     }
 
     return true;

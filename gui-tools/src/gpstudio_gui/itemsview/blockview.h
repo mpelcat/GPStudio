@@ -34,10 +34,11 @@ class BlockItem;
 class GPSTUDIO_GUI_EXPORT BlockView : public QGraphicsView
 {
 public:
-    BlockView(QWidget *parent);
+    BlockView(QWidget *parent=NULL);
     ~BlockView();
 
     bool loadFromNode(const ModelNode *node);
+    bool loadFromCam(const Camera *camera);
 
     BlockScene *blockScene() const;
     void setBlockScene(BlockScene *scene);
