@@ -45,20 +45,6 @@ BlockItem::BlockItem()
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
 
-    /*QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
-    QCheckBox *checkBox = new QCheckBox("en");
-    checkBox->setGeometry(5,5,50,20);
-    checkBox->setAutoFillBackground(false);
-    checkBox->setAttribute(Qt::WA_NoSystemBackground);
-    widget->setWidget(checkBox);
-
-    QGraphicsProxyWidget *widget2 = new QGraphicsProxyWidget(this);
-    QSlider *slider = new QSlider(Qt::Horizontal);
-    slider->setGeometry(10,40,100,30);
-    slider->setAutoFillBackground(false);
-    slider->setAttribute(Qt::WA_NoSystemBackground);
-    widget2->setWidget(slider);*/
-
     update();
 }
 
@@ -235,15 +221,7 @@ BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
     if(!item)
         item = BlockItem::fromModelBlock(block->modelBlock());
 
-    /*QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
-    QCheckBox *checkBox = new QCheckBox("en");
-    checkBox->setGeometry(5,5,50,20);
-    checkBox->setAutoFillBackground(false);
-    checkBox->setAttribute(Qt::WA_NoSystemBackground);
-    widget->setWidget(checkBox);*/
-
     Property *propertyEnable = NULL;
-    qDebug()<<"proxytrtr";
     propertyEnable = block->assocProperty()->path("enable");
     if(propertyEnable)
     {
@@ -252,7 +230,6 @@ BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
         propertyEnableWidget->setGeometry(5,5,50,20);
         propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
         proxy->setWidget(propertyEnableWidget);
-        qDebug()<<"proxy";
     }
 
     return item;
