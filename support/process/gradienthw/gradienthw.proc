@@ -6,7 +6,13 @@
 	</svg>
 	<flows>
 		<flow name="in" type="in" size="8" desc="input flow"/>
-		<flow name="magnitude" type="out" size="16" desc="magnitude"/>
+		<flow name="magnitude" type="out" size="16" desc="magnitude">
+			<properties>
+				<property name="datatype" value="image" type="flowtype"/>
+				<property name="width" propertymap="in.width.value" type="int" min="" max=""/>
+				<property name="height" propertymap="in.height.value" type="int" min="" max=""/>
+			</properties>
+		</flow>
 		<flow name="angle" type="out" size="16" desc="angle"/>
 	</flows>
 	<params>
