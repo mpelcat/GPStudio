@@ -33,6 +33,7 @@ class BlockItem;
 
 class GPSTUDIO_GUI_EXPORT BlockView : public QGraphicsView
 {
+    Q_OBJECT
 public:
     BlockView(QWidget *parent=NULL);
     ~BlockView();
@@ -51,6 +52,12 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+
+public slots:
+    void updateSelection();
+
+signals:
+    void blockSelected(const Block *block);
 
 private:
     BlockScene *_scene;

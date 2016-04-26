@@ -42,6 +42,10 @@ BlockView::BlockView(QWidget *parent)
     setRenderHint(QPainter::Antialiasing, true);
     setRenderHint(QPainter::SmoothPixmapTransform, true);
     setRenderHint(QPainter::TextAntialiasing, true);
+
+    setDragMode(QGraphicsView::ScrollHandDrag);
+
+    connect(_scene, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
 }
 
 BlockView::~BlockView()
@@ -115,6 +119,19 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
         _startConnectItem = NULL;
         _lineConector = NULL;
     }*/
+}
+
+void BlockView::updateSelection()
+{
+    if(_scene->selectedItems().count()==0)
+        return;
+
+    QGraphicsItem *item = _scene->selectedItems().at(0);
+    BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+    if(blockItem)
+    {
+        emit blockSelected(blockItem->block());
+    }
 }
 
 void BlockView::setBlockScene(BlockScene *scene)

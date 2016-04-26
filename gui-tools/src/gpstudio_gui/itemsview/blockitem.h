@@ -52,6 +52,8 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    const Block *block() const;
+
     void updateBlock();
 
     void addPort(BlockPortItem *portItem);
@@ -79,6 +81,8 @@ private:
     QSvgRenderer _svgRenderer;
 
     QMap<QString, BlockPortItem *> _ports;
+
+    const Block *_block;
 };
 
 #endif // BLOCKITEM_H

@@ -54,6 +54,9 @@ public:
 protected slots:
     void updateRootProperty(QModelIndex index);
 
+public slots:
+    void selectBlock(const Block *block);
+
 private:
     void setupWidgets();
     void setRootProperty(const Property *property);

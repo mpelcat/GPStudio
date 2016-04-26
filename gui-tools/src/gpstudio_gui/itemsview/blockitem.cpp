@@ -41,6 +41,8 @@
 
 BlockItem::BlockItem()
 {
+    _block = NULL;
+
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
@@ -99,6 +101,11 @@ QString BlockItem::name() const
 void BlockItem::setName(const QString &name)
 {
     _name = name;
+}
+
+const Block *BlockItem::block() const
+{
+    return _block;
 }
 
 void BlockItem::updateBlock()
@@ -231,6 +238,8 @@ BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
         propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
         proxy->setWidget(propertyEnableWidget);
     }
+
+    item->_block = block;
 
     return item;
 }
