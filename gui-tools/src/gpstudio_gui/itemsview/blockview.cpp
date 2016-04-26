@@ -134,6 +134,21 @@ void BlockView::updateSelection()
     emit blockSelected(blockItem->block());
 }
 
+void BlockView::selectBlock(const Block *block)
+{
+    _scene->blockSignals(true);
+    _scene->clearSelection();
+
+    BlockItem *blockItem = _scene->item(block->name());
+    if(blockItem)
+    {
+        blockItem->setSelected(true);
+        blockItem->ensureVisible();
+    }
+
+    _scene->blockSignals(false);
+}
+
 void BlockView::setBlockScene(BlockScene *scene)
 {
     _scene = scene;

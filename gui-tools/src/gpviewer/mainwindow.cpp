@@ -188,6 +188,7 @@ void MainWindow::createDocks()
     camExplorerContent->setLayout(camExplorerLayout);
     _camExplorerDock->setWidget(camExplorerContent);
     connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
+    connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
     // script dock

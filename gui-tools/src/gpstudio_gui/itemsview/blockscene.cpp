@@ -112,3 +112,11 @@ bool BlockScene::loadFromCamera(const Camera *camera)
 
     return true;
 }
+
+BlockItem *BlockScene::item(const QString &name) const
+{
+    QMap<QString, BlockItem* >::const_iterator it = _blocks.find(name);
+    if(it != _blocks.end())
+        return it.value();
+    return NULL;
+}

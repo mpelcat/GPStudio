@@ -53,8 +53,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
-public slots:
+protected slots:
     void updateSelection();
+
+public slots:
+    void selectBlock(const Block *block);
 
 signals:
     void blockSelected(const Block *block);

@@ -40,6 +40,8 @@ public:
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
+    BlockItem *item(const QString &name) const;
+
 protected:
     QMap<QString, BlockItem* > _blocks;
 };

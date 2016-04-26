@@ -52,10 +52,13 @@ public:
     void setModeView(const Mode &modeView);
 
 protected slots:
-    void updateRootProperty(QModelIndex index);
+    void updateRootProperty();
 
 public slots:
     void selectBlock(const Block *block);
+
+signals:
+    void blockSelected(const Block *block);
 
 private:
     void setupWidgets();

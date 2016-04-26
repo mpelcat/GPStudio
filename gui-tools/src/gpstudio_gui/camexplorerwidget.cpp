@@ -69,8 +69,7 @@ void CamExplorerWidget::setupWidgets()
     _camTreeView->setSortingEnabled(true);
     splitter->addWidget(_camTreeView);
 
-    connect(_camTreeView, SIGNAL(clicked(QModelIndex)), this, SLOT(updateRootProperty(QModelIndex)));
-    connect(_camTreeView, SIGNAL(activated(QModelIndex)), this, SLOT(updateRootProperty(QModelIndex)));
+    connect(_camTreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(updateRootProperty()));
 
     switch (_modeView)
     {
@@ -171,8 +170,15 @@ void CamExplorerWidget::setCamera(Camera *camera)
     }
 }
 
-void CamExplorerWidget::updateRootProperty(QModelIndex index)
+void CamExplorerWidget::updateRootProperty()
 {
+    if(!_camTreeView->selectionModel()->hasSelection())
+    {
+        setRootProperty(NULL);
+        return;
+    }
+
+    QModelIndex index = _camTreeView->selectionModel()->selection().indexes().at(0);
     if(!index.isValid() || index.model()!=_camItemModel)
     {
         setRootProperty(NULL);
@@ -200,6 +206,7 @@ void CamExplorerWidget::updateRootProperty(QModelIndex index)
         break;
     case CameraItem::BlockType:
         setRootProperty(item->block()->assocProperty());
+        emit blockSelected(item->block());
         break;
     case CameraItem::FlowType:
         setRootProperty(item->flow()->assocProperty());
@@ -212,16 +219,22 @@ void CamExplorerWidget::updateRootProperty(QModelIndex index)
 
 void CamExplorerWidget::selectBlock(const Block *block)
 {
-    _camTreeView->selectionModel()->clearSelection();
+    //_camTreeView->selectionModel()->blockSignals(true);
+    blockSignals(true);
+
     if(block)
     {
         QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(block->name()), -1, Qt::MatchRecursive);
         if(items.count()>0)
         {
-            _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
-            updateRootProperty(items.at(0));
+            _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         }
     }
     else
-        setRootProperty(NULL);
+    {
+        _camTreeView->selectionModel()->clearSelection();
+    }
+
+    //_camTreeView->selectionModel()->blockSignals(false);
+    blockSignals(false);
 }
