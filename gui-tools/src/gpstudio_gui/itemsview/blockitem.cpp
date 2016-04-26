@@ -68,6 +68,11 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 {
     Q_UNUSED(option); Q_UNUSED(widget);
 
+    if(isSelected())
+        painter->setPen(QPen(QColor("orange"), 3));
+    else
+        painter->setPen(QPen(Qt::black, 1));
+
     if(_svgRenderer.isValid())
     {
         _svgRenderer.render(painter, _svgRenderer.viewBox());
@@ -79,6 +84,7 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
 
     // block name
+    painter->setPen(QPen(Qt::black, 1));
     QRectF textRect = QRectF(_boundingRect.x(), _boundingRect.height(), _boundingRect.width(), 15);
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignBottom, _name);
 }
