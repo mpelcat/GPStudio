@@ -29,7 +29,7 @@
 CameraCom::CameraCom(const CameraInfo &cameraInfo)
 {
     _cameraIO = NULL;
-
+    _info = cameraInfo;
 
     if(cameraInfo.driverType().contains("USB", Qt::CaseInsensitive))
     {
@@ -154,6 +154,11 @@ void CameraCom::run()
 
         //QThread::sleep(100);
     }
+}
+
+const CameraInfo CameraCom::info() const
+{
+    return _info;
 }
 
 CameraIO *CameraCom::cameraIO() const

@@ -223,10 +223,11 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
-    _camExplorerWidget->setCamera(_cam);
     //tabifyDockWidget(ui->paramsDock, ui->camTreeView);
 
     connectCam();
+
+    _camExplorerWidget->setCamera(_cam);
 }
 
 void MainWindow::connectCam()

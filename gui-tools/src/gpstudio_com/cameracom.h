@@ -39,6 +39,8 @@ public:
     bool isConnected() const;
     void stop();
 
+    const CameraInfo info() const;
+
     //Camera(const CameraInfo &info);
 
     // void sendFlow(const Flow &flow);
@@ -70,6 +72,8 @@ private:
     QList<FlowCom*> _outputFlow;
 
     FlowCom *_paramFlow;
+
+    CameraInfo _info;
 };
 
 #endif // CAMERA_COM_H

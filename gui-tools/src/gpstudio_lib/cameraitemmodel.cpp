@@ -21,6 +21,7 @@
 #include "cameraitemmodel.h"
 
 #include "camera/camera.h"
+#include "cameracom.h"
 
 #include <QDebug>
 #include <QIcon>
@@ -113,7 +114,10 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             case Name:
                 return QVariant(item->camera()->node()->name());
             case Value:
-                return QVariant("USB port 1.2");
+                if(item->camera()->isConnected())
+                    return QVariant(item->camera()->com()->info().name());
+                else
+                    return QVariant("Not connected");
             default:
                 return QVariant();
             }
@@ -133,7 +137,7 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             case Name:
                 return QVariant(item->block()->name());
             default:
-                return QVariant();
+                return QVariant(item->block()->modelBlock()->driver());
             }
         }
         return QVariant();
