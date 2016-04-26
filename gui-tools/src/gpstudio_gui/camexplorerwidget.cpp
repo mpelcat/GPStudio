@@ -212,11 +212,16 @@ void CamExplorerWidget::updateRootProperty(QModelIndex index)
 
 void CamExplorerWidget::selectBlock(const Block *block)
 {
-    QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(block->name()), -1, Qt::MatchRecursive);
-    if(items.count()>0)
+    _camTreeView->selectionModel()->clearSelection();
+    if(block)
     {
-        _camTreeView->selectionModel()->clearSelection();
-        _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
-        updateRootProperty(items.at(0));
+        QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(block->name()), -1, Qt::MatchRecursive);
+        if(items.count()>0)
+        {
+            _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+            updateRootProperty(items.at(0));
+        }
     }
+    else
+        setRootProperty(NULL);
 }

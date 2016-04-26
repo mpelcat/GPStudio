@@ -124,14 +124,14 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
 void BlockView::updateSelection()
 {
     if(_scene->selectedItems().count()==0)
+    {
+        emit blockSelected(NULL);
         return;
+    }
 
     QGraphicsItem *item = _scene->selectedItems().at(0);
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
-    if(blockItem)
-    {
-        emit blockSelected(blockItem->block());
-    }
+    emit blockSelected(blockItem->block());
 }
 
 void BlockView::setBlockScene(BlockScene *scene)
