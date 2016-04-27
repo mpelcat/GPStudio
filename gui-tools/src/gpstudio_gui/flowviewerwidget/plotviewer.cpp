@@ -45,6 +45,9 @@ void PlotViewer::showFlowConnection(int flowId)
     /*if(flowId>=_flowViewerInterface->flowConnections().size())
         return;*/
 
+    if(_pauseButton->isChecked())
+        return;
+
     const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
 
     QByteArray data = flowPackage.data();
@@ -80,9 +83,21 @@ void PlotViewer::showFlowConnection(int flowId)
     _widget->replot();
 }
 
+void PlotViewer::saveImage()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Save image...", "", "Images (*.jpg)");
+    if(!fileName.isEmpty())
+    {
+        QFileInfo info(fileName);
+        if(info.completeSuffix()=="")
+            fileName.append(".jpg");
+        _widget->saveJpg(fileName);
+    }
+}
+
 void PlotViewer::setupWidgets()
 {
-    QLayout *layout = new QVBoxLayout();
+    QLayout *layout = new QHBoxLayout();
     layout->setContentsMargins(0,0,0,0);
 
     _widget = new QCustomPlot();
@@ -92,6 +107,37 @@ void PlotViewer::setupWidgets()
     _widget->xAxis->setDateTimeFormat("HH:mm:ss");
 
     layout->addWidget(_widget);
+    layout->addItem(getToolBar());
 
     setLayout(layout);
+}
+
+QLayout *PlotViewer::getToolBar()
+{
+    QVBoxLayout *layoutTools = new QVBoxLayout();
+    layoutTools->setContentsMargins(0,5,2,0);
+    layoutTools->setSpacing(2);
+
+    _pauseButton = new QToolButton();
+    _pauseButton->setToolTip("Pause viewer");
+    _pauseButton->setAutoRaise(true);
+    _pauseButton->setCheckable(true);
+    _pauseButton->setIcon(QIcon(":/icons/img/pause.png"));
+    layoutTools->addWidget(_pauseButton);
+
+    _saveButton = new QToolButton();
+    _saveButton->setToolTip("Save image");
+    _saveButton->setAutoRaise(true);
+    _saveButton->setIcon(QIcon(":/icons/img/save.png"));
+    connect(_saveButton, SIGNAL(clicked(bool)), this, SLOT(saveImage()));
+    layoutTools->addWidget(_saveButton);
+
+    _settingsButton = new QToolButton();
+    _settingsButton->setToolTip("Records images");
+    _settingsButton->setAutoRaise(true);
+    _settingsButton->setIcon(QIcon(":/icons/img/settings.png"));
+    layoutTools->addWidget(_settingsButton);
+
+    layoutTools->addSpacerItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    return layoutTools;
 }

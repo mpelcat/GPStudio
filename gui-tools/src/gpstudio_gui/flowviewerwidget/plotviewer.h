@@ -36,9 +36,15 @@ public:
 
 protected slots:
     void showFlowConnection(int flowId);
+    void saveImage();
 
 protected:
     virtual void setupWidgets();
+    QLayout *getToolBar();
+
+    QToolButton *_pauseButton;
+    QToolButton *_saveButton;
+    QToolButton *_settingsButton;
 
     QCustomPlot *_widget;
     qint64 _startDate;
