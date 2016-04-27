@@ -73,7 +73,7 @@ void FlowViewerWidget::changeType()
     QList<AbstractViewer::ViewerType> viewersTypes = AbstractViewer::viewer2Type(dataType);
     foreach (AbstractViewer::ViewerType type, viewersTypes)
     {
-        _typeComboBox->addItem(AbstractViewer::nameViewerType(type), (int)type);
+        _typeComboBox->addItem(AbstractViewer::iconViewerType(type), AbstractViewer::nameViewerType(type), (int)type);
     }
 
     if(!viewersTypes.empty())

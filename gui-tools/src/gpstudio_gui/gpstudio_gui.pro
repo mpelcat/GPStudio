@@ -93,6 +93,10 @@ HEADERS  += \
     itemsview/blockportitem.h \
     itemsview/blockview.h
 
+RESOURCES += \
+    flowvieweractions.qrc \
+    flowviewertypes.qrc
+
 include(../../thirdparts/hexedit/hexedit.pri)
 include(../../thirdparts/qcustomplot/qcustomplot.pri)
 

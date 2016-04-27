@@ -48,6 +48,7 @@ public:
     static QList<AbstractViewer::ViewerType> viewer2Type(FlowViewerInterface::FlowDataType dataType);
 
     static QString nameViewerType(AbstractViewer::ViewerType viewerType);
+    static QIcon iconViewerType(AbstractViewer::ViewerType viewerType);
     static AbstractViewer *fromDataTypeName(AbstractViewer::ViewerType viewerType, FlowViewerInterface *flowViewerInterface);
 
 protected:

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+    <file>../img/charts.png</file>
+    <file>../img/hex.png</file>
+    <file>../img/layers.png</file>
+    </qresource>
+</RCC>

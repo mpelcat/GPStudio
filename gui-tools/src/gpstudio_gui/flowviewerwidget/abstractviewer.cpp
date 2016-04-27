@@ -91,12 +91,27 @@ QString AbstractViewer::nameViewerType(AbstractViewer::ViewerType viewerType)
     switch (viewerType)
     {
     case AbstractViewer::LayerViewerType:
-        return QString("LayerViewer");
+        return QString("Layer Viewer");
     case AbstractViewer::HewViewerType:
-        return QString("HexViewer");
+        return QString("Hex Viewer");
     case AbstractViewer::PlotsViewerType:
-        return QString("PlotsViewer");
+        return QString("Plots Viewer");
     default:
         return QString("Unknow");
+    }
+}
+
+QIcon AbstractViewer::iconViewerType(AbstractViewer::ViewerType viewerType)
+{
+    switch (viewerType)
+    {
+    case AbstractViewer::LayerViewerType:
+        return QIcon(":/icons/img/layers.png");
+    case AbstractViewer::HewViewerType:
+        return QIcon(":/icons/img/hex.png");
+    case AbstractViewer::PlotsViewerType:
+        return QIcon(":/icons/img/charts.png");
+    default:
+        return QIcon();
     }
 }
