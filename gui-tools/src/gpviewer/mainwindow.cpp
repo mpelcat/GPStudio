@@ -50,9 +50,6 @@ MainWindow::MainWindow(QStringList args) :
 
     ui->setupUi(this);
 
-    // create block view
-    _blocksView = new BlockView(this);
-
     createDocks();
     createToolBarAndMenu();
 
@@ -187,8 +184,6 @@ void MainWindow::createDocks()
     camExplorerLayout->addWidget(_camExplorerWidget);
     camExplorerContent->setLayout(camExplorerLayout);
     _camExplorerDock->setWidget(camExplorerContent);
-    connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
-    connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
     // script dock
@@ -217,8 +212,6 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     if(_cam) delete _cam;
 
     _cam = new Camera(fileName);
-
-    _blocksView->loadFromCam(_cam);
 
     setupViewers(2);
 
@@ -323,7 +316,12 @@ void MainWindow::setupViewers(int count)
     }
 
     // adding block view
+    _blocksView = new BlockView(this);
+    if(_cam)
+        _blocksView->loadFromCam(_cam);
     QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_blocksView);
+    connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
+    connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
     windows->setWindowTitle("Blocks view");
     windows->show();
 
