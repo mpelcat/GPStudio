@@ -80,7 +80,7 @@ void Property::setValue(int value)
 void Property::setValue(const QVariant &value)
 {
     bool valueChangedb = false;
-    /*if(value != _value && _value.isValid())*/ valueChangedb=true;
+    if(value != _value && _value.isValid()) valueChangedb=true;
     _value=value;
 
     if(_type==Matrix)
