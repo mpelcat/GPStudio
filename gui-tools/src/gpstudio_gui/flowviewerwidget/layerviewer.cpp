@@ -23,6 +23,10 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QDateTime>
+
 #include "flowviewerinterface.h"
 
 LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
@@ -42,6 +46,9 @@ void LayerViewer::showFlowConnection(int flowId)
     if(flowId>=_flowViewerInterface->flowConnections().size())
         return;
 
+    if(_pauseButton->isChecked())
+        return;
+
     const FlowPackage flowPackage = _flowViewerInterface->flowConnections()[flowId]->lastData();
     Property *flowProp = _flowViewerInterface->flowConnections()[flowId]->flow()->assocProperty();
 
@@ -51,16 +58,90 @@ void LayerViewer::showFlowConnection(int flowId)
     QImage *image = flowPackage.toImage(width, height, 8);
     _widget->showImage(*image);
     delete image;
+
+    if(!_recordPath.isEmpty() && _recordButton->isChecked())
+    {
+        QImage image(_widget->scene()->sceneRect().size().toSize(), QImage::Format_RGB32);
+        QPainter painter(&image);
+        _widget->scene()->render(&painter);
+        image.save(QString("%1/%2_%3.jpg")
+                   .arg(_recordPath)
+                   .arg(_flowViewerInterface->flowConnections()[flowId]->flow()->name())
+                   .arg(QDateTime::currentDateTime().toString("yy-MM-dd_hh.mm.ss.zzz")));
+    }
+}
+
+void LayerViewer::saveImage()
+{
+    QImage image(_widget->scene()->sceneRect().size().toSize(), QImage::Format_RGB32);
+    QPainter painter(&image);
+    _widget->scene()->render(&painter);
+
+    QString fileName = QFileDialog::getSaveFileName(this, "Save image...", "", "Images (*.png *.bmp *.jpg)");
+    if(!fileName.isEmpty())
+    {
+        QFileInfo info(fileName);
+        if(info.completeSuffix()=="")
+            fileName.append(".jpg");
+        image.save(fileName);
+    }
+}
+
+void LayerViewer::recordImages()
+{
+    if(_recordButton->isChecked())
+        _recordPath = QFileDialog::getExistingDirectory(this, "Directory to save images...", "");
 }
 
 void LayerViewer::setupWidgets()
 {
-    QLayout *layout = new QVBoxLayout();
+    QLayout *layout = new QHBoxLayout();
     layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(0);
+
+    layout->addItem(getToolBar());
 
     _widget = new LayerWidget();
 
     layout->addWidget(_widget);
 
     setLayout(layout);
+}
+
+QLayout *LayerViewer::getToolBar()
+{
+    QVBoxLayout *layoutTools = new QVBoxLayout();
+    layoutTools->setContentsMargins(0,5,2,0);
+    layoutTools->setSpacing(2);
+
+    _pauseButton = new QToolButton();
+    _pauseButton->setToolTip("Pause viewer");
+    _pauseButton->setAutoRaise(true);
+    _pauseButton->setCheckable(true);
+    _pauseButton->setIcon(QIcon(":/icons/img/pause.png"));
+    layoutTools->addWidget(_pauseButton);
+
+    _saveButton = new QToolButton();
+    _saveButton->setToolTip("Save image");
+    _saveButton->setAutoRaise(true);
+    _saveButton->setIcon(QIcon(":/icons/img/save.png"));
+    connect(_saveButton, SIGNAL(clicked(bool)), this, SLOT(saveImage()));
+    layoutTools->addWidget(_saveButton);
+
+    _recordButton = new QToolButton();
+    _recordButton->setToolTip("Records images");
+    _recordButton->setAutoRaise(true);
+    _recordButton->setCheckable(true);
+    _recordButton->setIcon(QIcon(":/icons/img/record.png"));
+    connect(_recordButton, SIGNAL(clicked(bool)), this, SLOT(recordImages()));
+    layoutTools->addWidget(_recordButton);
+
+    _settingsButton = new QToolButton();
+    _settingsButton->setToolTip("Records images");
+    _settingsButton->setAutoRaise(true);
+    _settingsButton->setIcon(QIcon(":/icons/img/settings.png"));
+    layoutTools->addWidget(_settingsButton);
+
+    layoutTools->addSpacerItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    return layoutTools;
 }

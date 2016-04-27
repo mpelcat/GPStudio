@@ -27,6 +27,8 @@
 
 #include "viewer/layerwidget.h"
 
+#include <QToolButton>
+
 class GPSTUDIO_GUI_EXPORT LayerViewer : public AbstractViewer
 {
     Q_OBJECT
@@ -36,9 +38,19 @@ public:
 
 protected slots:
     void showFlowConnection(int flowId);
+    void saveImage();
+    void recordImages();
 
 protected:
     virtual void setupWidgets();
+    QLayout *getToolBar();
+
+    QToolButton *_pauseButton;
+    QToolButton *_saveButton;
+    QToolButton *_recordButton;
+    QToolButton *_settingsButton;
+
+    QString _recordPath;
 
     LayerWidget *_widget;
 };

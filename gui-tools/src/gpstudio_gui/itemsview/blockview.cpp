@@ -75,7 +75,7 @@ void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
-    if(event->button() == Qt::RightButton)
+    /*if(event->button() == Qt::RightButton)
     {
         BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
         if(processItem)
@@ -85,19 +85,19 @@ void BlockView::mousePressEvent(QMouseEvent *event)
             _lineConector->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
             blockScene()->addItem(_lineConector);
         }
-    }
+    }*/
 }
 
 void BlockView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
 
-    if(_startConnectItem)
+    /*if(_startConnectItem)
     {
         QLineF line = _lineConector->line();
         line.setP2(mapToScene(event->pos()-QPoint(-5,-5)));
         _lineConector->setLine(line);
-    }
+    }*/
 }
 
 void BlockView::mouseReleaseEvent(QMouseEvent *event)
