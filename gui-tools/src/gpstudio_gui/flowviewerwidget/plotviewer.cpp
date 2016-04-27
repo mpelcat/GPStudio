@@ -106,8 +106,8 @@ void PlotViewer::setupWidgets()
     _widget->xAxis->setTickLabelType(QCPAxis::ltDateTime);
     _widget->xAxis->setDateTimeFormat("HH:mm:ss");
 
-    layout->addWidget(_widget);
     layout->addItem(getToolBar());
+    layout->addWidget(_widget);
 
     setLayout(layout);
 }
