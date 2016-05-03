@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <io driver="mpu" categ="" pi_size_addr_rel="4" desc="">
+  <svg width="160" height="110">
+		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+		<text x="50" y="50">MPU</text>
+  </svg>
   <files>
     <file name="mpu_acqui.vhd" type="vhdl" group="hdl" path="hdl/mpu_acqui.vhd" desc=""/>
     <file name="mpu_i2c.vhd" type="vhdl" group="hdl" path="hdl/mpu_i2c.vhd" desc=""/>
