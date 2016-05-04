@@ -23,42 +23,15 @@
 
 #include "gpstudio_gui_common.h"
 
-#include <QSyntaxHighlighter>
+#include "abstractsyntax.h"
 
-class GPSTUDIO_GUI_EXPORT VHDLSyntax : public QSyntaxHighlighter
+class GPSTUDIO_GUI_EXPORT VHDLSyntax : public AbstractSyntax
 {
     Q_OBJECT
 public:
     VHDLSyntax(QTextDocument *parent = 0);
 
-protected:
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
-
-private:
-    struct HighlightingRule
-    {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
-    struct PartToHighlight
-    {
-        VHDLSyntax::HighlightingRule rule;
-        int index;
-        int length;
-    };
-    friend bool operator<(const VHDLSyntax::PartToHighlight &t1, const VHDLSyntax::PartToHighlight &t2);
-
-    QTextCharFormat keywordFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat typesFormat;
-    QTextCharFormat numberFormat;
+    static QStringList extensions() {return QStringList()<<"vhd"<<"vhdl";}
 };
-
-inline bool operator<(const VHDLSyntax::PartToHighlight &t1, const VHDLSyntax::PartToHighlight &t2)
-{
-    return t1.index<t2.index;
-}
 
 #endif // VHDLSYNTAX_H

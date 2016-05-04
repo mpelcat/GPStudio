@@ -65,7 +65,11 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     itemsview/blockview.cpp \
     blockeditor/blockeditorwindow.cpp \
     blockeditor/codeeditor.cpp \
-    blockeditor/syntaxhighlight/vhdlsyntax.cpp
+    blockeditor/syntaxhighlight/abstractsyntax.cpp \
+    blockeditor/syntaxhighlight/vhdlsyntax.cpp \
+    blockeditor/syntaxhighlight/xmlsyntax.cpp \
+    blockeditor/syntaxhighlight/verilogsyntax.cpp \
+    blockeditor/syntaxhighlight/tclsyntax.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -97,7 +101,11 @@ HEADERS  += \
     itemsview/blockview.h \
     blockeditor/blockeditorwindow.h \
     blockeditor/codeeditor.h \
-    blockeditor/syntaxhighlight/vhdlsyntax.h
+    blockeditor/syntaxhighlight/abstractsyntax.h \
+    blockeditor/syntaxhighlight/vhdlsyntax.h \
+    blockeditor/syntaxhighlight/xmlsyntax.h \
+    blockeditor/syntaxhighlight/verilogsyntax.h \
+    blockeditor/syntaxhighlight/tclsyntax.h
 
 RESOURCES += \
     flowvieweractions.qrc \

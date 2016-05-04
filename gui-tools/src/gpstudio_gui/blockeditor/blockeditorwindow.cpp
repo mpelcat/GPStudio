@@ -25,10 +25,7 @@ void BlockEditorWindow::openFile(const QModelIndex &indexFile)
     {
         if(file->name() == item->text())
         {
-            QFile fileIO(file->path());
-            fileIO.open(QIODevice::ReadOnly | QIODevice::Text);
-            _codeEditor->insertPlainText(fileIO.readAll());
-            fileIO.close();
+            _codeEditor->loadFileCode(file->path());
             break;
         }
     }

@@ -1,8 +1,12 @@
 #include "codeeditor.h"
 
 #include "syntaxhighlight/vhdlsyntax.h"
+#include "syntaxhighlight/xmlsyntax.h"
+#include "syntaxhighlight/verilogsyntax.h"
+#include "syntaxhighlight/tclsyntax.h"
 
 #include <QDebug>
+#include <QFileInfo>
 #include <QKeyEvent>
 
 CodeEditor::CodeEditor(QWidget *parent)
@@ -13,7 +17,7 @@ CodeEditor::CodeEditor(QWidget *parent)
     setFont(font);
     setTabStopWidth(fontMetrics().width("    "));
     setLineWrapMode(QPlainTextEdit::NoWrap);
-    highlight = new VHDLSyntax(this->document());
+    highlight = 0;
 }
 
 void CodeEditor::keyPressEvent(QKeyEvent *event)
@@ -32,4 +36,39 @@ void CodeEditor::keyPressEvent(QKeyEvent *event)
             insertPlainText(spaces);
         }
     }
+}
+
+void CodeEditor::loadFileCode(QString file)
+{
+    clear();
+
+    if(highlight)
+        highlight->deleteLater();
+
+    QFile fileIO(file);
+    if(fileIO.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        insertPlainText(fileIO.readAll());
+        fileIO.close();
+    }
+
+    QFileInfo info(fileIO);
+    if(VHDLSyntax::extensions().contains(info.suffix()))
+    {
+        highlight = new VHDLSyntax(this->document());
+    }
+    else if(XMLSyntax::extensions().contains(info.suffix()))
+    {
+        highlight = new XMLSyntax(this->document());
+    }
+    else if(VerilogSyntax::extensions().contains(info.suffix()))
+    {
+        highlight = new VerilogSyntax(this->document());
+    }
+    else if(TCLSyntax::extensions().contains(info.suffix()))
+    {
+        highlight = new TCLSyntax(this->document());
+    }
+    else
+        highlight = NULL;
 }

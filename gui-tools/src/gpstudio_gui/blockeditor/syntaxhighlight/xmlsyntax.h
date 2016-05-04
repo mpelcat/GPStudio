@@ -18,31 +18,20 @@
 **
 ****************************************************************************/
 
-#ifndef CODEEDITOR_H
-#define CODEEDITOR_H
+#ifndef XMLSYNTAX_H
+#define XMLSYNTAX_H
 
 #include "gpstudio_gui_common.h"
 
-#include <QWidget>
-#include <QPlainTextEdit>
-#include <QSyntaxHighlighter>
+#include "abstractsyntax.h"
 
-class GPSTUDIO_GUI_EXPORT CodeEditor : public QPlainTextEdit
+class GPSTUDIO_GUI_EXPORT XMLSyntax : public AbstractSyntax
 {
     Q_OBJECT
 public:
-    explicit CodeEditor(QWidget *parent = 0);
+    XMLSyntax(QTextDocument *parent = 0);
 
-public slots:
-    void loadFileCode(QString file);
-protected slots:
-
-
-    // QWidget interface
-protected:
-    void keyPressEvent(QKeyEvent *event);
-
-    QSyntaxHighlighter *highlight;
+    static QStringList extensions() {return QStringList()<<"xml"<<"io"<<"proc";}
 };
 
-#endif // CODEEDITOR_H
+#endif // XMLSYNTAX_H

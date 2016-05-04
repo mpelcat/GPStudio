@@ -18,31 +18,20 @@
 **
 ****************************************************************************/
 
-#ifndef CODEEDITOR_H
-#define CODEEDITOR_H
+#ifndef VERILOGSYNTAX_H
+#define VERILOGSYNTAX_H
 
 #include "gpstudio_gui_common.h"
 
-#include <QWidget>
-#include <QPlainTextEdit>
-#include <QSyntaxHighlighter>
+#include "abstractsyntax.h"
 
-class GPSTUDIO_GUI_EXPORT CodeEditor : public QPlainTextEdit
+class GPSTUDIO_GUI_EXPORT VerilogSyntax : public AbstractSyntax
 {
     Q_OBJECT
 public:
-    explicit CodeEditor(QWidget *parent = 0);
+    VerilogSyntax(QTextDocument *parent = 0);
 
-public slots:
-    void loadFileCode(QString file);
-protected slots:
-
-
-    // QWidget interface
-protected:
-    void keyPressEvent(QKeyEvent *event);
-
-    QSyntaxHighlighter *highlight;
+    static QStringList extensions() {return QStringList()<<"v"<<"verilog";}
 };
 
-#endif // CODEEDITOR_H
+#endif // VERILOGSYNTAX_H
