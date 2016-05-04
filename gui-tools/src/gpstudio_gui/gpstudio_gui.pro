@@ -62,7 +62,10 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     itemsview/blockscene.cpp \
     itemsview/blockconnectoritem.cpp \
     itemsview/blockportitem.cpp \
-    itemsview/blockview.cpp
+    itemsview/blockview.cpp \
+    blockeditor/blockeditorwindow.cpp \
+    blockeditor/codeeditor.cpp \
+    blockeditor/syntaxhighlight/vhdlsyntax.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -91,7 +94,10 @@ HEADERS  += \
     itemsview/blockscene.h \
     itemsview/blockconnectoritem.h \
     itemsview/blockportitem.h \
-    itemsview/blockview.h
+    itemsview/blockview.h \
+    blockeditor/blockeditorwindow.h \
+    blockeditor/codeeditor.h \
+    blockeditor/syntaxhighlight/vhdlsyntax.h
 
 RESOURCES += \
     flowvieweractions.qrc \

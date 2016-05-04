@@ -121,6 +121,16 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     }*/
 }
 
+void BlockView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseDoubleClickEvent(event);
+
+    QGraphicsItem *item = _scene->itemAt(mapToScene(event->pos()), QTransform());
+    BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+    if(blockItem)
+        emit blockDetailsRequest(blockItem->block());
+}
+
 void BlockView::updateSelection()
 {
     if(_scene->selectedItems().count()==0)

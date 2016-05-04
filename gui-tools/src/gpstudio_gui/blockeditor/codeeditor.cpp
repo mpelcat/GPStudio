@@ -6,11 +6,13 @@
 #include <QKeyEvent>
 
 CodeEditor::CodeEditor(QWidget *parent)
+    : QPlainTextEdit(parent)
 {
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setStyleHint(QFont::TypeWriter);
     setFont(font);
     setTabStopWidth(fontMetrics().width("    "));
+    setLineWrapMode(QPlainTextEdit::NoWrap);
     highlight = new VHDLSyntax(this->document());
 }
 

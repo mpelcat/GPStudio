@@ -52,6 +52,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent * event);
 
 protected slots:
     void updateSelection();
@@ -61,6 +62,7 @@ public slots:
 
 signals:
     void blockSelected(const Block *block);
+    void blockDetailsRequest(const Block *block);
 
 private:
     BlockScene *_scene;

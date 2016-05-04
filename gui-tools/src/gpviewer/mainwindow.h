@@ -34,6 +34,8 @@
 #include "../../thirdparts/hexedit/qhexedit.h"
 #include "itemsview/blockview.h"
 
+#include "blockeditor/blockeditorwindow.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -63,6 +65,7 @@ private slots:
     void fourViewer();
 
     void updateWindowsMenu();
+    void showBlockDetails(const Block *block);
 
 private:
     Ui::MainWindow *ui;
@@ -97,6 +100,8 @@ private:
     QAction *_cascadeAct;
     QAction *_nextAct;
     QAction *_previousAct;
+
+    BlockEditorWindow *_blockEditor;
 };
 
 #endif // MAINWINDOW_H

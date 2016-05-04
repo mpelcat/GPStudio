@@ -63,10 +63,13 @@ MainWindow::MainWindow(QStringList args) :
     _camExplorerDock->raise();
     _scriptDock->show();
     _scriptDock->raise();
+
+    _blockEditor = NULL;
 }
 
 MainWindow::~MainWindow()
 {
+    if(_blockEditor) delete _blockEditor;
     delete ui;
     if(_cam) delete _cam;
 }
@@ -290,6 +293,13 @@ void MainWindow::updateWindowsMenu()
     }
 }
 
+void MainWindow::showBlockDetails(const Block *block)
+{
+    if(_blockEditor) delete _blockEditor;
+    _blockEditor = new BlockEditorWindow (this, block->modelBlock());
+    _blockEditor->show();
+}
+
 void MainWindow::setupViewers(int count)
 {
     ui->mdiArea->closeAllSubWindows();
@@ -322,6 +332,7 @@ void MainWindow::setupViewers(int count)
     QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_blocksView);
     connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
     connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
+    connect(_blocksView, SIGNAL(blockDetailsRequest(const Block*)), this, SLOT(showBlockDetails(const Block*)));
     windows->setWindowTitle("Blocks view");
     windows->show();
 

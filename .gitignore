@@ -26,6 +26,7 @@ bin/*.dll
 bin/*.exe
 bin/gpnode_gui
 bin/gpviewer
+bin/gpblock_gui
 
 gui-tools/build*/
 gui-tools/bin*/
