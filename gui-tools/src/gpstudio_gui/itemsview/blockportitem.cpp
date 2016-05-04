@@ -70,18 +70,28 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     painter->setPen(QPen(Qt::transparent));
 
-    QLinearGradient grad(-15,-15,15,15);
-    grad.setColorAt(0, QColor("orange"));
-    grad.setColorAt(1, QColor("orange").darker());
-    painter->setBrush(grad);
-
-    painter->drawPath(path);
-
-    painter->setPen(QPen());
     if(_direction==Input)
+    {
+        QLinearGradient grad(-15,-15,15,15);
+        grad.setColorAt(0, QColor("blue"));
+        grad.setColorAt(1, QColor("blue").darker());
+        painter->setBrush(grad);
+        painter->drawPath(path);
+
+        painter->setPen(QPen());
         painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
+    }
     else
+    {
+        QLinearGradient grad(-15,-15,15,15);
+        grad.setColorAt(0, QColor("orange"));
+        grad.setColorAt(1, QColor("orange").darker());
+        painter->setBrush(grad);
+        painter->drawPath(path);
+
+        painter->setPen(QPen());
         painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
+    }
 }
 
 QString BlockPortItem::name() const
@@ -114,6 +124,14 @@ void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
 const QList<BlockConnectorItem *> &BlockPortItem::connects() const
 {
     return _connects;
+}
+
+QPointF BlockPortItem::connectorPos() const
+{
+    if(_direction==Input)
+        return scenePos()+QPointF(-10,0);
+    else
+        return scenePos()+QPointF(10,0);
 }
 
 BlockPortItem *BlockPortItem::fromModelFlow(const ModelFlow *modelFlow)

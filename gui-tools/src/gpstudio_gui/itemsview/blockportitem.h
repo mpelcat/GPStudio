@@ -55,6 +55,8 @@ public:
 
     const QList<BlockConnectorItem *> &connects() const;
 
+    QPointF connectorPos() const;
+
 public:
     static BlockPortItem *fromModelFlow(const ModelFlow *modelFlow);
 
