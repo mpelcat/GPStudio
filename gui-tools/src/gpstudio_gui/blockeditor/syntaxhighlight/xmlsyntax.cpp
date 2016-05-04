@@ -22,7 +22,7 @@ XMLSyntax::XMLSyntax(QTextDocument *parent)
     highlightingRules.append(rule);
 
     typesFormat.setForeground(QColor(255,48,99));
-    rule.pattern = QRegExp("([a-zA-Z]+)[\\s\\t]*=");
+    rule.pattern = QRegExp("([a-zA-Z\\_]+)[\\s\\t]*=");
     rule.format = typesFormat;
     highlightingRules.append(rule);
 
