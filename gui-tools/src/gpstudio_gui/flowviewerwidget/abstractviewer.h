@@ -24,6 +24,7 @@
 #include "gpstudio_gui_common.h"
 
 #include <QWidget>
+#include <QToolButton>
 
 #include "camera/property.h"
 

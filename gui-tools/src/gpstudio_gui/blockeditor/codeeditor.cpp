@@ -12,7 +12,7 @@
 CodeEditor::CodeEditor(QWidget *parent)
     : QPlainTextEdit(parent)
 {
-    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    QFont font = QFont("monospace");
     font.setStyleHint(QFont::TypeWriter);
     setFont(font);
     setTabStopWidth(fontMetrics().width("    "));

@@ -29,4 +29,10 @@
 #  define GPSTUDIO_GUI_EXPORT Q_DECL_IMPORT
 #endif
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+ #if !defined(Q_DECL_OVERRIDE)
+  # define Q_DECL_OVERRIDE
+ #endif
+#endif
+
 #endif // GPSTUDIO_GUI_COMMON_H

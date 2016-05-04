@@ -22,6 +22,8 @@
 
 #include <QDebug>
 #include <QVBoxLayout>
+#include <QFileInfo>
+#include <QFileDialog>
 
 #include "flowviewerinterface.h"
 

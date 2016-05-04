@@ -35,8 +35,6 @@ public:
 
 public slots:
     void loadFileCode(QString file);
-protected slots:
-
 
     // QWidget interface
 protected:
