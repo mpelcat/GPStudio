@@ -26,6 +26,7 @@
 #include <QMainWindow>
 #include <QTreeView>
 #include <QStandardItemModel>
+#include <QTabWidget>
 
 #include "codeeditor.h"
 #include "model/model_block.h"
@@ -35,6 +36,7 @@ class GPSTUDIO_GUI_EXPORT BlockEditorWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit BlockEditorWindow(QWidget *parent = 0, const ModelBlock *block = 0);
+    ~BlockEditorWindow();
 
 signals:
 
@@ -43,12 +45,14 @@ protected slots:
 
 protected:
     void setupWidgets();
-
     QTreeView *_filesTreeView;
-    CodeEditor *_codeEditor;
+    QTabWidget *_tabFiles;
+
+    void createToolBarAndMenu();
+    QToolBar *_mainToolBar;
 
     void setBlock(const ModelBlock *block);
-    QStandardItemModel _filesModel;
+    QStandardItemModel *_filesModel;
     const ModelBlock *_block;
 };
 

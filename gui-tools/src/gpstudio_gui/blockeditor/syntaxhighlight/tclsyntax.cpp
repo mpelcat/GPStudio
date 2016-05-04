@@ -53,7 +53,7 @@ TCLSyntax::TCLSyntax(QTextDocument *parent)
     rule.format = quotationFormat;
     highlightingRules.append(rule);
 
-    singleLineCommentFormat.setForeground(Qt::red);
+    singleLineCommentFormat.setForeground(QColor(0,128,0));
     rule.pattern = QRegExp("(#[^\n]*)");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);

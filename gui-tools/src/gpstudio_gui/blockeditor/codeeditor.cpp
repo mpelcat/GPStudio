@@ -48,7 +48,7 @@ void CodeEditor::loadFileCode(QString file)
     QFile fileIO(file);
     if(fileIO.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        insertPlainText(fileIO.readAll());
+        setPlainText(fileIO.readAll());
         fileIO.close();
     }
 

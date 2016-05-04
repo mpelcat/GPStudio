@@ -48,7 +48,7 @@ VerilogSyntax::VerilogSyntax(QTextDocument *parent)
     rule.format = quotationFormat;
     highlightingRules.append(rule);
 
-    singleLineCommentFormat.setForeground(Qt::red);
+    singleLineCommentFormat.setForeground(QColor(0,128,0));
     rule.pattern = QRegExp("(//[^\n]*)");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
@@ -79,7 +79,7 @@ VerilogSyntax::VerilogSyntax(QTextDocument *parent)
     rule.format = numberFormat;
     highlightingRules.append(rule);
 
-    multiLineCommentFormat.setForeground(Qt::red);
+    multiLineCommentFormat.setForeground(QColor(0,128,0));
     commentStartExpression = QRegExp("/\\*");
     commentEndExpression = QRegExp("\\*/");
 }

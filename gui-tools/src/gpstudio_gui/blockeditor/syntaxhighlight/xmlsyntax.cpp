@@ -31,7 +31,7 @@ XMLSyntax::XMLSyntax(QTextDocument *parent)
     rule.format = numberFormat;
     highlightingRules.append(rule);
 
-    multiLineCommentFormat.setForeground(Qt::red);
+    multiLineCommentFormat.setForeground(QColor(0,128,0));
     commentStartExpression = QRegExp("\\<!--");
     commentEndExpression = QRegExp("--\\>");
 }
