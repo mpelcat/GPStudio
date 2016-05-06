@@ -99,9 +99,9 @@ void LayerViewer::setupWidgets()
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
 
-    layout->addItem(getToolBar());
-
     _widget = new LayerWidget();
+
+    layout->addItem(getToolBar());
 
     layout->addWidget(_widget);
 
@@ -114,6 +114,7 @@ QLayout *LayerViewer::getToolBar()
     layoutTools->setContentsMargins(0,5,2,0);
     layoutTools->setSpacing(2);
 
+    // viewer actions (pause, grab image, video...)
     _pauseButton = new QToolButton();
     _pauseButton->setToolTip("Pause viewer");
     _pauseButton->setAutoRaise(true);
@@ -141,6 +142,33 @@ QLayout *LayerViewer::getToolBar()
     _settingsButton->setAutoRaise(true);
     _settingsButton->setIcon(QIcon(":/icons/img/settings.png"));
     layoutTools->addWidget(_settingsButton);
+
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    layoutTools->addWidget(line);
+
+    // viewer zoom option
+    _zoomFitButton = new QToolButton();
+    _zoomFitButton->setToolTip("Zoom fit best");
+    _zoomFitButton->setAutoRaise(true);
+    _zoomFitButton->setIcon(QIcon(":/icons/img/zoom-fit.png"));
+    connect(_zoomFitButton, SIGNAL(clicked(bool)), _widget, SLOT(zoomFit()));
+    layoutTools->addWidget(_zoomFitButton);
+
+    _zoomOutButton = new QToolButton();
+    _zoomOutButton->setToolTip("Zoom out");
+    _zoomOutButton->setAutoRaise(true);
+    _zoomOutButton->setIcon(QIcon(":/icons/img/zoom-out.png"));
+    connect(_zoomOutButton, SIGNAL(clicked(bool)), _widget, SLOT(zoomOut()));
+    layoutTools->addWidget(_zoomOutButton);
+
+    _zoomInButton = new QToolButton();
+    _zoomInButton->setToolTip("Zoom in");
+    _zoomInButton->setAutoRaise(true);
+    _zoomInButton->setIcon(QIcon(":/icons/img/zoom-in.png"));
+    connect(_zoomInButton, SIGNAL(clicked(bool)), _widget, SLOT(zoomIn()));
+    layoutTools->addWidget(_zoomInButton);
 
     layoutTools->addSpacerItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
     return layoutTools;

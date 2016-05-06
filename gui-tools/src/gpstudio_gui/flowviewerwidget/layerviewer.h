@@ -43,12 +43,17 @@ protected slots:
 
 protected:
     virtual void setupWidgets();
-    QLayout *getToolBar();
 
+    // toolbar members
+    QLayout *getToolBar();
     QToolButton *_pauseButton;
     QToolButton *_saveButton;
     QToolButton *_recordButton;
     QToolButton *_settingsButton;
+
+    QToolButton *_zoomFitButton;
+    QToolButton *_zoomOutButton;
+    QToolButton *_zoomInButton;
 
     QString _recordPath;
 
