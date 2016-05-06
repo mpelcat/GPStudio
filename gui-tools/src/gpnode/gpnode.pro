@@ -46,8 +46,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     confignodedialog.ui
 
-RESOURCES  += icons.qrc
-
 # relative path for shared library in the same directory
 LIBS += -Wl,-R.
 
@@ -75,7 +73,6 @@ use_open_cv {
         LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc
     }
 }
-
 
 win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
 LIBS += -lusb-1.0

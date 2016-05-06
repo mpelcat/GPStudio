@@ -70,7 +70,7 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     blockeditor/syntaxhighlight/xmlsyntax.cpp \
     blockeditor/syntaxhighlight/verilogsyntax.cpp \
     blockeditor/syntaxhighlight/tclsyntax.cpp \
-    blockeditor/docviewer.cpp \
+    viewer/docviewer.cpp \
     pdfviewer.cpp
 
 HEADERS  += \
@@ -108,10 +108,11 @@ HEADERS  += \
     blockeditor/syntaxhighlight/xmlsyntax.h \
     blockeditor/syntaxhighlight/verilogsyntax.h \
     blockeditor/syntaxhighlight/tclsyntax.h \
-    blockeditor/docviewer.h \
+    viewer/docviewer.h \
     pdfviewer.h
 
 RESOURCES += \
+    icons.qrc \
     flowvieweractions.qrc \
     flowviewertypes.qrc
 

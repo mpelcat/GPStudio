@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
     <file>../img/pause.png</file>
-    <file>../img/save.png</file>
     <file>../img/record.png</file>
-    <file>../img/settings.png</file>
     </qresource>
 </RCC>

@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>../img/new.png</file>
+        <file>../img/open.png</file>
+        <file>../img/save.png</file>
+        <file>../img/settings.png</file>
+        <file>../img/connect.png</file>
+        <file>../img/term.png</file>
+        <file>../img/zoom-in.png</file>
+        <file>../img/zoom-out.png</file>
+        <file>../img/zoom-fit.png</file>
+    </qresource>
+</RCC>
