@@ -71,7 +71,7 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     blockeditor/syntaxhighlight/verilogsyntax.cpp \
     blockeditor/syntaxhighlight/tclsyntax.cpp \
     viewer/docviewer.cpp \
-    pdfviewer.cpp
+    viewer/pdfviewer.cpp
 
 HEADERS  += \
     viewmodelwidget/camtreeview.h \
@@ -109,7 +109,7 @@ HEADERS  += \
     blockeditor/syntaxhighlight/verilogsyntax.h \
     blockeditor/syntaxhighlight/tclsyntax.h \
     viewer/docviewer.h \
-    pdfviewer.h
+    viewer/pdfviewer.h
 
 RESOURCES += \
     icons.qrc \
