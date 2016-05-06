@@ -57,12 +57,18 @@ public:
 
 public slots:
     void setView(const QRect &viewRect);
+    void zoomIn();
+    void zoomOut();
+    void zoomFit();
 
 protected:
     void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+
+    void setZoomLevel(int step);
 
 signals:
     void viewMoved(const QRect &viewRect);

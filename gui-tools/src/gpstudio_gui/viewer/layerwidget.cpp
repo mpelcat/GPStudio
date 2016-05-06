@@ -33,6 +33,11 @@ LayerWidget::LayerWidget(QWidget *parent) :
 {
     _scene = new QGraphicsScene();
     setScene(_scene);
+    setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    setRenderHint(QPainter::Antialiasing, true);
+    setRenderHint(QPainter::SmoothPixmapTransform, true);
+    setRenderHint(QPainter::TextAntialiasing, true);
 
     _currentZoomLevel = 1;
 
@@ -117,13 +122,17 @@ void LayerWidget::wheelEvent(QWheelEvent *event)
 {
     int numDegrees = event->delta() / 8;
     int numSteps = numDegrees / 15;
-    double zoom = qPow(1.2,numSteps);
 
-    _currentZoomLevel *= zoom;
-    scale(zoom, zoom);
+    setZoomLevel(numSteps);
+}
 
-    QRect viewRect(mapToScene(0, 0).toPoint(), mapToScene(frameRect().bottomRight()).toPoint());
-    emit viewMoved(viewRect);
+void LayerWidget::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Plus)
+        zoomIn();
+    if(event->key()==Qt::Key_Minus)
+        zoomOut();
+    QGraphicsView::keyPressEvent(event);
 }
 
 void LayerWidget::mouseMoveEvent(QMouseEvent *event)
@@ -165,6 +174,18 @@ void LayerWidget::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
+void LayerWidget::setZoomLevel(int step)
+{
+    double zoom = qPow(1.25,step);
+
+    _currentZoomLevel *= zoom;
+
+    scale(zoom, zoom);
+
+    QRect viewRect(mapToScene(0, 0).toPoint(), mapToScene(frameRect().bottomRight()).toPoint());
+    emit viewMoved(viewRect);
+}
+
 int LayerWidget::flowNumber() const
 {
     return _flowNumber;
@@ -188,4 +209,19 @@ void LayerWidget::setPropertyView(unsigned int propertyView)
 void LayerWidget::setView(const QRect &viewRect)
 {
     fitInView(viewRect, Qt::KeepAspectRatio);
+}
+
+void LayerWidget::zoomIn()
+{
+    setZoomLevel(1);
+}
+
+void LayerWidget::zoomOut()
+{
+    setZoomLevel(-1);
+}
+
+void LayerWidget::zoomFit()
+{
+    fitInView(sceneRect(), Qt::KeepAspectRatio);
 }
