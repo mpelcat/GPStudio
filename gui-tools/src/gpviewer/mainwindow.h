@@ -60,10 +60,6 @@ private slots:
 
     void setBiSpace();
 
-    void oneViewer();
-    void twoViewer();
-    void fourViewer();
-
     void updateWindowsMenu();
     void showBlockDetails(const Block *block);
 

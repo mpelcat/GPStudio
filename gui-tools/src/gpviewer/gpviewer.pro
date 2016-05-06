@@ -48,8 +48,6 @@ FORMS    += \
     mainwindow.ui \
     connectnodedialog.ui
 
-RESOURCES += icons.qrc
-
 # relative path for shared library in the same directory
 LIBS += -Wl,-R.
 

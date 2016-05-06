@@ -116,18 +116,6 @@ void MainWindow::createToolBarAndMenu()
 
     // ============= View =============
     QMenu *viewMenu = ui->menuBar->addMenu("&View");
-    QAction *oneViewer = new QAction("&One",this);
-    ui->mainToolBar->addAction(oneViewer);
-    viewMenu->addAction(oneViewer);
-    connect(oneViewer, SIGNAL(triggered()), this, SLOT(oneViewer()));
-    QAction *twoViewer = new QAction("&Two",this);
-    ui->mainToolBar->addAction(twoViewer);
-    viewMenu->addAction(twoViewer);
-    connect(twoViewer, SIGNAL(triggered()), this, SLOT(twoViewer()));
-    QAction *fourViewer = new QAction("&Four",this);
-    ui->mainToolBar->addAction(fourViewer);
-    viewMenu->addAction(fourViewer);
-    connect(fourViewer, SIGNAL(triggered()), this, SLOT(fourViewer()));
 
     viewMenu->addSeparator();
     viewMenu->addAction(_scriptDock->toggleViewAction());
@@ -220,8 +208,6 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
-    //tabifyDockWidget(ui->paramsDock, ui->camTreeView);
-
     connectCam();
 
     _camExplorerWidget->setCamera(_cam);
@@ -248,22 +234,6 @@ void MainWindow::setBiSpace()
 {
     if(!_cam) return;
     _piSpaceHex->setData(_cam->registerData());
-}
-
-void MainWindow::oneViewer()
-{
-    setupViewers(1);
-    ui->mdiArea->tileSubWindows();
-}
-
-void MainWindow::twoViewer()
-{
-    setupViewers(2);
-}
-
-void MainWindow::fourViewer()
-{
-    setupViewers(4);
 }
 
 void MainWindow::updateWindowsMenu()
