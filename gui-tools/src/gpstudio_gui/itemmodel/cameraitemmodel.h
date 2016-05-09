@@ -21,7 +21,7 @@
 #ifndef CAMERAITEMMODEL_H
 #define CAMERAITEMMODEL_H
 
-#include "gpstudio_lib_common.h"
+#include "gpstudio_gui_common.h"
 
 #include "cameraitem.h"
 
@@ -30,7 +30,7 @@
 
 class Camera;
 
-class GPSTUDIO_LIB_EXPORT CameraItemModelNoSorted : public QAbstractItemModel
+class GPSTUDIO_GUI_EXPORT CameraItemModelNoSorted : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -64,7 +64,7 @@ private:
     CameraItem *_rootItem;
 };
 
-class GPSTUDIO_LIB_EXPORT CameraItemModel : public QSortFilterProxyModel
+class GPSTUDIO_GUI_EXPORT CameraItemModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:

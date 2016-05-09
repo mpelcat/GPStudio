@@ -21,7 +21,7 @@
 #ifndef CAMERAITEM_H
 #define CAMERAITEM_H
 
-#include "gpstudio_lib_common.h"
+#include "gpstudio_gui_common.h"
 
 #include <QList>
 
@@ -29,7 +29,7 @@ class Camera;
 class Block;
 class Flow;
 
-class GPSTUDIO_LIB_EXPORT CameraItem
+class GPSTUDIO_GUI_EXPORT CameraItem
 {
 public:
     CameraItem();

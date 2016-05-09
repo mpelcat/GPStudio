@@ -21,14 +21,14 @@
 #ifndef PROPERTYITEMMODEL_H
 #define PROPERTYITEMMODEL_H
 
-#include "gpstudio_lib_common.h"
+#include "gpstudio_gui_common.h"
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 
 class Property;
 
-class GPSTUDIO_LIB_EXPORT PropertyItemModelNoSorted : public QAbstractItemModel
+class GPSTUDIO_GUI_EXPORT PropertyItemModelNoSorted : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -68,7 +68,7 @@ private:
     const Property *_rootProperty;
 };
 
-class GPSTUDIO_LIB_EXPORT PropertyItemModel : public QSortFilterProxyModel
+class GPSTUDIO_GUI_EXPORT PropertyItemModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
