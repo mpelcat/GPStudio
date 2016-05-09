@@ -49,6 +49,7 @@ public:
 
 public:
     static ModelFIBlock *fromNodeGenerated(const QDomElement &domElement, ModelFIBlock *fiBlock=NULL);
+    static ModelFIBlock *fromNodeDef(const QDomElement &domElement, ModelFIBlock *fiBlock=NULL);
 
 protected:
     QList<ModelFlowConnect *> _flowConnects;

@@ -49,7 +49,9 @@ public:
 
 public:
     static ModelFlowConnect *fromNodeGenerated(const QDomElement &domElement);
+    static ModelFlowConnect *fromNodeDef(const QDomElement &domElement);
     static QList<ModelFlowConnect *> listFromNodeGenerated(const QDomElement &domElement);
+    static QList<ModelFlowConnect *> listFromNodeDef(const QDomElement &domElement);
 
 protected:
     QString _fromblock;

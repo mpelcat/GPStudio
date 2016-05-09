@@ -49,7 +49,8 @@ bool BlockScene::loadFromNode(const ModelNode *node)
         }
     }
 
-    connectBlocks(node->getFIBlock()->flowConnects());
+    if(node->getFIBlock())
+        connectBlocks(node->getFIBlock()->flowConnects());
 
     return true;
 }
@@ -68,7 +69,8 @@ bool BlockScene::loadFromCamera(const Camera *camera)
         }
     }
 
-    connectBlocks(camera->node()->getFIBlock()->flowConnects());
+    if(camera->node()->getFIBlock())
+        connectBlocks(camera->node()->getFIBlock()->flowConnects());
 
     return true;
 }

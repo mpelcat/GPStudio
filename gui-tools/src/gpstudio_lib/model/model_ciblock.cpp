@@ -22,6 +22,7 @@
 
 ModelCIBlock::ModelCIBlock()
 {
+    _name = "ci";
 }
 
 ModelCIBlock::~ModelCIBlock()

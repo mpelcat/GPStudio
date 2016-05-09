@@ -87,6 +87,11 @@ ModelFlowConnect *ModelFlowConnect::fromNodeGenerated(const QDomElement &domElem
     return flowConnect;
 }
 
+ModelFlowConnect *ModelFlowConnect::fromNodeDef(const QDomElement &domElement)
+{
+    return ModelFlowConnect::fromNodeGenerated(domElement);
+}
+
 QList<ModelFlowConnect *> ModelFlowConnect::listFromNodeGenerated(const QDomElement &domElement)
 {
     QDomNode n = domElement.firstChild();
@@ -97,6 +102,23 @@ QList<ModelFlowConnect *> ModelFlowConnect::listFromNodeGenerated(const QDomElem
         if(!e.isNull())
         {
             if(e.tagName()=="flow_connect")
+                list.append(ModelFlowConnect::fromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}
+
+QList<ModelFlowConnect *> ModelFlowConnect::listFromNodeDef(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<ModelFlowConnect *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="connect")
                 list.append(ModelFlowConnect::fromNodeGenerated(e));
         }
         n = n.nextSibling();

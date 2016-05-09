@@ -24,6 +24,7 @@
 
 ModelFIBlock::ModelFIBlock()
 {
+    _name = "fi";
 }
 
 ModelFIBlock::~ModelFIBlock()
@@ -83,7 +84,8 @@ void ModelFIBlock::addTreeConnects(const QList<ModelTreeConnect *> &treeConnects
 
 ModelFIBlock *ModelFIBlock::fromNodeGenerated(const QDomElement &domElement, ModelFIBlock *fiBlock)
 {
-    if(fiBlock==NULL) fiBlock = new ModelFIBlock();
+    if(fiBlock==NULL)
+        fiBlock = new ModelFIBlock();
 
     ModelBlock::fromNodeGenerated(domElement, fiBlock);
 
@@ -105,3 +107,26 @@ ModelFIBlock *ModelFIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
     return fiBlock;
 }
 
+ModelFIBlock *ModelFIBlock::fromNodeDef(const QDomElement &domElement, ModelFIBlock *fiBlock)
+{
+    if(fiBlock==NULL)
+        fiBlock = new ModelFIBlock();
+
+    ModelBlock::fromNodeGenerated(domElement, fiBlock);
+
+    fiBlock->setName("fi");
+
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="connects")
+                fiBlock->addFlowConnects(ModelFlowConnect::listFromNodeDef(e));
+        }
+        n = n.nextSibling();
+    }
+
+    return fiBlock;
+}

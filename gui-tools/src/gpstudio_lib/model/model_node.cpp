@@ -24,6 +24,10 @@
 #include <QFileInfo>
 #include <QDebug>
 
+#include "model_ciblock.h"
+#include "model_fiblock.h"
+#include "model_piblock.h"
+
 ModelNode::ModelNode()
 {
     _valid = false;
@@ -182,6 +186,8 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
             }
             if(e.tagName()=="process")
                 node->_blocks.append(ModelBlock::listFromNodeDef(e));
+            if(e.tagName()=="flow_interconnect")
+                node->_blocks.append(ModelFIBlock::fromNodeDef(e));
         }
         n = n.nextSibling();
     }

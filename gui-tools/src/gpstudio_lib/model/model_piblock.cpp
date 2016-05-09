@@ -22,6 +22,7 @@
 
 ModelPIBlock::ModelPIBlock()
 {
+    _name = "pi";
 }
 
 ModelPIBlock::~ModelPIBlock()
