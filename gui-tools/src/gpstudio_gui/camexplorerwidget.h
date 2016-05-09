@@ -25,8 +25,8 @@
 
 #include <QWidget>
 
-#include "viewmodelwidget/propertyitemmodel.h"
-#include "viewmodelwidget/cameraitemmodel.h"
+#include "itemmodel/propertyitemmodel.h"
+#include "itemmodel/cameraitemmodel.h"
 
 #include <QTreeView>
 #include <QBoxLayout>

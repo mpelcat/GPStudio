@@ -40,7 +40,7 @@
   <customwidget>
    <class>CamTreeView</class>
    <extends>QTreeView</extends>
-   <header>viewmodelwidget/camtreeview.h</header>
+   <header>itemmodel/camtreeview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

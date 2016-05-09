@@ -66,7 +66,7 @@
   <customwidget>
    <class>LibTreeView</class>
    <extends>QTreeView</extends>
-   <header>viewmodelwidget/libtreeview.h</header>
+   <header>itemmodel/libtreeview.h</header>
   </customwidget>
   <customwidget>
    <class>BlockView</class>

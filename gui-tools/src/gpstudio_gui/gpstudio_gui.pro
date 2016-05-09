@@ -47,13 +47,13 @@ SOURCES += \
     propertywidgets/propertyenumwidget.cpp \
     scriptwidget.cpp \
     scriptlineedit.cpp \
-    viewmodelwidget/camtreeview.cpp \
-    viewmodelwidget/caminfoitemmodel.cpp \
-    viewmodelwidget/libitemmodel.cpp \
-    viewmodelwidget/libtreeview.cpp \
-    viewmodelwidget/cameraitemmodel.cpp \
-    viewmodelwidget/cameraitem.cpp \
-    viewmodelwidget/propertyitemmodel.cpp \
+    itemmodel/camtreeview.cpp \
+    itemmodel/caminfoitemmodel.cpp \
+    itemmodel/libitemmodel.cpp \
+    itemmodel/libtreeview.cpp \
+    itemmodel/cameraitemmodel.cpp \
+    itemmodel/cameraitem.cpp \
+    itemmodel/propertyitemmodel.cpp \
     propertywidgets/propertymatrixwidget.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
@@ -88,13 +88,13 @@ HEADERS  += \
     propertywidgets/propertyenumwidget.h \
     scriptwidget.h \
     scriptlineedit.h \
-    viewmodelwidget/camtreeview.h \
-    viewmodelwidget/caminfoitemmodel.h \
-    viewmodelwidget/libitemmodel.h \
-    viewmodelwidget/libtreeview.h \
-    viewmodelwidget/cameraitemmodel.h \
-    viewmodelwidget/cameraitem.h \
-    viewmodelwidget/propertyitemmodel.h \
+    itemmodel/camtreeview.h \
+    itemmodel/caminfoitemmodel.h \
+    itemmodel/libitemmodel.h \
+    itemmodel/libtreeview.h \
+    itemmodel/cameraitemmodel.h \
+    itemmodel/cameraitem.h \
+    itemmodel/propertyitemmodel.h \
     propertywidgets/propertymatrixwidget.h \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \
