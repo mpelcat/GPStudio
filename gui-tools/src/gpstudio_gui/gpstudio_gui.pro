@@ -38,8 +38,7 @@ DEFINES += GPSTUDIO_GUI_EXPORT_LIB
 
 QMAKE_CFLAGS_RELEASE = -O2
 
-SOURCES += viewmodelwidget/camtreeview.cpp \
-    viewmodelwidget/caminfoitemmodel.cpp \
+SOURCES += \
     propertywidgets/propertywidget.cpp \
     propertywidgets/propertygroupwidget.cpp \
     propertywidgets/propertyintwidget.cpp \
@@ -48,8 +47,13 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     propertywidgets/propertyenumwidget.cpp \
     scriptwidget.cpp \
     scriptlineedit.cpp \
+    viewmodelwidget/camtreeview.cpp \
+    viewmodelwidget/caminfoitemmodel.cpp \
     viewmodelwidget/libitemmodel.cpp \
     viewmodelwidget/libtreeview.cpp \
+    viewmodelwidget/cameraitemmodel.cpp \
+    viewmodelwidget/cameraitem.cpp \
+    viewmodelwidget/propertyitemmodel.cpp \
     propertywidgets/propertymatrixwidget.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
@@ -74,8 +78,6 @@ SOURCES += viewmodelwidget/camtreeview.cpp \
     viewer/pdfviewer.cpp
 
 HEADERS  += \
-    viewmodelwidget/camtreeview.h \
-    viewmodelwidget/caminfoitemmodel.h \
     gpstudio_gui_common.h \
     propertywidgets/propertywidgets.h \
     propertywidgets/propertywidget.h \
@@ -86,8 +88,13 @@ HEADERS  += \
     propertywidgets/propertyenumwidget.h \
     scriptwidget.h \
     scriptlineedit.h \
+    viewmodelwidget/camtreeview.h \
+    viewmodelwidget/caminfoitemmodel.h \
     viewmodelwidget/libitemmodel.h \
     viewmodelwidget/libtreeview.h \
+    viewmodelwidget/cameraitemmodel.h \
+    viewmodelwidget/cameraitem.h \
+    viewmodelwidget/propertyitemmodel.h \
     propertywidgets/propertymatrixwidget.h \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \

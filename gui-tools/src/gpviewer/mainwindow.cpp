@@ -38,9 +38,9 @@
 #include "camera/flowmanager.h"
 
 #include <QTreeView>
-#include "cameraitemmodel.h"
+#include "viewmodelwidget/cameraitemmodel.h"
 
-#include "propertyitemmodel.h"
+#include "viewmodelwidget/propertyitemmodel.h"
 
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),

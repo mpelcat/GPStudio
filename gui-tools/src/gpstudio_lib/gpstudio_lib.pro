@@ -84,10 +84,7 @@ HEADERS += gpstudio_lib_common.h \
     camera/registerbitfield.h \
     camera/register.h \
     camera/flow.h \
-    camera/block.h \
-    cameraitemmodel.h \
-    cameraitem.h \
-    propertyitemmodel.h
+    camera/block.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -135,10 +132,7 @@ SOURCES += \
     camera/registerbitfield.cpp \
     camera/register.cpp \
     camera/flow.cpp \
-    camera/block.cpp \
-    cameraitemmodel.cpp \
-    cameraitem.cpp \
-    propertyitemmodel.cpp
+    camera/block.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com
