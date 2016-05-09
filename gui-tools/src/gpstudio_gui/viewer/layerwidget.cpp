@@ -132,6 +132,8 @@ void LayerWidget::keyPressEvent(QKeyEvent *event)
         zoomIn();
     if(event->key()==Qt::Key_Minus)
         zoomOut();
+    if(event->key()==Qt::Key_Asterisk)
+        zoomFit();
     QGraphicsView::keyPressEvent(event);
 }
 
@@ -223,5 +225,5 @@ void LayerWidget::zoomOut()
 
 void LayerWidget::zoomFit()
 {
-    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    fitInView(_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
 }

@@ -195,7 +195,7 @@ void BlockView::zoomOut()
 
 void BlockView::zoomFit()
 {
-    fitInView(sceneRect(), Qt::KeepAspectRatio);
+    fitInView(_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
 }
 
 void BlockView::setZoomLevel(int step)
@@ -218,5 +218,7 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         zoomIn();
     if(event->key()==Qt::Key_Minus)
         zoomOut();
+    if(event->key()==Qt::Key_Asterisk)
+        zoomFit();
     QGraphicsView::keyPressEvent(event);
 }
