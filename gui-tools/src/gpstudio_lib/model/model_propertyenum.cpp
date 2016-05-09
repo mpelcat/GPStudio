@@ -70,7 +70,7 @@ void ModelPropertyEnum::setDescription(const QString &description)
 
 ModelPropertyEnum *ModelPropertyEnum::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelPropertyEnum *blockPropertyEnum=new ModelPropertyEnum();
+    ModelPropertyEnum *blockPropertyEnum = new ModelPropertyEnum();
 
     blockPropertyEnum->setName(domElement.attribute("name","no_name"));
     blockPropertyEnum->setCaption(domElement.attribute("caption",blockPropertyEnum->name()));
@@ -92,7 +92,8 @@ QList<ModelPropertyEnum *> ModelPropertyEnum::listFromNodeGenerated(const QDomEl
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="enum") list.append(ModelPropertyEnum::fromNodeGenerated(e));
+            if(e.tagName()=="enum")
+                list.append(ModelPropertyEnum::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

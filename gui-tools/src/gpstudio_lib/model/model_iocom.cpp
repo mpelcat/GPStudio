@@ -71,7 +71,8 @@ const QList<ModelComConnect *> ModelIOCom::comConnects() const
 
 ModelIO *ModelIOCom::fromNodeGenerated(const QDomElement &domElement, ModelIOCom *ioCom)
 {
-    if(ioCom==NULL) ioCom = new ModelIOCom();
+    if(ioCom==NULL)
+        ioCom = new ModelIOCom();
 
     ioCom->setDriverIO(domElement.attribute("driverio",""));
 
@@ -83,7 +84,8 @@ ModelIO *ModelIOCom::fromNodeGenerated(const QDomElement &domElement, ModelIOCom
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="com_connects") ioCom->addComConnects(ModelComConnect::listFromNodeGenerated(e));
+            if(e.tagName()=="com_connects")
+                ioCom->addComConnects(ModelComConnect::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

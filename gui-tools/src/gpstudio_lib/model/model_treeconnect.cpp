@@ -101,14 +101,17 @@ void ModelTreeConnect::addTreeItems(const QList<ModelTreeItem *> &treeItems)
 
 ModelTreeConnect *ModelTreeConnect::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelTreeConnect *treeConnect=new ModelTreeConnect();
-    bool ok=false;
+    ModelTreeConnect *treeConnect = new ModelTreeConnect();
+    bool ok = false;
 
     treeConnect->setToblock(domElement.attribute("toblock",""));
     treeConnect->setToflow(domElement.attribute("toflow",""));
 
     int size = domElement.attribute("size","0").toInt(&ok);
-    if(ok && size>=0) treeConnect->setSize(size); else treeConnect->setSize(0);
+    if(ok && size>=0)
+        treeConnect->setSize(size);
+    else
+        treeConnect->setSize(0);
 
     treeConnect->setOrder(domElement.attribute("order",""));
     treeConnect->setMuxname(domElement.attribute("muxname",""));
@@ -119,7 +122,8 @@ ModelTreeConnect *ModelTreeConnect::fromNodeGenerated(const QDomElement &domElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="tree_items") treeConnect->addTreeItems(ModelTreeItem::listFromNodeGenerated(e));
+            if(e.tagName()=="tree_items")
+                treeConnect->addTreeItems(ModelTreeItem::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -136,7 +140,8 @@ QList<ModelTreeConnect *> ModelTreeConnect::listFromNodeGenerated(const QDomElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="tree_connect") list.append(ModelTreeConnect::fromNodeGenerated(e));
+            if(e.tagName()=="tree_connect")
+                list.append(ModelTreeConnect::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

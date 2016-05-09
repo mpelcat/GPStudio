@@ -114,23 +114,35 @@ void ModelClock::setParent(ModelBlock *parent)
 
 ModelClock *ModelClock::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelClock *clock=new ModelClock();
+    ModelClock *clock = new ModelClock();
     bool ok=false;
 
     clock->setName(domElement.attribute("name","no_name"));
     clock->setGroup(domElement.attribute("group",""));
 
     int shift = domElement.attribute("shift","0").toInt(&ok);
-    if(ok) clock->setShift(shift); else clock->setShift(0);
+    if(ok)
+        clock->setShift(shift);
+    else
+        clock->setShift(0);
 
     int min = domElement.attribute("min","0").toInt(&ok);
-    if(ok) clock->setMin(min); else clock->setMin(0);
+    if(ok)
+        clock->setMin(min);
+    else
+        clock->setMin(0);
 
     int max = domElement.attribute("max","0").toInt(&ok);
-    if(ok) clock->setMax(max); else clock->setMax(0);
+    if(ok)
+        clock->setMax(max);
+    else
+        clock->setMax(0);
 
     int typical = domElement.attribute("typical","0").toInt(&ok);
-    if(ok) clock->setTypical(typical); else clock->setTypical(0);
+    if(ok)
+        clock->setTypical(typical);
+    else
+        clock->setTypical(0);
 
     clock->setDescription(domElement.attribute("desc",""));
 
@@ -146,7 +158,8 @@ QList<ModelClock *> ModelClock::listFromNodeGenerated(const QDomElement &domElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="clock") list.append(ModelClock::fromNodeGenerated(e));
+            if(e.tagName()=="clock")
+                list.append(ModelClock::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

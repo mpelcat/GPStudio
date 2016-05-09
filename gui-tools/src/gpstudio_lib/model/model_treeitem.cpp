@@ -73,19 +73,25 @@ void ModelTreeItem::setMuxvalue(const uint &muxvalue)
 
 ModelTreeItem *ModelTreeItem::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelTreeItem *treeItem=new ModelTreeItem();
-    bool ok=false;
+    ModelTreeItem *treeItem = new ModelTreeItem();
+    bool ok = false;
 
     treeItem->setFromblock(domElement.attribute("fromblock",""));
     treeItem->setFromflow(domElement.attribute("fromflow",""));
 
     int size = domElement.attribute("size","0").toInt(&ok);
-    if(ok && size>=0) treeItem->setSize(size); else treeItem->setSize(0);
+    if(ok && size>=0)
+        treeItem->setSize(size);
+    else
+        treeItem->setSize(0);
 
     treeItem->setOrder(domElement.attribute("order",""));
 
     int muxvalue = domElement.attribute("muxvalue","0").toInt(&ok);
-    if(ok && muxvalue>=0) treeItem->setMuxvalue(muxvalue); else treeItem->setMuxvalue(0);
+    if(ok && muxvalue>=0)
+        treeItem->setMuxvalue(muxvalue);
+    else
+        treeItem->setMuxvalue(0);
 
     return treeItem;
 }
@@ -99,7 +105,8 @@ QList<ModelTreeItem *> ModelTreeItem::listFromNodeGenerated(const QDomElement &d
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="tree_item") list.append(ModelTreeItem::fromNodeGenerated(e));
+            if(e.tagName()=="tree_item")
+                list.append(ModelTreeItem::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

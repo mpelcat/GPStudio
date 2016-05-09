@@ -84,14 +84,17 @@ void ModelPort::setParent(ModelBlock *parent)
 
 ModelPort *ModelPort::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelPort *port=new ModelPort();
-    bool ok=false;
+    ModelPort *port = new ModelPort();
+    bool ok = false;
 
     port->setName(domElement.attribute("name","no_name"));
     port->setType(domElement.attribute("type",""));
 
     int size = domElement.attribute("size","0").toInt(&ok);
-    if(ok && size>=0) port->setSize(size); else port->setSize(0);
+    if(ok && size>=0)
+        port->setSize(size);
+    else
+        port->setSize(0);
 
     port->setDescription(domElement.attribute("desc",""));
 
@@ -107,7 +110,8 @@ QList<ModelPort *> ModelPort::listFromNodeGenerated(const QDomElement &domElemen
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="port") list.append(ModelPort::fromNodeGenerated(e));
+            if(e.tagName()=="port")
+                list.append(ModelPort::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

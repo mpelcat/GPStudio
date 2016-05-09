@@ -30,7 +30,8 @@ ModelParam::ModelParam(ModelBlock *parent)
 
 ModelParam::~ModelParam()
 {
-    for(int i=0; i<_parambitfields.size(); i++) delete _parambitfields[i];
+    for(int i=0; i<_parambitfields.size(); i++)
+        delete _parambitfields[i];
 }
 
 QString ModelParam::name() const
@@ -65,7 +66,8 @@ void ModelParam::setRegAddr(const qint32 &regAddr)
 
 qint32 ModelParam::absoluteAddr() const
 {
-    if(_parent) return _parent->addrAbs()+_regAddr;
+    if(_parent)
+        return _parent->addrAbs()+_regAddr;
     return _regAddr;
 }
 
@@ -180,26 +182,41 @@ void ModelParam::addParamBitFields(const QList<ModelParamBitField *> &bitFields)
 
 ModelParam *ModelParam::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelParam *param=new ModelParam();
-    bool ok=false;
+    ModelParam *param = new ModelParam();
+    bool ok = false;
 
     param->setName(domElement.attribute("name","no_name"));
     param->setType(domElement.attribute("type",""));
 
     int regaddr = domElement.attribute("regaddr","-1").toInt(&ok);
-    if(ok) param->setRegAddr(regaddr); else param->setRegAddr(-1);
+    if(ok)
+        param->setRegAddr(regaddr);
+    else
+        param->setRegAddr(-1);
 
     int value = domElement.attribute("value","0").toInt(&ok);
-    if(ok) param->setValue(value); else param->setValue(0);
+    if(ok)
+        param->setValue(value);
+    else
+        param->setValue(0);
 
     int defaultValue = domElement.attribute("default","0").toInt(&ok);
-    if(ok) param->setDefaultValue(defaultValue); else param->setDefaultValue(0);
+    if(ok)
+        param->setDefaultValue(defaultValue);
+    else
+        param->setDefaultValue(0);
 
     int min = domElement.attribute("min","0").toInt(&ok);
-    if(ok) param->setMin(min); else param->setMin(0);
+    if(ok)
+        param->setMin(min);
+    else
+        param->setMin(0);
 
     int max = domElement.attribute("max","0").toInt(&ok);
-    if(ok) param->setMax(max); else param->setMax(0);
+    if(ok)
+        param->setMax(max);
+    else
+        param->setMax(0);
 
     param->setPropertyMap(domElement.attribute("propertymap",""));
 
@@ -213,7 +230,8 @@ ModelParam *ModelParam::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="bitfields") param->addParamBitFields(ModelParamBitField::listFromNodeGenerated(e));
+            if(e.tagName()=="bitfields")
+                param->addParamBitFields(ModelParamBitField::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -230,7 +248,8 @@ QList<ModelParam *> ModelParam::listFromNodeGenerated(const QDomElement &domElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="param") list.append(ModelParam::fromNodeGenerated(e));
+            if(e.tagName()=="param")
+                list.append(ModelParam::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

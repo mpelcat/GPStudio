@@ -84,15 +84,18 @@ void ModelReset::setParent(ModelBlock *parent)
 
 ModelReset *ModelReset::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelReset *reset=new ModelReset();
+    ModelReset *reset = new ModelReset();
 
     reset->setName(domElement.attribute("name","no_name"));
     reset->setGroup(domElement.attribute("group",""));
 
     QString direction = domElement.attribute("direction","");
-    if(direction.toLower()=="in") reset->setDirection(DirIn);
-    else if(direction.toLower()=="out") reset->setDirection(DirOut);
-    else reset->setDirection(DirUndef);
+    if(direction.toLower()=="in")
+        reset->setDirection(DirIn);
+    else if(direction.toLower()=="out")
+        reset->setDirection(DirOut);
+    else
+        reset->setDirection(DirUndef);
 
     reset->setDescription(domElement.attribute("desc",""));
 
@@ -108,7 +111,8 @@ QList<ModelReset *> ModelReset::listFromNodeGenerated(const QDomElement &domElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="reset") list.append(ModelReset::fromNodeGenerated(e));
+            if(e.tagName()=="reset")
+                list.append(ModelReset::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

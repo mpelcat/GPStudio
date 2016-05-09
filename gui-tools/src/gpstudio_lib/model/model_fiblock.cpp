@@ -94,8 +94,10 @@ ModelFIBlock *ModelFIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="flow_connects") fiBlock->addFlowConnects(ModelFlowConnect::listFromNodeGenerated(e));
-            if(e.tagName()=="tree_connects") fiBlock->addTreeConnects(ModelTreeConnect::listFromNodeGenerated(e));
+            if(e.tagName()=="flow_connects")
+                fiBlock->addFlowConnects(ModelFlowConnect::listFromNodeGenerated(e));
+            if(e.tagName()=="tree_connects")
+                fiBlock->addTreeConnects(ModelTreeConnect::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

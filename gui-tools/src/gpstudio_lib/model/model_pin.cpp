@@ -30,7 +30,8 @@ ModelPin::ModelPin(ModelBlock *parent)
 
 ModelPin::~ModelPin()
 {
-    for(int i=0; i<_attributes.size(); i++) delete _attributes[i];
+    for(int i=0; i<_attributes.size(); i++)
+        delete _attributes[i];
 }
 
 QString ModelPin::name() const
@@ -91,7 +92,8 @@ ModelPin *ModelPin::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="attributes") pin->_attributes.append(ModelAttribute::listFromNodeGenerated(e));
+            if(e.tagName()=="attributes")
+                pin->_attributes.append(ModelAttribute::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -108,7 +110,8 @@ QList<ModelPin *> ModelPin::listFromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="pin") list.append(ModelPin::fromNodeGenerated(e));
+            if(e.tagName()=="pin")
+                list.append(ModelPin::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

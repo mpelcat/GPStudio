@@ -35,7 +35,8 @@ QString ModelProcess::type() const
 
 ModelProcess *ModelProcess::fromNodeGenerated(const QDomElement &domElement, ModelProcess *process)
 {
-    if(process==NULL) process = new ModelProcess();
+    if(process==NULL)
+        process = new ModelProcess();
 
     ModelBlock::fromNodeGenerated(domElement, process);
 

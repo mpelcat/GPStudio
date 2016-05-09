@@ -105,7 +105,7 @@ void ModelParamBitField::setParent(ModelParam *parent)
 
 ModelParamBitField *ModelParamBitField::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelParamBitField *paramBitField=new ModelParamBitField();
+    ModelParamBitField *paramBitField = new ModelParamBitField();
 
     paramBitField->setName(domElement.attribute("name","no_name"));
     paramBitField->setType(domElement.attribute("type",""));
@@ -129,7 +129,8 @@ QList<ModelParamBitField *> ModelParamBitField::listFromNodeGenerated(const QDom
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="bitfield") list.append(ModelParamBitField::fromNodeGenerated(e));
+            if(e.tagName()=="bitfield")
+                list.append(ModelParamBitField::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -139,31 +140,35 @@ QList<ModelParamBitField *> ModelParamBitField::listFromNodeGenerated(const QDom
 QList<uint> ModelParamBitField::listBitFromBitField(const QString &bitField)
 {
     QList<uint> bits;
-    if(bitField.isEmpty()) return QList<uint>();
+    if(bitField.isEmpty())
+        return QList<uint>();
 
     QString lastSymbole = "";
     int previous = -1;
 
     QRegExp exp("([-,]?)([0-9]+)");
-    int pos=0;
+    int pos = 0;
     while((pos = exp.indexIn(bitField, pos)) != -1)
     {
         QString symbole = exp.cap(1);
         int bit = exp.cap(2).toUInt();
 
-        if(bit>31) return QList<uint>();
+        if(bit>31)
+            return QList<uint>();
 
         if(symbole==",")
         {
             if(lastSymbole=="," || lastSymbole=="")
             {
-                if(previous==-1) return QList<uint>();
+                if(previous==-1)
+                    return QList<uint>();
                 bits.append(previous);
             }
         }
         else if(symbole=="-")
         {
-            if(previous<bit) return QList<uint>();
+            if(previous<bit)
+                return QList<uint>();
             for(int i=previous; i>=bit; i--) bits.append(i);
         }
 
@@ -173,7 +178,8 @@ QList<uint> ModelParamBitField::listBitFromBitField(const QString &bitField)
         pos += exp.matchedLength();
     }
 
-    if((lastSymbole=="," || lastSymbole=="") and previous!=-1) bits.append(previous);
+    if((lastSymbole=="," || lastSymbole=="") and previous!=-1)
+        bits.append(previous);
 
     return bits;
 }

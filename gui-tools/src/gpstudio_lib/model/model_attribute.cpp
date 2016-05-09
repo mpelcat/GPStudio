@@ -56,7 +56,7 @@ void ModelAttribute::setType(const QString &type)
 
 ModelAttribute *ModelAttribute::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelAttribute *attribute=new ModelAttribute();
+    ModelAttribute *attribute = new ModelAttribute();
 
     attribute->setName(domElement.attribute("name","no_name"));
     attribute->setValue(domElement.attribute("value",""));
@@ -74,7 +74,8 @@ QList<ModelAttribute *> ModelAttribute::listFromNodeGenerated(const QDomElement 
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="attribute") list.append(ModelAttribute::fromNodeGenerated(e));
+            if(e.tagName()=="attribute")
+                list.append(ModelAttribute::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

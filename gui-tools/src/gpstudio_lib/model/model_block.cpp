@@ -36,14 +36,22 @@ ModelBlock::ModelBlock()
 
 ModelBlock::~ModelBlock()
 {
-    for(int i=0; i<_files.size(); i++) delete _files[i];
-    for(int i=0; i<_params.size(); i++) delete _params[i];
-    for(int i=0; i<_properties.size(); i++) delete _properties[i];
-    for(int i=0; i<_flows.size(); i++) delete _flows[i];
-    for(int i=0; i<_clocks.size(); i++) delete _clocks[i];
-    for(int i=0; i<_ports.size(); i++) delete _ports[i];
-    for(int i=0; i<_pins.size(); i++) delete _pins[i];
-    for(int i=0; i<_resets.size(); i++) delete _resets[i];
+    for(int i=0; i<_files.size(); i++)
+        delete _files[i];
+    for(int i=0; i<_params.size(); i++)
+        delete _params[i];
+    for(int i=0; i<_properties.size(); i++)
+        delete _properties[i];
+    for(int i=0; i<_flows.size(); i++)
+        delete _flows[i];
+    for(int i=0; i<_clocks.size(); i++)
+        delete _clocks[i];
+    for(int i=0; i<_ports.size(); i++)
+        delete _ports[i];
+    for(int i=0; i<_pins.size(); i++)
+        delete _pins[i];
+    for(int i=0; i<_resets.size(); i++)
+        delete _resets[i];
 }
 
 const QString &ModelBlock::name() const
@@ -180,7 +188,8 @@ ModelFile *ModelBlock::getFile(const QString &name) const
     for(int i=0; i<this->files().size(); i++)
     {
         ModelFile *file = this->files().at(i);
-        if(file->name()==name) return file;
+        if(file->name()==name)
+            return file;
     }
     return NULL;
 }
@@ -214,7 +223,8 @@ ModelParam *ModelBlock::getParam(const QString &name) const
     for(int i=0; i<this->params().size(); i++)
     {
         ModelParam *param = this->params().at(i);
-        if(param->name()==name) return param;
+        if(param->name()==name)
+            return param;
     }
     return NULL;
 }
@@ -248,7 +258,8 @@ ModelProperty *ModelBlock::getBlockProperty(const QString &name) const
     for(int i=0; i<this->properties().size(); i++)
     {
         ModelProperty *blockProperty = this->properties().at(i);
-        if(blockProperty->name()==name) return blockProperty;
+        if(blockProperty->name()==name)
+            return blockProperty;
     }
     return NULL;
 }
@@ -282,7 +293,8 @@ ModelFlow *ModelBlock::getFlow(const QString &name) const
     for(int i=0; i<this->flows().size(); i++)
     {
         ModelFlow *flow = this->flows().at(i);
-        if(flow->name()==name) return flow;
+        if(flow->name()==name)
+            return flow;
     }
     return NULL;
 }
@@ -316,7 +328,8 @@ ModelClock *ModelBlock::getClock(const QString &name) const
     for(int i=0; i<this->clocks().size(); i++)
     {
         ModelClock *clock = this->clocks().at(i);
-        if(clock->name()==name) return clock;
+        if(clock->name()==name)
+            return clock;
     }
     return NULL;
 }
@@ -350,7 +363,8 @@ ModelPort *ModelBlock::getPort(const QString &name) const
     for(int i=0; i<this->ports().size(); i++)
     {
         ModelPort *port = this->ports().at(i);
-        if(port->name()==name) return port;
+        if(port->name()==name)
+            return port;
     }
     return NULL;
 }
@@ -384,7 +398,8 @@ ModelPin *ModelBlock::getPin(const QString &name) const
     for(int i=0; i<this->pins().size(); i++)
     {
         ModelPin *pin = this->pins().at(i);
-        if(pin->name()==name) return pin;
+        if(pin->name()==name)
+            return pin;
     }
     return NULL;
 }
@@ -459,12 +474,18 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="files") block->addFiles(ModelFile::listFromNodeGenerated(e));
-            if(e.tagName()=="params") block->addParams(ModelParam::listFromNodeGenerated(e));
-            if(e.tagName()=="properties") block->addProperties(ModelProperty::listFromNodeGenerated(e));
-            if(e.tagName()=="flows") block->addFlows(ModelFlow::listFromNodeGenerated(e));
-            if(e.tagName()=="clocks") block->addClocks(ModelClock::listFromNodeGenerated(e));
-            if(e.tagName()=="resets") block->addResets(ModelReset::listFromNodeGenerated(e));
+            if(e.tagName()=="files")
+                block->addFiles(ModelFile::listFromNodeGenerated(e));
+            if(e.tagName()=="params")
+                block->addParams(ModelParam::listFromNodeGenerated(e));
+            if(e.tagName()=="properties")
+                block->addProperties(ModelProperty::listFromNodeGenerated(e));
+            if(e.tagName()=="flows")
+                block->addFlows(ModelFlow::listFromNodeGenerated(e));
+            if(e.tagName()=="clocks")
+                block->addClocks(ModelClock::listFromNodeGenerated(e));
+            if(e.tagName()=="resets")
+                block->addResets(ModelReset::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -485,16 +506,49 @@ QList<ModelBlock *> ModelBlock::listFromNodeGenerated(const QDomElement &domElem
             QString typeBlock = e.attribute("type");
             if(e.tagName()=="block")
             {
-                if(typeBlock=="process") block = ModelProcess::fromNodeGenerated(e);
-                if(typeBlock=="io") block = ModelIO::fromNodeGenerated(e);
-                if(typeBlock=="iocom") block = ModelIOCom::fromNodeGenerated(e);
-                if(typeBlock=="pi") block = ModelPIBlock::fromNodeGenerated(e);
-                if(typeBlock=="fi") block = ModelFIBlock::fromNodeGenerated(e);
-                if(typeBlock=="ci") block = ModelCIBlock::fromNodeGenerated(e);
-                if(block==NULL) block = ModelBlock::fromNodeGenerated(e);
+                if(typeBlock=="process")
+                    block = ModelProcess::fromNodeGenerated(e);
+                if(typeBlock=="io")
+                    block = ModelIO::fromNodeGenerated(e);
+                if(typeBlock=="iocom")
+                    block = ModelIOCom::fromNodeGenerated(e);
+                if(typeBlock=="pi")
+                    block = ModelPIBlock::fromNodeGenerated(e);
+                if(typeBlock=="fi")
+                    block = ModelFIBlock::fromNodeGenerated(e);
+                if(typeBlock=="ci")
+                    block = ModelCIBlock::fromNodeGenerated(e);
+                if(block==NULL)
+                    block = ModelBlock::fromNodeGenerated(e);
 
                 list.append(block);
             }
+        }
+        n = n.nextSibling();
+    }
+    return list;
+}
+
+QList<ModelBlock *> ModelBlock::listFromNodeDef(const QDomElement &domElement)
+{
+    QDomNode n = domElement.firstChild();
+    QList<ModelBlock *> list;
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            ModelBlock *block=NULL;
+            if(e.tagName()=="process")
+                block = ModelProcess::fromNodeGenerated(e);
+            if(e.tagName()=="io")
+                block = ModelIO::fromNodeGenerated(e);
+            if(e.tagName()=="iocom")
+                block = ModelIOCom::fromNodeGenerated(e);
+            if(block==NULL)
+                block = ModelBlock::fromNodeGenerated(e);
+
+            list.append(block);
         }
         n = n.nextSibling();
     }

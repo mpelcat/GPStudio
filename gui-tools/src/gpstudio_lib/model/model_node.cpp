@@ -31,7 +31,8 @@ ModelNode::ModelNode()
 
 ModelNode::~ModelNode()
 {
-    for(int i=0; i<_blocks.size(); i++) delete _blocks[i];
+    for(int i=0; i<_blocks.size(); i++)
+        delete _blocks[i];
 }
 
 QString ModelNode::name() const
@@ -69,7 +70,8 @@ ModelFIBlock *ModelNode::getFIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="fi") return (ModelFIBlock*)block;
+        if(block->type()=="fi")
+            return (ModelFIBlock*)block;
     }
     return NULL;
 }
@@ -79,7 +81,8 @@ ModelCIBlock *ModelNode::getCIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="ci") return (ModelCIBlock*)block;
+        if(block->type()=="ci")
+            return (ModelCIBlock*)block;
     }
     return NULL;
 }
@@ -89,7 +92,8 @@ ModelPIBlock *ModelNode::getPIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="pi") return (ModelPIBlock*)block;
+        if(block->type()=="pi")
+            return (ModelPIBlock*)block;
     }
     return NULL;
 }
@@ -99,7 +103,8 @@ ModelIOCom *ModelNode::getIOCom() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="iocom") return (ModelIOCom*)block;
+        if(block->type()=="iocom")
+            return (ModelIOCom*)block;
     }
     return NULL;
 }
@@ -107,12 +112,22 @@ ModelIOCom *ModelNode::getIOCom() const
 ModelNode *ModelNode::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
+    ModelNode *node;
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    qDebug()<<Q_FUNC_INFO<<fileName;
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
     else
     {
-        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
-        ModelNode *node = ModelNode::fromNodeGenerated(doc.documentElement());
+        if(!doc.setContent(&file))
+        {
+            qDebug()<<"Cannot parse"<<file.fileName();
+            return NULL;
+        }
+        if(!doc.documentElement().firstChildElement("blocks").isNull())
+            node = ModelNode::fromNodeGenerated(doc.documentElement());
+        else
+            node = ModelNode::fromNodeDef(doc.documentElement());
         file.close();
         return node;
     }
@@ -121,7 +136,7 @@ ModelNode *ModelNode::readFromFile(const QString &fileName)
 
 ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelNode *node=new ModelNode();
+    ModelNode *node = new ModelNode();
     node->setName(domElement.attribute("name","no_name"));
 
     QDomNode n = domElement.firstChild();
@@ -130,7 +145,29 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="blocks") node->_blocks.append(ModelBlock::listFromNodeGenerated(e));
+            if(e.tagName()=="blocks")
+                node->_blocks.append(ModelBlock::listFromNodeGenerated(e));
+        }
+        n = n.nextSibling();
+    }
+
+    node->_valid=true;
+    return node;
+}
+
+ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
+{
+    ModelNode *node = new ModelNode();
+    node->setName(domElement.attribute("name","no_name"));
+
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="process")
+                node->_blocks.append(ModelBlock::listFromNodeDef(e));
         }
         n = n.nextSibling();
     }

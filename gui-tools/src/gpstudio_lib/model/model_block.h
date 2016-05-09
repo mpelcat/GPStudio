@@ -127,6 +127,7 @@ public:
 public:
     static ModelBlock *fromNodeGenerated(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
+    static QList<ModelBlock *> listFromNodeDef(const QDomElement &domElement);
 
 protected:
     QString _name;

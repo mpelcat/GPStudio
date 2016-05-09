@@ -117,21 +117,25 @@ ModelProperty *ModelFlow::getBlockProperty(const QString &name) const
     for(int i=0; i<this->properties().size(); i++)
     {
         ModelProperty *blockProperty = this->properties().at(i);
-        if(blockProperty->name()==name) return blockProperty;
+        if(blockProperty->name()==name)
+            return blockProperty;
     }
     return NULL;
 }
 
 ModelFlow *ModelFlow::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelFlow *flow=new ModelFlow();
-    bool ok=false;
+    ModelFlow *flow = new ModelFlow();
+    bool ok = false;
 
     flow->setName(domElement.attribute("name","no_name"));
     flow->setType(domElement.attribute("type",""));
 
-    int size = domElement.attribute("size","0").toInt(&ok);
-    if(ok && size>=0) flow->setSize(size); else flow->setSize(0);
+    int size = domElement.attribute("size","8").toInt(&ok);
+    if(ok && size>=0)
+        flow->setSize(size);
+    else
+        flow->setSize(8);
 
     flow->setDescription(domElement.attribute("desc",""));
 
@@ -141,7 +145,8 @@ ModelFlow *ModelFlow::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="properties") flow->addProperties(ModelProperty::listFromNodeGenerated(e));
+            if(e.tagName()=="properties")
+                flow->addProperties(ModelProperty::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -158,7 +163,8 @@ QList<ModelFlow *> ModelFlow::listFromNodeGenerated(const QDomElement &domElemen
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="flow") list.append(ModelFlow::fromNodeGenerated(e));
+            if(e.tagName()=="flow")
+                list.append(ModelFlow::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

@@ -76,7 +76,7 @@ void ModelFlowConnect::setOrder(const QString &order)
 
 ModelFlowConnect *ModelFlowConnect::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelFlowConnect *flowConnect=new ModelFlowConnect();
+    ModelFlowConnect *flowConnect = new ModelFlowConnect();
 
     flowConnect->setFromblock(domElement.attribute("fromblock",""));
     flowConnect->setFromflow(domElement.attribute("fromflow",""));
@@ -96,7 +96,8 @@ QList<ModelFlowConnect *> ModelFlowConnect::listFromNodeGenerated(const QDomElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="flow_connect") list.append(ModelFlowConnect::fromNodeGenerated(e));
+            if(e.tagName()=="flow_connect")
+                list.append(ModelFlowConnect::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

@@ -29,7 +29,8 @@ ModelProperty::ModelProperty()
 
 ModelProperty::~ModelProperty()
 {
-    for(int i=0; i<_propertyEnums.size(); i++) delete _propertyEnums[i];
+    for(int i=0; i<_propertyEnums.size(); i++)
+        delete _propertyEnums[i];
 }
 
 QString ModelProperty::name() const
@@ -188,7 +189,7 @@ void ModelProperty::addPropertyEnum(ModelPropertyEnum *propertyEnum)
 
 ModelProperty *ModelProperty::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelProperty *blockProperty=new ModelProperty();
+    ModelProperty *blockProperty = new ModelProperty();
 
     blockProperty->setName(domElement.attribute("name","no_name"));
     blockProperty->setCaption(domElement.attribute("caption",blockProperty->name()));
@@ -209,8 +210,10 @@ ModelProperty *ModelProperty::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="properties") blockProperty->_properties.append(ModelProperty::listFromNodeGenerated(e));
-            if(e.tagName()=="enums") blockProperty->_propertyEnums.append(ModelPropertyEnum::listFromNodeGenerated(e));
+            if(e.tagName()=="properties")
+                blockProperty->_properties.append(ModelProperty::listFromNodeGenerated(e));
+            if(e.tagName()=="enums")
+                blockProperty->_propertyEnums.append(ModelPropertyEnum::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -227,7 +230,8 @@ QList<ModelProperty *> ModelProperty::listFromNodeGenerated(const QDomElement &d
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="property") list.append(ModelProperty::fromNodeGenerated(e));
+            if(e.tagName()=="property")
+                list.append(ModelProperty::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

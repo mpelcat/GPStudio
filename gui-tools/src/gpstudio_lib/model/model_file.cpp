@@ -94,7 +94,7 @@ void ModelFile::setParent(ModelBlock *parent)
 
 ModelFile *ModelFile::fromNodeGenerated(const QDomElement &domElement)
 {
-    ModelFile *file=new ModelFile();
+    ModelFile *file = new ModelFile();
 
     file->setName(domElement.attribute("name","no_name"));
     file->setType(domElement.attribute("type",""));
@@ -114,7 +114,8 @@ QList<ModelFile *> ModelFile::listFromNodeGenerated(const QDomElement &domElemen
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="file") list.append(ModelFile::fromNodeGenerated(e));
+            if(e.tagName()=="file")
+                list.append(ModelFile::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
