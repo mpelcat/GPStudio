@@ -54,12 +54,18 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent * event);
 
+    void setZoomLevel(int step);
+    void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 protected slots:
     void updateSelection();
 
 public slots:
     void selectBlock(const Block *block);
 
+    void zoomIn();
+    void zoomOut();
+    void zoomFit();
 signals:
     void blockSelected(const Block *block);
     void blockDetailsRequest(const Block *block);

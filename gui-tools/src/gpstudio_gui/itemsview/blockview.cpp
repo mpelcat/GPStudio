@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMimeData>
+#include <qmath.h>
 
 #include "blockitem.h"
 #include "blockconnectoritem.h"
@@ -39,6 +40,8 @@ BlockView::BlockView(QWidget *parent)
     setScene(_scene);
 
     setAcceptDrops(true);
+    setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setRenderHint(QPainter::Antialiasing, true);
     setRenderHint(QPainter::SmoothPixmapTransform, true);
     setRenderHint(QPainter::TextAntialiasing, true);
@@ -178,4 +181,42 @@ bool BlockView::loadFromNode(const ModelNode *node)
 bool BlockView::loadFromCam(const Camera *camera)
 {
     return _scene->loadFromCamera(camera);
+}
+
+void BlockView::zoomIn()
+{
+    setZoomLevel(1);
+}
+
+void BlockView::zoomOut()
+{
+    setZoomLevel(-1);
+}
+
+void BlockView::zoomFit()
+{
+    fitInView(sceneRect(), Qt::KeepAspectRatio);
+}
+
+void BlockView::setZoomLevel(int step)
+{
+    double zoom = qPow(1.25,step);
+    scale(zoom, zoom);
+}
+
+void BlockView::wheelEvent(QWheelEvent *event)
+{
+    int numDegrees = event->delta() / 8;
+    int numSteps = numDegrees / 15;
+
+    setZoomLevel(numSteps);
+}
+
+void BlockView::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Plus)
+        zoomIn();
+    if(event->key()==Qt::Key_Minus)
+        zoomOut();
+    QGraphicsView::keyPressEvent(event);
 }
