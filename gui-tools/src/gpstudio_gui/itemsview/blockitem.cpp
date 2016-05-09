@@ -150,6 +150,14 @@ void BlockItem::addPort(BlockPortItem *portItem)
     _ports.insert(portItem->name(), portItem);
 }
 
+BlockPortItem *BlockItem::port(const QString &name) const
+{
+    QMap<QString, BlockPortItem* >::const_iterator it = _ports.find(name);
+    if(it != _ports.end())
+        return it.value();
+    return NULL;
+}
+
 const QMap<QString, BlockPortItem *> &BlockItem::ports() const
 {
     return _ports;

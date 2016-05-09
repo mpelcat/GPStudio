@@ -49,27 +49,7 @@ bool BlockScene::loadFromNode(const ModelNode *node)
         }
     }
 
-    foreach (ModelFlowConnect *flowConnect, node->getFIBlock()->flowConnects())
-    {
-        QMap<QString, BlockItem* >::const_iterator fromblockIt = _blocks.find(flowConnect->fromblock());
-        if(fromblockIt==_blocks.end()) continue;
-        BlockItem *fromblockItem = fromblockIt.value();
-
-        QMap<QString, BlockPortItem* >::const_iterator fromflowIt = fromblockItem->ports().find(flowConnect->fromflow());
-        if(fromflowIt==fromblockItem->ports().end()) continue;
-        BlockPortItem *fromflowItem = fromflowIt.value();
-
-        QMap<QString, BlockItem* >::const_iterator toblockIt = _blocks.find(flowConnect->toblock());
-        if(toblockIt==_blocks.end()) continue;
-        BlockItem *toblockItem = toblockIt.value();
-
-        QMap<QString, BlockPortItem* >::const_iterator toflowIt = toblockItem->ports().find(flowConnect->toflow());
-        if(toflowIt==fromblockItem->ports().end()) continue;
-        BlockPortItem *toflowItem = toflowIt.value();
-
-        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
-        addItem(connectorItem);
-    }
+    connectBlocks(node->getFIBlock()->flowConnects());
 
     return true;
 }
@@ -88,35 +68,36 @@ bool BlockScene::loadFromCamera(const Camera *camera)
         }
     }
 
-    foreach (ModelFlowConnect *flowConnect, camera->node()->getFIBlock()->flowConnects())
-    {
-        QMap<QString, BlockItem* >::const_iterator fromblockIt = _blocks.find(flowConnect->fromblock());
-        if(fromblockIt==_blocks.end()) continue;
-        BlockItem *fromblockItem = fromblockIt.value();
-
-        QMap<QString, BlockPortItem* >::const_iterator fromflowIt = fromblockItem->ports().find(flowConnect->fromflow());
-        if(fromflowIt==fromblockItem->ports().end()) continue;
-        BlockPortItem *fromflowItem = fromflowIt.value();
-
-        QMap<QString, BlockItem* >::const_iterator toblockIt = _blocks.find(flowConnect->toblock());
-        if(toblockIt==_blocks.end()) continue;
-        BlockItem *toblockItem = toblockIt.value();
-
-        QMap<QString, BlockPortItem* >::const_iterator toflowIt = toblockItem->ports().find(flowConnect->toflow());
-        if(toflowIt==fromblockItem->ports().end()) continue;
-        BlockPortItem *toflowItem = toflowIt.value();
-
-        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
-        addItem(connectorItem);
-    }
+    connectBlocks(camera->node()->getFIBlock()->flowConnects());
 
     return true;
 }
 
-BlockItem *BlockScene::item(const QString &name) const
+BlockItem *BlockScene::block(const QString &name) const
 {
     QMap<QString, BlockItem* >::const_iterator it = _blocks.find(name);
     if(it != _blocks.end())
         return it.value();
     return NULL;
+}
+
+void BlockScene::connectBlocks(const QList<ModelFlowConnect *> &connections)
+{
+    foreach (ModelFlowConnect *flowConnect, connections)
+    {
+        BlockItem *fromblockItem = block(flowConnect->fromblock());
+        if(!fromblockItem) continue;
+
+        BlockPortItem *fromflowItem = fromblockItem->port(flowConnect->fromflow());
+        if(!fromflowItem) continue;
+
+        BlockItem *toblockItem = block(flowConnect->toblock());
+        if(!fromflowItem) continue;
+
+        BlockPortItem *toflowItem = toblockItem->port(flowConnect->toflow());
+        if(!toflowItem) continue;
+
+        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
+        addItem(connectorItem);
+    }
 }

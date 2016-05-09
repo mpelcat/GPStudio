@@ -31,6 +31,8 @@
 #include "model/model_node.h"
 #include "camera/camera.h"
 
+class ModelFlowConnect;
+
 class GPSTUDIO_GUI_EXPORT BlockScene : public QGraphicsScene
 {
 public:
@@ -40,10 +42,11 @@ public:
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
-    BlockItem *item(const QString &name) const;
+    BlockItem *block(const QString &name) const;
 
 protected:
     QMap<QString, BlockItem* > _blocks;
+    void connectBlocks(const QList<ModelFlowConnect *> &connections);
 };
 
 #endif // BLOCKSCENE_H

@@ -152,7 +152,7 @@ void BlockView::selectBlock(const Block *block)
     _scene->blockSignals(true);
     _scene->clearSelection();
 
-    BlockItem *blockItem = _scene->item(block->name());
+    BlockItem *blockItem = _scene->block(block->name());
     if(blockItem)
     {
         blockItem->setSelected(true);

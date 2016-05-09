@@ -57,6 +57,7 @@ public:
     void updateBlock();
 
     void addPort(BlockPortItem *portItem);
+    BlockPortItem *port(const QString &name) const;
     const QMap<QString, BlockPortItem *> &ports() const;
 
 public:
