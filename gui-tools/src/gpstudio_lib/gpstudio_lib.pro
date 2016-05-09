@@ -59,6 +59,7 @@ HEADERS += gpstudio_lib_common.h \
     flowviewerinterface.h \
     model/model_attribute.h \
     model/model_block.h \
+    model/model_board.h \
     model/model_ciblock.h \
     model/model_clock.h \
     model/model_comconnect.h \
@@ -107,6 +108,7 @@ SOURCES += \
     flowviewerinterface.cpp \
     model/model_attribute.cpp \
     model/model_block.cpp \
+    model/model_board.cpp \
     model/model_ciblock.cpp \
     model/model_clock.cpp \
     model/model_comconnect.cpp \

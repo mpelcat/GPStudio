@@ -28,6 +28,7 @@
 #include <QList>
 
 #include "model_block.h"
+#include "model_board.h"
 
 class ModelFIBlock;
 class ModelCIBlock;
@@ -42,6 +43,8 @@ public:
 
     QString name() const;
     void setName(const QString &name);
+
+    ModelBoard *getBoard() const;
 
     bool isValid() const;
 
@@ -62,6 +65,8 @@ public:
 protected:
     QString _name;
     bool _valid;
+
+    ModelBoard *_board;
 
     QList<ModelBlock *> _blocks;
 };

@@ -27,6 +27,7 @@
 ModelNode::ModelNode()
 {
     _valid = false;
+    _board = NULL;
 }
 
 ModelNode::~ModelNode()
@@ -114,7 +115,7 @@ ModelNode *ModelNode::readFromFile(const QString &fileName)
     QDomDocument doc;
     ModelNode *node;
     QFile file(fileName);
-    qDebug()<<Q_FUNC_INFO<<fileName;
+
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug()<<"Cannot open"<<file.fileName();
     else
@@ -145,6 +146,11 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
+            if(e.tagName()=="board")
+            {
+                if(node->_board==NULL)
+                    node->_board = ModelBoard::fromNodeGenerated(e);
+            }
             if(e.tagName()=="blocks")
                 node->_blocks.append(ModelBlock::listFromNodeGenerated(e));
         }
@@ -166,6 +172,14 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
+            if(e.tagName()=="board")
+            {
+                if(node->_board==NULL)
+                {
+                    node->_board = ModelBoard::fromNodeDef(e);
+                    node->_blocks.append(ModelBoard::listIosFromNodeDef(e));
+                }
+            }
             if(e.tagName()=="process")
                 node->_blocks.append(ModelBlock::listFromNodeDef(e));
         }
@@ -174,4 +188,9 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
 
     node->_valid=true;
     return node;
+}
+
+ModelBoard *ModelNode::getBoard() const
+{
+    return _board;
 }

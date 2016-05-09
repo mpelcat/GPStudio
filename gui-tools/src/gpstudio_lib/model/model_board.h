@@ -18,36 +18,32 @@
 **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MODEL_BOARD_H
+#define MODEL_BOARD_H
 
-#include <QMainWindow>
+#include "gpstudio_lib_common.h"
 
-#include "gpnodeproject.h"
-#include "model/model_node.h"
+#include <QString>
+#include <QDomElement>
+#include <QList>
 
-namespace Ui {
-class MainWindow;
-}
+class ModelBlock;
 
-class MainWindow : public QMainWindow
+class ModelBoard
 {
-    Q_OBJECT
+public:
+    ModelBoard();
+
+    QString name() const;
+    void setName(const QString &name);
 
 public:
-    explicit MainWindow(QStringList args=QStringList());
-    ~MainWindow();
+    static ModelBoard *fromNodeGenerated(const QDomElement &domElement);
+    static ModelBoard *fromNodeDef(const QDomElement &domElement);
+    static QList<ModelBlock *> listIosFromNodeDef(const QDomElement &domElement);
 
-    void createToolBarAndMenu();
-
-private slots:
-    void configNode();
-
-private:
-    Ui::MainWindow *ui;
-
-    GPNodeProject *_project;
-    ModelNode *_node;
+protected:
+    QString _name;
 };
 
-#endif // MAINWINDOW_H
+#endif // MODEL_BOARD_H
