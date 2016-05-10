@@ -73,37 +73,6 @@ void FlowManager::setCamera(Camera *camera)
                 flowConnection->setFlow(_blockCom->flow(flow->name()));
 
                 addFlowConnection(flowConnection);
-                //qDebug()<<flowConnection->flow()->name()<<flowConnection->flowId();
-            }
-        }
-    }
-
-    _fi=_camera->fiBlock();
-    ModelFIBlock *fIBlock = camera->node()->getFIBlock();
-
-    if(fIBlock)
-    {
-        foreach(ModelTreeConnect *treeConnect, fIBlock->treeConnects())
-        {
-            //qDebug()<<treeConnect->toblock()<<treeConnect->toflow();
-            foreach(ModelTreeItem *treeItem, treeConnect->treeitems())
-            {
-                //qDebug()<<"\t"<<treeItem->fromblock()<<treeItem->fromflow();
-            }
-
-            if(treeConnect->treeitems().count()==1) // direct connection
-            {
-                const Property *propIn = _camera->rootProperty().path(treeConnect->toblock()+"."+treeConnect->toflow());
-
-                ModelTreeItem *treeItem = treeConnect->treeitems()[0];
-                const Property *propOut = _camera->rootProperty().path(treeItem->fromblock()+"."+treeItem->fromflow());
-                //qDebug()<<"rrr "<<propOut->parent()->name()<<propOut->name()<<propIn->parent()->name()<<propIn->name();
-
-                foreach (Property *subBlockProperty, propOut->subProperties())
-                {
-                    //qDebug()<<subBlockProperty->parent()->name()<<subBlockProperty->name();
-                    //propIn->addSubProperty(subBlockProperty);
-                }
             }
         }
     }

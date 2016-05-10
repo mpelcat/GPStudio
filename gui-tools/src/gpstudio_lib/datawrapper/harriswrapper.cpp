@@ -18,7 +18,7 @@
 **
 ****************************************************************************/
 
-#include "harriswrapper.h"
+/*#include "harriswrapper.h"
 #include <QDebug>
 Harriswrapper::Harriswrapper()
 {
@@ -187,3 +187,4 @@ void Harriswrapper::setHimg(int himg)
 {
     _himg = himg;
 }
+*/

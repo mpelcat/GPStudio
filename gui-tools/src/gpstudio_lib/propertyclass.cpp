@@ -81,16 +81,6 @@ QScriptClass::QueryFlags PropertyClass::queryProperty(const QScriptValue & objec
     return flags;
 }
 
-static QScriptValue getSetFoo(QScriptContext *context, QScriptEngine *engine)
-{
-    /*QScriptValue callee = context->callee();
-    if (context->argumentCount() == 1) // writing?
-        callee.setProperty("value", context->argument(0));
-    return callee.property("value");*/
-    //qDebug()<<context->callee().property("value");
-    return context->callee().property("name");
-}
-
 QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptString &name, uint id)
 {
     Q_UNUSED(id);
@@ -101,12 +91,7 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
 #endif
 
     if(name.toString()=="toString")
-    {
-        QScriptValue value = engine()->newFunction(getSetFoo);
-        return value;
-        //return engine()->newVariant(object, _linkedProperty->value().toString());
-        //return QScriptValue(_linkedProperty->name()+": "+_linkedProperty->value().toString());
-    }
+        return QScriptValue(_linkedProperty->value().toString());
 
     if(name.toString()=="value" || name.toString()=="valueOf")
     {
@@ -139,7 +124,8 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
                     for(int y=0;y<3;y++)
                     {
                         QString key = QString("m%1%2").arg(x).arg(y);
-                        if(_linkedProperty->subPropertiesMap().contains(key)) line.append(_linkedProperty->subPropertiesMap()[key]->value());
+                        if(_linkedProperty->subPropertiesMap().contains(key))
+                            line.append(_linkedProperty->subPropertiesMap()[key]->value());
                     }
                     lines.append(line);
                 }
@@ -152,23 +138,22 @@ QScriptValue PropertyClass::property(const QScriptValue &object, const QScriptSt
     }
 
     if(name.toString()=="bits")
-    {
         return QScriptValue(_linkedProperty->bits());
-    }
 
     QString filteredName = name.toString();
-    if(filteredName=="__in") filteredName="in";
+    if(filteredName=="__in")
+        filteredName="in";
 
     if(_subPropertiesClasses.contains(filteredName))
     {
-        PropertyClass *prop=_subPropertiesClasses[filteredName];
+        PropertyClass *prop = _subPropertiesClasses[filteredName];
         return engine()->newObject(prop);
     }
     else
     {
         if(_linkedProperty->subPropertiesMap().contains(filteredName))
         {
-            PropertyClass *prop=new PropertyClass(engine(), &(*_linkedProperty)[filteredName]);
+            PropertyClass *prop = new PropertyClass(engine(), &(*_linkedProperty)[filteredName]);
             _subPropertiesClasses.insert(filteredName, prop);
             return engine()->newObject(prop);
         }
@@ -185,7 +170,5 @@ void PropertyClass::setProperty(QScriptValue &object, const QScriptString &name,
     qDebug()<<_linkedProperty->name()+".set"<<name<<value.toVariant();
 #endif
     if(name.toString()=="value")
-    {
         _linkedProperty->setValue(value.toVariant());
-    }
 }

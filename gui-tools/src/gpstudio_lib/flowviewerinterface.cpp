@@ -56,10 +56,10 @@ void FlowViewerInterface::addFlowConnection(FlowConnection *flowConnection)
     if(dataTypeProperty)
         connect(dataTypeProperty, SIGNAL(valueChanged(QVariant)), this, SLOT(changeDataType()));
 
-    foreach (Property *property, flowConnection->flow()->assocProperty()->subProperties())
+    /*foreach (Property *property, flowConnection->flow()->assocProperty()->subProperties())
     {
         //qDebug()<<property->name();
-    }
+    }*/
     changeDataType();
 }
 
@@ -108,6 +108,8 @@ void FlowViewerInterface::changeDataType()
 
 void FlowViewerInterface::processData(FlowPackage data)
 {
+    Q_UNUSED(data);
+
     FlowConnection *connection = FlowViewerInterface::objectToFlowConnection(QObject::sender());
     if(!connection)
         return;

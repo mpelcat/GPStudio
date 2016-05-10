@@ -131,7 +131,7 @@ void RegisterManager::start()
 void RegisterManager::setRegister(uint addr, uint value)
 {
     if(!_camera) return;
-    if(addr>=_registerData.size()) return;
+    if(addr>=(uint)_registerData.size()) return;
 
     _registerData.data()[addr*4+0]=value>>24;
     _registerData.data()[addr*4+1]=value>>16;

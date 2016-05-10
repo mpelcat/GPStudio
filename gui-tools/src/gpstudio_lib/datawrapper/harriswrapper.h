@@ -27,7 +27,7 @@
 
 #include <QImage>
 
-class GPSTUDIO_LIB_EXPORT Harriswrapper
+/*class GPSTUDIO_LIB_EXPORT Harriswrapper
 {
 public:
     Harriswrapper();
@@ -43,6 +43,6 @@ public:
 private:
     int _wimg, _himg;
 
-};
+};*/
 
 #endif // HARRISWRAPPER_H
