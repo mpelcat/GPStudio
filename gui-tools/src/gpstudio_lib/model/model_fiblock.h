@@ -33,17 +33,18 @@ class GPSTUDIO_LIB_EXPORT ModelFIBlock : public ModelBlock
 {
 public:
     ModelFIBlock();
+    ModelFIBlock(const ModelFIBlock &modelFIBlock);
     virtual ~ModelFIBlock();
 
     QString type() const;
 
-    QList<ModelFlowConnect *> flowConnects();
-    const QList<ModelFlowConnect *> flowConnects() const;
+    QList<ModelFlowConnect *> &flowConnects();
+    const QList<ModelFlowConnect *> &flowConnects() const;
     void addFlowConnect(ModelFlowConnect *flowConnect);
     void addFlowConnects(const QList<ModelFlowConnect *> &flowConnects);
 
-    QList<ModelTreeConnect *> treeConnects();
-    const QList<ModelTreeConnect *> treeConnects() const;
+    QList<ModelTreeConnect *> &treeConnects();
+    const QList<ModelTreeConnect *> &treeConnects() const;
     void addTreeConnect(ModelTreeConnect *treeConnect);
     void addTreeConnects(const QList<ModelTreeConnect *> &treeConnects);
 

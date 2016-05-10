@@ -33,24 +33,26 @@ class GPSTUDIO_LIB_EXPORT ModelTreeConnect
 {
 public:
     ModelTreeConnect();
+    ModelTreeConnect(const ModelTreeConnect &modelTreeConnect);
+    ~ModelTreeConnect();
 
-    QString toblock() const;
+    const QString &toblock() const;
     void setToblock(const QString &toblock);
 
-    QString toflow() const;
+    const QString &toflow() const;
     void setToflow(const QString &toflow);
 
     uint size() const;
     void setSize(const uint &size);
 
-    QString order() const;
+    const QString &order() const;
     void setOrder(const QString &order);
 
-    QString muxname() const;
+    const QString &muxname() const;
     void setMuxname(const QString &muxname);
 
-    QList<ModelTreeItem *> treeitems();
-    const QList<ModelTreeItem *> treeitems() const;
+    QList<ModelTreeItem *> &treeitems();
+    const QList<ModelTreeItem *> &treeitems() const;
     void addTreeItem(ModelTreeItem *treeItem);
     void addTreeItems(const QList<ModelTreeItem *> &treeItems);
 

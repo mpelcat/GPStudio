@@ -24,7 +24,11 @@ ModelComConnect::ModelComConnect()
 {
 }
 
-QString ModelComConnect::link() const
+ModelComConnect::~ModelComConnect()
+{
+}
+
+const QString &ModelComConnect::link() const
 {
     return _link;
 }
@@ -34,7 +38,7 @@ void ModelComConnect::setLink(const QString &link)
     _link = link;
 }
 
-QString ModelComConnect::id() const
+const QString &ModelComConnect::id() const
 {
     return _id;
 }
@@ -44,7 +48,7 @@ void ModelComConnect::setId(const QString &id)
     _id = id;
 }
 
-QString ModelComConnect::type() const
+const QString &ModelComConnect::type() const
 {
     return _type;
 }

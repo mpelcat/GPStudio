@@ -31,14 +31,15 @@ class ModelAttribute
 {
 public:
     ModelAttribute();
+    ~ModelAttribute();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString value() const;
+    const QString &value() const;
     void setValue(const QString &value);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
 public:

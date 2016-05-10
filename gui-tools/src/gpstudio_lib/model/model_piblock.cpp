@@ -25,6 +25,11 @@ ModelPIBlock::ModelPIBlock()
     _name = "pi";
 }
 
+ModelPIBlock::ModelPIBlock(const ModelPIBlock &modelPIBlock)
+    : ModelBlock(modelPIBlock)
+{
+}
+
 ModelPIBlock::~ModelPIBlock()
 {
 }
@@ -36,7 +41,8 @@ QString ModelPIBlock::type() const
 
 ModelPIBlock *ModelPIBlock::fromNodeGenerated(const QDomElement &domElement, ModelPIBlock *piBlock)
 {
-    if(piBlock==NULL) piBlock = new ModelPIBlock();
+    if(piBlock==NULL)
+        piBlock = new ModelPIBlock();
 
     ModelBlock::fromNodeGenerated(domElement, piBlock);
 
@@ -45,6 +51,8 @@ ModelPIBlock *ModelPIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
 
 ModelPIBlock *ModelPIBlock::fromNodeDef(const QDomElement &domElement, ModelPIBlock *piBlock)
 {
+    Q_UNUSED(domElement);
+
     if(piBlock==NULL)
         piBlock = new ModelPIBlock();
 

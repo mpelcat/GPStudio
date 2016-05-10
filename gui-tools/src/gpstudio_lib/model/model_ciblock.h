@@ -31,6 +31,7 @@ class GPSTUDIO_LIB_EXPORT ModelCIBlock : public ModelBlock
 {
 public:
     ModelCIBlock();
+    ModelCIBlock(const ModelCIBlock &modelCIBlock);
     virtual ~ModelCIBlock();
 
     QString type() const;

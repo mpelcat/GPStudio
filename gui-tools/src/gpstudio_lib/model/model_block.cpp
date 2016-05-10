@@ -38,6 +38,17 @@ ModelBlock::ModelBlock()
 
 ModelBlock::ModelBlock(const ModelBlock &modelBlock)
 {
+    _name = modelBlock._name;
+    _inLib = modelBlock._inLib;
+    _driver = modelBlock._driver;
+    _categ = modelBlock._categ;
+    _addrAbs = modelBlock._addrAbs;
+    _sizeAddrRel = modelBlock._sizeAddrRel;
+    _masterCount = modelBlock._masterCount;
+    _xPos = modelBlock._xPos;
+    _yPos = modelBlock._yPos;
+    _description = modelBlock._description;
+
     for(int i=0; i<modelBlock._files.size(); i++)
         _files.append(new ModelFile(*modelBlock._files[i]));
     for(int i=0; i<modelBlock._params.size(); i++)

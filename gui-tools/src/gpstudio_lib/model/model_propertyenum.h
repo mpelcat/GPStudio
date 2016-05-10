@@ -33,16 +33,16 @@ public:
     ModelPropertyEnum();
     ~ModelPropertyEnum();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString caption() const;
+    const QString &caption() const;
     void setCaption(const QString &caption);
 
-    QVariant value() const;
+    const QVariant &value() const;
     void setValue(const QVariant &value);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
 public:

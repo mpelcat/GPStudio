@@ -34,10 +34,10 @@ public:
     ModelClock(ModelBlock *parent=NULL);
     ~ModelClock();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString group() const;
+    const QString &group() const;
     void setGroup(const QString &group);
 
     qint16 shift() const;
@@ -52,7 +52,7 @@ public:
     qint32 typical() const;
     void setTypical(const qint32 &typical);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

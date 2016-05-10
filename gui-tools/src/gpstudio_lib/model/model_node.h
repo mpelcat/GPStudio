@@ -41,7 +41,7 @@ public:
     ModelNode();
     ~ModelNode();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
     ModelBoard *getBoard() const;

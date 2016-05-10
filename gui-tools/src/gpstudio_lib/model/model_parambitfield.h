@@ -35,22 +35,22 @@ public:
     ModelParamBitField();
     ~ModelParamBitField();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
-    QVariant value() const;
+    const QVariant &value() const;
     void setValue(const QVariant &value);
 
-    QString bitfield() const;
+    const QString &bitfield() const;
     void setBitfield(const QString &bitfield);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
-    QString propertyMap() const;
+    const QString &propertyMap() const;
     void setPropertyMap(const QString &propertyMap);
 
     ModelParam *parent() const;

@@ -25,6 +25,11 @@ ModelCIBlock::ModelCIBlock()
     _name = "ci";
 }
 
+ModelCIBlock::ModelCIBlock(const ModelCIBlock &modelCIBlock)
+    : ModelBlock(modelCIBlock)
+{
+}
+
 ModelCIBlock::~ModelCIBlock()
 {
 }
@@ -36,7 +41,8 @@ QString ModelCIBlock::type() const
 
 ModelCIBlock *ModelCIBlock::fromNodeGenerated(const QDomElement &domElement, ModelCIBlock *ciBlock)
 {
-    if(ciBlock==NULL) ciBlock = new ModelCIBlock();
+    if(ciBlock==NULL)
+        ciBlock = new ModelCIBlock();
 
     ModelBlock::fromNodeGenerated(domElement, ciBlock);
 
@@ -45,6 +51,8 @@ ModelCIBlock *ModelCIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
 
 ModelCIBlock *ModelCIBlock::fromNodeDef(const QDomElement &domElement, ModelCIBlock *ciBlock)
 {
+    Q_UNUSED(domElement);
+
     if(ciBlock==NULL)
         ciBlock = new ModelCIBlock();
 

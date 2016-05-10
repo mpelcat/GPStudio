@@ -31,20 +31,21 @@ class GPSTUDIO_LIB_EXPORT ModelFlowConnect
 {
 public:
     ModelFlowConnect();
+    ~ModelFlowConnect();
 
-    QString fromblock() const;
+    const QString &fromblock() const;
     void setFromblock(const QString &fromblock);
 
-    QString fromflow() const;
+    const QString &fromflow() const;
     void setFromflow(const QString &fromflow);
 
-    QString toblock() const;
+    const QString &toblock() const;
     void setToblock(const QString &toblock);
 
-    QString toflow() const;
+    const QString &toflow() const;
     void setToflow(const QString &toflow);
 
-    QString order() const;
+    const QString &order() const;
     void setOrder(const QString &order);
 
 public:

@@ -24,7 +24,11 @@ ModelAttribute::ModelAttribute()
 {
 }
 
-QString ModelAttribute::name() const
+ModelAttribute::~ModelAttribute()
+{
+}
+
+const QString &ModelAttribute::name() const
 {
     return _name;
 }
@@ -34,7 +38,7 @@ void ModelAttribute::setName(const QString &name)
     _name = name;
 }
 
-QString ModelAttribute::value() const
+const QString &ModelAttribute::value() const
 {
     return _value;
 }
@@ -44,7 +48,7 @@ void ModelAttribute::setValue(const QString &value)
     _value = value;
 }
 
-QString ModelAttribute::type() const
+const QString &ModelAttribute::type() const
 {
     return _type;
 }

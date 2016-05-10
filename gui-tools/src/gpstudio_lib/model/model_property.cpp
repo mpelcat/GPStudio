@@ -27,13 +27,37 @@ ModelProperty::ModelProperty()
     _parent = NULL;
 }
 
+ModelProperty::ModelProperty(const ModelProperty &modelProperty)
+{
+    _parent = NULL;
+
+    _name = modelProperty._name;
+    _caption = modelProperty._caption;
+    _type = modelProperty._type;
+    _value = modelProperty._value;
+    _min = modelProperty._min;
+    _max = modelProperty._max;
+    _step = modelProperty._step;
+    _assert = modelProperty._assert;
+    _onchange = modelProperty._onchange;
+    _propertymap = modelProperty._propertymap;
+    _description = modelProperty._description;
+
+    for(int i=0; i<modelProperty._properties.size(); i++)
+        _properties.append(new ModelProperty(*modelProperty._properties[i]));
+    for(int i=0; i<modelProperty._propertyEnums.size(); i++)
+        _propertyEnums.append(new ModelPropertyEnum(*modelProperty._propertyEnums[i]));
+}
+
 ModelProperty::~ModelProperty()
 {
+    for(int i=0; i<_properties.size(); i++)
+        delete _properties[i];
     for(int i=0; i<_propertyEnums.size(); i++)
         delete _propertyEnums[i];
 }
 
-QString ModelProperty::name() const
+const QString &ModelProperty::name() const
 {
     return _name;
 }
@@ -43,7 +67,7 @@ void ModelProperty::setName(const QString &name)
     _name = name;
 }
 
-QString ModelProperty::caption() const
+const QString &ModelProperty::caption() const
 {
     return _caption;
 }
@@ -53,7 +77,7 @@ void ModelProperty::setCaption(const QString &caption)
     _caption = caption;
 }
 
-QString ModelProperty::type() const
+const QString &ModelProperty::type() const
 {
     return _type;
 }
@@ -63,7 +87,7 @@ void ModelProperty::setType(const QString &type)
     _type = type;
 }
 
-QString ModelProperty::value() const
+const QString &ModelProperty::value() const
 {
     return _value;
 }
@@ -73,7 +97,7 @@ void ModelProperty::setValue(const QString &value)
     _value = value;
 }
 
-QString ModelProperty::min() const
+const QString &ModelProperty::min() const
 {
     return _min;
 }
@@ -83,7 +107,7 @@ void ModelProperty::setMin(const QString &min)
     _min = min;
 }
 
-QString ModelProperty::max() const
+const QString &ModelProperty::max() const
 {
     return _max;
 }
@@ -93,7 +117,7 @@ void ModelProperty::setMax(const QString &max)
     _max = max;
 }
 
-QString ModelProperty::step() const
+const QString &ModelProperty::step() const
 {
     return _step;
 }
@@ -103,7 +127,7 @@ void ModelProperty::setStep(const QString &step)
     _step = step;
 }
 
-QString ModelProperty::assert() const
+const QString &ModelProperty::assert() const
 {
     return _assert;
 }
@@ -113,7 +137,7 @@ void ModelProperty::setAssert(const QString &assert)
     _assert = assert;
 }
 
-QString ModelProperty::propertymap() const
+const QString &ModelProperty::propertymap() const
 {
     return _propertymap;
 }
@@ -123,7 +147,7 @@ void ModelProperty::setPropertymap(const QString &propertymap)
     _propertymap = propertymap;
 }
 
-QString ModelProperty::onchange() const
+const QString &ModelProperty::onchange() const
 {
     return _onchange;
 }
@@ -133,7 +157,7 @@ void ModelProperty::setOnchange(const QString &onchange)
     _onchange = onchange;
 }
 
-QString ModelProperty::description() const
+const QString &ModelProperty::description() const
 {
     return _description;
 }

@@ -31,14 +31,15 @@ class GPSTUDIO_LIB_EXPORT ModelComConnect
 {
 public:
     ModelComConnect();
+    ~ModelComConnect();
 
-    QString link() const;
+    const QString &link() const;
     void setLink(const QString &link);
 
-    QString id() const;
+    const QString &id() const;
     void setId(const QString &id);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
 public:

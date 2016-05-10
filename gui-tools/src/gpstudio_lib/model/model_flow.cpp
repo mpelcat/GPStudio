@@ -30,8 +30,23 @@ ModelFlow::ModelFlow(ModelBlock *parent)
     _parent = NULL;
 }
 
+ModelFlow::ModelFlow(const ModelFlow &modelFlow)
+{
+    _parent = NULL;
+
+    _name = modelFlow._name;
+    _type = modelFlow._type;
+    _size = modelFlow._size;
+    _description = modelFlow._description;
+
+    for(int i=0; i<modelFlow._properties.size(); i++)
+        _properties.append(new ModelProperty(*modelFlow._properties[i]));
+}
+
 ModelFlow::~ModelFlow()
 {
+    for(int i=0; i<_properties.size(); i++)
+        delete _properties[i];
 }
 
 const QString &ModelFlow::name() const
@@ -44,7 +59,7 @@ void ModelFlow::setName(const QString &name)
     _name = name;
 }
 
-QString ModelFlow::type() const
+const QString &ModelFlow::type() const
 {
     return _type;
 }
@@ -64,7 +79,7 @@ void ModelFlow::setSize(const quint8 &size)
     _size = size;
 }
 
-QString ModelFlow::description() const
+const QString &ModelFlow::description() const
 {
     return _description;
 }

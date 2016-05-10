@@ -26,7 +26,25 @@ ModelTreeConnect::ModelTreeConnect()
 {
 }
 
-QString ModelTreeConnect::toblock() const
+ModelTreeConnect::ModelTreeConnect(const ModelTreeConnect &modelTreeConnect)
+{
+    _toblock = modelTreeConnect._toblock;
+    _toflow = modelTreeConnect._toflow;
+    _size = modelTreeConnect._size;
+    _order = modelTreeConnect._order;
+    _muxname = modelTreeConnect._muxname;
+
+    for(int i=0; i<modelTreeConnect._treeitems.size(); i++)
+        _treeitems.append(new ModelTreeItem(*modelTreeConnect._treeitems[i]));
+}
+
+ModelTreeConnect::~ModelTreeConnect()
+{
+    for(int i=0; i<_treeitems.size(); i++)
+        delete _treeitems[i];
+}
+
+const QString &ModelTreeConnect::toblock() const
 {
     return _toblock;
 }
@@ -36,7 +54,7 @@ void ModelTreeConnect::setToblock(const QString &toblock)
     _toblock = toblock;
 }
 
-QString ModelTreeConnect::toflow() const
+const QString &ModelTreeConnect::toflow() const
 {
     return _toflow;
 }
@@ -56,7 +74,7 @@ void ModelTreeConnect::setSize(const uint &size)
     _size = size;
 }
 
-QString ModelTreeConnect::order() const
+const QString &ModelTreeConnect::order() const
 {
     return _order;
 }
@@ -66,7 +84,7 @@ void ModelTreeConnect::setOrder(const QString &order)
     _order = order;
 }
 
-QString ModelTreeConnect::muxname() const
+const QString &ModelTreeConnect::muxname() const
 {
     return _muxname;
 }
@@ -76,12 +94,12 @@ void ModelTreeConnect::setMuxname(const QString &muxname)
     _muxname = muxname;
 }
 
-QList<ModelTreeItem *> ModelTreeConnect::treeitems()
+QList<ModelTreeItem *> &ModelTreeConnect::treeitems()
 {
     return _treeitems;
 }
 
-const QList<ModelTreeItem *> ModelTreeConnect::treeitems() const
+const QList<ModelTreeItem *> &ModelTreeConnect::treeitems() const
 {
     return _treeitems;
 }

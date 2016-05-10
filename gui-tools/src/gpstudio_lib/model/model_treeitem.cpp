@@ -25,7 +25,12 @@
 ModelTreeItem::ModelTreeItem()
 {
 }
-QString ModelTreeItem::fromblock() const
+
+ModelTreeItem::~ModelTreeItem()
+{
+}
+
+const QString &ModelTreeItem::fromblock() const
 {
     return _fromblock;
 }
@@ -34,7 +39,8 @@ void ModelTreeItem::setFromblock(const QString &fromblock)
 {
     _fromblock = fromblock;
 }
-QString ModelTreeItem::fromflow() const
+
+const QString &ModelTreeItem::fromflow() const
 {
     return _fromflow;
 }
@@ -43,6 +49,7 @@ void ModelTreeItem::setFromflow(const QString &fromflow)
 {
     _fromflow = fromflow;
 }
+
 uint ModelTreeItem::size() const
 {
     return _size;
@@ -52,7 +59,8 @@ void ModelTreeItem::setSize(const uint &size)
 {
     _size = size;
 }
-QString ModelTreeItem::order() const
+
+const QString &ModelTreeItem::order() const
 {
     return _order;
 }
@@ -61,6 +69,7 @@ void ModelTreeItem::setOrder(const QString &order)
 {
     _order = order;
 }
+
 uint ModelTreeItem::muxvalue() const
 {
     return _muxvalue;

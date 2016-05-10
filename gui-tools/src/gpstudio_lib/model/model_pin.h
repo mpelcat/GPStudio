@@ -35,12 +35,13 @@ class GPSTUDIO_LIB_EXPORT ModelPin
 {
 public:
     ModelPin(ModelBlock *parent=NULL);
+    ModelPin(const ModelPin &modelPin);
     ~ModelPin();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString mapTo() const;
+    const QString &mapTo() const;
     void setMapTo(const QString &mapTo);
 
     QList<ModelAttribute *> &attributes();

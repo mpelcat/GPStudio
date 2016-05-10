@@ -26,7 +26,11 @@ ModelBoard::ModelBoard()
 {
 }
 
-QString ModelBoard::name() const
+ModelBoard::~ModelBoard()
+{
+}
+
+const QString &ModelBoard::name() const
 {
     return _name;
 }

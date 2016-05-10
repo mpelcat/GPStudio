@@ -31,17 +31,18 @@ class GPSTUDIO_LIB_EXPORT ModelIOCom : public ModelIO
 {
 public:
     ModelIOCom();
-    ~ModelIOCom();
+    ModelIOCom(const ModelIOCom &modelIOCom);
+    virtual ~ModelIOCom();
 
     QString type() const;
 
-    QString driverIO() const;
+    const QString &driverIO() const;
     void setDriverIO(const QString &driverIO);
 
     void addComConnect(ModelComConnect *comConnect);
     void addComConnects(const QList<ModelComConnect *> &comConnects);
-    QList<ModelComConnect *> comConnects();
-    const QList<ModelComConnect *> comConnects() const;
+    QList<ModelComConnect *> &comConnects();
+    const QList<ModelComConnect *> &comConnects() const;
 
 public:
     static ModelIO *fromNodeGenerated(const QDomElement &domElement, ModelIOCom *ioCom=NULL);

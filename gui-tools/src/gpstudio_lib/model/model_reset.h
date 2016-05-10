@@ -36,16 +36,16 @@ public:
 
     enum Direction {DirUndef, DirIn, DirOut};
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString group() const;
+    const QString &group() const;
     void setGroup(const QString &group);
 
     Direction direction() const;
     void setDirection(const Direction &direction);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

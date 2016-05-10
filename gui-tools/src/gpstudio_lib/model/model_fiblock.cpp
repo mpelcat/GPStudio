@@ -27,8 +27,21 @@ ModelFIBlock::ModelFIBlock()
     _name = "fi";
 }
 
+ModelFIBlock::ModelFIBlock(const ModelFIBlock &modelFIBlock)
+    : ModelBlock(modelFIBlock)
+{
+    for(int i=0; i<modelFIBlock._flowConnects.size(); i++)
+        _flowConnects.append(new ModelFlowConnect(*modelFIBlock._flowConnects[i]));
+    for(int i=0; i<modelFIBlock._treeConnects.size(); i++)
+        _treeConnects.append(new ModelTreeConnect(*modelFIBlock._treeConnects[i]));
+}
+
 ModelFIBlock::~ModelFIBlock()
 {
+    for(int i=0; i<_flowConnects.size(); i++)
+        delete _flowConnects[i];
+    for(int i=0; i<_treeConnects.size(); i++)
+        delete _treeConnects[i];
 }
 
 QString ModelFIBlock::type() const
@@ -36,12 +49,12 @@ QString ModelFIBlock::type() const
     return "fi";
 }
 
-QList<ModelFlowConnect *> ModelFIBlock::flowConnects()
+QList<ModelFlowConnect *> &ModelFIBlock::flowConnects()
 {
     return _flowConnects;
 }
 
-const QList<ModelFlowConnect *> ModelFIBlock::flowConnects() const
+const QList<ModelFlowConnect *> &ModelFIBlock::flowConnects() const
 {
     return _flowConnects;
 }
@@ -59,12 +72,12 @@ void ModelFIBlock::addFlowConnects(const QList<ModelFlowConnect *> &flowConnects
     }
 }
 
-QList<ModelTreeConnect *> ModelFIBlock::treeConnects()
+QList<ModelTreeConnect *> &ModelFIBlock::treeConnects()
 {
     return _treeConnects;
 }
 
-const QList<ModelTreeConnect *> ModelFIBlock::treeConnects() const
+const QList<ModelTreeConnect *> &ModelFIBlock::treeConnects() const
 {
     return _treeConnects;
 }

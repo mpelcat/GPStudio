@@ -31,17 +31,18 @@ class GPSTUDIO_LIB_EXPORT ModelTreeItem
 {
 public:
     ModelTreeItem();
+    ~ModelTreeItem();
 
-    QString fromblock() const;
+    const QString &fromblock() const;
     void setFromblock(const QString &fromblock);
 
-    QString fromflow() const;
+    const QString &fromflow() const;
     void setFromflow(const QString &fromflow);
 
     uint size() const;
     void setSize(const uint &size);
 
-    QString order() const;
+    const QString &order() const;
     void setOrder(const QString &order);
 
     uint muxvalue() const;

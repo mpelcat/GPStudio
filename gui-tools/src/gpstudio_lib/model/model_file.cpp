@@ -32,7 +32,7 @@ ModelFile::~ModelFile()
 {
 }
 
-QString ModelFile::name() const
+const QString &ModelFile::name() const
 {
     return _name;
 }
@@ -42,7 +42,7 @@ void ModelFile::setName(const QString &name)
     _name = name;
 }
 
-QString ModelFile::type() const
+const QString &ModelFile::type() const
 {
     return _type;
 }
@@ -52,7 +52,7 @@ void ModelFile::setType(const QString &type)
     _type = type;
 }
 
-QString ModelFile::group() const
+const QString &ModelFile::group() const
 {
     return _group;
 }
@@ -62,7 +62,7 @@ void ModelFile::setGroup(const QString &group)
     _group = group;
 }
 
-QString ModelFile::path() const
+const QString &ModelFile::path() const
 {
     return _path;
 }
@@ -72,7 +72,7 @@ void ModelFile::setPath(const QString &path)
     _path = path;
 }
 
-QString ModelFile::description() const
+const QString &ModelFile::description() const
 {
     return _description;
 }

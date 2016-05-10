@@ -26,9 +26,19 @@ ModelIOCom::ModelIOCom()
 {
 }
 
+ModelIOCom::ModelIOCom(const ModelIOCom &modelIOCom)
+    : ModelIO(modelIOCom)
+{
+    _driverIO = modelIOCom._driverIO;
+
+    for(int i=0; i<modelIOCom._comConnects.size(); i++)
+        _comConnects.append(modelIOCom._comConnects[i]);
+}
+
 ModelIOCom::~ModelIOCom()
 {
-    for(int i=0; i<_comConnects.size(); i++) delete _comConnects[i];
+    for(int i=0; i<_comConnects.size(); i++)
+        delete _comConnects[i];
 }
 
 QString ModelIOCom::type() const
@@ -36,7 +46,7 @@ QString ModelIOCom::type() const
     return "iocom";
 }
 
-QString ModelIOCom::driverIO() const
+const QString &ModelIOCom::driverIO() const
 {
     return _driverIO;
 }
@@ -59,12 +69,12 @@ void ModelIOCom::addComConnects(const QList<ModelComConnect *> &comConnects)
     }
 }
 
-QList<ModelComConnect *> ModelIOCom::comConnects()
+QList<ModelComConnect *> &ModelIOCom::comConnects()
 {
     return _comConnects;
 }
 
-const QList<ModelComConnect *> ModelIOCom::comConnects() const
+const QList<ModelComConnect *> &ModelIOCom::comConnects() const
 {
     return _comConnects;
 }

@@ -34,18 +34,19 @@ class GPSTUDIO_LIB_EXPORT ModelFlow
 {
 public:
     ModelFlow(ModelBlock *parent=NULL);
+    ModelFlow(const ModelFlow &modelFlow);
     ~ModelFlow();
 
     const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
     quint8 size() const;
     void setSize(const quint8 &size);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

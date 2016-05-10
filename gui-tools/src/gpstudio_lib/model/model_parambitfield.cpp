@@ -33,7 +33,7 @@ ModelParamBitField::~ModelParamBitField()
 {
 }
 
-QString ModelParamBitField::name() const
+const QString &ModelParamBitField::name() const
 {
     return _name;
 }
@@ -43,7 +43,7 @@ void ModelParamBitField::setName(const QString &name)
     _name = name;
 }
 
-QString ModelParamBitField::type() const
+const QString &ModelParamBitField::type() const
 {
     return _type;
 }
@@ -53,7 +53,7 @@ void ModelParamBitField::setType(const QString &type)
     _type = type;
 }
 
-QVariant ModelParamBitField::value() const
+const QVariant &ModelParamBitField::value() const
 {
     return _value;
 }
@@ -63,7 +63,7 @@ void ModelParamBitField::setValue(const QVariant &value)
     _value = value;
 }
 
-QString ModelParamBitField::bitfield() const
+const QString &ModelParamBitField::bitfield() const
 {
     return _bitfield;
 }
@@ -73,7 +73,7 @@ void ModelParamBitField::setBitfield(const QString &bitfield)
     _bitfield = bitfield;
 }
 
-QString ModelParamBitField::description() const
+const QString &ModelParamBitField::description() const
 {
     return _description;
 }
@@ -83,7 +83,7 @@ void ModelParamBitField::setDescription(const QString &description)
     _description = description;
 }
 
-QString ModelParamBitField::propertyMap() const
+const QString &ModelParamBitField::propertyMap() const
 {
     return _propertyMap;
 }

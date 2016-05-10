@@ -36,12 +36,13 @@ class GPSTUDIO_LIB_EXPORT ModelParam
 {
 public:
     ModelParam(ModelBlock *parent=NULL);
+    ModelParam(const ModelParam &modelParam);
     ~ModelParam();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
     qint32 regAddr() const;
@@ -51,7 +52,7 @@ public:
     const QVariant &value() const;
     void setValue(const QVariant &value);
 
-    QVariant defaultValue() const;
+    const QVariant &defaultValue() const;
     void setDefaultValue(const QVariant &defaultValue);
 
     const QVariant &min() const;
@@ -63,10 +64,10 @@ public:
     bool isHard() const;
     void setHard(bool hard);
 
-    QString propertyMap() const;
+    const QString &propertyMap() const;
     void setPropertyMap(const QString &propertyMap);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

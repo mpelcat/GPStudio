@@ -28,13 +28,24 @@ ModelPin::ModelPin(ModelBlock *parent)
     _parent = NULL;
 }
 
+ModelPin::ModelPin(const ModelPin &modelPin)
+{
+    _parent = NULL;
+
+    _name = modelPin._name;
+    _mapTo = modelPin._mapTo;
+
+    for(int i=0; i<modelPin._attributes.size(); i++)
+        _attributes.append(new ModelAttribute(*modelPin._attributes[i]));
+}
+
 ModelPin::~ModelPin()
 {
     for(int i=0; i<_attributes.size(); i++)
         delete _attributes[i];
 }
 
-QString ModelPin::name() const
+const QString &ModelPin::name() const
 {
     return _name;
 }
@@ -44,7 +55,7 @@ void ModelPin::setName(const QString &name)
     _name = name;
 }
 
-QString ModelPin::mapTo() const
+const QString &ModelPin::mapTo() const
 {
     return _mapTo;
 }

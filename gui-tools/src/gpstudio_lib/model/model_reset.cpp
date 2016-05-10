@@ -32,7 +32,7 @@ ModelReset::~ModelReset()
 {
 }
 
-QString ModelReset::name() const
+const QString &ModelReset::name() const
 {
     return _name;
 }
@@ -42,7 +42,7 @@ void ModelReset::setName(const QString &name)
     _name = name;
 }
 
-QString ModelReset::group() const
+const QString &ModelReset::group() const
 {
     return _group;
 }
@@ -62,7 +62,7 @@ void ModelReset::setDirection(const ModelReset::Direction &direction)
     _direction = direction;
 }
 
-QString ModelReset::description() const
+const QString &ModelReset::description() const
 {
     return _description;
 }

@@ -24,7 +24,11 @@ ModelFlowConnect::ModelFlowConnect()
 {
 }
 
-QString ModelFlowConnect::fromblock() const
+ModelFlowConnect::~ModelFlowConnect()
+{
+}
+
+const QString &ModelFlowConnect::fromblock() const
 {
     return _fromblock;
 }
@@ -34,7 +38,7 @@ void ModelFlowConnect::setFromblock(const QString &fromblock)
     _fromblock = fromblock;
 }
 
-QString ModelFlowConnect::fromflow() const
+const QString &ModelFlowConnect::fromflow() const
 {
     return _fromflow;
 }
@@ -44,7 +48,7 @@ void ModelFlowConnect::setFromflow(const QString &fromflow)
     _fromflow = fromflow;
 }
 
-QString ModelFlowConnect::toblock() const
+const QString &ModelFlowConnect::toblock() const
 {
     return _toblock;
 }
@@ -54,7 +58,7 @@ void ModelFlowConnect::setToblock(const QString &toblock)
     _toblock = toblock;
 }
 
-QString ModelFlowConnect::toflow() const
+const QString &ModelFlowConnect::toflow() const
 {
     return _toflow;
 }
@@ -64,7 +68,7 @@ void ModelFlowConnect::setToflow(const QString &toflow)
     _toflow = toflow;
 }
 
-QString ModelFlowConnect::order() const
+const QString &ModelFlowConnect::order() const
 {
     return _order;
 }

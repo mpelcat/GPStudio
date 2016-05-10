@@ -40,7 +40,7 @@ ModelNode::~ModelNode()
         delete _blocks[i];
 }
 
-QString ModelNode::name() const
+const QString &ModelNode::name() const
 {
     return _name;
 }

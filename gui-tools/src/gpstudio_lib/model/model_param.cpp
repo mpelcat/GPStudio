@@ -28,13 +28,32 @@ ModelParam::ModelParam(ModelBlock *parent)
     _parent = NULL;
 }
 
+ModelParam::ModelParam(const ModelParam &modelParam)
+{
+    _parent = NULL;
+
+    _name = modelParam._name;
+    _type = modelParam._type;
+    _regAddr = modelParam._regAddr;
+    _value = modelParam._value;
+    _defaultValue = modelParam._defaultValue;
+    _min = modelParam._min;
+    _max = modelParam._max;
+    _hard = modelParam._hard;
+    _description = modelParam._description;
+    _propertyMap = modelParam._propertyMap;
+
+    for(int i=0; i<modelParam._parambitfields.size(); i++)
+        _parambitfields.append(modelParam._parambitfields[i]);
+}
+
 ModelParam::~ModelParam()
 {
     for(int i=0; i<_parambitfields.size(); i++)
         delete _parambitfields[i];
 }
 
-QString ModelParam::name() const
+const QString &ModelParam::name() const
 {
     return _name;
 }
@@ -44,7 +63,7 @@ void ModelParam::setName(const QString &name)
     _name = name;
 }
 
-QString ModelParam::type() const
+const QString &ModelParam::type() const
 {
     return _type;
 }
@@ -81,7 +100,7 @@ void ModelParam::setValue(const QVariant &value)
     _value = value;
 }
 
-QVariant ModelParam::defaultValue() const
+const QVariant &ModelParam::defaultValue() const
 {
     return _defaultValue;
 }
@@ -121,7 +140,7 @@ void ModelParam::setHard(bool hard)
     _hard = hard;
 }
 
-QString ModelParam::propertyMap() const
+const QString &ModelParam::propertyMap() const
 {
     return _propertyMap;
 }
@@ -131,7 +150,7 @@ void ModelParam::setPropertyMap(const QString &propertyMap)
     _propertyMap = propertyMap;
 }
 
-QString ModelParam::description() const
+const QString &ModelParam::description() const
 {
     return _description;
 }

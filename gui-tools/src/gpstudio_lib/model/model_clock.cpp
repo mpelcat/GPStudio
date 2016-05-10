@@ -32,7 +32,7 @@ ModelClock::~ModelClock()
 {
 }
 
-QString ModelClock::name() const
+const QString &ModelClock::name() const
 {
     return _name;
 }
@@ -42,7 +42,7 @@ void ModelClock::setName(const QString &name)
     _name = name;
 }
 
-QString ModelClock::group() const
+const QString &ModelClock::group() const
 {
     return _group;
 }
@@ -92,7 +92,7 @@ void ModelClock::setTypical(const qint32 &typical)
     _typical = typical;
 }
 
-QString ModelClock::description() const
+const QString &ModelClock::description() const
 {
     return _description;
 }

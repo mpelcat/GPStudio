@@ -34,16 +34,16 @@ public:
     ModelPort(ModelBlock *parent=NULL);
     ~ModelPort();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
     quint8 size() const;
     void setSize(const quint8 &size);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

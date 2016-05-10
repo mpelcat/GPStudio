@@ -34,19 +34,19 @@ public:
     ModelFile(ModelBlock *parent=NULL);
     ~ModelFile();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
-    QString group() const;
+    const QString &group() const;
     void setGroup(const QString &group);
 
-    QString path() const;
+    const QString &path() const;
     void setPath(const QString &path);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;

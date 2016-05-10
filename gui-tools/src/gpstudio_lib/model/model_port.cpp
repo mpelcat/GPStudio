@@ -32,7 +32,7 @@ ModelPort::~ModelPort()
 {
 }
 
-QString ModelPort::name() const
+const QString &ModelPort::name() const
 {
     return _name;
 }
@@ -42,7 +42,7 @@ void ModelPort::setName(const QString &name)
     _name = name;
 }
 
-QString ModelPort::type() const
+const QString &ModelPort::type() const
 {
     return _type;
 }
@@ -62,7 +62,7 @@ void ModelPort::setSize(const quint8 &size)
     _size = size;
 }
 
-QString ModelPort::description() const
+const QString &ModelPort::description() const
 {
     return _description;
 }

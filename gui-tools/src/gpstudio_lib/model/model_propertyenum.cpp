@@ -28,7 +28,7 @@ ModelPropertyEnum::~ModelPropertyEnum()
 {
 }
 
-QString ModelPropertyEnum::name() const
+const QString &ModelPropertyEnum::name() const
 {
     return _name;
 }
@@ -38,7 +38,7 @@ void ModelPropertyEnum::setName(const QString &name)
     _name = name;
 }
 
-QString ModelPropertyEnum::caption() const
+const QString &ModelPropertyEnum::caption() const
 {
     return _caption;
 }
@@ -48,7 +48,7 @@ void ModelPropertyEnum::setCaption(const QString &caption)
     _caption = caption;
 }
 
-QVariant ModelPropertyEnum::value() const
+const QVariant &ModelPropertyEnum::value() const
 {
     return _value;
 }
@@ -58,7 +58,7 @@ void ModelPropertyEnum::setValue(const QVariant &value)
     _value = value;
 }
 
-QString ModelPropertyEnum::description() const
+const QString &ModelPropertyEnum::description() const
 {
     return _description;
 }

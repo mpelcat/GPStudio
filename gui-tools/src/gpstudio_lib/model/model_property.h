@@ -35,39 +35,40 @@ class GPSTUDIO_LIB_EXPORT ModelProperty
 {
 public:
     ModelProperty();
+    ModelProperty(const ModelProperty &modelProperty);
     ~ModelProperty();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString caption() const;
+    const QString &caption() const;
     void setCaption(const QString &caption);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
-    QString value() const;
+    const QString &value() const;
     void setValue(const QString &value);
 
-    QString min() const;
+    const QString &min() const;
     void setMin(const QString &min);
 
-    QString max() const;
+    const QString &max() const;
     void setMax(const QString &max);
 
-    QString step() const;
+    const QString &step() const;
     void setStep(const QString &step);
 
-    QString assert() const;
+    const QString &assert() const;
     void setAssert(const QString &assert);
 
-    QString propertymap() const;
+    const QString &propertymap() const;
     void setPropertymap(const QString &propertymap);
 
-    QString onchange() const;
+    const QString &onchange() const;
     void setOnchange(const QString &onchange);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
     ModelBlock *parent() const;
