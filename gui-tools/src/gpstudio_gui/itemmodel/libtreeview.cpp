@@ -49,11 +49,11 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     QDrag *drag = new QDrag(this);
     QMimeData *mimeData = new QMimeData;
 
-    ProcessLib proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+    const ProcessLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
 
-    mimeData->setText(proc.name());
+    mimeData->setText(proc->name());
     drag->setMimeData(mimeData);
-    drag->setPixmap(proc.icon().pixmap(32,32));
+    drag->setPixmap(proc->icon().pixmap(32,32));
 
     drag->exec();
 }

@@ -31,6 +31,7 @@
 BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
 {
+    _editMode = false;
     _scene = new BlockScene();
     scale(0.75, 0.75);
 
@@ -57,21 +58,43 @@ BlockView::~BlockView()
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
 {
-    event->accept();
+    if(_editMode)
+    {
+        if(event->mimeData()->hasText())
+            event->accept();
+    }
 }
 
 void BlockView::dragMoveEvent(QDragMoveEvent *event)
 {
-    event->accept();
+    if(_editMode)
+    {
+        if(event->mimeData()->hasText())
+            event->accept();
+    }
 }
 
 void BlockView::dropEvent(QDropEvent *event)
 {
-    QString blockType = event->mimeData()->text();
-    BlockItem *proc = BlockItem::fromProcessLib(Lib::getLib().process(blockType));
-    proc->setPos(mapToScene(event->pos()));
-    proc->setName(blockType);
-    _scene->addItem(proc);
+    if(_editMode)
+    {
+        QString driver = event->mimeData()->text();
+
+        ModelProcess *modelProcess = NULL;
+        ProcessLib *processLib = Lib::getLib().process(driver);
+        if(processLib)
+        {
+            modelProcess = new ModelProcess(*processLib->modelProcess());
+            qDebug()<<modelProcess->driver();
+
+            modelProcess->setName(QString("%1_%2").arg(driver).arg(1));
+        }
+
+        BlockItem *proc = BlockItem::fromModelBlock(modelProcess);
+        proc->setPos(mapToScene(event->pos()));
+        proc->setName(driver);
+        _scene->addItem(proc);
+    }
 }
 
 void BlockView::mousePressEvent(QMouseEvent *event)
@@ -196,6 +219,16 @@ void BlockView::zoomOut()
 void BlockView::zoomFit()
 {
     fitInView(_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+}
+
+bool BlockView::editMode() const
+{
+    return _editMode;
+}
+
+void BlockView::setEditMode(bool editMode)
+{
+    _editMode = editMode;
 }
 
 void BlockView::setZoomLevel(int step)

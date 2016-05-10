@@ -152,6 +152,7 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
 
     // get process model for creating instance of ModelProcess
     processLib->_modelProcess = ModelProcess::fromNodeGenerated(domElement);
+    processLib->_modelProcess->setDriver(processLib->_name); // TODO fixe me
 
     return processLib;
 }

@@ -49,14 +49,14 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
     void setLib(const Lib *lib);
-    QList<ProcessLib> processList() const;
+    const QList<ProcessLib*> &processList() const;
 
 signals:
 
 public slots:
 
 private:
-    QList<ProcessLib> _processList;
+    QList<ProcessLib*> _processList;
 
 };
 

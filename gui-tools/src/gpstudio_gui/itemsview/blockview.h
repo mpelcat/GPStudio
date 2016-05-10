@@ -44,6 +44,9 @@ public:
     BlockScene *blockScene() const;
     void setBlockScene(BlockScene *scene);
 
+    bool editMode() const;
+    void setEditMode(bool editMode);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
@@ -72,6 +75,7 @@ signals:
 
 private:
     BlockScene *_scene;
+    bool _editMode;
 
     // connector system
     BlockItem *_startConnectItem;

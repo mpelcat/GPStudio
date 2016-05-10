@@ -45,6 +45,7 @@ MainWindow::MainWindow(QStringList args) :
 
     _project = new GPNodeProject();
 
+    ui->processView->setEditMode(true);
     ui->libTreeView->setLib(&Lib::getLib());
 
     if(args.size()>1)

@@ -55,7 +55,7 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
 {
     if(index.row()>=_processList.count()) return QVariant();
 
-    const ProcessLib &processLib = _processList[index.row()];
+    ProcessLib *processLib = _processList[index.row()];
 
     switch (role)
     {
@@ -63,18 +63,18 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
         switch (index.column())
         {
         case Name:
-            return QVariant(processLib.name());
+            return QVariant(processLib->name());
         case Description:
-            return QVariant(processLib.description());
+            return QVariant(processLib->description());
         default:
             return QVariant();
         }
     case Qt::DecorationRole:
         if(index.column()==Name)
-            return QVariant(processLib.icon());
+            return QVariant(processLib->icon());
         break;
     case Qt::ToolTipRole:
-        return QVariant(processLib.description());
+        return QVariant(processLib->description());
     case Qt::UserRole:
         return index.row();
     }
@@ -116,13 +116,13 @@ void LibItemModel::setLib(const Lib *lib)
     _processList.clear();
     foreach(ProcessLib *processLib, lib->processes())
     {
-        _processList.append(*processLib);
+        _processList.append(processLib);
     }
 
     emit layoutChanged();
 }
 
-QList<ProcessLib> LibItemModel::processList() const
+const QList<ProcessLib*> &LibItemModel::processList() const
 {
     return _processList;
 }
