@@ -94,7 +94,7 @@ void BlockScene::connectBlocks(const QList<ModelFlowConnect *> &connections)
         if(!fromflowItem) continue;
 
         BlockItem *toblockItem = block(flowConnect->toblock());
-        if(!fromflowItem) continue;
+        if(!toblockItem) continue;
 
         BlockPortItem *toflowItem = toblockItem->port(flowConnect->toflow());
         if(!toflowItem) continue;

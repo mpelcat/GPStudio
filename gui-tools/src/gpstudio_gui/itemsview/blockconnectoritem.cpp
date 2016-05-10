@@ -61,7 +61,7 @@ QRectF BlockConnectorItem::boundingRect() const
 {
     if(_portItemOut!=NULL && _portItemIn!=NULL)
     {
-        return QRectF(_portItemOut->scenePos(), _portItemIn->scenePos()).normalized();
+        return QRectF(_portItemOut->connectorPos(), _portItemIn->connectorPos()).normalized();
     }
     return QRectF();
 }
