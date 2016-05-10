@@ -69,7 +69,7 @@ private:
     Camera *_cam;
 
     // viewer
-    void setupViewers(int count);
+    void setupViewers();
     QMap<int, FlowViewerWidget *> _viewers;
 
     // docks

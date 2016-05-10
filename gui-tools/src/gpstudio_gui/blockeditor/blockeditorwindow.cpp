@@ -106,7 +106,7 @@ void BlockEditorWindow::createToolBarAndMenu()
     viewMenu->addSeparator();
 
     // ============= Help =============
-    QMenu *helpMenu = menuBar()->addMenu("&Help");
+    /*QMenu *helpMenu =*/ menuBar()->addMenu("&Help");
 
     _mainToolBar->addSeparator();
 }

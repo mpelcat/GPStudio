@@ -150,11 +150,13 @@ QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) con
             {
             case Property::Group:
             case Property::FlowType:
+            case Property::FlowDataType:
             case Property::BlockType:
                 return QVariant();
             case Property::Int:
             case Property::SInt:
             case Property::Bool:
+            case Property::String:
                 return property->value();
             case Property::Enum:
                 foreach (PropertyEnum *penum, property->enums()) enumsList << penum->name();

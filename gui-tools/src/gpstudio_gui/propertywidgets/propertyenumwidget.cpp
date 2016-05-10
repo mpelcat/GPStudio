@@ -78,6 +78,7 @@ void PropertyEnumWidget::setValue(QVariant value)
 
 void PropertyEnumWidget::wrapValue(int value)
 {
+    Q_UNUSED(value);
     //qDebug()<<"wrapValue"<<value<<_comboBox->currentText();
     emit(valueChanged(_comboBox->itemData(_comboBox->currentIndex())));
 }

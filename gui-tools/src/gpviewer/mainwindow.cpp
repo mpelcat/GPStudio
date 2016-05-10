@@ -154,7 +154,7 @@ void MainWindow::createToolBarAndMenu()
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(updateWindowsMenu()));
 
     // ============= Help =============
-    QMenu *helpMenu = ui->menuBar->addMenu("&Help");
+    /*QMenu *helpMenu =*/ ui->menuBar->addMenu("&Help");
 
     ui->mainToolBar->addSeparator();
 }
@@ -203,7 +203,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
 
     _cam = new Camera(fileName);
 
-    setupViewers(2);
+    setupViewers();
 
     connect(_cam, SIGNAL(registerDataChanged()), this, SLOT(setBiSpace()));
 
@@ -269,7 +269,7 @@ void MainWindow::showBlockDetails(const Block *block)
     _blockEditor->show();
 }
 
-void MainWindow::setupViewers(int count)
+void MainWindow::setupViewers()
 {
     ui->mdiArea->closeAllSubWindows();
     _viewers.clear();

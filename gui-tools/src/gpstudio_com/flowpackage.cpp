@@ -95,10 +95,10 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
     if(dataSize==8)
     {
         const char *ptr = _data.data();
-        const char *ptrEnd = _data.data()+_data.size();
+        //const char *ptrEnd = _data.data()+_data.size();
 
         int x, y;
-        int rwidth = width;
+        //int rwidth = width;
         int rheight = _data.size()/width;
 
         for(y=0; y<rheight; y++)

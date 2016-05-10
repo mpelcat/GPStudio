@@ -27,6 +27,7 @@ LibItemModel::LibItemModel(QObject *parent) :
 
 int LibItemModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return ColumnCount;
 }
 
