@@ -27,9 +27,14 @@
 
 IOLib::IOLib()
 {
+    _modelIO = NULL;
 }
 
-QString IOLib::name() const
+IOLib::~IOLib()
+{
+}
+
+const QString &IOLib::name() const
 {
     return _name;
 }
@@ -39,7 +44,7 @@ void IOLib::setName(const QString &name)
     _name = name;
 }
 
-QString IOLib::description() const
+const QString &IOLib::description() const
 {
     return _description;
 }
@@ -49,7 +54,7 @@ void IOLib::setDescription(const QString &description)
     _description = description;
 }
 
-QString IOLib::categ() const
+const QString &IOLib::categ() const
 {
     return _categ;
 }
@@ -59,7 +64,7 @@ void IOLib::setCateg(const QString &categ)
     _categ = categ;
 }
 
-QString IOLib::path() const
+const QString &IOLib::path() const
 {
     return _path;
 }
@@ -69,7 +74,7 @@ void IOLib::setPath(const QString &path)
     _path = path;
 }
 
-QString IOLib::configFile() const
+const QString &IOLib::configFile() const
 {
     return _configFile;
 }
@@ -79,7 +84,7 @@ void IOLib::setConfigFile(const QString &configFile)
     _configFile = configFile;
 }
 
-QString IOLib::draw() const
+const QString &IOLib::draw() const
 {
     return _draw;
 }
@@ -89,7 +94,7 @@ void IOLib::setDraw(const QString &draw)
     _draw = draw;
 }
 
-QIcon IOLib::icon() const
+const QIcon &IOLib::icon() const
 {
     return _icon;
 }
@@ -103,26 +108,29 @@ IOLib *IOLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    IOLib *ioLib = NULL;
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
     else
     {
-        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
+        if(!doc.setContent(&file))
+            qDebug()<<"Cannot open"<<file.fileName();
         else
-        {
-            return IOLib::fromDomElement(doc.documentElement());
-        }
+            ioLib = IOLib::fromDomElement(doc.documentElement());
         file.close();
     }
-    return NULL;
+    return ioLib;
 }
 
 IOLib *IOLib::fromDomElement(const QDomElement &domElement)
 {
-    IOLib *ioLib=new IOLib();
+    IOLib *ioLib = new IOLib();
     ioLib->setName(domElement.attribute("driver","no_name"));
     ioLib->setCateg(domElement.attribute("categ",""));
     ioLib->setDescription(domElement.attribute("description",""));
 
+    // icon
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
     if(nodesSvg.size()>0)
     {
@@ -141,4 +149,9 @@ IOLib *IOLib::fromDomElement(const QDomElement &domElement)
     ioLib->_icon.addPixmap(pixIcon);
 
     return ioLib;
+}
+
+ModelIO *IOLib::modelIO() const
+{
+    return _modelIO;
 }

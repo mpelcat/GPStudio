@@ -33,29 +33,29 @@ public:
     IOBoardLib();
     ~IOBoardLib();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString type() const;
+    const QString &type() const;
     void setType(const QString &type);
 
-    QString driver() const;
+    const QString &driver() const;
     void setDriver(const QString &driver);
 
     bool isOptional() const;
     void setOptional(bool isOptional);
 
-    QString group() const;
+    const QString &group() const;
     void setGroup(const QString &group);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
 public:
     static IOBoardLib *fromNodeGenerated(const QDomElement &domElement);
     static QList<IOBoardLib *> listFromNodeGenerated(const QDomElement &domElement);
 
-private:
+protected:
     QString _name;
     QString _type;
     QString _driver;

@@ -61,12 +61,12 @@ public:
 
     static inline Lib &getLib() {if(!_instance) _instance = new Lib(); return *_instance;}
 
-private:
+protected:
     void closeProcess();
     void closeIos();
     void closeBoards();
 
-private:
+protected:
     QList<ProcessLib*> _process;
     QMap<QString, ProcessLib*> _processMap;
 

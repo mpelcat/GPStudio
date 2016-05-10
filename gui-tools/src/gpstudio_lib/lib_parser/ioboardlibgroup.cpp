@@ -18,34 +18,45 @@
 **
 ****************************************************************************/
 
-#ifndef IOLIBGROUP_H
-#define IOLIBGROUP_H
+#include "ioboardlibgroup.h"
 
-#include "gpstudio_lib_common.h"
-
-#include <QString>
-#include <QStringList>
-#include <QList>
-
-class GPSTUDIO_LIB_EXPORT IOLibGroup
+IOBoardLibGroup::IOBoardLibGroup(const QString &name)
+    : _name(name)
 {
-public:
-    IOLibGroup(const QString &name=QString());
-    ~IOLibGroup();
+}
 
-    QString name() const;
-    void setName(const QString &name);
+IOBoardLibGroup::~IOBoardLibGroup()
+{
+}
 
-    bool isOptional() const;
-    void setOptional(bool isOptional);
+const QString &IOBoardLibGroup::name() const
+{
+    return _name;
+}
 
-    const QStringList &ios() const;
-    void addIos(const QString &name);
+void IOBoardLibGroup::setName(const QString &name)
+{
+    _name = name;
+}
 
-private:
-    QString _name;
-    QStringList _ios;
-    bool _optional;
-};
+bool IOBoardLibGroup::isOptional() const
+{
+    return _optional;
+}
 
-#endif // IOLIBGROUP_H
+void IOBoardLibGroup::setOptional(bool isOptional)
+{
+    _optional = isOptional;
+}
+
+const QStringList &IOBoardLibGroup::ios() const
+{
+    return _ios;
+}
+
+void IOBoardLibGroup::addIos(const QString &name)
+{
+    _ios.append(name);
+}
+
+

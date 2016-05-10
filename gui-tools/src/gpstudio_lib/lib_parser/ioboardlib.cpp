@@ -22,15 +22,13 @@
 
 IOBoardLib::IOBoardLib()
 {
-
 }
 
 IOBoardLib::~IOBoardLib()
 {
-
 }
 
-QString IOBoardLib::name() const
+const QString &IOBoardLib::name() const
 {
     return _name;
 }
@@ -40,7 +38,7 @@ void IOBoardLib::setName(const QString &name)
     _name = name;
 }
 
-QString IOBoardLib::type() const
+const QString &IOBoardLib::type() const
 {
     return _type;
 }
@@ -50,7 +48,7 @@ void IOBoardLib::setType(const QString &type)
     _type = type;
 }
 
-QString IOBoardLib::driver() const
+const QString &IOBoardLib::driver() const
 {
     return _driver;
 }
@@ -70,7 +68,7 @@ void IOBoardLib::setOptional(bool optional)
     _optional = optional;
 }
 
-QString IOBoardLib::group() const
+const QString &IOBoardLib::group() const
 {
     return _group;
 }
@@ -80,7 +78,7 @@ void IOBoardLib::setGroup(const QString &group)
     _group = group;
 }
 
-QString IOBoardLib::description() const
+const QString &IOBoardLib::description() const
 {
     return _description;
 }
@@ -92,7 +90,7 @@ void IOBoardLib::setDescription(const QString &description)
 
 IOBoardLib *IOBoardLib::fromNodeGenerated(const QDomElement &domElement)
 {
-    IOBoardLib *io=new IOBoardLib();
+    IOBoardLib *io = new IOBoardLib();
     io->setName(domElement.attribute("name","no_name"));
     io->setType(domElement.attribute("type",""));
     io->setDriver(domElement.attribute("driver",""));
@@ -114,7 +112,8 @@ QList<IOBoardLib *> IOBoardLib::listFromNodeGenerated(const QDomElement &domElem
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="io") list.append(IOBoardLib::fromNodeGenerated(e));
+            if(e.tagName()=="io")
+                list.append(IOBoardLib::fromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

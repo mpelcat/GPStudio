@@ -28,37 +28,42 @@
 #include <QList>
 #include <QIcon>
 
+#include "model/model_io.h"
+
 class GPSTUDIO_LIB_EXPORT IOLib
 {
 public:
     IOLib();
+    ~IOLib();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
-    QString description() const;
+    const QString &description() const;
     void setDescription(const QString &description);
 
-    QString categ() const;
+    const QString &categ() const;
     void setCateg(const QString &categ);
 
-    QString path() const;
+    const QString &path() const;
     void setPath(const QString &path);
 
-    QString configFile() const;
+    const QString &configFile() const;
     void setConfigFile(const QString &configFile);
 
-    QString draw() const;
+    const QString &draw() const;
     void setDraw(const QString &draw);
 
-    QIcon icon() const;
+    const QIcon &icon() const;
     void setIcon(const QIcon &icon);
+
+    ModelIO *modelIO() const;
 
 public:
     static IOLib *readFromFile(const QString &fileName);
     static IOLib *fromDomElement(const QDomElement &domElement);
 
-private:
+protected:
     QString _name;
     QString _categ;
     QString _path;
@@ -66,6 +71,8 @@ private:
     QString _description;
     QString _draw;
     QIcon _icon;
+
+    ModelIO *_modelIO;
 };
 
 #endif // IOLIB_H

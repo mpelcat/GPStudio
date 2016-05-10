@@ -50,7 +50,8 @@ void Lib::reloadProcess()
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.proc")))
         {
             ProcessLib *process = ProcessLib::readFromFile(ipInfo.absoluteFilePath());
-            if(process) addProcess(process);
+            if(process)
+                addProcess(process);
         }
     }
 }
@@ -68,10 +69,9 @@ const QList<ProcessLib *> &Lib::processes() const
 
 ProcessLib *Lib::process(const QString &name)
 {
-    if(_processMap.contains(name))
-    {
-        return _processMap[name];
-    }
+    QMap<QString, ProcessLib* >::const_iterator it = _processMap.find(name);
+    if(it != _processMap.end())
+        return it.value();
     return NULL;
 }
 
@@ -87,7 +87,8 @@ void Lib::reloadIos()
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.io")))
         {
             IOLib *io = IOLib::readFromFile(ipInfo.absoluteFilePath());
-            if(io) addIo(io);
+            if(io)
+                addIo(io);
         }
     }
 }
@@ -105,10 +106,9 @@ const QList<IOLib *> &Lib::ios() const
 
 IOLib *Lib::io(const QString &name)
 {
-    if(_iosMap.contains(name))
-    {
-        return _iosMap[name];
-    }
+    QMap<QString, IOLib* >::const_iterator it = _iosMap.find(name);
+    if(it != _iosMap.end())
+        return it.value();
     return NULL;
 }
 
@@ -125,10 +125,9 @@ const QList<BoardLib *> &Lib::boards() const
 
 BoardLib *Lib::board(const QString &name)
 {
-    if(_boardsMap.contains(name))
-    {
-        return _boardsMap[name];
-    }
+    QMap<QString, BoardLib* >::const_iterator it = _boardsMap.find(name);
+    if(it != _boardsMap.end())
+        return it.value();
     return NULL;
 }
 
@@ -144,7 +143,8 @@ void Lib::reloadBoards()
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.dev")))
         {
             BoardLib *board = BoardLib::readFromFile(ipInfo.absoluteFilePath());
-            addBoard(board);
+            if(board)
+                addBoard(board);
         }
     }
 }
@@ -158,18 +158,21 @@ void Lib::reloadLib()
 
 void Lib::closeProcess()
 {
-    for(int i=0; i<_process.size(); i++) delete _process[i];
+    for(int i=0; i<_process.size(); i++)
+        delete _process[i];
     _process.clear();
 }
 
 void Lib::closeIos()
 {
-    for(int i=0; i<_ios.size(); i++) delete _ios[i];
+    for(int i=0; i<_ios.size(); i++)
+        delete _ios[i];
     _ios.clear();
 }
 
 void Lib::closeBoards()
 {
-    for(int i=0; i<_boards.size(); i++) delete _boards[i];
+    for(int i=0; i<_boards.size(); i++)
+        delete _boards[i];
     _boards.clear();
 }

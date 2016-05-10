@@ -27,9 +27,14 @@
 
 ProcessLib::ProcessLib()
 {
+    _modelProcess = NULL;
 }
 
-QString ProcessLib::name() const
+ProcessLib::~ProcessLib()
+{
+}
+
+const QString &ProcessLib::name() const
 {
     return _name;
 }
@@ -39,7 +44,7 @@ void ProcessLib::setName(const QString &name)
     _name = name;
 }
 
-QString ProcessLib::description() const
+const QString &ProcessLib::description() const
 {
     return _description;
 }
@@ -49,7 +54,7 @@ void ProcessLib::setDescription(const QString &description)
     _description = description;
 }
 
-QString ProcessLib::categ() const
+const QString &ProcessLib::categ() const
 {
     return _categ;
 }
@@ -59,7 +64,7 @@ void ProcessLib::setCateg(const QString &categ)
     _categ = categ;
 }
 
-QString ProcessLib::path() const
+const QString &ProcessLib::path() const
 {
     return _path;
 }
@@ -69,7 +74,7 @@ void ProcessLib::setPath(const QString &path)
     _path = path;
 }
 
-QString ProcessLib::configFile() const
+const QString &ProcessLib::configFile() const
 {
     return _configFile;
 }
@@ -79,7 +84,7 @@ void ProcessLib::setConfigFile(const QString &configFile)
     _configFile = configFile;
 }
 
-QString ProcessLib::draw() const
+const QString &ProcessLib::draw() const
 {
     return _draw;
 }
@@ -89,7 +94,7 @@ void ProcessLib::setDraw(const QString &draw)
     _draw = draw;
 }
 
-QIcon ProcessLib::icon() const
+const QIcon &ProcessLib::icon() const
 {
     return _icon;
 }
@@ -103,26 +108,29 @@ ProcessLib *ProcessLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    ProcessLib *processLib = NULL;
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
     else
     {
-        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
+        if(!doc.setContent(&file))
+            qDebug()<<"Cannot open"<<file.fileName();
         else
-        {
-            return ProcessLib::fromDomElement(doc.documentElement());
-        }
+            processLib = ProcessLib::fromDomElement(doc.documentElement());
         file.close();
     }
-    return NULL;
+    return processLib;
 }
 
 ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
 {
-    ProcessLib *processLib=new ProcessLib();
+    ProcessLib *processLib = new ProcessLib();
     processLib->setName(domElement.attribute("name","no_name"));
     processLib->setCateg(domElement.attribute("categ",""));
     processLib->setDescription(domElement.attribute("description",""));
 
+    // icon
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
     if(nodesSvg.size()>0)
     {
@@ -141,4 +149,9 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
     processLib->_icon.addPixmap(pixIcon);
 
     return processLib;
+}
+
+ModelProcess *ProcessLib::modelProcess() const
+{
+    return _modelProcess;
 }

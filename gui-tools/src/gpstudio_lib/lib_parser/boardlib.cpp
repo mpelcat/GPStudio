@@ -26,7 +26,13 @@
 BoardLib::BoardLib()
 {
 }
-QString BoardLib::name() const
+
+BoardLib::~BoardLib()
+{
+
+}
+
+const QString &BoardLib::name() const
 {
     return _name;
 }
@@ -56,7 +62,7 @@ void BoardLib::addIO(IOBoardLib *io)
     }
     else
     {
-        _iosGroups.insert(io->group(), IOLibGroup(io->type()));
+        _iosGroups.insert(io->group(), IOBoardLibGroup(io->type()));
         _iosGroups[io->group()].addIos(io->name());
     }
 }
@@ -64,14 +70,14 @@ void BoardLib::addIO(IOBoardLib *io)
 void BoardLib::addIOs(const QList<IOBoardLib *> &ios)
 {
     foreach (IOBoardLib *io, ios)
-    {
         addIO(io);
-    }
 }
 
 IOBoardLib *BoardLib::io(const QString &name) const
 {
-    if(_iosMap.contains(name)) return _iosMap[name];
+    QMap<QString, IOBoardLib* >::const_iterator it = _iosMap.find(name);
+    if(it != _iosMap.end())
+        return it.value();
     return NULL;
 }
 
@@ -79,17 +85,19 @@ BoardLib *BoardLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) qDebug()<<"Cannot open"<<file.fileName();
+    BoardLib *boardLib = NULL;
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
     else
     {
-        if(!doc.setContent(&file)) qDebug()<<"Cannot open"<<file.fileName();
+        if(!doc.setContent(&file))
+            qDebug()<<"Cannot open"<<file.fileName();
         else
-        {
-            return BoardLib::fromNodeGenerated(doc.documentElement());
-        }
+            boardLib = BoardLib::fromNodeGenerated(doc.documentElement());
         file.close();
     }
-    return NULL;
+    return boardLib;
 }
 
 BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
@@ -103,7 +111,8 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="ios") board->addIOs(IOBoardLib::listFromNodeGenerated(e));
+            if(e.tagName()=="ios")
+                board->addIOs(IOBoardLib::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -111,7 +120,7 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
     return board;
 }
 
-const QMap<QString, IOLibGroup> &BoardLib::iosGroups() const
+const QMap<QString, IOBoardLibGroup> &BoardLib::iosGroups() const
 {
     return _iosGroups;
 }

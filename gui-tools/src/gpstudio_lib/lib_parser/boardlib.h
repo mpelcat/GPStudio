@@ -29,14 +29,15 @@
 #include <QMap>
 
 #include "ioboardlib.h"
-#include "iolibgroup.h"
+#include "ioboardlibgroup.h"
 
 class GPSTUDIO_LIB_EXPORT BoardLib
 {
 public:
     BoardLib();
+    ~BoardLib();
 
-    QString name() const;
+    const QString &name() const;
     void setName(const QString &name);
 
     QList<IOBoardLib *> &ios();
@@ -44,18 +45,18 @@ public:
     void addIO(IOBoardLib *io);
     void addIOs(const QList<IOBoardLib *> &ios);
     IOBoardLib *io(const QString &name) const;
-    const QMap<QString, IOLibGroup> &iosGroups() const;
+    const QMap<QString, IOBoardLibGroup> &iosGroups() const;
 
 public:
     static BoardLib *readFromFile(const QString &fileName);
     static BoardLib *fromNodeGenerated(const QDomElement &domElement);
 
-private:
+protected:
     QString _name;
 
     QList<IOBoardLib *> _ios;
     QMap<QString, IOBoardLib *> _iosMap;
-    QMap<QString, IOLibGroup> _iosGroups;
+    QMap<QString, IOBoardLibGroup> _iosGroups;
 };
 
 #endif // BOARDLIB_H
