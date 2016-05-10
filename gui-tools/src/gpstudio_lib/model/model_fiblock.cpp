@@ -89,7 +89,6 @@ ModelFIBlock *ModelFIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
 
     ModelBlock::fromNodeGenerated(domElement, fiBlock);
 
-
     QDomNode n = domElement.firstChild();
     while(!n.isNull())
     {
@@ -111,8 +110,6 @@ ModelFIBlock *ModelFIBlock::fromNodeDef(const QDomElement &domElement, ModelFIBl
 {
     if(fiBlock==NULL)
         fiBlock = new ModelFIBlock();
-
-    ModelBlock::fromNodeGenerated(domElement, fiBlock);
 
     fiBlock->setName("fi");
 

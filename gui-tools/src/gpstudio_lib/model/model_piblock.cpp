@@ -42,3 +42,13 @@ ModelPIBlock *ModelPIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
 
     return piBlock;
 }
+
+ModelPIBlock *ModelPIBlock::fromNodeDef(const QDomElement &domElement, ModelPIBlock *piBlock)
+{
+    if(piBlock==NULL)
+        piBlock = new ModelPIBlock();
+
+    piBlock->setName("pi");
+
+    return piBlock;
+}

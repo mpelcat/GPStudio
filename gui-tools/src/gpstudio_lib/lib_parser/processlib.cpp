@@ -32,6 +32,7 @@ ProcessLib::ProcessLib()
 
 ProcessLib::~ProcessLib()
 {
+    delete _modelProcess;
 }
 
 const QString &ProcessLib::name() const
@@ -130,7 +131,7 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
     processLib->setCateg(domElement.attribute("categ",""));
     processLib->setDescription(domElement.attribute("description",""));
 
-    // icon
+    // get svg part of file and save as string
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
     if(nodesSvg.size()>0)
     {
@@ -140,6 +141,7 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
         processLib->setDraw(svg);
     }
 
+    // render an 32px icon from svg
     QSvgRenderer render;
     QPixmap pixIcon(32,32);
     QPainter painter(&pixIcon);
@@ -147,6 +149,9 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
     render.render(&painter, QRectF(0,0,32,32));
     painter.end();
     processLib->_icon.addPixmap(pixIcon);
+
+    // get process model for creating instance of ModelProcess
+    processLib->_modelProcess = ModelProcess::fromNodeGenerated(domElement);
 
     return processLib;
 }

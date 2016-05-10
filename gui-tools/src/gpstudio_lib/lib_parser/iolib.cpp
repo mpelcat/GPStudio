@@ -32,6 +32,7 @@ IOLib::IOLib()
 
 IOLib::~IOLib()
 {
+    delete _modelIO;
 }
 
 const QString &IOLib::name() const
@@ -130,7 +131,7 @@ IOLib *IOLib::fromDomElement(const QDomElement &domElement)
     ioLib->setCateg(domElement.attribute("categ",""));
     ioLib->setDescription(domElement.attribute("description",""));
 
-    // icon
+    // get svg part of file and save as string
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
     if(nodesSvg.size()>0)
     {
@@ -140,6 +141,7 @@ IOLib *IOLib::fromDomElement(const QDomElement &domElement)
         ioLib->setDraw(svg);
     }
 
+    // render an 32px icon from svg
     QSvgRenderer render;
     QPixmap pixIcon(32,32);
     QPainter painter(&pixIcon);
@@ -147,6 +149,9 @@ IOLib *IOLib::fromDomElement(const QDomElement &domElement)
     render.render(&painter, QRectF(0,0,32,32));
     painter.end();
     ioLib->_icon.addPixmap(pixIcon);
+
+    // get process model for creating instance of ModelIO
+    ioLib->_modelIO = ModelIO::fromNodeGenerated(domElement);
 
     return ioLib;
 }

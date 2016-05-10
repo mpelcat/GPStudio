@@ -29,12 +29,14 @@ class GPSTUDIO_LIB_EXPORT ModelIO : public ModelBlock
 {
 public:
     ModelIO();
+    ModelIO(const ModelIO &modelIO);
     virtual ~ModelIO();
 
     QString type() const;
 
 public:
     static ModelIO *fromNodeGenerated(const QDomElement &domElement, ModelIO *io=NULL);
+    static ModelIO *fromNodeDef(const QDomElement &domElement, ModelIO *io=NULL);
 };
 
 #endif // MODEL_IO_H

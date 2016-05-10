@@ -20,9 +20,16 @@
 
 #include "model_io.h"
 
+#include "lib_parser/lib.h"
+
 #include <QDebug>
 
 ModelIO::ModelIO()
+{
+}
+
+ModelIO::ModelIO(const ModelIO &modelIO)
+    : ModelBlock(modelIO)
 {
 }
 
@@ -55,6 +62,22 @@ ModelIO *ModelIO::fromNodeGenerated(const QDomElement &domElement, ModelIO *io)
         }
         n = n.nextSibling();
     }
+
+    return io;
+}
+
+ModelIO *ModelIO::fromNodeDef(const QDomElement &domElement, ModelIO *io)
+{
+    QString driver = domElement.attribute("driver","");
+
+    IOLib *ioLib = Lib::getLib().io(driver);
+    if(ioLib)
+        io = new ModelIO(*ioLib->modelIO());
+
+    if(io==NULL)
+        io = new ModelIO();
+
+    ModelBlock::fromNodeDef(domElement, io);
 
     return io;
 }

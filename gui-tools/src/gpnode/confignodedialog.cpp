@@ -65,7 +65,7 @@ void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
     BoardLib *board = Lib::getLib().board(arg1);
     if(!board) return;
 
-    QMapIterator<QString, IOLibGroup> i(board->iosGroups());
+    QMapIterator<QString, IOBoardLibGroup> i(board->iosGroups());
     while (i.hasNext())
     {
         i.next();

@@ -38,10 +38,9 @@
 
 class GPSTUDIO_LIB_EXPORT ModelBlock
 {
-protected:
-    ModelBlock();
-
 public:
+    ModelBlock();
+    ModelBlock(const ModelBlock &modelBlock);
     virtual ~ModelBlock();
 
     const QString &name() const;
@@ -126,6 +125,7 @@ public:
 
 public:
     static ModelBlock *fromNodeGenerated(const QDomElement &domElement, ModelBlock *block=NULL);
+    static ModelBlock *fromNodeDef(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
     static QList<ModelBlock *> listFromNodeDef(const QDomElement &domElement);
 

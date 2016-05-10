@@ -37,6 +37,7 @@ public:
 
 public:
     static ModelPIBlock *fromNodeGenerated(const QDomElement &domElement, ModelPIBlock *piBlock=NULL);
+    static ModelPIBlock *fromNodeDef(const QDomElement &domElement, ModelPIBlock *piBlock=NULL);
 };
 
 #endif // MODEL_PIBLOCK_H

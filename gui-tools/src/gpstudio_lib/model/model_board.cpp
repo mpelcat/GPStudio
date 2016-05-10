@@ -47,11 +47,11 @@ ModelBoard *ModelBoard::fromNodeGenerated(const QDomElement &domElement)
 
 ModelBoard *ModelBoard::fromNodeDef(const QDomElement &domElement)
 {
-    ModelBoard *attribute = new ModelBoard();
+    ModelBoard *board = new ModelBoard();
 
-    attribute->setName(domElement.attribute("name","no_name"));
+    board->setName(domElement.attribute("name","no_name"));
 
-    return attribute;
+    return board;
 }
 
 QList<ModelBlock *> ModelBoard::listIosFromNodeDef(const QDomElement &domElement)

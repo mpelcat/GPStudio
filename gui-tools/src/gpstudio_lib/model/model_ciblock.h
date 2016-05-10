@@ -37,6 +37,7 @@ public:
 
 public:
     static ModelCIBlock *fromNodeGenerated(const QDomElement &domElement, ModelCIBlock *ciBlock=NULL);
+    static ModelCIBlock *fromNodeDef(const QDomElement &domElement, ModelCIBlock *ciBlock=NULL);
 };
 
 #endif // MODEL_CIBLOCK_H

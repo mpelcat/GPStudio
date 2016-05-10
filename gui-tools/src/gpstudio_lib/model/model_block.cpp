@@ -32,6 +32,28 @@
 
 ModelBlock::ModelBlock()
 {
+    _xPos = 0;
+    _yPos = 0;
+}
+
+ModelBlock::ModelBlock(const ModelBlock &modelBlock)
+{
+    for(int i=0; i<modelBlock._files.size(); i++)
+        _files.append(new ModelFile(*modelBlock._files[i]));
+    for(int i=0; i<modelBlock._params.size(); i++)
+        _params.append(new ModelParam(*modelBlock._params[i]));
+    for(int i=0; i<modelBlock._properties.size(); i++)
+        _properties.append(new ModelProperty(*modelBlock._properties[i]));
+    for(int i=0; i<modelBlock._flows.size(); i++)
+        _flows.append(new ModelFlow(*modelBlock._flows[i]));
+    for(int i=0; i<modelBlock._clocks.size(); i++)
+        _clocks.append(new ModelClock(*modelBlock._clocks[i]));
+    for(int i=0; i<modelBlock._ports.size(); i++)
+        _ports.append(new ModelPort(*modelBlock._ports[i]));
+    for(int i=0; i<modelBlock._pins.size(); i++)
+        _pins.append(new ModelPin(*modelBlock._pins[i]));
+    for(int i=0; i<modelBlock._resets.size(); i++)
+        _resets.append(new ModelReset(*modelBlock._resets[i]));
 }
 
 ModelBlock::~ModelBlock()
@@ -433,38 +455,55 @@ ModelReset *ModelBlock::getReset(const QString &name) const
     for(int i=0; i<this->resets().size(); i++)
     {
         ModelReset *reset = this->resets().at(i);
-        if(reset->name()==name) return reset;
+        if(reset->name()==name)
+            return reset;
     }
     return NULL;
 }
 
 ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBlock *block)
 {
-    if(block==NULL) block = new ModelBlock();
+    if(block==NULL)
+        block = new ModelBlock();
 
     bool ok=false;
 
     block->setName(domElement.attribute("name","no_name"));
 
-    block->setInLib((domElement.attribute("in_lib","")=="1" || domElement.attribute("in_lib","")=="true"));
+    block->setInLib((domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true"));
 
     block->setDriver(domElement.attribute("driver",""));
     block->setCateg(domElement.attribute("categ",""));
 
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
-    if(ok) block->setXPos(xPos); else block->setXPos(-1);
+    if(ok)
+        block->setXPos(xPos);
+    else
+        block->setXPos(-1);
 
     int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
-    if(ok) block->setYPos(yPos); else block->setYPos(-1);
+    if(ok)
+        block->setYPos(yPos);
+    else
+        block->setYPos(-1);
 
     int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
-    if(ok) block->setAddrAbs(addrAbs); else block->setAddrAbs(-1);
+    if(ok)
+        block->setAddrAbs(addrAbs);
+    else
+        block->setAddrAbs(-1);
 
     int sizeAddrRel = domElement.attribute("pi_size_addr_rel","0").toInt(&ok);
-    if(ok && sizeAddrRel>=0) block->setSizeAddrRel(sizeAddrRel); else block->setSizeAddrRel(0);
+    if(ok && sizeAddrRel>=0)
+        block->setSizeAddrRel(sizeAddrRel);
+    else
+        block->setSizeAddrRel(0);
 
     int masterCount = domElement.attribute("master_count","0").toInt(&ok);
-    if(ok && masterCount>=0) block->setMasterCount(masterCount); else block->setMasterCount(0);
+    if(ok && masterCount>=0)
+        block->setMasterCount(masterCount);
+    else
+        block->setMasterCount(0);
 
     block->setDescription(domElement.attribute("desc",""));
 
@@ -489,6 +528,31 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
         }
         n = n.nextSibling();
     }
+
+    return block;
+}
+
+ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *block)
+{
+    bool ok;
+
+    if(block==NULL)
+        block = new ModelBlock();
+
+    block->setName(domElement.attribute("name","no_name"));
+    block->setDriver(domElement.attribute("driver",""));
+
+    int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
+    if(ok)
+        block->setXPos(xPos);
+    else
+        block->setXPos(-1);
+
+    int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
+    if(ok)
+        block->setYPos(yPos);
+    else
+        block->setYPos(-1);
 
     return block;
 }
@@ -540,11 +604,11 @@ QList<ModelBlock *> ModelBlock::listFromNodeDef(const QDomElement &domElement)
         {
             ModelBlock *block=NULL;
             if(e.tagName()=="process")
-                block = ModelProcess::fromNodeGenerated(e);
+                block = ModelProcess::fromNodeDef(e);
             if(e.tagName()=="io")
-                block = ModelIO::fromNodeGenerated(e);
+                block = ModelIO::fromNodeDef(e);
             if(e.tagName()=="iocom")
-                block = ModelIOCom::fromNodeGenerated(e);
+                block = ModelIOCom::fromNodeDef(e);
             if(block==NULL)
                 block = ModelBlock::fromNodeGenerated(e);
 

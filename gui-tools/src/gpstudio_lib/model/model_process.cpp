@@ -20,7 +20,16 @@
 
 #include "model_process.h"
 
+#include "lib_parser/lib.h"
+
+#include <QDebug>
+
 ModelProcess::ModelProcess()
+{
+}
+
+ModelProcess::ModelProcess(const ModelProcess &modelProcess)
+    : ModelBlock(modelProcess)
 {
 }
 
@@ -39,6 +48,26 @@ ModelProcess *ModelProcess::fromNodeGenerated(const QDomElement &domElement, Mod
         process = new ModelProcess();
 
     ModelBlock::fromNodeGenerated(domElement, process);
+
+    return process;
+}
+
+ModelProcess *ModelProcess::fromNodeDef(const QDomElement &domElement, ModelProcess *process)
+{
+    bool inLib = (domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true");
+    QString driver = domElement.attribute("driver","");
+
+    if(inLib)
+    {
+        ProcessLib *processLib = Lib::getLib().process(driver);
+        if(processLib)
+            process = new ModelProcess(*processLib->modelProcess());
+    }
+
+    if(process==NULL)
+        process = new ModelProcess();
+        
+    ModelBlock::fromNodeDef(domElement, process);
 
     return process;
 }

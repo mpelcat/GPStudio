@@ -42,3 +42,13 @@ ModelCIBlock *ModelCIBlock::fromNodeGenerated(const QDomElement &domElement, Mod
 
     return ciBlock;
 }
+
+ModelCIBlock *ModelCIBlock::fromNodeDef(const QDomElement &domElement, ModelCIBlock *ciBlock)
+{
+    if(ciBlock==NULL)
+        ciBlock = new ModelCIBlock();
+
+    ciBlock->setName("pi");
+
+    return ciBlock;
+}

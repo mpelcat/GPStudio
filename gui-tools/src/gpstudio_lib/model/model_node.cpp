@@ -188,6 +188,10 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
                 node->_blocks.append(ModelBlock::listFromNodeDef(e));
             if(e.tagName()=="flow_interconnect")
                 node->_blocks.append(ModelFIBlock::fromNodeDef(e));
+            if(e.tagName()=="params_interconnect")
+                node->_blocks.append(ModelPIBlock::fromNodeDef(e));
+            if(e.tagName()=="clock_interconnect")
+                node->_blocks.append(ModelCIBlock::fromNodeDef(e));
         }
         n = n.nextSibling();
     }

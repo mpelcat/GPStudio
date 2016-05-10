@@ -44,7 +44,7 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/boardlib.h \
     lib_parser/iolib.h \
     lib_parser/ioboardlib.h \
-    lib_parser/iolibgroup.h \
+    lib_parser/ioboardlibgroup.h \
     camera/camera.h \
     camera/property.h \
     propertyclass.h \
@@ -93,7 +93,7 @@ SOURCES += \
     lib_parser/boardlib.cpp \
     lib_parser/iolib.cpp \
     lib_parser/ioboardlib.cpp \
-    lib_parser/iolibgroup.cpp \
+    lib_parser/ioboardlibgroup.cpp \
     camera/camera.cpp \
     camera/property.cpp \
     propertyclass.cpp \

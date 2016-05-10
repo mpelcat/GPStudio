@@ -31,12 +31,14 @@ class GPSTUDIO_LIB_EXPORT ModelProcess : public ModelBlock
 {
 public:
     ModelProcess();
+    ModelProcess(const ModelProcess &modelProcess);
     virtual ~ModelProcess();
 
     QString type() const;
 
 public:
     static ModelProcess *fromNodeGenerated(const QDomElement &domElement, ModelProcess *process=NULL);
+    static ModelProcess *fromNodeDef(const QDomElement &domElement, ModelProcess *process=NULL);
 };
 
 #endif // MODEL_PROCESS_H
