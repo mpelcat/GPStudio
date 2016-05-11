@@ -69,8 +69,10 @@ public slots:
     void zoomIn();
     void zoomOut();
     void zoomFit();
+
 signals:
     void blockSelected(const Block *block);
+    void blockMoved(ModelBlock *block, QPoint oldPos, QPoint newPos);
     void blockDetailsRequest(const Block *block);
 
 private:
@@ -80,6 +82,7 @@ private:
     // connector system
     BlockItem *_startConnectItem;
     QGraphicsLineItem *_lineConector;
+    QPointF _oldBlockPos;
 };
 
 #endif // BLOCKVIEW_H

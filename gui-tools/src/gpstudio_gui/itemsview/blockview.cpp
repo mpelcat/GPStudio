@@ -101,6 +101,10 @@ void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
+    BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
+    if(blockItem)
+        _oldBlockPos = blockItem->pos();
+
     /*if(event->button() == Qt::RightButton)
     {
         BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
@@ -129,6 +133,11 @@ void BlockView::mouseMoveEvent(QMouseEvent *event)
 void BlockView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
+
+    BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
+    if(blockItem)
+        if(blockItem->pos() != _oldBlockPos)
+            emit blockMoved(blockItem->modelBlock(), _oldBlockPos.toPoint(), blockItem->pos().toPoint());
 
     /*if(_startConnectItem)
     {

@@ -52,7 +52,8 @@ public:
     QString name() const;
     void setName(const QString &name);
 
-    const Block *block() const;
+    Block *block() const;
+    ModelBlock *modelBlock() const;
 
     void updateBlock();
 
@@ -66,10 +67,10 @@ public:
     static BlockItem *fromProcessLib(const ProcessLib *processLib, BlockItem *item = NULL);
 
     // model
-    static BlockItem *fromModelBlock(const ModelBlock *modelBlock, BlockItem *item = NULL);
+    static BlockItem *fromModelBlock(ModelBlock *modelBlock, BlockItem *item = NULL);
 
     // camera model
-    static BlockItem *fromBlock(const Block *block, BlockItem *item = NULL);
+    static BlockItem *fromBlock(Block *block, BlockItem *item = NULL);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -83,7 +84,8 @@ private:
 
     QMap<QString, BlockPortItem *> _ports;
 
-    const Block *_block;
+    Block *_block;
+    ModelBlock *_modelBlock;
 };
 
 #endif // BLOCKITEM_H

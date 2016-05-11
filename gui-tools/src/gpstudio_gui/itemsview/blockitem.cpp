@@ -109,7 +109,7 @@ void BlockItem::setName(const QString &name)
     _name = name;
 }
 
-const Block *BlockItem::block() const
+Block *BlockItem::block() const
 {
     return _block;
 }
@@ -178,6 +178,11 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     return QGraphicsItem::itemChange(change, value);
 }
 
+ModelBlock *BlockItem::modelBlock() const
+{
+    return _modelBlock;
+}
+
 BlockItem *BlockItem::fromIoLib(const IOLib *ioLib, BlockItem *item)
 {
     if(!ioLib)
@@ -208,7 +213,7 @@ BlockItem *BlockItem::fromProcessLib(const ProcessLib *processLib, BlockItem *it
     return item;
 }
 
-BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *item)
+BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
 {
     if(!modelBlock)
         return NULL;
@@ -231,12 +236,14 @@ BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *it
     item->setPos(modelBlock->pos());
     item->setName(modelBlock->name());
 
+    item->_modelBlock = modelBlock;
+
     item->updateBlock();
 
     return item;
 }
 
-BlockItem *BlockItem::fromBlock(const Block *block, BlockItem *item)
+BlockItem *BlockItem::fromBlock(Block *block, BlockItem *item)
 {
     if(!item)
         item = BlockItem::fromModelBlock(block->modelBlock());

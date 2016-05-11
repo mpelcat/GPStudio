@@ -47,13 +47,13 @@ public:
 
     Property *assocProperty() const;
 
-    const ModelBlock *modelBlock() const;
+    ModelBlock *modelBlock() const;
 
 protected:
     void setName(const QString &name);
 
 public:
-    static Block *fromModelBlock(const ModelBlock *modelBlock);
+    static Block *fromModelBlock(ModelBlock *modelBlock);
 
 protected:
     QString _name;
@@ -63,7 +63,7 @@ protected:
 
     Property *_assocProperty;
 
-    const ModelBlock *_modelBlock;
+    ModelBlock *_modelBlock;
 };
 
 #endif // BLOCK_H

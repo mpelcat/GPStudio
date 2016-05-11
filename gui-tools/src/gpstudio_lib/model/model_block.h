@@ -23,6 +23,7 @@
 
 #include "gpstudio_lib_common.h"
 
+#include <QObject>
 #include <QDomElement>
 #include <QString>
 #include <QList>
@@ -37,8 +38,9 @@
 #include "model_pin.h"
 #include "model_reset.h"
 
-class GPSTUDIO_LIB_EXPORT ModelBlock
+class GPSTUDIO_LIB_EXPORT ModelBlock : public QObject
 {
+    Q_OBJECT
 public:
     ModelBlock();
     ModelBlock(const ModelBlock &modelBlock);
@@ -65,7 +67,6 @@ public:
     quint8 masterCount() const;
     void setMasterCount(const quint8 &value);
 
-    QPoint &pos();
     const QPoint &pos() const;
     void setPos(const QPoint &pos);
 
@@ -127,6 +128,9 @@ public:
     static ModelBlock *fromNodeDef(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
     static QList<ModelBlock *> listFromNodeDef(const QDomElement &domElement);
+
+signals:
+    void positionChanged(QPoint oldPosition);
 
 protected:
     QString _name;

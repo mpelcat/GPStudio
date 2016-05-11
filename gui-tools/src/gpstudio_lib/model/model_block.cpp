@@ -36,6 +36,7 @@ ModelBlock::ModelBlock()
 }
 
 ModelBlock::ModelBlock(const ModelBlock &modelBlock)
+    : QObject()
 {
     _name = modelBlock._name;
     _inLib = modelBlock._inLib;
@@ -155,11 +156,6 @@ void ModelBlock::setMasterCount(const quint8 &value)
     _masterCount = value;
 }
 
-QPoint &ModelBlock::pos()
-{
-    return _pos;
-}
-
 const QPoint &ModelBlock::pos() const
 {
     return _pos;
@@ -167,7 +163,12 @@ const QPoint &ModelBlock::pos() const
 
 void ModelBlock::setPos(const QPoint &pos)
 {
-    _pos = pos;
+    QPoint oldPos = _pos;
+    if(oldPos != pos)
+    {
+        _pos = pos;
+        emit positionChanged(oldPos);
+    }
 }
 
 const QString &ModelBlock::description() const
@@ -479,17 +480,19 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
     block->setDriver(domElement.attribute("driver",""));
     block->setCateg(domElement.attribute("categ",""));
 
+    QPoint pos;
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
     if(ok)
-        block->pos().setX(xPos);
+        pos.setX(xPos);
     else
-        block->pos().setX(-1);
+        pos.setX(-1);
 
     int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
     if(ok)
-        block->pos().setY(yPos);
+        pos.setY(yPos);
     else
-        block->pos().setY(-1);
+        pos.setY(-1);
+    block->setPos(pos);
 
     int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
     if(ok)
@@ -546,17 +549,19 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
     block->setName(domElement.attribute("name","no_name"));
     block->setDriver(domElement.attribute("driver",""));
 
+    QPoint pos;
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
     if(ok)
-        block->pos().setX(xPos);
+        pos.setX(xPos);
     else
-        block->pos().setX(-1);
+        pos.setX(-1);
 
     int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
     if(ok)
-        block->pos().setY(yPos);
+        pos.setY(yPos);
     else
-        block->pos().setY(-1);
+        pos.setY(-1);
+    block->setPos(pos);
 
     return block;
 }

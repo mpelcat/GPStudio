@@ -40,7 +40,7 @@ Property *Block::assocProperty() const
     return _assocProperty;
 }
 
-Block *Block::fromModelBlock(const ModelBlock *modelBlock)
+Block *Block::fromModelBlock(ModelBlock *modelBlock)
 {
     Block *block = new Block();
     block->_modelBlock = modelBlock;
@@ -68,7 +68,7 @@ Block *Block::fromModelBlock(const ModelBlock *modelBlock)
     return block;
 }
 
-const ModelBlock *Block::modelBlock() const
+ModelBlock *Block::modelBlock() const
 {
     return _modelBlock;
 }
