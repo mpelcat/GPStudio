@@ -32,8 +32,7 @@
 
 ModelBlock::ModelBlock()
 {
-    _xPos = 0;
-    _yPos = 0;
+    _pos = QPoint(0, 0);
 }
 
 ModelBlock::ModelBlock(const ModelBlock &modelBlock)
@@ -45,8 +44,7 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
     _addrAbs = modelBlock._addrAbs;
     _sizeAddrRel = modelBlock._sizeAddrRel;
     _masterCount = modelBlock._masterCount;
-    _xPos = modelBlock._xPos;
-    _yPos = modelBlock._yPos;
+    _pos = modelBlock._pos;
     _description = modelBlock._description;
 
     for(int i=0; i<modelBlock._files.size(); i++)
@@ -157,24 +155,19 @@ void ModelBlock::setMasterCount(const quint8 &value)
     _masterCount = value;
 }
 
-int ModelBlock::xPos() const
+QPoint &ModelBlock::pos()
 {
-    return _xPos;
+    return _pos;
 }
 
-void ModelBlock::setXPos(int value)
+const QPoint &ModelBlock::pos() const
 {
-    _xPos = value;
+    return _pos;
 }
 
-int ModelBlock::yPos() const
+void ModelBlock::setPos(const QPoint &pos)
 {
-    return _yPos;
-}
-
-void ModelBlock::setYPos(int value)
-{
-    _yPos = value;
+    _pos = pos;
 }
 
 const QString &ModelBlock::description() const
@@ -488,15 +481,15 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
 
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
     if(ok)
-        block->setXPos(xPos);
+        block->pos().setX(xPos);
     else
-        block->setXPos(-1);
+        block->pos().setX(-1);
 
     int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
     if(ok)
-        block->setYPos(yPos);
+        block->pos().setY(yPos);
     else
-        block->setYPos(-1);
+        block->pos().setY(-1);
 
     int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
     if(ok)
@@ -555,15 +548,15 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
 
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
     if(ok)
-        block->setXPos(xPos);
+        block->pos().setX(xPos);
     else
-        block->setXPos(-1);
+        block->pos().setX(-1);
 
     int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
     if(ok)
-        block->setYPos(yPos);
+        block->pos().setY(yPos);
     else
-        block->setYPos(-1);
+        block->pos().setY(-1);
 
     return block;
 }

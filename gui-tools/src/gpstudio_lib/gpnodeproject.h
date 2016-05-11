@@ -23,7 +23,7 @@
 
 #include "gpstudio_lib_common.h"
 
-#include "lib_parser/lib.h"
+#include "model/model_node.h"
 
 class GPSTUDIO_LIB_EXPORT GPNodeProject
 {
@@ -36,6 +36,8 @@ public:
 
 private:
     QString _name;
+
+    ModelNode *_node;
 };
 
 #endif // GPNODEPROJECT_H

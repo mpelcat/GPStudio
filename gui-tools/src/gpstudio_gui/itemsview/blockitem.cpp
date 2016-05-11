@@ -228,7 +228,7 @@ BlockItem *BlockItem::fromModelBlock(const ModelBlock *modelBlock, BlockItem *it
     foreach (ModelFlow *flow, modelBlock->flows())
         item->addPort(BlockPortItem::fromModelFlow(flow));
 
-    item->setPos(modelBlock->xPos(), -modelBlock->yPos());
+    item->setPos(modelBlock->pos());
     item->setName(modelBlock->name());
 
     item->updateBlock();

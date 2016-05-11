@@ -21,6 +21,8 @@
 #include "confignodedialog.h"
 #include "ui_confignodedialog.h"
 
+#include "lib_parser/lib.h"
+
 #include <QDebug>
 
 #include <QCheckBox>

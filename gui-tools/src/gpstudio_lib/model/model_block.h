@@ -26,6 +26,7 @@
 #include <QDomElement>
 #include <QString>
 #include <QList>
+#include <QPoint>
 
 #include "model_file.h"
 #include "model_param.h"
@@ -64,11 +65,9 @@ public:
     quint8 masterCount() const;
     void setMasterCount(const quint8 &value);
 
-    int xPos() const;
-    void setXPos(int value);
-
-    int yPos() const;
-    void setYPos(int value);
+    QPoint &pos();
+    const QPoint &pos() const;
+    void setPos(const QPoint &pos);
 
     const QString &description() const;
     void setDescription(const QString &description);
@@ -137,8 +136,7 @@ protected:
     qint32 _addrAbs;
     quint8 _sizeAddrRel;
     quint8 _masterCount;
-    int _xPos;
-    int _yPos;
+    QPoint _pos;
     QString _description;
 
     QList<ModelFile *> _files;
