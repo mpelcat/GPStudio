@@ -10,7 +10,7 @@
 		<file name="mt9.vhd" path="hdl/mt9.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="mt9_config_slave.vhd" path="hdl/mt9_config_slave.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="mt9_config_i2c.vhd" path="hdl/mt9_config_i2c.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="MT9 datasheet" path="doc/MT9M031_DS_Rev. A 1009 EN.pdf" type="doc" group="doc" desc=""/>
+		<file name="MT9M031_datasheet.pdf" path="doc/MT9M031_DS_Rev. A 1009 EN.pdf" type="doc" group="doc" desc=""/>
 	</files>
 	<flows>
 		<flow name="out" type="out" size="8" desc="image flow from MT9 image sensor">
