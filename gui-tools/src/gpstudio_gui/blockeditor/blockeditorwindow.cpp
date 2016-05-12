@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QStatusBar>
 
 BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
@@ -56,7 +57,6 @@ void BlockEditorWindow::setupWidgets()
     QWidget *centralwidget = new QWidget(this);
 
     QLayout *layout = new QVBoxLayout(centralwidget);
-    layout->setContentsMargins(0,0,0,0);
 
     QSplitter *splitter = new QSplitter(centralwidget);
     splitter->setOrientation(Qt::Horizontal);
@@ -73,11 +73,16 @@ void BlockEditorWindow::setupWidgets()
     centralwidget->setLayout(layout);
     setCentralWidget(centralwidget);
 
+    splitter->setStretchFactor(0, QSizePolicy::Fixed);
+    splitter->setStretchFactor(1, QSizePolicy::Maximum);
+
     QMenuBar *menubar = new QMenuBar(this);
     setMenuBar(menubar);
 
-    splitter->setStretchFactor(0, QSizePolicy::Fixed);
-    splitter->setStretchFactor(1, QSizePolicy::Maximum);
+    QStatusBar *statusBar = new QStatusBar(this);
+    setStatusBar(statusBar);
+
+    setGeometry(100, 100, 800, 600);
 }
 
 void BlockEditorWindow::createToolBarAndMenu()

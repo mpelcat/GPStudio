@@ -37,14 +37,6 @@ equals(DISTRIB, 1) {
 QMAKE_CFLAGS_RELEASE = -O2
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    confignodedialog.cpp
-
-HEADERS  += mainwindow.h \
-    confignodedialog.h
-
-FORMS    += mainwindow.ui \
-    confignodedialog.ui
 
 # relative path for shared library in the same directory
 LIBS += -Wl,-R.

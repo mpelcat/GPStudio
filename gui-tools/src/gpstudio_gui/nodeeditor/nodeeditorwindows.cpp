@@ -18,118 +18,156 @@
 **
 ****************************************************************************/
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "nodeeditorwindows.h"
 
 #include "model/model_node.h"
 #include "model/model_parambitfield.h"
 
 #include <QDebug>
-#include <QRegExp>
+#include <QFile>
+
+#include <QStatusBar>
+#include <QToolBar>
+#include <QMenuBar>
 #include <QAction>
+#include <QDockWidget>
+#include <QLayout>
 
 #include "propertywidgets/propertywidgets.h"
 
 #include "confignodedialog.h"
 
-#include "itemsview/blockitem.h"
-#include "itemsview/blockportitem.h"
-#include "itemsview/blockconnectoritem.h"
-
 #include "undostack/blockcommands.h"
 
-MainWindow::MainWindow(QStringList args) :
-    QMainWindow(0),
-    ui(new Ui::MainWindow)
+NodeEditorWindows::NodeEditorWindows(QWidget *parent, ModelNode *node) :
+    QMainWindow(0)
 {
-    ui->setupUi(this);
+    setupWidgets();
+    createDocks();
     createToolBarAndMenu();
 
+    _node = node;
+
     _project = new GPNodeProject(this);
+    _blocksView->loadFromNode(_node);
 
-    ui->processView->setEditMode(true);
-    ui->libTreeView->setLib(&Lib::getLib());
-
-    if(args.size()>1)
-    {
-        if(QFile::exists(args[1]))
-        {
-            _node = ModelNode::readFromFile(args[1]);
-             ui->processView->loadFromNode(_node);
-        }
-    }
-
-    connect(ui->processView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
+    connect(_blocksView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
             this, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
 }
 
-MainWindow::~MainWindow()
+NodeEditorWindows::~NodeEditorWindows()
 {
     delete _project;
-    delete ui;
 }
 
-void MainWindow::createToolBarAndMenu()
+void NodeEditorWindows::setupWidgets()
 {
-    // ============= Edit =============
-    QMenu *nodeMenu = ui->menuBar->addMenu("&Node");
+    QWidget *centralwidget = new QWidget(this);
+
+    QLayout *layout = new QVBoxLayout(centralwidget);
+
+    _blocksView = new BlockView(centralwidget);
+    _blocksView->setEditMode(true);
+    layout->addWidget(_blocksView);
+
+    centralwidget->setLayout(layout);
+    setCentralWidget(centralwidget);
+
+    QMenuBar *menubar = new QMenuBar(this);
+    setMenuBar(menubar);
+
+    QStatusBar *statusBar = new QStatusBar(this);
+    setStatusBar(statusBar);
+
+    setGeometry(100, 100, 800, 600);
+}
+
+void NodeEditorWindows::createDocks()
+{
+    // settings of mdi area
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
+
+    // lib treeview dock
+    _libTreeView = new LibTreeView();
+    _libTreeView->setLib(&Lib::getLib());
+
+    _libTreeViewDock = new QDockWidget("LibExplorer", this);
+    QWidget *libTreeViewContent = new QWidget(_libTreeViewDock);
+    QLayout *libTreeViewLayout = new QVBoxLayout();
+    _libTreeView = new LibTreeView();
+    _libTreeView->setLib(&Lib::getLib());
+    libTreeViewLayout->addWidget(_libTreeView);
+    libTreeViewContent->setLayout(libTreeViewLayout);
+    _libTreeViewDock->setWidget(libTreeViewContent);
+    addDockWidget(Qt::LeftDockWidgetArea, _libTreeViewDock);
+}
+
+void NodeEditorWindows::createToolBarAndMenu()
+{
+    _mainToolBar = new QToolBar(this);
+    addToolBar(_mainToolBar);
+
+    // ============= Node =============
+    QMenu *nodeMenu = menuBar()->addMenu("&Node");
 
     QAction *newDocAction = new QAction("&New",this);
     newDocAction->setIcon(QIcon(":/icons/img/new.png"));
     newDocAction->setShortcut(QKeySequence::New);
-    ui->mainToolBar->addAction(newDocAction);
+    _mainToolBar->addAction(newDocAction);
     nodeMenu->addAction(newDocAction);
 
     QAction *openDocAction = new QAction("&Open",this);
     openDocAction->setIcon(QIcon(":/icons/img/open.png"));
     openDocAction->setShortcut(QKeySequence::Open);
-    ui->mainToolBar->addAction(openDocAction);
+    _mainToolBar->addAction(openDocAction);
     nodeMenu->addAction(openDocAction);
 
     QAction *saveDocAction = new QAction("&Save",this);
     saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAction->setShortcut(QKeySequence::Save);
-    ui->mainToolBar->addAction(saveDocAction);
+    _mainToolBar->addAction(saveDocAction);
     nodeMenu->addAction(saveDocAction);
 
     nodeMenu->addSeparator();
-    ui->mainToolBar->addSeparator();
+    _mainToolBar->addSeparator();
 
     QAction *configNode = new QAction("&Configure node",this);
     configNode->setIcon(QIcon(":/icons/img/settings.png"));
     saveDocAction->setShortcut(QKeySequence::Preferences);
     nodeMenu->addAction(configNode);
-    ui->mainToolBar->addAction(configNode);
+    _mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
 
     // ============= Edit =============
-    QMenu *editMenu = ui->menuBar->addMenu("&Edit");
-    ui->mainToolBar->addSeparator();
+    QMenu *editMenu = menuBar()->addMenu("&Edit");
+    _mainToolBar->addSeparator();
 
     QAction *undoAction = _undoStack.createUndoAction(this, "&Undo");
     undoAction->setIcon(QIcon(":/icons/img/edit-undo.png"));
     undoAction->setShortcut(QKeySequence::Undo);
-    ui->mainToolBar->addAction(undoAction);
+    _mainToolBar->addAction(undoAction);
     editMenu->addAction(undoAction);
 
     QAction *redoAction = _undoStack.createRedoAction(this, "&Redo");
     redoAction->setIcon(QIcon(":/icons/img/edit-redo.png"));
     redoAction->setShortcut(QKeySequence::Redo);
-    ui->mainToolBar->addAction(redoAction);
+    _mainToolBar->addAction(redoAction);
     editMenu->addAction(redoAction);
 
-    /*QMenu *viewMenu = */ui->menuBar->addMenu("&View");
-    /*QMenu *helpMenu = */ui->menuBar->addMenu("&Help");
+    /*QMenu *viewMenu = */menuBar()->addMenu("&View");
+    /*QMenu *helpMenu = */menuBar()->addMenu("&Help");
 }
 
-void MainWindow::configNode()
+void NodeEditorWindows::configNode()
 {
     ConfigNodeDialog configNodeDialog(this);
     configNodeDialog.setProject(_project);
     configNodeDialog.exec();
 }
 
-void MainWindow::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
+void NodeEditorWindows::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
 {
     _undoStack.push(new BlockCmdMove(block, oldPos, newPos));
 }

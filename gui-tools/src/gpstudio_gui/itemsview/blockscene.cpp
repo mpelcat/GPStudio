@@ -37,6 +37,9 @@ BlockScene::~BlockScene()
 
 bool BlockScene::loadFromNode(const ModelNode *node)
 {
+    if(!node)
+        return false;
+
     clear();
 
     foreach (ModelBlock *block, node->blocks())

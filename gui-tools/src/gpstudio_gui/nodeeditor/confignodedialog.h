@@ -21,15 +21,15 @@
 #ifndef CONFIGNODEDIALOG_H
 #define CONFIGNODEDIALOG_H
 
+#include "gpstudio_gui_common.h"
+
 #include <QDialog>
+#include <QComboBox>
+#include <QLayout>
 
 #include "gpnodeproject.h"
 
-namespace Ui {
-class ConfigNodeDialog;
-}
-
-class ConfigNodeDialog : public QDialog
+class GPSTUDIO_GUI_EXPORT ConfigNodeDialog : public QDialog
 {
     Q_OBJECT
 
@@ -41,12 +41,14 @@ public:
     void setProject(GPNodeProject *project);
 
 private slots:
-    void on_boardComboBox_currentIndexChanged(const QString &arg1);
+    void selectBoard(const QString &boardName);
 
 private:
-    Ui::ConfigNodeDialog *ui;
-
+    void setupWidgets();
     GPNodeProject *_project;
+
+    QComboBox *_boardComboBox;
+    QVBoxLayout *_iosLayout;
 };
 
 #endif // CONFIGNODEDIALOG_H

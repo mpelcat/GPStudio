@@ -19,7 +19,6 @@
 ****************************************************************************/
 
 #include "confignodedialog.h"
-#include "ui_confignodedialog.h"
 
 #include "lib_parser/lib.h"
 
@@ -31,15 +30,13 @@
 #include <QLayout>
 
 ConfigNodeDialog::ConfigNodeDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::ConfigNodeDialog)
+    QDialog(parent)
 {
-    ui->setupUi(this);
+    setupWidgets();
 }
 
 ConfigNodeDialog::~ConfigNodeDialog()
 {
-    delete ui;
 }
 
 GPNodeProject *ConfigNodeDialog::project() const
@@ -53,18 +50,18 @@ void ConfigNodeDialog::setProject(GPNodeProject *project)
 
     foreach (BoardLib *board, Lib::getLib().boards())
     {
-        ui->boardComboBox->addItem(board->name());
+        _boardComboBox->addItem(board->name());
     }
 }
 
-void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
+void ConfigNodeDialog::selectBoard(const QString &boardName)
 {
-    while(!ui->iosLayout->isEmpty())
+    while(!_iosLayout->isEmpty())
     {
-        delete ui->iosLayout->itemAt(0)->widget();
+        delete _iosLayout->itemAt(0)->widget();
     }
 
-    BoardLib *board = Lib::getLib().board(arg1);
+    BoardLib *board = Lib::getLib().board(boardName);
     if(!board) return;
 
     QMapIterator<QString, IOBoardLibGroup> i(board->iosGroups());
@@ -72,7 +69,7 @@ void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
     {
         i.next();
         QGroupBox *group = new QGroupBox(i.value().name());
-        ui->iosLayout->addWidget(group);
+        _iosLayout->addWidget(group);
         QLayout *layout = new QVBoxLayout();
         layout->setContentsMargins(0,0,0,0);
         group->setLayout(layout);
@@ -94,4 +91,20 @@ void ConfigNodeDialog::on_boardComboBox_currentIndexChanged(const QString &arg1)
             }
         }
     }
+}
+
+void ConfigNodeDialog::setupWidgets()
+{
+    QLayout *layout = new QVBoxLayout();
+
+    _boardComboBox = new QComboBox();
+    connect(_boardComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(selectBoard(QString)));
+    layout->addWidget(_boardComboBox);
+
+    _iosLayout = new QVBoxLayout();
+    layout->addItem(_iosLayout);
+
+    setLayout(layout);
+
+    setGeometry(100, 100, 300, 400);
 }

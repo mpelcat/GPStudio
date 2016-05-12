@@ -74,6 +74,8 @@ SOURCES += \
     blockeditor/syntaxhighlight/xmlsyntax.cpp \
     blockeditor/syntaxhighlight/verilogsyntax.cpp \
     blockeditor/syntaxhighlight/tclsyntax.cpp \
+    nodeeditor/nodeeditorwindows.cpp \
+    nodeeditor/confignodedialog.cpp \
     viewer/docviewer.cpp \
     viewer/pdfviewer.cpp \
     gpnodeproject.cpp \
@@ -118,6 +120,8 @@ HEADERS  += \
     blockeditor/syntaxhighlight/xmlsyntax.h \
     blockeditor/syntaxhighlight/verilogsyntax.h \
     blockeditor/syntaxhighlight/tclsyntax.h \
+    nodeeditor/nodeeditorwindows.h \
+    nodeeditor/confignodedialog.h \
     viewer/docviewer.h \
     viewer/pdfviewer.h \
     gpnodeproject.h \

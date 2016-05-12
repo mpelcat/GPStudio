@@ -18,14 +18,28 @@
 **
 ****************************************************************************/
 
-#include "mainwindow.h"
+#include "nodeeditor/nodeeditorwindows.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w(a.arguments());
-    w.show();
+    NodeEditorWindows *nodeEditorWindows = NULL;
+
+    if(a.arguments().size()>1)
+    {
+        QString nodeFileName = a.arguments()[1];
+        if(QFile::exists(nodeFileName))
+        {
+            ModelNode *node = ModelNode::readFromFile(nodeFileName);
+            nodeEditorWindows = new NodeEditorWindows(NULL, node);
+        }
+    }
+
+    if(!nodeEditorWindows)
+        nodeEditorWindows = new NodeEditorWindows(NULL);
+
+    nodeEditorWindows->show();
 
     return a.exec();
 }

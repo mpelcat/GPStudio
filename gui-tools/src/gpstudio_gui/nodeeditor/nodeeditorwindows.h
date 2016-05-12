@@ -18,29 +18,28 @@
 **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef NODEEDITORWINDOW_H
+#define NODEEDITORWINDOW_H
+
+#include "gpstudio_gui_common.h"
 
 #include <QMainWindow>
 
 #include "gpnodeproject.h"
 #include "model/model_node.h"
 
+#include "itemsview/blockview.h"
+#include "itemmodel/libtreeview.h"
+
 #include <QUndoStack>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class GPSTUDIO_GUI_EXPORT NodeEditorWindows : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QStringList args=QStringList());
-    ~MainWindow();
-
-    void createToolBarAndMenu();
+    explicit NodeEditorWindows(QWidget *parent=NULL, ModelNode *node=NULL);
+    ~NodeEditorWindows();
 
 private slots:
     void configNode();
@@ -48,12 +47,21 @@ private slots:
     void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
 
 private:
-    Ui::MainWindow *ui;
-
     GPNodeProject *_project;
     ModelNode *_node;
+
+    void setupWidgets();
+    BlockView *_blocksView;
+
+    // docks
+    void createDocks();
+    QDockWidget *_libTreeViewDock;
+    LibTreeView *_libTreeView;
+
+    void createToolBarAndMenu();
+    QToolBar *_mainToolBar;
 
     QUndoStack _undoStack;
 };
 
-#endif // MAINWINDOW_H
+#endif // NODEEDITORWINDOW_H
