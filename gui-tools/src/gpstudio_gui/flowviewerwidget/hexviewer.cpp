@@ -23,7 +23,7 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
-#include "flowviewerinterface.h"
+#include "camera/flowviewerinterface.h"
 
 HexViewer::HexViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)

@@ -27,7 +27,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 
-#include "flowviewerinterface.h"
+#include "camera/flowviewerinterface.h"
 
 LayerViewer::LayerViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)

@@ -28,7 +28,7 @@
 
 #include "camera/property.h"
 
-#include "flowviewerinterface.h"
+#include "camera/flowviewerinterface.h"
 
 class GPSTUDIO_GUI_EXPORT AbstractViewer : public QWidget
 {

@@ -25,7 +25,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 
-#include "flowviewerinterface.h"
+#include "camera/flowviewerinterface.h"
 
 #include "scriptengine/scriptengine.h"
 

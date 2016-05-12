@@ -45,17 +45,11 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/iolib.h \
     lib_parser/ioboardlib.h \
     lib_parser/ioboardlibgroup.h \
-    camera/camera.h \
-    camera/property.h \
     scriptengine/propertyclass.h \
     scriptengine/scriptengine.h \
-    camera/propertyenum.h \
     datawrapper/datawrapper.h \
     datawrapper/gradiantwrapper.h \
     datawrapper/harriswrapper.h \
-    camera/flowmanager.h \
-    camera/flowconnection.h \
-    flowviewerinterface.h \
     model/model_attribute.h \
     model/model_block.h \
     model/model_board.h \
@@ -80,11 +74,17 @@ HEADERS += gpstudio_lib_common.h \
     model/model_treeitem.h \
     model/model_property.h \
     model/model_propertyenum.h \
+    camera/camera.h \
+    camera/block.h \
+    camera/property.h \
+    camera/propertyenum.h \
+    camera/flow.h \
+    camera/flowmanager.h \
+    camera/flowconnection.h \
+    camera/flowviewerinterface.h \
     camera/registermanager.h \
     camera/registerbitfield.h \
-    camera/register.h \
-    camera/flow.h \
-    camera/block.h
+    camera/register.h
 
 SOURCES += \
     lib_parser/processlib.cpp \
@@ -93,17 +93,11 @@ SOURCES += \
     lib_parser/iolib.cpp \
     lib_parser/ioboardlib.cpp \
     lib_parser/ioboardlibgroup.cpp \
-    camera/camera.cpp \
-    camera/property.cpp \
     scriptengine/propertyclass.cpp \
     scriptengine/scriptengine.cpp \
-    camera/propertyenum.cpp \
     datawrapper/datawrapper.cpp \
     datawrapper/gradiantwrapper.cpp \
     datawrapper/harriswrapper.cpp \
-    camera/flowmanager.cpp \
-    camera/flowconnection.cpp \
-    flowviewerinterface.cpp \
     model/model_attribute.cpp \
     model/model_block.cpp \
     model/model_board.cpp \
@@ -128,11 +122,17 @@ SOURCES += \
     model/model_treeitem.cpp \
     model/model_property.cpp \
     model/model_propertyenum.cpp \
+    camera/camera.cpp \
+    camera/block.cpp \
+    camera/property.cpp \
+    camera/propertyenum.cpp \
+    camera/flow.cpp \
+    camera/flowmanager.cpp \
+    camera/flowconnection.cpp \
+    camera/flowviewerinterface.cpp \
     camera/registermanager.cpp \
     camera/registerbitfield.cpp \
-    camera/register.cpp \
-    camera/flow.cpp \
-    camera/block.cpp
+    camera/register.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

@@ -31,7 +31,7 @@
 #include <QLabel>
 #include <QComboBox>
 
-#include "flowviewerinterface.h"
+#include "camera/flowviewerinterface.h"
 #include "abstractviewer.h"
 
 class GPSTUDIO_GUI_EXPORT FlowViewerWidget : public QWidget
