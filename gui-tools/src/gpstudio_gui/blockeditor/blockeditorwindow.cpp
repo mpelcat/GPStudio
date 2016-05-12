@@ -7,7 +7,7 @@
 #include <QMenuBar>
 #include <QToolBar>
 
-BlockEditorWindow::BlockEditorWindow(QWidget *parent, const ModelBlock *block)
+BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
 {
     _filesModel = new QStandardItemModel();
@@ -111,7 +111,7 @@ void BlockEditorWindow::createToolBarAndMenu()
     _mainToolBar->addSeparator();
 }
 
-void BlockEditorWindow::setBlock(const ModelBlock *block)
+void BlockEditorWindow::setBlock(ModelBlock *block)
 {
     if(!block)
         return;

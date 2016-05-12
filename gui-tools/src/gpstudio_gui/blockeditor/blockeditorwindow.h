@@ -35,7 +35,7 @@ class GPSTUDIO_GUI_EXPORT BlockEditorWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit BlockEditorWindow(QWidget *parent = 0, const ModelBlock *block = 0);
+    explicit BlockEditorWindow(QWidget *parent = 0, ModelBlock *block = 0);
     ~BlockEditorWindow();
 
 signals:
@@ -51,9 +51,9 @@ protected:
     void createToolBarAndMenu();
     QToolBar *_mainToolBar;
 
-    void setBlock(const ModelBlock *block);
+    void setBlock(ModelBlock *block);
     QStandardItemModel *_filesModel;
-    const ModelBlock *_block;
+    ModelBlock *_block;
 };
 
 #endif // BLOCKEDITORWINDOW_H
