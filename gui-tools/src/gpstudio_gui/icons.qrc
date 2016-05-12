@@ -9,5 +9,10 @@
         <file>../img/zoom-in.png</file>
         <file>../img/zoom-out.png</file>
         <file>../img/zoom-fit.png</file>
+        <file>../img/edit-undo.png</file>
+        <file>../img/edit-redo.png</file>
+        <file>../img/edit-cut.png</file>
+        <file>../img/edit-copy.png</file>
+        <file>../img/edit-paste.png</file>
     </qresource>
 </RCC>
