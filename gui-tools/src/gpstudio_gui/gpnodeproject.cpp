@@ -18,26 +18,27 @@
 **
 ****************************************************************************/
 
-#ifndef GPNODEPROJECT_H
-#define GPNODEPROJECT_H
+#include "gpnodeproject.h"
 
-#include "gpstudio_lib_common.h"
+#include <QDebug>
 
-#include "model/model_node.h"
-
-class GPSTUDIO_LIB_EXPORT GPNodeProject
+GPNodeProject::GPNodeProject(QObject *parent)
+    : QObject(parent)
 {
-public:
-    GPNodeProject();
-    ~GPNodeProject();
+    //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
+}
 
-    QString name() const;
-    void setName(const QString &name);
+GPNodeProject::~GPNodeProject()
+{
+    qDebug()<<"sdfg";
+}
 
-private:
-    QString _name;
+QString GPNodeProject::name() const
+{
+    return _name;
+}
 
-    ModelNode *_node;
-};
-
-#endif // GPNODEPROJECT_H
+void GPNodeProject::setName(const QString &name)
+{
+    _name = name;
+}

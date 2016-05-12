@@ -75,7 +75,8 @@ SOURCES += \
     blockeditor/syntaxhighlight/verilogsyntax.cpp \
     blockeditor/syntaxhighlight/tclsyntax.cpp \
     viewer/docviewer.cpp \
-    viewer/pdfviewer.cpp
+    viewer/pdfviewer.cpp \
+    gpnodeproject.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -116,7 +117,8 @@ HEADERS  += \
     blockeditor/syntaxhighlight/verilogsyntax.h \
     blockeditor/syntaxhighlight/tclsyntax.h \
     viewer/docviewer.h \
-    viewer/pdfviewer.h
+    viewer/pdfviewer.h \
+    gpnodeproject.h
 
 RESOURCES += \
     icons.qrc \
