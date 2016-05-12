@@ -26,7 +26,6 @@
 #include <QMainWindow>
 
 #include "gpnodeproject.h"
-#include "model/model_node.h"
 
 #include "itemsview/blockview.h"
 #include "itemmodel/libtreeview.h"
@@ -38,7 +37,7 @@ class GPSTUDIO_GUI_EXPORT NodeEditorWindows : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit NodeEditorWindows(QWidget *parent=NULL, ModelNode *node=NULL);
+    explicit NodeEditorWindows(QWidget *parent=NULL, GPNodeProject *nodeProject=NULL);
     ~NodeEditorWindows();
 
 private slots:
@@ -48,7 +47,6 @@ private slots:
 
 private:
     GPNodeProject *_project;
-    ModelNode *_node;
 
     void setupWidgets();
     BlockView *_blocksView;

@@ -39,17 +39,19 @@
 
 #include "undostack/blockcommands.h"
 
-NodeEditorWindows::NodeEditorWindows(QWidget *parent, ModelNode *node) :
-    QMainWindow(0)
+NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject) :
+    QMainWindow(parent)
 {
     setupWidgets();
     createDocks();
     createToolBarAndMenu();
 
-    _node = node;
+    if(nodeProject)
+        _project = nodeProject;
+    else
+        _project = new GPNodeProject();
 
-    _project = new GPNodeProject(this);
-    _blocksView->loadFromNode(_node);
+    _blocksView->loadFromNode(nodeProject->node());
 
     connect(_blocksView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
             this, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));

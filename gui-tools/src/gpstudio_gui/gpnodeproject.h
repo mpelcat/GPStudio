@@ -35,6 +35,11 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    ModelNode *node() const;
+    void setNode(ModelNode *node);
+
+    bool openProject(const QString &nodeFileName);
+
 private:
     QString _name;
 

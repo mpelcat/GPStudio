@@ -20,26 +20,22 @@
 
 #include "nodeeditor/nodeeditorwindows.h"
 #include <QApplication>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    NodeEditorWindows *nodeEditorWindows = NULL;
+    GPNodeProject *nodeProject = new GPNodeProject();
 
     if(a.arguments().size()>1)
     {
         QString nodeFileName = a.arguments()[1];
-        if(QFile::exists(nodeFileName))
-        {
-            ModelNode *node = ModelNode::readFromFile(nodeFileName);
-            nodeEditorWindows = new NodeEditorWindows(NULL, node);
-        }
+        if(!nodeProject->openProject(nodeFileName))
+            qDebug()<<"Cannot open file"<<nodeFileName;
     }
 
-    if(!nodeEditorWindows)
-        nodeEditorWindows = new NodeEditorWindows(NULL);
-
-    nodeEditorWindows->show();
+    NodeEditorWindows nodeEditorWindows(NULL, nodeProject);
+    nodeEditorWindows.show();
 
     return a.exec();
 }

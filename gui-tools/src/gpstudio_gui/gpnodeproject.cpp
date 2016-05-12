@@ -25,12 +25,11 @@
 GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
-    //if(QFile::exists("../../../std_project/node_generated.xml")) openNodeGeneratedFile("../../../std_project/node_generated.xml");
+    _node = NULL;
 }
 
 GPNodeProject::~GPNodeProject()
 {
-    qDebug()<<"sdfg";
 }
 
 QString GPNodeProject::name() const
@@ -41,4 +40,26 @@ QString GPNodeProject::name() const
 void GPNodeProject::setName(const QString &name)
 {
     _name = name;
+}
+
+ModelNode *GPNodeProject::node() const
+{
+    return _node;
+}
+
+void GPNodeProject::setNode(ModelNode *node)
+{
+    _node = node;
+}
+
+bool GPNodeProject::openProject(const QString &nodeFileName)
+{
+    ModelNode *node;
+    node = ModelNode::readFromFile(nodeFileName);
+
+    if(!node)
+        return false;
+
+    setNode(node);
+    return true;
 }
