@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -18,39 +18,50 @@
 **
 ****************************************************************************/
 
-#ifndef BLOCKSCENE_H
-#define BLOCKSCENE_H
+#ifndef BLOCKCOMMANDS_H
+#define BLOCKCOMMANDS_H
 
 #include "gpstudio_gui_common.h"
 
-#include <QGraphicsScene>
-#include "blockitem.h"
+#include <QUndoCommand>
 
-#include "lib_parser/lib.h"
+#include "model/model_block.h"
 
-#include "model/model_node.h"
-#include "camera/camera.h"
-
-class ModelFlowConnect;
-
-class GPSTUDIO_GUI_EXPORT BlockScene : public QGraphicsScene
+class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
-    Q_OBJECT
 public:
-    BlockScene();
-    ~BlockScene();
-
-    bool loadFromNode(const ModelNode *node);
-    bool loadFromCamera(const Camera *camera);
-
-    BlockItem *block(const QString &name) const;
-
-public slots:
-    void updateBlockPos();
+    BlockCommand(ModelBlock *block);
 
 protected:
-    QMap<QString, BlockItem* > _blocks;
-    void connectBlocks(const QList<ModelFlowConnect *> &connections);
+    ModelBlock *_block;
 };
 
-#endif // BLOCKSCENE_H
+class GPSTUDIO_GUI_EXPORT BlockCmdRename : public BlockCommand
+{
+public:
+    enum { Id = 0x0101 };
+    BlockCmdRename(ModelBlock *block, QString oldName, QString newName);
+    bool mergeWith(const QUndoCommand *command);
+    int id() const { return Id; }
+
+protected:
+    QString _oldName;
+    QString _newName;
+};
+
+class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
+{
+public:
+    enum { Id = 0x0102 };
+    BlockCmdMove(ModelBlock *block, QPoint oldPos, QPoint newPos);
+    void undo();
+    void redo();
+    bool mergeWith(const QUndoCommand *command);
+    int id() const { return Id; }
+
+protected:
+    QPoint _oldPos;
+    QPoint _newPos;
+};
+
+#endif // BLOCKCOMMANDS_H

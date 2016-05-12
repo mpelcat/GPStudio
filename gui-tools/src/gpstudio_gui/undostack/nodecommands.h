@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -18,42 +18,27 @@
 **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef NODECOMMANDS_H
+#define NODECOMMANDS_H
 
-#include <QMainWindow>
+#include "gpstudio_gui_common.h"
 
-#include "gpnodeproject.h"
+#include <QUndoCommand>
+
 #include "model/model_node.h"
 
-#include <QUndoStack>
-
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class GPSTUDIO_GUI_EXPORT NodeCommand : public QUndoCommand
 {
-    Q_OBJECT
-
 public:
-    explicit MainWindow(QStringList args=QStringList());
-    ~MainWindow();
-
-    void createToolBarAndMenu();
-
-private slots:
-    void configNode();
-
-    void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
-
-private:
-    Ui::MainWindow *ui;
-
-    GPNodeProject *_project;
-    ModelNode *_node;
-
-    QUndoStack _undoStack;
+    NodeCommand();
+protected:
+    ModelNode _node;
 };
 
-#endif // MAINWINDOW_H
+class GPSTUDIO_GUI_EXPORT NodeRename : public NodeCommand
+{
+public:
+    NodeRename();
+};
+
+#endif // NODECOMMANDS_H

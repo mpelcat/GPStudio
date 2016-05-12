@@ -56,6 +56,7 @@ public:
     ModelBlock *modelBlock() const;
 
     void updateBlock();
+    void updatePos();
 
     void addPort(BlockPortItem *portItem);
     BlockPortItem *port(const QString &name) const;

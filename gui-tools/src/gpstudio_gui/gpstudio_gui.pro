@@ -76,7 +76,9 @@ SOURCES += \
     blockeditor/syntaxhighlight/tclsyntax.cpp \
     viewer/docviewer.cpp \
     viewer/pdfviewer.cpp \
-    gpnodeproject.cpp
+    gpnodeproject.cpp \
+    undostack/nodecommands.cpp \
+    undostack/blockcommands.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -118,7 +120,9 @@ HEADERS  += \
     blockeditor/syntaxhighlight/tclsyntax.h \
     viewer/docviewer.h \
     viewer/pdfviewer.h \
-    gpnodeproject.h
+    gpnodeproject.h \
+    undostack/nodecommands.h \
+    undostack/blockcommands.h
 
 RESOURCES += \
     icons.qrc \

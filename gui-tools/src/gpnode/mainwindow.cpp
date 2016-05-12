@@ -36,6 +36,8 @@
 #include "itemsview/blockportitem.h"
 #include "itemsview/blockconnectoritem.h"
 
+#include "undostack/blockcommands.h"
+
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
     ui(new Ui::MainWindow)
@@ -43,7 +45,7 @@ MainWindow::MainWindow(QStringList args) :
     ui->setupUi(this);
     createToolBarAndMenu();
 
-    _project = new GPNodeProject();
+    _project = new GPNodeProject(this);
 
     ui->processView->setEditMode(true);
     ui->libTreeView->setLib(&Lib::getLib());
@@ -56,46 +58,65 @@ MainWindow::MainWindow(QStringList args) :
              ui->processView->loadFromNode(_node);
         }
     }
+
+    connect(ui->processView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
+            this, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
     delete _project;
+    delete ui;
 }
 
 void MainWindow::createToolBarAndMenu()
 {
-    // ============= File =============
-    QMenu *fileMenu = ui->menuBar->addMenu("&File");
+    // ============= Edit =============
+    QMenu *nodeMenu = ui->menuBar->addMenu("&Node");
 
     QAction *newDocAction = new QAction("&New",this);
     newDocAction->setIcon(QIcon(":/icons/img/new.png"));
     newDocAction->setShortcut(QKeySequence::New);
     ui->mainToolBar->addAction(newDocAction);
-    fileMenu->addAction(newDocAction);
+    nodeMenu->addAction(newDocAction);
 
     QAction *openDocAction = new QAction("&Open",this);
     openDocAction->setIcon(QIcon(":/icons/img/open.png"));
     openDocAction->setShortcut(QKeySequence::Open);
     ui->mainToolBar->addAction(openDocAction);
-    fileMenu->addAction(openDocAction);
+    nodeMenu->addAction(openDocAction);
 
     QAction *saveDocAction = new QAction("&Save",this);
     saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAction->setShortcut(QKeySequence::Save);
     ui->mainToolBar->addAction(saveDocAction);
-    fileMenu->addAction(saveDocAction);
+    nodeMenu->addAction(saveDocAction);
 
-    fileMenu->addSeparator();
+    nodeMenu->addSeparator();
     ui->mainToolBar->addSeparator();
 
     QAction *configNode = new QAction("&Configure node",this);
     configNode->setIcon(QIcon(":/icons/img/settings.png"));
     saveDocAction->setShortcut(QKeySequence::Preferences);
-    fileMenu->addAction(configNode);
+    nodeMenu->addAction(configNode);
     ui->mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
+
+    // ============= Edit =============
+    QMenu *editMenu = ui->menuBar->addMenu("&Edit");
+    ui->mainToolBar->addSeparator();
+
+    QAction *undoAction = _undoStack.createUndoAction(this, "&Undo");
+    undoAction->setIcon(QIcon(":/icons/img/edit-undo.png"));
+    undoAction->setShortcut(QKeySequence::Undo);
+    ui->mainToolBar->addAction(undoAction);
+    editMenu->addAction(undoAction);
+
+    QAction *redoAction = _undoStack.createRedoAction(this, "&Redo");
+    redoAction->setIcon(QIcon(":/icons/img/edit-redo.png"));
+    redoAction->setShortcut(QKeySequence::Redo);
+    ui->mainToolBar->addAction(redoAction);
+    editMenu->addAction(redoAction);
 
     /*QMenu *viewMenu = */ui->menuBar->addMenu("&View");
     /*QMenu *helpMenu = */ui->menuBar->addMenu("&Help");
@@ -106,4 +127,9 @@ void MainWindow::configNode()
     ConfigNodeDialog configNodeDialog(this);
     configNodeDialog.setProject(_project);
     configNodeDialog.exec();
+}
+
+void MainWindow::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
+{
+    _undoStack.push(new BlockCmdMove(block, oldPos, newPos));
 }

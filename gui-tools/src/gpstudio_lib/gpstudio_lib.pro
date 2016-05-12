@@ -53,7 +53,6 @@ HEADERS += gpstudio_lib_common.h \
     datawrapper/datawrapper.h \
     datawrapper/gradiantwrapper.h \
     datawrapper/harriswrapper.h \
-    gpnodeproject.h \
     camera/flowmanager.h \
     camera/flowconnection.h \
     flowviewerinterface.h \
@@ -102,7 +101,6 @@ SOURCES += \
     datawrapper/datawrapper.cpp \
     datawrapper/gradiantwrapper.cpp \
     datawrapper/harriswrapper.cpp \
-    gpnodeproject.cpp \
     camera/flowmanager.cpp \
     camera/flowconnection.cpp \
     flowviewerinterface.cpp \

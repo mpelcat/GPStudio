@@ -144,6 +144,11 @@ void BlockItem::updateBlock()
     }
 }
 
+void BlockItem::updatePos()
+{
+    setPos(_modelBlock->pos());
+}
+
 void BlockItem::addPort(BlockPortItem *portItem)
 {
     portItem->setParentItem(this);

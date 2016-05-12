@@ -44,6 +44,7 @@ bool BlockScene::loadFromNode(const ModelNode *node)
         if(block->name()!="pi" && block->name()!="fi" && block->name()!="ci")
         {
             BlockItem *blockItem = BlockItem::fromModelBlock(block);
+            connect(block, SIGNAL(positionChanged(QPoint)), this, SLOT(updateBlockPos()));
             _blocks.insert(block->name(), blockItem);
             addItem(blockItem);
         }
@@ -81,6 +82,13 @@ BlockItem *BlockScene::block(const QString &name) const
     if(it != _blocks.end())
         return it.value();
     return NULL;
+}
+
+void BlockScene::updateBlockPos()
+{
+    QMap<QString, BlockItem* >::const_iterator it;
+    for (it = _blocks.constBegin(); it != _blocks.constEnd(); ++it)
+        (*it)->updatePos();
 }
 
 void BlockScene::connectBlocks(const QList<ModelFlowConnect *> &connections)
