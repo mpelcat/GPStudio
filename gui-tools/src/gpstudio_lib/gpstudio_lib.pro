@@ -47,8 +47,8 @@ HEADERS += gpstudio_lib_common.h \
     lib_parser/ioboardlibgroup.h \
     camera/camera.h \
     camera/property.h \
-    propertyclass.h \
-    scriptengine.h \
+    scriptengine/propertyclass.h \
+    scriptengine/scriptengine.h \
     camera/propertyenum.h \
     datawrapper/datawrapper.h \
     datawrapper/gradiantwrapper.h \
@@ -95,8 +95,8 @@ SOURCES += \
     lib_parser/ioboardlibgroup.cpp \
     camera/camera.cpp \
     camera/property.cpp \
-    propertyclass.cpp \
-    scriptengine.cpp \
+    scriptengine/propertyclass.cpp \
+    scriptengine/scriptengine.cpp \
     camera/propertyenum.cpp \
     datawrapper/datawrapper.cpp \
     datawrapper/gradiantwrapper.cpp \

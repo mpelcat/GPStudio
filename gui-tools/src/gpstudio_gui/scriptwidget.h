@@ -30,7 +30,7 @@
 #include <QPushButton>
 
 #include "scriptlineedit.h"
-#include "scriptengine.h"
+#include "scriptengine/scriptengine.h"
 
 class GPSTUDIO_GUI_EXPORT ScriptWidget : public QWidget
 {

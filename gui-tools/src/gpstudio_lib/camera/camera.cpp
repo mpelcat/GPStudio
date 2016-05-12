@@ -24,7 +24,7 @@
 #include <QStringList>
 
 #include "property.h"
-#include "propertyclass.h"
+#include "scriptengine/propertyclass.h"
 
 #include "flowmanager.h"
 #include "cameracom.h"

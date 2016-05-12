@@ -30,7 +30,7 @@
 #include "flow.h"
 #include "property.h"
 
-#include "scriptengine.h"
+#include "scriptengine/scriptengine.h"
 
 #include "model/model_node.h"
 #include "registermanager.h"

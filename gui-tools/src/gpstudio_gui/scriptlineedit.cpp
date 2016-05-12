@@ -22,7 +22,7 @@
 
 #include <QKeyEvent>
 
-#include "scriptengine.h"
+#include "scriptengine/scriptengine.h"
 
 #include <camera/camera.h>
 

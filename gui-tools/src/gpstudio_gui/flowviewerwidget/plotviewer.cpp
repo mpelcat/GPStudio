@@ -27,7 +27,7 @@
 
 #include "flowviewerinterface.h"
 
-#include "scriptengine.h"
+#include "scriptengine/scriptengine.h"
 
 PlotViewer::PlotViewer(FlowViewerInterface *flowViewerInterface)
     : AbstractViewer(flowViewerInterface)
