@@ -50,12 +50,15 @@ public slots:
     void closeProject();
 
     // block commands
+    void updateBlock(ModelBlock *block);
     void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
 
 signals:
     void nodeChanged(ModelNode *node);
     void nodePathChanged(QString path);
     void nodeModified(bool modified);
+
+    void blockUpdated(ModelBlock *block);
 
 private:
     void setPath(const QString &path);

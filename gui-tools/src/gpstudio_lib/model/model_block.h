@@ -38,9 +38,8 @@
 #include "model_pin.h"
 #include "model_reset.h"
 
-class GPSTUDIO_LIB_EXPORT ModelBlock : public QObject
+class GPSTUDIO_LIB_EXPORT ModelBlock
 {
-    Q_OBJECT
 public:
     ModelBlock();
     ModelBlock(const ModelBlock &modelBlock);
@@ -128,9 +127,6 @@ public:
     static ModelBlock *fromNodeDef(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
     static QList<ModelBlock *> listFromNodeDef(const QDomElement &domElement);
-
-signals:
-    void positionChanged(QPoint oldPosition);
 
 protected:
     QString _name;

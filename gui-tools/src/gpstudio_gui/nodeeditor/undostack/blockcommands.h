@@ -25,14 +25,16 @@
 
 #include <QUndoCommand>
 
+#include "nodeeditor/gpnodeproject.h"
 #include "model/model_block.h"
 
 class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
 public:
-    BlockCommand(ModelBlock *block);
+    BlockCommand(GPNodeProject *project, ModelBlock *block);
 
 protected:
+    GPNodeProject *_project;
     ModelBlock *_block;
 };
 
@@ -40,7 +42,7 @@ class GPSTUDIO_GUI_EXPORT BlockCmdRename : public BlockCommand
 {
 public:
     enum { Id = 0x0101 };
-    BlockCmdRename(ModelBlock *block, QString oldName, QString newName);
+    BlockCmdRename(GPNodeProject *project, ModelBlock *block, QString oldName, QString newName);
     bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
@@ -53,7 +55,7 @@ class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
 {
 public:
     enum { Id = 0x0102 };
-    BlockCmdMove(ModelBlock *block, QPoint oldPos, QPoint newPos);
+    BlockCmdMove(GPNodeProject *project, ModelBlock *block, QPoint oldPos, QPoint newPos);
     void undo();
     void redo();
     bool mergeWith(const QUndoCommand *command);

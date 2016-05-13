@@ -125,6 +125,11 @@ void GPNodeProject::closeProject()
     delete _node;
 }
 
+void GPNodeProject::updateBlock(ModelBlock *block)
+{
+    emit blockUpdated(block);
+}
+
 void GPNodeProject::setPath(const QString &path)
 {
     _path = path;
@@ -150,5 +155,5 @@ void GPNodeProject::setNode(ModelNode *node)
 
 void GPNodeProject::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
 {
-    _undoStack->push(new BlockCmdMove(block, oldPos, newPos));
+    _undoStack->push(new BlockCmdMove(this, block, oldPos, newPos));
 }

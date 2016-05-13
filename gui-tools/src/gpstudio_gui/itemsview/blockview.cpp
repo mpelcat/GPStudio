@@ -208,6 +208,12 @@ void BlockView::selectBlock(const Block *block)
     _scene->blockSignals(false);
 }
 
+void BlockView::updateBlock(ModelBlock *block)
+{
+    BlockItem *blockItem = _scene->block(block);
+    blockItem->setPos(block->pos());
+}
+
 void BlockView::changeNode(ModelNode *node)
 {
     loadFromNode(node);

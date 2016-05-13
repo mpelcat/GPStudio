@@ -42,15 +42,10 @@ bool BlockScene::loadFromNode(const ModelNode *node)
 
     clear();
 
-    foreach (ModelBlock *block, node->blocks())
+    foreach (ModelBlock *modelBlock, node->blocks())
     {
-        if(block->name()!="pi" && block->name()!="fi" && block->name()!="ci")
-        {
-            BlockItem *blockItem = BlockItem::fromModelBlock(block);
-            connect(block, SIGNAL(positionChanged(QPoint)), this, SLOT(updateBlockPos()));
-            _blocks.insert(block->name(), blockItem);
-            addItem(blockItem);
-        }
+        if(modelBlock->name()!="pi" && modelBlock->name()!="fi" && modelBlock->name()!="ci")
+            addBlock(modelBlock);
     }
 
     if(node->getFIBlock())
@@ -66,11 +61,7 @@ bool BlockScene::loadFromCamera(const Camera *camera)
     foreach (Block *block, camera->blocks())
     {
         if(block->name()!="pi" && block->name()!="fi" && block->name()!="ci")
-        {
-            BlockItem *blockItem = BlockItem::fromBlock(block);
-            _blocks.insert(block->name(), blockItem);
-            addItem(blockItem);
-        }
+            addBlock(block->modelBlock());
     }
 
     if(camera->node()->getFIBlock())
@@ -79,19 +70,28 @@ bool BlockScene::loadFromCamera(const Camera *camera)
     return true;
 }
 
+void BlockScene::addBlock(ModelBlock *blockModel)
+{
+    BlockItem *blockItem = BlockItem::fromModelBlock(blockModel);
+    _blocksName.insert(blockModel->name(), blockItem);
+    _blocksModel.insert(blockModel, blockItem);
+    addItem(blockItem);
+}
+
 BlockItem *BlockScene::block(const QString &name) const
 {
-    QMap<QString, BlockItem* >::const_iterator it = _blocks.find(name);
-    if(it != _blocks.end())
+    QMap<QString, BlockItem* >::const_iterator it = _blocksName.find(name);
+    if(it != _blocksName.end())
         return it.value();
     return NULL;
 }
 
-void BlockScene::updateBlockPos()
+BlockItem *BlockScene::block(ModelBlock *modelBlock) const
 {
-    QMap<QString, BlockItem* >::const_iterator it;
-    for (it = _blocks.constBegin(); it != _blocks.constEnd(); ++it)
-        (*it)->updatePos();
+    QMap<ModelBlock*, BlockItem* >::const_iterator it = _blocksModel.find(modelBlock);
+    if(it != _blocksModel.end())
+        return it.value();
+    return NULL;
 }
 
 void BlockScene::connectBlocks(const QList<ModelFlowConnect *> &connections)

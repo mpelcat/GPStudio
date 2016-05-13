@@ -36,7 +36,6 @@ ModelBlock::ModelBlock()
 }
 
 ModelBlock::ModelBlock(const ModelBlock &modelBlock)
-    : QObject()
 {
     _name = modelBlock._name;
     _inLib = modelBlock._inLib;
@@ -163,12 +162,7 @@ const QPoint &ModelBlock::pos() const
 
 void ModelBlock::setPos(const QPoint &pos)
 {
-    QPoint oldPos = _pos;
-    if(oldPos != pos)
-    {
-        _pos = pos;
-        emit positionChanged(oldPos);
-    }
+    _pos = pos;
 }
 
 const QString &ModelBlock::description() const

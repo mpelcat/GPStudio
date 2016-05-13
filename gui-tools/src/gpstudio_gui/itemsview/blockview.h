@@ -69,6 +69,7 @@ protected slots:
 
 public slots:
     void selectBlock(const Block *block);
+    void updateBlock(ModelBlock *block);
     void changeNode(ModelNode *node);
 
     void zoomIn();

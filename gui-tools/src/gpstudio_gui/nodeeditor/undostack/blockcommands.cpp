@@ -22,14 +22,14 @@
 
 #include <QDebug>
 
-BlockCommand::BlockCommand(ModelBlock *block)
-    : _block(block)
+BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
+    : _block(block), _project(project)
 {
 }
 
 // Rename block
-BlockCmdRename::BlockCmdRename(ModelBlock *block, QString oldName, QString newName)
-    : BlockCommand(block), _oldName(oldName), _newName(newName)
+BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, QString oldName, QString newName)
+    : BlockCommand(project, block), _oldName(oldName), _newName(newName)
 {
 }
 
@@ -39,19 +39,21 @@ bool BlockCmdRename::mergeWith(const QUndoCommand *command)
 }
 
 // Move block
-BlockCmdMove::BlockCmdMove(ModelBlock *block, QPoint oldPos, QPoint newPos)
-    : BlockCommand(block), _oldPos(oldPos), _newPos(newPos)
+BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, QPoint oldPos, QPoint newPos)
+    : BlockCommand(project, block), _oldPos(oldPos), _newPos(newPos)
 {
 }
 
 void BlockCmdMove::undo()
 {
     _block->setPos(_oldPos);
+    _project->updateBlock(_block);
 }
 
 void BlockCmdMove::redo()
 {
     _block->setPos(_newPos);
+    _project->updateBlock(_block);
 }
 
 bool BlockCmdMove::mergeWith(const QUndoCommand *command)

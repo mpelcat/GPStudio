@@ -43,13 +43,14 @@ public:
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
+    void addBlock(ModelBlock *blockModel);
     BlockItem *block(const QString &name) const;
-
-public slots:
-    void updateBlockPos();
+    BlockItem *block(ModelBlock *modelBlock) const;
 
 protected:
-    QMap<QString, BlockItem* > _blocks;
+    QMap<QString, BlockItem* > _blocksName;
+    QMap<ModelBlock*, BlockItem* > _blocksModel;
+
     void connectBlocks(const QList<ModelFlowConnect *> &connections);
 };
 
