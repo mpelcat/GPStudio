@@ -51,19 +51,28 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
     createDocks();
     createToolBarAndMenu();
 
-    connect(_project, SIGNAL(nodeChanged()), this, SLOT(reloadNode()));
-    connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
-
+    attachProject(nodeProject);
     if(!_project->node())
         _project->newProject();
-
-    connect(_blocksView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
-            this, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
 }
 
 NodeEditorWindows::~NodeEditorWindows()
 {
     delete _project;
+}
+
+void NodeEditorWindows::attachProject(GPNodeProject *project)
+{
+    /*if(_project)
+        disconnect(_project);*/
+
+    _project = project;
+
+    connect(_project, SIGNAL(nodeChanged(ModelNode *)), this, SLOT(reloadNode()));
+    connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
+
+    // attach project to editors and viewers
+    _blocksView->attachProject(_project);
 }
 
 void NodeEditorWindows::setupWidgets()
@@ -154,13 +163,13 @@ void NodeEditorWindows::createToolBarAndMenu()
     QMenu *editMenu = menuBar()->addMenu("&Edit");
     _mainToolBar->addSeparator();
 
-    QAction *undoAction = _undoStack.createUndoAction(this, "&Undo");
+    QAction *undoAction = _project->undoStack()->createUndoAction(this, "&Undo");
     undoAction->setIcon(QIcon(":/icons/img/edit-undo.png"));
     undoAction->setShortcut(QKeySequence::Undo);
     _mainToolBar->addAction(undoAction);
     editMenu->addAction(undoAction);
 
-    QAction *redoAction = _undoStack.createRedoAction(this, "&Redo");
+    QAction *redoAction = _project->undoStack()->createRedoAction(this, "&Redo");
     redoAction->setIcon(QIcon(":/icons/img/edit-redo.png"));
     redoAction->setShortcut(QKeySequence::Redo);
     _mainToolBar->addAction(redoAction);
@@ -179,16 +188,10 @@ void NodeEditorWindows::configNode()
 
 void NodeEditorWindows::reloadNode()
 {
-    _blocksView->loadFromNode(_project->node());
     reloadNodePath();
 }
 
 void NodeEditorWindows::reloadNodePath()
 {
     setWindowTitle(QString("GPnode - %1").arg(_project->name()));
-}
-
-void NodeEditorWindows::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
-{
-    _undoStack.push(new BlockCmdMove(block, oldPos, newPos));
 }

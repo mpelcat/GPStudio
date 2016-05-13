@@ -77,10 +77,10 @@ SOURCES += \
     nodeeditor/gpnodeproject.cpp \
     nodeeditor/nodeeditorwindows.cpp \
     nodeeditor/confignodedialog.cpp \
+    nodeeditor/undostack/nodecommands.cpp \
+    nodeeditor/undostack/blockcommands.cpp \
     viewer/docviewer.cpp \
-    viewer/pdfviewer.cpp \
-    undostack/nodecommands.cpp \
-    undostack/blockcommands.cpp
+    viewer/pdfviewer.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -123,10 +123,10 @@ HEADERS  += \
     nodeeditor/gpnodeproject.h \
     nodeeditor/nodeeditorwindows.h \
     nodeeditor/confignodedialog.h \
+    nodeeditor/undostack/nodecommands.h \
+    nodeeditor/undostack/blockcommands.h \
     viewer/docviewer.h \
-    viewer/pdfviewer.h \
-    undostack/nodecommands.h \
-    undostack/blockcommands.h
+    viewer/pdfviewer.h
 
 RESOURCES += \
     icons.qrc \

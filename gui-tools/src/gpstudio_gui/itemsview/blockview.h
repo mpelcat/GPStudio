@@ -31,12 +31,16 @@ class BlockItem;
 #include "model/model_node.h"
 #include "lib_parser/lib.h"
 
+#include "nodeeditor/gpnodeproject.h"
+
 class GPSTUDIO_GUI_EXPORT BlockView : public QGraphicsView
 {
     Q_OBJECT
 public:
     BlockView(QWidget *parent=NULL);
     ~BlockView();
+
+    void attachProject(GPNodeProject *project);
 
     bool loadFromNode(const ModelNode *node);
     bool loadFromCam(const Camera *camera);
@@ -65,6 +69,7 @@ protected slots:
 
 public slots:
     void selectBlock(const Block *block);
+    void changeNode(ModelNode *node);
 
     void zoomIn();
     void zoomOut();
@@ -76,6 +81,8 @@ signals:
     void blockDetailsRequest(const Block *block);
 
 private:
+    GPNodeProject *_project;
+
     BlockScene *_scene;
     bool _editMode;
 

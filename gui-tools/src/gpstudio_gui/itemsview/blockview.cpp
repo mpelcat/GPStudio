@@ -31,6 +31,7 @@
 BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
 {
+    _project = NULL;
     _editMode = false;
     _scene = new BlockScene();
     scale(0.75, 0.75);
@@ -54,6 +55,19 @@ BlockView::BlockView(QWidget *parent)
 
 BlockView::~BlockView()
 {
+}
+
+void BlockView::attachProject(GPNodeProject *project)
+{
+    if(_project)
+        disconnect(_project);
+
+    _project = project;
+
+    connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(changeNode(ModelNode*)));
+
+    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
+            project, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
 }
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
@@ -192,6 +206,11 @@ void BlockView::selectBlock(const Block *block)
     }
 
     _scene->blockSignals(false);
+}
+
+void BlockView::changeNode(ModelNode *node)
+{
+    loadFromNode(node);
 }
 
 void BlockView::setBlockScene(BlockScene *scene)

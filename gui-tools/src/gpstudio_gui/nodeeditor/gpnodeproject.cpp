@@ -24,10 +24,13 @@
 #include <QFileInfo>
 #include <QFileDialog>
 
+#include "undostack/blockcommands.h"
+
 GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
     _node = NULL;
+    _undoStack = new QUndoStack();
 }
 
 GPNodeProject::~GPNodeProject()
@@ -70,6 +73,8 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
 {
     ModelNode *node;
     QString fileName;
+
+    closeProject();
 
     if(nodeFileName.isEmpty())
     {
@@ -116,6 +121,7 @@ void GPNodeProject::closeProject()
         saveProject();
     }
 
+    setNode(NULL);
     delete _node;
 }
 
@@ -131,8 +137,18 @@ void GPNodeProject::setModified(bool modified)
     emit nodeModified(_modified);
 }
 
+QUndoStack *GPNodeProject::undoStack() const
+{
+    return _undoStack;
+}
+
 void GPNodeProject::setNode(ModelNode *node)
 {
     _node = node;
-    emit nodeChanged();
+    emit nodeChanged(_node);
+}
+
+void GPNodeProject::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
+{
+    _undoStack->push(new BlockCmdMove(block, oldPos, newPos));
 }

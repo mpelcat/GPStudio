@@ -25,6 +25,8 @@
 
 #include "model/model_node.h"
 
+#include <QUndoStack>
+
 class GPSTUDIO_GUI_EXPORT GPNodeProject : public QObject
 {
     Q_OBJECT
@@ -37,15 +39,21 @@ public:
     bool isModified() const;
     ModelNode *node() const;
 
+    QUndoStack *undoStack() const;
+
 public slots:
+    // project commands
     void newProject();
     bool openProject(const QString &nodeFileName=QString());
     bool saveProject();
     bool saveProjectAs(const QString &nodeFileName=QString());
     void closeProject();
 
+    // block commands
+    void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
+
 signals:
-    void nodeChanged();
+    void nodeChanged(ModelNode *node);
     void nodePathChanged(QString path);
     void nodeModified(bool modified);
 
@@ -58,6 +66,8 @@ private:
 
     void setModified(bool modified);
     bool _modified;
+
+    QUndoStack *_undoStack;
 };
 
 #endif // GPNODEPROJECT_H

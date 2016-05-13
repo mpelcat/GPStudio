@@ -30,8 +30,6 @@
 #include "itemsview/blockview.h"
 #include "itemmodel/libtreeview.h"
 
-#include <QUndoStack>
-
 class GPSTUDIO_GUI_EXPORT NodeEditorWindows : public QMainWindow
 {
     Q_OBJECT
@@ -40,13 +38,13 @@ public:
     explicit NodeEditorWindows(QWidget *parent=NULL, GPNodeProject *nodeProject=NULL);
     ~NodeEditorWindows();
 
+    void attachProject(GPNodeProject *project);
+
 private slots:
     void configNode();
 
     void reloadNode();
     void reloadNodePath();
-
-    void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
 
 private:
     GPNodeProject *_project;
@@ -61,8 +59,6 @@ private:
 
     void createToolBarAndMenu();
     QToolBar *_mainToolBar;
-
-    QUndoStack _undoStack;
 };
 
 #endif // NODEEDITORWINDOW_H
