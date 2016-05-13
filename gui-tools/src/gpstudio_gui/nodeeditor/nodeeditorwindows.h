@@ -43,6 +43,9 @@ public:
 private slots:
     void configNode();
 
+    void reloadNode();
+    void reloadNodePath();
+
     void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
 
 private:

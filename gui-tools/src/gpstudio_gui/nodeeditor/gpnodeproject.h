@@ -33,17 +33,31 @@ public:
     ~GPNodeProject();
 
     QString name() const;
-    void setName(const QString &name);
-
+    QString path() const;
+    bool isModified() const;
     ModelNode *node() const;
-    void setNode(ModelNode *node);
 
-    bool openProject(const QString &nodeFileName);
+public slots:
+    void newProject();
+    bool openProject(const QString &nodeFileName=QString());
+    bool saveProject();
+    bool saveProjectAs(const QString &nodeFileName=QString());
+    void closeProject();
+
+signals:
+    void nodeChanged();
+    void nodePathChanged(QString path);
+    void nodeModified(bool modified);
 
 private:
-    QString _name;
+    void setPath(const QString &path);
+    QString _path;
 
+    void setNode(ModelNode *node);
     ModelNode *_node;
+
+    void setModified(bool modified);
+    bool _modified;
 };
 
 #endif // GPNODEPROJECT_H

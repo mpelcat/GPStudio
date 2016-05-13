@@ -42,16 +42,20 @@
 NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject) :
     QMainWindow(parent)
 {
-    setupWidgets();
-    createDocks();
-    createToolBarAndMenu();
-
     if(nodeProject)
         _project = nodeProject;
     else
         _project = new GPNodeProject();
 
-    _blocksView->loadFromNode(nodeProject->node());
+    setupWidgets();
+    createDocks();
+    createToolBarAndMenu();
+
+    connect(_project, SIGNAL(nodeChanged()), this, SLOT(reloadNode()));
+    connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
+
+    if(!_project->node())
+        _project->newProject();
 
     connect(_blocksView, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
             this, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
@@ -119,18 +123,22 @@ void NodeEditorWindows::createToolBarAndMenu()
     newDocAction->setShortcut(QKeySequence::New);
     _mainToolBar->addAction(newDocAction);
     nodeMenu->addAction(newDocAction);
+    connect(newDocAction, SIGNAL(triggered(bool)), _project, SLOT(newProject()));
 
     QAction *openDocAction = new QAction("&Open",this);
     openDocAction->setIcon(QIcon(":/icons/img/open.png"));
     openDocAction->setShortcut(QKeySequence::Open);
     _mainToolBar->addAction(openDocAction);
     nodeMenu->addAction(openDocAction);
+    connect(openDocAction, SIGNAL(triggered(bool)), _project, SLOT(openProject()));
 
     QAction *saveDocAction = new QAction("&Save",this);
     saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAction->setShortcut(QKeySequence::Save);
     _mainToolBar->addAction(saveDocAction);
     nodeMenu->addAction(saveDocAction);
+    connect(saveDocAction, SIGNAL(triggered(bool)), _project, SLOT(saveProject()));
+    connect(_project, SIGNAL(nodeModified(bool)), saveDocAction, SLOT(setEnabled(bool)));
 
     nodeMenu->addSeparator();
     _mainToolBar->addSeparator();
@@ -167,6 +175,17 @@ void NodeEditorWindows::configNode()
     ConfigNodeDialog configNodeDialog(this);
     configNodeDialog.setProject(_project);
     configNodeDialog.exec();
+}
+
+void NodeEditorWindows::reloadNode()
+{
+    _blocksView->loadFromNode(_project->node());
+    reloadNodePath();
+}
+
+void NodeEditorWindows::reloadNodePath()
+{
+    setWindowTitle(QString("GPnode - %1").arg(_project->name()));
 }
 
 void NodeEditorWindows::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
