@@ -72,6 +72,37 @@ void ModelFIBlock::addFlowConnects(const QList<ModelFlowConnect *> &flowConnects
     }
 }
 
+void ModelFIBlock::connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    ModelFlowConnect *modelFlowConnect = new ModelFlowConnect();
+    modelFlowConnect->setFromblock(fromFlow->parent()->name());
+    modelFlowConnect->setFromflow(fromFlow->name());
+    modelFlowConnect->setToblock(toFlow->parent()->name());
+    modelFlowConnect->setToflow(toFlow->name());
+    addFlowConnect(modelFlowConnect);
+}
+
+void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    for(int i=0; i<_flowConnects.size(); i++)
+    {
+        if(_flowConnects[i]->fromblock()==fromFlow->parent()->name())
+        {
+            if(_flowConnects[i]->fromflow()==fromFlow->name())
+            {
+                if(_flowConnects[i]->toblock()==toFlow->parent()->name())
+                {
+                    if(_flowConnects[i]->toflow()==toFlow->name())
+                    {
+                        _flowConnects.removeAt(i);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
 QList<ModelTreeConnect *> &ModelFIBlock::treeConnects()
 {
     return _treeConnects;
@@ -139,4 +170,20 @@ ModelFIBlock *ModelFIBlock::fromNodeDef(const QDomElement &domElement, ModelFIBl
     }
 
     return fiBlock;
+}
+
+QDomElement ModelFIBlock::toXMLElement(QDomDocument &doc, const QDomElement &other)
+{
+    Q_UNUSED(other);
+
+    QDomElement element = doc.createElement("flow_interconnect");
+
+    QDomElement connectsList = doc.createElement("connects");
+    foreach (ModelFlowConnect *flowConnect, _flowConnects)
+    {
+        connectsList.appendChild(flowConnect->toXMLElement(doc));
+    }
+    element.appendChild(connectsList);
+
+    return element;
 }

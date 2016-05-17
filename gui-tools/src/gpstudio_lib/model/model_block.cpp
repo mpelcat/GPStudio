@@ -622,9 +622,13 @@ QList<ModelBlock *> ModelBlock::listFromNodeDef(const QDomElement &domElement)
     return list;
 }
 
-QDomElement ModelBlock::toXMLElement(QDomDocument &doc)
+QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other)
 {
-    QDomElement element = doc.createElement("process");
+    QDomElement element;
+    if(other.isNull())
+        element = doc.createElement("process");
+    else
+        element = other;
 
     element.setAttribute("name", _name);
     element.setAttribute("driver", _driver);

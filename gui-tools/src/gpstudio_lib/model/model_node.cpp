@@ -160,6 +160,10 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
     }
     element.appendChild(processList);
 
+    ModelFIBlock *fi = getFIBlock();
+    if(fi)
+        element.appendChild(fi->toXMLElement(doc));
+
     return element;
 }
 
@@ -175,7 +179,7 @@ bool ModelNode::saveToFile(const QString &fileName)
         doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
         doc.appendChild(toXMLElement(doc));
         QTextStream stream(&file);
-        stream << doc.toString();
+        stream << doc.toString(2);
         file.close();
         return true;
     }

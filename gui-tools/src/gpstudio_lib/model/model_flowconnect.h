@@ -53,6 +53,7 @@ public:
     static ModelFlowConnect *fromNodeDef(const QDomElement &domElement);
     static QList<ModelFlowConnect *> listFromNodeGenerated(const QDomElement &domElement);
     static QList<ModelFlowConnect *> listFromNodeDef(const QDomElement &domElement);
+    virtual QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _fromblock;

@@ -22,6 +22,7 @@
 
 ModelFlowConnect::ModelFlowConnect()
 {
+    _order = "msb";
 }
 
 ModelFlowConnect::~ModelFlowConnect()
@@ -86,7 +87,7 @@ ModelFlowConnect *ModelFlowConnect::fromNodeGenerated(const QDomElement &domElem
     flowConnect->setFromflow(domElement.attribute("fromflow",""));
     flowConnect->setToblock(domElement.attribute("toblock",""));
     flowConnect->setToflow(domElement.attribute("toflow",""));
-    flowConnect->setOrder(domElement.attribute("order",""));
+    flowConnect->setOrder(domElement.attribute("order","msb"));
 
     return flowConnect;
 }
@@ -128,4 +129,17 @@ QList<ModelFlowConnect *> ModelFlowConnect::listFromNodeDef(const QDomElement &d
         n = n.nextSibling();
     }
     return list;
+}
+
+QDomElement ModelFlowConnect::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("connect");
+
+    element.setAttribute("fromblock", _fromblock);
+    element.setAttribute("fromflow", _fromflow);
+    element.setAttribute("toblock", _toblock);
+    element.setAttribute("toflow", _toflow);
+    element.setAttribute("order", _order);
+
+    return element;
 }

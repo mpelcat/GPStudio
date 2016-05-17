@@ -127,7 +127,7 @@ public:
     static ModelBlock *fromNodeDef(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
     static QList<ModelBlock *> listFromNodeDef(const QDomElement &domElement);
-    QDomElement toXMLElement(QDomDocument &doc);
+    virtual QDomElement toXMLElement(QDomDocument &doc, const QDomElement &other=QDomElement());
 
 protected:
     QString _name;

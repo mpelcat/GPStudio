@@ -43,6 +43,9 @@ public:
     void addFlowConnect(ModelFlowConnect *flowConnect);
     void addFlowConnects(const QList<ModelFlowConnect *> &flowConnects);
 
+    void connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+
     QList<ModelTreeConnect *> &treeConnects();
     const QList<ModelTreeConnect *> &treeConnects() const;
     void addTreeConnect(ModelTreeConnect *treeConnect);
@@ -51,6 +54,7 @@ public:
 public:
     static ModelFIBlock *fromNodeGenerated(const QDomElement &domElement, ModelFIBlock *fiBlock=NULL);
     static ModelFIBlock *fromNodeDef(const QDomElement &domElement, ModelFIBlock *fiBlock=NULL);
+    virtual QDomElement toXMLElement(QDomDocument &doc, const QDomElement &other=QDomElement());
 
 protected:
     QList<ModelFlowConnect *> _flowConnects;
