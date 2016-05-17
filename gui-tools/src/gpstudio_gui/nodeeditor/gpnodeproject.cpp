@@ -30,6 +30,7 @@ GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
     _node = NULL;
+    _modified = false;
     _undoStack = new QUndoStack();
 }
 
@@ -106,12 +107,25 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
 
 bool GPNodeProject::saveProject()
 {
-    setModified(false);
-    return true;
+    return saveProjectAs(_path);
 }
 
 bool GPNodeProject::saveProjectAs(const QString &nodeFileName)
 {
+    QString fileName;
+
+    if(nodeFileName.isEmpty())
+    {
+        fileName = QFileDialog::getSaveFileName(0, "Save node project", "", "Node project (*.node)");
+        if(fileName.isEmpty())
+            return false;
+    }
+    else
+        fileName = nodeFileName;
+
+    setPath(fileName);
+
+    _node->saveToFile(_path);
     setModified(false);
     return true;
 }
@@ -130,6 +144,8 @@ void GPNodeProject::closeProject()
 void GPNodeProject::setPath(const QString &path)
 {
     _path = path;
+    if(_node)
+        _node->setName(name());
     emit nodePathChanged(_path);
 }
 
@@ -149,18 +165,21 @@ void GPNodeProject::cmdMoveBlockTo(ModelBlock *block, QPoint pos)
 {
     block->setPos(pos);
     emit blockUpdated(block);
+    setModified(true);
 }
 
 void GPNodeProject::cmdAddBlock(ModelBlock *block)
 {
     _node->addBlock(block);
     emit blockAdded(block);
+    setModified(true);
 }
 
 void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
 {
     _node->removeBlock(block);
     emit blockRemoved(block);
+    setModified(true);
 }
 
 QUndoStack *GPNodeProject::undoStack() const

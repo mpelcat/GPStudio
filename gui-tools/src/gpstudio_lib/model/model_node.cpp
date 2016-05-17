@@ -144,6 +144,44 @@ ModelNode *ModelNode::readFromFile(const QString &fileName)
     return NULL;
 }
 
+QDomElement ModelNode::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("node");
+
+    element.setAttribute("name", _name);
+
+    QDomElement processList = doc.createElement("process");
+    foreach (ModelBlock *process, blocks())
+    {
+        if(process->type()=="process")
+        {
+            processList.appendChild(process->toXMLElement(doc));
+        }
+    }
+    element.appendChild(processList);
+
+    return element;
+}
+
+bool ModelNode::saveToFile(const QString &fileName)
+{
+    QDomDocument doc;
+    QFile file(fileName);
+
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
+    else
+    {
+        doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
+        doc.appendChild(toXMLElement(doc));
+        QTextStream stream(&file);
+        stream << doc.toString();
+        file.close();
+        return true;
+    }
+    return false;
+}
+
 ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
 {
     ModelNode *node = new ModelNode();
