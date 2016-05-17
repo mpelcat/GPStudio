@@ -65,6 +65,7 @@ void BlockView::attachProject(GPNodeProject *project)
     _project = project;
 
     connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(changeNode(ModelNode*)));
+    connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(updateBlock(ModelBlock*)));
 
     connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
             project, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
@@ -93,21 +94,14 @@ void BlockView::dropEvent(QDropEvent *event)
     if(_editMode)
     {
         QString driver = event->mimeData()->text();
-
-        ModelProcess *modelProcess = NULL;
         ProcessLib *processLib = Lib::getLib().process(driver);
         if(processLib)
         {
-            modelProcess = new ModelProcess(*processLib->modelProcess());
-            qDebug()<<modelProcess->driver();
-
+            ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
             modelProcess->setName(QString("%1_%2").arg(driver).arg(1));
+            modelProcess->setPos(mapToScene(event->pos()).toPoint());
+            _scene->addBlock(modelProcess);
         }
-
-        BlockItem *proc = BlockItem::fromModelBlock(modelProcess);
-        proc->setPos(mapToScene(event->pos()));
-        proc->setName(driver);
-        _scene->addItem(proc);
     }
 }
 
@@ -210,8 +204,11 @@ void BlockView::selectBlock(const Block *block)
 
 void BlockView::updateBlock(ModelBlock *block)
 {
-    BlockItem *blockItem = _scene->block(block);
-    blockItem->setPos(block->pos());
+    BlockItem *blockItem = _scene->block(block->name());
+    if(blockItem)
+    {
+        blockItem->setPos(block->pos());
+    }
 }
 
 void BlockView::changeNode(ModelNode *node)

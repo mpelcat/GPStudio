@@ -43,7 +43,7 @@ public:
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
-    void addBlock(ModelBlock *blockModel);
+    BlockItem *addBlock(ModelBlock *blockModel);
     BlockItem *block(const QString &name) const;
     BlockItem *block(ModelBlock *modelBlock) const;
 

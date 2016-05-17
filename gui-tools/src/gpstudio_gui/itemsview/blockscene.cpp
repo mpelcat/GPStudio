@@ -70,12 +70,13 @@ bool BlockScene::loadFromCamera(const Camera *camera)
     return true;
 }
 
-void BlockScene::addBlock(ModelBlock *blockModel)
+BlockItem *BlockScene::addBlock(ModelBlock *blockModel)
 {
     BlockItem *blockItem = BlockItem::fromModelBlock(blockModel);
     _blocksName.insert(blockModel->name(), blockItem);
     _blocksModel.insert(blockModel, blockItem);
     addItem(blockItem);
+    return blockItem;
 }
 
 BlockItem *BlockScene::block(const QString &name) const
