@@ -35,6 +35,7 @@ GPNodeProject::GPNodeProject(QObject *parent)
 
 GPNodeProject::~GPNodeProject()
 {
+    delete _undoStack;
 }
 
 QString GPNodeProject::name() const
@@ -125,11 +126,6 @@ void GPNodeProject::closeProject()
     delete _node;
 }
 
-void GPNodeProject::updateBlock(ModelBlock *block)
-{
-    emit blockUpdated(block);
-}
-
 void GPNodeProject::setPath(const QString &path)
 {
     _path = path;
@@ -140,6 +136,30 @@ void GPNodeProject::setModified(bool modified)
 {
     _modified = modified;
     emit nodeModified(_modified);
+}
+
+void GPNodeProject::cmdRenameBlock(ModelBlock *block, const QString &name)
+{
+    block->setName(name);
+    emit blockUpdated(block);
+}
+
+void GPNodeProject::cmdMoveBlockTo(ModelBlock *block, QPoint pos)
+{
+    block->setPos(pos);
+    emit blockUpdated(block);
+}
+
+void GPNodeProject::cmdAddBlock(ModelBlock *block)
+{
+    _node->addBlock(block);
+    emit blockAdded(block);
+}
+
+void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
+{
+    _node->removeBlock(block);
+    emit blockRemoved(block);
 }
 
 QUndoStack *GPNodeProject::undoStack() const
@@ -153,7 +173,26 @@ void GPNodeProject::setNode(ModelNode *node)
     emit nodeChanged(_node);
 }
 
-void GPNodeProject::moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos)
+void GPNodeProject::moveBlock(ModelBlock *block, const QPoint &newPos)
 {
-    _undoStack->push(new BlockCmdMove(this, block, oldPos, newPos));
+    _undoStack->push(new BlockCmdMove(this, block, block->pos(), newPos));
+}
+
+void GPNodeProject::renameBlock(ModelBlock *block, const QString &newName)
+{
+    _undoStack->push(new BlockCmdRename(this, block, block->name(), newName));
+}
+
+void GPNodeProject::addBlock(ModelBlock *block)
+{
+    if(block->name().isEmpty())
+        block->setName(QString("%1_%2").arg(block->driver()).arg(_node->blocks().count()));
+    if(block->name()==block->driver())
+        block->setName(QString("%1_%2").arg(block->driver()).arg(_node->blocks().count()));
+    _undoStack->push(new BlockCmdAdd(this, block));
+}
+
+void GPNodeProject::removeBlock(ModelBlock *block)
+{
+    _undoStack->push(new BlockCmdRemove(this, block));
 }

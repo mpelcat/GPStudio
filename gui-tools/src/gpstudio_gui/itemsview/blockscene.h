@@ -44,6 +44,7 @@ public:
     bool loadFromCamera(const Camera *camera);
 
     BlockItem *addBlock(ModelBlock *blockModel);
+    void removeBlock(ModelBlock *blockModel);
     BlockItem *block(const QString &name) const;
     BlockItem *block(ModelBlock *modelBlock) const;
 

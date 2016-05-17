@@ -79,6 +79,17 @@ BlockItem *BlockScene::addBlock(ModelBlock *blockModel)
     return blockItem;
 }
 
+void BlockScene::removeBlock(ModelBlock *blockModel)
+{
+    BlockItem *blockItem = block(blockModel);
+    if(blockItem)
+    {
+        removeItem(blockItem);
+        _blocksName.remove(blockModel->name());
+        _blocksModel.remove(blockModel);
+    }
+}
+
 BlockItem *BlockScene::block(const QString &name) const
 {
     QMap<QString, BlockItem* >::const_iterator it = _blocksName.find(name);

@@ -66,9 +66,10 @@ void BlockView::attachProject(GPNodeProject *project)
 
     connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(changeNode(ModelNode*)));
     connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(updateBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockAdded(ModelBlock*)), this, SLOT(addBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockRemoved(ModelBlock*)), this, SLOT(removeBlock(ModelBlock*)));
 
-    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint,QPoint)),
-            project, SLOT(moveBlock(ModelBlock*,QPoint,QPoint)));
+    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)), project, SLOT(moveBlock(ModelBlock*,QPoint)));
 }
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
@@ -98,9 +99,8 @@ void BlockView::dropEvent(QDropEvent *event)
         if(processLib)
         {
             ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
-            modelProcess->setName(QString("%1_%2").arg(driver).arg(1));
             modelProcess->setPos(mapToScene(event->pos()).toPoint());
-            _scene->addBlock(modelProcess);
+            _project->addBlock(modelProcess);
         }
     }
 }
@@ -108,10 +108,6 @@ void BlockView::dropEvent(QDropEvent *event)
 void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
-
-    BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
-    if(blockItem)
-        _oldBlockPos = blockItem->pos();
 
     /*if(event->button() == Qt::RightButton)
     {
@@ -144,8 +140,8 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
 
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
     if(blockItem)
-        if(blockItem->pos() != _oldBlockPos)
-            emit blockMoved(blockItem->modelBlock(), _oldBlockPos.toPoint(), blockItem->pos().toPoint());
+        if(blockItem->pos() != blockItem->modelBlock()->pos())
+            emit blockMoved(blockItem->modelBlock(), blockItem->pos().toPoint());
 
     /*if(_startConnectItem)
     {
@@ -204,11 +200,21 @@ void BlockView::selectBlock(const Block *block)
 
 void BlockView::updateBlock(ModelBlock *block)
 {
-    BlockItem *blockItem = _scene->block(block->name());
+    BlockItem *blockItem = _scene->block(block);
     if(blockItem)
     {
         blockItem->setPos(block->pos());
     }
+}
+
+void BlockView::addBlock(ModelBlock *block)
+{
+    _scene->addBlock(block);
+}
+
+void BlockView::removeBlock(ModelBlock *block)
+{
+    _scene->removeBlock(block);
 }
 
 void BlockView::changeNode(ModelNode *node)

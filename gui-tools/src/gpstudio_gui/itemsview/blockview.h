@@ -69,8 +69,11 @@ protected slots:
 
 public slots:
     void selectBlock(const Block *block);
-    void updateBlock(ModelBlock *block);
     void changeNode(ModelNode *node);
+
+    void updateBlock(ModelBlock *block);
+    void addBlock(ModelBlock *block);
+    void removeBlock(ModelBlock *block);
 
     void zoomIn();
     void zoomOut();
@@ -78,7 +81,7 @@ public slots:
 
 signals:
     void blockSelected(const Block *block);
-    void blockMoved(ModelBlock *block, QPoint oldPos, QPoint newPos);
+    void blockMoved(ModelBlock *block, QPoint newPos);
     void blockDetailsRequest(const Block *block);
 
 private:
@@ -90,7 +93,6 @@ private:
     // connector system
     BlockItem *_startConnectItem;
     QGraphicsLineItem *_lineConector;
-    QPointF _oldBlockPos;
 };
 
 #endif // BLOCKVIEW_H

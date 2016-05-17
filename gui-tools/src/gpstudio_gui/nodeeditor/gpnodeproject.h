@@ -50,8 +50,10 @@ public slots:
     void closeProject();
 
     // block commands
-    void updateBlock(ModelBlock *block);
-    void moveBlock(ModelBlock *block, QPoint oldPos, QPoint newPos);
+    void moveBlock(ModelBlock *block, const QPoint &newPos);
+    void renameBlock(ModelBlock *block, const QString &newName);
+    void addBlock(ModelBlock *block);
+    void removeBlock(ModelBlock *block);
 
 signals:
     void nodeChanged(ModelNode *node);
@@ -59,6 +61,8 @@ signals:
     void nodeModified(bool modified);
 
     void blockUpdated(ModelBlock *block);
+    void blockAdded(ModelBlock *block);
+    void blockRemoved(ModelBlock *block);
 
 private:
     void setPath(const QString &path);
@@ -71,6 +75,19 @@ private:
     bool _modified;
 
     QUndoStack *_undoStack;
+
+protected:
+    // commands from undo stack
+    friend class BlockCmdRename;
+    void cmdRenameBlock(ModelBlock *block, const QString &name);
+
+    friend class BlockCmdMove;
+    void cmdMoveBlockTo(ModelBlock *block, QPoint pos);
+
+    friend class BlockCmdAdd;
+    friend class BlockCmdRemove;
+    void cmdAddBlock(ModelBlock *block);
+    void cmdRemoveBlock(ModelBlock *block);
 };
 
 #endif // GPNODEPROJECT_H

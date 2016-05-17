@@ -23,37 +23,52 @@
 #include <QDebug>
 
 BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
-    : _block(block), _project(project)
+    : _project(project), _block(block)
 {
 }
 
 // Rename block
-BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, QString oldName, QString newName)
+BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName)
     : BlockCommand(project, block), _oldName(oldName), _newName(newName)
 {
 }
 
+void BlockCmdRename::undo()
+{
+    _project->cmdRenameBlock(_block, _oldName);
+}
+
+void BlockCmdRename::redo()
+{
+    _project->cmdRenameBlock(_block, _newName);
+}
+
 bool BlockCmdRename::mergeWith(const QUndoCommand *command)
 {
-    return false;
+    const BlockCmdRename *blockCmdRename = static_cast<const BlockCmdRename *>(command);
+
+    if (_block != blockCmdRename->_block)
+        return false;
+
+    _newName = blockCmdRename->_newName;
+
+    return true;
 }
 
 // Move block
-BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, QPoint oldPos, QPoint newPos)
+BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos)
     : BlockCommand(project, block), _oldPos(oldPos), _newPos(newPos)
 {
 }
 
 void BlockCmdMove::undo()
 {
-    _block->setPos(_oldPos);
-    _project->updateBlock(_block);
+    _project->cmdMoveBlockTo(_block, _oldPos);
 }
 
 void BlockCmdMove::redo()
 {
-    _block->setPos(_newPos);
-    _project->updateBlock(_block);
+    _project->cmdMoveBlockTo(_block, _newPos);
 }
 
 bool BlockCmdMove::mergeWith(const QUndoCommand *command)
@@ -66,4 +81,49 @@ bool BlockCmdMove::mergeWith(const QUndoCommand *command)
     _newPos = blockCmdMove->_newPos;
 
     return true;
+}
+
+// Add block
+BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
+    : BlockCommand(project, block)
+{
+}
+
+BlockCmdAdd::~BlockCmdAdd()
+{
+    // delete the block if it's not inside the node
+    if(!_project->node()->blocks().contains(_block))
+        delete _block;
+}
+
+void BlockCmdAdd::undo()
+{
+    _project->cmdRemoveBlock(_block);
+}
+
+void BlockCmdAdd::redo()
+{
+    _project->cmdAddBlock(_block);
+}
+
+BlockCmdRemove::BlockCmdRemove(GPNodeProject *project, ModelBlock *block)
+    : BlockCommand(project, block)
+{
+}
+
+BlockCmdRemove::~BlockCmdRemove()
+{
+    // delete the block if it's not inside the node
+    if(!_project->node()->blocks().contains(_block))
+        delete _block;
+}
+
+void BlockCmdRemove::undo()
+{
+    _project->cmdAddBlock(_block);
+}
+
+void BlockCmdRemove::redo()
+{
+    _project->cmdRemoveBlock(_block);
 }

@@ -42,7 +42,9 @@ class GPSTUDIO_GUI_EXPORT BlockCmdRename : public BlockCommand
 {
 public:
     enum { Id = 0x0101 };
-    BlockCmdRename(GPNodeProject *project, ModelBlock *block, QString oldName, QString newName);
+    BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName);
+    void undo();
+    void redo();
     bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
@@ -55,7 +57,7 @@ class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
 {
 public:
     enum { Id = 0x0102 };
-    BlockCmdMove(GPNodeProject *project, ModelBlock *block, QPoint oldPos, QPoint newPos);
+    BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos);
     void undo();
     void redo();
     bool mergeWith(const QUndoCommand *command);
@@ -64,6 +66,28 @@ public:
 protected:
     QPoint _oldPos;
     QPoint _newPos;
+};
+
+class GPSTUDIO_GUI_EXPORT BlockCmdAdd : public BlockCommand
+{
+public:
+    enum { Id = 0x0103 };
+    BlockCmdAdd(GPNodeProject *project, ModelBlock *block);
+    ~BlockCmdAdd();
+    void undo();
+    void redo();
+    int id() const { return Id; }
+};
+
+class GPSTUDIO_GUI_EXPORT BlockCmdRemove : public BlockCommand
+{
+public:
+    enum { Id = 0x0104 };
+    BlockCmdRemove(GPNodeProject *project, ModelBlock *block);
+    ~BlockCmdRemove();
+    void undo();
+    void redo();
+    int id() const { return Id; }
 };
 
 #endif // BLOCKCOMMANDS_H

@@ -70,6 +70,11 @@ void ModelNode::addBlock(ModelBlock *block)
     _blocks.append(block);
 }
 
+void ModelNode::removeBlock(ModelBlock *block)
+{
+    _blocks.removeOne(block);
+}
+
 ModelFIBlock *ModelNode::getFIBlock() const
 {
     for(int i=0; i<this->blocks().size(); i++)
