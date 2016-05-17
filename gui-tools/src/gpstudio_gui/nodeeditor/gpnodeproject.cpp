@@ -26,6 +26,8 @@
 
 #include "undostack/blockcommands.h"
 
+#include <model/model_fiblock.h>
+
 GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
@@ -182,6 +184,30 @@ void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
     setModified(true);
 }
 
+void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    ModelFIBlock *fiBlock = _node->getFIBlock();
+    if(!fiBlock)
+    {
+        fiBlock = new ModelFIBlock();
+        _node->addBlock(fiBlock);
+    }
+
+    fiBlock->connectFlow(fromFlow, toFlow);
+}
+
+void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    ModelFIBlock *fiBlock = _node->getFIBlock();
+    if(!fiBlock)
+    {
+        fiBlock = new ModelFIBlock();
+        _node->addBlock(fiBlock);
+    }
+
+    fiBlock->disConnectFlow(fromFlow, toFlow);
+}
+
 QUndoStack *GPNodeProject::undoStack() const
 {
     return _undoStack;
@@ -215,4 +241,14 @@ void GPNodeProject::addBlock(ModelBlock *block)
 void GPNodeProject::removeBlock(ModelBlock *block)
 {
     _undoStack->push(new BlockCmdRemove(this, block));
+}
+
+void GPNodeProject::connectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    _undoStack->push(new BlockCmdConnectFlow(this, fromFlow, toFlow));
+}
+
+void GPNodeProject::disConnectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    _undoStack->push(new BlockCmdDisconnectFlow(this, fromFlow, toFlow));
 }

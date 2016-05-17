@@ -18,8 +18,8 @@
 **
 ****************************************************************************/
 
-#include "blockconnectoritem.h"
 #include "blockportitem.h"
+#include "blockconnectoritem.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -54,7 +54,14 @@ QRectF BlockPortItem::boundingRect() const
 
 QPainterPath BlockPortItem::shape() const
 {
-    return QPainterPath();
+    QPainterPath path;
+
+    path.moveTo(-9, -9);
+    path.lineTo(9, 0);
+    path.lineTo(-9, 9);
+    path.closeSubpath();
+
+    return path;
 }
 
 void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -134,7 +141,7 @@ QPointF BlockPortItem::connectorPos() const
         return scenePos()+QPointF(10,0);
 }
 
-BlockPortItem *BlockPortItem::fromModelFlow(const ModelFlow *modelFlow)
+BlockPortItem *BlockPortItem::fromModelFlow(ModelFlow *modelFlow)
 {
     BlockPortItem *item = new BlockPortItem();
 
@@ -144,5 +151,17 @@ BlockPortItem *BlockPortItem::fromModelFlow(const ModelFlow *modelFlow)
     else
         item->_direction = Output;
 
+    item->_modelFlow = modelFlow;
+
     return item;
+}
+
+ModelFlow *BlockPortItem::modelFlow() const
+{
+    return _modelFlow;
+}
+
+void BlockPortItem::setModelFlow(ModelFlow *modelFlow)
+{
+    _modelFlow = modelFlow;
 }

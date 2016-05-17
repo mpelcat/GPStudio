@@ -31,7 +31,7 @@
 class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
 public:
-    BlockCommand(GPNodeProject *project, ModelBlock *block);
+    BlockCommand(GPNodeProject *project, ModelBlock *block=NULL);
 
 protected:
     GPNodeProject *_project;
@@ -88,6 +88,34 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+};
+
+class GPSTUDIO_GUI_EXPORT BlockCmdConnectFlow : public BlockCommand
+{
+public:
+    enum { Id = 0x0105 };
+    BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    ModelFlow *_flow1;
+    ModelFlow *_flow2;
+};
+
+class GPSTUDIO_GUI_EXPORT BlockCmdDisconnectFlow : public BlockCommand
+{
+public:
+    enum { Id = 0x0106 };
+    BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    ModelFlow *_flow1;
+    ModelFlow *_flow2;
 };
 
 #endif // BLOCKCOMMANDS_H

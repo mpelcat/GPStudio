@@ -54,6 +54,8 @@ public slots:
     void renameBlock(ModelBlock *block, const QString &newName);
     void addBlock(ModelBlock *block);
     void removeBlock(ModelBlock *block);
+    void connectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void disConnectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
 
 signals:
     void nodeChanged(ModelNode *node);
@@ -88,6 +90,11 @@ protected:
     friend class BlockCmdRemove;
     void cmdAddBlock(ModelBlock *block);
     void cmdRemoveBlock(ModelBlock *block);
+
+    friend class BlockCmdConnectFlow;
+    friend class BlockCmdDisconnectFlow;
+    void cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
 };
 
 #endif // GPNODEPROJECT_H

@@ -30,7 +30,7 @@ class BlockPortItem;
 class GPSTUDIO_GUI_EXPORT BlockConnectorItem : public QGraphicsItem
 {
 public:
-    BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn);
+    BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn = NULL);
     ~BlockConnectorItem();
 
     enum { Type = UserType + 2 };
@@ -48,9 +48,16 @@ public:
 
     void updateShape();
 
+    QPoint endPos() const;
+    void setEndPos(const QPoint &endPos);
+
 private:
-    BlockPortItem *_portItemOut;
-    BlockPortItem *_portItemIn;
+    BlockPortItem *_portItem1;
+    BlockPortItem *_portItem2;
+    QPoint _endPos;
+
+    QPointF _inPos;
+    QPointF _outPos;
 
     DrawStyle _style;
 };

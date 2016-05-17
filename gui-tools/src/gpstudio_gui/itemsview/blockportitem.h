@@ -57,12 +57,16 @@ public:
 
     QPointF connectorPos() const;
 
+    ModelFlow *modelFlow() const;
+    void setModelFlow(ModelFlow *modelFlow);
+
 public:
-    static BlockPortItem *fromModelFlow(const ModelFlow *modelFlow);
+    static BlockPortItem *fromModelFlow(ModelFlow *modelFlow);
 
 private:
     QString _name;
     Direction _direction;
+    ModelFlow *_modelFlow;
 
     QList<BlockConnectorItem *> _connects;
 };

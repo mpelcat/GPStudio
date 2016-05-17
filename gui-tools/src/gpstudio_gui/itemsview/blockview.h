@@ -27,6 +27,7 @@
 
 #include "blockscene.h"
 class BlockItem;
+class BlockConnectorItem;
 
 #include "model/model_node.h"
 #include "lib_parser/lib.h"
@@ -83,6 +84,7 @@ signals:
     void blockSelected(const Block *block);
     void blockMoved(ModelBlock *block, QPoint newPos);
     void blockDetailsRequest(const Block *block);
+    void blockPortConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
 
 private:
     GPNodeProject *_project;
@@ -91,8 +93,8 @@ private:
     bool _editMode;
 
     // connector system
-    BlockItem *_startConnectItem;
-    QGraphicsLineItem *_lineConector;
+    BlockPortItem *_startConnectItem;
+    BlockConnectorItem *_lineConector;
 };
 
 #endif // BLOCKVIEW_H

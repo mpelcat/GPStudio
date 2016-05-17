@@ -132,3 +132,41 @@ void BlockCmdRemove::redo()
 {
     _project->cmdRemoveBlock(_block);
 }
+
+// Flow connection
+BlockCmdConnectFlow::BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
+    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+{
+    setText(QString("connect flow '%1.%2' to '%3.%4'")
+            .arg(flow1->parent()->name()).arg(flow1->name())
+            .arg(flow2->parent()->name()).arg(flow2->name()));
+}
+
+void BlockCmdConnectFlow::undo()
+{
+    _project->cmdDisconnectFlow(_flow1, _flow2);
+}
+
+void BlockCmdConnectFlow::redo()
+{
+    _project->cmdConnectFlow(_flow1, _flow2);
+}
+
+// Flow disconnection
+BlockCmdDisconnectFlow::BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
+    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+{
+    setText(QString("disconnect flow '%1.%2' to '%3.%4'")
+            .arg(flow1->parent()->name()).arg(flow1->name())
+            .arg(flow2->parent()->name()).arg(flow2->name()));
+}
+
+void BlockCmdDisconnectFlow::undo()
+{
+    _project->cmdConnectFlow(_flow1, _flow2);
+}
+
+void BlockCmdDisconnectFlow::redo()
+{
+    _project->cmdDisconnectFlow(_flow1, _flow2);
+}

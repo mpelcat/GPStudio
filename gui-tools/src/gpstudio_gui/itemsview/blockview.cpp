@@ -27,6 +27,7 @@
 
 #include "blockitem.h"
 #include "blockconnectoritem.h"
+#include "blockportitem.h"
 
 BlockView::BlockView(QWidget *parent)
     : QGraphicsView(parent)
@@ -70,6 +71,7 @@ void BlockView::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(blockRemoved(ModelBlock*)), this, SLOT(removeBlock(ModelBlock*)));
 
     connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)), project, SLOT(moveBlock(ModelBlock*,QPoint)));
+    connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)), project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
 }
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
@@ -109,29 +111,24 @@ void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
-    /*if(event->button() == Qt::RightButton)
+    if(event->button() == Qt::RightButton)
     {
-        BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
+        BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
         if(processItem)
         {
             _startConnectItem = processItem;
-            _lineConector = new QGraphicsLineItem();
-            _lineConector->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
+            _lineConector = new BlockConnectorItem(_startConnectItem);
             blockScene()->addItem(_lineConector);
         }
-    }*/
+    }
 }
 
 void BlockView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
 
-    /*if(_startConnectItem)
-    {
-        QLineF line = _lineConector->line();
-        line.setP2(mapToScene(event->pos()-QPoint(-5,-5)));
-        _lineConector->setLine(line);
-    }*/
+    if(_startConnectItem)
+        _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
 }
 
 void BlockView::mouseReleaseEvent(QMouseEvent *event)
@@ -143,21 +140,16 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
         if(blockItem->pos() != blockItem->modelBlock()->pos())
             emit blockMoved(blockItem->modelBlock(), blockItem->pos().toPoint());
 
-    /*if(_startConnectItem)
+    if(_startConnectItem)
     {
-        BlockItem *processItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
+        BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
         if(processItem)
-        {
-            BlockConnectorItem *connectItem = new BlockConnectorItem(_startConnectItem, processItem);
-            scene()->addItem(connectItem);
-            _startConnectItem->addConnect(connectItem);
-            processItem->addConnect(connectItem);
-        }
+            emit blockPortConnected(_startConnectItem->modelFlow(), processItem->modelFlow());
 
         scene()->removeItem(_lineConector);
         _startConnectItem = NULL;
         _lineConector = NULL;
-    }*/
+    }
 }
 
 void BlockView::mouseDoubleClickEvent(QMouseEvent *event)
@@ -180,7 +172,8 @@ void BlockView::updateSelection()
 
     QGraphicsItem *item = _scene->selectedItems().at(0);
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
-    emit blockSelected(blockItem->block());
+    if(blockItem)
+        emit blockSelected(blockItem->block());
 }
 
 void BlockView::selectBlock(const Block *block)
