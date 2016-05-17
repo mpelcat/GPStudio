@@ -33,6 +33,7 @@ class GPSTUDIO_LIB_EXPORT ModelParamBitField
 {
 public:
     ModelParamBitField();
+    ModelParamBitField(const ModelParamBitField &modelParamBitField);
     ~ModelParamBitField();
 
     const QString &name() const;

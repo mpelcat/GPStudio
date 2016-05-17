@@ -29,6 +29,18 @@ ModelParamBitField::ModelParamBitField()
     _parent = NULL;
 }
 
+ModelParamBitField::ModelParamBitField(const ModelParamBitField &modelParamBitField)
+{
+    _parent = NULL;
+
+    _name = modelParamBitField._name;
+    _type = modelParamBitField._type;
+    _value = modelParamBitField._value;
+    _bitfield = modelParamBitField._bitfield;
+    _description = modelParamBitField._description;
+    _propertyMap = modelParamBitField._propertyMap;
+}
+
 ModelParamBitField::~ModelParamBitField()
 {
 }

@@ -48,21 +48,21 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
     _description = modelBlock._description;
 
     for(int i=0; i<modelBlock._files.size(); i++)
-        _files.append(new ModelFile(*modelBlock._files[i]));
+        addFile(new ModelFile(*modelBlock._files[i]));
     for(int i=0; i<modelBlock._params.size(); i++)
-        _params.append(new ModelParam(*modelBlock._params[i]));
+        addParam(new ModelParam(*modelBlock._params[i]));
     for(int i=0; i<modelBlock._properties.size(); i++)
-        _properties.append(new ModelProperty(*modelBlock._properties[i]));
+        addProperty(new ModelProperty(*modelBlock._properties[i]));
     for(int i=0; i<modelBlock._flows.size(); i++)
-        _flows.append(new ModelFlow(*modelBlock._flows[i]));
+        addFlow(new ModelFlow(*modelBlock._flows[i]));
     for(int i=0; i<modelBlock._clocks.size(); i++)
-        _clocks.append(new ModelClock(*modelBlock._clocks[i]));
+        addClock(new ModelClock(*modelBlock._clocks[i]));
     for(int i=0; i<modelBlock._ports.size(); i++)
-        _ports.append(new ModelPort(*modelBlock._ports[i]));
+        addPort(new ModelPort(*modelBlock._ports[i]));
     for(int i=0; i<modelBlock._pins.size(); i++)
-        _pins.append(new ModelPin(*modelBlock._pins[i]));
+        addPin(new ModelPin(*modelBlock._pins[i]));
     for(int i=0; i<modelBlock._resets.size(); i++)
-        _resets.append(new ModelReset(*modelBlock._resets[i]));
+        addReset(new ModelReset(*modelBlock._resets[i]));
 }
 
 ModelBlock::~ModelBlock()

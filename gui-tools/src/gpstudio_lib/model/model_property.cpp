@@ -44,9 +44,9 @@ ModelProperty::ModelProperty(const ModelProperty &modelProperty)
     _description = modelProperty._description;
 
     for(int i=0; i<modelProperty._properties.size(); i++)
-        _properties.append(new ModelProperty(*modelProperty._properties[i]));
+        addProperty(new ModelProperty(*modelProperty._properties[i]));
     for(int i=0; i<modelProperty._propertyEnums.size(); i++)
-        _propertyEnums.append(new ModelPropertyEnum(*modelProperty._propertyEnums[i]));
+        addPropertyEnum(new ModelPropertyEnum(*modelProperty._propertyEnums[i]));
 }
 
 ModelProperty::~ModelProperty()

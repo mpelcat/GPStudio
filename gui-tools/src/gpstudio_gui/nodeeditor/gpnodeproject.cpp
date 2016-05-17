@@ -36,6 +36,7 @@ GPNodeProject::GPNodeProject(QObject *parent)
 GPNodeProject::~GPNodeProject()
 {
     delete _undoStack;
+    delete _node;
 }
 
 QString GPNodeProject::name() const

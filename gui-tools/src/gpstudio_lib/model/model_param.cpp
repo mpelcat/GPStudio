@@ -44,7 +44,7 @@ ModelParam::ModelParam(const ModelParam &modelParam)
     _propertyMap = modelParam._propertyMap;
 
     for(int i=0; i<modelParam._parambitfields.size(); i++)
-        _parambitfields.append(modelParam._parambitfields[i]);
+        addParamBitField(new ModelParamBitField(*modelParam._parambitfields[i]));
 }
 
 ModelParam::~ModelParam()

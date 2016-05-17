@@ -36,7 +36,7 @@ ModelPin::ModelPin(const ModelPin &modelPin)
     _mapTo = modelPin._mapTo;
 
     for(int i=0; i<modelPin._attributes.size(); i++)
-        _attributes.append(new ModelAttribute(*modelPin._attributes[i]));
+        addAttribute(new ModelAttribute(*modelPin._attributes[i]));
 }
 
 ModelPin::~ModelPin()

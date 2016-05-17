@@ -35,7 +35,7 @@ ModelTreeConnect::ModelTreeConnect(const ModelTreeConnect &modelTreeConnect)
     _muxname = modelTreeConnect._muxname;
 
     for(int i=0; i<modelTreeConnect._treeitems.size(); i++)
-        _treeitems.append(new ModelTreeItem(*modelTreeConnect._treeitems[i]));
+        addTreeItem(new ModelTreeItem(*modelTreeConnect._treeitems[i]));
 }
 
 ModelTreeConnect::~ModelTreeConnect()

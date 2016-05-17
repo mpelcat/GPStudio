@@ -32,7 +32,7 @@ ModelIOCom::ModelIOCom(const ModelIOCom &modelIOCom)
     _driverIO = modelIOCom._driverIO;
 
     for(int i=0; i<modelIOCom._comConnects.size(); i++)
-        _comConnects.append(modelIOCom._comConnects[i]);
+        addComConnect(modelIOCom._comConnects[i]);
 }
 
 ModelIOCom::~ModelIOCom()

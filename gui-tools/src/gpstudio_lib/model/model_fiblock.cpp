@@ -31,9 +31,9 @@ ModelFIBlock::ModelFIBlock(const ModelFIBlock &modelFIBlock)
     : ModelBlock(modelFIBlock)
 {
     for(int i=0; i<modelFIBlock._flowConnects.size(); i++)
-        _flowConnects.append(new ModelFlowConnect(*modelFIBlock._flowConnects[i]));
+        addFlowConnect(new ModelFlowConnect(*modelFIBlock._flowConnects[i]));
     for(int i=0; i<modelFIBlock._treeConnects.size(); i++)
-        _treeConnects.append(new ModelTreeConnect(*modelFIBlock._treeConnects[i]));
+        addTreeConnect(new ModelTreeConnect(*modelFIBlock._treeConnects[i]));
 }
 
 ModelFIBlock::~ModelFIBlock()

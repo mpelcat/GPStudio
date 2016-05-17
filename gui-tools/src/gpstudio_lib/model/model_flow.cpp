@@ -40,7 +40,7 @@ ModelFlow::ModelFlow(const ModelFlow &modelFlow)
     _description = modelFlow._description;
 
     for(int i=0; i<modelFlow._properties.size(); i++)
-        _properties.append(new ModelProperty(*modelFlow._properties[i]));
+        addProperty(new ModelProperty(*modelFlow._properties[i]));
 }
 
 ModelFlow::~ModelFlow()
