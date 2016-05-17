@@ -31,6 +31,7 @@ BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
 BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName)
     : BlockCommand(project, block), _oldName(oldName), _newName(newName)
 {
+    setText(QString("renamed block '%1'").arg(newName));
 }
 
 void BlockCmdRename::undo()
@@ -59,6 +60,7 @@ bool BlockCmdRename::mergeWith(const QUndoCommand *command)
 BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos)
     : BlockCommand(project, block), _oldPos(oldPos), _newPos(newPos)
 {
+    setText(QString("moved block '%1'").arg(block->name()));
 }
 
 void BlockCmdMove::undo()
@@ -87,6 +89,7 @@ bool BlockCmdMove::mergeWith(const QUndoCommand *command)
 BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
     : BlockCommand(project, block)
 {
+    setText(QString("added block '%1'").arg(block->name()));
 }
 
 BlockCmdAdd::~BlockCmdAdd()
@@ -106,9 +109,11 @@ void BlockCmdAdd::redo()
     _project->cmdAddBlock(_block);
 }
 
+// Remove block
 BlockCmdRemove::BlockCmdRemove(GPNodeProject *project, ModelBlock *block)
     : BlockCommand(project, block)
 {
+    setText(QString("remove block '%1'").arg(block->name()));
 }
 
 BlockCmdRemove::~BlockCmdRemove()
