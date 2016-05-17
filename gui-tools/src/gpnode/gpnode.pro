@@ -36,7 +36,7 @@ equals(DISTRIB, 1) {
 
 QMAKE_CFLAGS_RELEASE = -O2
 
-SOURCES += main.cpp\
+SOURCES += gpnode.cpp
 
 # relative path for shared library in the same directory
 LIBS += -Wl,-R.
