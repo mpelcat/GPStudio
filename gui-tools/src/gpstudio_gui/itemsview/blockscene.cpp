@@ -26,6 +26,7 @@
 #include <QMap>
 
 #include "blockconnectoritem.h"
+#include "blockportitem.h"
 
 BlockScene::BlockScene()
 {
@@ -135,6 +136,37 @@ void BlockScene::connectBlockPort(const QString &fromblock, const QString &fromf
     if(!toflowItem) return;
 
     connectBlockPort(fromflowItem, toflowItem);
+}
+
+void BlockScene::disconnectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
+{
+    disconnectBlockPort(fromflow->parent()->name(), fromflow->name(), toflow->parent()->name(), toflow->name());
+}
+
+void BlockScene::disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow)
+{
+    BlockItem *fromblockItem = block(fromblock);
+    if(!fromblockItem) return;
+
+    BlockPortItem *fromflowItem = fromblockItem->port(fromflow);
+    if(!fromflowItem) return;
+
+    BlockItem *toblockItem = block(toblock);
+    if(!toblockItem) return;
+
+    BlockPortItem *toflowItem = toblockItem->port(toflow);
+    if(!toflowItem) return;
+
+    foreach (BlockConnectorItem *connectorItem, fromflowItem->connects())
+    {
+        if((connectorItem->portItem1()==fromflowItem || connectorItem->portItem2()==fromflowItem) &&
+           (connectorItem->portItem1()==toflowItem || connectorItem->portItem2()==toflowItem))
+        {
+            connectorItem->disconnectPorts();
+            removeItem(connectorItem);
+            delete connectorItem;
+        }
+    }
 }
 
 void BlockScene::connectBlockPort(BlockPortItem *fromflowItem, BlockPortItem *toflowItem)

@@ -142,6 +142,11 @@ void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
     _connects.append(connectItem);
 }
 
+void BlockPortItem::removeConnect(BlockConnectorItem *connectItem)
+{
+    _connects.removeOne(connectItem);
+}
+
 const QList<BlockConnectorItem *> &BlockPortItem::connects() const
 {
     return _connects;

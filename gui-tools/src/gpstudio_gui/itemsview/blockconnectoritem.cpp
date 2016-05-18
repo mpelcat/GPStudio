@@ -29,6 +29,7 @@
 BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn)
     : _portItem1(portItemOut), _portItem2(portItemIn)
 {
+    setFlag(ItemIsSelectable, true);
     if(_portItem1)
         _portItem1->addConnect(this);
     if(_portItem2)
@@ -63,41 +64,31 @@ QRectF BlockConnectorItem::boundingRect() const
     return QRectF(_inPos, _outPos).normalized().adjusted(-10, -10, 10, 10);
 }
 
+QPainterPath BlockConnectorItem::shape() const
+{
+    QPen pen(Qt::black, 10);
+    QPainterPathStroker ps;
+    ps.setWidth(pen.width());
+    ps.setCapStyle(pen.capStyle());
+    ps.setJoinStyle(pen.joinStyle());
+    ps.setMiterLimit(pen.miterLimit());
+    QPainterPath p = ps.createStroke(_shape);
+    p.addPath(_shape);
+    return p;
+}
+
 void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
     // start draw
-    painter->setPen(QPen(Qt::black, 3));
-
-    QRectF rect = QRectF(_outPos, _inPos).normalized();
-
-    int y1, y2;
-    if(_outPos.y() > _inPos.y())
-    {
-        y1 = rect.bottom();
-        y2 = rect.top();
-    }
+    if(isSelected())
+        painter->setPen(QPen(QColor("orange"), 4));
     else
-    {
-        y1 = rect.top();
-        y2 = rect.bottom();
-    }
-    QPainterPath path;
-    path.moveTo(_outPos);
-    if(_style==LineDraw)
-    {
-        path.lineTo(QPoint(rect.center().x(), y1));
-        path.lineTo(QPoint(rect.center().x(), y2));
-        path.lineTo(_inPos);
-    }
-    else
-    {
-        path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _inPos);
-    }
+        painter->setPen(QPen(Qt::black, 3));
 
-    painter->drawPath(path);
+    painter->drawPath(_shape);
 }
 
 void BlockConnectorItem::updateShape()
@@ -137,6 +128,34 @@ void BlockConnectorItem::updateShape()
         _inPos = _endPos;
     if(!outInit)
         _outPos = _endPos;
+
+    // compute shape
+    QRectF rect = QRectF(_outPos, _inPos).normalized();
+    int y1, y2;
+    if(_outPos.y() > _inPos.y())
+    {
+        y1 = rect.bottom();
+        y2 = rect.top();
+    }
+    else
+    {
+        y1 = rect.top();
+        y2 = rect.bottom();
+    }
+    QPainterPath path;
+    path.moveTo(_outPos);
+    if(_style==LineDraw)
+    {
+        path.lineTo(QPoint(rect.center().x(), y1));
+        path.lineTo(QPoint(rect.center().x(), y2));
+        path.lineTo(_inPos);
+    }
+    else
+    {
+        path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _inPos);
+    }
+
+    _shape = path;
 }
 
 QPoint BlockConnectorItem::endPos() const
@@ -148,6 +167,24 @@ void BlockConnectorItem::setEndPos(const QPoint &endPos)
 {
     _endPos = endPos;
     updateShape();
+}
+
+void BlockConnectorItem::disconnectPorts()
+{
+    if(_portItem1)
+        _portItem1->removeConnect(this);
+    if(_portItem2)
+        _portItem2->removeConnect(this);
+}
+
+BlockPortItem *BlockConnectorItem::portItem1() const
+{
+    return _portItem1;
+}
+
+BlockPortItem *BlockConnectorItem::portItem2() const
+{
+    return _portItem2;
 }
 
 

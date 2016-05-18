@@ -44,12 +44,17 @@ public:
     void setStyle(const DrawStyle &style);
 
     QRectF boundingRect() const;
+    QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     void updateShape();
 
     QPoint endPos() const;
     void setEndPos(const QPoint &endPos);
+
+    void disconnectPorts();
+    BlockPortItem *portItem1() const;
+    BlockPortItem *portItem2() const;
 
 private:
     BlockPortItem *_portItem1;
@@ -58,6 +63,7 @@ private:
 
     QPointF _inPos;
     QPointF _outPos;
+    QPainterPath _shape;
 
     DrawStyle _style;
 };

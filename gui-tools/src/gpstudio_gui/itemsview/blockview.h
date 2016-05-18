@@ -83,10 +83,13 @@ public slots:
     void zoomFit();
 
 signals:
-    void blockSelected(const Block *block);
-    void blockMoved(ModelBlock *block, QPoint newPos);
     void blockDetailsRequest(const Block *block);
+    void blockSelected(const Block *block);
+
+    void blockMoved(ModelBlock *block, QPoint newPos);
+    void blockDeleted(ModelBlock *block);
     void blockPortConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockPortDisconnected(ModelFlow *fromFlow, ModelFlow *toFlow);
 
 private:
     GPNodeProject *_project;

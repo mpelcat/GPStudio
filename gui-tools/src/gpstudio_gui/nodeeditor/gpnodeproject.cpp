@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "undostack/blockcommands.h"
 
@@ -136,9 +137,11 @@ void GPNodeProject::closeProject()
 {
     if(_modified)
     {
-        saveProject();
+        if(QMessageBox::question(0, "Project modified", "Would you like to save the project before close it ?", QMessageBox::Save | QMessageBox::Cancel)==QMessageBox::Save)
+            saveProject();
     }
 
+    _undoStack->clear();
     setNode(NULL);
     delete _node;
 }

@@ -147,6 +147,13 @@ void BlockItem::updateBlock()
 void BlockItem::updatePos()
 {
     setPos(_modelBlock->pos());
+    foreach (BlockPortItem *portItem, _ports)
+    {
+        foreach (BlockConnectorItem *connectItem, portItem->connects())
+        {
+            connectItem->updateShape();
+        }
+    }
 }
 
 void BlockItem::addPort(BlockPortItem *portItem)

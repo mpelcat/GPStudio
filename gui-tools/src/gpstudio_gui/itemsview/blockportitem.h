@@ -52,6 +52,7 @@ public:
     void setDirection(const Direction &direction);
 
     void addConnect(BlockConnectorItem *connectItem);
+    void removeConnect(BlockConnectorItem *connectItem);
 
     const QList<BlockConnectorItem *> &connects() const;
 
