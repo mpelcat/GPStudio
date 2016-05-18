@@ -264,7 +264,10 @@ void MainWindow::updateWindowsMenu()
 
 void MainWindow::showBlockDetails(const Block *block)
 {
-    if(_blockEditor) delete _blockEditor;
+    if(!block)
+        return;
+    if(_blockEditor)
+        delete _blockEditor;
     _blockEditor = new BlockEditorWindow (this, block->modelBlock());
     _blockEditor->show();
 }

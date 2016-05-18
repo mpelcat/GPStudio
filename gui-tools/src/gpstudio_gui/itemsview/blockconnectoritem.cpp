@@ -35,6 +35,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
         _portItem2->addConnect(this);
     setZValue(-1);
     _style=CubicDraw;
+    updateShape();
 }
 
 BlockConnectorItem::~BlockConnectorItem()
@@ -59,7 +60,7 @@ void BlockConnectorItem::setStyle(const BlockConnectorItem::DrawStyle &style)
 
 QRectF BlockConnectorItem::boundingRect() const
 {
-    return QRectF(_inPos, _outPos).normalized();
+    return QRectF(_inPos, _outPos).normalized().adjusted(-10, -10, 10, 10);
 }
 
 void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -103,6 +104,8 @@ void BlockConnectorItem::updateShape()
 {
     bool inInit=false, outInit=false;
 
+    prepareGeometryChange();
+
     // compute point start and end
     if(_portItem1)
     {
@@ -134,8 +137,6 @@ void BlockConnectorItem::updateShape()
         _inPos = _endPos;
     if(!outInit)
         _outPos = _endPos;
-
-    prepareGeometryChange();
 }
 
 QPoint BlockConnectorItem::endPos() const

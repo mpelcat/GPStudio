@@ -65,6 +65,8 @@ signals:
     void blockUpdated(ModelBlock *block);
     void blockAdded(ModelBlock *block);
     void blockRemoved(ModelBlock *block);
+    void blockConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockDisconected(ModelFlow *fromFlow, ModelFlow *toFlow);
 
 private:
     void setPath(const QString &path);

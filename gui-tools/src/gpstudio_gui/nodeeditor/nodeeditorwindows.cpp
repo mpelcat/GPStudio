@@ -105,9 +105,6 @@ void NodeEditorWindows::createDocks()
     setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
 
     // lib treeview dock
-    _libTreeView = new LibTreeView();
-    _libTreeView->setLib(&Lib::getLib());
-
     _libTreeViewDock = new QDockWidget("LibExplorer", this);
     QWidget *libTreeViewContent = new QWidget(_libTreeViewDock);
     QLayout *libTreeViewLayout = new QVBoxLayout();

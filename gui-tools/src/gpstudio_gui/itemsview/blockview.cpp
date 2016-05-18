@@ -69,6 +69,8 @@ void BlockView::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(updateBlock(ModelBlock*)));
     connect(_project, SIGNAL(blockAdded(ModelBlock*)), this, SLOT(addBlock(ModelBlock*)));
     connect(_project, SIGNAL(blockRemoved(ModelBlock*)), this, SLOT(removeBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockConnected(ModelFlow*,ModelFlow*)), this, SLOT(connectBlock(ModelFlow*,ModelFlow*)));
+    connect(_project, SIGNAL(blockDisconected(ModelFlow*,ModelFlow*)), this, SLOT(disconnectBlock(ModelFlow*,ModelFlow*)));
 
     connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)), project, SLOT(moveBlock(ModelBlock*,QPoint)));
     connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)), project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
@@ -111,7 +113,7 @@ void BlockView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsView::mousePressEvent(event);
 
-    if(event->button() == Qt::RightButton)
+    if(event->button() == Qt::LeftButton)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
         if(processItem)
@@ -119,6 +121,7 @@ void BlockView::mousePressEvent(QMouseEvent *event)
             _startConnectItem = processItem;
             _lineConector = new BlockConnectorItem(_startConnectItem);
             blockScene()->addItem(_lineConector);
+            _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
         }
     }
 }
@@ -143,7 +146,7 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     if(_startConnectItem)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
-        if(processItem)
+        if(processItem && processItem!=_startConnectItem)
             emit blockPortConnected(_startConnectItem->modelFlow(), processItem->modelFlow());
 
         scene()->removeItem(_lineConector);
@@ -208,6 +211,16 @@ void BlockView::addBlock(ModelBlock *block)
 void BlockView::removeBlock(ModelBlock *block)
 {
     _scene->removeBlock(block);
+}
+
+void BlockView::connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    _scene->connectBlockPort(fromFlow, toFlow);
+}
+
+void BlockView::disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+
 }
 
 void BlockView::changeNode(ModelNode *node)

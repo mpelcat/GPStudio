@@ -75,6 +75,8 @@ public slots:
     void updateBlock(ModelBlock *block);
     void addBlock(ModelBlock *block);
     void removeBlock(ModelBlock *block);
+    void connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
 
     void zoomIn();
     void zoomOut();

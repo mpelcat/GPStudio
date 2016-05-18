@@ -63,10 +63,15 @@ public:
 public:
     static BlockPortItem *fromModelFlow(ModelFlow *modelFlow);
 
+protected:
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
 private:
     QString _name;
     Direction _direction;
     ModelFlow *_modelFlow;
+    bool _hover;
 
     QList<BlockConnectorItem *> _connects;
 };

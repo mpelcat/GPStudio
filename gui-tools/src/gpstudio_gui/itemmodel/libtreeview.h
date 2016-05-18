@@ -36,8 +36,10 @@ public:
     void setLib(const Lib *lib);
 
 signals:
+    void processAdded(QString driver);
 
-public slots:
+protected slots:
+    void doubleClickProcess(QModelIndex index);
 
 protected:
     void startDrag(Qt::DropActions supportedActions);

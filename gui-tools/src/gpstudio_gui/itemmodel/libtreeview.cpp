@@ -32,6 +32,8 @@ LibTreeView::LibTreeView(QWidget *parent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
     setDragEnabled(true);
     setDragDropMode(QAbstractItemView::DragOnly);
+
+    connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClickProcess(QModelIndex)));
 }
 
 void LibTreeView::setLib(const Lib *lib)
@@ -56,4 +58,15 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     drag->setPixmap(proc->icon().pixmap(32,32));
 
     drag->exec();
+}
+
+void LibTreeView::doubleClickProcess(QModelIndex index)
+{
+    if(!index.isValid())
+        return;
+
+    const ProcessLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+
+    if(proc)
+        emit processAdded(proc->name());
 }

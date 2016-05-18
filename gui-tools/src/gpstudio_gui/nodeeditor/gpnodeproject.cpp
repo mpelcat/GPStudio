@@ -194,6 +194,7 @@ void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
     }
 
     fiBlock->connectFlow(fromFlow, toFlow);
+    emit blockConnected(fromFlow, toFlow);
 }
 
 void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
@@ -206,6 +207,7 @@ void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
     }
 
     fiBlock->disConnectFlow(fromFlow, toFlow);
+    emit blockDisconected(fromFlow, toFlow);
 }
 
 QUndoStack *GPNodeProject::undoStack() const

@@ -23,6 +23,7 @@
 
 #include <QPainter>
 #include <QDebug>
+#include <QCursor>
 
 #include "lib_parser/processlib.h"
 #include "lib_parser/iolib.h"
@@ -32,7 +33,10 @@
 BlockPortItem::BlockPortItem()
 {
     setFlag(ItemIsSelectable, true);
+    setAcceptHoverEvents(true);
     _direction = Input;
+    setCursor(Qt::CrossCursor);
+    _hover = false;
 }
 
 BlockPortItem::~BlockPortItem()
@@ -47,18 +51,18 @@ int BlockPortItem::type() const
 QRectF BlockPortItem::boundingRect() const
 {
     if(_direction==Input)
-        return QRectF(-10,-10,90,20);
+        return QRectF(-15,-15,90,30);
     else
-        return QRectF(-40,-10,90,20);
+        return QRectF(-40,-15,90,30);
 }
 
 QPainterPath BlockPortItem::shape() const
 {
     QPainterPath path;
 
-    path.moveTo(-9, -9);
-    path.lineTo(9, 0);
-    path.lineTo(-9, 9);
+    path.moveTo(-12, -12);
+    path.lineTo(12, 0);
+    path.lineTo(-12, 12);
     path.closeSubpath();
 
     return path;
@@ -70,10 +74,20 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     QPainterPath path;
 
-    path.moveTo(-9, -9);
-    path.lineTo(9, 0);
-    path.lineTo(-9, 9);
-    path.closeSubpath();
+    if(_hover)
+    {
+        path.moveTo(-11, -11);
+        path.lineTo(11, 0);
+        path.lineTo(-11, 11);
+        path.closeSubpath();
+    }
+    else
+    {
+        path.moveTo(-9, -9);
+        path.lineTo(9, 0);
+        path.lineTo(-9, 9);
+        path.closeSubpath();
+    }
 
     painter->setPen(QPen(Qt::transparent));
 
@@ -136,9 +150,9 @@ const QList<BlockConnectorItem *> &BlockPortItem::connects() const
 QPointF BlockPortItem::connectorPos() const
 {
     if(_direction==Input)
-        return scenePos()+QPointF(-10,0);
+        return scenePos()+QPointF(-7,0);
     else
-        return scenePos()+QPointF(10,0);
+        return scenePos()+QPointF(7,0);
 }
 
 BlockPortItem *BlockPortItem::fromModelFlow(ModelFlow *modelFlow)
@@ -154,6 +168,20 @@ BlockPortItem *BlockPortItem::fromModelFlow(ModelFlow *modelFlow)
     item->_modelFlow = modelFlow;
 
     return item;
+}
+
+void BlockPortItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    _hover = true;
+    prepareGeometryChange();
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void BlockPortItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    _hover = false;
+    prepareGeometryChange();
+    QGraphicsItem::hoverLeaveEvent(event);
 }
 
 ModelFlow *BlockPortItem::modelFlow() const
