@@ -21,6 +21,7 @@
 #include "model_block.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QStringList>
 
 #include "model_io.h"
@@ -456,6 +457,28 @@ ModelReset *ModelBlock::getReset(const QString &name) const
         ModelReset *reset = this->resets().at(i);
         if(reset->name()==name)
             return reset;
+    }
+    return NULL;
+}
+
+ModelBlock *ModelBlock::readFromFile(const QString &fileName)
+{
+    QDomDocument doc;
+    ModelBlock *modelBlock;
+    QFile file(fileName);
+
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug()<<"Cannot open"<<file.fileName();
+    else
+    {
+        if(!doc.setContent(&file))
+        {
+            qDebug()<<"Cannot parse"<<file.fileName();
+            return NULL;
+        }
+        modelBlock = ModelBlock::fromNodeGenerated(doc.documentElement());
+        file.close();
+        return modelBlock;
     }
     return NULL;
 }

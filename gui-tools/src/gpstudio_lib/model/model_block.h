@@ -123,6 +123,8 @@ public:
     ModelReset *getReset(const QString &name) const;
 
 public:
+    static ModelBlock *readFromFile(const QString &fileName);
+
     static ModelBlock *fromNodeGenerated(const QDomElement &domElement, ModelBlock *block=NULL);
     static ModelBlock *fromNodeDef(const QDomElement &domElement, ModelBlock *block=NULL);
     static QList<ModelBlock *> listFromNodeGenerated(const QDomElement &domElement);
