@@ -52,6 +52,13 @@ void BlockEditorWindow::openFile(const QModelIndex &indexFile)
     }
 }
 
+void BlockEditorWindow::closeTab(int id)
+{
+    QWidget *widget = _tabFiles->widget(id);
+    _tabFiles->removeTab(id);
+    delete widget;
+}
+
 void BlockEditorWindow::setupWidgets()
 {
     QWidget *centralwidget = new QWidget(this);
@@ -68,6 +75,7 @@ void BlockEditorWindow::setupWidgets()
 
     _tabFiles = new QTabWidget(splitter);
     _tabFiles->setTabsClosable(true);
+    connect(_tabFiles, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
     splitter->addWidget(_tabFiles);
 
     centralwidget->setLayout(layout);

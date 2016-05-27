@@ -42,6 +42,7 @@ signals:
 
 protected slots:
     void openFile(const QModelIndex &indexFile);
+    void closeTab(int id);
 
 protected:
     void setupWidgets();

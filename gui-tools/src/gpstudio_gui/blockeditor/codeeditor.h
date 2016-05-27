@@ -32,13 +32,18 @@ class GPSTUDIO_GUI_EXPORT CodeEditor : public QPlainTextEdit
     Q_OBJECT
 public:
     explicit CodeEditor(QWidget *parent = 0);
+    QString textUnderMouse(QPoint pos) const;
 
 public slots:
     void loadFileCode(QString file);
 
+    void highlightCurrentLine();
+
     // QWidget interface
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    bool event(QEvent *event);
 
     QSyntaxHighlighter *highlight;
 };
