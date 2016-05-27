@@ -20,13 +20,32 @@
 
 #include "model_flowconnect.h"
 
+#include "model_fiblock.h"
+#include "model_node.h"
+
 ModelFlowConnect::ModelFlowConnect()
 {
+    _parent = NULL;
     _order = "msb";
 }
 
 ModelFlowConnect::~ModelFlowConnect()
 {
+}
+
+ModelBlock *ModelFlowConnect::fromModelBlock() const
+{
+    if(!parent())
+        return NULL;
+
+    if(!parent()->node())
+        return NULL;
+    ModelNode *node = parent()->node();
+    if(!node)
+        return NULL;
+
+    ModelBlock *block = node->getBlock(_fromblock);
+    return block;
 }
 
 const QString &ModelFlowConnect::fromblock() const
@@ -39,6 +58,16 @@ void ModelFlowConnect::setFromblock(const QString &fromblock)
     _fromblock = fromblock;
 }
 
+ModelFlow *ModelFlowConnect::fromModelFlow() const
+{
+    ModelBlock *block = fromModelBlock();
+    if(!block)
+        return NULL;
+
+    ModelFlow *flow = block->getFlow(_fromflow);
+    return flow;
+}
+
 const QString &ModelFlowConnect::fromflow() const
 {
     return _fromflow;
@@ -49,6 +78,21 @@ void ModelFlowConnect::setFromflow(const QString &fromflow)
     _fromflow = fromflow;
 }
 
+ModelBlock *ModelFlowConnect::toModelBlock() const
+{
+    if(!parent())
+        return NULL;
+
+    if(!parent()->node())
+        return NULL;
+    ModelNode *node = parent()->node();
+    if(!node)
+        return NULL;
+
+    ModelBlock *block = node->getBlock(_toblock);
+    return block;
+}
+
 const QString &ModelFlowConnect::toblock() const
 {
     return _toblock;
@@ -57,6 +101,16 @@ const QString &ModelFlowConnect::toblock() const
 void ModelFlowConnect::setToblock(const QString &toblock)
 {
     _toblock = toblock;
+}
+
+ModelFlow *ModelFlowConnect::toModelFlow() const
+{
+    ModelBlock *block = toModelBlock();
+    if(!block)
+        return NULL;
+
+    ModelFlow *flow = block->getFlow(_toflow);
+    return flow;
 }
 
 const QString &ModelFlowConnect::toflow() const
@@ -142,4 +196,14 @@ QDomElement ModelFlowConnect::toXMLElement(QDomDocument &doc)
     element.setAttribute("order", _order);
 
     return element;
+}
+
+ModelFIBlock *ModelFlowConnect::parent() const
+{
+    return _parent;
+}
+
+void ModelFlowConnect::setParent(ModelFIBlock *parent)
+{
+    _parent = parent;
 }

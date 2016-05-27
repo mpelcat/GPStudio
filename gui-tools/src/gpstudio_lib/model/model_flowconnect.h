@@ -27,26 +27,37 @@
 #include <QString>
 #include <QDomElement>
 
+class ModelBlock;
+class ModelFIBlock;
+class ModelFlow;
+
 class GPSTUDIO_LIB_EXPORT ModelFlowConnect
 {
 public:
     ModelFlowConnect();
-    ~ModelFlowConnect();
+    virtual ~ModelFlowConnect();
 
+    ModelBlock *fromModelBlock() const;
     const QString &fromblock() const;
     void setFromblock(const QString &fromblock);
 
+    ModelFlow *fromModelFlow() const;
     const QString &fromflow() const;
     void setFromflow(const QString &fromflow);
 
+    ModelBlock *toModelBlock() const;
     const QString &toblock() const;
     void setToblock(const QString &toblock);
 
+    ModelFlow *toModelFlow() const;
     const QString &toflow() const;
     void setToflow(const QString &toflow);
 
     const QString &order() const;
     void setOrder(const QString &order);
+
+    ModelFIBlock *parent() const;
+    void setParent(ModelFIBlock *parent);
 
 public:
     static ModelFlowConnect *fromNodeGenerated(const QDomElement &domElement);
@@ -61,6 +72,8 @@ protected:
     QString _toblock;
     QString _toflow;
     QString _order;
+
+    ModelFIBlock *_parent;
 };
 
 #endif // MODEL_FLOWCONNECT_H

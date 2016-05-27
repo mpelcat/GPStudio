@@ -38,6 +38,8 @@
 #include "model_pin.h"
 #include "model_reset.h"
 
+class ModelNode;
+
 class GPSTUDIO_LIB_EXPORT ModelBlock
 {
 public:
@@ -73,6 +75,9 @@ public:
     void setDescription(const QString &description);
 
     virtual QString type() const;
+
+    ModelNode *node() const;
+    void setNode(ModelNode *node);
 
     QList<ModelFile *> &files();
     const QList<ModelFile *> &files() const;
@@ -150,6 +155,8 @@ protected:
     QList<ModelPort *> _ports;
     QList<ModelPin *> _pins;
     QList<ModelReset *> _resets;
+
+    ModelNode *_node;
 };
 
 #endif // MODEL_BLOCK_H

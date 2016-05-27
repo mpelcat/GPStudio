@@ -39,8 +39,10 @@ public:
     QString type() const;
 
     QList<ModelFlowConnect *> &flowConnects();
+    QList<ModelFlowConnect *> flowConnects(const QString blockName);
     const QList<ModelFlowConnect *> &flowConnects() const;
     void addFlowConnect(ModelFlowConnect *flowConnect);
+    void removeFlowConnect(ModelFlowConnect *flowConnect);
     void addFlowConnects(const QList<ModelFlowConnect *> &flowConnects);
 
     void connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);

@@ -48,6 +48,7 @@ public:
 
     bool isValid() const;
 
+    ModelBlock *getBlock(const QString &blockName);
     QList<ModelBlock *> &blocks();
     const QList<ModelBlock *> &blocks() const;
     void addBlock(ModelBlock *block);

@@ -54,6 +54,21 @@ QList<ModelFlowConnect *> &ModelFIBlock::flowConnects()
     return _flowConnects;
 }
 
+QList<ModelFlowConnect *> ModelFIBlock::flowConnects(const QString blockName)
+{
+    QList<ModelFlowConnect *> connects;
+
+    for(int i=0; i<_flowConnects.size(); i++)
+    {
+        if(_flowConnects[i]->fromblock()==blockName || _flowConnects[i]->toblock()==blockName)
+        {
+            connects.append(_flowConnects[i]);
+        }
+    }
+
+    return connects;
+}
+
 const QList<ModelFlowConnect *> &ModelFIBlock::flowConnects() const
 {
     return _flowConnects;
@@ -61,7 +76,14 @@ const QList<ModelFlowConnect *> &ModelFIBlock::flowConnects() const
 
 void ModelFIBlock::addFlowConnect(ModelFlowConnect *flowConnect)
 {
+    flowConnect->setParent(this);
     _flowConnects.append(flowConnect);
+}
+
+void ModelFIBlock::removeFlowConnect(ModelFlowConnect *flowConnect)
+{
+    flowConnect->setParent(NULL);
+    _flowConnects.removeOne(flowConnect);
 }
 
 void ModelFIBlock::addFlowConnects(const QList<ModelFlowConnect *> &flowConnects)
@@ -94,7 +116,7 @@ void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
                 {
                     if(_flowConnects[i]->toflow()==toFlow->name())
                     {
-                        _flowConnects.removeAt(i);
+                        removeFlowConnect(_flowConnects[i]);
                         return;
                     }
                 }

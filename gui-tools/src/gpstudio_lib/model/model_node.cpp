@@ -55,6 +55,14 @@ bool ModelNode::isValid() const
     return _valid;
 }
 
+ModelBlock *ModelNode::getBlock(const QString &blockName)
+{
+    for(int i=0; i<_blocks.size(); i++)
+        if(_blocks[i]->name()==blockName)
+            return _blocks[i];
+    return NULL;
+}
+
 QList<ModelBlock *> &ModelNode::blocks()
 {
     return _blocks;
@@ -68,11 +76,13 @@ const QList<ModelBlock *> &ModelNode::blocks() const
 void ModelNode::addBlock(ModelBlock *block)
 {
     _blocks.append(block);
+    block->setNode(this);
 }
 
 void ModelNode::removeBlock(ModelBlock *block)
 {
     _blocks.removeOne(block);
+    block->setNode(NULL);
 }
 
 ModelFIBlock *ModelNode::getFIBlock() const

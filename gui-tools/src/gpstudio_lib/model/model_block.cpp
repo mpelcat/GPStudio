@@ -34,6 +34,7 @@
 ModelBlock::ModelBlock()
 {
     _pos = QPoint(0, 0);
+    _node = NULL;
 }
 
 ModelBlock::ModelBlock(const ModelBlock &modelBlock)
@@ -47,6 +48,7 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
     _masterCount = modelBlock._masterCount;
     _pos = modelBlock._pos;
     _description = modelBlock._description;
+    _node = NULL;
 
     for(int i=0; i<modelBlock._files.size(); i++)
         addFile(new ModelFile(*modelBlock._files[i]));
@@ -179,6 +181,16 @@ void ModelBlock::setDescription(const QString &description)
 QString ModelBlock::type() const
 {
     return "block";
+}
+
+ModelNode *ModelBlock::node() const
+{
+    return _node;
+}
+
+void ModelBlock::setNode(ModelNode *node)
+{
+    _node = node;
 }
 
 QList<ModelFile *> &ModelBlock::files()
