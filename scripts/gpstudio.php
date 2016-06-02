@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * Copyright (C) 2016 Dream IP
  * 
  * This file is part of GPStudio.
@@ -31,215 +30,231 @@
  * @section usrguide user guide
  * 
  * @defgroup base Base script model
-**/
-
+ * */
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 {
-	$txtred=""; # Red
-	$txtorange=""; # Orange
-	$txtgreen=""; # Green
-	$txtrst="";    # Text Reset
+    $txtred = ""; # Red
+    $txtorange = ""; # Orange
+    $txtgreen = ""; # Green
+    $txtrst = "";    # Text Reset
 }
 else
 {
-	$txtred="\e[31m"; # Red
-	$txtorange="\e[33m"; # Orange
-	$txtgreen="\e[32m"; # Green
-	$txtrst="\e[0m";    # Text Reset
+    $txtred = "\e[31m"; # Red
+    $txtorange = "\e[33m"; # Orange
+    $txtgreen = "\e[32m"; # Green
+    $txtrst = "\e[0m";    # Text Reset
 }
 
-$warningCount=0;
-$lastCtx='';
-$setVerbosityOption=true;
+$warningCount = 0;
+$lastCtx = '';
+$setVerbosityOption = true;
 
 function setVerbosity($option)
 {
-	global $setVerbosityOption;
-	$setVerbosityOption = $option;
+    global $setVerbosityOption;
+    $setVerbosityOption = $option;
 }
 
-function error($errorText, $errorCode, $errorCtx="")
+function error($errorText, $errorCode, $errorCtx = "")
 {
-	global $txtrst;
-	global $txtred;
-	
-	echo $txtred;
-	if(!empty($errorCtx)) echo "[$errorCtx] ";
-	echo "Error ($errorCode) : ".$errorText."\n";
-	echo $txtrst;
-	exit(1);
+    global $txtrst;
+    global $txtred;
+
+    echo $txtred;
+    if (!empty($errorCtx))
+        echo "[$errorCtx] ";
+    echo "Error ($errorCode) : " . $errorText . "\n";
+    echo $txtrst;
+    exit(1);
 }
 
-function warning($warningText, $warningCode, $warningCtx="")
+function warning($warningText, $warningCode, $warningCtx = "")
 {
-	global $txtrst;
-	global $txtorange;
-	global $warningCount;
-	global $lastCtx;
-	global $setVerbosityOption;
-	
-	if($setVerbosityOption)
-	{
-		if($lastCtx!='' and $lastCtx!=$warningCtx) echo "\n";
-		
-		echo $txtorange;
-		if(!empty($warningCtx)) echo "[$warningCtx] ";
-		echo "Warning ($warningCode) : ".$warningText."\n";
-		echo $txtrst;
-		
-		$warningCount++;
-		$lastCtx=$warningCtx;
-	}
+    global $txtrst;
+    global $txtorange;
+    global $warningCount;
+    global $lastCtx;
+    global $setVerbosityOption;
+
+    if ($setVerbosityOption)
+    {
+        if ($lastCtx != '' and $lastCtx != $warningCtx)
+            echo "\n";
+
+        echo $txtorange;
+        if (!empty($warningCtx))
+            echo "[$warningCtx] ";
+        echo "Warning ($warningCode) : " . $warningText . "\n";
+        echo $txtrst;
+
+        $warningCount++;
+        $lastCtx = $warningCtx;
+    }
 }
 
-function message($messageText, $messageCtx="")
+function message($messageText, $messageCtx = "")
 {
-	global $txtrst;
-	global $txtgreen;
-	global $lastCtx;
-	global $setVerbosityOption;
-	
-	if($setVerbosityOption)
-	{
-		if($lastCtx!='' and $lastCtx!=$messageCtx) echo "\n";
-		
-		echo $txtgreen;
-		if(!empty($messageCtx)) echo "[$messageCtx] ";
-		echo $messageText."\n";
-		echo $txtrst;
-		
-		$lastCtx=$messageCtx;
-	}
+    global $txtrst;
+    global $txtgreen;
+    global $lastCtx;
+    global $setVerbosityOption;
+
+    if ($setVerbosityOption)
+    {
+        if ($lastCtx != '' and $lastCtx != $messageCtx)
+            echo "\n";
+
+        echo $txtgreen;
+        if (!empty($messageCtx))
+            echo "[$messageCtx] ";
+        echo $messageText . "\n";
+        echo $txtrst;
+
+        $lastCtx = $messageCtx;
+    }
 }
 
-function messageVerbosity($messageText, $messageCtx="")
+function messageVerbosity($messageText, $messageCtx = "")
 {
-	global $argv;
-	if(in_array("verbosity", $argv))
-	{
-		message($messageText, $messageCtx);
-	}
+    global $argv;
+    if (in_array("verbosity", $argv))
+    {
+        message($messageText, $messageCtx);
+    }
 }
 
 function findproject()
 {
-	$projects = array();
-	$files = scandir(getcwd());
-	foreach($files as $file)
-	{
-		if(substr($file,-5)===".node")
-		{
-			$projects[]=$file;
-		}
-	}
-	if(count($projects)==1) return $projects[0]; else return '';
+    $projects = array();
+    $files = scandir(getcwd());
+    foreach ($files as $file)
+    {
+        if (substr($file, -5) === ".node")
+        {
+            $projects[] = $file;
+        }
+    }
+    if (count($projects) == 1)
+        return $projects[0];
+    else
+        return '';
 }
 
 function findprocess()
 {
-	$process = array();
-	$files = scandir(getcwd());
-	foreach($files as $file)
-	{
-		if(substr($file,-5)===".proc")
-		{
-			$process[]=$file;
-		}
-	}
-	if(count($process)==1) return $process[0]; else return '';
+    $process = array();
+    $files = scandir(getcwd());
+    foreach ($files as $file)
+    {
+        if (substr($file, -5) === ".proc")
+        {
+            $process[] = $file;
+        }
+    }
+    if (count($process) == 1)
+        return $process[0];
+    else
+        return '';
 }
 
 function findio()
 {
-	$io = array();
-	$files = scandir(getcwd());
-	foreach($files as $file)
-	{
-		if(substr($file,-3)===".io")
-		{
-			$io[]=$file;
-		}
-	}
-	if(count($io)==1) return $io[0]; else return '';
+    $io = array();
+    $files = scandir(getcwd());
+    foreach ($files as $file)
+    {
+        if (substr($file, -3) === ".io")
+        {
+            $io[] = $file;
+        }
+    }
+    if (count($io) == 1)
+        return $io[0];
+    else
+        return '';
 }
 
 function listprocess()
 {
-	$directory = SUPPORT_PATH."process".DIRECTORY_SEPARATOR;
-	echo $directory;
-	$files = scandir($directory);
-	foreach($files as $file)
-	{
-		if($file!='.' and $file!='..')
-		{
-			echo $file." ";
-		}
-	}
+    $directory = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR;
+    echo $directory;
+    $files = scandir($directory);
+    foreach ($files as $file)
+    {
+        if ($file != '.' and $file != '..')
+        {
+            echo $file . " ";
+        }
+    }
 }
 
 function listio()
 {
-	$directory = SUPPORT_PATH."io".DIRECTORY_SEPARATOR;
-	echo $directory;
-	$files = scandir($directory);
-	foreach($files as $file)
-	{
-		if($file!='.' and $file!='..')
-		{
-			echo $file." ";
-		}
-	}
+    $directory = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR;
+    echo $directory;
+    $files = scandir($directory);
+    foreach ($files as $file)
+    {
+        if ($file != '.' and $file != '..')
+        {
+            echo $file . " ";
+        }
+    }
 }
 
 function copy_with_rights($src, $dest)
 {
-	copy($src, $dest);
-	$srcright = fileperms($src);
-	if(file_exists($dest))
-	{
-		if(fileperms($dest)!=$srcright) chmod($dest, $srcright);
-	}
-	else chmod($dest, $srcright);
+    copy($src, $dest);
+    $srcright = fileperms($src);
+    if (file_exists($dest))
+    {
+        if (fileperms($dest) != $srcright)
+            chmod($dest, $srcright);
+    }
+    else
+        chmod($dest, $srcright);
 }
 
 function mkdir_rec($dir_path)
 {
-	$dir_path = str_replace("\\","/",$dir_path);
-	$dirs = explode("/",$dir_path);
-	for($i=1;$i<=count($dirs);$i++)
-	{
-		$path = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $i));
-		if(!is_dir($path) and $path!="") mkdir($path);
-	}
+    $dir_path = str_replace("\\", "/", $dir_path);
+    $dirs = explode("/", $dir_path);
+    for ($i = 1; $i <= count($dirs); $i++)
+    {
+        $path = implode(DIRECTORY_SEPARATOR, array_slice($dirs, 0, $i));
+        if (!is_dir($path) and $path != "")
+            mkdir($path);
+    }
 }
 
 function cpy_dir($source, $dest)
 {
-    if(is_dir($source))
+    if (is_dir($source))
     {
-        $dir_handle=opendir($source);
-        while($file=readdir($dir_handle))
+        $dir_handle = opendir($source);
+        while ($file = readdir($dir_handle))
         {
-            if($file!="." && $file!="..")
+            if ($file != "." && $file != "..")
             {
-                if(is_dir($source.DIRECTORY_SEPARATOR.$file))
+                if (is_dir($source . DIRECTORY_SEPARATOR . $file))
                 {
-                    if(!is_dir($dest.DIRECTORY_SEPARATOR.$file))
+                    if (!is_dir($dest . DIRECTORY_SEPARATOR . $file))
                     {
-                        mkdir($dest.DIRECTORY_SEPARATOR.$file);
+                        mkdir($dest . DIRECTORY_SEPARATOR . $file);
                     }
-                    cpy_dir($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
+                    cpy_dir($source . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file);
                 }
                 else
                 {
-					if(is_link($source.DIRECTORY_SEPARATOR.$file))
-					{
-						symlink(readlink($source.DIRECTORY_SEPARATOR.$file), $dest.DIRECTORY_SEPARATOR.$file);
-					}
+                    if (is_link($source . DIRECTORY_SEPARATOR . $file))
+                    {
+                        symlink(readlink($source . DIRECTORY_SEPARATOR . $file), $dest . DIRECTORY_SEPARATOR . $file);
+                    }
                     else
-					{
-						copy_with_rights($source.DIRECTORY_SEPARATOR.$file, $dest.DIRECTORY_SEPARATOR.$file);
-					}
+                    {
+                        copy_with_rights($source . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file);
+                    }
                 }
             }
         }
@@ -251,65 +266,68 @@ function cpy_dir($source, $dest)
     }
 }
 
-function getRelativePath($path, $dir=NULL)
+function getRelativePath($path, $dir = NULL)
 {
-	if($dir==NULL) $dir=getcwd();
-	
-	$path=realpath($path);
-	$dir=realpath($dir);
-	
-	if(is_dir($path))
-	{
-		$dirSrc = realpath($path);
-		$srcName = '';
-	}
-	else
-	{
-		$dirSrc = dirname($path);
-		$srcName = basename($path);
-	}
-	
-	if($dirSrc==$dir)
-	{
-		return $srcName; // file in dir
-	}
-	
-	if(strpos($dir, $dirSrc)===0)
-	{
-		$back_dir = str_replace($dirSrc, "", $dir);
-		$back_count = substr_count($back_dir, DIRECTORY_SEPARATOR);
-		return str_repeat("..".DIRECTORY_SEPARATOR, $back_count).$srcName;
-	}
-	
-	if(strpos($dirSrc, $dir)===0)
-	{
-		$back_dir = str_replace($dir.DIRECTORY_SEPARATOR, "", $dirSrc);
-		return $back_dir;
-	}
-	
-	return $path;
+    if ($dir == NULL)
+        $dir = getcwd();
+
+    $path = realpath($path);
+    $dir = realpath($dir);
+
+    if (is_dir($path))
+    {
+        $dirSrc = realpath($path);
+        $srcName = '';
+    }
+    else
+    {
+        $dirSrc = dirname($path);
+        $srcName = basename($path);
+    }
+
+    if ($dirSrc == $dir)
+    {
+        return $srcName; // file in dir
+    }
+
+    if (strpos($dir, $dirSrc) === 0)
+    {
+        $back_dir = str_replace($dirSrc, "", $dir);
+        $back_count = substr_count($back_dir, DIRECTORY_SEPARATOR);
+        return str_repeat(".." . DIRECTORY_SEPARATOR, $back_count) . $srcName;
+    }
+
+    if (strpos($dirSrc, $dir) === 0)
+    {
+        $back_dir = str_replace($dir . DIRECTORY_SEPARATOR, "", $dirSrc);
+        return $back_dir;
+    }
+
+    return $path;
 }
 
 function saveIfDifferent($fileName, $content)
 {
-	// save file if it's different
-	$needToReplace = false;
-	if(file_exists($fileName))
-	{
-		$handle = fopen($fileName, 'r');
-		$actualContent = fread($handle, filesize($fileName));
-		fclose($handle);
-		if($actualContent != $content) $needToReplace = true;
-	}
-	else $needToReplace = true;
+    // save file if it's different
+    $needToReplace = false;
+    if (file_exists($fileName))
+    {
+        $handle = fopen($fileName, 'r');
+        $actualContent = fread($handle, filesize($fileName));
+        fclose($handle);
+        if ($actualContent != $content)
+            $needToReplace = true;
+    }
+    else
+        $needToReplace = true;
 
-	if($needToReplace)
-	{
-		$handle = null;
-		if (!$handle = fopen($fileName, 'w')) error("$filename cannot be openned",5,"GPStudio");
-		if (fwrite($handle, $content) === FALSE) error("$filename cannot be written",5,"GPStudio");
-		fclose($handle);
-	}
+    if ($needToReplace)
+    {
+        $handle = null;
+        if (!$handle = fopen($fileName, 'w'))
+            error("$filename cannot be openned", 5, "GPStudio");
+        if (fwrite($handle, $content) === FALSE)
+            error("$filename cannot be written", 5, "GPStudio");
+        fclose($handle);
+    }
 }
-
-?>

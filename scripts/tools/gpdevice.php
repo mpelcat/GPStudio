@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * Copyright (C) 2016 Dream IP
  * 
  * This file is part of GPStudio.
@@ -21,5 +20,3 @@
 
 define("TOOL", "gpdevice");
 require("gpblock.php");
-
-?>
