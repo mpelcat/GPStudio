@@ -105,7 +105,7 @@ class IOCom extends IO
         foreach ($this->comConnects as $comConnect)
         {
             if ($comConnect->link == $link)
-                return $file;
+                return $comConnect;
         }
         return null;
     }

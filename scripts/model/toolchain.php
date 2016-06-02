@@ -90,11 +90,9 @@ class Toolchain
             case 'hdl':
                 require_once("toolchain/hdl/hdl.php");
                 return new HDL_toolchain($xml);
-                break;
             case 'altera_quartus':
                 require_once("toolchain/altera_quartus/altera_quartus.php");
                 return new Altera_quartus_toolchain($xml);
-                break;
             default:
                 throw new Exception('Toolchain \'' . $toolchain_name . '\' doesn\'t exists.');
         }

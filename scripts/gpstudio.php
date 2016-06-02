@@ -325,9 +325,9 @@ function saveIfDifferent($fileName, $content)
     {
         $handle = null;
         if (!$handle = fopen($fileName, 'w'))
-            error("$filename cannot be openned", 5, "GPStudio");
+            error("$fileName cannot be openned", 5, "GPStudio");
         if (fwrite($handle, $content) === FALSE)
-            error("$filename cannot be written", 5, "GPStudio");
+            error("$fileName cannot be written", 5, "GPStudio");
         fclose($handle);
     }
 }
