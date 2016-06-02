@@ -33,11 +33,21 @@ class ClockDomain
     public $name;
 
     /**
-     * @brief Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
+     * @brief Typical value for this clock in Hz, could be written like this :
+     * "14.2M" or "18.7k" or "1500"
      * @var float $typical
      */
     public $typical;
 
+    /**
+     * @brief constructor of ClockDomain
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $name if it's different of null, call the
+     * xml parser to fill members, in case of $name is a string, init member
+     * with this value
+     * @param int|null $typical
+     */
     function __construct($name = null, $typical = null)
     {
         if (is_object($name) and get_class($name) === 'SimpleXMLElement')
@@ -47,17 +57,35 @@ class ClockDomain
         }
         else
         {
-            $this->name = $name;
-            $this->typical = $typical;
+            if ($name != null)
+                $this->name = $name;
+
+            if ($typical != null)
+                $this->typical = $typical;
         }
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
         $this->typical = Clock::convert($xml['typical']);
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("domain");

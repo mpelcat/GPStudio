@@ -19,7 +19,9 @@
  */
 
 /**
- * Attribute is contained into the Board class to define the specific attributes of the board and in Pin class to define each features of pin dedicated to the toolchain.
+ * Attribute is contained into the Board class to define the specific attributes
+ * of the board and in Pin class to define each features of pin dedicated to the
+ * toolchain.
  * @brief The Attribute class is used to define special attributes for a toolchain.
  * @see Toolchain Pin Board
  * @ingroup base
@@ -27,7 +29,7 @@
 class Attribute
 {
     /**
-     * @brief Attribute name
+     * @brief Name of the attribute
      * @var string $name
      */
     public $name;
@@ -44,12 +46,24 @@ class Attribute
      */
     public $type;
 
+    /**
+     * @brief Constructor of the class
+     * 
+     * Build an empty Attribute if $xml is empty, fill it with $xml if set
+     * @param SimpleXMLElement|null $xml XML element to parse if not null
+     */
     function __construct($xml = null)
     {
         if ($xml)
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -57,6 +71,15 @@ class Attribute
         $this->type = (string) $xml['type'];
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("attribute");

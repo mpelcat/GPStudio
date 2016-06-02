@@ -92,6 +92,13 @@ class Board
      */
     public $parentNode;
 
+    /**
+     * @brief Constructor of the class
+     * 
+     * Build an board from a board node elelement and a link to a node
+     * @param SimpleXMLElement $xml XML element to parse if not null
+     * @param Node $node node associated to the board to parse it
+     */
     function __construct($board_element, $node)
     {
         $this->parentNode = $node;
@@ -151,6 +158,12 @@ class Board
         }
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     private function parse_xml($board_element, $node)
     {
         $this->name = (string) $this->xml['name'];
@@ -396,6 +409,15 @@ class Board
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("board");
@@ -433,7 +455,8 @@ class Board
         array_push($this->clocks, $clock);
     }
 
-    /** return a reference to the clock with the name $name, if not found, return false
+    /** return a reference to the clock with the name $name, if not found, return
+     * null
      *  @param string $name name of the clock to search
      *  @return Clock found clock * */
     function getClock($name)
@@ -454,7 +477,8 @@ class Board
         array_push($this->resets, $reset);
     }
 
-    /** return a reference to the reset with the name $name, if not found, return false
+    /** return a reference to the reset with the name $name, if not found, return
+     * null
      *  @param string $name name of the reset to search
      *  @return Reset found reset * */
     function getReset($name)
@@ -475,7 +499,8 @@ class Board
         array_push($this->pins, $pin);
     }
 
-    /** return a reference to the pin with the name $name, if not found, return false
+    /** return a reference to the pin with the name $name, if not found, return
+     * false
      *  @param string $name name of the pin to search
      *  @return Pin found pin * */
     function getPin($name)

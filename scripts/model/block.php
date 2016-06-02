@@ -19,8 +19,20 @@
  */
 
 /**
- * Block is the base of IO and Process block. 
- * @brief Block is the base of IO and Process block.
+ * It needs to be specialised, it only contains the list of :
+ *  - implementation files (vhdl, verilog, C, C++, ...), documentation files
+ * File
+ *  - hardware parameters (generic for VHDL, param for verilog constant for
+ * C/C++) or register for hardware implementation Param
+ *  - properties for high level software Property
+ *  - flows interface input and output Flow
+ *  - clocks inputs (all blocks) and clocks generator (IO blocks only) Clock
+ *  - reset inputs (all blocks) and reset generators (IO blocks only) Reset
+ *  - pins and ports as external io for IO block Pin, Port
+ *  - bus interfaces for PI slave and master InterfaceBus
+ *  - attributes for special attributes compilation toolchain Attribute
+ * 
+ * @brief Block is the base block definition for all blocks.
  * @see IO Process
  * @ingroup base
  */
@@ -62,7 +74,8 @@ class Block
     public $driver;
 
     /**
-     * @brief Specify the categorie of the block eg : communication, imagesensor, descriptor...
+     * @brief Specify the categorie of the block eg : communication, imagesensor,
+     * descriptor...
      * @var string $categ
      */
     public $categ;
@@ -110,7 +123,7 @@ class Block
     public $generatescriptfile;
 
     /**
-     * @brief Description of the flow (optional)
+     * @brief Description of the block (optional)
      * @var string $desc
      */
     public $desc;
@@ -134,7 +147,7 @@ class Block
     public $files;
 
     /**
-     * Array of flows in the block can be input flow or output
+     * @brief Array of flows in the block can be input flow or output
      * @var array|Flow $flows
      */
     public $flows;
@@ -171,6 +184,11 @@ class Block
 
     protected $xml;
 
+    /**
+     * @brief Constructor of the class
+     * 
+     * Build an empty Block with the default clock, 'clk_proc'.
+     */
     function __construct()
     {
         $this->params = array();
@@ -202,6 +220,16 @@ class Block
           $this->addReset($reset); */
     }
 
+    /**
+     * @brief Method to print a box corresponding to this block with all flow
+     * interface.
+     * 
+     * Ex :
+     * -------------
+     * |    mt9    |  out (8)
+     * |           |---------->
+     * -------------
+     */
     function print_flow()
     {
         // count flow in and out
@@ -274,6 +302,13 @@ class Block
         echo str_repeat(' ', $maxInLenght) . str_repeat('-', $lenghtBlock + 2) . str_repeat(' ', $maxOutLenght) . "\n";
     }
 
+    /**
+     * @brief Call the configure script if exist
+     * @param Node $node node container
+     * @param Block $block current block
+     * @see $this->configscriptfile
+     * @see configscriptfile
+     */
     function configure($node, $block)
     {
         if (!empty($this->configscriptfile))
@@ -290,6 +325,14 @@ class Block
         }
     }
 
+    /**
+     * @brief Call the generate script if exist
+     * @param Node $node node container
+     * @param Block $block current block
+     * @param string $path path of the generated IP
+     * @param string $language language of IP
+     * @see $generatescriptfile
+     */
     function generate($node, $block, $path, $language)
     {
         if (!empty($this->generatescriptfile))
@@ -306,18 +349,21 @@ class Block
         }
     }
 
-    /** Add a parameter to the block 
-     *  @param Param $param parameter to add to the block * */
+    /** @brief Add a parameter to the block 
+     *  @param Param $param parameter to add to the block
+     */
     function addParam($param)
     {
         $param->parentBlock = $this;
         array_push($this->params, $param);
     }
 
-    /** return a reference to the parameter with the name $name, if not found, return null
+    /** @brief return a reference to the parameter with the name $name, if not
+     * found, return null
      *  @param string $name name of the parameter to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Param found parameter * */
+     *  @return Param found parameter 
+     */
     function getParam($name, $casesens = true)
     {
         if ($casesens)
@@ -339,8 +385,9 @@ class Block
         return null;
     }
 
-    /** delete a param from his name
-     *  @param string $name name of the param to delete  * */
+    /** @brief delete a param from his name
+     *  @param string $name name of the param to delete
+     */
     function delParam($name)
     {
         $i = 0;
@@ -356,10 +403,12 @@ class Block
         return null;
     }
 
-    /** return a reference to the bitfield with the path $path, if not found, return null
+    /** @brief return a reference to the bitfield with the path $path, if not
+     * found, return null
      *  @param string $path path of the parambitfield to search (param.parambitfield)
      *  @param bool $casesens take care or not of the case of the name
-     *  @return ParamBitfield found bitfield * */
+     *  @return ParamBitfield found bitfield 
+     */
     function getParamBitField($path, $casesens = true)
     {
         $subPath = explode('.', $path);
@@ -372,9 +421,11 @@ class Block
         return $paramBitField;
     }
 
-    /** return a reference to the bitfield with the path $path, if not found, return null
+    /** @brief return a reference to the bitfield with the path $path, if not
+     * found, return null
      *  @param string $path path of the parambitfield to search (param.parambitfield)
-     *  @return ParamBitfield found bitfield * */
+     *  @return ParamBitfield found bitfield
+     */
     function delParamBitField($path)
     {
         $subPath = explode('.', $path);
@@ -386,18 +437,21 @@ class Block
         return $param->delParambitfield($subPath[1]);
     }
 
-    /** Add a property to the block 
-     *  @param Property $property property to add to the block * */
+    /** @brief Add a property to the block 
+     *  @param Property $property property to add to the block
+     */
     function addProperty($property)
     {
         $property->parentBlock = $this;
         array_push($this->properties, $property);
     }
 
-    /** return a reference to the property with the name $name, if not found, return null
+    /** @brief return a reference to the property with the name $name, if not
+     * found, return null
      *  @param string $name name of the property to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+     *  @return Property found property
+     */
     function getProperty($name, $casesens = true)
     {
         if ($casesens)
@@ -419,19 +473,22 @@ class Block
         return null;
     }
 
-    /** alias to getProperty($name, $casesens)
+    /** @brief alias to getProperty($name, $casesens)
      *  @param string $name name of the property enum to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+     *  @return Property found property
+     */
     function getSubProperty($name, $casesens = true)
     {
         return $this->getProperty($name, $casesens);
     }
 
-    /** return a reference to the property with the access path $path, if not found, return null
+    /** @brief return a reference to the property with the access path $path,
+     * if not found, return null
      *  @param string $path path of the property to search, separed by . (dot)
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+     *  @return Property found property
+     */
     function getPropertyPath($path, $casesens = true)
     {
         $subprops = explode('.', $path);
@@ -454,8 +511,9 @@ class Block
         return $parent;
     }
 
-    /** delete a property from his name
-     *  @param string $name name of the property to delete  * */
+    /** @brief delete a property from his name
+     *  @param string $name name of the property to delete
+     */
     function delProperty($name)
     {
         $i = 0;
@@ -471,8 +529,9 @@ class Block
         return null;
     }
 
-    /** delete a property from his path
-     *  @param string $path path of the property to delete  * */
+    /** @brief delete a property from his path
+     *  @param string $path path of the property to delete
+     */
     function delPropertyPath($path)
     {
         $subprops = explode('.', $path);
@@ -495,10 +554,12 @@ class Block
         $parent->delProperty($subprops[count($subprops) - 1]);
     }
 
-    /** return a reference to the property with the access path $path, if not found, return null
+    /** @brief return a reference to the property with the access path $path,
+     * if not found, return null
      *  @param string $path path of the property to search, separed by . (dot)
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+     *  @return Property found property
+     */
     function getPropertyEnumPath($path, $casesens = true)
     {
         $subprops = explode('.', $path);
@@ -515,8 +576,9 @@ class Block
         return $property->getPropertyEnum($name, $casesens);
     }
 
-    /** delete a property enum from his path
-     *  @param string $path path of the property to delete  * */
+    /** @brief delete a property enum from his path
+     *  @param string $path path of the property to delete
+     */
     function delPropertyEnumPath($path)
     {
         $subprops = explode('.', $path);
@@ -533,17 +595,20 @@ class Block
         $property->delPropertyEnum($name);
     }
 
-    /** Add a file to the block 
-     *  @param File $file file to add to the block * */
+    /** @brief Add a file to the block 
+     *  @param File $file file to add to the block
+     */
     function addFile($file)
     {
         $file->parentBlock = $this;
         array_push($this->files, $file);
     }
 
-    /** return a reference to the file with the name $name, if not found, return null
+    /** @brief return a reference to the file with the name $name, if not found,
+     * return null
      *  @param string $name name of the file to search
-     *  @return File found file * */
+     *  @return File found file
+     */
     function getFile($name)
     {
         foreach ($this->files as $file)
@@ -554,9 +619,11 @@ class Block
         return null;
     }
 
-    /** return a reference to the file with the path $path, if not found, return null
+    /** @brief return a reference to the file with the path $path, if not found,
+     * return null
      *  @param string $path path of the file to search
-     *  @return File found file * */
+     *  @return File found file
+     */
     function getFileByPath($path)
     {
         foreach ($this->files as $file)
@@ -567,8 +634,9 @@ class Block
         return null;
     }
 
-    /** delete a file from his path
-     *  @param string $path path of the file to delete  * */
+    /** @brief delete a file from his path
+     *  @param string $path path of the file to delete
+     */
     function delFileByPath($path)
     {
         $i = 0;
@@ -584,18 +652,21 @@ class Block
         return null;
     }
 
-    /** Add a flow to the block 
-     *  @param Flow $flow flow to add to the block * */
+    /** @brief Add a flow to the block 
+     *  @param Flow $flow flow to add to the block
+     */
     function addFlow($flow)
     {
         $flow->parentBlock = $this;
         array_push($this->flows, $flow);
     }
 
-    /** return a reference to the flow with the name $name, if not found, return null
+    /** @brief return a reference to the flow with the name $name, if not found,
+     * return null
      *  @param string $name name of the flow to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Flow found flow * */
+     *  @return Flow found flow
+     */
     function getFlow($name, $casesens = true)
     {
         if ($casesens)
@@ -617,8 +688,9 @@ class Block
         return null;
     }
 
-    /** delete a flow from his name
-     *  @param string $name name of the flow to delete  * */
+    /** @brief delete a flow from his name
+     *  @param string $name name of the flow to delete
+     */
     function delFlow($name)
     {
         $i = 0;
@@ -634,18 +706,21 @@ class Block
         return null;
     }
 
-    /** Add a clock to the block 
-     *  @param Clock $clock clock to add to the block * */
+    /** @brief Add a clock to the block 
+     *  @param Clock $clock clock to add to the block
+     */
     function addClock($clock)
     {
         $clock->parentBlock = $this;
         array_push($this->clocks, $clock);
     }
 
-    /** return a reference to the clock with the name $name, if not found, return null
+    /** @brief return a reference to the clock with the name $name, if not found,
+     * return null
      *  @param string $name name of the clock to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Clock found clock * */
+     *  @return Clock found clock
+     */
     function getClock($name, $casesens = true)
     {
         if ($casesens)
@@ -667,8 +742,9 @@ class Block
         return null;
     }
 
-    /** delete a clock from his name
-     *  @param string $name name of the clock to delete  * */
+    /** @brief delete a clock from his name
+     *  @param string $name name of the clock to delete
+     */
     function delClock($name)
     {
         $i = 0;
@@ -684,18 +760,21 @@ class Block
         return null;
     }
 
-    /** Add a reset to the block 
-     *  @param Reset $reset reset to add to the block * */
+    /** @brief Add a reset to the block 
+     *  @param Reset $reset reset to add to the block
+     */
     function addReset($reset)
     {
         $reset->parentBlock = $this;
         array_push($this->resets, $reset);
     }
 
-    /** return a reference to the reset with the name $name, if not found, return null
+    /** @brief return a reference to the reset with the name $name, if not found,
+     * return null
      *  @param string $name name of the reset to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Reset found reset * */
+     *  @return Reset found reset
+     */
     function getReset($name, $casesens = true)
     {
         if ($casesens)
@@ -717,8 +796,9 @@ class Block
         return null;
     }
 
-    /** delete a reset from his name
-     *  @param string $name name of the reset to delete  * */
+    /** @brief delete a reset from his name
+     *  @param string $name name of the reset to delete
+     */
     function delReset($name)
     {
         $i = 0;
@@ -734,18 +814,21 @@ class Block
         return null;
     }
 
-    /** Add an interface to the block 
-     *  @param Interface $interface interface to add to the block * */
+    /** @brief Add an InterfaceBus to the block 
+     *  @param InterfaceBus $interface interface to add to the block
+     */
     function addInterface($interface)
     {
         $interface->parentBlock = $this;
         array_push($this->interfaces, $interface);
     }
 
-    /** return a reference to the interface with the name $name, if not found, return null
+    /** @brief return a reference to the interface with the name $name, if not
+     * found, return null
      *  @param string $name name of the interface to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Interface found interface * */
+     *  @return InterfaceBus found interface
+     */
     function getInterface($name, $casesens = true)
     {
         if ($casesens)
@@ -767,14 +850,16 @@ class Block
         return null;
     }
 
-    /** Add a attribute to the toolchain 
-     *  @param Attribute $attribute attribute to add to the block * */
+    /** @brief Add a attribute to the toolchain 
+     *  @param Attribute $attribute attribute to add to the block
+     */
     function addAttribute($attribute)
     {
         array_push($this->attributes, $attribute);
     }
 
-    /** return a reference to the attribute with the name $name, if not found, return null
+    /** @brief return a reference to the attribute with the name $name, if not
+     * found, return null
      *  @param string $name name of the attribute enum to search
      *  @param bool $casesens take care or not of the case of the name
      *  @return Attribute found attribute * */
@@ -799,10 +884,12 @@ class Block
         return null;
     }
 
-    /** return a reference to the instance with the name $name, if not found, return null
+    /** @brief return a reference to the instance with the name $name, if not
+     * found, return null
      *  @param string $name name of the instance to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return mixed found instance * */
+     *  @return mixed found instance
+     */
     function getInstance($name, $casesens = true)
     {
         $instance = $this->getAttribute($name, $casesens);
@@ -837,6 +924,12 @@ class Block
         return null;
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * SimpleXMLElement $xml xml element to parse need to be specified in
+     * members before to call this function
+     */
     protected function parse_xml()
     {
         if (isset($this->xml['size_addr_rel']))
@@ -911,11 +1004,24 @@ class Block
         }
     }
 
+    /**
+     * @brief Returns the type of the block as string, redefined by children.
+     * @return string type of the block.
+     */
     public function type()
     {
         return 'block';
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         if ($this->type() == "io" or $this->type() == "iocom")
@@ -1148,6 +1254,10 @@ class Block
         return $xml_element;
     }
 
+    /**
+     * @brief Helper function that save an '.io' or '.proc' file.
+     * @param string $file file name to save
+     */
     function saveBlockDef($file)
     {
         $xml = new DOMDocument("1.0", "UTF-8");
@@ -1159,6 +1269,10 @@ class Block
         $xml->save($file);
     }
 
+    /**
+     * @brief Redefines all the contained properties to the global context by
+     * adding the name of the block at the begining of all of properties map
+     */
     function toGlobalPropertyPath()
     {
         foreach ($this->properties as $property)

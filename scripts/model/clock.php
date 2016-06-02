@@ -18,16 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @brief The Clock class is used to define a clock source or a clock input in Block or Board
+/** @brief The Clock class is used to define a clock source or a clock input in
+ * Board, Block or Component.
  * 
- * Clock instance is present in Board and Block.
+ * Clock instance is present in Board, Block or Component.
  * 
  * It's possible to define a clock with 3 ways :
  * 	- Clock::$typical frequency and eventualy a clock Clock::$shift given in degrees
  * 	- an interval of frequency given with Clock::$min and Clock::$max
  * 	- a clock Clock::$domain and a Clock::$ratio
  * 
- * If typical is set, the clock is completly constrained. In other case, the typical freq is computed by the ClockInterconnect::configure() method.
+ * \f[
+ * \fbox{
+ * \begin{tikztimingtable}
+ * clock       & 10{HL}      \\
+ * signal1     & 5{LLHH}     \\
+ * signal2     & 5{LHHL}     \\
+ * \end{tikztimingtable}
+ * }
+ * \f]
+ * 
+ * If typical is set, the clock is completly constrained. In other case, the
+ * typical freq is computed by the ClockInterconnect::configure() method.
  * 
  * @see ClockInterconnect ClockDomain
  * @ingroup base
@@ -61,7 +73,8 @@ class Clock
     /**
      * @brief minimum freq acceptance
      * 
-     * Minimal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
+     * Minimal value for this clock in Hz, could be written like this :
+     * "14.2M" or "18.7k" or "1500"
      * @var float $min
      * @see $max
      */
@@ -70,7 +83,8 @@ class Clock
     /**
      * @brief maximal freq acceptance
      * 
-     * Maximal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
+     * Maximal value for this clock in Hz, could be written like this :
+     * "14.2M" or "18.7k" or "1500"
      * @var float $max
      * @see $min
      */
@@ -80,8 +94,8 @@ class Clock
      * @brief frequence of the clock
      * 
      * Typical value for this clock in Hz, could be written like this :
-     * 14.2M or 18.7k or 1500. If this field is set, min, max and ratio
-     * was not used.
+     * "14.2M" or "18.7k" or "1500". If this field is set, min, max and ratio
+     * will be ignored.
      * @var float $typical
      */
     public $typical;
@@ -130,10 +144,11 @@ class Clock
     public $parentBlock;
 
     /**
-     * @brief constructor
+     * @brief constructor of Clock
      * 
      * Initialise all the internal members and call parse_xml if $xml is set
-     * @param SimpleXMLElement $xml if it's different of null, call the xml parser to fill members
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
      */
     function __construct($xml = null)
     {
@@ -151,7 +166,7 @@ class Clock
     }
 
     /**
-     * @brief private function to fill this instance from the input xml structure
+     * @brief internal function to fill this instance from input xml structure
      * 
      * Can be call only from this node into the constructor
      * @param SimpleXMLElement $xml xml element to parse
@@ -200,10 +215,12 @@ class Clock
     }
 
     /**
-     * @brief permit to output this instance
+     * @brief permits to output this instance
      * 
-     * Return a formated node for the node_generated file. This method call all the children getXmlElement to add into this node.
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
      * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
      * @return DOMElement xml element corresponding to this current instance
      */
     public function getXmlElement($xml, $format)
@@ -272,7 +289,8 @@ class Clock
     /**
      * @brief frenquency from string
      * 
-     * Return a frequency as number in Hz from a string. Input format can be : 14.2M or 18.7k or 1500
+     * Return a frequency as number in Hz from a string. Input format can be :
+     * "14.2M" or "18.7k" or "1500"
      * @param string $string string to convert to frequency in Hz
      * @return int frequency in Hz
      */
@@ -294,7 +312,8 @@ class Clock
     /**
      * @brief human readable frequency
      * 
-     * Return formated string of a frequency for human reader. This is used for printable report or warning.
+     * Return formated string of a frequency for human reader. This is used for
+     * printable report or warning.
      * @param int $freq frequency in Hz
      * @return string formated string
      */
@@ -321,7 +340,8 @@ class Clock
     /**
      * @brief HDL readable frequency
      * 
-     * Return formated string of a frequency for HDL compiler. This is used for naming convention in HDL output code.
+     * Return formated string of a frequency for HDL compiler. This is used for
+     * naming convention in HDL output code.
      * @param int $freq frequency in Hz
      * @return string formated string
      */
