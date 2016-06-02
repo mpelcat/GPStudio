@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * Copyright (C) 2016 Dream IP
  * 
  * This file is part of GPStudio.
@@ -21,37 +20,35 @@
 
 class InterfaceBus
 {
-	/**
-	* @brief Name of the interface
-	* @var string $name
-	*/
-	public $name;
+    /**
+     * @brief Name of the interface
+     * @var string $name
+     */
+    public $name;
 
-	/**
-	* @brief Name of the block
-	* @var string $blockname
-	*/
-	public $blockname;
+    /**
+     * @brief Name of the block
+     * @var string $blockname
+     */
+    public $blockname;
 
-	/**
-	* @brief bi_master bi_slave bi_master_conn bi_slave_conn
-	* @var string $type
-	*/
-	public $type;
+    /**
+     * @brief bi_master bi_slave bi_master_conn bi_slave_conn
+     * @var string $type
+     */
+    public $type;
 
-	/**
-	* @brief Sife of the adress bus interface
-	* @var int $size_addr
-	*/
-	public $size_addr;
-	
-	function __construct($name, $blockname, $type, $size_addr)
-	{
-		$this->name=$name;
-		$this->blockname=$blockname;
-		$this->type=$type;
-		$this->size_addr=$size_addr;
-	}
+    /**
+     * @brief Sife of the adress bus interface
+     * @var int $size_addr
+     */
+    public $size_addr;
+
+    function __construct($name, $blockname, $type, $size_addr)
+    {
+        $this->name = $name;
+        $this->blockname = $blockname;
+        $this->type = $type;
+        $this->size_addr = $size_addr;
+    }
 }
-
-?>
