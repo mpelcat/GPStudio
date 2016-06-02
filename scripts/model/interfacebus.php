@@ -18,6 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * InterfaceBus are used in Block::interfaces as a list. An interface as slave,
+ * (pi_slave) or master (pi_master), slave connection (pi_slave_conn) or master
+ * connection (pi_master_conn)
+ * @brief Define a bus interface for PI
+ * @see Block PI
+ * @ingroup base
+ */
 class InterfaceBus
 {
     /**
@@ -33,7 +41,8 @@ class InterfaceBus
     public $blockname;
 
     /**
-     * @brief bi_master bi_slave bi_master_conn bi_slave_conn
+     * bi_master bi_slave bi_master_conn bi_slave_conn
+     * @brief Type of connection
      * @var string $type
      */
     public $type;
@@ -44,6 +53,13 @@ class InterfaceBus
      */
     public $size_addr;
 
+    /**
+     * 
+     * @param string $name default value contructor
+     * @param string $blockname default value contructor
+     * @param string $type default value contructor
+     * @param int $size_addr default value contructor
+     */
     function __construct($name, $blockname, $type, $size_addr)
     {
         $this->name = $name;

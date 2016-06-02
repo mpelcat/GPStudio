@@ -62,6 +62,13 @@ class Flow
      */
     public $properties;
 
+    /**
+     * @brief constructor of Flow
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->properties = array();
@@ -70,11 +77,21 @@ class Flow
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class instance
+     * @return string
+     */
     public function __toString()
     {
         return "'" . $this->name . "' direction: '" . $this->type . "' size: '" . $this->size . "' desc: '" . $this->desc . "'";
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->parentBlock = null;
@@ -84,10 +101,9 @@ class Flow
         if (!empty($xml['size']))
             $this->size = (int) $xml['size'];
         else
-            $this->size = 16; // TODO change this hard coded default value
+            $this->size = 16;
 
-            
-// properties
+        // properties
         if (isset($xml->properties))
         {
             foreach ($xml->properties->property as $propertyXml)
@@ -97,6 +113,15 @@ class Flow
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("flow");
@@ -146,7 +171,8 @@ class Flow
         array_push($this->properties, $property);
     }
 
-    /** return a reference to the property with the name $name, if not found, return null
+    /** return a reference to the property with the name $name, if not found,
+     * return null
      *  @param string $name name of the property to search
      *  @param bool $casesens take care or not of the case of the name
      *  @return Property found property * */
