@@ -22,19 +22,19 @@
 class ComConnect
 {
 	/**
-	* Attribute name
+	* @brief Attribute name
 	* @var string $link
 	*/
 	public $link;
 	
 	/**
-	* Value of the id
+	* @brief Value of the id
 	* @var string $id
 	*/
 	public $id;
 	
 	/**
-	* Type of connection, could be "flow", "paramin" or "paramout"
+	* @brief Type of connection, could be "flow", "paramin" or "paramout"
 	* @var string $type
 	*/
 	public $type;

@@ -29,38 +29,38 @@
 class Flow
 {
 	/**
-	* Name of the flow
+	* @brief Name of the flow
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Type of the flow, can be "in" or "out"
+	* @brief Type of the flow, can be "in" or "out"
 	* @var string $type
 	*/
 	public $type;
 
 	/**
-	* Size in bit of the flow
+	* @brief Size in bit of the flow
 	* @var int $size
 	*/
 	public $size;
 
 	/**
-	* Description of the flow (optional)
+	* @brief Description of the flow (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Reference to the associated parent block
+	* @brief Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;
 	
 	
 	/**
-	* Array of property class specify the high level properties
+	* @brief Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;

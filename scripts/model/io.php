@@ -24,13 +24,13 @@ require_once("block.php");
 class IO extends Block
 {
 	/**
-	* External pins mapping for blocks abble to comunicate with the output
+	* @brief External pins mapping for blocks abble to comunicate with the output
 	* @var array|Pin $pins
 	*/
 	public $pins;
 
 	/**
-	* Array of port abble to comunicate with the output
+	* @brief Array of port abble to comunicate with the output
 	* @var array|Port $ext_ports
 	*/
 	public $ext_ports;

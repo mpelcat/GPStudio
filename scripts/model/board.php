@@ -35,62 +35,62 @@ class Board
 	private $xml;
 	
 	/**
-	* Complete path of the board definition
+	* @brief Complete path of the board definition
 	* @var string $board_file
 	*/
 	public $board_file;
 
 	/**
-	* Name of the board
+	* @brief Name of the board
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Specify the external file script to configure the board (optional)
+	* @brief Specify the external file script to configure the board (optional)
 	* @var string $configscriptfile
 	*/
 	public $configscriptfile;
 
 	/**
-	* Specify the external file script to generate the board files (optional)
+	* @brief Specify the external file script to generate the board files (optional)
 	* @var string $generatescriptfile
 	*/
 	public $generatescriptfile;
 
 	/**
-	* Path where the root of files and define of the board is putted
+	* @brief Path where the root of files and define of the board is putted
 	* @var string $path
 	*/
 	public $path;
 
 	/**
-	* Toolchain structure of board
+	* @brief Toolchain structure of board
 	* @var Toolchain $toolchain
 	*/
 	public $toolchain;
 	
 
 	/**
-	* Array of pin mapping of the board
+	* @brief Array of pin mapping of the board
 	* @var array|Pin $pins
 	*/
 	public $pins;
 
 	/**
-	* Array of input clocks of the board
+	* @brief Array of input clocks of the board
 	* @var array|Clock $clocks
 	*/
 	public $clocks;
 
 	/**
-	* Array of input resets of the board
+	* @brief Array of input resets of the board
 	* @var array|Reset $resets
 	*/
 	public $resets;
 
 	/**
-	* Reference to the associated parent node
+	* @brief Reference to the associated parent node
 	* @var Node $parentNode
 	*/
 	public $parentNode;

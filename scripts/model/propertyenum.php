@@ -22,31 +22,31 @@
 class PropertyEnum
 {
 	/**
-	* Name of the enum
+	* @brief Name of the enum
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Caption of the property for high level interface (can contain space)
+	* @brief Caption of the property for high level interface (can contain space)
 	* @var string $caption
 	*/
 	public $caption;
 
 	/**
-	* Coresponding value of the enum when this enum is chosen
+	* @brief Coresponding value of the enum when this enum is chosen
 	* @var string $value
 	*/
 	public $value;
 
 	/**
-	* Description of the enum (optional)
+	* @brief Description of the enum (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Reference to the associated parent Property
+	* @brief Reference to the associated parent Property
 	* @var Property $parentProperty
 	*/
 	public $parentProperty;

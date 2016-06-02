@@ -22,31 +22,31 @@
 class TreeItem
 {
 	/**
-	* Name of the block source of the flow
+	* @brief Name of the block source of the flow
 	* @var string $fromblock
 	*/
 	public $fromblock;
 
 	/**
-	* Name of the flow on the block source of the flow
+	* @brief Name of the flow on the block source of the flow
 	* @var string $fromflow
 	*/
 	public $fromflow;
 
 	/**
-	* Size of connect in bit
+	* @brief Size of connect in bit
 	* @var string $size
 	*/
 	public $size;
 
 	/**
-	* Byte ordering can be "msb" or "lsb", default value is "msb"
+	* @brief Byte ordering can be "msb" or "lsb", default value is "msb"
 	* @var string $order
 	*/
 	public $order;
 
 	/**
-	* Value of the property to choose this connexion
+	* @brief Value of the property to choose this connexion
 	* @var string $muxvalue
 	*/
 	public $muxvalue;

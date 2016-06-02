@@ -22,31 +22,31 @@
 class Reset
 {
 	/**
-	* Name of the reset
+	* @brief Name of the reset
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Name of the group reset
+	* @brief Name of the group reset
 	* @var string $group
 	*/
 	public $group;
 	
 	/**
-	* Direction of the reset to specify if it's a source reset ('out') or an input reset ('in')
+	* @brief Direction of the reset to specify if it's a source reset ('out') or an input reset ('in')
 	* @var string $direction
 	*/
 	public $direction;
 
 	/**
-	* Description of the reset (optional)
+	* @brief Description of the reset (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Reference to the associated parent block
+	* @brief Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;

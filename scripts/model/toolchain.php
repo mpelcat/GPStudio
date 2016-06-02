@@ -24,7 +24,7 @@ require_once("attribute.php");
 class Toolchain
 {
 	/**
-	* Array of attributes of the toolchain (optional)
+	* @brief Array of attributes of the toolchain (optional)
 	* @var array|Attribute $attributes
 	*/
 	public $attributes;

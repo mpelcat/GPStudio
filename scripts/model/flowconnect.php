@@ -22,31 +22,31 @@
 class FlowConnect
 {
 	/**
-	* Name of the block source of the flow
+	* @brief Name of the block source of the flow
 	* @var string $fromblock
 	*/
 	public $fromblock;
 
 	/**
-	* Name of the flow on the block source of the flow
+	* @brief Name of the flow on the block source of the flow
 	* @var string $fromflow
 	*/
 	public $fromflow;
 
 	/**
-	* Name of the block sink of the flow
+	* @brief Name of the block sink of the flow
 	* @var string $toblock
 	*/
 	public $toblock;
 
 	/**
-	* Name of the flow on the block sink of the flow
+	* @brief Name of the flow on the block sink of the flow
 	* @var string $toflow
 	*/
 	public $toflow;
 
 	/**
-	* Byte ordering can be "msb" or "lsb", default value is "msb"
+	* @brief Byte ordering can be "msb" or "lsb", default value is "msb"
 	* @var string $order
 	*/
 	public $order;

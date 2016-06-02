@@ -24,92 +24,92 @@ require_once("propertyenum.php");
 class Property
 {
 	/**
-	* Name of the property
+	* @brief Name of the property
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Caption of the property for high level interface
+	* @brief Caption of the property for high level interface
 	* @var string $caption
 	*/
 	public $caption;
 
 	/**
-	* Type of property
+	* @brief Type of property
 	* @var string $type
 	*/
 	public $type;
 
 	/**
-	* Current value of the property
+	* @brief Current value of the property
 	* @var string $value
 	*/
 	public $value;
 
 	/**
-	* Minimum value of the property
+	* @brief Minimum value of the property
 	* @var string $min
 	*/
 	public $min;
 
 	/**
-	* Maximum value of the property
+	* @brief Maximum value of the property
 	* @var string $max
 	*/
 	public $max;
 
 	/**
-	* Step value of the property
+	* @brief Step value of the property
 	* @var string $step
 	*/
 	public $step;
 
 	/**
-	* Check if the property is good (optional)
+	* @brief Check if the property is good (optional)
 	* @var string $assert
 	*/
 	public $assert;
 
 	/**
-	* Mapping to properties (optional)
+	* @brief Mapping to properties (optional)
 	* @var string $propertymap
 	*/
 	public $propertymap;
 
 	/**
-	* Code to execute if the property change (optional)
+	* @brief Code to execute if the property change (optional)
 	* @var string $onchange
 	*/
 	public $onchange;
 
 	/**
-	* Description of the param (optional)
+	* @brief Description of the param (optional)
 	* @var string $desc
 	*/
 	public $desc;
 	
 
 	/**
-	* Array of enums if param property have different enums (optional)
+	* @brief Array of enums if param property have different enums (optional)
 	* @var array|PropertyEnum $propertyenums
 	*/
 	public $propertyenums;
 	
 	/**
-	* Array of property class specify the high level properties
+	* @brief Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;
 
 	/**
-	* Reference to the associated parent block (don't set if parentProperty is set)
+	* @brief Reference to the associated parent block (don't set if parentProperty is set)
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;
 
 	/**
-	* Reference to the associated parent Property (don't set if parentBlock is set)
+	* @brief Reference to the associated parent Property (don't set if parentBlock is set)
 	* @var Property $parentProperty
 	*/
 	public $parentProperty;

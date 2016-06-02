@@ -29,43 +29,43 @@
 class File
 {
 	/**
-	* Name of the file
+	* @brief Name of the file
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* File type can be : ['', 'verilog', 'vhdl', 'qip', 'sdc', 'hex']
+	* @brief File type can be : ['', 'verilog', 'vhdl', 'qip', 'sdc', 'hex']
 	* @var string $type
 	*/
 	public $type;
 
 	/**
-	* Group can be : ['', 'hdl', ...]
+	* @brief Group can be : ['', 'hdl', ...]
 	* @var string $group
 	*/
 	public $group;
 
 	/**
-	* Sub path of the file
+	* @brief Sub path of the file
 	* @var string $path
 	*/
 	public $path;
 
 	/**
-	* True if this file is generated, so the path is not modified by the toolchain
+	* @brief True if this file is generated, so the path is not modified by the toolchain
 	* @var bool $generated
 	*/
 	public $generated;
 
 	/**
-	* Description of the file (optional)
+	* @brief Description of the file (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Reference to the associated parent block
+	* @brief Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;

@@ -29,19 +29,19 @@
 class Attribute
 {
 	/**
-	* Attribute name
+	* @brief Attribute name
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Value of the attibute
+	* @brief Value of the attibute
 	* @var string $value
 	*/
 	public $value;
 	
 	/**
-	* Type of attribute
+	* @brief Type of attribute
 	* @var string $type
 	*/
 	public $type;

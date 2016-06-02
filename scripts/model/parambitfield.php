@@ -22,50 +22,50 @@
 class ParamBitfield
 {
 	/**
-	* Name of the bitfield
+	* @brief Name of the bitfield
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Type of the value
+	* @brief Type of the value
 	* @var string $type
 	*/
 	public $type;
 
 	/**
-	* Current value of the bitfield
+	* @brief Current value of the bitfield
 	* @var string $value
 	*/
 	public $value;
 
 	/**
-	* Bitfield in text format
+	* @brief Bitfield in text format
 	* @var string $bitfield
 	* @exemple "2-0" "2,6,1" "15-4,0"
 	*/
 	public $bitfield;
 
 	/**
-	* Mapping to properties (optional)
+	* @brief Mapping to properties (optional)
 	* @var string $propertymap
 	*/
 	public $propertymap;
 
 	/**
-	* Description of the bitfield (optional)
+	* @brief Description of the bitfield (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Array of int for concerned bit in the param
+	* @brief Array of int for concerned bit in the param
 	* @var array|int $bitfieldlist
 	*/
 	public $bitfieldlist;
 
 	/**
-	* Reference to the associated parent Param
+	* @brief Reference to the associated parent Param
 	* @var Param $parentParam
 	*/
 	public $parentParam;

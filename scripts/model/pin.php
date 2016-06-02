@@ -22,25 +22,25 @@
 class Pin
 {
 	/**
-	* Pin name to map
+	* @brief Pin name to map
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Name of the external pin to map
+	* @brief Name of the external pin to map
 	* @var string $mapto
 	*/
 	public $mapto;
 	
 	/**
-	* Array of attributes of the pin (optional)
+	* @brief Array of attributes of the pin (optional)
 	* @var array|Attribute $attributes
 	*/
 	public $attributes;
 
 	/**
-	* Reference to the associated parent block
+	* @brief Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;

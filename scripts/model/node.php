@@ -26,25 +26,25 @@ require_once("process.php");
 class Node
 {
 	/**
-	* The complete path of the file of the input definition
+	* @brief The complete path of the file of the input definition
 	* @var string $node_file
 	*/
 	public $node_file;
 
 	/**
-	* Name of the node
+	* @brief Name of the node
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Board structure of the node
+	* @brief Board structure of the node
 	* @var Board $board
 	*/
 	public $board;
 
 	/**
-	* Array of al the blocks (process or io) contain in the node
+	* @brief Array of al the blocks (process or io) contain in the node
 	* @var array|Block $blocks
 	*/
 	public $blocks;

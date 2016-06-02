@@ -22,31 +22,31 @@
 class Port
 {
 	/**
-	* Name of the interface
+	* @brief Name of the interface
 	* @var string $name
 	*/
 	public $name;
 	
 	/**
-	* Type of the port
+	* @brief Type of the port
 	* @var string $type
 	*/
 	public $type;
 	
 	/**
-	* Size of the port in bit
+	* @brief Size of the port in bit
 	* @var int $size
 	*/
 	public $size;
 	
 	/**
-	* Description of the port (optional)
+	* @brief Description of the port (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 	/**
-	* Reference to the associated parent block
+	* @brief Reference to the associated parent block
 	* @var Block $parentBlock
 	*/
 	public $parentBlock;

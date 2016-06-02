@@ -24,37 +24,37 @@ require_once("treeitem.php");
 class TreeConnect
 {
 	/**
-	* Name of the block sink of the flow
+	* @brief Name of the block sink of the flow
 	* @var string $toblock
 	*/
 	public $toblock;
 
 	/**
-	* Name of the flow on the block sink of the flow
+	* @brief Name of the flow on the block sink of the flow
 	* @var string $toflow
 	*/
 	public $toflow;
 
 	/**
-	* Size of connect in bit
+	* @brief Size of connect in bit
 	* @var string $size
 	*/
 	public $size;
 
 	/**
-	* Byte ordering can be "msb" or "lsb", default value is "msb"
+	* @brief Byte ordering can be "msb" or "lsb", default value is "msb"
 	* @var string $order
 	*/
 	public $order;
 
 	/**
-	* Property name of the MUX
+	* @brief Property name of the MUX
 	* @var string $muxname
 	*/
 	public $muxname;
 
 	/**
-	* List of all the source flow can be chosen for this flow input
+	* @brief List of all the source flow can be chosen for this flow input
 	* @var array|TreeItem $treeitems
 	*/
 	public $treeitems;

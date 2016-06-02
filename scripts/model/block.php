@@ -40,98 +40,98 @@ require_once("attribute.php");
 class Block
 {
 	/**
-	* Name of the block
+	* @brief Name of the block
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Path where the root of files and define of the block is putted
+	* @brief Path where the root of files and define of the block is putted
 	* @var string $path
 	*/
 	public $path;
 
 	/**
-	* Specify if the block is defined in the library or not
+	* @brief Specify if the block is defined in the library or not
 	* @var bool $in_lib
 	*/
 	public $in_lib;
 
 	/**
-	* Specify the name of the driver for the block
+	* @brief Specify the name of the driver for the block
 	* @var string $driver
 	*/
 	public $driver;
 
 	/**
-	* Specify the categorie of the block eg : communication, imagesensor, descriptor...
+	* @brief Specify the categorie of the block eg : communication, imagesensor, descriptor...
 	* @var string $categ
 	*/
 	public $categ;
 	
 	/**
-	* The absolute adress of the block on BI
+	* @brief The absolute adress of the block on BI
 	* @var int $addr_abs
 	*/
 	public $addr_abs;
 
 	/**
-	* Size of relative adress bus
+	* @brief Size of relative adress bus
 	* @var int $pi_size_addr_rel
 	*/
 	public $pi_size_addr_rel;
 
 	/**
-	* Number of master in the block on BI
+	* @brief Number of master in the block on BI
 	* @var int $master_count
 	*/
 	public $master_count;
 	
 	/**
-	* X position on schematic (optional)
+	* @brief X position on schematic (optional)
 	* @var int $x_pos
 	*/
 	public $x_pos;
 	
 	/**
-	* Y position on schematic (optional)
+	* @brief Y position on schematic (optional)
 	* @var int $y_pos
 	*/
 	public $y_pos;
 
 	/**
-	* Specify the external file script to configure the block (optional)
+	* @brief Specify the external file script to configure the block (optional)
 	* @var string $configscriptfile
 	*/
 	public $configscriptfile;
 
 	/**
-	* Specify the external file script to generate the block (optional)
+	* @brief Specify the external file script to generate the block (optional)
 	* @var string $generatescriptfile
 	*/
 	public $generatescriptfile;
 
 	/**
-	* Description of the flow (optional)
+	* @brief Description of the flow (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
 
 	/**
-	* Array of parameters class (can be Generic or dynamics parameter on BI)
+	* @brief Array of parameters class (can be Generic or dynamics parameter on BI)
 	* @var array|Param $params
 	*/
 	public $params;
 	
 	/**
-	* Array of property class specify the high level properties
+	* @brief Array of property class specify the high level properties
 	* @var array|Property $properties
 	*/
 	public $properties;
 
 	/**
-	* Array of files whith define the implementation of the block
+	* @brief Array of files whith define the implementation of the block
 	* @var array|File $files
 	*/
 	public $files;
@@ -143,31 +143,31 @@ class Block
 	public $flows;
 
 	/**
-	* Array of clocks to drive the block
+	* @brief Array of clocks to drive the block
 	* @var array|Clock $clocks
 	*/
 	public $clocks;
 
 	/**
-	* Array of resets, can be different type of resets
+	* @brief Array of resets, can be different type of resets
 	* @var array|Reset $resets
 	*/
 	public $resets;
 
 	/**
-	* Array of interfaces of the block
+	* @brief Array of interfaces of the block
 	* @var array|InterfaceBus $interfaces
 	*/
 	public $interfaces;
 	
 	/**
-	* Array of attributes of the block (optional)
+	* @brief Array of attributes of the block (optional)
 	* @var array|Attribute $attributes
 	*/
 	public $attributes;
 
 	/**
-	* Reference to the associated parent node
+	* @brief Reference to the associated parent node
 	* @var Node $parentNode
 	*/
 	public $parentNode;

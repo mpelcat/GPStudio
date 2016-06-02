@@ -29,13 +29,13 @@
 class ClockDomain
 {
 	/**
-	* Name of the clock
+	* @brief Name of the clock
 	* @var string $name
 	*/
 	public $name;
 
 	/**
-	* Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
+	* @brief Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
 	* @var float $typical
 	*/
 	public $typical;

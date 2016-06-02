@@ -25,14 +25,14 @@ require_once("comconnect.php");
 class IOCom extends IO
 {
 	/**
-	* Name of the driver to use for etablish a communication with the board
+	* @brief Name of the driver to use for etablish a communication with the board
 	* @var string $driverio
 	*/
 	public $driverio;
 	
 
 	/**
-	* Array of ComConnect to give the equivalence table between hardware flow and software id flow
+	* @brief Array of ComConnect to give the equivalence table between hardware flow and software id flow
 	* @var array|ComConnect $com_connects
 	*/
 	public $comConnects;

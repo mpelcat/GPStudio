@@ -36,28 +36,32 @@
 
 class Clock
 {
-	/** @brief name of the clock
+	/**
+	* @brief name of the clock
 	* 
 	* This name should be unique in the block.
 	* @var string $name
 	*/
 	public $name;
 
-	/** @brief clock direction
-	 * 
+	/**
+	* @brief clock direction
+	* 
 	* Specify if clock is in or out (value : "in" or "out", default "in")
 	* @var string $direction
 	*/
 	public $direction;
 
-	/** @brief clock shift phase
+	/**
+	* @brief clock shift phase
 	* 
 	* Phase shift of the clock given in degrees
 	* @var int $shift
 	*/
 	public $shift;
 
-	/** @brief minimum freq acceptance
+	/**
+	* @brief minimum freq acceptance
 	* 
 	* Minimal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
 	* @var float $min
@@ -65,7 +69,8 @@ class Clock
 	*/
 	public $min;
 
-	/** @brief maximal freq acceptance
+	/**
+	* @brief maximal freq acceptance
 	* 
 	* Maximal value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500
 	* @var float $max
@@ -73,29 +78,36 @@ class Clock
 	*/
 	public $max;
 
-	/** @brief frequence of the clock
+	/**
+	* @brief frequence of the clock
 	* 
-	* Typical value for this clock in Hz, could be written like this : 14.2M or 18.7k or 1500. If this field is set, min, max and ratio was not used.
+	* Typical value for this clock in Hz, could be written like this :
+	* 14.2M or 18.7k or 1500. If this field is set, min, max and ratio
+	* was not used.
 	* @var float $typical
 	*/
 	public $typical;
 
-	/** @brief ratio frequence in the clock domain
+	/**
+	* @brief ratio frequence in the clock domain
 	* 
-	* ratio compared to the main clock domain. If domain not set, produce an error. Default value 1.
+	* ratio compared to the main clock domain. If domain not set,
+	* produce an error. Default value 1.
 	* @var float $ratio
 	* @see $domain
 	*/
 	public $ratio;
 
-	/** @brief clock domain
+	/**
+	* @brief clock domain
 	* 
 	* Clocks in the same domain depend of the same clock source
 	* @var string $domain
 	*/
 	public $domain;
 
-	/** @brief net to connect the clock
+	/**
+	* @brief net to connect the clock
 	* 
 	* Physical net name to connect the clock. This value is computed by CI
 	* @var string $net
@@ -103,14 +115,16 @@ class Clock
 	*/
 	public $net;
 
-	/** @brief description
+	/**
+	* @brief description
 	* 
 	* Description of the clock (optional)
 	* @var string $desc
 	*/
 	public $desc;
 
-	/** @brief parent block
+	/**
+	* @brief parent block
 	* 
 	* Reference to the associated parent block
 	* @var Block $parentBlock
@@ -118,7 +132,8 @@ class Clock
 	public $parentBlock;
 	
 
-	/** @brief constructor
+	/**
+	* @brief constructor
 	* 
 	* Initialise all the internal members and call parse_xml if $xml is set
 	* @param SimpleXMLElement $xml if it's different of null, call the xml parser to fill members
@@ -137,7 +152,8 @@ class Clock
         return $this->name." ".Clock::formatFreq($this->typical)." ".$this->direction;
     }
 	
-	/** @brief private function to fill this instance from the input xml structure
+	/**
+	* @brief private function to fill this instance from the input xml structure
 	* 
 	* Can be call only from this node into the constructor
 	* @param SimpleXMLElement $xml xml element to parse
@@ -177,7 +193,8 @@ class Clock
 		$this->desc = (string)$xml['desc'];
 	}
 	
-	/** @brief permit to output this instance
+	/**
+	* @brief permit to output this instance
 	* 
 	* Return a formated node for the node_generated file. This method call all the children getXmlElement to add into this node.
 	* @param DOMDocument $xml reference of the output xml document
@@ -246,7 +263,8 @@ class Clock
 		return $xml_element;
 	}
 	
-	/** @brief frenquency from string
+	/**
+	* @brief frenquency from string
 	* 
 	* Return a frequency as number in Hz from a string. Input format can be : 14.2M or 18.7k or 1500
 	* @param string $string string to convert to frequency in Hz
@@ -264,7 +282,8 @@ class Clock
 		return $clock;
 	}
 	
-	/** @brief human readable frequency
+	/**
+	* @brief human readable frequency
 	* 
 	* Return formated string of a frequency for human reader. This is used for printable report or warning.
 	* @param int $freq frequency in Hz
@@ -290,7 +309,8 @@ class Clock
 		}
 	}
 	
-	/** @brief HDL readable frequency
+	/**
+	* @brief HDL readable frequency
 	* 
 	* Return formated string of a frequency for HDL compiler. This is used for naming convention in HDL output code.
 	* @param int $freq frequency in Hz

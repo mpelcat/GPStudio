@@ -21,9 +21,28 @@
 
 class Lib
 {
+	/**
+	* @brief Array of IOs name available in library
+	* @var array|string $ios
+	*/
 	public $ios;
+	
+	/**
+	* @brief Array of boards name available in library
+	* @var array|string $boards
+	*/
 	public $boards;
+	
+	/**
+	* @brief Array of processes name available in library
+	* @var array|string $process
+	*/
 	public $process;
+	
+	/**
+	* @brief Array of toolchains name available in library
+	* @var array|string $toolchain
+	*/
 	public $toolchain;
 	
 	function __construct($libpaths)
