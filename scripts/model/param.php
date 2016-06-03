@@ -20,6 +20,12 @@
 
 require_once("parambitfield.php");
 
+/**
+ * @brief Param handle a constant parameter (generic for VHDL, param for verilog
+ * constant for C/C++) or register for hardware implementation.
+ * @see Block
+ * @ingroup base
+ */
 class Param
 {
     /**
@@ -103,6 +109,10 @@ class Param
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class instance
+     * @return string
+     */
     public function __toString()
     {
         if ($this->hard)
@@ -111,6 +121,12 @@ class Param
             return "register " . $this->name . " regaddr: " . $this->regaddr . " propertymap: '" . $this->propertymap . "'";
     }
 
+    /**
+     * @brief Compare two param object address to sort it by address
+     * @param Param $a first Param object to compare
+     * @param Param $b second Param object to compare
+     * @return int -1, 1 or 0 to say if it is smaller, bigger or equal
+     */
     public static function cmp_raddr($a, $b)
     {
         if ($a->hard && $b->hard)
@@ -124,6 +140,12 @@ class Param
         return ($a->regaddr < $b->regaddr) ? -1 : 1;
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -160,6 +182,15 @@ class Param
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("param");
@@ -236,18 +267,23 @@ class Param
         return $xml_element;
     }
 
-    /** Add a parambitfield to the param 
-     *  @param ParamBitfield $parambitfield parambitfield to add to the param * */
+    /**
+     * @brief Add a parambitfield to the param 
+     * @param ParamBitfield $parambitfield parambitfield to add to the param
+     */
     function addParamBitfield($parambitfield)
     {
         $parambitfield->parentParam = $this;
         array_push($this->parambitfields, $parambitfield);
     }
 
-    /** return a reference to the bitfield with the name $name, if not found, return null
-     *  @param string $name name of the parambitfield to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return ParamBitfield found bitfield * */
+    /**
+     * @brief return a reference to the bitfield with the name $name, if not
+     * found, return null
+     * @param string $name name of the parambitfield to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return ParamBitfield found bitfield
+     */
     function getParambitfield($name, $casesens = true)
     {
         if ($casesens)
@@ -269,8 +305,10 @@ class Param
         return null;
     }
 
-    /** delete a bitfield from his name
-     *  @param string $name name of the bitfield to delete * */
+    /**
+     * @brief delete a bitfield from his name
+     * @param string $name name of the bitfield to delete
+     */
     function delParambitfield($name)
     {
         $i = 0;
@@ -286,6 +324,12 @@ class Param
         return null;
     }
 
+    /**
+     * @brief Redefines all the contained properties to the global context by
+     * adding the name of the block at the begining of all of properties map
+     * @param string $blockName Name of of the block to append before all the
+     * propertymap expression
+     */
     function toGlobalPropertyPath($blockName)
     {
         $this->propertymap = Property::localToGlobalPropertyPath($this->propertymap, $blockName);

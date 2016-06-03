@@ -160,6 +160,10 @@ class Clock
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class instance
+     * @return string
+     */
     public function __toString()
     {
         return $this->name . " " . Clock::formatFreq($this->typical) . " " . $this->direction;

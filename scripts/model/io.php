@@ -20,10 +20,17 @@
 
 require_once("block.php");
 
+/**
+ * It allows the use of pins and external port to declare phisycal interface.
+ * @brief IO is the specialised implementation of Block.
+ * @see Block
+ * @ingroup base
+ */
 class IO extends Block
 {
     /**
-     * @brief External pins mapping for blocks abble to comunicate with the output
+     * @brief External pins mapping for blocks abble to comunicate with the
+     * output
      * @var array|Pin $pins
      */
     public $pins;
@@ -34,6 +41,18 @@ class IO extends Block
      */
     public $ext_ports;
 
+    /**
+     * @brief constructor of IO
+     * 
+     * Initialise all the internal members and call parse_xml if
+     * $io_device_element is an SimpleXMLElement object. Else, it open the file
+     * with the path $io_device_element as string or the io with the name
+     * $io_device_element in library
+     * @param SimpleXMLElement|null $io_device_element if it's different of null,
+     * call the xml parser to fill members
+     * @param SimpleXMLElement|null $io_node_element if it's different of null,
+     * call the xml parser to fill members
+     */
     function __construct($io_device_element = null, $io_node_element = null)
     {
         $this->pins = array();
@@ -100,6 +119,11 @@ class IO extends Block
         }
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * @param SimpleXMLElement $io_device_element element from io in lib
+     * @param SimpleXMLElement $io_node_element element from the node
+     */
     protected function parse_xml($io_device_element, $io_node_element)
     {
         parent::parse_xml();
@@ -125,11 +149,24 @@ class IO extends Block
         }
     }
 
+    /**
+     * @brief Returns the type of the block as string, redefined by children.
+     * @return string type of the block.
+     */
     public function type()
     {
         return 'io';
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = parent::getXmlElement($xml, $format);
@@ -156,18 +193,23 @@ class IO extends Block
         return $xml_element;
     }
 
-    /** Add a pin to the block 
-     *  @param Pin $pin pin to add to the block * */
+    /**
+     * @brief Add a pin to the block 
+     * @param Pin $pin pin to add to the block
+     */
     function addPin($pin)
     {
         $pin->parentBlock = $this;
         array_push($this->pins, $pin);
     }
 
-    /** return a reference to the pin with the name $name, if not found, return null
-     *  @param string $name name of the pin to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Pin found pin * */
+    /**
+     * @brief return a reference to the pin with the name $name, if not found,
+     * return null
+     * @param string $name name of the pin to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Pin found pin
+     */
     function getPin($name, $casesens = true)
     {
         if ($casesens)
@@ -189,18 +231,23 @@ class IO extends Block
         return null;
     }
 
-    /** Add an external port to the block 
-     *  @param Port $extPort port to add to the block * */
+    /**
+     * @brief Add an external port to the block 
+     * @param Port $extPort port to add to the block
+     */
     function addExtPort($extPort)
     {
         $extPort->parentBlock = $this;
         array_push($this->ext_ports, $extPort);
     }
 
-    /** return a reference to the external port with the name $name, if not found, return null
-     *  @param string $name name of the external port to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Port found external port * */
+    /**
+     * @brief return a reference to the external port with the name $name, if not
+     * found, return null
+     * @param string $name name of the external port to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Port found external port
+     */
     function getExtPort($name, $casesens = true)
     {
         if ($casesens)
@@ -222,8 +269,10 @@ class IO extends Block
         return null;
     }
 
-    /** delete an external port from his name
-     *  @param string $name name of the external port to delete  * */
+    /**
+     * @brief delete an external port from his name
+     * @param string $name name of the external port to delete
+     */
     function delExtPort($name)
     {
         $i = 0;

@@ -18,6 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * A param can contains multiple bitfieds and each bit field can be composed by
+ * one or more bits.
+ * 
+ * @brief Bit field for param when param are registers
+ * @see Param
+ * @ingroup base
+ */
 class ParamBitfield
 {
     /**
@@ -69,6 +77,13 @@ class ParamBitfield
      */
     public $parentParam;
 
+    /**
+     * @brief constructor of ParamBitfield
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->bitfieldlist = array();
@@ -78,11 +93,21 @@ class ParamBitfield
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class instance
+     * @return string
+     */
     public function __toString()
     {
         return "bitfield " . $this->name . " bitfield: " . $this->bitfield . " propertymap: '" . $this->propertymap . "'";
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -103,6 +128,11 @@ class ParamBitfield
         }
     }
 
+    /**
+     * @brief bit field expression parser that gives the list of bits
+     * @param type $string bit field expression
+     * @return array list of all bits ordered
+     */
     public static function decodeBitField($string)
     {
         $bitfieldlist = array();
@@ -146,6 +176,15 @@ class ParamBitfield
         return $bitfieldlist;
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("bitfield");

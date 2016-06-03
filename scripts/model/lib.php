@@ -18,6 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Lib is a container that store all the IPs available in library path.
+ * @ingroup base
+ * @see Board IO Process Toolchain
+ */
 class Lib
 {
     /**
@@ -44,6 +49,10 @@ class Lib
      */
     public $toolchain;
 
+    /**
+     * @brief Constructor of Lib from an array of library path.
+     * @param array|string $libpaths
+     */
     function __construct($libpaths)
     {
         $this->ios = array();
@@ -60,6 +69,10 @@ class Lib
         }
     }
 
+    /**
+     * @brief Opens the path and search all the available IP in all of them.
+     * @param array|string $libpath Array of library path
+     */
     protected function openlib($libpath)
     {
         // process
@@ -109,17 +122,5 @@ class Lib
                     $this->toolchains[] = $dir;
             }
         }
-    }
-
-    public function type()
-    {
-        return 'process';
-    }
-
-    public function getXmlElement($xml, $format)
-    {
-        $xml_element = parent::getXmlElement($xml, $format);
-
-        return $xml_element;
     }
 }

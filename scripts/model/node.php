@@ -22,6 +22,16 @@ require_once("board.php");
 require_once("block.php");
 require_once("process.php");
 
+/**
+ * A node in GPStudio is typically a smart camera or a server. It store the list
+ * of blocks and the local configuration of the node with the definition of the
+ * board.
+ * 
+ * @brief Node is the base class container that store all the configuration of a
+ * node.
+ * @see Block Board
+ * @ingroup base
+ */
 class Node
 {
     /**
@@ -50,6 +60,13 @@ class Node
 
     public $xml;
 
+    /**
+     * @brief constructor of Node
+     * 
+     * Initialise all the internal members and call parse_config_xml if
+     * $node_file is set
+     * @param string $node_file Node file name
+     */
     function __construct($node_file = null)
     {
         $this->blocks = array();
@@ -58,6 +75,10 @@ class Node
             $this->parse_config_xml($node_file);
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml file
+     * @param string $node_file Node file name
+     */
     protected function parse_config_xml($node_file)
     {
         if (!file_exists($node_file))
@@ -178,6 +199,15 @@ class Node
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("node");
@@ -227,6 +257,14 @@ class Node
         return $xml_element;
     }
 
+    /**
+     * @brief Sets the board from his name in library.
+     * 
+     * Gets the Board block from the library or local project and add it to the
+     * node.
+     * @param string $boardName name of the board.
+     * @see Board
+     */
     function setBoard($boardName)
     {
         if (isset($this->board))
@@ -236,6 +274,13 @@ class Node
         $this->board = new Board($boardName, $this);
     }
 
+    /**
+     * @brief Adds an IO from his name or path.
+     * 
+     * Gets the IO block from the library or local project and add it to the
+     * node.
+     * @param string $ioName name or path of the io to add
+     */
     function addIo($ioName)
     {
         if (isset($this->board))
@@ -244,6 +289,10 @@ class Node
         }
     }
 
+    /**
+     * @brief Delete an IO block from his name
+     * @param string $ioName name of the io block to delete
+     */
     function delIo($ioName)
     {
         $i = 0;
@@ -255,6 +304,14 @@ class Node
         }
     }
 
+    /**
+     * @brief Adds a process from his name or path.
+     * 
+     * Gets the process block from the library or local project and add it to
+     * the node.
+     * @param string $processName name or path of the io to add
+     * @param string $processDriver driver name or path of the process to add
+     */
     function addProcess($processName, $processDriver)
     {
         $process = new Process($processDriver);
@@ -262,17 +319,28 @@ class Node
         $this->addBlock($process);
     }
 
-    function delProcess($ioProcess)
+    /**
+     * @brief Delete a process block from his name
+     * @param string $processName name of the process block to delete
+     */
+    function delProcess($processName)
     {
         $i = 0;
         foreach ($this->blocks as $block)
         {
-            if ($block->name == $ioProcess and $block->type() == "process")
+            if ($block->name == $processName and $block->type() == "process")
                 unset($this->blocks[$i]);
             $i++;
         }
     }
 
+    /**
+     * @brief Save the whole structure with all data including all internal
+     * children data
+     * 
+     * Generally used to save the 'node_generated.xml' file in build dir.
+     * @param string $file file name to save
+     */
     function saveXml($file)
     {
         $xml = new DOMDocument("1.0", "UTF-8");
@@ -284,6 +352,12 @@ class Node
         $xml->save($file);
     }
 
+    /**
+     * @brief Save the project with the minimal information needed.
+     * 
+     * Generally used to save the '.node' project file.
+     * @param string $file file name to save
+     */
     function saveProject($file)
     {
         $xml = new DOMDocument("1.0", "UTF-8");
@@ -295,8 +369,10 @@ class Node
         $xml->save($file);
     }
 
-    /** Add a block to the node 
-     *  @param Block $block block to add to the node * */
+    /**
+     * @brief Add a block to the node 
+     * @param Block $block block to add to the node
+     */
     function addBlock($block)
     {
         $block->parentNode = $this;
@@ -305,9 +381,12 @@ class Node
         array_push($this->blocks, $block);
     }
 
-    /** return a reference to the block with the name $name, if not found, return false
-     *  @param string $name name of the block to search
-     *  @return Block found block * */
+    /**
+     * @brief return a reference to the block with the name $name, if not found,
+     * return null
+     * @param string $name name of the block to search
+     * @return Block found block
+     */
     function getBlock($name)
     {
         foreach ($this->blocks as $block)
@@ -318,6 +397,13 @@ class Node
         return null;
     }
 
+    /**
+     * @brief return a reference to the flow with the name $name, if not found,
+     * return null
+     * @param string $name name of the flow to search composed by the name of
+     * the block followed by the name of the flow. Ex : 'block1.flowin0'
+     * @return Flow found flow
+     */
     function getFlow($name)
     {
         $subPath = explode('.', $name);
