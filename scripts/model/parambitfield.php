@@ -47,9 +47,9 @@ class ParamBitfield
     public $value;
 
     /**
-     * @brief Bitfield in text format
+     * @brief Bitfield expression in text format, example:
+     * "2-0" "2,6,1" "15-4,0"
      * @var string $bitfield
-     * @exemple "2-0" "2,6,1" "15-4,0"
      */
     public $bitfield;
 

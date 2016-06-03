@@ -37,7 +37,7 @@ class IOCom extends IO
 
     /**
      * @brief Array of ComConnect to give the equivalence table between hardware flow and software id flow
-     * @var array|ComConnect $com_connects
+     * @var array|ComConnect $comConnects
      * @see ComConnect
      */
     public $comConnects;

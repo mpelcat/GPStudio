@@ -96,7 +96,8 @@ class Board
      * @brief Constructor of the class
      * 
      * Build an board from a board node elelement and a link to a node
-     * @param SimpleXMLElement $xml XML element to parse if not null
+     * @param SimpleXMLElement|string $board_element XML element to parse if
+     * $board_element is an SimpleXMLElement object, name of the board else.
      * @param Node $node node associated to the board to parse it
      */
     function __construct($board_element, $node)

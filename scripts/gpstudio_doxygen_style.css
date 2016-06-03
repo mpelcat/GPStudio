@@ -1,0 +1,41 @@
+#top {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	max-width: 960px;
+}
+
+.header {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	max-width: 960px;
+}
+
+body {
+	background-color: white;
+	color: black;
+	margin: 0;
+}
+
+div.contents {
+	margin-bottom: 10px;
+	padding: 12px;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	width: 960px;
+	background-color: white;
+}
+
+#titlearea {
+	background-color: white;
+}
+
+hr.footer {
+	display: none;
+}
+
+.footer {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	max-width: 960px;
+	background-color: #AAA;
+}
