@@ -21,16 +21,15 @@
 /**
  * It needs to be specialised, it only contains the list of :
  *  - implementation files (vhdl, verilog, C, C++, ...), documentation files
- * File
+ * Block::$files
  *  - hardware parameters (generic for VHDL, param for verilog constant for
- * C/C++) or register for hardware implementation Param
- *  - properties for high level software Property
- *  - flows interface input and output Flow
- *  - clocks inputs (all blocks) and clocks generator (IO blocks only) Clock
- *  - reset inputs (all blocks) and reset generators (IO blocks only) Reset
- *  - pins and ports as external io for IO block Pin, Port
- *  - bus interfaces for PI slave and master InterfaceBus
- *  - attributes for special attributes compilation toolchain Attribute
+ * C/C++) or register for hardware implementation Block::$params
+ *  - properties for high level software Block::$properties
+ *  - flows interface input and output Block::$flows
+ *  - clocks inputs (all blocks) and clocks generator (IO blocks only) Block::$clocks
+ *  - reset inputs (all blocks) and reset generators (IO blocks only) Block::$resets
+ *  - bus interfaces for PI slave and master Block::$interfaces
+ *  - attributes for special attributes compilation toolchain Block::$attributes
  * 
  * @brief Block is the base block definition for all blocks.
  * @see IO Process

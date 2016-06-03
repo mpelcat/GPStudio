@@ -22,7 +22,11 @@ require_once("block.php");
 
 /**
  * It allows the use of pins and external port to declare phisycal interface.
- * @brief IO is the specialised implementation of Block.
+ * 
+ * It only contains the list of :
+ *  - pins and ports as external io IO::$pins, IO::$ext_ports
+ * @brief IO is the specialised implementation of Block for sensors and
+ * communication blocks.
  * @see Block
  * @ingroup base
  */
@@ -48,8 +52,9 @@ class IO extends Block
      * $io_device_element is an SimpleXMLElement object. Else, it open the file
      * with the path $io_device_element as string or the io with the name
      * $io_device_element in library
-     * @param SimpleXMLElement|null $io_device_element if it's different of null,
-     * call the xml parser to fill members
+     * @param SimpleXMLElement|string null $io_device_element if it's different
+     * of null, call the xml parser to fill members. In case of string type,
+     * loads the IO in lib from the name or from the path in project.
      * @param SimpleXMLElement|null $io_node_element if it's different of null,
      * call the xml parser to fill members
      */

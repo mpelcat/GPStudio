@@ -20,9 +20,27 @@
 
 require_once("block.php");
 
+/**
+ * Compared to Block, this class does not contain additionnal members. It just
+ * contains library parser and helper for process.
+ * @brief Process is the specialised implementation of Block for processes.
+ * @see Block
+ * @ingroup base
+ */
 class Process extends Block
 {
 
+    /**
+     * @brief constructor of Process
+     * 
+     * Initialise all the internal members and call parse_xml if
+     * $process_node_element is an SimpleXMLElement object. Else, it open the
+     * file with the path $process_node_element as string or the process with
+     * the name $process_node_element in library
+     * @param SimpleXMLElement|string|null $process_node_element if it's
+     * different of null, call the xml parser to fill members In case of string
+     * type, loads the process in lib from the name or from the path in project.
+     */
     function __construct($process_node_element = NULL)
     {
         parent::__construct();
@@ -134,17 +152,34 @@ class Process extends Block
         unset($this->xml);
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * @param SimpleXMLElement $process_node_element element from io in lib
+     */
     protected function parse_xml($process_node_element)
     {
         $this->xml = $process_node_element;
         parent::parse_xml();
     }
 
+    /**
+     * @brief Returns the type of the block as string, redefined by children.
+     * @return string type of the block.
+     */
     public function type()
     {
         return 'process';
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = parent::getXmlElement($xml, $format);

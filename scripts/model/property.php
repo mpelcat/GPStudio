@@ -20,6 +20,12 @@
 
 require_once("propertyenum.php");
 
+/**
+ * Property is contained into the Block::$properties and Flow::$properties
+ * @brief The Property class is used to define high level properties
+ * @see Block Param ParamBitfield Flow
+ * @ingroup base
+ */
 class Property
 {
     /**
@@ -112,6 +118,13 @@ class Property
      */
     public $parentProperty;
 
+    /**
+     * @brief constructor of Property
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->parentBlock = null;
@@ -122,12 +135,31 @@ class Property
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class
+     * instance
+     * @return string
+     */
     public function __toString()
     {
-        $string = $this->name . " caption:'" . $this->caption . "' type:'" . $this->type . "' value:'" . $this->value . "' min:'" . $this->min . "' max:'" . $this->max . "' step:'" . $this->step . "' desc:'" . $this->desc . "'";
+        $string = $this->name
+                . " caption:'" . $this->caption
+                . "' type:'" . $this->type
+                . "' value:'" . $this->value
+                . "' min:'" . $this->min
+                . "' max:'" . $this->max
+                . "' step:'" . $this->step
+                . "' desc:'" . $this->desc
+                . "'";
         return $string;
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -163,6 +195,15 @@ class Property
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("property");
@@ -250,18 +291,23 @@ class Property
         return $xml_element;
     }
 
-    /** Add a property enum to the block 
-     *  @param PropertyEnum $propertyenum property enum to add to the property * */
+    /**
+     * @brief Add a property enum to the block 
+     * @param PropertyEnum $propertyenum property enum to add to the property
+     */
     function addPropertyEnum($propertyenum)
     {
         $propertyenum->parentProperty = $this;
         array_push($this->propertyenums, $propertyenum);
     }
 
-    /** return a reference to the property enum with the name $name, if not found, return false
-     *  @param string $name name of the property enum to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return PropertyEnum found property enum * */
+    /**
+     * @brief return a reference to the property enum with the name $name, if not
+     * found, return false
+     * @param string $name name of the property enum to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return PropertyEnum found property enum
+     */
     function getPropertyEnum($name, $casesens = true)
     {
         if ($casesens)
@@ -283,8 +329,10 @@ class Property
         return null;
     }
 
-    /** delete a property enum from his name
-     *  @param string $name name of the property enum to delete  * */
+    /**
+     * @brief delete a property enum from his name
+     * @param string $name name of the property enum to delete 
+     */
     function delPropertyEnum($name)
     {
         $i = 0;
@@ -299,25 +347,31 @@ class Property
         }
     }
 
-    /** Add a sub-property to the property 
-     *  @param Property $property sub-property to add to the property * */
+    /**
+     * @brief Add a sub-property to the property 
+     * @param Property $property sub-property to add to the property
+     */
     function addSubProperty($property)
     {
         $property->parentProperty = $this;
         array_push($this->properties, $property);
     }
 
-    /** alias to addSubProperty($property)
-     *  @param Property $property sub-property to add to the property * */
+    /**
+     * @brief alias to addSubProperty($property)
+     * @param Property $property sub-property to add to the property
+     */
     function addProperty($property)
     {
         $this->addSubProperty($property);
     }
 
-    /** return a reference to the property with the name $name, if not found, return false
-     *  @param string $name name of the property enum to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+    /**
+     * @brief return a reference to the property with the name $name, if not found, return false
+     * @param string $name name of the property enum to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Property found property
+     */
     function getSubProperty($name, $casesens = true)
     {
         if ($casesens)
@@ -339,17 +393,21 @@ class Property
         return null;
     }
 
-    /** alias to getSubProperty($name, $casesens)
-     *  @param string $name name of the property enum to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Property found property * */
+    /**
+     * @brief alias to getSubProperty($name, $casesens)
+     * @param string $name name of the property enum to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Property found property
+     */
     function getProperty($name, $casesens = true)
     {
         return $this->getSubProperty($name, $casesens);
     }
 
-    /** delete a property from his name
-     *  @param string $name name of the property to delete  * */
+    /**
+     * @brief delete a property from his name
+     * @param string $name name of the property to delete 
+     */
     function delSubProperty($name)
     {
         $i = 0;
@@ -364,15 +422,19 @@ class Property
         }
     }
 
-    /** alias to delSubProperty($name)
-     *  @param string $name name of the property to delete  * */
+    /**
+     * @brief alias to delSubProperty($name)
+     * @param string $name name of the property to delete 
+     */
     function delProperty($name)
     {
         return $this->delSubProperty($name);
     }
 
-    /** return the path of the property (without the name of the block)
-     *  @return string path of the property * */
+    /**
+     * @brief return the path of the property (without the name of the block)
+     * @return string path of the property
+     */
     function path()
     {
         if ($this->parentProperty == NULL)
@@ -381,6 +443,14 @@ class Property
             return $this->parentProperty->path() . "." . $this->name;
     }
 
+    /**
+     * @brief Returns the complete path for the property with the name of the
+     * block.
+     * 
+     * If the property is a subproperty of another property, the call is
+     * recursive.
+     * @return string complete path of the property
+     */
     function completePath()
     {
         if ($this->parentProperty == NULL)
@@ -394,6 +464,11 @@ class Property
             return $this->parentProperty->path() . "." . $this->name;
     }
 
+    /**
+     * @brief Returns all the depending property of the expression $expression
+     * @param string $expression expression that need to be analysed
+     * @return array|string array of property path
+     */
     static function dependsProperties($expression)
     {
         preg_match_all("/([a-zA-Z_]+[a-zA-Z0-9_]*\\.?)+/x", $expression, $matches);
@@ -406,6 +481,15 @@ class Property
         return array_unique($depends);
     }
 
+    /**
+     * @brief Transforms an expression into a global expression in the context
+     * of $blockName
+     * 
+     * This function use Property::dependsProperties function.
+     * @param string $expression expression to convert
+     * @param string $blockName context of expression (name of the block)
+     * @return string processed expression in global context
+     */
     static function localToGlobalPropertyPath($expression, $blockName)
     {
         foreach (Property::dependsProperties($expression) as $depend)
@@ -415,6 +499,11 @@ class Property
         return $expression;
     }
 
+    /**
+     * @brief Transforms the propertymap expression into a global expression in
+     * the context of $blockName
+     * @param string $blockName context of expression (name of the block)
+     */
     function toGlobalPropertyPath($blockName)
     {
         $this->propertymap = Property::localToGlobalPropertyPath($this->propertymap, $blockName);
