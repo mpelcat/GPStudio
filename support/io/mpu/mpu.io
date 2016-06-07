@@ -13,6 +13,9 @@
     <file name="mpu.vhd" type="vhdl" group="hdl" path="hdl/mpu.vhd" desc=""/>
     <file name="mpu_slave.vhd" type="vhdl" group="hdl" path="hdl/mpu_slave.vhd" desc=""/>
     <file name="mpu_offset_correction.vhd" type="vhdl" group="hdl" path="hdl/mpu_offset_correction.vhd" desc=""/>
+    <file name="mpu.md" path="doc/mpu.md" type="doc" group="doc" desc=""/>
+    <file name="mpu_schema.tex" path="doc/mpu_schema.tex" type="doc" group="doc" desc=""/>
+    <file name="mpu_schema_global.tex" path="doc/mpu_schema_global.tex" type="doc" group="doc" desc=""/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
