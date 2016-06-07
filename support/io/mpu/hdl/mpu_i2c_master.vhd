@@ -1,6 +1,28 @@
---------------------------------------------------------------------
--- I2C master code from open source
---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--   FileName:         i2c_master.vhd
+--   Dependencies:     none
+--   Design Software:  Quartus II 32-bit Version 11.1 Build 173 SJ Full Version
+--
+--   HDL CODE IS PROVIDED "AS IS."  DIGI-KEY EXPRESSLY DISCLAIMS ANY
+--   WARRANTY OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+--   PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL DIGI-KEY
+--   BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR CONSEQUENTIAL
+--   DAMAGES, LOST PROFITS OR LOST DATA, HARM TO YOUR EQUIPMENT, COST OF
+--   PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS
+--   BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF),
+--   ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER SIMILAR COSTS.
+--
+--   Version History
+--   Version 1.0 11/1/2012 Scott Larson
+--     Initial Public Release
+--   Version 2.0 06/20/2014 Scott Larson
+--     Added ability to interface with different slaves in the same transaction
+--     Corrected ack_error bug where ack_error went 'Z' instead of '1' on error
+--     Corrected timing of when ack_error signal clears
+--    
+--------------------------------------------------------------------------------
 
 
 LIBRARY ieee;
