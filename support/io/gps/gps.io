@@ -13,6 +13,9 @@
     <file name="gps.vhd" type="vhdl" group="hdl" path="hdl/gps.vhd" desc=""/>
     <file name="gps_slave.vhd" type="vhdl" group="hdl" path="hdl/gps_slave.vhd" desc=""/>
     <file name="gps_pkg.vhd" type="vhdl" group="hdl" path="hdl/gps_pkg.vhd" desc=""/>
+    <file name="gps.md" path="doc/gps.md" type="doc" group="doc" desc=""/>
+    <file name="schema_gps.tex" path="doc/schema_gps.tex" type="doc" group="doc" desc=""/>
+    <file name="gps_schema_global.tex" path="doc/gps_schema_global.tex" type="doc" group="doc" desc=""/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in" desc=""/>
