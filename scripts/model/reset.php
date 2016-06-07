@@ -18,6 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Reset is used into the Block::$resets to list all the reset of the block.
+ * 
+ * @brief The Reset class define a reset input or reset provider.
+ * @see Property
+ * @ingroup base
+ */
 class Reset
 {
     /**
@@ -33,7 +40,8 @@ class Reset
     public $group;
 
     /**
-     * @brief Direction of the reset to specify if it's a source reset ('out') or an input reset ('in')
+     * @brief Direction of the reset to specify if it's a source reset ('out')
+     * or an input reset ('in')
      * @var string $direction
      */
     public $direction;
@@ -50,6 +58,13 @@ class Reset
      */
     public $parentBlock;
 
+    /**
+     * @brief constructor of Reset
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->direction = 'in';
@@ -58,11 +73,25 @@ class Reset
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class
+     * instance
+     * @return string
+     */
     public function __toString()
     {
-        return $this->name . " " . $this->group . " " . $this->direction;
+        $string = $this->name
+                . " group:'" . $this->group
+                . "' direction:'" . $this->direction . "'";
+        return $string;
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -71,6 +100,15 @@ class Reset
         $this->desc = (string) $xml['desc'];
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml)
     {
         $xml_element = $xml->createElement("reset");

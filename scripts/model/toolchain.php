@@ -20,6 +20,11 @@
 
 require_once("attribute.php");
 
+/**
+ * @brief The Reset class define a toolchain for building a project.
+ * @see Property
+ * @ingroup base
+ */
 class Toolchain
 {
     /**
@@ -28,6 +33,13 @@ class Toolchain
      */
     public $attributes;
 
+    /**
+     * @brief constructor of Toolchain
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->attributes = array();
@@ -36,6 +48,12 @@ class Toolchain
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -50,6 +68,15 @@ class Toolchain
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("toolchain");
@@ -73,14 +100,25 @@ class Toolchain
         return $xml_element;
     }
 
+    /**
+     * @brief Configure the project node $node to be ready to be generated.
+     * @param Node $node node to configure
+     * @see Toolchain::generate_project
+     */
     public function configure_project($node)
     {
-        
+        // must be re implemented by childrens
     }
 
+    /**
+     * @brief Create all necessary files to be compiled by the specified
+     * toolchain. Files generated depends of the used toolchain.
+     * @param Node $node node structure
+     * @param string $path output path of the generated project
+     */
     public function generate_project($node, $path)
     {
-        
+        // must be re implemented by childrens
     }
 
     static public function load($toolchain_name, $xml = null)
@@ -99,15 +137,18 @@ class Toolchain
     }
 
     /** Add a attribute to the toolchain 
-     *  @param Attribute $attribute attribute to add to the toolchain * */
+     *  @param Attribute $attribute attribute to add to the toolchain
+     */
     function addAttribute($attribute)
     {
         array_push($this->attributes, $attribute);
     }
 
-    /** return a reference to the attribute with the name $name, if not found, return false
+    /** return a reference to the attribute with the name $name, if not found,
+     * return false
      *  @param string $name name of the attribute enum to search
-     *  @return Attribute found attribute * */
+     *  @return Attribute found attribute
+     */
     function getAttribute($name)
     {
         foreach ($this->attributes as $attribute)
@@ -118,14 +159,26 @@ class Toolchain
         return null;
     }
 
+    /**
+     * @brief This function is used for special ressources attributes request.
+     * @param string $type Type of ressource requested.
+     * @return array
+     */
     function getRessourceAttributes($type)
     {
+        // must be re implemented by childrens
         $attr = array();
         return $attr;
     }
 
+    /**
+     * @brief This function is used for special ressources assignement request.
+     * @param string $type Type of ressource requested.
+     * @return array
+     */
     function getRessourceDeclare($type)
     {
+        // must be re implemented by childrens
         $declare = '';
         return $declare;
     }

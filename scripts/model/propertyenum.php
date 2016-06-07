@@ -18,6 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * PropertyEnum is contained into the Property::$propertyenums when
+ * property have a list of choices for value.
+ * 
+ * @brief The PropertyEnum can be used to list the values that can take a
+ * property.
+ * @see Property
+ * @ingroup base
+ */
 class PropertyEnum
 {
     /**
@@ -27,7 +36,8 @@ class PropertyEnum
     public $name;
 
     /**
-     * @brief Caption of the property for high level interface (can contain space)
+     * @brief Caption of the property for high level interface (can contain
+     * space)
      * @var string $caption
      */
     public $caption;
@@ -50,6 +60,13 @@ class PropertyEnum
      */
     public $parentProperty;
 
+    /**
+     * @brief constructor of PropertyEnum
+     * 
+     * Initialise all the internal members and call parse_xml if $xml is set
+     * @param SimpleXMLElement|null $xml if it's different of null, call the
+     * xml parser to fill members
+     */
     function __construct($xml = null)
     {
         $this->parentProperty = null;
@@ -57,12 +74,26 @@ class PropertyEnum
             $this->parse_xml($xml);
     }
 
+    /**
+     * @brief funtion that export as string the main content of the class
+     * instance
+     * @return string
+     */
     public function __toString()
     {
-        $string = $this->name . " caption:'" . $this->caption . "' value:'" . $this->value . "' desc:'" . $this->desc . "'";
+        $string = $this->name
+                . " caption:'" . $this->caption
+                . "' value:'" . $this->value
+                . "' desc:'" . $this->desc . "'";
         return $string;
     }
 
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
@@ -73,6 +104,15 @@ class PropertyEnum
         $this->desc = (string) $xml['desc'];
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("enum");
