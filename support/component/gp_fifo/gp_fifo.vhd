@@ -10,7 +10,7 @@ entity gp_fifo is
 	generic (
 		DATA_WIDTH		: positive;
 		FIFO_DEPTH		: positive
-	)
+	);
 	port (
 		clk			: in std_logic;
 		reset_n			: in std_logic;
@@ -28,6 +28,8 @@ entity gp_fifo is
 end gp_fifo;
 
 architecture rtl of gp_fifo is
+-- SIGNALS
+	signal reset_s : std_logic;
 -- COMPONENT
 	component scfifo
 	generic (
@@ -56,6 +58,7 @@ architecture rtl of gp_fifo is
 
 --INSTANTATION
 	begin
+	reset_s	<=	not(reset_n);
 	scfifo_component : scfifo
 		generic map (
 			ADD_RAM_OUTPUT_REGISTER	=>	"OFF",
@@ -72,12 +75,12 @@ architecture rtl of gp_fifo is
 		
 		port map(
 			clock		=>	clk,
-			aclr		=>	not(reset_n),
+			aclr		=>	reset_s,
 		    	data		=>	data_in,
 		    	wrreq		=>	data_wr,
-		    	full		=>	full
-		    	rdreq		=>	data_rd
-			empty		=>	empty
+		    	full		=>	full,
+		    	rdreq		=>	data_rd,
+			empty		=>	empty,
             		q		=>	data_out
         	);
 	end rtl;
