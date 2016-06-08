@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
 entity filter is
 	port (	   

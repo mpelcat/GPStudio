@@ -2,9 +2,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
-entity com_ethernet is
+entity eth_marvell_88e1111 is
 	generic (
 ------------à generer
 		MASTER_ADDR_WIDTH	: integer				:= 2;
@@ -48,9 +48,9 @@ entity com_ethernet is
 		datawr_i				: in std_logic_vector(31 downto 0);
 		datard_o				: out std_logic_vector(31 downto 0)
 	);
-end com_ethernet;
+end eth_marvell_88e1111;
 
-architecture RTL of com_ethernet is
+architecture RTL of eth_marvell_88e1111 is
 
 signal reset_n			: std_logic;
 signal TX_s				: rgmii_t;
@@ -74,7 +74,7 @@ begin
 
 reset_n	<= '1';
 
-COM_inst : entity work.COM
+COM_inst : entity work.com
 	generic map(
 				fifo_in_N 			=> FIFO_IN_N,			
 				fifo_in_ID			=> FIFO_IN_ID, 
@@ -118,7 +118,7 @@ COM_inst : entity work.COM
 				enable_in3 		=> enable_in3				
 			);
 
-ethernet_inst : entity work.ethernet_udp
+ethernet_inst : entity work.gemac_udp
 	port map (
 		--- External ports
 	   CLK125				=> clk125,

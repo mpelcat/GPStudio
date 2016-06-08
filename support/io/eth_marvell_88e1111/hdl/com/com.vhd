@@ -2,10 +2,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
 	
-entity COM is
+entity com is
 	generic(fifo_in_N 		: integer	:= 4;			--up to 10 fifos
 			  fifo_in_ID		: fifo_ID	:= (x"7000",x"7080",x"4000",x"4040",others=>x"0000"); 
 			  fifo_in_size		: fifo_size	:= (2048,1024,2048,512,others=>0);							
@@ -50,9 +50,9 @@ entity COM is
 				enable_in2		: in std_logic;
 				enable_in3		: in std_logic
 			);
-end COM;
+end com;
 	
-architecture RTL of COM is
+architecture RTL of com is
 
 ----- Signals for fifos receiving flows (fifo_in)
 type fifo_in_signal	is array (0 to fifo_in_N-1) of std_logic;

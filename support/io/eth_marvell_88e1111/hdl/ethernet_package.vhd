@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-package COM_package is 
+package ethernet_package is 
 	function get_length (depth : integer) return integer;
 	
 	 type rgmii_t is record
@@ -32,9 +32,9 @@ package COM_package is
 	type fifo_size is array (0 to 15) of integer range 0 to 32768;
 	type fifo_out_clk is array (0 to 15) of std_logic;
 	type param_t is array(0 to 49) of std_logic_vector(31 downto 0);
-end COM_package;
+end ethernet_package;
 
-package body COM_package is 
+package body ethernet_package is 
 
 function get_length (depth : integer) return integer is 
 variable result : integer range 0 to 20;

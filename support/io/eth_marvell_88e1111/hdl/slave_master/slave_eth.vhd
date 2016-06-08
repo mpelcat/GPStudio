@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
 entity slave_eth is 
 generic (pi_size_addr 		: integer:=3);

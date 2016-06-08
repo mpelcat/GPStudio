@@ -2,10 +2,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
 
-entity ethernet_udp is
+entity gemac_udp is
 	port (
 		--- External ports
 	   CLK125				: in STD_LOGIC;
@@ -31,9 +31,9 @@ entity ethernet_udp is
 		ID_port_out			: out std_logic_vector(15 downto 0)
 	);
 	
-end ethernet_udp;
+end gemac_udp;
 
-architecture RTL of ethernet_udp is
+architecture RTL of gemac_udp is
 
 signal RESET_BTN				:  STD_LOGIC;
 signal eth_tx_stream			: std_logic_vector(8 downto 0);

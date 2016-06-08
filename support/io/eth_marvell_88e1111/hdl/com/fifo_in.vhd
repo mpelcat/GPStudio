@@ -35,7 +35,7 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
-use work.COM_package.all;
+use work.ethernet_package.all;
 
 LIBRARY altera_mf;
 USE altera_mf.all;
