@@ -51,4 +51,4 @@ FIFO_DEPTH	| Integer | Yes 			| Specifies the depths of the gp_fifo you require.
 The following waveforms show the functional simulation of a gp_fifo with a depth of 4 and an 8 bits width. A Full testbench example can be found in the `support/component/gp_fifo/hdl/tb` directory
 
 ![gp_fifo_waveform]
-(https://github.com/DreamIP/GPStudio/blob/master/support/component/gp_fifo/doc/wave.svg")
+(https://github.com/DreamIP/GPStudio/blob/master/support/component/gp_fifo/doc/wave.svg)
