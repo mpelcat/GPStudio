@@ -1,5 +1,5 @@
 # gp_fifo
-The standard GPStudio single clock FIFO component. This function is used in flow buffering applications.  gp_fifo instantiate the optimal FIFO component depending on the targeted device. For now, only Altera device families as supported as gp_fifo encapsulates an Altera scfifo.
+The standard GPStudio single clock FIFO component used in flow buffering applications.  gp_fifo instantiates the optimal FIFO component depending on the targeted device. For now, only Altera device families are supported as gp_fifo encapsulates an Altera scfifo.
 
 ## Prototype
 
@@ -49,4 +49,6 @@ FIFO_DEPTH	| Integer | Yes 			| Specifies the depths of the gp_fifo you require.
 ## Example
 
 The following waveforms show the functional simulation of a gp_fifo with a depth of 4 and an 8 bits width. A Full testbench example can be found in the `support/component/gp_fifo/hdl/tb` directory
-<img src="./wave.svg" \>
+
+![gp_fifo_waveform]
+(https://github.com/DreamIP/GPStudio/blob/master/support/component/gp_fifo/doc/wave.svg")
