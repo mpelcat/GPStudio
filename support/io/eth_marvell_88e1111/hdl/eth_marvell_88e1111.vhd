@@ -28,8 +28,10 @@ entity eth_marvell_88e1111 is
 		PHY_MDIO 			: inout STD_LOGIC;
 		GE_RXCLK 			: in STD_LOGIC;  
 		GE_TXCLK 			: out STD_LOGIC;
-		TX						: out rgmii_t;
-		RX						: in rgmii_t;
+		TX_data				: out std_logic_vector(3 downto 0);
+		TX_dv					: out std_logic;
+		RX_data				: in std_logic_vector(3 downto 0);
+		RX_dv					: in std_logic;
 		
 ------------à generer
 		--flows in et flows out 
@@ -60,6 +62,8 @@ signal flow_rx_in		: flow_t;
 signal flow_master	: flow_t;
 signal ID_port_in		: std_logic_vector(15 downto 0);
 signal ID_port_out	: std_logic_vector(15 downto 0);
+signal TX				: rgmii_t;
+signal RX				: rgmii_t;
 
 ------------à generer
 signal enable_eth		: std_logic;
@@ -72,7 +76,10 @@ signal flow_o1       : flow_t;
 signal flow_o2       : flow_t;
 
 begin
-
+TX_data	<= TX.data;
+TX_dv		<= TX.dv;
+RX.data	<= RX_data;
+RX.dv		<= RX_dv;
 reset_n	<= '1';
 
 COM_inst : entity work.com
