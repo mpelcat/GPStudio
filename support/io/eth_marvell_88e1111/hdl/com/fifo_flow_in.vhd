@@ -41,9 +41,9 @@ signal last_data				: std_logic;
 signal not_empty				: std_logic;
 
 signal wrreq					: std_logic;
-
+signal reset					: std_logic;
 begin
-
+reset	<= not reset_n;
 ID_port	<= ID;
 
 data_len_zero<=x"0000";
@@ -55,7 +55,7 @@ ready			<= ready_s;
 fifo_in_inst : ENTITY work.fifo_in 
 	generic map (depth => depth)
 	PORT map(
-		aclr		=> reset_n,
+		aclr		=> reset,
 		data		=> flow_in.data,
 		rdclk		=> clk,
 		rdreq		=> rd_fifo,

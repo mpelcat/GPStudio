@@ -27,15 +27,16 @@ signal ready_s			: std_logic;
 signal rd_fifo_dl		: std_logic;
 signal wr_fifo			: std_logic;
 signal wr_data			: std_logic_vector(7 downto 0);
+signal reset			: std_logic;
 
 begin
-
+reset		<= not reset_n;
 ready 		<= ready_s;
 
 fifo_out_inst : ENTITY work.fifo_out
 	PORT map
 	(
-		aclr		=> reset_n,
+		aclr		=> reset,
 		data		=> wr_data,
 		rdclk		=> flow_out_clk,
 		rdreq		=> rd_fifo,

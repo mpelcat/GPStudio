@@ -12,8 +12,8 @@ entity com is
 			  one_packet		: integer	:= 1450;
 			  fifo_out_N		: integer	:=2;
 			  fifo_out_ID		: fifo_ID	:= (x"3000",x"3001",others=>x"0000");
-			  fifo_out_size	: fifo_size	:= (512,1024,others=>0)
-			  
+			  fifo_out_size	: fifo_size	:= (512,1024,others=>0);
+			  MASTER_PORT		: std_logic_vector(15 downto 0)
 			  );
 	port  (
 				clk				: in std_logic;
@@ -25,7 +25,9 @@ entity com is
 				ID_in				: out std_logic_vector(15 downto 0);
 				size				: out std_logic_vector(15 downto 0);
 				flow_out			: out flow_t;
-				
+				--- flow to master
+				flow_master		: out flow_t;
+
 ------------à generer
 				flow_in0			: in flow_t;
 				flow_in1			: in flow_t;
@@ -171,6 +173,23 @@ fifo_out_gen : for i in 0 to fifo_out_N-1 generate
 			);
 		end generate fifo_out_gen;
 
+
+
+--- Fifo master			
+fifo_master_inst : entity work.fifo_flow_out
+	generic map( 
+				ID	  			=> MASTER_PORT,
+			   depth  		=> 128
+			  )
+	port map (
+				clk				=> clk,
+				reset_n			=> reset_n,
+				ready				=> open,
+				port_detected	=> ID_out,
+				flow_in			=> flow_rx_in,
+				flow_out_clk	=> clk_proc,
+				flow_out			=> flow_master
+			);
 		
 ------------à generer
 fifo_in_flow_i(0)		<=	flow_in0;

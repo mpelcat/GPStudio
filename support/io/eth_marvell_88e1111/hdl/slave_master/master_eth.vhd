@@ -4,14 +4,11 @@ use IEEE.NUMERIC_STD.ALL;
 use work.ethernet_package.all;
 
 entity master_eth is 
-generic (
-		master_port			: std_logic_vector(15 downto 0):=x"8000";
-		pi_size_addr 		: integer:=2);
+generic (pi_size_addr 		: integer:=2);
 Port(
 		CLK 					: in STD_LOGIC;
 		RESET_n 				: in STD_LOGIC;
-		RX_filtered			: in flow_t;
-		port_detected		: in std_logic_vector(15 downto 0);
+		flow_in				: in flow_t;
 		master_addr_o		: out std_logic_vector(pi_size_addr downto 0);
 		master_wr_o			: out std_logic;
 		master_rd_o			: out std_logic;
@@ -44,27 +41,25 @@ begin
 		master_addr_o			<= (others => '0');
 		
 	elsif clk'event and clk='1' then 
-		rx_dv_dl		<=	RX_filtered.dv;
+		rx_dv_dl		<=	flow_in.dv;
 		
 		case (state) is
 				when idle =>
 				
 					master_wr_o		<= '0';
-					if port_detected=master_port then
-						if RX_filtered.dv='1' and rx_dv_dl='0' then
-							state 								<= get_data;
-							master_datawr_o_s(7 downto 0)	<= RX_filtered.data;
-							count									<= x"0";
-						end if;
+					if flow_in.dv='1' and rx_dv_dl='0' then
+						state 								<= get_data;
+						master_datawr_o_s(7 downto 0)	<= flow_in.data;
+						count									<= x"0";
 					end if;
 						
 				when get_data =>
 					
 					count 		<= count + 1;
 					if count < x"3" then
-						master_datawr_o_s	<= master_datawr_o_s(23 downto 0) & RX_filtered.data;
+						master_datawr_o_s	<= master_datawr_o_s(23 downto 0) & flow_in.data;
 					elsif count = x"3" then 
-						master_addr_o		<= RX_filtered.data(pi_size_addr downto 0);
+						master_addr_o		<= flow_in.data(pi_size_addr downto 0);
 					else
 						state 	<= write_param;
 					end if;

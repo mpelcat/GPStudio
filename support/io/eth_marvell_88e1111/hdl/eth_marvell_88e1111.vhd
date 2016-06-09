@@ -57,6 +57,7 @@ signal TX_s				: rgmii_t;
 signal param   		: param_t;
 signal flow_tx_out	: flow_t;
 signal flow_rx_in		: flow_t;
+signal flow_master	: flow_t;
 signal ID_port_in		: std_logic_vector(15 downto 0);
 signal ID_port_out	: std_logic_vector(15 downto 0);
 
@@ -94,7 +95,9 @@ COM_inst : entity work.com
 				flow_out			=> flow_tx_out,
 				ID_in				=> ID_port_in,
 				size				=> open,			
-				
+				--- flow to master
+				flow_master		=> flow_master,
+
 ------------à generer				
 				flow_in0 		=> flow,
 				flow_in1 		=> flow,
@@ -153,8 +156,7 @@ generic map (
 Port map(
 		CLK 					=> CLK125,
 		RESET_n 				=> reset_n,
-		RX_filtered			=> flow_rx_in,
-		port_detected		=> ID_port_out,
+		flow_in				=> flow_master,
 		master_addr_o		=> master_addr_o,
 		master_wr_o			=> master_wr_o,
 		master_rd_o			=> master_rd_o,
