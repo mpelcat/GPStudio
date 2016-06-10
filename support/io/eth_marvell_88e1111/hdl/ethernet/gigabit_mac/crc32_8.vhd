@@ -100,7 +100,7 @@ begin
 	--  1   |     1   | next_crc | bit-swapped, complimented msbyte of next_crc
 	process(CLK, RESET)
 	begin
-		if RESET = '1' then
+		if RESET = '0' then
 			crcreg <= x"FFFFFFFF";
 			CRC <= x"FF";
 		elsif CLK'event and CLK = '1' then
