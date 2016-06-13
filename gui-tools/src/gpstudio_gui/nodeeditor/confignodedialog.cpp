@@ -28,6 +28,8 @@
 #include <QRadioButton>
 #include <QGroupBox>
 #include <QLayout>
+#include <QDialogButtonBox>
+#include <QSpacerItem>
 
 ConfigNodeDialog::ConfigNodeDialog(QWidget *parent) :
     QDialog(parent)
@@ -56,23 +58,26 @@ void ConfigNodeDialog::setProject(GPNodeProject *project)
 
 void ConfigNodeDialog::selectBoard(const QString &boardName)
 {
-    while(!_iosLayout->isEmpty())
-    {
-        delete _iosLayout->itemAt(0)->widget();
-    }
-
     BoardLib *board = Lib::getLib().board(boardName);
-    if(!board) return;
+    if(!board)
+        return;
+
+    QWidget *widget = new QWidget();
+    widget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+    QLayout *layout = new QVBoxLayout();
+    layout->setContentsMargins(0,0,0,0);
 
     QMapIterator<QString, IOBoardLibGroup> i(board->iosGroups());
     while (i.hasNext())
     {
         i.next();
+
         QGroupBox *group = new QGroupBox(i.value().name());
-        _iosLayout->addWidget(group);
-        QLayout *layout = new QVBoxLayout();
-        layout->setContentsMargins(0,0,0,0);
-        group->setLayout(layout);
+
+        QLayout *groupLayout = new QVBoxLayout();
+        groupLayout->setContentsMargins(0,0,0,0);
+
         foreach(QString ioName, i.value().ios())
         {
             IOBoardLib *io = board->io(ioName);
@@ -81,28 +86,40 @@ void ConfigNodeDialog::selectBoard(const QString &boardName)
                 if(io->isOptional())
                 {
                     QCheckBox *checkBox = new QCheckBox(io->name());
-                    layout->addWidget(checkBox);
+                    groupLayout->addWidget(checkBox);
                 }
                 else
                 {
                     QRadioButton *checkBox = new QRadioButton(io->name());
-                    layout->addWidget(checkBox);
+                    groupLayout->addWidget(checkBox);
                 }
             }
         }
+
+        group->setLayout(groupLayout);
+        layout->addWidget(group);
     }
+
+    widget->setLayout(layout);
+    _iosWidget->setWidget(widget);
 }
 
 void ConfigNodeDialog::setupWidgets()
 {
-    QLayout *layout = new QVBoxLayout();
+    QVBoxLayout *layout = new QVBoxLayout();
 
     _boardComboBox = new QComboBox();
     connect(_boardComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(selectBoard(QString)));
     layout->addWidget(_boardComboBox);
 
-    _iosLayout = new QVBoxLayout();
-    layout->addItem(_iosLayout);
+    _iosWidget = new QScrollArea();
+    layout->addWidget(_iosWidget);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     setLayout(layout);
 

@@ -26,6 +26,7 @@
 #include <QDialog>
 #include <QComboBox>
 #include <QLayout>
+#include <QScrollArea>
 
 #include "gpnodeproject.h"
 
@@ -48,7 +49,7 @@ private:
     GPNodeProject *_project;
 
     QComboBox *_boardComboBox;
-    QVBoxLayout *_iosLayout;
+    QScrollArea *_iosWidget;
 };
 
 #endif // CONFIGNODEDIALOG_H
