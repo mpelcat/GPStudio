@@ -37,11 +37,11 @@ begin
 REG:process (clk, RESET_n) 
 begin
 	if (RESET_n = '0') then	
-		enable_eth_o <= '0';
-		enable_in0_o <= '0';
-		enable_in1_o <= '0';
-		enable_in2_o <= '0';
-		enable_in3_o <= '0';
+		enable_eth_o <= '1';
+		enable_in0_o <= '1';
+		enable_in1_o <= '1';
+		enable_in2_o <= '1';
+		enable_in3_o <= '1';
 		
 	elsif rising_edge(clk) then
 		if(wr_i = '1') then
