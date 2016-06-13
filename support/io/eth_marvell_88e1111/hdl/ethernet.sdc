@@ -36,8 +36,6 @@ derive_clock_uncertainty
 # Set Input Delay
 #**************************************************************
 
-set_input_delay -clock [get_clocks {GE_RXCLK}] -max 0.500 [get_ports RX_data*]
-set_input_delay -clock [get_clocks {GE_RXCLK}] -min 0.500 [get_ports RX_dv]
 
 #**************************************************************
 # Set Output Delay

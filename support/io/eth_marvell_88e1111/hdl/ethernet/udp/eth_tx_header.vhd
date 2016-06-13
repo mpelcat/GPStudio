@@ -40,6 +40,7 @@ signal start_encap			: std_logic;
 signal dv_uncap_dl			: std_logic;
 signal dv_uncap_dl2			: std_logic;
 signal queue_dv_dl			: std_logic;
+signal set_length				: std_logic;
 signal TX						: gmii_t;
 begin
 
@@ -101,16 +102,19 @@ begin
 			elsif CLK125'event and CLK125='1' then
 					case(state_encap) is
 					
-						when idle => 
-								eth_hdr		<= x"7845C4192509" & x"005043430001" & x"0800";
-								ip_hdr		<= x"4500" & len_ip & x"00004000" & x"8011" & CS_ip & ip_src & ip_dest;
-								udp_hdr		<= port_src & port_dest & len_udp & CS_udp;
-								
+						when idle => 							
 								if start_encap='1' then
-									state_encap <= ethernet;
+									set_length	<= '1';
 									count_udp	<=x"00";
 									len_udp		<= ("00000" & fifo_udp_len) + x"8"; -- Data + udp header
-									len_ip		<= len_udp + x"14";						-- Data + udp header + ip header
+									len_ip		<= ("00000" & fifo_udp_len) + x"1C";-- Data + udp header + ip header
+									
+								elsif set_length='1' then
+									set_length	<= '0';
+									state_encap <= ethernet;
+									eth_hdr		<= x"7845C4192509" & x"005043430001" & x"0800";
+									ip_hdr		<= x"4500" & len_ip & x"00004000" & x"8011" & CS_ip & ip_src & ip_dest;
+									udp_hdr		<= port_src & port_dest & len_udp & CS_udp;
 								else
 									TX.dv	<= '0';
 								end if;
