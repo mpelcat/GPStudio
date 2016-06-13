@@ -32,7 +32,7 @@ entity com is
 				flow_in0			: in flow_t;
 				flow_in1			: in flow_t;
 				flow_in2			: in flow_t;
-				flow_in3			: in flow_t;	
+				flow_in3			: in flow_t;
 				----
 				
 				
@@ -200,10 +200,10 @@ fifo_in_flow_i(3)		<=	flow_in3;
 flow_out0				<=	fifo_out_flow_i(0);
 flow_out1				<=	fifo_out_flow_i(1);			
 			
-enable_s(0) 			<= enable_eth or enable_in0;
-enable_s(1) 			<= enable_eth or enable_in1;
-enable_s(2) 			<= enable_eth or enable_in2;
-enable_s(3) 			<= enable_eth or enable_in3;		
+enable_s(0) 			<= enable_eth and enable_in0;
+enable_s(1) 			<= enable_eth and enable_in1;
+enable_s(2) 			<= enable_eth and enable_in2;
+enable_s(3) 			<= enable_eth and enable_in3;		
 			
 			
 			

@@ -6,7 +6,6 @@ use work.ethernet_package.all;
 
 entity eth_marvell_88e1111 is
 	generic (
-------------à generer
 		MASTER_ADDR_WIDTH	: integer				:= 2;
 		MASTER_PORT			: std_logic_vector(15 downto 0)	:= x"8000";
 		FIFO_IN_N			: integer				:= 4;--up to 16 fifos
@@ -20,7 +19,7 @@ entity eth_marvell_88e1111 is
 	port(	
 		CLK125				: in STD_LOGIC;
 		clk_proc				: in std_logic;
-		--reset_n				: in std_logic;
+		reset_n				: in std_logic;
 		
 		--- ETHERNET
 		PHY_RESET_L 		: out STD_LOGIC;
@@ -34,7 +33,29 @@ entity eth_marvell_88e1111 is
 		RX_dv					: in std_logic;
 		
 ------------à generer
-		--flows in et flows out 
+		flow_in0_data			: in std_logic_vector(7 downto 0);
+		flow_in0_dv				: in std_logic;
+		flow_in0_fv				: in std_logic;
+		
+		flow_in1_data			: in std_logic_vector(7 downto 0);
+		flow_in1_dv				: in std_logic;
+		flow_in1_fv				: in std_logic;
+		
+		flow_in2_data			: in std_logic_vector(7 downto 0);
+		flow_in2_dv				: in std_logic;
+		flow_in2_fv				: in std_logic;
+		
+		flow_in3_data			: in std_logic_vector(7 downto 0);
+		flow_in3_dv				: in std_logic;
+		flow_in3_fv				: in std_logic;
+		
+		flow_out0_data			: out std_logic_vector(7 downto 0);
+		flow_out0_dv			: out std_logic;
+		flow_out0_fv			: out std_logic;
+		
+		flow_out1_data			: out std_logic_vector(7 downto 0);
+		flow_out1_dv			: out std_logic;
+		flow_out1_fv			: out std_logic;
 		
 		--- PI_master
 		master_addr_o		: out std_logic_vector(MASTER_ADDR_WIDTH downto 0);
@@ -54,7 +75,6 @@ end eth_marvell_88e1111;
 
 architecture RTL of eth_marvell_88e1111 is
 
-signal reset_n			: std_logic;
 signal TX_s				: rgmii_t;
 signal param   		: param_t;
 signal flow_tx_out	: flow_t;
@@ -71,19 +91,16 @@ signal enable_in0		: std_logic;
 signal enable_in1		: std_logic;
 signal enable_in2		: std_logic;
 signal enable_in3		: std_logic;
-signal flow          : flow_t;
-signal flow_o1       : flow_t;
-signal flow_o2       : flow_t;
 
 begin
 TX_data	<= TX.data;
 TX_dv		<= TX.dv;
 RX.data	<= RX_data;
 RX.dv		<= RX_dv;
-reset_n	<= '1';
 
-COM_inst : entity work.com
+com_inst : entity work.com
 	generic map(
+				master_port			=> MASTER_PORT,
 				fifo_in_N 			=> FIFO_IN_N,			
 				fifo_in_ID			=> FIFO_IN_ID, 
 				fifo_in_size		=> FIFO_IN_SIZE,							
@@ -102,22 +119,36 @@ COM_inst : entity work.com
 				flow_out			=> flow_tx_out,
 				ID_in				=> ID_port_in,
 				size				=> open,			
+				--- From HAL to flows out
+				flow_rx_in		=> flow_rx_in,
+				ID_out			=> ID_port_out,
 				--- flow to master
 				flow_master		=> flow_master,
 
 ------------à generer				
-				flow_in0 		=> flow,
-				flow_in1 		=> flow,
-				flow_in2 		=> flow,
-				flow_in3 		=> flow,		
+				flow_in0.data			=> flow_in0_data,
+				flow_in0.dv				=> flow_in0_dv,
+				flow_in0.fv				=> flow_in0_fv,
 				
-				--- From HAL to flows out
-				flow_rx_in		=> flow_rx_in,
-				ID_out			=> ID_port_out,
+				flow_in1.data			=> flow_in1_data,
+				flow_in1.dv				=> flow_in1_dv,
+				flow_in1.fv				=> flow_in1_fv,
 				
-------------à generer				
-				flow_out0		=> flow_o1,
-				flow_out1		=> flow_o2,
+				flow_in2.data			=> flow_in2_data,
+				flow_in2.dv				=> flow_in2_dv,
+				flow_in2.fv				=> flow_in2_fv,
+				
+				flow_in3.data			=> flow_in3_data,
+				flow_in3.dv				=> flow_in3_dv,
+				flow_in3.fv				=> flow_in3_fv,
+				
+				flow_out0.data			=> flow_out0_data,
+				flow_out0.dv			=> flow_out0_dv,
+				flow_out0.fv			=> flow_out0_fv,
+				
+				flow_out1.data			=> flow_out1_data,
+				flow_out1.dv			=> flow_out1_dv,
+				flow_out1.fv			=> flow_out1_fv,
 				
 				--- parameters from slave
 ------------à generer
@@ -157,11 +188,9 @@ ethernet_inst : entity work.gemac_udp
 	TX				<= TX_s;
 		
 master : entity work.master_eth 
-generic map (
-		master_port 		=> MASTER_PORT,
-		pi_size_addr 		=> MASTER_ADDR_WIDTH)
+generic map (pi_size_addr 		=> MASTER_ADDR_WIDTH)
 Port map(
-		CLK 					=> CLK125,
+		CLK 					=> clk_proc,
 		RESET_n 				=> reset_n,
 		flow_in				=> flow_master,
 		master_addr_o		=> master_addr_o,
@@ -174,7 +203,7 @@ Port map(
 slave : entity work.slave_eth 
 generic map (pi_size_addr 		=> 3)
 Port map(
-		CLK 					=> CLK125,
+		CLK 					=> clk_proc,
 		RESET_n 				=> reset_n,
 		addr_rel_i			=> addr_rel_i,
 		wr_i					=> wr_i,
