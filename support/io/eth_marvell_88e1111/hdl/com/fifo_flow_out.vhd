@@ -33,7 +33,7 @@ begin
 reset		<= not reset_n;
 ready 		<= ready_s;
 
-fifo_out_inst : ENTITY work.fifo_out
+fifo_out_inst : ENTITY work.gp_dcfifo
 	PORT map
 	(
 		aclr		=> reset,

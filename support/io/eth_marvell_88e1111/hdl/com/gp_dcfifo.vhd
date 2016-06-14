@@ -40,7 +40,7 @@ use work.ethernet_package.all;
 LIBRARY altera_mf;
 USE altera_mf.all;
 
-ENTITY fifo_in IS
+ENTITY gp_dcfifo IS
 	generic(depth : natural:=2048);
 	PORT
 	(
@@ -55,10 +55,10 @@ ENTITY fifo_in IS
 		rdusedw		: OUT STD_LOGIC_VECTOR (get_length(depth)-1 DOWNTO 0);
 		wrfull		: OUT STD_LOGIC 
 	);
-END fifo_in;
+END gp_dcfifo;
 
 
-ARCHITECTURE SYN OF fifo_in IS
+ARCHITECTURE SYN OF gp_dcfifo IS
 
 	SIGNAL sub_wire0	: STD_LOGIC ;
 	SIGNAL sub_wire1	: STD_LOGIC_VECTOR (7 DOWNTO 0);

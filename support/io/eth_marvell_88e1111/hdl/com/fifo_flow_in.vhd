@@ -53,7 +53,7 @@ data_len_s	<= data_len_zero or usedw;
 data_len  	<= data_len_s;
 
 
-fifo_in_inst : ENTITY work.fifo_in 
+fifo_in_inst : ENTITY work.gp_dcfifo 
 	generic map (depth => depth)
 	PORT map(
 		aclr		=> reset,
