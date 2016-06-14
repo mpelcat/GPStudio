@@ -19,6 +19,7 @@ entity gemac_udp is
 		RX						: in rgmii_t;
 		
 		--- Receiving flows to send on link
+		flow_in_size		: in std_logic_vector(15 downto 0);
 		flow_in_data		: in std_logic_vector(7 downto 0);
 		flow_in_dv			: in std_logic;
 		flow_in_fv			: in std_logic;
@@ -98,6 +99,7 @@ filter_mac_ip_port :  entity work.filter
 			CLK125 			=> CLK125,
 			reset_n 			=> reset_n,
 			ID_port_in		=> ID_port_in,
+			flow_in_size	=> flow_in_size,
 			TX_i.dv 			=> flow_in_dv,
 			TX_i.data 		=> flow_in_data,
 			TX_o 				=> TX_encapsulated

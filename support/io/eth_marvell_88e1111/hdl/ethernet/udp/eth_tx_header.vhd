@@ -11,6 +11,7 @@ entity eth_tx_header is
 			CLK125 			: in STD_LOGIC;
 			reset_n 			: in STD_LOGIC;
 			ID_port_in		: in std_logic_vector(15 downto 0);
+			flow_in_size	: in std_logic_vector(15 downto 0);
 			TX_i 				: in gmii_t;
 			TX_o 				: out gmii_t
 	);
@@ -22,7 +23,7 @@ architecture RTL of eth_tx_header is
 signal fifo_udp_out	: std_logic_vector(7 downto 0);
 signal empty_fifo_udp: std_logic;
 signal CS_sum			: std_logic_vector(31 downto 0);
-signal fifo_udp_len	: std_logic_vector(10 downto 0);
+signal fifo_udp_len	: std_logic_vector(5 downto 0);
 signal rd_fifo_udp	: std_logic;
 
 type encapsulation_fsm is (ethernet,ip,udp,data,idle);
@@ -67,9 +68,11 @@ begin
 				dv_uncap_dl 	<= TX_i.dv;
 				dv_uncap_dl2	<= dv_uncap_dl;
 				queue_dv_dl		<= TX.dv;
-				
-				if TX_i.dv='0' and dv_uncap_dl='1' then
+				--start the encapsulation when a flow is received
+				if TX_i.dv='1' and dv_uncap_dl='0' then
 					start_encap		<= '1';
+					len_udp			<= flow_in_size + x"8"; -- Data + udp header
+					len_ip			<= flow_in_size + x"1C";-- Data + udp header + ip header
 				else
 					start_encap		<= '0';
 				end if;
@@ -106,8 +109,6 @@ begin
 								if start_encap='1' then
 									set_length	<= '1';
 									count_udp	<=x"00";
-									len_udp		<= ("00000" & fifo_udp_len) + x"8"; -- Data + udp header
-									len_ip		<= ("00000" & fifo_udp_len) + x"1C";-- Data + udp header + ip header
 									
 								elsif set_length='1' then
 									set_length	<= '0';

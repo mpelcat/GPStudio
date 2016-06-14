@@ -82,6 +82,7 @@ signal flow_rx_in		: flow_t;
 signal flow_master	: flow_t;
 signal ID_port_in		: std_logic_vector(15 downto 0);
 signal ID_port_out	: std_logic_vector(15 downto 0);
+signal size_flow		: std_logic_vector(15 downto 0);
 signal TX				: rgmii_t;
 signal RX				: rgmii_t;
 
@@ -118,7 +119,7 @@ com_inst : entity work.com
 				HAL_busy			=> TX_s.dv,
 				flow_out			=> flow_tx_out,
 				ID_in				=> ID_port_in,
-				size				=> open,			
+				size				=> size_flow,			
 				--- From HAL to flows out
 				flow_rx_in		=> flow_rx_in,
 				ID_out			=> ID_port_out,
@@ -173,6 +174,7 @@ ethernet_inst : entity work.gemac_udp
 		RX						=> RX,
 		
 		--- Receiving flows to send on link
+		flow_in_size		=> size_flow,
 		flow_in_data		=> flow_tx_out.data,
 		flow_in_dv			=> flow_tx_out.dv,
 		flow_in_fv			=> flow_tx_out.fv,

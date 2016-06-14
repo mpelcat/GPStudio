@@ -39,7 +39,9 @@ signal start_rd_fifo_dl		: std_logic;
 signal ready_s					: std_logic;
 signal last_data				: std_logic;
 signal not_empty				: std_logic;
-
+signal ready_dl1,ready_dl2	: std_logic;
+signal ready_dl3,ready_dl4	: std_logic;
+signal ready_dl5,ready_dl6	: std_logic;
 signal wrreq					: std_logic;
 signal reset					: std_logic;
 begin
@@ -49,7 +51,6 @@ ID_port	<= ID;
 data_len_zero<=x"0000";
 data_len_s	<= data_len_zero or usedw;
 data_len  	<= data_len_s;
-ready			<= ready_s;
 
 
 fifo_in_inst : ENTITY work.fifo_in 
@@ -113,6 +114,14 @@ begin
 		not_empty	<= '0';
 		
 	elsif clk'event and clk='1' then
+		----- Delay ready signal to have correct size of data in fifo
+		ready_dl1	<= ready_s;
+		ready_dl2	<= ready_dl1;
+		ready_dl3	<= ready_dl2;
+		ready_dl4	<= ready_dl3;
+		ready_dl5	<= ready_dl4;
+		ready			<= ready_dl5;
+		
 		----- Set ready when an incoming flow ends or when the fifo is empty
 		if flow_in.fv='0' and data_len_s>x"0000" and ready_s <= '0' then 
 			ready_s <= '1';

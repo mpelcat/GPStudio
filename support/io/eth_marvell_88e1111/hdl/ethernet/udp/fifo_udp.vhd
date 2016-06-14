@@ -48,14 +48,14 @@ ENTITY fifo_udp IS
 		wrreq		: IN STD_LOGIC ;
 		empty		: OUT STD_LOGIC ;
 		q		: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-		usedw		: OUT STD_LOGIC_VECTOR (10 DOWNTO 0)
+		usedw		: OUT STD_LOGIC_VECTOR (5 DOWNTO 0)
 	);
 END fifo_udp;
 
 
 ARCHITECTURE SYN OF fifo_udp IS
 
-	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (10 DOWNTO 0);
+	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (5 DOWNTO 0);
 	SIGNAL sub_wire1	: STD_LOGIC ;
 	SIGNAL sub_wire2	: STD_LOGIC_VECTOR (7 DOWNTO 0);
 
@@ -78,7 +78,7 @@ ARCHITECTURE SYN OF fifo_udp IS
 			clock	: IN STD_LOGIC ;
 			data	: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
 			rdreq	: IN STD_LOGIC ;
-			usedw	: OUT STD_LOGIC_VECTOR (10 DOWNTO 0);
+			usedw	: OUT STD_LOGIC_VECTOR (5 DOWNTO 0);
 			empty	: OUT STD_LOGIC ;
 			q	: OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
 			wrreq	: IN STD_LOGIC 
@@ -86,7 +86,7 @@ ARCHITECTURE SYN OF fifo_udp IS
 	END COMPONENT;
 
 BEGIN
-	usedw    <= sub_wire0(10 DOWNTO 0);
+	usedw    <= sub_wire0(5 DOWNTO 0);
 	empty    <= sub_wire1;
 	q    <= sub_wire2(7 DOWNTO 0);
 
@@ -94,11 +94,11 @@ BEGIN
 	GENERIC MAP (
 		add_ram_output_register => "OFF",
 		intended_device_family => "Cyclone III",
-		lpm_numwords => 2048,
+		lpm_numwords => 64,
 		lpm_showahead => "OFF",
 		lpm_type => "scfifo",
 		lpm_width => 8,
-		lpm_widthu => 11,
+		lpm_widthu => 6,
 		overflow_checking => "ON",
 		underflow_checking => "ON",
 		use_eab => "ON"
@@ -124,9 +124,9 @@ END SYN;
 -- Retrieval info: PRIVATE: AlmostEmptyThr NUMERIC "-1"
 -- Retrieval info: PRIVATE: AlmostFull NUMERIC "0"
 -- Retrieval info: PRIVATE: AlmostFullThr NUMERIC "-1"
--- Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "0"
+-- Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "1"
 -- Retrieval info: PRIVATE: Clock NUMERIC "0"
--- Retrieval info: PRIVATE: Depth NUMERIC "2048"
+-- Retrieval info: PRIVATE: Depth NUMERIC "64"
 -- Retrieval info: PRIVATE: Empty NUMERIC "1"
 -- Retrieval info: PRIVATE: Full NUMERIC "0"
 -- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
@@ -155,11 +155,11 @@ END SYN;
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: ADD_RAM_OUTPUT_REGISTER STRING "OFF"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
--- Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "2048"
+-- Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "64"
 -- Retrieval info: CONSTANT: LPM_SHOWAHEAD STRING "OFF"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "scfifo"
 -- Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "8"
--- Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "11"
+-- Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "6"
 -- Retrieval info: CONSTANT: OVERFLOW_CHECKING STRING "ON"
 -- Retrieval info: CONSTANT: UNDERFLOW_CHECKING STRING "ON"
 -- Retrieval info: CONSTANT: USE_EAB STRING "ON"
@@ -168,7 +168,7 @@ END SYN;
 -- Retrieval info: USED_PORT: empty 0 0 0 0 OUTPUT NODEFVAL "empty"
 -- Retrieval info: USED_PORT: q 0 0 8 0 OUTPUT NODEFVAL "q[7..0]"
 -- Retrieval info: USED_PORT: rdreq 0 0 0 0 INPUT NODEFVAL "rdreq"
--- Retrieval info: USED_PORT: usedw 0 0 11 0 OUTPUT NODEFVAL "usedw[10..0]"
+-- Retrieval info: USED_PORT: usedw 0 0 6 0 OUTPUT NODEFVAL "usedw[5..0]"
 -- Retrieval info: USED_PORT: wrreq 0 0 0 0 INPUT NODEFVAL "wrreq"
 -- Retrieval info: CONNECT: @clock 0 0 0 0 clock 0 0 0 0
 -- Retrieval info: CONNECT: @data 0 0 8 0 data 0 0 8 0
@@ -176,7 +176,7 @@ END SYN;
 -- Retrieval info: CONNECT: @wrreq 0 0 0 0 wrreq 0 0 0 0
 -- Retrieval info: CONNECT: empty 0 0 0 0 @empty 0 0 0 0
 -- Retrieval info: CONNECT: q 0 0 8 0 @q 0 0 8 0
--- Retrieval info: CONNECT: usedw 0 0 11 0 @usedw 0 0 11 0
+-- Retrieval info: CONNECT: usedw 0 0 6 0 @usedw 0 0 6 0
 -- Retrieval info: GEN_FILE: TYPE_NORMAL fifo_udp.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL fifo_udp.inc FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL fifo_udp.cmp FALSE
