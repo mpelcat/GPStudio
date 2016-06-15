@@ -18,6 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("file.php");
+require_once("param.php");
+require_once("property.php");
+require_once("flow.php");
+require_once("clock.php");
+require_once("reset.php");
+require_once("pin.php");
+require_once("port.php");
+require_once("interfacebus.php");
+require_once("attribute.php");
+
 /**
  * It needs to be specialised, it only contains the list of :
  *  - implementation files (vhdl, verilog, C, C++, ...), documentation files
@@ -35,17 +46,6 @@
  * @see IO Process
  * @ingroup base
  */
-require_once("file.php");
-require_once("param.php");
-require_once("property.php");
-require_once("flow.php");
-require_once("clock.php");
-require_once("reset.php");
-require_once("pin.php");
-require_once("port.php");
-require_once("interfacebus.php");
-require_once("attribute.php");
-
 class Block
 {
     /**

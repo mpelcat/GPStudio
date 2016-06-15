@@ -10,7 +10,7 @@ clean: gpnode-clean tutorial-clean manual-clean doc-backend-clean gpproc-clean g
 
 doc-backend: ../doc/backend.pdf
 
-../doc/backend.pdf: $(SRC)
+../doc/backend.pdf: ../scripts/Doxyfile $(SRC)
 	mkdir -p ../doc/backend
 	cd ../scripts && doxygen > /dev/null
 	cd ../doc/backend/latex/ && make -f Makefile > /dev/null
