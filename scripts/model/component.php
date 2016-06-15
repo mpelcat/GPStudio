@@ -24,6 +24,10 @@ require_once("flow.php");
 require_once("clock.php");
 require_once("reset.php");
 require_once("port.php");
+require_once("interfacebus.php");
+require_once("attribute.php");
+require_once("pin.php");
+require_once("port.php");
 
 /**
  * Component is the the definition of hardware components. It could be
@@ -103,6 +107,8 @@ class Component
         $this->flows = array();
         $this->clocks = array();
         $this->resets = array();
+        $this->interfaces = array();
+        $this->attributes = array();
     }
 
     /**
@@ -111,6 +117,7 @@ class Component
      */
     function addParam($param)
     {
+        $param->parentBlock = $this;
         array_push($this->params, $param);
     }
 
@@ -166,6 +173,7 @@ class Component
      */
     function addFile($file)
     {
+        $file->parentBlock = $this;
         array_push($this->files, $file);
     }
 
@@ -226,6 +234,7 @@ class Component
      */
     function addFlow($flow)
     {
+        $flow->parentBlock = $this;
         array_push($this->flows, $flow);
     }
 
@@ -282,6 +291,7 @@ class Component
      */
     function addClock($clock)
     {
+        $clock->parentBlock = $this;
         array_push($this->clocks, $clock);
     }
 
@@ -338,6 +348,7 @@ class Component
      */
     function addReset($reset)
     {
+        $reset->parentBlock = $this;
         array_push($this->resets, $reset);
     }
 
@@ -388,6 +399,116 @@ class Component
         return null;
     }
 
+    /** @brief Add an InterfaceBus to the block 
+     *  @param InterfaceBus $interface interface to add to the block
+     */
+    function addInterface($interface)
+    {
+        $interface->parentBlock = $this;
+        array_push($this->interfaces, $interface);
+    }
+
+    /** @brief return a reference to the interface with the name $name, if not
+     * found, return null
+     *  @param string $name name of the interface to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return InterfaceBus found interface
+     */
+    function getInterface($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->interfaces as $interface)
+            {
+                if ($interface->name == $name)
+                    return $interface;
+            }
+        }
+        else
+        {
+            foreach ($this->interfaces as $interface)
+            {
+                if (strcasecmp($interface->name, $name) == 0)
+                    return $interface;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add a attribute to the toolchain 
+     *  @param Attribute $attribute attribute to add to the block
+     */
+    function addAttribute($attribute)
+    {
+        array_push($this->attributes, $attribute);
+    }
+
+    /** @brief return a reference to the attribute with the name $name, if not
+     * found, return null
+     *  @param string $name name of the attribute enum to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Attribute found attribute * */
+    function getAttribute($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if ($attribute->name == $name)
+                    return $attribute;
+            }
+        }
+        else
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if (strcasecmp($attribute->name, $name) == 0)
+                    return $attribute;
+            }
+        }
+        return null;
+    }
+
+    /** @brief return a reference to the instance with the name $name, if not
+     * found, return null
+     *  @param string $name name of the instance to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return mixed found instance
+     */
+    function getInstance($name, $casesens = true)
+    {
+        $instance = $this->getAttribute($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getClock($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getFileByPath($name);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getFlow($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getParam($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getPropertyPath($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getReset($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+
+        if ($this->type() == "io" or $this->type() == "iocom")
+        {
+            $instance = $this->getExtPort($name, $casesens);
+            if ($instance != NULL)
+                return $instance;
+        }
+
+        return null;
+    }
+
     /**
      * @brief internal function to fill this instance from input xml structure
      * 
@@ -401,45 +522,45 @@ class Component
         $this->desc = (string) $this->xml['desc'];
 
         // files
-        if (isset($xml->files))
+        if (isset($this->xml->files))
         {
-            foreach ($xml->files->file as $fileXml)
+            foreach ($this->xml->files->file as $fileXml)
             {
                 $this->addFile(new File($fileXml));
             }
         }
 
         // params
-        if (isset($xml->params))
+        if (isset($this->xml->params))
         {
-            foreach ($xml->params->param as $paramXml)
+            foreach ($this->xml->params->param as $paramXml)
             {
                 $this->addParam(new Param($paramXml));
             }
         }
 
         // flows
-        if (isset($xml->flows))
+        if (isset($this->xml->flows))
         {
-            foreach ($xml->flows->flow as $flowXml)
+            foreach ($this->xml->flows->flow as $flowXml)
             {
                 $this->addFlow(new Flow($flowXml));
             }
         }
 
         // clocks
-        if (isset($xml->clocks))
+        if (isset($this->xml->clocks))
         {
-            foreach ($xml->clocks->clock as $clockXml)
+            foreach ($this->xml->clocks->clock as $clockXml)
             {
                 $this->addClock(new Clock($clockXml));
             }
         }
 
         // resets
-        if (isset($xml->resets))
+        if (isset($this->xml->resets))
         {
-            foreach ($xml->resets->reset as $resetXml)
+            foreach ($this->xml->resets->reset as $resetXml)
             {
                 $this->addReset(new Reset($resetXml));
             }
