@@ -18,6 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("file.php");
+require_once("param.php");
+require_once("flow.php");
+require_once("clock.php");
+require_once("reset.php");
+require_once("port.php");
+
 /**
  * Component is the the definition of hardware components. It could be
  * used in a block to indicate the inclusion of the block or in the
@@ -26,13 +33,6 @@
  * @see Block
  * @ingroup base
  */
-require_once("file.php");
-require_once("param.php");
-require_once("flow.php");
-require_once("clock.php");
-require_once("reset.php");
-require_once("port.php");
-
 class Component
 {
     /**
@@ -91,6 +91,11 @@ class Component
 
     protected $xml;
 
+    /**
+     * @brief constructor of Component
+     * 
+     * Initialise all the internal members
+     */
     function __construct()
     {
         $this->params = array();
@@ -100,18 +105,20 @@ class Component
         $this->resets = array();
     }
 
-    /** @brief Add a parameter to the component 
-     *  @param Param $param parameter to add to the component
+    /**
+     * @brief Add a parameter to the component 
+     * @param Param $param parameter to add to the component
      */
     function addParam($param)
     {
         array_push($this->params, $param);
     }
 
-    /** @brief return a reference to the parameter with the name $name, if not found, return null
-     *  @param string $name name of the parameter to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Param found parameter
+    /**
+     * @brief return a reference to the parameter with the name $name, if not found, return null
+     * @param string $name name of the parameter to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Param found parameter
      */
     function getParam($name, $casesens = true)
     {
@@ -134,8 +141,9 @@ class Component
         return null;
     }
 
-    /** @brief delete a param from his name
-     *  @param string $name name of the param to delete
+    /**
+     * @brief delete a param from his name
+     * @param string $name name of the param to delete
      */
     function delParam($name)
     {
@@ -152,17 +160,20 @@ class Component
         return null;
     }
 
-    /** @brief Add a file to the component 
-     *  @param File $file file to add to the component
+    /**
+     * @brief Add a file to the component 
+     * @param File $file file to add to the component
      */
     function addFile($file)
     {
         array_push($this->files, $file);
     }
 
-    /** @brief return a reference to the file with the name $name, if not found, return null
-     *  @param string $name name of the file to search
-     *  @return File found file
+    /**
+     * @brief return a reference to the file with the name $name, if not found,
+     * return null
+     * @param string $name name of the file to search
+     * @return File found file
      */
     function getFile($name)
     {
@@ -174,9 +185,11 @@ class Component
         return null;
     }
 
-    /** @brief return a reference to the file with the path $path, if not found, return null
-     *  @param string $path path of the file to search
-     *  @return File found file
+    /**
+     * @brief return a reference to the file with the path $path, if not found,
+     * return null
+     * @param string $path path of the file to search
+     * @return File found file
      */
     function getFileByPath($path)
     {
@@ -188,8 +201,9 @@ class Component
         return null;
     }
 
-    /** @brief delete a file from his path
-     *  @param string $path path of the file to delete
+    /**
+     * @brief delete a file from his path
+     * @param string $path path of the file to delete
      */
     function delFileByPath($path)
     {
@@ -206,18 +220,21 @@ class Component
         return null;
     }
 
-    /** @brief Add a flow to the component 
-     *  @param Flow $flow flow to add to the component
+    /**
+     * @brief Add a flow to the component 
+     * @param Flow $flow flow to add to the component
      */
     function addFlow($flow)
     {
         array_push($this->flows, $flow);
     }
 
-    /** @brief return a reference to the flow with the name $name, if not found, return null
-     *  @param string $name name of the flow to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Flow found flow
+    /**
+     * @brief return a reference to the flow with the name $name, if not found,
+     * return null
+     * @param string $name name of the flow to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Flow found flow
      */
     function getFlow($name, $casesens = true)
     {
@@ -240,8 +257,9 @@ class Component
         return null;
     }
 
-    /** @brief delete a flow from his name
-     *  @param string $name name of the flow to delete
+    /**
+     * @brief delete a flow from his name
+     * @param string $name name of the flow to delete
      */
     function delFlow($name)
     {
@@ -258,18 +276,21 @@ class Component
         return null;
     }
 
-    /** @brief Add a clock to the component 
-     *  @param Clock $clock clock to add to the component
+    /**
+     * @brief Add a clock to the component 
+     * @param Clock $clock clock to add to the component
      */
     function addClock($clock)
     {
         array_push($this->clocks, $clock);
     }
 
-    /** @brief return a reference to the clock with the name $name, if not found, return null
-     *  @param string $name name of the clock to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Clock found clock
+    /**
+     * @brief return a reference to the clock with the name $name, if not found,
+     * return null
+     * @param string $name name of the clock to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Clock found clock
      */
     function getClock($name, $casesens = true)
     {
@@ -292,8 +313,9 @@ class Component
         return null;
     }
 
-    /** @brief delete a clock from his name
-     *  @param string $name name of the clock to delete
+    /**
+     * @brief delete a clock from his name
+     * @param string $name name of the clock to delete
      */
     function delClock($name)
     {
@@ -310,18 +332,21 @@ class Component
         return null;
     }
 
-    /** @brief Add a reset to the component 
-     *  @param Reset $reset reset to add to the component
+    /**
+     * @brief Add a reset to the component 
+     * @param Reset $reset reset to add to the component
      */
     function addReset($reset)
     {
         array_push($this->resets, $reset);
     }
 
-    /** @brief return a reference to the reset with the name $name, if not found, return null
-     *  @param string $name name of the reset to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Reset found reset
+    /**
+     * @brief return a reference to the reset with the name $name, if not found,
+     * return null
+     * @param string $name name of the reset to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Reset found reset
      */
     function getReset($name, $casesens = true)
     {
@@ -344,8 +369,9 @@ class Component
         return null;
     }
 
-    /** @brief delete a reset from his name
-     *  @param string $name name of the reset to delete
+    /**
+     * @brief delete a reset from his name
+     * @param string $name name of the reset to delete
      */
     function delReset($name)
     {
@@ -362,58 +388,73 @@ class Component
         return null;
     }
 
-    protected function parse_xml()
+    /**
+     * @brief internal function to fill this instance from input xml structure
+     * 
+     * Can be call only from this node into the constructor
+     * @param SimpleXMLElement $xml xml element to parse
+     */
+    protected function parse_xml($xml)
     {
         $this->name = (string) $this->xml['name'];
         $this->categ = (string) $this->xml['categ'];
         $this->desc = (string) $this->xml['desc'];
 
         // files
-        if (isset($this->xml->files))
+        if (isset($xml->files))
         {
-            foreach ($this->xml->files->file as $fileXml)
+            foreach ($xml->files->file as $fileXml)
             {
                 $this->addFile(new File($fileXml));
             }
         }
 
         // params
-        if (isset($this->xml->params))
+        if (isset($xml->params))
         {
-            foreach ($this->xml->params->param as $paramXml)
+            foreach ($xml->params->param as $paramXml)
             {
                 $this->addParam(new Param($paramXml));
             }
         }
 
         // flows
-        if (isset($this->xml->flows))
+        if (isset($xml->flows))
         {
-            foreach ($this->xml->flows->flow as $flowXml)
+            foreach ($xml->flows->flow as $flowXml)
             {
                 $this->addFlow(new Flow($flowXml));
             }
         }
 
         // clocks
-        if (isset($this->xml->clocks))
+        if (isset($xml->clocks))
         {
-            foreach ($this->xml->clocks->clock as $clockXml)
+            foreach ($xml->clocks->clock as $clockXml)
             {
                 $this->addClock(new Clock($clockXml));
             }
         }
 
         // resets
-        if (isset($this->xml->resets))
+        if (isset($xml->resets))
         {
-            foreach ($this->xml->resets->reset as $resetXml)
+            foreach ($xml->resets->reset as $resetXml)
             {
                 $this->addReset(new Reset($resetXml));
             }
         }
     }
 
+    /**
+     * @brief permits to output this instance
+     * 
+     * Return a formated node for the node_generated file. This method call all
+     * the children getXmlElement to add into this node.
+     * @param DOMDocument $xml reference of the output xml document
+     * @param string $format desired output file format
+     * @return DOMElement xml element corresponding to this current instance
+     */
     public function getXmlElement($xml, $format)
     {
         $xml_element = $xml->createElement("component");
