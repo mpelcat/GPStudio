@@ -1,12 +1,29 @@
 # Change Log
 
-## Future 1.0-pre (2016-04-04)
-[Full changelog](https://github.com/DreamIP/GPStudio/compare/v0.95...master)
+## Future 1.1 (2016-08-30)
+[Full changelog](https://github.com/DreamIP/GPStudio/compare/v1.00...master)
+
+### New Feature
+* Backend component introduction
+* Informations (author, version, licence...) ingregrated to IP
+* Base components for IP devellopement
+* New com/sensor block
+
+### Changes
+* gpnode GUI completed for node generation
+
+### Bug fixes
+* 
+
+## Release [v1.00](https://github.com/DreamIP/GPStudio/tree/1.00) (2016-06-15)
+[Full changelog](https://github.com/DreamIP/GPStudio/compare/v0.95...v1.00)
 
 ### New Feature
 * Properties on flows propagated by blocks
-* Dynamic viewer adaptation (current work)
+* Dynamic viewer adaptation
+* Node editor and viewer
 * Camera Explorer
+* New GUI tool: gpnode (beta)
 
 ### Changes
 * Complete review of gpviewer
