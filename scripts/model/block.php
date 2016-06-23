@@ -474,22 +474,13 @@ class Block extends Component
      */
     protected function parse_xml()
     {
+        parent::parse_xml();
+
         if (isset($this->xml['size_addr_rel']))
             warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'", 12, "Block");
         $this->pi_size_addr_rel = (int) $this->xml['pi_size_addr_rel'];
-        $this->categ = (string) $this->xml['categ'];
         $this->configscriptfile = (string) $this->xml['configscriptfile'];
         $this->generatescriptfile = (string) $this->xml['generatescriptfile'];
-        $this->desc = (string) $this->xml['desc'];
-
-        // files
-        if (isset($this->xml->files))
-        {
-            foreach ($this->xml->files->file as $fileXml)
-            {
-                $this->addFile(new File($fileXml));
-            }
-        }
 
         // properties
         if (isset($this->xml->properties))
@@ -497,51 +488,6 @@ class Block extends Component
             foreach ($this->xml->properties->property as $propertyXml)
             {
                 $this->addProperty(new Property($propertyXml));
-            }
-        }
-
-        // params
-        if (isset($this->xml->params))
-        {
-            foreach ($this->xml->params->param as $paramXml)
-            {
-                $this->addParam(new Param($paramXml));
-            }
-        }
-
-        // flows
-        if (isset($this->xml->flows))
-        {
-            foreach ($this->xml->flows->flow as $flowXml)
-            {
-                $this->addFlow(new Flow($flowXml));
-            }
-        }
-
-        // clocks
-        if (isset($this->xml->clocks))
-        {
-            foreach ($this->xml->clocks->clock as $clockXml)
-            {
-                $this->addClock(new Clock($clockXml));
-            }
-        }
-
-        // resets
-        if (isset($this->xml->resets))
-        {
-            foreach ($this->xml->resets->reset as $resetXml)
-            {
-                $this->addReset(new Reset($resetXml));
-            }
-        }
-
-        // attributes
-        if (isset($this->xml->attributes))
-        {
-            foreach ($this->xml->attributes->attribute as $attribute)
-            {
-                $this->addAttribute(new Attribute($attribute));
             }
         }
     }

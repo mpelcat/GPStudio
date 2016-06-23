@@ -515,9 +515,8 @@ class Component
      * Can be call only from this node into the constructor
      * @param SimpleXMLElement $xml xml element to parse
      */
-    protected function parse_xml($xml)
+    protected function parse_xml()
     {
-        $this->name = (string) $this->xml['name'];
         $this->categ = (string) $this->xml['categ'];
         $this->desc = (string) $this->xml['desc'];
 
