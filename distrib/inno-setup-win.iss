@@ -28,6 +28,7 @@ SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
 Uninstallable=yes
 LicenseFile=gpstudio_win64-qt5\license.txt
+ChangesEnvironment=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
