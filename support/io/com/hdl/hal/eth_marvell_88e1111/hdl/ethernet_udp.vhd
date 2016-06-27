@@ -109,7 +109,7 @@ interface_managemet_inst : entity work.interface_management
 	);
     
 ----- Filter mac/ip address and detect destination port
-filter_mac_ip_port :  entity work.udp_filter 
+filter_mac_ip_port :  entity work.eth_udp_filter 
 	port map (	   
 				RXCLK			    => clk125,
 				reset_n			    => reset_n,

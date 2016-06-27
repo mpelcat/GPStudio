@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.ethernet_package.all;
 
-entity udp_filter is
+entity eth_udp_filter is
 	port (	   
 				RXCLK				: in std_logic;
 				reset_n			    : in std_logic;
@@ -14,9 +14,9 @@ entity udp_filter is
                 ip_hal              : in std_logic_vector(31 downto 0);
 				port_detected	    : out std_logic_vector(15 downto 0)
 		);
-end udp_filter;
+end eth_udp_filter;
 
-architecture RTL of udp_filter is
+architecture RTL of eth_udp_filter is
 
 type filter_fsm is (idle,mac,size_st,ip,port_st,data);
 signal state	: filter_fsm;
