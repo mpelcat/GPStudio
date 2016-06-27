@@ -40,6 +40,9 @@ public:
 
     void attachProject(GPNodeProject *project);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void configNode();
 

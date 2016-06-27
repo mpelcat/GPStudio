@@ -113,6 +113,12 @@ void MainWindow::createToolBarAndMenu()
     nodeMenu->addAction(connectAction);
     connect(connectAction, SIGNAL(triggered()), this, SLOT(connectCam()));
 
+    nodeMenu->addSeparator();
+    QAction *exit = new QAction("E&xit",this);
+    exit->setShortcut(QKeySequence::Quit);
+    nodeMenu->addAction(exit);
+    connect(exit, SIGNAL(triggered()), this, SLOT(close()));
+
     // ============= View =============
     QMenu *viewMenu = ui->menuBar->addMenu("&View");
 

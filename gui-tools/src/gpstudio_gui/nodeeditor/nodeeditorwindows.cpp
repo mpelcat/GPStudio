@@ -81,6 +81,12 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
     _blocksView->attachProject(_project);
 }
 
+void NodeEditorWindows::closeEvent(QCloseEvent *event)
+{
+    _project->closeProject();
+    event->accept();
+}
+
 void NodeEditorWindows::setupWidgets()
 {
     QWidget *centralwidget = new QWidget(this);
@@ -161,6 +167,12 @@ void NodeEditorWindows::createToolBarAndMenu()
     nodeMenu->addAction(configNode);
     _mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
+
+    nodeMenu->addSeparator();
+    QAction *exit = new QAction("E&xit",this);
+    exit->setShortcut(QKeySequence::Quit);
+    nodeMenu->addAction(exit);
+    connect(exit, SIGNAL(triggered()), this, SLOT(close()));
 
     // ============= Edit =============
     QMenu *editMenu = menuBar()->addMenu("&Edit");

@@ -27,6 +27,12 @@ BlockEditorWindow::~BlockEditorWindow()
     //delete layout();
 }
 
+void BlockEditorWindow::closeEvent(QCloseEvent *event)
+{
+    //_project->closeProject();
+    event->accept();
+}
+
 void BlockEditorWindow::openFile(const QModelIndex &indexFile)
 {
     QStandardItem *item = _filesModel->itemFromIndex(indexFile);
@@ -112,6 +118,12 @@ void BlockEditorWindow::createToolBarAndMenu()
     openDocAction->setShortcut(QKeySequence::Save);
     _mainToolBar->addAction(connectAction);
     nodeMenu->addAction(connectAction);
+
+    nodeMenu->addSeparator();
+    QAction *exit = new QAction("E&xit",this);
+    exit->setShortcut(QKeySequence::Quit);
+    nodeMenu->addAction(exit);
+    connect(exit, SIGNAL(triggered()), this, SLOT(close()));
 
     // ============= View =============
     QMenu *viewMenu = menuBar()->addMenu("&View");

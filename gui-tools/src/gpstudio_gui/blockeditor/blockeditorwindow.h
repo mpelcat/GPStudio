@@ -38,6 +38,9 @@ public:
     explicit BlockEditorWindow(QWidget *parent = 0, ModelBlock *block = 0);
     ~BlockEditorWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 signals:
 
 protected slots:
