@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use work.ethernet_package.all;
+use work.com_package.all;
 
 entity com_master is 
 generic (pi_size_addr 		: integer:=2);
