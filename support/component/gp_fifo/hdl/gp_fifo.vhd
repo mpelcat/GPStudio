@@ -1,6 +1,7 @@
 library IEEE;
     use IEEE.STD_LOGIC_1164.all;
     use IEEE.NUMERIC_STD.all;
+use ieee.math_real.all;
 
 library ALTERA_MF;
     use ALTERA_MF.all;
@@ -66,7 +67,7 @@ architecture rtl of gp_fifo is
             LPM_SHOWAHEAD           => "OFF",
             LPM_TYPE                => "scfifo",
             LPM_WIDTH               => DATA_WIDTH,
-            LPM_WIDTHU              => DATA_WIDTH,
+            LPM_WIDTHU              => integer(ceil(log2(real(FIFO_DEPTH)))),
             OVERFLOW_CHECKING       => "ON",
             UNDERFLOW_CHECKING      => "ON",
             USE_EAB                 => "ON"
