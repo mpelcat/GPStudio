@@ -71,8 +71,9 @@
 \path[connect,->] (filter.west) --node{/} ++(-2cm,0) node[left]{data\_to\_com};
 
 %slave
-\path[connect,<-] (filter.north) -- ([yshift=2.5cm]filter.north) --node[above]{data\_slave}node{/} ++(-4.25cm,0) ;
-\path[connect,<-] (header.south) -- ([yshift=2.5cm]filter.north) --node[above]{data\_slave} ++(-4.25cm,0) ;
+
+\path[connect,<-] (top.north) --++(0,1.5cm) node[above]{data\_slave};
+
 
 \end{tikzpicture}
 
