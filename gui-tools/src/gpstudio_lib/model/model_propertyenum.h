@@ -31,6 +31,7 @@ class GPSTUDIO_LIB_EXPORT ModelPropertyEnum
 {
 public:
     ModelPropertyEnum();
+    ModelPropertyEnum(const ModelPropertyEnum &modelPropertyEnum);
     ~ModelPropertyEnum();
 
     const QString &name() const;

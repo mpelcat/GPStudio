@@ -49,8 +49,9 @@ bool BlockScene::loadFromNode(const ModelNode *node)
             addBlock(modelBlock);
     }
 
-    if(node->getFIBlock())
-        connectBlockPorts(node->getFIBlock()->flowConnects());
+    ModelFIBlock *fiBlock = node->getFIBlock();
+    if(fiBlock)
+        connectBlockPorts(fiBlock->flowConnects());
 
     return true;
 }
@@ -138,9 +139,12 @@ void BlockScene::connectBlockPort(const QString &fromblock, const QString &fromf
     connectBlockPort(fromflowItem, toflowItem);
 }
 
-void BlockScene::disconnectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
+void BlockScene::disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow)
 {
-    disconnectBlockPort(fromflow->parent()->name(), fromflow->name(), toflow->parent()->name(), toflow->name());
+    if(fromFlow==NULL || toFlow==NULL)
+        return;
+
+    disconnectBlockPort(fromFlow->parent()->name(), fromFlow->name(), toFlow->parent()->name(), toFlow->name());
 }
 
 void BlockScene::disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow)

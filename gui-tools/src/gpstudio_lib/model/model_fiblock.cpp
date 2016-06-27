@@ -23,6 +23,7 @@
 #include <QDebug>
 
 ModelFIBlock::ModelFIBlock()
+    : ModelBlock::ModelBlock()
 {
     _name = "fi";
 }
@@ -106,6 +107,9 @@ void ModelFIBlock::connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 
 void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 {
+    if(fromFlow==NULL || toFlow==NULL)
+        return;
+
     for(int i=0; i<_flowConnects.size(); i++)
     {
         if(_flowConnects[i]->fromblock()==fromFlow->parent()->name())

@@ -77,6 +77,9 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+
+protected:
+    ModelBlock *_backupBlock;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdRemove : public BlockCommand
@@ -88,6 +91,9 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+
+protected:
+    ModelBlock *_backupBlock;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdConnectFlow : public BlockCommand

@@ -38,8 +38,6 @@ ModelBlock *ModelFlowConnect::fromModelBlock() const
     if(!parent())
         return NULL;
 
-    if(!parent()->node())
-        return NULL;
     ModelNode *node = parent()->node();
     if(!node)
         return NULL;
@@ -83,8 +81,6 @@ ModelBlock *ModelFlowConnect::toModelBlock() const
     if(!parent())
         return NULL;
 
-    if(!parent()->node())
-        return NULL;
     ModelNode *node = parent()->node();
     if(!node)
         return NULL;

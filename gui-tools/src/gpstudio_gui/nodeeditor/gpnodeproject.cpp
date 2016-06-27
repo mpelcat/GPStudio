@@ -175,6 +175,13 @@ void GPNodeProject::cmdMoveBlockTo(ModelBlock *block, QPoint pos)
 
 void GPNodeProject::cmdAddBlock(ModelBlock *block)
 {
+    ModelFIBlock *fiBlock = _node->getFIBlock();
+    if(!fiBlock)
+    {
+        fiBlock = new ModelFIBlock();
+        _node->addBlock(fiBlock);
+    }
+
     _node->addBlock(block);
     emit blockAdded(block);
     setModified(true);
@@ -182,9 +189,22 @@ void GPNodeProject::cmdAddBlock(ModelBlock *block)
 
 void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
 {
+    ModelFIBlock *fiBlock = _node->getFIBlock();
+    if(!fiBlock)
+    {
+        fiBlock = new ModelFIBlock();
+        _node->addBlock(fiBlock);
+    }
+
+    foreach (ModelFlowConnect *flowConnect, fiBlock->flowConnects(block->name()))
+    {
+        cmdDisconnectFlow(flowConnect->fromModelFlow(), flowConnect->toModelFlow());
+    }
+
     _node->removeBlock(block);
     emit blockRemoved(block);
     setModified(true);
+    delete block;
 }
 
 void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
@@ -198,6 +218,7 @@ void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 
     fiBlock->connectFlow(fromFlow, toFlow);
     emit blockConnected(fromFlow, toFlow);
+    setModified(true);
 }
 
 void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
@@ -211,6 +232,7 @@ void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 
     fiBlock->disConnectFlow(fromFlow, toFlow);
     emit blockDisconected(fromFlow, toFlow);
+    setModified(true);
 }
 
 QUndoStack *GPNodeProject::undoStack() const

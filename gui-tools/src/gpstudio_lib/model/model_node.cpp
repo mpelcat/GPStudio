@@ -79,6 +79,14 @@ void ModelNode::addBlock(ModelBlock *block)
     block->setNode(this);
 }
 
+void ModelNode::addBlock(QList<ModelBlock *> blocks)
+{
+    foreach (ModelBlock *block, blocks)
+    {
+        addBlock(block);
+    }
+}
+
 void ModelNode::removeBlock(ModelBlock *block)
 {
     _blocks.removeOne(block);
@@ -213,7 +221,7 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
                     node->_board = ModelBoard::fromNodeGenerated(e);
             }
             if(e.tagName()=="blocks")
-                node->_blocks.append(ModelBlock::listFromNodeGenerated(e));
+                node->addBlock(ModelBlock::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -238,17 +246,17 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
                 if(node->_board==NULL)
                 {
                     node->_board = ModelBoard::fromNodeDef(e);
-                    node->_blocks.append(ModelBoard::listIosFromNodeDef(e));
+                    node->addBlock(ModelBoard::listIosFromNodeDef(e));
                 }
             }
             if(e.tagName()=="process")
-                node->_blocks.append(ModelBlock::listFromNodeDef(e));
+                node->addBlock(ModelBlock::listFromNodeDef(e));
             if(e.tagName()=="flow_interconnect")
-                node->_blocks.append(ModelFIBlock::fromNodeDef(e));
+                node->addBlock(ModelFIBlock::fromNodeDef(e));
             if(e.tagName()=="params_interconnect")
-                node->_blocks.append(ModelPIBlock::fromNodeDef(e));
+                node->addBlock(ModelPIBlock::fromNodeDef(e));
             if(e.tagName()=="clock_interconnect")
-                node->_blocks.append(ModelCIBlock::fromNodeDef(e));
+                node->addBlock(ModelCIBlock::fromNodeDef(e));
         }
         n = n.nextSibling();
     }

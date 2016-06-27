@@ -52,6 +52,7 @@ public:
     QList<ModelBlock *> &blocks();
     const QList<ModelBlock *> &blocks() const;
     void addBlock(ModelBlock *block);
+    void addBlock(QList<ModelBlock *> blocks);
     void removeBlock(ModelBlock *block);
 
     ModelFIBlock *getFIBlock() const;

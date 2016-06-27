@@ -71,6 +71,12 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(nodeChanged(ModelNode *)), this, SLOT(reloadNode()));
     connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
 
+    if(project->node())
+    {
+        reloadNode();
+        reloadNodePath();
+    }
+
     // attach project to editors and viewers
     _blocksView->attachProject(_project);
 }

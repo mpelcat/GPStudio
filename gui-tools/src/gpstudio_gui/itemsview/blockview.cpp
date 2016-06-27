@@ -65,17 +65,32 @@ void BlockView::attachProject(GPNodeProject *project)
 
     _project = project;
 
-    connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(changeNode(ModelNode*)));
-    connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(updateBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockAdded(ModelBlock*)), this, SLOT(addBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockRemoved(ModelBlock*)), this, SLOT(removeBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockConnected(ModelFlow*,ModelFlow*)), this, SLOT(connectBlock(ModelFlow*,ModelFlow*)));
-    connect(_project, SIGNAL(blockDisconected(ModelFlow*,ModelFlow*)), this, SLOT(disconnectBlock(ModelFlow*,ModelFlow*)));
+    connect(_project, SIGNAL(nodeChanged(ModelNode*)),
+            this, SLOT(changeNode(ModelNode*)));
+    connect(_project, SIGNAL(blockUpdated(ModelBlock*)),
+            this, SLOT(updateBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockAdded(ModelBlock*)),
+            this, SLOT(addBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockRemoved(ModelBlock*)),
+            this, SLOT(removeBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockConnected(ModelFlow*,ModelFlow*)),
+            this, SLOT(connectBlock(ModelFlow*,ModelFlow*)));
+    connect(_project, SIGNAL(blockDisconected(ModelFlow*,ModelFlow*)),
+            this, SLOT(disconnectBlock(ModelFlow*,ModelFlow*)));
 
-    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)), project, SLOT(moveBlock(ModelBlock*,QPoint)));
-    connect(this, SIGNAL(blockDeleted(ModelBlock*)), project, SLOT(removeBlock(ModelBlock*)));
-    connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)), project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
-    connect(this, SIGNAL(blockPortDisconnected(ModelFlow*,ModelFlow*)), project, SLOT(disConnectBlockFlows(ModelFlow*,ModelFlow*)));
+    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)),
+            project, SLOT(moveBlock(ModelBlock*,QPoint)));
+    connect(this, SIGNAL(blockDeleted(ModelBlock*)),
+            project, SLOT(removeBlock(ModelBlock*)));
+    connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)),
+            project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
+    connect(this, SIGNAL(blockPortDisconnected(ModelFlow*,ModelFlow*)),
+            project, SLOT(disConnectBlockFlows(ModelFlow*,ModelFlow*)));
+
+    if(project->node())
+    {
+        changeNode(project->node());
+    }
 }
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)

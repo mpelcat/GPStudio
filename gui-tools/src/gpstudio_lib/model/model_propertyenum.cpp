@@ -24,6 +24,14 @@ ModelPropertyEnum::ModelPropertyEnum()
 {
 }
 
+ModelPropertyEnum::ModelPropertyEnum(const ModelPropertyEnum &modelPropertyEnum)
+{
+    _name = modelPropertyEnum._name;
+    _caption = modelPropertyEnum._caption;
+    _value = modelPropertyEnum._value;
+    _description = modelPropertyEnum._description;
+}
+
 ModelPropertyEnum::~ModelPropertyEnum()
 {
 }

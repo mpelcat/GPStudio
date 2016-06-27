@@ -53,7 +53,7 @@ public:
     void connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
     void connectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 
-    void disconnectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
+    void disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow);
     void disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 
     void connectBlockPorts(const QList<ModelFlowConnect *> &connections);

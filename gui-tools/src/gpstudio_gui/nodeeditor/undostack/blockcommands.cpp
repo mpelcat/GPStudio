@@ -89,23 +89,25 @@ bool BlockCmdMove::mergeWith(const QUndoCommand *command)
 BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
     : BlockCommand(project, block)
 {
+    _backupBlock = block;
     setText(QString("added block '%1'").arg(block->name()));
 }
 
 BlockCmdAdd::~BlockCmdAdd()
 {
-    // delete the block if it's not inside the node
-    if(!_project->node()->blocks().contains(_block))
-        delete _block;
+    delete _backupBlock;
 }
 
 void BlockCmdAdd::undo()
 {
+    _backupBlock = new ModelBlock(*_block);
     _project->cmdRemoveBlock(_block);
 }
 
 void BlockCmdAdd::redo()
 {
+    _block = _backupBlock;
+    _backupBlock = NULL;
     _project->cmdAddBlock(_block);
 }
 
@@ -118,18 +120,19 @@ BlockCmdRemove::BlockCmdRemove(GPNodeProject *project, ModelBlock *block)
 
 BlockCmdRemove::~BlockCmdRemove()
 {
-    // delete the block if it's not inside the node
-    if(!_project->node()->blocks().contains(_block))
-        delete _block;
+    delete _backupBlock;
 }
 
 void BlockCmdRemove::undo()
 {
+    _block = _backupBlock;
     _project->cmdAddBlock(_block);
+    _backupBlock = NULL;
 }
 
 void BlockCmdRemove::redo()
 {
+    _backupBlock = new ModelBlock(*_block);
     _project->cmdRemoveBlock(_block);
 }
 
