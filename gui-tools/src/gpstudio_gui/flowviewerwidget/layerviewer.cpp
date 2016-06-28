@@ -55,9 +55,12 @@ void LayerViewer::showFlowConnection(int flowId)
     int width = flowProp->property("width").toInt();
     int height = flowProp->property("height").toInt();
 
-    QImage *image = flowPackage.toImage(width, height, 8);
-    _widget->showImage(*image);
-    delete image;
+    if(width!=0 && height!=0)
+    {
+        QImage *image = flowPackage.toImage(width, height, 8);
+        _widget->showImage(*image);
+        delete image;
+    }
 
     if(!_recordPath.isEmpty() && _recordButton->isChecked())
     {
