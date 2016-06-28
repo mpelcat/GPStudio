@@ -23,6 +23,8 @@
 #include <QDebug>
 
 #include "model/model_fiblock.h"
+#include "model/model_process.h"
+#include "model/model_iocom.h"
 
 BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
     : _project(project), _block(block)
@@ -102,7 +104,14 @@ BlockCmdAdd::~BlockCmdAdd()
 
 void BlockCmdAdd::undo()
 {
-    _backupBlock = new ModelBlock(*_block);
+    // backup block
+    if(_block->type()=="process")
+        _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(_block));
+    else if(_block->type()=="io")
+        _backupBlock = new ModelIO(*static_cast<ModelIO*>(_block));
+    else if(_block->type()=="iocom")
+        _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(_block));
+
     _project->cmdRemoveBlock(_block);
 }
 
@@ -138,7 +147,12 @@ void BlockCmdRemove::undo()
 void BlockCmdRemove::redo()
 {
     // backup block
-    _backupBlock = new ModelBlock(*_block);
+    if(_block->type()=="process")
+        _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(_block));
+    else if(_block->type()=="io")
+        _backupBlock = new ModelIO(*static_cast<ModelIO*>(_block));
+    else if(_block->type()=="iocom")
+        _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(_block));
 
     // backup connection to/from block
     _flowConnects.clear();
