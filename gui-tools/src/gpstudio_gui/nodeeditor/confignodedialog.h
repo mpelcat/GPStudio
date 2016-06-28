@@ -44,12 +44,18 @@ public:
 private slots:
     void selectBoard(const QString &boardName);
 
+public slots:
+    void accept();
+
 private:
     void setupWidgets();
     GPNodeProject *_project;
 
     QComboBox *_boardComboBox;
     QScrollArea *_iosWidget;
+
+    QStringList iosName();
+    QLayout *_iosLayout;
 };
 
 #endif // CONFIGNODEDIALOG_H

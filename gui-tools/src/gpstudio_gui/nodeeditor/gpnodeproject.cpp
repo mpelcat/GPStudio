@@ -29,6 +29,8 @@
 
 #include <model/model_fiblock.h>
 
+#include "lib_parser/lib.h"
+
 GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
@@ -150,6 +152,11 @@ void GPNodeProject::closeProject()
     delete _node;
 }
 
+void GPNodeProject::setBoard(QString boardName, QStringList iosName)
+{
+    cmdSetBoard(boardName, iosName);
+}
+
 void GPNodeProject::setPath(const QString &path)
 {
     _path = path;
@@ -237,6 +244,31 @@ void GPNodeProject::cmdDisconnectFlow(const ModelFlowConnect &flowConnect)
     fiBlock->disConnectFlow(flowConnect);
     emit blockDisconected(flowConnect);
     setModified(true);
+}
+
+void GPNodeProject::cmdSetBoard(QString boardName, QStringList iosName)
+{
+    BoardLib *boardLib = Lib::getLib().board(boardName);
+    if(!boardLib)
+        return;
+
+    ModelBoard *board = new ModelBoard(*boardLib->modelBoard());
+    _node->setBoard(board);
+
+    foreach (QString ioName, iosName)
+    {
+        if(_node->getBlock(ioName) == NULL)
+        {
+            QString ioDriver = boardLib->io(ioName)->driver();
+            IOLib *ioLib = Lib::getLib().io(ioDriver);
+            if(ioLib)
+            {
+                ModelIO *io = ioLib->modelIO();
+                io->setName(ioName);
+                cmdAddBlock(io);
+            }
+        }
+    }
 }
 
 QUndoStack *GPNodeProject::undoStack() const

@@ -51,6 +51,8 @@ public slots:
     bool saveProjectAs(const QString &nodeFileName=QString());
     void closeProject();
 
+    void setBoard(QString boardName, QStringList iosName);
+
     // block commands
     void moveBlock(ModelBlock *block, const QPoint &newPos);
     void renameBlock(ModelBlock *block, const QString &newName);
@@ -99,6 +101,8 @@ protected:
     friend class BlockCmdDisconnectFlow;
     void cmdConnectFlow(const ModelFlowConnect &flowConnect);
     void cmdDisconnectFlow(const ModelFlowConnect &flowConnect);
+
+    void cmdSetBoard(QString boardName, QStringList iosName);
 };
 
 #endif // GPNODEPROJECT_H

@@ -23,6 +23,8 @@
 #include <QFile>
 #include <QDebug>
 
+#include "model/model_board.h"
+
 BoardLib::BoardLib()
 {
 }
@@ -81,6 +83,11 @@ IOBoardLib *BoardLib::io(const QString &name) const
     return NULL;
 }
 
+ModelBoard *BoardLib::modelBoard() const
+{
+    return _modelBoard;
+}
+
 BoardLib *BoardLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
@@ -94,16 +101,19 @@ BoardLib *BoardLib::readFromFile(const QString &fileName)
         if(!doc.setContent(&file))
             qDebug()<<"Cannot open"<<file.fileName();
         else
-            boardLib = BoardLib::fromNodeGenerated(doc.documentElement());
+            boardLib = BoardLib::fromDomElement(doc.documentElement());
         file.close();
     }
     return boardLib;
 }
 
-BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
+BoardLib *BoardLib::fromDomElement(const QDomElement &domElement)
 {
     BoardLib *board=new BoardLib();
+    board->_modelBoard = new ModelBoard();
+
     board->setName(domElement.attribute("name","no_name"));
+    board->_modelBoard->setName(board->name());
 
     QDomNode n = domElement.firstChild();
     while(!n.isNull())
@@ -112,7 +122,7 @@ BoardLib *BoardLib::fromNodeGenerated(const QDomElement &domElement)
         if(!e.isNull())
         {
             if(e.tagName()=="ios")
-                board->addIOs(IOBoardLib::listFromNodeGenerated(e));
+                board->addIOs(IOBoardLib::listFromDomElement(e));
         }
         n = n.nextSibling();
     }
