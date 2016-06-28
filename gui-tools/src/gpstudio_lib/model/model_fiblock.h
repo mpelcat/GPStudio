@@ -46,7 +46,9 @@ public:
     void addFlowConnects(const QList<ModelFlowConnect *> &flowConnects);
 
     void connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void connectFlow(const ModelFlowConnect &flowConnect);
     void disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void disConnectFlow(const ModelFlowConnect &flowConnect);
 
     QList<ModelTreeConnect *> &treeConnects();
     const QList<ModelTreeConnect *> &treeConnects() const;

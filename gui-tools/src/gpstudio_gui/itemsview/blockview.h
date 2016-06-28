@@ -75,8 +75,8 @@ public slots:
     void updateBlock(ModelBlock *block);
     void addBlock(ModelBlock *block);
     void removeBlock(ModelBlock *block);
-    void connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void connectBlock(const ModelFlowConnect &flowConnect);
+    void disconnectBlock(const ModelFlowConnect &flowConnect);
 
     void zoomIn();
     void zoomOut();
@@ -88,8 +88,8 @@ signals:
 
     void blockMoved(ModelBlock *block, QPoint newPos);
     void blockDeleted(ModelBlock *block);
-    void blockPortConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void blockPortDisconnected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockPortConnected(ModelFlowConnect flowConnect);
+    void blockPortDisconnected(ModelFlowConnect flowConnect);
 
 private:
     GPNodeProject *_project;

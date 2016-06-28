@@ -105,6 +105,11 @@ void ModelFIBlock::connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
     addFlowConnect(modelFlowConnect);
 }
 
+void ModelFIBlock::connectFlow(const ModelFlowConnect &flowConnect)
+{
+    addFlowConnect(new ModelFlowConnect(flowConnect));
+}
+
 void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 {
     if(fromFlow==NULL || toFlow==NULL)
@@ -124,6 +129,21 @@ void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
                         return;
                     }
                 }
+            }
+        }
+    }
+}
+
+void ModelFIBlock::disConnectFlow(const ModelFlowConnect &flowConnect)
+{
+    for(int i=0; i<_flowConnects.size(); i++)
+    {
+        for(int i=0; i<_flowConnects.size(); i++)
+        {
+            if(*(_flowConnects[i])==flowConnect)
+            {
+                removeFlowConnect(_flowConnects[i]);
+                return;
             }
         }
     }

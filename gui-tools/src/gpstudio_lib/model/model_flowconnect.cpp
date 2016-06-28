@@ -23,10 +23,23 @@
 #include "model_fiblock.h"
 #include "model_node.h"
 
-ModelFlowConnect::ModelFlowConnect()
+ModelFlowConnect::ModelFlowConnect(QString fromblock, QString fromflow, QString toblock, QString toflow, QString order)
+    : _fromblock(fromblock), _fromflow(fromflow),
+      _toblock(toblock), _toflow(toflow),
+      _order(order)
 {
     _parent = NULL;
-    _order = "msb";
+}
+
+ModelFlowConnect::ModelFlowConnect(const ModelFlowConnect &other)
+{
+    _fromblock = other._fromblock;
+    _fromflow = other._fromflow;
+    _toblock = other._toblock;
+    _toflow = other._toflow;
+    _order = other._order;
+
+    _parent = NULL;
 }
 
 ModelFlowConnect::~ModelFlowConnect()
@@ -202,4 +215,19 @@ ModelFIBlock *ModelFlowConnect::parent() const
 void ModelFlowConnect::setParent(ModelFIBlock *parent)
 {
     _parent = parent;
+}
+
+bool ModelFlowConnect::operator ==(const ModelFlowConnect &other) const
+{
+    if(_fromblock != other._fromblock)
+        return false;
+    if(_fromflow != other._fromflow)
+        return false;
+    if(_toblock != other._toblock)
+        return false;
+    if(_toflow != other._toflow)
+        return false;
+    if(_order != other._order)
+        return false;
+    return true;
 }

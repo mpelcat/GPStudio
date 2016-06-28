@@ -202,7 +202,7 @@ void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
 
     foreach (ModelFlowConnect *flowConnect, fiBlock->flowConnects(block->name()))
     {
-        cmdDisconnectFlow(flowConnect->fromModelFlow(), flowConnect->toModelFlow());
+        cmdDisconnectFlow(*flowConnect);
     }
 
     _node->removeBlock(block);
@@ -211,7 +211,7 @@ void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
     delete block;
 }
 
-void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+void GPNodeProject::cmdConnectFlow(const ModelFlowConnect &flowConnect)
 {
     ModelFIBlock *fiBlock = _node->getFIBlock();
     if(!fiBlock)
@@ -220,12 +220,12 @@ void GPNodeProject::cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
         _node->addBlock(fiBlock);
     }
 
-    fiBlock->connectFlow(fromFlow, toFlow);
-    emit blockConnected(fromFlow, toFlow);
+    fiBlock->connectFlow(flowConnect);
+    emit blockConnected(flowConnect);
     setModified(true);
 }
 
-void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
+void GPNodeProject::cmdDisconnectFlow(const ModelFlowConnect &flowConnect)
 {
     ModelFIBlock *fiBlock = _node->getFIBlock();
     if(!fiBlock)
@@ -234,8 +234,8 @@ void GPNodeProject::cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
         _node->addBlock(fiBlock);
     }
 
-    fiBlock->disConnectFlow(fromFlow, toFlow);
-    emit blockDisconected(fromFlow, toFlow);
+    fiBlock->disConnectFlow(flowConnect);
+    emit blockDisconected(flowConnect);
     setModified(true);
 }
 
@@ -274,12 +274,12 @@ void GPNodeProject::removeBlock(ModelBlock *block)
     _undoStack->push(new BlockCmdRemove(this, block));
 }
 
-void GPNodeProject::connectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow)
+void GPNodeProject::connectBlockFlows(const ModelFlowConnect &flowConnect)
 {
-    _undoStack->push(new BlockCmdConnectFlow(this, fromFlow, toFlow));
+    _undoStack->push(new BlockCmdConnectFlow(this, flowConnect));
 }
 
-void GPNodeProject::disConnectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow)
+void GPNodeProject::disConnectBlockFlows(const ModelFlowConnect &flowConnect)
 {
-    _undoStack->push(new BlockCmdDisconnectFlow(this, fromFlow, toFlow));
+    _undoStack->push(new BlockCmdDisconnectFlow(this, flowConnect));
 }

@@ -73,19 +73,19 @@ void BlockView::attachProject(GPNodeProject *project)
             this, SLOT(addBlock(ModelBlock*)));
     connect(_project, SIGNAL(blockRemoved(ModelBlock*)),
             this, SLOT(removeBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockConnected(ModelFlow*,ModelFlow*)),
-            this, SLOT(connectBlock(ModelFlow*,ModelFlow*)));
-    connect(_project, SIGNAL(blockDisconected(ModelFlow*,ModelFlow*)),
-            this, SLOT(disconnectBlock(ModelFlow*,ModelFlow*)));
+    connect(_project, SIGNAL(blockConnected(ModelFlowConnect)),
+            this, SLOT(connectBlock(ModelFlowConnect)));
+    connect(_project, SIGNAL(blockDisconected(ModelFlowConnect)),
+            this, SLOT(disconnectBlock(ModelFlowConnect)));
 
     connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)),
             project, SLOT(moveBlock(ModelBlock*,QPoint)));
     connect(this, SIGNAL(blockDeleted(ModelBlock*)),
             project, SLOT(removeBlock(ModelBlock*)));
-    connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)),
-            project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
-    connect(this, SIGNAL(blockPortDisconnected(ModelFlow*,ModelFlow*)),
-            project, SLOT(disConnectBlockFlows(ModelFlow*,ModelFlow*)));
+    connect(this, SIGNAL(blockPortConnected(ModelFlowConnect)),
+            project, SLOT(connectBlockFlows(ModelFlowConnect)));
+    connect(this, SIGNAL(blockPortDisconnected(ModelFlowConnect)),
+            project, SLOT(disConnectBlockFlows(ModelFlowConnect)));
 
     if(project->node())
     {
@@ -167,7 +167,10 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
         if(processItem && processItem!=_startConnectItem)
-            emit blockPortConnected(_startConnectItem->modelFlow(), processItem->modelFlow());
+            emit blockPortConnected(ModelFlowConnect(_startConnectItem->modelFlow()->parent()->name(),
+                                    _startConnectItem->modelFlow()->name(),
+                                    processItem->modelFlow()->parent()->name(),
+                                    processItem->modelFlow()->name()));
 
         _lineConector->disconnectPorts();
         scene()->removeItem(_lineConector);
@@ -235,14 +238,14 @@ void BlockView::removeBlock(ModelBlock *block)
     _scene->removeBlock(block);
 }
 
-void BlockView::connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+void BlockView::connectBlock(const ModelFlowConnect &flowConnect)
 {
-    _scene->connectBlockPort(fromFlow, toFlow);
+    _scene->connectBlockPort(flowConnect);
 }
 
-void BlockView::disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+void BlockView::disconnectBlock(const ModelFlowConnect &flowConnect)
 {
-    _scene->disconnectBlockPort(fromFlow, toFlow);
+    _scene->disconnectBlockPort(flowConnect);
 }
 
 void BlockView::changeNode(ModelNode *node)
@@ -326,8 +329,10 @@ void BlockView::keyPressEvent(QKeyEvent *event)
             BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
             if(connectorItem)
             {
-                emit blockPortDisconnected(connectorItem->portItem1()->modelFlow(),
-                                           connectorItem->portItem2()->modelFlow());
+                emit blockPortDisconnected(ModelFlowConnect(connectorItem->portItem1()->modelFlow()->parent()->name(),
+                                                            connectorItem->portItem1()->modelFlow()->name(),
+                                                            connectorItem->portItem2()->modelFlow()->parent()->name(),
+                                                            connectorItem->portItem2()->modelFlow()->name()));
             }
             else
             {

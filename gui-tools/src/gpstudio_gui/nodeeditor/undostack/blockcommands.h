@@ -28,6 +28,8 @@
 #include "nodeeditor/gpnodeproject.h"
 #include "model/model_block.h"
 
+#include <model/model_flowconnect.h>
+
 class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
 public:
@@ -94,34 +96,33 @@ public:
 
 protected:
     ModelBlock *_backupBlock;
+    QList<ModelFlowConnect> _flowConnects;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdConnectFlow : public BlockCommand
 {
 public:
     enum { Id = 0x0105 };
-    BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    BlockCmdConnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect);
     void undo();
     void redo();
     int id() const { return Id; }
 
 protected:
-    ModelFlow *_flow1;
-    ModelFlow *_flow2;
+    ModelFlowConnect _flowConnect;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdDisconnectFlow : public BlockCommand
 {
 public:
     enum { Id = 0x0106 };
-    BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    BlockCmdDisconnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect);
     void undo();
     void redo();
     int id() const { return Id; }
 
 protected:
-    ModelFlow *_flow1;
-    ModelFlow *_flow2;
+    ModelFlowConnect _flowConnect;
 };
 
 #endif // BLOCKCOMMANDS_H

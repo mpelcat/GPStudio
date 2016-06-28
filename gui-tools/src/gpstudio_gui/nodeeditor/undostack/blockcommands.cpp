@@ -22,6 +22,8 @@
 
 #include <QDebug>
 
+#include "model/model_fiblock.h"
+
 BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
     : _project(project), _block(block)
 {
@@ -128,48 +130,60 @@ void BlockCmdRemove::undo()
     _block = _backupBlock;
     _project->cmdAddBlock(_block);
     _backupBlock = NULL;
+
+    foreach (ModelFlowConnect flowConnect, _flowConnects)
+        _project->cmdConnectFlow(flowConnect);
 }
 
 void BlockCmdRemove::redo()
 {
+    // backup block
     _backupBlock = new ModelBlock(*_block);
+
+    // backup connection to/from block
+    _flowConnects.clear();
+    QList<ModelFlowConnect *> _flowConnectsPtr;
+    _flowConnectsPtr = _project->node()->getFIBlock()->flowConnects(_block->name());
+    foreach (ModelFlowConnect *flowConnect, _flowConnectsPtr)
+        _flowConnects.append(*flowConnect);
+
     _project->cmdRemoveBlock(_block);
 }
 
 // Flow connection
-BlockCmdConnectFlow::BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
-    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+BlockCmdConnectFlow::BlockCmdConnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect)
+    : BlockCommand(project), _flowConnect(flowConnect)
 {
     setText(QString("connect flow '%1.%2' to '%3.%4'")
-            .arg(flow1->parent()->name()).arg(flow1->name())
-            .arg(flow2->parent()->name()).arg(flow2->name()));
+            .arg(flowConnect.fromblock()).arg(flowConnect.fromflow())
+            .arg(flowConnect.toblock()).arg(flowConnect.toflow()));
 }
 
 void BlockCmdConnectFlow::undo()
 {
-    _project->cmdDisconnectFlow(_flow1, _flow2);
+    _project->cmdDisconnectFlow(_flowConnect);
 }
 
 void BlockCmdConnectFlow::redo()
 {
-    _project->cmdConnectFlow(_flow1, _flow2);
+    _project->cmdConnectFlow(_flowConnect);
 }
 
 // Flow disconnection
-BlockCmdDisconnectFlow::BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
-    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+BlockCmdDisconnectFlow::BlockCmdDisconnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect)
+    : BlockCommand(project), _flowConnect(flowConnect)
 {
     setText(QString("disconnect flow '%1.%2' to '%3.%4'")
-            .arg(flow1->parent()->name()).arg(flow1->name())
-            .arg(flow2->parent()->name()).arg(flow2->name()));
+            .arg(flowConnect.fromblock()).arg(flowConnect.fromflow())
+            .arg(flowConnect.toblock()).arg(flowConnect.toflow()));
 }
 
 void BlockCmdDisconnectFlow::undo()
 {
-    _project->cmdConnectFlow(_flow1, _flow2);
+    _project->cmdConnectFlow(_flowConnect);
 }
 
 void BlockCmdDisconnectFlow::redo()
 {
-    _project->cmdDisconnectFlow(_flow1, _flow2);
+    _project->cmdDisconnectFlow(_flowConnect);
 }

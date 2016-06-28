@@ -50,9 +50,11 @@ public:
     BlockItem *block(const QString &name) const;
     BlockItem *block(ModelBlock *modelBlock) const;
 
+    void connectBlockPort(const ModelFlowConnect &flowConnect);
     void connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
     void connectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 
+    void disconnectBlockPort(const ModelFlowConnect &flowConnect);
     void disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow);
     void disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 

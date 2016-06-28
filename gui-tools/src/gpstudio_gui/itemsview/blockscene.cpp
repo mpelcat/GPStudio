@@ -117,6 +117,11 @@ BlockItem *BlockScene::block(ModelBlock *modelBlock) const
     return NULL;
 }
 
+void BlockScene::connectBlockPort(const ModelFlowConnect &flowConnect)
+{
+    connectBlockPort(flowConnect.fromblock(), flowConnect.fromflow(), flowConnect.toblock(), flowConnect.toflow());
+}
+
 void BlockScene::connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
 {
     connectBlockPort(fromflow->parent()->name(), fromflow->name(), toflow->parent()->name(), toflow->name());
@@ -137,6 +142,11 @@ void BlockScene::connectBlockPort(const QString &fromblock, const QString &fromf
     if(!toflowItem) return;
 
     connectBlockPort(fromflowItem, toflowItem);
+}
+
+void BlockScene::disconnectBlockPort(const ModelFlowConnect &flowConnect)
+{
+    disconnectBlockPort(flowConnect.fromblock(), flowConnect.fromflow(), flowConnect.toblock(), flowConnect.toflow());
 }
 
 void BlockScene::disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow)

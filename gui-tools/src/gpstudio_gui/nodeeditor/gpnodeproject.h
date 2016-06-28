@@ -27,6 +27,8 @@
 
 #include <QUndoStack>
 
+#include <model/model_flowconnect.h>
+
 class GPSTUDIO_GUI_EXPORT GPNodeProject : public QObject
 {
     Q_OBJECT
@@ -54,8 +56,8 @@ public slots:
     void renameBlock(ModelBlock *block, const QString &newName);
     void addBlock(ModelBlock *block);
     void removeBlock(ModelBlock *block);
-    void connectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void disConnectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void connectBlockFlows(const ModelFlowConnect &flowConnect);
+    void disConnectBlockFlows(const ModelFlowConnect &flowConnect);
 
 signals:
     void nodeChanged(ModelNode *node);
@@ -65,8 +67,8 @@ signals:
     void blockUpdated(ModelBlock *block);
     void blockAdded(ModelBlock *block);
     void blockRemoved(ModelBlock *block);
-    void blockConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void blockDisconected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockConnected(const ModelFlowConnect flowConnect);
+    void blockDisconected(const ModelFlowConnect flowConnect);
 
 private:
     void setPath(const QString &path);
@@ -95,8 +97,8 @@ protected:
 
     friend class BlockCmdConnectFlow;
     friend class BlockCmdDisconnectFlow;
-    void cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void cmdConnectFlow(const ModelFlowConnect &flowConnect);
+    void cmdDisconnectFlow(const ModelFlowConnect &flowConnect);
 };
 
 #endif // GPNODEPROJECT_H
