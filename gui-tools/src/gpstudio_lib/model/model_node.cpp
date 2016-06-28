@@ -50,6 +50,19 @@ void ModelNode::setName(const QString &name)
     _name = name;
 }
 
+ModelBoard *ModelNode::board() const
+{
+    return _board;
+}
+
+void ModelNode::setBoard(ModelBoard *board)
+{
+    if(_board)
+        delete _board;
+    board->setParent(this);
+    _board = board;
+}
+
 bool ModelNode::isValid() const
 {
     return _valid;
@@ -168,6 +181,11 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
 
     element.setAttribute("name", _name);
 
+    if(_board!=NULL)
+    {
+        element.appendChild(_board->toXMLElement(doc));
+    }
+
     QDomElement processList = doc.createElement("process");
     foreach (ModelBlock *process, blocks())
     {
@@ -217,8 +235,8 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->_board==NULL)
-                    node->_board = ModelBoard::fromNodeGenerated(e);
+                if(node->board()==NULL)
+                    node->setBoard(ModelBoard::fromNodeGenerated(e));
             }
             if(e.tagName()=="blocks")
                 node->addBlock(ModelBlock::listFromNodeGenerated(e));
@@ -243,9 +261,9 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->_board==NULL)
+                if(node->board()==NULL)
                 {
-                    node->_board = ModelBoard::fromNodeDef(e);
+                    node->setBoard(ModelBoard::fromNodeDef(e));
                     node->addBlock(ModelBoard::listIosFromNodeDef(e));
                 }
             }
@@ -263,9 +281,4 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
 
     node->_valid=true;
     return node;
-}
-
-ModelBoard *ModelNode::getBoard() const
-{
-    return _board;
 }

@@ -44,7 +44,8 @@ public:
     const QString &name() const;
     void setName(const QString &name);
 
-    ModelBoard *getBoard() const;
+    ModelBoard *board() const;
+    void setBoard(ModelBoard *board);
 
     bool isValid() const;
 

@@ -661,15 +661,32 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
 {
     QDomElement element;
     if(other.isNull())
-        element = doc.createElement("process");
+    {
+        if(type()=="io" || type()=="iocom")
+            element = doc.createElement("io");
+        else
+            element = doc.createElement("process");
+    }
     else
         element = other;
 
     element.setAttribute("name", _name);
     element.setAttribute("driver", _driver);
-    element.setAttribute("inlib", _inLib ? "true" : "false");
+
+    if(type()!="io" && type()!="iocom")
+        element.setAttribute("inlib", _inLib ? "true" : "false");
+
     element.setAttribute("x_pos", _pos.x());
     element.setAttribute("y_pos", _pos.y());
+
+    QDomElement paramList = doc.createElement("params");
+    foreach (ModelParam *param, _params)
+    {
+        if(param->isHard())
+            paramList.appendChild(param->toXMLElement(doc));
+    }
+    if(!paramList.childNodes().isEmpty())
+        element.appendChild(paramList);
 
     return element;
 }
