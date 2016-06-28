@@ -86,7 +86,10 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
     {
         fileName = QFileDialog::getOpenFileName(0, "Open node project", "", "Node project (*.node)");
         if(fileName.isEmpty())
+        {
+            newProject();
             return false;
+        }
     }
     else
         fileName = nodeFileName;
@@ -141,6 +144,7 @@ void GPNodeProject::closeProject()
             saveProject();
     }
 
+    _modified = false;
     _undoStack->clear();
     setNode(NULL);
     delete _node;

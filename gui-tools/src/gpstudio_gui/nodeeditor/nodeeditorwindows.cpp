@@ -153,17 +153,24 @@ void NodeEditorWindows::createToolBarAndMenu()
     QAction *saveDocAction = new QAction("&Save",this);
     saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAction->setShortcut(QKeySequence::Save);
+    saveDocAction->setEnabled(false);
     _mainToolBar->addAction(saveDocAction);
     nodeMenu->addAction(saveDocAction);
     connect(saveDocAction, SIGNAL(triggered(bool)), _project, SLOT(saveProject()));
     connect(_project, SIGNAL(nodeModified(bool)), saveDocAction, SLOT(setEnabled(bool)));
+
+    QAction *saveDocAsAction = new QAction("Save &as...",this);
+    saveDocAsAction->setIcon(QIcon(":/icons/img/save.png"));
+    saveDocAsAction->setShortcut(QKeySequence::SaveAs);
+    nodeMenu->addAction(saveDocAsAction);
+    connect(saveDocAsAction, SIGNAL(triggered(bool)), _project, SLOT(saveProjectAs()));
 
     nodeMenu->addSeparator();
     _mainToolBar->addSeparator();
 
     QAction *configNode = new QAction("&Configure node",this);
     configNode->setIcon(QIcon(":/icons/img/settings.png"));
-    saveDocAction->setShortcut(QKeySequence::Preferences);
+    configNode->setShortcut(QKeySequence::Preferences);
     nodeMenu->addAction(configNode);
     _mainToolBar->addAction(configNode);
     connect(configNode, SIGNAL(triggered()), this, SLOT(configNode()));
