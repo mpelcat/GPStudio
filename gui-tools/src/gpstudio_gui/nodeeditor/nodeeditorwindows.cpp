@@ -32,6 +32,7 @@
 #include <QAction>
 #include <QDockWidget>
 #include <QLayout>
+#include <QMessageBox>
 
 #include "propertywidgets/propertywidgets.h"
 
@@ -177,6 +178,7 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     nodeMenu->addSeparator();
     QAction *exit = new QAction("E&xit",this);
+    exit->setIcon(QIcon(":/icons/img/exit.png"));
     exit->setShortcut(QKeySequence::Quit);
     nodeMenu->addAction(exit);
     connect(exit, SIGNAL(triggered()), this, SLOT(close()));
@@ -197,8 +199,45 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addAction(redoAction);
     editMenu->addAction(redoAction);
 
-    /*QMenu *viewMenu = */menuBar()->addMenu("&View");
-    /*QMenu *helpMenu = */menuBar()->addMenu("&Help");
+    // ============= Project =============
+    QMenu *projectMenu = menuBar()->addMenu("&Project");
+    _mainToolBar->addSeparator();
+
+    QAction *makecleanAction = new QAction("&Clean project", this);
+    makecleanAction->setIcon(QIcon(":/icons/img/make-clean.png"));
+    _mainToolBar->addAction(makecleanAction);
+    projectMenu->addAction(makecleanAction);
+
+    QAction *makegenerateAction = new QAction("&Generate project", this);
+    makegenerateAction->setIcon(QIcon(":/icons/img/make-generate.png"));
+    _mainToolBar->addAction(makegenerateAction);
+    projectMenu->addAction(makegenerateAction);
+
+    QAction *makecompileAction = new QAction("&Compile project", this);
+    makecompileAction->setIcon(QIcon(":/icons/img/make-compile.png"));
+    _mainToolBar->addAction(makecompileAction);
+    projectMenu->addAction(makecompileAction);
+
+    QAction *makesendAction = new QAction("&Program camera", this);
+    makesendAction->setIcon(QIcon(":/icons/img/make-send.png"));
+    _mainToolBar->addAction(makesendAction);
+    projectMenu->addAction(makesendAction);
+
+    QAction *makerunAction = new QAction("&Launch camera with viewer", this);
+    makerunAction->setIcon(QIcon(":/icons/img/run.png"));
+    _mainToolBar->addAction(makerunAction);
+    projectMenu->addAction(makerunAction);
+
+    // ============= Help =============
+    QMenu *helpMenu = menuBar()->addMenu("&Help");
+
+    QAction *aboutAction = new QAction("&About", this);
+    connect(aboutAction, SIGNAL(triggered(bool)), this, SLOT(about()));
+    helpMenu->addAction(aboutAction);
+
+    QAction *aboutQtAction = new QAction("About &Qt", this);
+    connect(aboutQtAction, SIGNAL(triggered(bool)), this, SLOT(aboutQt()));
+    helpMenu->addAction(aboutQtAction);
 }
 
 void NodeEditorWindows::configNode()
@@ -216,4 +255,29 @@ void NodeEditorWindows::reloadNode()
 void NodeEditorWindows::reloadNodePath()
 {
     setWindowTitle(QString("GPnode - %1").arg(_project->name()));
+}
+
+void NodeEditorWindows::about()
+{
+    QMessageBox::about(this,"GPStudio: GPNode 1.01","Copyright (C) 2016 Dream IP\n\
+\n\
+This sofware is part of GPStudio.\n\
+\n\
+GPStudio is a free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program.  If not, see <http://www.gnu.org/licenses/>\n.");
+}
+
+void NodeEditorWindows::aboutQt()
+{
+    QMessageBox::aboutQt(this);
 }

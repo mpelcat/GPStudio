@@ -49,6 +49,9 @@ private slots:
     void reloadNode();
     void reloadNodePath();
 
+    void about();
+    void aboutQt();
+
 private:
     GPNodeProject *_project;
 

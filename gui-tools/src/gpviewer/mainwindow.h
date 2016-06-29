@@ -50,6 +50,10 @@ public:
 
     void openNodeGeneratedFile(const QString fileName);
 
+public slots:
+    void about();
+    void aboutQt();
+
 protected:
     bool event(QEvent *event);
 

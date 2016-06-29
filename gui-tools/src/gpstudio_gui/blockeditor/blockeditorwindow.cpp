@@ -7,6 +7,7 @@
 #include <QMenuBar>
 #include <QToolBar>
 #include <QStatusBar>
+#include <QMessageBox>
 
 BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
@@ -121,17 +122,21 @@ void BlockEditorWindow::createToolBarAndMenu()
 
     nodeMenu->addSeparator();
     QAction *exit = new QAction("E&xit",this);
+    exit->setIcon(QIcon(":/icons/img/exit.png"));
     exit->setShortcut(QKeySequence::Quit);
     nodeMenu->addAction(exit);
     connect(exit, SIGNAL(triggered()), this, SLOT(close()));
 
-    // ============= View =============
-    QMenu *viewMenu = menuBar()->addMenu("&View");
-
-    viewMenu->addSeparator();
-
     // ============= Help =============
-    /*QMenu *helpMenu =*/ menuBar()->addMenu("&Help");
+    QMenu *helpMenu = menuBar()->addMenu("&Help");
+
+    QAction *aboutAction = new QAction("&About", this);
+    connect(aboutAction, SIGNAL(triggered(bool)), this, SLOT(about()));
+    helpMenu->addAction(aboutAction);
+
+    QAction *aboutQtAction = new QAction("About &Qt", this);
+    connect(aboutQtAction, SIGNAL(triggered(bool)), this, SLOT(aboutQt()));
+    helpMenu->addAction(aboutQtAction);
 
     _mainToolBar->addSeparator();
 }
@@ -157,4 +162,29 @@ void BlockEditorWindow::setBlock(ModelBlock *block)
     connect(_filesTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(openFile(QModelIndex)));
 
     _filesTreeView->expandAll();
+}
+
+void BlockEditorWindow::about()
+{
+    QMessageBox::about(this,"GPStudio: GPBlock 1.01","Copyright (C) 2016 Dream IP\n\
+\n\
+This sofware is part of GPStudio.\n\
+\n\
+GPStudio is a free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program.  If not, see <http://www.gnu.org/licenses/>\n.");
+}
+
+void BlockEditorWindow::aboutQt()
+{
+    QMessageBox::aboutQt(this);
 }
