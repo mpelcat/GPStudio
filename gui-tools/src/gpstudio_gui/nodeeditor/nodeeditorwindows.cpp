@@ -74,10 +74,12 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(nodeChanged(ModelNode *)), this, SLOT(reloadNode()));
     connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
 
-    _camExplorerWidget->setNode(_project->node());
     connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
     connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
     connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
+
+    connect(_project, SIGNAL(blockAdded(ModelBlock*)), _camExplorerWidget, SLOT(update()));
+    connect(_project, SIGNAL(blockRemoved(ModelBlock*)), _camExplorerWidget, SLOT(update()));
 
     if(project->node())
     {
@@ -277,6 +279,7 @@ void NodeEditorWindows::configNode()
 
 void NodeEditorWindows::reloadNode()
 {
+    _camExplorerWidget->setNode(_project->node());
     reloadNodePath();
 }
 

@@ -21,6 +21,7 @@
 #include "confignodedialog.h"
 
 #include "lib_parser/lib.h"
+#include "model/model_board.h"
 
 #include <QDebug>
 

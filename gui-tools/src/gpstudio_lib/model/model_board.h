@@ -30,7 +30,7 @@
 class ModelNode;
 class ModelBlock;
 
-class ModelBoard
+class GPSTUDIO_LIB_EXPORT ModelBoard
 {
 public:
     ModelBoard();

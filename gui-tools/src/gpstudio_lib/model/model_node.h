@@ -38,7 +38,7 @@ class ModelIOCom;
 class GPSTUDIO_LIB_EXPORT ModelNode
 {
 public:
-    ModelNode();
+    ModelNode(const QString &name=QString());
     ~ModelNode();
 
     const QString &name() const;

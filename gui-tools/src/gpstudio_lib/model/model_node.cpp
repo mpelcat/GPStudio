@@ -28,7 +28,8 @@
 #include "model_fiblock.h"
 #include "model_piblock.h"
 
-ModelNode::ModelNode()
+ModelNode::ModelNode(const QString &name)
+    : _name(name)
 {
     _valid = false;
     _board = NULL;

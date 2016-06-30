@@ -73,7 +73,7 @@ void GPNodeProject::newProject()
     closeProject();
 
     setPath("");
-    setNode(new ModelNode());
+    setNode(new ModelNode("new_project"));
     setModified(false);
 }
 

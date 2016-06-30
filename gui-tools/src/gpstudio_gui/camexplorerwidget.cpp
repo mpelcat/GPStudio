@@ -262,3 +262,11 @@ void CamExplorerWidget::selectBlock(QString blockName)
     //_camTreeView->selectionModel()->blockSignals(false);
     blockSignals(false);
 }
+
+void CamExplorerWidget::update()
+{
+    if(_camera)
+        setCamera(_camera);
+    if(_node)
+        setNode(_node);
+}
