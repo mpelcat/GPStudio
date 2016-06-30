@@ -80,7 +80,8 @@ SOURCES += \
     nodeeditor/undostack/nodecommands.cpp \
     nodeeditor/undostack/blockcommands.cpp \
     viewer/docviewer.cpp \
-    viewer/pdfviewer.cpp
+    viewer/pdfviewer.cpp \
+    compilelogwidget.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -126,7 +127,8 @@ HEADERS  += \
     nodeeditor/undostack/nodecommands.h \
     nodeeditor/undostack/blockcommands.h \
     viewer/docviewer.h \
-    viewer/pdfviewer.h
+    viewer/pdfviewer.h \
+    compilelogwidget.h
 
 RESOURCES += \
     icons.qrc \

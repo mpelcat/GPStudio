@@ -127,6 +127,16 @@ void NodeEditorWindows::createDocks()
     libTreeViewContent->setLayout(libTreeViewLayout);
     _libTreeViewDock->setWidget(libTreeViewContent);
     addDockWidget(Qt::LeftDockWidgetArea, _libTreeViewDock);
+
+    // cam explorer dock
+    _compileLogDock = new QDockWidget("Log", this);
+    QWidget *compileLogContent = new QWidget(_compileLogDock);
+    QLayout *compileLogLayout = new QVBoxLayout();
+    _compileLog = new CompileLogWidget();
+    compileLogLayout->addWidget(_compileLog);
+    compileLogContent->setLayout(compileLogLayout);
+    _compileLogDock->setWidget(compileLogContent);
+    addDockWidget(Qt::BottomDockWidgetArea, _compileLogDock);
 }
 
 void NodeEditorWindows::createToolBarAndMenu()
@@ -210,6 +220,7 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     QAction *makegenerateAction = new QAction("&Generate project", this);
     makegenerateAction->setIcon(QIcon(":/icons/img/make-generate.png"));
+    connect(makegenerateAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchGenerate()));
     _mainToolBar->addAction(makegenerateAction);
     projectMenu->addAction(makegenerateAction);
 

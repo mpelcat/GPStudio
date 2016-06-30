@@ -29,6 +29,7 @@
 
 #include "itemsview/blockview.h"
 #include "itemmodel/libtreeview.h"
+#include "compilelogwidget.h"
 
 class GPSTUDIO_GUI_EXPORT NodeEditorWindows : public QMainWindow
 {
@@ -62,6 +63,8 @@ private:
     void createDocks();
     QDockWidget *_libTreeViewDock;
     LibTreeView *_libTreeView;
+    QDockWidget *_compileLogDock;
+    CompileLogWidget *_compileLog;
 
     void createToolBarAndMenu();
     QToolBar *_mainToolBar;
