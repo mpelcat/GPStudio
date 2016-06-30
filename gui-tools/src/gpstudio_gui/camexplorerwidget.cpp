@@ -158,11 +158,32 @@ Camera *CamExplorerWidget::camera() const
 
 void CamExplorerWidget::setCamera(Camera *camera)
 {
+    _node = NULL;
     _camera = camera;
     if(_camera)
     {
         _camItemModel->clearAll();
         _camItemModel->addCamera(camera);
+        _camTreeView->expandToDepth(0);
+        _camTreeView->resizeColumnToContents(0);
+
+        //setRootProperty(NULL);
+    }
+}
+
+ModelNode *CamExplorerWidget::node() const
+{
+    return _node;
+}
+
+void CamExplorerWidget::setNode(ModelNode *node)
+{
+    _camera = NULL;
+    _node = node;
+    if(_node)
+    {
+        _camItemModel->clearAll();
+        _camItemModel->addNode(_node);
         _camTreeView->expandToDepth(0);
         _camTreeView->resizeColumnToContents(0);
 
@@ -207,6 +228,9 @@ void CamExplorerWidget::updateRootProperty()
     case CameraItem::BlockType:
         setRootProperty(item->block()->assocProperty());
         emit blockSelected(item->block()->name());
+        break;
+    case CameraItem::ModelBlockType:
+        emit blockSelected(item->modelBlock()->name());
         break;
     case CameraItem::FlowType:
         setRootProperty(item->flow()->assocProperty());

@@ -55,6 +55,8 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
     attachProject(nodeProject);
     if(!_project->node())
         _project->newProject();
+
+    _blockEditor = NULL;
 }
 
 NodeEditorWindows::~NodeEditorWindows()
@@ -71,6 +73,11 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     connect(_project, SIGNAL(nodeChanged(ModelNode *)), this, SLOT(reloadNode()));
     connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
+
+    _camExplorerWidget->setNode(_project->node());
+    connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
+    connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
+    connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
 
     if(project->node())
     {
@@ -117,6 +124,16 @@ void NodeEditorWindows::createDocks()
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
 
+    // cam explorer dock
+    _camExplorerDock = new QDockWidget("CamExplorer", this);
+    QWidget *camExplorerContent = new QWidget(_camExplorerDock);
+    QLayout *camExplorerLayout = new QVBoxLayout();
+    _camExplorerWidget = new CamExplorerWidget();
+    camExplorerLayout->addWidget(_camExplorerWidget);
+    camExplorerContent->setLayout(camExplorerLayout);
+    _camExplorerDock->setWidget(camExplorerContent);
+    addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
+
     // lib treeview dock
     _libTreeViewDock = new QDockWidget("LibExplorer", this);
     QWidget *libTreeViewContent = new QWidget(_libTreeViewDock);
@@ -126,9 +143,9 @@ void NodeEditorWindows::createDocks()
     libTreeViewLayout->addWidget(_libTreeView);
     libTreeViewContent->setLayout(libTreeViewLayout);
     _libTreeViewDock->setWidget(libTreeViewContent);
-    addDockWidget(Qt::LeftDockWidgetArea, _libTreeViewDock);
+    addDockWidget(Qt::RightDockWidgetArea, _libTreeViewDock);
 
-    // cam explorer dock
+    // compile log dock
     _compileLogDock = new QDockWidget("Log", this);
     QWidget *compileLogContent = new QWidget(_compileLogDock);
     QLayout *compileLogLayout = new QVBoxLayout();
@@ -291,4 +308,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>\n.");
 void NodeEditorWindows::aboutQt()
 {
     QMessageBox::aboutQt(this);
+}
+
+void NodeEditorWindows::showBlockDetails(QString blockName)
+{
+    if(blockName.isEmpty())
+        return;
+    if(_blockEditor)
+        delete _blockEditor;
+    _blockEditor = new BlockEditorWindow (this, _project->node()->getBlock(blockName));
+    _blockEditor->show();
 }

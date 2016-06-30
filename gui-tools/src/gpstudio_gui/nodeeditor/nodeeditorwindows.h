@@ -30,6 +30,9 @@
 #include "itemsview/blockview.h"
 #include "itemmodel/libtreeview.h"
 #include "compilelogwidget.h"
+#include "camexplorerwidget.h"
+
+#include "blockeditor/blockeditorwindow.h"
 
 class GPSTUDIO_GUI_EXPORT NodeEditorWindows : public QMainWindow
 {
@@ -53,6 +56,8 @@ private slots:
     void about();
     void aboutQt();
 
+    void showBlockDetails(QString blockName);
+
 private:
     GPNodeProject *_project;
 
@@ -61,13 +66,20 @@ private:
 
     // docks
     void createDocks();
+
+    QDockWidget *_camExplorerDock;
+    CamExplorerWidget *_camExplorerWidget;
+
     QDockWidget *_libTreeViewDock;
     LibTreeView *_libTreeView;
+
     QDockWidget *_compileLogDock;
     CompileLogWidget *_compileLog;
 
     void createToolBarAndMenu();
     QToolBar *_mainToolBar;
+
+    BlockEditorWindow *_blockEditor;
 };
 
 #endif // NODEEDITORWINDOW_H

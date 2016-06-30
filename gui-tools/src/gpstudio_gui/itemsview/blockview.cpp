@@ -187,21 +187,21 @@ void BlockView::mouseDoubleClickEvent(QMouseEvent *event)
     QGraphicsItem *item = _scene->itemAt(mapToScene(event->pos()), QTransform());
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
     if(blockItem)
-        emit blockDetailsRequest(blockItem->block()->name());
+        emit blockDetailsRequest(blockItem->name());
 }
 
 void BlockView::updateSelection()
 {
     if(_scene->selectedItems().count()==0)
     {
-        emit blockSelected(NULL);
+        emit blockSelected("");
         return;
     }
 
     QGraphicsItem *item = _scene->selectedItems().at(0);
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
     if(blockItem)
-        emit blockSelected(blockItem->block()->name());
+        emit blockSelected(blockItem->name());
 }
 
 void BlockView::selectBlock(QString blockName)

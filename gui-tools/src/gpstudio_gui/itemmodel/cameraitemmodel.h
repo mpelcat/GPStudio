@@ -29,6 +29,7 @@
 #include <QSortFilterProxyModel>
 
 class Camera;
+class ModelNode;
 
 class GPSTUDIO_GUI_EXPORT CameraItemModelNoSorted : public QAbstractItemModel
 {
@@ -44,6 +45,7 @@ public:
     };
 
     void addCamera(const Camera *camera);
+    void addNode(const ModelNode *node);
     void clearAll();
 
     // QAbstractItemModel interface

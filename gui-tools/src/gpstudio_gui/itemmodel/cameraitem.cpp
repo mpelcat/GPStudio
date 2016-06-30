@@ -34,15 +34,33 @@ CameraItem::CameraItem(const Camera *camera)
     _ptr = camera;
 }
 
+CameraItem::CameraItem(const ModelNode *node)
+{
+    _type = ModelNodeType;
+    _ptr = node;
+}
+
 CameraItem::CameraItem(const Block *block)
 {
     _type = BlockType;
     _ptr = block;
 }
 
+CameraItem::CameraItem(const ModelBlock *block)
+{
+    _type = ModelBlockType;
+    _ptr = block;
+}
+
 CameraItem::CameraItem(const Flow *flow)
 {
     _type = FlowType;
+    _ptr = flow;
+}
+
+CameraItem::CameraItem(const ModelFlow *flow)
+{
+    _type = ModelFlowType;
     _ptr = flow;
 }
 
@@ -58,19 +76,43 @@ CameraItem::Type CameraItem::type() const
 
 const Camera *CameraItem::camera() const
 {
-    if(_type==CameraType) return static_cast<const Camera*>(_ptr);
+    if(_type==CameraType)
+        return static_cast<const Camera*>(_ptr);
     return NULL;
 }
 
 const Block *CameraItem::block() const
 {
-    if(_type==BlockType) return static_cast<const Block*>(_ptr);
+    if(_type==BlockType)
+        return static_cast<const Block*>(_ptr);
     return NULL;
 }
 
 const Flow *CameraItem::flow() const
 {
-    if(_type==FlowType) return static_cast<const Flow*>(_ptr);
+    if(_type==FlowType)
+        return static_cast<const Flow*>(_ptr);
+    return NULL;
+}
+
+const ModelNode *CameraItem::modelNode() const
+{
+    if(_type==ModelNodeType)
+        return static_cast<const ModelNode*>(_ptr);
+    return NULL;
+}
+
+const ModelBlock *CameraItem::modelBlock() const
+{
+    if(_type==ModelBlockType)
+        return static_cast<const ModelBlock*>(_ptr);
+    return NULL;
+}
+
+const ModelFlow *CameraItem::modelFlow() const
+{
+    if(_type==ModelFlowType)
+        return static_cast<const ModelFlow*>(_ptr);
     return NULL;
 }
 
@@ -104,6 +146,21 @@ CameraItem *CameraItem::append(const Camera *camera)
     return item;
 }
 
+CameraItem *CameraItem::append(const ModelNode *node)
+{
+    CameraItem *item = new CameraItem(node);
+    item->_parent = this;
+    item->_row = _childrens.count();
+
+    foreach (ModelBlock *block, node->blocks())
+    {
+        item->append(block);
+    }
+
+    _childrens.append(item);
+    return item;
+}
+
 CameraItem *CameraItem::append(const Block *block)
 {
     CameraItem *item = new CameraItem(block);
@@ -122,7 +179,34 @@ CameraItem *CameraItem::append(const Block *block)
     return item;
 }
 
+CameraItem *CameraItem::append(const ModelBlock *block)
+{
+    CameraItem *item = new CameraItem(block);
+    item->_parent = this;
+    item->_row = _childrens.count();
+
+    if(!block->flows().empty())
+    {
+        foreach (ModelFlow *flow, block->flows())
+        {
+            item->append(flow);
+        }
+    }
+
+    _childrens.append(item);
+    return item;
+}
+
 CameraItem *CameraItem::append(const Flow *flow)
+{
+    CameraItem *item = new CameraItem(flow);
+    item->_parent = this;
+    item->_row = _childrens.count();
+    _childrens.append(item);
+    return item;
+}
+
+CameraItem *CameraItem::append(const ModelFlow *flow)
 {
     CameraItem *item = new CameraItem(flow);
     item->_parent = this;

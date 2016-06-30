@@ -50,6 +50,9 @@ public:
     Camera *camera() const;
     void setCamera(Camera *camera);
 
+    ModelNode *node() const;
+    void setNode(ModelNode *node);
+
     Mode modeView() const;
     void setModeView(const Mode &modeView);
 

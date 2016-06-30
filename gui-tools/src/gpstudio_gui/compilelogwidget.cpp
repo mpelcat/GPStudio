@@ -62,7 +62,7 @@ void CompileLogWidget::launchGenerate()
 {
     QString program = "gpnode";
     QStringList arguments;
-    arguments << "generate";
+    arguments << "generate" << "-o" << "build";
 
     _process = new QProcess(this);
     connect(_process, SIGNAL(readyReadStandardError()), this, SLOT(appendLog()));
