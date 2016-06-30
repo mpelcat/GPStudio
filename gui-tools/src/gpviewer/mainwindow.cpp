@@ -279,13 +279,13 @@ void MainWindow::updateWindowsMenu()
     }
 }
 
-void MainWindow::showBlockDetails(const Block *block)
+void MainWindow::showBlockDetails(QString blockName)
 {
-    if(!block)
+    if(blockName.isEmpty())
         return;
     if(_blockEditor)
         delete _blockEditor;
-    _blockEditor = new BlockEditorWindow (this, block->modelBlock());
+    _blockEditor = new BlockEditorWindow (this, _cam->block(blockName)->modelBlock());
     _blockEditor->show();
 }
 
@@ -319,9 +319,9 @@ void MainWindow::setupViewers()
     if(_cam)
         _blocksView->loadFromCam(_cam);
     QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_blocksView);
-    connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
-    connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
-    connect(_blocksView, SIGNAL(blockDetailsRequest(const Block*)), this, SLOT(showBlockDetails(const Block*)));
+    connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
+    connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
+    connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
     windows->setWindowTitle("Blocks view");
     windows->show();
 

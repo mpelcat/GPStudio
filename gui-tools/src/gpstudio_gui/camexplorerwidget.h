@@ -28,6 +28,8 @@
 #include "itemmodel/propertyitemmodel.h"
 #include "itemmodel/cameraitemmodel.h"
 
+#include "model/model_node.h"
+
 #include <QTreeView>
 #include <QBoxLayout>
 #include <QScrollArea>
@@ -55,10 +57,10 @@ protected slots:
     void updateRootProperty();
 
 public slots:
-    void selectBlock(const Block *block);
+    void selectBlock(QString blockName);
 
 signals:
-    void blockSelected(const Block *block);
+    void blockSelected(QString blockName);
 
 private:
     void setupWidgets();
@@ -72,6 +74,7 @@ private:
     QScrollArea *_propertyWidget;
 
     Camera *_camera;
+    ModelNode *_node;
 
     Mode _modeView;
 };

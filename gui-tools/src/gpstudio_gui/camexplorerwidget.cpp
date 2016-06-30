@@ -206,7 +206,7 @@ void CamExplorerWidget::updateRootProperty()
         break;
     case CameraItem::BlockType:
         setRootProperty(item->block()->assocProperty());
-        emit blockSelected(item->block());
+        emit blockSelected(item->block()->name());
         break;
     case CameraItem::FlowType:
         setRootProperty(item->flow()->assocProperty());
@@ -217,14 +217,14 @@ void CamExplorerWidget::updateRootProperty()
     }
 }
 
-void CamExplorerWidget::selectBlock(const Block *block)
+void CamExplorerWidget::selectBlock(QString blockName)
 {
     //_camTreeView->selectionModel()->blockSignals(true);
     blockSignals(true);
 
-    if(block)
+    if(!blockName.isEmpty())
     {
-        QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(block->name()), -1, Qt::MatchRecursive);
+        QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(blockName), -1, Qt::MatchRecursive);
         if(items.count()>0)
         {
             _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);

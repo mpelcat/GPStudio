@@ -65,7 +65,7 @@ private slots:
     void setBiSpace();
 
     void updateWindowsMenu();
-    void showBlockDetails(const Block *block);
+    void showBlockDetails(QString blockName);
 
 private:
     Ui::MainWindow *ui;

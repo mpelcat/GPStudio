@@ -69,7 +69,7 @@ protected slots:
     void updateSelection();
 
 public slots:
-    void selectBlock(const Block *block);
+    void selectBlock(QString blockName);
     void changeNode(ModelNode *node);
 
     void updateBlock(ModelBlock *block);
@@ -83,8 +83,8 @@ public slots:
     void zoomFit();
 
 signals:
-    void blockDetailsRequest(const Block *block);
-    void blockSelected(const Block *block);
+    void blockDetailsRequest(QString blockName);
+    void blockSelected(QString blockName);
 
     void blockMoved(ModelBlock *block, QPoint newPos);
     void blockDeleted(ModelBlock *block);
