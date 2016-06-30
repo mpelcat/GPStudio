@@ -54,7 +54,7 @@
 				</pin>
 			</pins>
 		</io>
-		<io name="gps" type="gps_data" driver="gps" optional="true" description="gps_s1216f8">
+		<io name="gps" type="sensor" driver="gps" optional="true" description="gps_s1216f8">
 			<pins>
 				<pin name="PIN_Y5" mapto="RXD">
 					<attributes>
@@ -68,7 +68,7 @@
 				</pin>
 			</pins>
 		</io>
-		<io name="mpu" type="imu_data" driver="mpu" optional="true" description="mpu6050">
+		<io name="mpu" type="sensor" driver="mpu" optional="true" description="mpu6050">
 			<pins>
 				<pin name="PIN_AA6" mapto="AD0">
 					<attributes>
