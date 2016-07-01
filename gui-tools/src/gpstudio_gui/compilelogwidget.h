@@ -56,6 +56,7 @@ public slots:
 
 protected slots:
     void exitProcess();
+    void errorProcess();
 
 private:
     void setupWidgets();

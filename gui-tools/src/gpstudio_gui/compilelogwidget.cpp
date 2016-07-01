@@ -43,7 +43,7 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     connect(_process, SIGNAL(readyReadStandardError()), this, SLOT(readProcess()));
     connect(_process, SIGNAL(readyReadStandardOutput()), this, SLOT(readProcess()));
     connect(_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(exitProcess()));
-    connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(exitProcess()));
+    connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(errorProcess()));
 
     emit actionAvailable(false);
     emit stopAvailable(true);
@@ -132,13 +132,13 @@ void CompileLogWidget::launchView()
 void CompileLogWidget::stopAll()
 {
     if(_process)
-        _process->kill();
+        _process->terminate();
 }
 
 void CompileLogWidget::exitProcess()
 {
     appendLog(QString("process '%1' exit with code %2 at %3. elapsed time: %4s")
-              .arg(_process->program())
+              .arg(_process->program() + " " + _process->arguments().join(" "))
               .arg(_process->exitCode())
               .arg(QDateTime::currentDateTime().toString())
               .arg((QDateTime::currentMSecsSinceEpoch() - _startProcessDate.toMSecsSinceEpoch())/1000));
@@ -148,6 +148,11 @@ void CompileLogWidget::exitProcess()
 
     _process->deleteLater();
     _process = NULL;
+}
+
+void CompileLogWidget::errorProcess()
+{
+    appendLog("failed...");
 }
 
 void CompileLogWidget::setupWidgets()
