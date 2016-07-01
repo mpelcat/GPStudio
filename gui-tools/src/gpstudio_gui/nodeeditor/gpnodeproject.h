@@ -25,6 +25,7 @@
 
 #include "model/model_node.h"
 
+#include <QStringList>
 #include <QUndoStack>
 
 #include <model/model_flowconnect.h>

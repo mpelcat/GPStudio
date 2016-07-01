@@ -1,5 +1,5 @@
 #define MyAppName "GPStudio"
-#define MyAppVersion "1.00"
+#define MyAppVersion "1.01"
 #define MyAppPublisher "Dream Institut Pascal"
 #define MyAppURL "http://gpstudio.univ-bpclermont.fr/"
 #define MyAppExeName "gpnode_gui.exe"
@@ -22,12 +22,12 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=.
-OutputBaseFilename=setup-gpstudio-{#MyAppVersion}
+OutputBaseFilename=setup-gpstudio_win64-qt5-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
 Uninstallable=yes
-LicenseFile=gpstudio_win64-qt5\license.txt
+LicenseFile=gpstudio_win64-qt5\licence.txt
 ChangesEnvironment=yes
 
 [Languages]
@@ -41,7 +41,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "gpstudio_win64-qt5\doc\*.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
 
 ; bin files
-Source: "gpstudio_win64-qt5\license.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\licenCe.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\gpnode_gui.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\gpviewer.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion

@@ -14,6 +14,7 @@ distrib-web: distrib
 	cp distrib/gpstudio_linux32-qt5-`cat version.txt`.tar.gz /var/www/gpstudio/download/distrib/
 	cp distrib/gpstudio_linux64-qt5-`cat version.txt`.tar.gz /var/www/gpstudio/download/distrib/
 	cp distrib/gpstudio_win64-qt5-`cat version.txt`.zip /var/www/gpstudio/download/distrib/
+	cp distrib/setup-gpstudio_win64-qt5-`cat version.txt`.exe /var/www/gpstudio/download/distrib/
 
 clean:
 	cd docsrc/ && make -f Makefile clean
