@@ -228,6 +228,14 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addAction(redoAction);
     editMenu->addAction(redoAction);
 
+    // ============= View =============
+    QMenu *viewMenu = menuBar()->addMenu("&View");
+
+    viewMenu->addSeparator();
+    viewMenu->addAction(_libTreeViewDock->toggleViewAction());
+    viewMenu->addAction(_camExplorerDock->toggleViewAction());
+    viewMenu->addAction(_compileLogDock->toggleViewAction());
+
     // ============= Project =============
     QMenu *projectMenu = menuBar()->addMenu("&Project");
     _mainToolBar->addSeparator();
