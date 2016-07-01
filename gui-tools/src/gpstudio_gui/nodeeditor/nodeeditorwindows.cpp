@@ -234,29 +234,46 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     QAction *makecleanAction = new QAction("&Clean project", this);
     makecleanAction->setIcon(QIcon(":/icons/img/make-clean.png"));
+    connect(makecleanAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchClear()));
+    connect(_compileLog, SIGNAL(actionAvailable(bool)), makecleanAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makecleanAction);
     projectMenu->addAction(makecleanAction);
 
     QAction *makegenerateAction = new QAction("&Generate project", this);
     makegenerateAction->setIcon(QIcon(":/icons/img/make-generate.png"));
     connect(makegenerateAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchGenerate()));
+    connect(_compileLog, SIGNAL(actionAvailable(bool)), makegenerateAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makegenerateAction);
     projectMenu->addAction(makegenerateAction);
 
     QAction *makecompileAction = new QAction("&Compile project", this);
     makecompileAction->setIcon(QIcon(":/icons/img/make-compile.png"));
+    connect(makecompileAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchCompile()));
+    connect(_compileLog, SIGNAL(actionAvailable(bool)), makecompileAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makecompileAction);
     projectMenu->addAction(makecompileAction);
 
     QAction *makesendAction = new QAction("&Program camera", this);
     makesendAction->setIcon(QIcon(":/icons/img/make-send.png"));
+    connect(makesendAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchSend()));
+    connect(_compileLog, SIGNAL(actionAvailable(bool)), makesendAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makesendAction);
     projectMenu->addAction(makesendAction);
 
     QAction *makerunAction = new QAction("&Launch camera with viewer", this);
     makerunAction->setIcon(QIcon(":/icons/img/run.png"));
+    connect(makerunAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchView()));
+    connect(_compileLog, SIGNAL(actionAvailable(bool)), makerunAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makerunAction);
     projectMenu->addAction(makerunAction);
+
+    QAction *stopAction = new QAction("&Stop current compilation", this);
+    stopAction->setIcon(QIcon(":/icons/img/stop.png"));
+    stopAction->setEnabled(false);
+    connect(stopAction, SIGNAL(triggered(bool)), _compileLog, SLOT(stopAll()));
+    connect(_compileLog, SIGNAL(stopAvailable(bool)), stopAction, SLOT(setEnabled(bool)));
+    _mainToolBar->addAction(stopAction);
+    projectMenu->addAction(stopAction);
 
     // ============= Help =============
     QMenu *helpMenu = menuBar()->addMenu("&Help");

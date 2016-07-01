@@ -26,6 +26,8 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QProcess>
+#include <QStringList>
+#include <QDateTime>
 
 class GPSTUDIO_GUI_EXPORT CompileLogWidget : public QWidget
 {
@@ -33,13 +35,27 @@ class GPSTUDIO_GUI_EXPORT CompileLogWidget : public QWidget
 public:
     explicit CompileLogWidget(QWidget *parent = 0);
 
+protected:
+    void launch(const QString &cmd, const QStringList &args);
+
 signals:
-    void stopRequest();
+    void actionAvailable(bool available);
+    void stopAvailable(bool available);
 
 public slots:
-    void appendLog();
+    void readProcess();
+    void appendLog(const QString &log);
 
+    void launchClear();
     void launchGenerate();
+    void launchCompile();
+    void launchSend();
+    void launchView();
+
+    void stopAll();
+
+protected slots:
+    void exitProcess();
 
 private:
     void setupWidgets();
@@ -47,6 +63,7 @@ private:
     QTextEdit *_textWidget;
 
     QProcess *_process;
+    QDateTime _startProcessDate;
 };
 
 #endif // COMPILELOGWIDGET_H

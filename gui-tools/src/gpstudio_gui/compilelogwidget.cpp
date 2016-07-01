@@ -26,9 +26,34 @@
 CompileLogWidget::CompileLogWidget(QWidget *parent) : QWidget(parent)
 {
     setupWidgets();
+    _process = NULL;
+
+    emit actionAvailable(true);
+    emit stopAvailable(false);
 }
 
-void CompileLogWidget::appendLog()
+void CompileLogWidget::appendLog(const QString &log)
+{
+    _textWidget->append(log);
+}
+
+void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
+{
+    _process = new QProcess(this);
+    connect(_process, SIGNAL(readyReadStandardError()), this, SLOT(readProcess()));
+    connect(_process, SIGNAL(readyReadStandardOutput()), this, SLOT(readProcess()));
+    connect(_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(exitProcess()));
+    connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(exitProcess()));
+
+    emit actionAvailable(false);
+    emit stopAvailable(true);
+
+    // _textWidget->clear();
+    _startProcessDate = QDateTime::currentDateTime();
+    _process->start(cmd, args);
+}
+
+void CompileLogWidget::readProcess()
 {
     QRegExp colorReg("\\x001b\\[([0-9]+)m([^\r\n\\x001b]*)");
 
@@ -48,14 +73,24 @@ void CompileLogWidget::appendLog()
         if(colorCode == "32")
             colorHTML = "green";
 
-        //_textWidget->appendPlainText("> ");
         html.append("<p><span style=\"color: "+colorHTML+"\">"+colorReg.cap(2)+"</span></p>");
-        //_textWidget->appendPlainText("");
 
         pos += colorReg.matchedLength();
     }
-    _textWidget->append(html);
-    //qDebug()<<_textWidget->toHtml();
+
+    dataRead = _process->readAllStandardError();
+    html.append("<p><span style=\"color: red\">"+dataRead+"</span></p>");
+
+    appendLog(html);
+}
+
+void CompileLogWidget::launchClear()
+{
+    QString program = "make";
+    QStringList arguments;
+    arguments << "clear";
+
+    launch(program, arguments);
 }
 
 void CompileLogWidget::launchGenerate()
@@ -64,12 +99,55 @@ void CompileLogWidget::launchGenerate()
     QStringList arguments;
     arguments << "generate" << "-o" << "build";
 
-    _process = new QProcess(this);
-    connect(_process, SIGNAL(readyReadStandardError()), this, SLOT(appendLog()));
-    connect(_process, SIGNAL(readyReadStandardOutput()), this, SLOT(appendLog()));
+    launch(program, arguments);
+}
 
-    // _textWidget->clear();
-    _process->start(program, arguments);
+void CompileLogWidget::launchCompile()
+{
+    QString program = "make";
+    QStringList arguments;
+    arguments << "compile";
+
+    launch(program, arguments);
+}
+
+void CompileLogWidget::launchSend()
+{
+    QString program = "make";
+    QStringList arguments;
+    arguments << "send";
+
+    launch(program, arguments);
+}
+
+void CompileLogWidget::launchView()
+{
+    QString program = "make";
+    QStringList arguments;
+    arguments << "view";
+
+    launch(program, arguments);
+}
+
+void CompileLogWidget::stopAll()
+{
+    if(_process)
+        _process->kill();
+}
+
+void CompileLogWidget::exitProcess()
+{
+    appendLog(QString("process '%1' exit with code %2 at %3. elapsed time: %4s")
+              .arg(_process->program())
+              .arg(_process->exitCode())
+              .arg(QDateTime::currentDateTime().toString())
+              .arg((QDateTime::currentMSecsSinceEpoch() - _startProcessDate.toMSecsSinceEpoch())/1000));
+
+    emit actionAvailable(true);
+    emit stopAvailable(false);
+
+    _process->deleteLater();
+    _process = NULL;
 }
 
 void CompileLogWidget::setupWidgets()
