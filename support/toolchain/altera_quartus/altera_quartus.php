@@ -382,8 +382,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
         saveIfDifferent($path . DIRECTORY_SEPARATOR . $filename, $content);
 
         // makefile local
-        $content = "GPS_LIB=" . LIB_PATH . "\r\n";
-        $content .= "GPS_VIEWER=" . LIB_PATH . "bin/\r\n";
+        $content = "GPS_LIB=" . str_replace("\\", '/', LIB_PATH) . "\r\n";
+        $content .= "GPS_VIEWER=" . str_replace("\\", '/', LIB_PATH) . "bin/\r\n";
         $content .= "QUARTUS_TOOLS_PATH=" . "\r\n";
         $content .= "" . "\r\n";
 
