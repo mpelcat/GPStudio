@@ -89,6 +89,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     // attach project to editors and viewers
     _blocksView->attachProject(_project);
+    _compileLog->setProject(_project);
 }
 
 void NodeEditorWindows::closeEvent(QCloseEvent *event)

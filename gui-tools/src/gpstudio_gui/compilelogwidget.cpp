@@ -22,6 +22,8 @@
 
 #include <QLayout>
 #include <QDebug>
+#include <QDir>
+#include <QCoreApplication>
 
 CompileLogWidget::CompileLogWidget(QWidget *parent) : QWidget(parent)
 {
@@ -48,20 +50,32 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     emit actionAvailable(false);
     emit stopAvailable(true);
 
+    /*QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("PATH", env.value("PATH")+";C:\\altera\\13.1\\quartus\\bin64");
+    _process->setProcessEnvironment(env);*/
+
     // _textWidget->clear();
     _startProcessDate = QDateTime::currentDateTime();
+    _process->setWorkingDirectory(QFileInfo(_project->path()).path());
     _process->start(cmd, args);
 }
 
 void CompileLogWidget::readProcess()
 {
+#if defined(Q_OS_WIN)
+    QRegExp colorReg("([^\r\n]*)");
+    int capint = 0;
+#else
     QRegExp colorReg("\\x001b\\[([0-9]+)m([^\r\n\\x001b]*)");
+    int capint = 2;
+#endif
 
+    QString html;
     QByteArray dataRead = _process->readAllStandardOutput();
+    QString stringRead = QString::fromLocal8Bit(dataRead);
 
     int pos = 0;
-    QString html;
-    while ((pos = colorReg.indexIn(dataRead, pos)) != -1)
+    while ((pos = colorReg.indexIn(stringRead, pos)) != -1)
     {
         QString colorCode = colorReg.cap(1);
         QString colorHTML = "black";
@@ -73,13 +87,13 @@ void CompileLogWidget::readProcess()
         if(colorCode == "32")
             colorHTML = "green";
 
-        html.append("<p><span style=\"color: "+colorHTML+"\">"+colorReg.cap(2)+"</span></p>");
+        html.append("<p><span style=\"color: "+colorHTML+"\">"+colorReg.cap(capint)+"</span></p>");
 
-        pos += colorReg.matchedLength();
+        pos += colorReg.matchedLength()+1;
     }
 
     dataRead = _process->readAllStandardError();
-    html.append("<p><span style=\"color: red\">"+dataRead+"</span></p>");
+    html.append("<p><span style=\"color: red\">"+QString::fromLocal8Bit(dataRead)+"</span></p>");
 
     appendLog(html);
 }
@@ -95,7 +109,11 @@ void CompileLogWidget::launchClear()
 
 void CompileLogWidget::launchGenerate()
 {
+#if defined(Q_OS_WIN)
+    QString program = "gpnode.bat";
+#else
     QString program = "gpnode";
+#endif
     QStringList arguments;
     arguments << "generate" << "-o" << "build";
 
@@ -137,7 +155,7 @@ void CompileLogWidget::stopAll()
 
 void CompileLogWidget::exitProcess()
 {
-    appendLog(QString("process '%1' exit with code %2 at %3. elapsed time: %4s")
+    appendLog(QString("process '%1' exit with code %2 at %3, elapsed time: %4s")
               .arg(_process->program() + " " + _process->arguments().join(" "))
               .arg(_process->exitCode())
               .arg(QDateTime::currentDateTime().toString())
@@ -152,7 +170,18 @@ void CompileLogWidget::exitProcess()
 
 void CompileLogWidget::errorProcess()
 {
-    appendLog("failed...");
+
+    if(_process)
+    {
+        appendLog(QString("failed exit code:%1 %2").arg(_process->exitCode()).arg(_process->errorString()));
+        _process->deleteLater();
+        _process = NULL;
+    }
+    else
+        appendLog("failed...");
+
+    emit actionAvailable(true);
+    emit stopAvailable(false);
 }
 
 void CompileLogWidget::setupWidgets()
@@ -169,4 +198,14 @@ void CompileLogWidget::setupWidgets()
     layout->addWidget(_textWidget);
 
     setLayout(layout);
+}
+
+GPNodeProject *CompileLogWidget::project() const
+{
+    return _project;
+}
+
+void CompileLogWidget::setProject(GPNodeProject *project)
+{
+    _project = project;
 }

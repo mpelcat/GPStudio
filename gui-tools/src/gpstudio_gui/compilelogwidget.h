@@ -29,11 +29,16 @@
 #include <QStringList>
 #include <QDateTime>
 
+#include "nodeeditor/gpnodeproject.h"
+
 class GPSTUDIO_GUI_EXPORT CompileLogWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit CompileLogWidget(QWidget *parent = 0);
+
+    GPNodeProject *project() const;
+    void setProject(GPNodeProject *project);
 
 protected:
     void launch(const QString &cmd, const QStringList &args);
@@ -65,6 +70,8 @@ private:
 
     QProcess *_process;
     QDateTime _startProcessDate;
+
+    GPNodeProject *_project;
 };
 
 #endif // COMPILELOGWIDGET_H
