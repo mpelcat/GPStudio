@@ -22,12 +22,12 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=.
-OutputBaseFilename=setup-gpstudio_win64-qt5-{#MyAppVersion}
+OutputBaseFilename=setup-gpstudio_win64-qt5-v{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
 Uninstallable=yes
-LicenseFile=gpstudio_win64-qt5\licence.txt
+LicenseFile=gpstudio_win64-qt5\license.txt
 ChangesEnvironment=yes
 
 [Languages]
@@ -41,7 +41,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "gpstudio_win64-qt5\doc\*.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
 
 ; bin files
-Source: "gpstudio_win64-qt5\licenCe.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\license.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\gpnode_gui.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\gpviewer.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
