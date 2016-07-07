@@ -60,6 +60,8 @@ signal data_valid_i             : std_logic;
 signal count                    : std_logic_vector(15 downto 0);
 signal read_data_s,hal_ready_s  : std_logic;
 signal data_valid_dl1,data_valid_dl2 : std_logic;
+signal read_data_dl             : std_logic;
+signal TX_s_dl                  : std_logic;
 
 begin
 
@@ -70,7 +72,7 @@ write_o		<= RX_filtered.dv;
 eth_tx_stream   <= TX_encapsulated.dv & TX_encapsulated.data;
 TX              <= TX_s;
 
-hal_ready_s     <= not TX_s.dv;
+
 read_data_o     <= read_data_s;
 hal_ready       <= hal_ready_s;
 
@@ -78,14 +80,25 @@ hal_ready       <= hal_ready_s;
 process(CLK125,reset_n)		
 begin
 	if reset_n='0' then
-		read_data_s <= '0';
+		read_data_s     <= '0';
+        hal_ready_s     <= '1';
 	elsif CLK125'event and CLK125='1' then
         data_valid_dl1      <= read_data_s;
-        data_valid_dl2      <= data_valid_dl1;   
+        data_valid_dl2      <= data_valid_dl1;  
+        TX_s_dl             <= TX_s.dv;
+        
+        --- Read data from com, read data when the flow_to_com is ready
 		if ready_i='1' and read_data_s='0' and hal_ready_s='1' then
 			read_data_s     <= '1';
         elsif ready_i='0' then     
             read_data_s     <= '0';
+        end if;
+        
+        --- Set hal_ready : high when it starts reading data and low when the packet has been fully sent
+        if read_data_s='1' and data_valid_dl1='0' then
+            hal_ready_s     <= '0';
+        elsif TX_s.dv='0' and TX_s_dl='1' then
+            hal_ready_s     <= '1';
         end if;
 	end if;
 end process;
