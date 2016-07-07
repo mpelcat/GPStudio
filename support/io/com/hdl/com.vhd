@@ -6,14 +6,13 @@ use work.com_package.all;
 
 	
 entity com is
-	generic(  fifo_in_N 		: integer	:= 4; 
-			  fifo_in_ID		: fifo_ID	:= ("000001","000010","000011",x"000100",others=>"000000"); 
-			  fifo_in_size		: fifo_size	:= (2048,1024,2048,512,others=>0);							
-			  one_packet		: integer	:= 1450;
-			  fifo_out_N		: integer	:= 2;
-			  fifo_out_ID		: fifo_ID	:= (x"30",x"31",others=>x"00");
-			  fifo_out_size	    : fifo_size	:= (512,1024,others=>0);
-			  MASTER_PORT		: std_logic_vector(15 downto 0)
+	generic(  FIFO_IN_N 		: integer	:= 4; 
+			  FIFO_IN_ID		: fifo_ID	:= ("000001","000010","000011",x"000100",others=>"000000"); 
+			  FIFO_IN_SIZE		: fifo_size	:= (2048,1024,2048,512,others=>0);							
+			  ONE_PACKET		: integer	:= 1450;
+			  FIFO_OUT_N		: integer	:= 3;
+			  FIFO_OUT_ID		: fifo_ID	:= ("110000","100001","100010",others=>x"100000");--- the first one is the master ID
+			  FIFO_OUT_SIZE	    : fifo_size	:= (512,1024,others=>0)
 			  );
 	port  (
 				clk_hal			: in std_logic;
@@ -27,11 +26,12 @@ entity com is
                 ready_o         : out std_logic;
                 hal_ready       : in std_logic;
                 
-				--- flow to master
+				--- Flow to master
 				flow_master		: out flow_t;
+                
                 --- From HAL to flows out
-				ID_out			: in std_logic_vector(15 downto 0);
-				flow_rx_in		: in flow_t;
+				data_i		    : in std_logic_vector(7 downto 0);
+				write_i	        : in std_logic;
                 
                 --- Flows in and out
 				flow_in0		: in flow_t;
@@ -53,21 +53,27 @@ end com;
 	
 architecture RTL of com is
 
------ Signals for fifos receiving flows (fifo_in)
-signal ready				: flow_in_signal;
-signal enable_s     		: flow_in_signal;
-signal read_data     		: flow_in_signal;
+----- Signals for fifos receiving flows (flow_to_com)
+signal ready				: array_std_logic;
+signal enable_i     		: array_std_logic;
+signal read_data     		: array_std_logic;
 signal fifo_in_flow_i		: array_flow_t;
-signal data          		: flow_in_bus8;
-signal data_size            : flow_in_bus16;
+signal data          		: array_bus8;
+signal data_size            : array_bus16;
 signal count_in,count_in_dl : integer range 0 to fifo_in_N-1;
-
 signal HAL_busy_dl		    : std_logic;
 signal wait_for_hal         : std_logic;
 signal ready_dl,ready_s     : std_logic;
 signal hal_ready_dl         : std_logic;
 
+----- Signals for fifos sending flows (com_to_flow)
+signal enable_o     		: std_logic;
+signal fifo_out_flow_o		: array_flow_t;
+
 begin	
+---------------------------------------------------------------------------------------------------------
+--------------------------                  FLOW_TO_COM_MUX 
+---------------------------------------------------------------------------------------------------------
 
 ----- Checking ready signals from fifos receiving flows
 process(clk_hal,reset_n)
@@ -95,36 +101,6 @@ data_o              <= data(count_in);
 data_size_o         <= data_size(count_in);
 read_data(count_in) <= read_data_i;
 
---- Fifo master		
-fifo_master_inst : entity work.fifo_flow_out
-	generic map( 
-               ID	  			=> MASTER_PORT,
-			   depth  		    => 128
-			  )
-	port map (
-				clk				=> clk_hal,
-				reset_n			=> reset_n,
-				ready			=> open,
-				port_detected	=> ID_out,
-				flow_in			=> flow_rx_in,
-				flow_out_clk	=> clk_proc,
-				flow_out		=> flow_master
-			);
-		
-------------à generer
-fifo_in_flow_i(0)		<=	flow_in0;
-fifo_in_flow_i(1)		<=	flow_in1;
-fifo_in_flow_i(2)		<=	flow_in2;
-fifo_in_flow_i(3)		<=	flow_in3;		
-		
---flow_out0				<=	fifo_out_flow_i(0);
---flow_out1				<=	fifo_out_flow_i(1);			
-			
-enable_s(0) 			<= enable_eth and enable_in0;
-enable_s(1) 			<= enable_eth and enable_in1;
-enable_s(2) 			<= enable_eth and enable_in2;
-enable_s(3) 			<= enable_eth and enable_in3;		
-			          
 ----- Instantiating fifo receiving flows
 flow_to_com_gen : for i in 0 to fifo_in_N-1 generate
     flow_to_com_inst : entity work.flow_to_com 
@@ -135,7 +111,7 @@ flow_to_com_gen : for i in 0 to fifo_in_N-1 generate
                     clk_hal			=> clk_hal,
                     clk_proc		=> clk_proc,
                     reset_n			=> reset_n,		
-                    enable			=> enable_s(i),
+                    enable			=> enable_i(i),
                     flow_in			=> fifo_in_flow_i(i),	
                     data_size       => data_size(i),
                     read_data       => read_data(i),
@@ -143,5 +119,43 @@ flow_to_com_gen : for i in 0 to fifo_in_N-1 generate
                     data_out		=> data(i)
 					);
 		end generate flow_to_com_gen; 
+        
+------------à generer
+fifo_in_flow_i(0)		<=	flow_in0;
+fifo_in_flow_i(1)		<=	flow_in1;
+fifo_in_flow_i(2)		<=	flow_in2;
+fifo_in_flow_i(3)		<=	flow_in3;		
+
+
+---------------------------------------------------------------------------------------------------------
+--------------------------                  COM_TO_FLOW_MUX 
+---------------------------------------------------------------------------------------------------------
+----- Instantiating com_to_flows blocks
+com_to_flow_gen : for i in 0 to fifo_out_N-1 generate
+    com_to_flow_inst : entity work.com_to_flow 
+    generic map(    ID_FIFO	  	=> fifo_out_ID(i),
+                    FIFO_DEPTH	=> fifo_out_size(i))
+    port map (
+                    clk_hal			=> clk_hal,
+                    clk_proc		=> clk_proc,
+                    reset_n			=> reset_n,		
+                    enable			=> enable_o,
+                    flow_out		=> fifo_out_flow_o(i),
+                    write_data      => write_i,
+                    data_in 		=> data_i
+					);
+		end generate com_to_flow_gen;
+ 
+flow_master             <=  fifo_out_flow_o(0);
+flow_out0				<=	fifo_out_flow_o(1);
+flow_out1				<=	fifo_out_flow_o(2);			
+
+----- Enable flows in and out		
+enable_i(0) 			<= enable_eth and enable_in0;
+enable_i(1) 			<= enable_eth and enable_in1;
+enable_i(2) 			<= enable_eth and enable_in2;
+enable_i(3) 			<= enable_eth and enable_in3;		
+			          
+enable_o    <= '1';
 
 end RTL;
