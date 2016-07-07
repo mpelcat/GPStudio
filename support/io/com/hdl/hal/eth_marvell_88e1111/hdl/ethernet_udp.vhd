@@ -14,8 +14,6 @@ entity ethernet_udp is
 		PHY_RESET_L 		: out STD_LOGIC;
 		PHY_MDC 			: out STD_LOGIC;
 		PHY_MDIO 			: inout STD_LOGIC;
-		GE_RXCLK 			: in STD_LOGIC;  
-		GE_TXCLK 			: out STD_LOGIC;
 		TX					: out rgmii_t;
 		RX					: in rgmii_t;
 		
@@ -40,9 +38,8 @@ entity ethernet_udp is
         read_data_o         : out std_logic;
 		
 		--- Transmitting flows received by link
-		flow_out_data		: out std_logic_vector(7 downto 0);
-		flow_out_dv			: out std_logic;
-		ID_port_out			: out std_logic_vector(15 downto 0)
+		data_o      		: out std_logic_vector(7 downto 0);
+		write_o 			: out std_logic
 	);
 	
 end ethernet_udp;
@@ -65,12 +62,11 @@ signal read_data_s,hal_ready_s  : std_logic;
 signal data_valid_dl1,data_valid_dl2 : std_logic;
 
 begin
-GE_TXCLK        <= CLK125;
 
-flow_out_data	<= RX_filtered.data;
-flow_out_dv		<= RX_filtered.dv;
+data_o	    <= RX_filtered.data;
+write_o		<= RX_filtered.dv;
 
-ID_port_out		<= port_detected;
+--ID_port_out		<= port_detected;
 eth_tx_stream   <= TX_encapsulated.dv & TX_encapsulated.data;
 TX              <= TX_s;
 
