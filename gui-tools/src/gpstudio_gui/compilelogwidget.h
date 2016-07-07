@@ -68,6 +68,8 @@ private:
 
     QTextEdit *_textWidget;
 
+    QString _program;
+    QStringList _arguments;
     QProcess *_process;
     QDateTime _startProcessDate;
 

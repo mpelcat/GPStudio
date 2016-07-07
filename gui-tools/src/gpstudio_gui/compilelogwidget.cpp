@@ -55,6 +55,8 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     _process->setProcessEnvironment(env);*/
 
     // _textWidget->clear();
+    _program = cmd;
+    _arguments = args;
     _startProcessDate = QDateTime::currentDateTime();
     _process->setWorkingDirectory(QFileInfo(_project->path()).path());
     _process->start(cmd, args);
@@ -156,7 +158,7 @@ void CompileLogWidget::stopAll()
 void CompileLogWidget::exitProcess()
 {
     appendLog(QString("process '%1' exit with code %2 at %3, elapsed time: %4s")
-              .arg(_process->program() + " " + _process->arguments().join(" "))
+              .arg(_program + " " + _arguments.join(" "))
               .arg(_process->exitCode())
               .arg(QDateTime::currentDateTime().toString())
               .arg((QDateTime::currentMSecsSinceEpoch() - _startProcessDate.toMSecsSinceEpoch())/1000));
