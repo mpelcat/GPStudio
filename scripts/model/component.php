@@ -99,6 +99,12 @@ class Component
      */
     public $components;
 
+    /**
+     * @brief Parent components, null if the component does not have a parent
+     * @var Component $parentComponent
+     */
+    public $parentComponent;
+
     protected $xml;
 
     /**
@@ -116,6 +122,8 @@ class Component
         $this->interfaces = array();
         $this->attributes = array();
         $this->components = array();
+        
+        $this->parentComponent = NULL;
     }
 
     /**
@@ -482,6 +490,7 @@ class Component
      */
     function addComponent($component)
     {
+        $component->parentComponent = $this;
         array_push($this->components, $component);
     }
 
@@ -607,6 +616,15 @@ class Component
                 $this->addReset(new Reset($resetXml));
             }
         }
+
+        // components
+        if (isset($this->xml->components))
+        {
+            foreach ($this->xml->components->component as $componentXml)
+            {
+                $this->addComponent(new Reset($componentXml));
+            }
+        }
     }
 
     /**
@@ -699,6 +717,17 @@ class Component
                 $xml_resets->appendChild($reset->getXmlElement($xml, $format));
             }
             $xml_element->appendChild($xml_resets);
+        }
+
+        // components
+        if (!empty($this->components))
+        {
+            $xml_components = $xml->createElement("components");
+            foreach ($this->components as $component)
+            {
+                $xml_components->appendChild($component->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_components);
         }
 
         return $xml_element;
