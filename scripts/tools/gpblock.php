@@ -58,36 +58,36 @@ if ($action == "new" and TOOL == "gpproc")
 {
     $options = getopt("a:n:");
     if (array_key_exists('n', $options))
-        $blockName = $options['n'];
+        $componentName = $options['n'];
     else
         error("You should specify a process name with -n", 1);
 
-    $block = new Process();
-    $block->name = $blockName;
-    $blockName.=".proc";
+    $component = new Process();
+    $component->name = $componentName;
+    $componentName.=".proc";
 
     $reset = new Reset();
     $reset->name = 'reset_n';
     $reset->group = 'reset_n';
-    $block->addReset($reset);
+    $component->addReset($reset);
 }
 elseif ($action == "new" and TOOL == "gpdevice")
 {
     $options = getopt("a:n:");
     if (array_key_exists('n', $options))
-        $blockName = $options['n'];
+        $componentName = $options['n'];
     else
         error("You should specify a device name with -n", 1);
 
-    $block = new IO();
-    $block->name = $blockName;
-    $block->driver = $blockName;
-    $blockName.=".io";
+    $component = new IO();
+    $component->name = $componentName;
+    $component->driver = $componentName;
+    $componentName.=".io";
 
     $reset = new Reset();
     $reset->name = 'reset_n';
     $reset->group = 'reset_n';
-    $block->addReset($reset);
+    $component->addReset($reset);
 }
 else
 {
@@ -96,8 +96,8 @@ else
         error("Cannot call this script directly", 1);
     if (TOOL == "gpproc")
     {
-        $blockName = findprocess();
-        if (!file_exists($blockName))
+        $componentName = findprocess();
+        if (!file_exists($componentName))
         {
             if (strpos($action, "list") === false)
                 error("Cannot find a valid block process in the current directory.", 1);
@@ -105,12 +105,12 @@ else
                 exit(1);
         }
         else
-            $block = new Process($blockName);
+            $component = new Process($componentName);
     }
     elseif (TOOL == "gpdevice")
     {
-        $blockName = findio();
-        if (!file_exists($blockName))
+        $componentName = findio();
+        if (!file_exists($componentName))
         {
             if (strpos($action, "list") === false)
                 error("Cannot find a valid block device in the current directory.", 1);
@@ -118,7 +118,7 @@ else
                 exit(1);
         }
         else
-            $block = new IO($blockName);
+            $component = new IO($componentName);
     }
     else
     {
@@ -143,19 +143,19 @@ switch ($action)
             $outDir = getcwd();
         mkdir_rec($outDir);
 
-        $block_generator = new Block_generator($block);
+        $component_generator = new Block_generator($component);
 
-        $block_generator->generateTopBlock($outDir);
-        message($block_generator->block_generator->name . '.vhd' . ' generated');
+        $component_generator->generateTopBlock($outDir);
+        message($component_generator->block_generator->name . '.vhd' . ' generated');
 
-        $block_generator->generateSlave($outDir);
-        if (isset($block_generator->slave_generator))
+        $component_generator->generateSlave($outDir);
+        if (isset($component_generator->slave_generator))
         {
-            message($block_generator->slave_generator->name . '.vhd' . ' generated');
+            message($component_generator->slave_generator->name . '.vhd' . ' generated');
         }
 
-        $block_generator->generateProcess($outDir);
-        message($block_generator->process_generator->name . '.vhd' . ' generated');
+        $component_generator->generateProcess($outDir);
+        message($component_generator->process_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;
@@ -168,9 +168,9 @@ switch ($action)
             $outDir = getcwd();
         mkdir_rec($outDir);
 
-        $block_generator = new Block_generator($block);
-        $block_generator->generateTopBlock($outDir);
-        message($block_generator->block_generator->name . '.vhd' . ' generated');
+        $component_generator = new Block_generator($component);
+        $component_generator->generateTopBlock($outDir);
+        message($component_generator->block_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;
@@ -183,9 +183,9 @@ switch ($action)
             $outDir = getcwd();
         mkdir_rec($outDir);
 
-        $block_generator = new Block_generator($block);
-        $block_generator->generateSlave($outDir);
-        message($block_generator->slave_generator->name . '.vhd' . ' generated');
+        $component_generator = new Block_generator($component);
+        $component_generator->generateSlave($outDir);
+        message($component_generator->slave_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;
@@ -198,9 +198,9 @@ switch ($action)
             $outDir = getcwd();
         mkdir_rec($outDir);
 
-        $block_generator = new Block_generator($block);
-        $block_generator->generateProcess($outDir);
-        message($block_generator->process_generator->name . '.vhd' . ' generated');
+        $component_generator = new Block_generator($component);
+        $component_generator->generateProcess($outDir);
+        message($component_generator->process_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;
@@ -213,15 +213,15 @@ switch ($action)
             $outDir = getcwd();
         mkdir_rec($outDir);
 
-        $block_generator = new Block_generator($block);
-        $block_generator->generateTb($outDir);
-        message($block_generator->block_generator->name . '.vhd' . ' generated');
+        $component_generator = new Block_generator($component);
+        $component_generator->generateTb($outDir);
+        message($component_generator->block_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;
 
     case "showblock":
-        $block->print_flow();
+        $component->print_flow();
         break;
 
     // =========================== files commands ======================
@@ -240,7 +240,7 @@ switch ($action)
         else
             error("You should specify a group for the file with -g", 1);
 
-        if ($block->getFileByPath($path) != NULL)
+        if ($component->getFileByPath($path) != NULL)
             error("This file already exists added with the same path.", 1);
         if (!file_exists($path))
             warning("This file does not exist, you should create it.", 4);
@@ -251,7 +251,7 @@ switch ($action)
         $file->type = $type;
         $file->group = $group;
 
-        $block->addFile($file);
+        $component->addFile($file);
         break;
 
     case "delfile":
@@ -261,15 +261,15 @@ switch ($action)
         else
             error("You should specify a path for the file with -p", 1);
 
-        if ($block->getFileByPath($path) == NULL)
+        if ($component->getFileByPath($path) == NULL)
             error("A file does not exist with the path '$path'.", 1);
 
-        $block->delFileByPath($path);
+        $component->delFileByPath($path);
         break;
 
     case "showfile":
         echo "files :" . "\n";
-        foreach ($block->files as $file)
+        foreach ($component->files as $file)
         {
             echo "  + " . $file . "\n";
         }
@@ -294,7 +294,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name))
             echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if ($block->getInstance($name, false) != NULL)
+        if ($component->getInstance($name, false) != NULL)
             error("This instance name already exists (insensitive case).", 1);
         if ($direction != "in" and $direction != "out")
             error("You should specify a direction for the flow with -d [in-out]", 1);
@@ -304,7 +304,7 @@ switch ($action)
         $flow->type = $direction;
         $flow->size = $size;
 
-        $block->addFlow($flow);
+        $component->addFlow($flow);
         break;
 
     case "delflow":
@@ -314,15 +314,15 @@ switch ($action)
         else
             error("You should specify a name for the flow with -n", 1);
 
-        if ($block->getFlow($name) == NULL)
+        if ($component->getFlow($name) == NULL)
             error("A flow does not exist with the name '$name'.", 1);
 
-        $block->delFlow($name);
+        $component->delFlow($name);
         break;
 
     case "showflow":
         echo "flows :" . "\n";
-        foreach ($block->flows as $flow)
+        foreach ($component->flows as $flow)
         {
             echo "  + " . $flow . "\n";
         }
@@ -342,9 +342,9 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if (($flow = $block->getFlow($name)) == NULL)
+        if (($flow = $component->getFlow($name)) == NULL)
             error("A flow does not exist with the name '$name'.", 1);
-        $check = $block->getFlow($newname, false);
+        $check = $component->getFlow($newname, false);
         if ($check != $flow and $check != NULL)
             error("This flow name '$check->name' already exists (insensitive case).", 1);
 
@@ -359,7 +359,7 @@ switch ($action)
         else
             error("You should specify a name for the flow with -n", 1);
 
-        if (($flow = $block->getFlow($name)) == NULL)
+        if (($flow = $component->getFlow($name)) == NULL)
             error("A flow does not exist with the name '$name'.", 1);
 
         if (array_key_exists('d', $options))
@@ -391,7 +391,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name))
             echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if ($block->getInstance($name) != NULL)
+        if ($component->getInstance($name) != NULL)
             error("This instance name already exists.", 1);
 
         if (array_key_exists('t', $options))
@@ -428,13 +428,13 @@ switch ($action)
 
         if ($regaddr != '' and $param->hard == false)
         {
-            if (log($regaddr, 2) > $block->pi_size_addr_rel or $block->pi_size_addr_rel == 0)
+            if (log($regaddr, 2) > $component->pi_size_addr_rel or $component->pi_size_addr_rel == 0)
             {
-                warning("Your relative adress is greater than the range of relative address ($block->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n" . TOOL . " setpisizeaddr -v " . ( ($regaddr == 0) ? 1 : (floor(log($regaddr, 2)) + 1)), 1);
+                warning("Your relative adress is greater than the range of relative address ($component->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n" . TOOL . " setpisizeaddr -v " . ( ($regaddr == 0) ? 1 : (floor(log($regaddr, 2)) + 1)), 1);
             }
         }
 
-        $block->addParam($param);
+        $component->addParam($param);
         break;
 
     case "delparam":
@@ -444,15 +444,15 @@ switch ($action)
         else
             error("You should specify a name for the param with -n", 1);
 
-        if ($block->getParam($name) == NULL)
+        if ($component->getParam($name) == NULL)
             error("A param does not exist with the name '$name'.", 1);
 
-        $block->delParam($name);
+        $component->delParam($name);
         break;
 
     case "showparam":
         echo "param :" . "\n";
-        foreach ($block->params as $param)
+        foreach ($component->params as $param)
         {
             echo "  + " . $param . "\n";
             if (!empty($param->parambitfields))
@@ -479,9 +479,9 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if (($param = $block->getParam($name)) == NULL)
+        if (($param = $component->getParam($name)) == NULL)
             error("A param does not exist with the name '$name'.", 1);
-        $check = $block->getParam($newname, false);
+        $check = $component->getParam($newname, false);
         if ($check != $param and $check != NULL)
             error("This param name '$check->name' already exists (insensitive case).", 1);
 
@@ -496,7 +496,7 @@ switch ($action)
         else
             error("You should specify a name for the param with -n", 1);
 
-        if (($param = $block->getParam($name)) == NULL)
+        if (($param = $component->getParam($name)) == NULL)
             error("A param does not exist with the name '$name'.", 1);
 
         if (array_key_exists('t', $options))
@@ -517,9 +517,9 @@ switch ($action)
 
         if (isset($regaddr) and $param->hard == false)
         {
-            if (log($regaddr, 2) > $block->pi_size_addr_rel or $block->pi_size_addr_rel == 0)
+            if (log($regaddr, 2) > $component->pi_size_addr_rel or $component->pi_size_addr_rel == 0)
             {
-                warning("Your relative adress is greater than the range of relative address ($block->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n" . TOOL . " setpisizeaddr -v " . ( ($regaddr == 0) ? 1 : (floor(log($regaddr, 2)) + 1)), 1);
+                warning("Your relative adress is greater than the range of relative address ($component->pi_size_addr_rel bits).\nPlease specify a new PI size address with :\n" . TOOL . " setpisizeaddr -v " . ( ($regaddr == 0) ? 1 : (floor(log($regaddr, 2)) + 1)), 1);
             }
         }
 
@@ -548,7 +548,7 @@ switch ($action)
         else
             error("The value of -v option need to be true/false or 0/1.", 1);
 
-        if (($param = $block->getParam($name)) == NULL)
+        if (($param = $component->getParam($name)) == NULL)
             error("A param does not exist with the name '$name'.", 1);
 
         $param->hard = $hard;
@@ -564,7 +564,7 @@ switch ($action)
         if (!is_numeric($size))
             error("You should specify a PI address relative size in bit with -v", 1);
 
-        $block->pi_size_addr_rel = $size;
+        $component->pi_size_addr_rel = $size;
 
         break;
 
@@ -587,7 +587,7 @@ switch ($action)
         $subPath = explode('.', $name);
         if (count($subPath) != 2)
             error("Invalide name for a bitfield (param.parambitfield).", 1);
-        $param = $block->getParam($subPath[0]);
+        $param = $component->getParam($subPath[0]);
         if ($param == NULL)
             error("Unknow param name '" . $subPath[0] . "'.", 1);
 
@@ -612,10 +612,10 @@ switch ($action)
         else
             error("You should specify a name for the bitfield with -n", 1);
 
-        if ($block->getParamBitField($name) == NULL)
+        if ($component->getParamBitField($name) == NULL)
             error("A bitfield does not exist with the name '$name'.", 1);
 
-        $block->delParamBitField($name);
+        $component->delParamBitField($name);
         break;
 
     case "showbitfield":
@@ -625,7 +625,7 @@ switch ($action)
         else
             error("You should specify a name for the bitfield with -n", 1);
 
-        if (($param = $block->getParam($name)) == NULL)
+        if (($param = $component->getParam($name)) == NULL)
             error("A param does not exist with the name '$name'.", 1);
 
         echo "bit fields of $param->name:" . "\n";
@@ -649,7 +649,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if (($bitfield = $block->getParambitfield($name)) == NULL)
+        if (($bitfield = $component->getParambitfield($name)) == NULL)
             error("A bitfield does not exist with the name '$name'.", 1);
         $check = $bitfield->parentParam->getParambitfield($newname, false);
         if ($check != $bitfield and $check != NULL)
@@ -670,7 +670,7 @@ switch ($action)
         else
             error("You should specify a bitfield bits selection for the bitfield with -b\nExemple: 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]", 1);
 
-        if (($paramBitField = $block->getParamBitField($name)) == NULL)
+        if (($paramBitField = $component->getParamBitField($name)) == NULL)
             error("A bitfield does not exist with the name '$name'.", 1);
 
         $paramBitField->bitfield = $bitfield;
@@ -695,7 +695,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name))
             echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if ($block->getInstance($name) != NULL)
+        if ($component->getInstance($name) != NULL)
             error("This instance name already exists.", 1);
         if ($direction != "in" and $direction != "out")
             error("You should specify a direction for the reset with -d [in-out]", 1);
@@ -705,7 +705,7 @@ switch ($action)
         $reset->direction = $direction;
         $reset->group = $group;
 
-        $block->addReset($reset);
+        $component->addReset($reset);
         break;
 
     case "delreset":
@@ -715,15 +715,15 @@ switch ($action)
         else
             error("You should specify a name for the reset with -n", 1);
 
-        if ($block->getReset($name) == NULL)
+        if ($component->getReset($name) == NULL)
             error("A reset does not exist with the name '$name'.", 1);
 
-        $block->delReset($name);
+        $component->delReset($name);
         break;
 
     case "showreset":
         echo "resets :" . "\n";
-        foreach ($block->resets as $reset)
+        foreach ($component->resets as $reset)
         {
             echo "  + " . $reset . "\n";
         }
@@ -743,9 +743,9 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if (($reset = $block->getReset($name)) == NULL)
+        if (($reset = $component->getReset($name)) == NULL)
             error("A reset does not exist with the name '$name'.", 1);
-        $check = $block->getReset($newname, false);
+        $check = $component->getReset($newname, false);
         if ($check != $reset and $check != NULL)
             error("This reset name '$check->name' already exists (insensitive case).", 1);
 
@@ -760,7 +760,7 @@ switch ($action)
         else
             error("You should specify a name for the reset with -n", 1);
 
-        if (($reset = $block->getReset($name)) == NULL)
+        if (($reset = $component->getReset($name)) == NULL)
             error("A reset does not exist with the name '$name'.", 1);
 
         if (array_key_exists('d', $options))
@@ -800,7 +800,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name))
             echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if ($block->getInstance($name) != NULL)
+        if ($component->getInstance($name) != NULL)
             error("This instance name already exists.", 1);
         if ($direction != "in" and $direction != "out")
             error("You should specify a direction for the clock with -d [in-out]", 1);
@@ -810,7 +810,7 @@ switch ($action)
         $clock->direction = $direction;
         $clock->domain = $domain;
 
-        $block->addClock($clock);
+        $component->addClock($clock);
         break;
 
     case "delclock":
@@ -820,15 +820,15 @@ switch ($action)
         else
             error("You should specify a name for the clock with -n", 1);
 
-        if ($block->getClock($name) == NULL)
+        if ($component->getClock($name) == NULL)
             error("A clock does not exist with the name '$name'.", 1);
 
-        $block->delClock($name);
+        $component->delClock($name);
         break;
 
     case "showclock":
         echo "clocks :" . "\n";
-        foreach ($block->clocks as $clock)
+        foreach ($component->clocks as $clock)
         {
             echo "  + " . $clock . "\n";
         }
@@ -848,9 +848,9 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if (($clock = $block->getClock($name)) == NULL)
+        if (($clock = $component->getClock($name)) == NULL)
             error("A clock does not exist with the name '$name'.", 1);
-        $check = $block->getClock($newname, false);
+        $check = $component->getClock($newname, false);
         if ($check != $clock and $check != NULL)
             error("This clock name '$check->name' already exists (insensitive case).", 1);
 
@@ -865,7 +865,7 @@ switch ($action)
         else
             error("You should specify a name for the clock with -n", 1);
 
-        if (($clock = $block->getClock($name)) == NULL)
+        if (($clock = $component->getClock($name)) == NULL)
             error("A clock does not exist with the name '$name'.", 1);
 
         if (array_key_exists('d', $options))
@@ -933,7 +933,7 @@ switch ($action)
 
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $name))
             echo error("This name '$name' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
-        if ($block->getInstance($name) != NULL)
+        if ($component->getInstance($name) != NULL)
             error("This instance name already exists.", 1);
         if ($type != "in" and $type != "out" and $type != "inout")
             error("You should specify a type for the external port with -t [in-out-inout]", 1);
@@ -943,7 +943,7 @@ switch ($action)
         $port->type = $type;
         $port->size = $size;
 
-        $block->addExtPort($port);
+        $component->addExtPort($port);
         break;
 
     case "delextport":
@@ -956,10 +956,10 @@ switch ($action)
         else
             error("You should specify a name for the file with -n", 1);
 
-        if ($block->getExtPort($name) == NULL)
+        if ($component->getExtPort($name) == NULL)
             error("A file does not exist with the path '$path'.", 1);
 
-        $block->delExtPort($name);
+        $component->delExtPort($name);
         break;
 
     case "showextport":
@@ -967,7 +967,7 @@ switch ($action)
             error("This command can only be used on a device block.", 1);
 
         echo "external ports :" . "\n";
-        foreach ($block->ext_ports as $ext_port)
+        foreach ($component->ext_ports as $ext_port)
         {
             echo "  + " . $ext_port . "\n";
         }
@@ -998,9 +998,9 @@ switch ($action)
         if (count($subprops) == 0)
             error("Invalid property name '$name'.", 1);
 
-        $parent = $block;
+        $parent = $component;
         $i = 0;
-        if (($instance = $block->getFlow($subprops[0], false)) != NULL)
+        if (($instance = $component->getFlow($subprops[0], false)) != NULL)
         {
             $parent = $instance;
             $i++;
@@ -1044,10 +1044,10 @@ switch ($action)
         else
             error("You should specify a name for the property with -n", 1);
 
-        if ($block->getPropertyPath($name) == NULL)
+        if ($component->getPropertyPath($name) == NULL)
             error("A property does not exist with the name '$name'.", 1);
 
-        $block->delPropertyPath($name);
+        $component->delPropertyPath($name);
         break;
 
     case "showproperty":
@@ -1058,8 +1058,8 @@ switch ($action)
             $name = "";
 
         $subprops = explode('.', $name);
-        $parent = $block;
-        if (($instance = $block->getFlow($subprops[0])) != NULL)
+        $parent = $component;
+        if (($instance = $component->getFlow($subprops[0])) != NULL)
         {
             $parent = $instance;
             unset($subprops[0]);
@@ -1093,17 +1093,17 @@ switch ($action)
         if (!preg_match("/^[A-Za-z][0-9A-Za-z_]*$/", $newname))
             echo error("This name '$newname' does not respect the naming convention ([A-Za-z][0-9A-Za-z_]*).", 1);
 
-        if (($property = $block->getPropertyPath($name)) == NULL)
+        if (($property = $component->getPropertyPath($name)) == NULL)
             error("A property does not exist with the name '$name'.", 1);
         if ($property->parentProperty == NULL)
         {
-            if ($block->getProperty($newname, false) != NULL)
+            if ($component->getProperty($newname, false) != NULL)
                 error("This property name '$newname' already exists.", 1);
         }
         else
         {
             $newpath = $property->parentProperty->path() . "." . $newname;
-            if ($block->getPropertyPath($newpath, false) != NULL)
+            if ($component->getPropertyPath($newpath, false) != NULL)
                 error("This property name '$newpath' already exists.", 1);
         }
 
@@ -1118,7 +1118,7 @@ switch ($action)
         else
             error("You should specify a name for the property with -n", 1);
 
-        if (($property = $block->getPropertyPath($name)) == NULL)
+        if (($property = $component->getPropertyPath($name)) == NULL)
             error("A property does not exist with the name '$name'.", 1);
 
         if (array_key_exists('l', $options))
@@ -1171,11 +1171,11 @@ switch ($action)
         else
             error("You should specify a name for the property with -v", 1);
 
-        $instance = $block->getPropertyPath($name);
+        $instance = $component->getPropertyPath($name);
         if ($instance == NULL)
-            $instance = $block->getParam($name);
+            $instance = $component->getParam($name);
         if ($instance == NULL)
-            $instance = $block->getParamBitField($name);
+            $instance = $component->getParamBitField($name);
         if ($instance == NULL)
             error("A property/bitfield/param does not exist with the name '$name'.", 1);
 
@@ -1206,7 +1206,7 @@ switch ($action)
         $name = $subprops[count($subprops) - 1];
         $propertyPath = array_slice($subprops, 0, count($subprops) - 1);
         $propertyPath = implode('.', $propertyPath);
-        $property = $block->getPropertyPath($propertyPath);
+        $property = $component->getPropertyPath($propertyPath);
         if ($property == NULL)
             error("This property name '$propertyPath' does not exist.", 1);
 
@@ -1235,10 +1235,10 @@ switch ($action)
         else
             error("You should specify a name for the enum with -n", 1);
 
-        if ($block->getPropertyEnumPath($name) == NULL)
+        if ($component->getPropertyEnumPath($name) == NULL)
             error("A enum does not exist with the name '$name'.", 1);
 
-        $block->delPropertyEnumPath($name);
+        $component->delPropertyEnumPath($name);
         break;
 
     case "showenum":
@@ -1248,7 +1248,7 @@ switch ($action)
         else
             error("You should specify a name of a property with -n", 1);
 
-        $property = $block->getPropertyPath($name);
+        $property = $component->getPropertyPath($name);
         if ($property == NULL)
             error("A property does not exist with the name '$name'.", 1);
 
@@ -1272,7 +1272,7 @@ switch ($action)
         else
             error("You should specify the help text with -v", 1);
 
-        if (($instance = $block->getInstance($name)) == NULL)
+        if (($instance = $component->getInstance($name)) == NULL)
             error("An instance does not exist with the name '$name'.", 1);
 
         $instance->desc = $desc;
@@ -1281,37 +1281,37 @@ switch ($action)
 
     // ========================== list commands ========================
     case "listfile":
-        foreach ($block->files as $file)
+        foreach ($component->files as $file)
             echo $file->path . ' ';
         $save = false;
         break;
 
     case "listflow":
-        foreach ($block->flows as $flow)
+        foreach ($component->flows as $flow)
             echo $flow->name . ' ';
         $save = false;
         break;
 
     case "listparam":
-        foreach ($block->params as $param)
+        foreach ($component->params as $param)
             echo $param->name . ' ';
         $save = false;
         break;
 
     case "listparamdot":
-        foreach ($block->params as $param)
+        foreach ($component->params as $param)
             echo $param->name . '. ';
         $save = false;
         break;
 
     case "listreset":
-        foreach ($block->resets as $reset)
+        foreach ($component->resets as $reset)
             echo $reset->name . ' ';
         $save = false;
         break;
 
     case "listclock":
-        foreach ($block->clocks as $clock)
+        foreach ($component->clocks as $clock)
             echo $clock->name . ' ';
         $save = false;
         break;
@@ -1335,13 +1335,13 @@ switch ($action)
         {
             if (count($wordRes) == 1)
             {
-                foreach ($block->properties as $property)
+                foreach ($component->properties as $property)
                 {
                     echo $property->name . ' ';
                     if (count($property->properties) > 0)
                         echo $property->name . '. ';
                 }
-                foreach ($block->flows as $flow)
+                foreach ($component->flows as $flow)
                 {
                     if (count($flow->properties) > 0)
                         echo $flow->name . '. ';
@@ -1350,9 +1350,9 @@ switch ($action)
             }
             else
             {
-                $instance = $block->getFlow($wordRes[0]);
+                $instance = $component->getFlow($wordRes[0]);
                 if ($instance == NULL)
-                    $instance = $block->getProperty($wordRes[0]);
+                    $instance = $component->getProperty($wordRes[0]);
                 if ($instance == NULL)
                     exit(1);
 
@@ -1378,7 +1378,7 @@ switch ($action)
         {
             if (count($wordRes) == 1)
             {
-                foreach ($block->params as $param)
+                foreach ($component->params as $param)
                 {
                     if (count($param->parambitfields) > 0)
                         echo $param->name . '. ';
@@ -1387,7 +1387,7 @@ switch ($action)
             }
             else
             {
-                $instance = $block->getParam($wordRes[0]);
+                $instance = $component->getParam($wordRes[0]);
                 if ($instance == NULL)
                     exit(0);
 
@@ -1404,4 +1404,4 @@ switch ($action)
 }
 
 if ($save)
-    $block->saveBlockDef($blockName);
+    $component->saveBlockDef($componentName);
