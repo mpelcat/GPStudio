@@ -93,6 +93,12 @@ class Component
      */
     public $resets;
 
+    /**
+     * @brief Array of children components
+     * @var array|Component $components
+     */
+    public $components;
+
     protected $xml;
 
     /**
@@ -109,6 +115,7 @@ class Component
         $this->resets = array();
         $this->interfaces = array();
         $this->attributes = array();
+        $this->components = array();
     }
 
     /**
@@ -435,7 +442,7 @@ class Component
         return null;
     }
 
-    /** @brief Add a attribute to the toolchain 
+    /** @brief Add an attribute to the toolchain 
      *  @param Attribute $attribute attribute to add to the block
      */
     function addAttribute($attribute)
@@ -447,8 +454,44 @@ class Component
      * found, return null
      *  @param string $name name of the attribute enum to search
      *  @param bool $casesens take care or not of the case of the name
-     *  @return Attribute found attribute * */
+     *  @return Attribute found attribute
+     */
     function getAttribute($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if ($attribute->name == $name)
+                    return $attribute;
+            }
+        }
+        else
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if (strcasecmp($attribute->name, $name) == 0)
+                    return $attribute;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add a component to the toolchain 
+     *  @param Component $component attribute to add to the block
+     */
+    function addComponent($component)
+    {
+        array_push($this->components, $component);
+    }
+
+    /** @brief return a reference to the component with the name $name, if not
+     * found, return null
+     *  @param string $name name of the component enum to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Component found component
+     */
+    function getComponent($name, $casesens = true)
     {
         if ($casesens)
         {
@@ -564,6 +607,15 @@ class Component
                 $this->addReset(new Reset($resetXml));
             }
         }
+    }
+
+    /**
+     * @brief Returns the type of the block as string, redefined by children.
+     * @return string type of the block.
+     */
+    public function type()
+    {
+        return 'component';
     }
 
     /**
