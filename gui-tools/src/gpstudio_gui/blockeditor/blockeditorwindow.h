@@ -62,6 +62,8 @@ protected:
     void setBlock(ModelBlock *block);
     QStandardItemModel *_filesModel;
     ModelBlock *_block;
+
+    QString _path;
 };
 
 #endif // BLOCKEDITORWINDOW_H

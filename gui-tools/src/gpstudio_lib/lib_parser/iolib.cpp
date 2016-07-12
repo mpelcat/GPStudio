@@ -21,6 +21,7 @@
 #include "iolib.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QSvgRenderer>
 #include <QDebug>
 #include <QPainter>
@@ -118,7 +119,11 @@ IOLib *IOLib::readFromFile(const QString &fileName)
         if(!doc.setContent(&file))
             qDebug()<<"Cannot open"<<file.fileName();
         else
+        {
             ioLib = IOLib::fromDomElement(doc.documentElement());
+            if(ioLib)
+                ioLib->setPath(QFileInfo(file).absolutePath());
+        }
         file.close();
     }
     return ioLib;

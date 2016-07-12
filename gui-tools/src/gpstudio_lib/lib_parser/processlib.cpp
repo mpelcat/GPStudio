@@ -21,6 +21,7 @@
 #include "processlib.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QSvgRenderer>
 #include <QDebug>
 #include <QPainter>
@@ -118,7 +119,11 @@ ProcessLib *ProcessLib::readFromFile(const QString &fileName)
         if(!doc.setContent(&file))
             qDebug()<<"Cannot open"<<file.fileName();
         else
+        {
             processLib = ProcessLib::fromDomElement(doc.documentElement());
+            if(processLib)
+                processLib->setPath(QFileInfo(file).absolutePath());
+        }
         file.close();
     }
     return processLib;

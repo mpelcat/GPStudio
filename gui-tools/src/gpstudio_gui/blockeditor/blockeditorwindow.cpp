@@ -9,6 +9,8 @@
 #include <QStatusBar>
 #include <QMessageBox>
 
+#include "lib_parser/lib.h"
+
 BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
 {
@@ -20,6 +22,16 @@ BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     setMinimumHeight(600);
 
     setBlock(block);
+
+    ProcessLib *process = Lib::getLib().process(_block->driver());
+    if(process)
+        _path = process->path();
+    else
+    {
+        IOLib *io = Lib::getLib().io(_block->driver());
+        if(io)
+            _path = io->path();
+    }
 }
 
 BlockEditorWindow::~BlockEditorWindow()
@@ -55,7 +67,7 @@ void BlockEditorWindow::openFile(const QModelIndex &indexFile)
         CodeEditor *codeEditor = new CodeEditor(this);
         _tabFiles->addTab(codeEditor, file->name());
         _tabFiles->setCurrentIndex(_tabFiles->count()-1);
-        codeEditor->loadFileCode(file->path());
+        codeEditor->loadFileCode(_path + "/" + file->path());
     }
 }
 
