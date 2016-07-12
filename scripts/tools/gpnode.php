@@ -40,7 +40,7 @@ switch ($action)
     // =========================== global commands =========================== 
     case "-h":
     case "--help":
-        echo "# gpnode command line tool to manage a gpstudio node (v0.95)" . "\n";
+        echo "# gpnode command line tool to manage a gpstudio node (v1.01)" . "\n";
         echo "" . "\n";
         echo "# === project ===" . "\n";
         echo "gpnode newproject -n <project-name>    # create a directory named <project-name> with a project file inside named <project-name>.node" . "\n";
@@ -78,7 +78,7 @@ switch ($action)
 
     case "-v":
     case "--version":
-        echo "# gpnode command line tool to manage a gpstudio node (v0.95)" . "\n";
+        echo "# gpnode command line tool to manage a gpstudio node (v1.01)" . "\n";
         exit(0);
 }
 

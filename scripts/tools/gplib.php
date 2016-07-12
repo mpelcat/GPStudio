@@ -42,7 +42,7 @@ switch ($action)
     // =========================== global commands =========================== 
     case "-h":
     case "--help":
-        echo "# gplib command line tool to manage gpstudio lib (v0.9)" . "\n";
+        echo "# gplib command line tool to manage gpstudio lib (v1.01)" . "\n";
         echo "gplib listprocess" . "\n";
         echo "gplib listio" . "\n";
         echo "gplib listboard" . "\n";
