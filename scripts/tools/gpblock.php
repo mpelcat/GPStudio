@@ -65,6 +65,11 @@ if ($action == "new" and TOOL == "gpproc")
     $block = new Process();
     $block->name = $blockName;
     $blockName.=".proc";
+
+    $reset = new Reset();
+    $reset->name = 'reset_n';
+    $reset->group = 'reset_n';
+    $block->addReset($reset);
 }
 elseif ($action == "new" and TOOL == "gpdevice")
 {
@@ -78,6 +83,11 @@ elseif ($action == "new" and TOOL == "gpdevice")
     $block->name = $blockName;
     $block->driver = $blockName;
     $blockName.=".io";
+
+    $reset = new Reset();
+    $reset->name = 'reset_n';
+    $reset->group = 'reset_n';
+    $block->addReset($reset);
 }
 else
 {
@@ -191,6 +201,21 @@ switch ($action)
         $block_generator = new Block_generator($block);
         $block_generator->generateProcess($outDir);
         message($block_generator->process_generator->name . '.vhd' . ' generated');
+
+        $save = false;
+        break;
+
+    case "generatetb":
+        $options = getopt("a:o:");
+        if (array_key_exists('o', $options))
+            $outDir = $options['o'];
+        else
+            $outDir = getcwd();
+        mkdir_rec($outDir);
+
+        $block_generator = new Block_generator($block);
+        $block_generator->generateTb($outDir);
+        message($block_generator->block_generator->name . '.vhd' . ' generated');
 
         $save = false;
         break;

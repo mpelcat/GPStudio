@@ -267,48 +267,51 @@ class VHDL_generator
         }
 
         // port declaration
-        $content.='	port (' . "\r\n";
-        $i = 0;
-        $len = count($this->ports);
-        $maxLenght = 0;
-        foreach ($this->ports as $port)
+        if(!empty($this->ports))
         {
-            if (!$port->space)
-            {
-                if (strlen($port->name) > $maxLenght)
-                    $maxLenght = strlen($port->name);
-            }
-        }
-        foreach ($this->ports as $port)
-        {
-            $i++;
-            if ($port->space)
-            {
-                $content.="\r\n" . '		--' . $port->name . "\r\n";
-            }
-            else
-            {
-                if ($port->size == 1 and $port->default != 'std_logic_vector')
-                {
-                    $content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic';
-                }
-                else
-                {
-                    if (is_numeric($port->size))
-                    {
-                        $content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . ($port->size - 1) . ' downto 0)';
-                    }
-                    else
-                    {
-                        $content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . $port->size . '-1 downto 0)';
-                    }
-                }
-                if ($i < $len)
-                    $content.=";\r\n";
-            }
-        }
-        $content.="\r\n";
-        $content.='	);' . "\r\n";
+			$content.='	port (' . "\r\n";
+			$i = 0;
+			$len = count($this->ports);
+			$maxLenght = 0;
+			foreach ($this->ports as $port)
+			{
+				if (!$port->space)
+				{
+					if (strlen($port->name) > $maxLenght)
+						$maxLenght = strlen($port->name);
+				}
+			}
+			foreach ($this->ports as $port)
+			{
+				$i++;
+				if ($port->space)
+				{
+					$content.="\r\n" . '		--' . $port->name . "\r\n";
+				}
+				else
+				{
+					if ($port->size == 1 and $port->default != 'std_logic_vector')
+					{
+						$content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic';
+					}
+					else
+					{
+						if (is_numeric($port->size))
+						{
+							$content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . ($port->size - 1) . ' downto 0)';
+						}
+						else
+						{
+							$content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . $port->size . '-1 downto 0)';
+						}
+					}
+					if ($i < $len)
+						$content.=";\r\n";
+				}
+			}
+			$content.="\r\n";
+			$content.='	);' . "\r\n";
+		}
         return $content;
     }
 
@@ -402,7 +405,17 @@ class VHDL_generator
                 }
                 else
                 {
-                    $content.='	signal ' . str_pad($signal->name, $maxLenght, ' ') . ' : ' . $signal->type . ' (' . ($signal->size - 1) . ' downto 0);' . "\r\n";
+					if (is_numeric($signal->size))
+					{
+						//$content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . ($port->size - 1) . ' downto 0)';
+						$content.='	signal ' . str_pad($signal->name, $maxLenght, ' ') . ' : ' . $signal->type . ' (' . ($signal->size - 1) . ' downto 0);' . "\r\n";
+					}
+					else
+					{
+						//$content.='		' . str_pad($port->name, $maxLenght, ' ') . ' : ' . $port->type . ' std_logic_vector(' . $port->size . '-1 downto 0)';
+						$content.='	signal ' . str_pad($signal->name, $maxLenght, ' ') . ' : ' . $signal->type . ' (' . $signal->size . '-1 downto 0);' . "\r\n";
+					}
+                    
                 }
             }
         }
