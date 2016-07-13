@@ -43,7 +43,82 @@ switch ($action)
     case "-h":
     case "--help":
         echo "# " . TOOL . " command line tool to manage a gpstudio block (v1.01)" . "\n";
-        // TODO complete
+        echo "# === global ===" . "\n";
+        echo TOOL . " new -n <" . KIND . "-name>" . "\n";
+        echo TOOL . " showblock" . "\n";
+        echo TOOL . " generatetop [-o <dir>]" . "\n";
+        if (TOOL != "gpcomp")
+        {
+            echo TOOL . " generateslave [-o <dir>]" . "\n";
+            echo TOOL . " generateprocess [-o <dir>]" . "\n";
+        }
+        echo TOOL . " generate [-o <dir>]" . "\n";
+        echo TOOL . " sethelp [-n <instance-name>] -v <help-text>" . "\n";
+        echo "" . "\n";
+        echo "# === files ===" . "\n";
+        echo TOOL . " addfile -p <path> -t <type> -g <group>" . "\n";
+        echo TOOL . " delfile -p <path>" . "\n";
+        echo TOOL . " showfile" . "\n";
+        echo "" . "\n";
+        echo "# === flows ===" . "\n";
+        echo TOOL . " addflow -n <flow-name> -d <direction> -s <size>" . "\n";
+        echo TOOL . " delflow -n <flow-name>" . "\n";
+        echo TOOL . " showflow" . "\n";
+        echo TOOL . " renameflow -n <flow-name> -v <new-name>" . "\n";
+        echo TOOL . " setflow -n <flow-name> [-d <direction>] [-s <size>]" . "\n";
+        echo "" . "\n";
+        echo "# === params ===" . "\n";
+        echo TOOL . " addparam -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>] [-m <property-map>]" . "\n";
+        echo TOOL . " delparam -n <param-name>" . "\n";
+        echo TOOL . " showparam" . "\n";
+        echo TOOL . " renameparam -n <param-name> -v <new-name>" . "\n";
+        echo TOOL . " setparam -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>]" . "\n";
+        echo TOOL . " fixparam -n <param-name> -v <true/false>" . "\n";
+        echo "" . "\n";
+        if (TOOL != "gpcomp")
+        {
+            echo "# === bitfields ===" . "\n";
+            echo TOOL . " addbitfield -n <param-name.bitfield-name> -b <bitfield> [-m <property-map>]" . "\n";
+            echo TOOL . " delbitfield -n <param-name.bitfield-name>" . "\n";
+            echo TOOL . " showbitfield -n <param-name>" . "\n";
+            echo TOOL . " renamebitfield -n <param-name.bitfield-name> -v <new-name>" . "\n";
+            echo TOOL . " setbitfield -n <bitfield-name> -b <bitfield>" . "\n";
+            echo "" . "\n";
+            echo "# === properties ===" . "\n";
+            echo TOOL . " addproperty -n <property-name> -t <type> [-v <default-value>] [-m <property-map>]" . "\n";
+            echo TOOL . " delproperty -n <property-name>" . "\n";
+            echo TOOL . " showproperty [-n <property/flow-name>]" . "\n";
+            echo TOOL . " renameproperty -n <property-name> -v <new-name>" . "\n";
+            echo TOOL . " setproperty -n <property-name> [-l <label>] [-t <type>] [-v <default-value>] [-r <min:max>] [-s <step>]" . "\n";
+            echo TOOL . " setpropertymap -n <param/property/bitfield-name> -v <property-map>" . "\n";
+            echo "" . "\n";
+            echo "# === enums ===" . "\n";
+            echo TOOL . " addenum -n <enum-name> -v <value> [-l <label>]" . "\n";
+            echo TOOL . " delenum -n <enum-name>" . "\n";
+            echo TOOL . " showenum [-n <property-name>]" . "\n";
+            echo "" . "\n";
+        }
+        echo "# === resets ===" . "\n";
+        echo TOOL . " addreset -n <reset-name> -d <direction> -g <group>" . "\n";
+        echo TOOL . " delreset -n <reset-name>" . "\n";
+        echo TOOL . " showreset" . "\n";
+        echo TOOL . " renamereset -n <reset-name> -v <new-name>" . "\n";
+        echo TOOL . " setreset -n <reset-name> [-d <direction>] [-g <group>]" . "\n";
+        echo "" . "\n";
+        echo "# === clocks ===" . "\n";
+        echo TOOL . " addclock -n <clock-name> -d <direction> [-g <clock-domain>]" . "\n";
+        echo TOOL . " delclock -n <clock-name>" . "\n";
+        echo TOOL . " showclock" . "\n";
+        echo TOOL . " renameclock -n <clock-name> -v <new-name>" . "\n";
+        echo TOOL . " setclock -n <clock-name> [-d <direction>] [-g <clock-domain> [-m <multiplier>]] [-f <clock-frequency>] [-r <min:max>]" . "\n";
+        if (TOOL == "gpdevice")
+        {
+            echo "" . "\n";
+            echo "# === external ports ===" . "\n";
+            echo TOOL . " addextport -n <port-name> -t <type> -s <size>" . "\n";
+            echo TOOL . " delextport -n <port-name>" . "\n";
+            echo TOOL . " showextport" . "\n";
+        }
         exit(0);
         break;
     case "-v":
