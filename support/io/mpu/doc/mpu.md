@@ -102,3 +102,17 @@ One sample is composed of 18 bytes (2 bytes for each axis from each sensor). The
 The I2C controller handle the data and clock line.  
 When it acquires samples, an offsets calculator is used to performs offsets depending on user values for each axis and for each sensor.  
 The data corrected are transmitted into a fifo that dispatch the sample into 3 flows.  
+
+### Configuration
+
+There are several things that you can modify in the configuration of the MPU block.
+
+The sample rate act on the refresh rate of the data. The flows will come out at this frequency. 
+Note that the compass has its own refresh rate that you can modify. It means that you can have a global sample rate at 50Hz while the compass is only refreshing at 5 Hz. The compass sample rate can be increased to 75Hz.
+
+There is also the possibilty to add hardware offsets. To do so, you have to be at the lowest sensibility (+/- 2g for accelero, +/- 250°/s for gyroscope). The value of the offset is adapted automatically to the sensibility you choose. 
+For example, if you choose +100 offset on accelero axis X, it will be +100 at +/-2g, +50 at +/-4g, etc.
+The data are coded on 16 signed bits (i.e. +/-16384). 
+If you want to add a +0.1g offset, you will set the value as follow : (0.1*16384)/2g = 819.
+
+
