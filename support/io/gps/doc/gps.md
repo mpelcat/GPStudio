@@ -61,7 +61,7 @@ TXD | out | Y | UART transmit line
 out* | flow out | Y | Flow from gps
 PI_slave | PI_slave | Y | Signals used to modify internal registers
 
-## Parameters
+### Parameters
 
 Parameter | Type | Required | Description
 -----|------|----------|------------
@@ -75,10 +75,23 @@ OUT_SIZE | int | Y | Flow data size (8 bits for the gps)
 
 The GPS receiver is a Skytraq S1216F8-GL. It can work with both GPS and Glonass satellites for more accuracy.   
 
-One sample is composed of the values of latitude and longitude and their orientation. The gps block is able to modify the configuration of the Skytraq such as the sample rate or which satellites to use : using only GPS satellites makes the acquisition to run up to 40Hz while using both GPS and Glonass satellites limits the acquisition at 20Hz.   
+One sample is composed of the values of latitude and longitude and their orientation. The gps block is able to modify the configuration of the Skytraq such as the sample rate or which satellites to use.
 The gps receiver handles the RXD line.  
 The gps transmitter receives the configuration data to send to the GPS and handles the TXD line.  
 The baud rate generator modifies the baud rate of the receiver and the transmitter depending on the configuration that have been chosen.  
 The gps controller detects the sequence containing the coordinates and writes them into the fifo.  
 The fifo outputs the gps flow when a sample is complete.  
+
+The output data are the coordinates in decimal degrees coded in ASCII, separated by commas. Here is an example :
+4576.0077,N,00311.1657,E
+
+You can make the conversion if needed :
+45°45'36.28" orientation North
+3°6'41.96" orientation East
+
+
+### Configuration
+
+The sample rate of the GPS can be modified following a list of predefined values. Using only GPS satellites makes the acquisition to run up to 40Hz while using both GPS and Glonass satellites limits the acquisition at 20Hz.  
+If you want to have a refresh rate at 40Hz, you will have to choose the GPS only mode. If you want more accuracy, you will choose GPS/GLONASS mode but you will be limited at 20Hz.
 
