@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -89,6 +89,24 @@ elseif ($action == "new" and TOOL == "gpdevice")
     $reset->group = 'reset_n';
     $component->addReset($reset);
 }
+elseif ($action == "new" and TOOL == "gpcomp")
+{
+    $options = getopt("a:n:");
+    if (array_key_exists('n', $options))
+        $componentName = $options['n'];
+    else
+        error("You should specify a device name with -n", 1);
+
+    $component = new Component();
+    $component->name = $componentName;
+    $component->driver = $componentName;
+    $componentName.=".comp";
+
+    $reset = new Reset();
+    $reset->name = 'reset_n';
+    $reset->group = 'reset_n';
+    $component->addReset($reset);
+}
 else
 {
     // find io or process and open it
@@ -119,6 +137,19 @@ else
         }
         else
             $component = new IO($componentName);
+    }
+    elseif (TOOL == "gpcomp")
+    {
+        $componentName = findcomp();
+        if (!file_exists($componentName))
+        {
+            if (strpos($action, "list") === false)
+                error("Cannot find a valid component in the current directory.", 1);
+            else
+                exit(1);
+        }
+        else
+            $component = new Component($componentName);
     }
     else
     {
@@ -397,13 +428,21 @@ switch ($action)
         if (array_key_exists('t', $options))
             $type = $options['t'];
         else
+        {
+            if (TOOL == "gpcomp")
+                error("Component param type have to be specified.", 1);
             $type = '';
+        }
         if (array_key_exists('v', $options))
             $value = $options['v'];
         else
             $value = '';
         if (array_key_exists('r', $options))
+        {
+            if (TOOL == "gpcomp")
+                error("Component cannot have register.", 1);
             $regaddr = $options['r'];
+        }
         else
             $regaddr = '';
         if (array_key_exists('m', $options))
@@ -556,6 +595,9 @@ switch ($action)
         break;
 
     case "setpisizeaddr":
+        if (TOOL == "gpcomp")
+            error("Component cannot have pi interface.", 1);
+
         $options = getopt("a:v:");
         if (array_key_exists('v', $options))
             $size = $options['v'];
@@ -570,6 +612,9 @@ switch ($action)
 
     // ========================= bitfields commands ====================
     case "addbitfield":
+        if (TOOL == "gpcomp")
+            error("Component cannot have bitfields.", 1);
+
         $options = getopt("a:n:b:m:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -606,6 +651,9 @@ switch ($action)
         break;
 
     case "delbitfield":
+        if (TOOL == "gpcomp")
+            error("Component cannot have bitfields.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -619,6 +667,9 @@ switch ($action)
         break;
 
     case "showbitfield":
+        if (TOOL == "gpcomp")
+            error("Component cannot have bitfields.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -637,6 +688,9 @@ switch ($action)
         break;
 
     case "renamebitfield":
+        if (TOOL == "gpcomp")
+            error("Component cannot have bitfields.", 1);
+
         $options = getopt("a:n:v:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -660,6 +714,9 @@ switch ($action)
         break;
 
     case "setbitfield":
+        if (TOOL == "gpcomp")
+            error("Component cannot have bitfields.", 1);
+
         $options = getopt("a:n:b:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -976,6 +1033,9 @@ switch ($action)
 
     // ======================= properties commands =====================
     case "addproperty":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:t:v:m:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1038,6 +1098,9 @@ switch ($action)
         break;
 
     case "delproperty":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1051,6 +1114,9 @@ switch ($action)
         break;
 
     case "showproperty":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1079,6 +1145,9 @@ switch ($action)
         break;
 
     case "renameproperty":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:v:");
 
         if (array_key_exists('n', $options))
@@ -1112,6 +1181,9 @@ switch ($action)
         break;
 
     case "setproperty":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:l:t:v:r:s:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1161,6 +1233,9 @@ switch ($action)
         break;
 
     case "setpropertymap":
+        if (TOOL == "gpcomp")
+            error("Component cannot have properties.", 1);
+
         $options = getopt("a:n:v:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1185,6 +1260,9 @@ switch ($action)
 
     // ========================= enums commands ========================
     case "addenum":
+        if (TOOL == "gpcomp")
+            error("Component cannot have enums.", 1);
+
         $options = getopt("a:n:v:l:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1229,6 +1307,9 @@ switch ($action)
         break;
 
     case "delenum":
+        if (TOOL == "gpcomp")
+            error("Component cannot have enums.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1242,6 +1323,9 @@ switch ($action)
         break;
 
     case "showenum":
+        if (TOOL == "gpcomp")
+            error("Component cannot have enums.", 1);
+
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
@@ -1404,4 +1488,9 @@ switch ($action)
 }
 
 if ($save)
-    $component->saveBlockDef($componentName);
+{
+    if(TOOL == "gpcomp")
+        $component->saveComponentDef($componentName);
+    else
+        $component->saveBlockDef($componentName);
+}

@@ -175,6 +175,23 @@ function findio()
         return '';
 }
 
+function findcomp()
+{
+    $comp = array();
+    $files = scandir(getcwd());
+    foreach ($files as $file)
+    {
+        if (substr($file, -5) === ".comp")
+        {
+            $comp[] = $file;
+        }
+    }
+    if (count($comp) == 1)
+        return $comp[0];
+    else
+        return '';
+}
+
 function listprocess()
 {
     $directory = SUPPORT_PATH . "process" . DIRECTORY_SEPARATOR;

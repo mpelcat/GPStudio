@@ -1,0 +1,18 @@
+#!/bin/bash
+
+args=""
+for arg in "$@"
+do
+	if [[ $arg == *" "* ]]
+	then
+		args+=" \"$arg\""
+	else
+		[ "$arg" = "" ] && args+=" \"\""
+		args+=" $arg"
+	fi
+done
+
+DIR=$(dirname "$0")
+CMD="php \"$DIR/../scripts/tools/gpcomp.php\" -a "
+CMD+=$args
+eval $CMD

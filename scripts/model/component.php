@@ -112,7 +112,7 @@ class Component
      * 
      * Initialise all the internal members
      */
-    function __construct()
+    function __construct($component = NULL)
     {
         $this->params = array();
         $this->files = array();
@@ -124,6 +124,20 @@ class Component
         $this->components = array();
         
         $this->parentComponent = NULL;
+        
+        $process_file = $component;
+        $this->driver = basename($component);
+        $this->path = getRelativePath(dirname($component));
+        $this->in_lib = false;
+        $this->name = str_replace(".comp", "", basename($component));
+
+        if (!file_exists($process_file))
+            error("File $process_file doesn't exist", 5, "Process");
+        if (!($this->xml = simplexml_load_file($process_file)))
+            error("Error when parsing $process_file", 5, "Process");
+
+        $this->parse_xml($this->xml);
+        $this->path = realpath(dirname($process_file));
     }
 
     /**
@@ -544,9 +558,12 @@ class Component
         $instance = $this->getParam($name, $casesens);
         if ($instance != NULL)
             return $instance;
-        $instance = $this->getPropertyPath($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
+        if ($this->type() != "component")
+        {
+            $instance = $this->getPropertyPath($name, $casesens);
+            if ($instance != NULL)
+                return $instance;
+        }
         $instance = $this->getReset($name, $casesens);
         if ($instance != NULL)
             return $instance;
@@ -731,5 +748,20 @@ class Component
         }
 
         return $xml_element;
+    }
+
+    /**
+     * @brief Helper function that save an '.comp' file.
+     * @param string $file file name to save
+     */
+    function saveComponentDef($file)
+    {
+        $xml = new DOMDocument("1.0", "UTF-8");
+        $xml->preserveWhiteSpace = false;
+        $xml->formatOutput = true;
+
+        $xml->appendChild($this->getXmlElement($xml, "blockdef"));
+
+        $xml->save($file);
     }
 }
