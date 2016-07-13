@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -37,10 +37,10 @@ else
 
 switch ($action)
 {
-    // =========================== global commands =========================== 
+    // =========================== global commands ===========================
     case "-h":
     case "--help":
-        echo "# gpnode command line tool to manage a gpstudio node (v1.01)" . "\n";
+        echo "# gpnode command line tool to manage a gpstudio node (" . VERSION . ")" . "\n";
         echo "" . "\n";
         echo "# === project ===" . "\n";
         echo "gpnode newproject -n <project-name>    # create a directory named <project-name> with a project file inside named <project-name>.node" . "\n";
@@ -78,7 +78,7 @@ switch ($action)
 
     case "-v":
     case "--version":
-        echo "# gpnode command line tool to manage a gpstudio node (v1.01)" . "\n";
+        echo "# gpnode command line tool to manage a gpstudio node (" . VERSION . ")" . "\n";
         exit(0);
 }
 
@@ -117,7 +117,7 @@ $save = true;
 // process action, pre config
 switch ($action)
 {
-    // =========================== project commands =========================== 
+    // =========================== project commands ===========================
     case "newproject":
         // nothing to do
         break;
@@ -197,7 +197,7 @@ switch ($action)
         $save = false;
         break;
 
-    // =========================== process commands =========================== 
+    // =========================== process commands ===========================
     case "addprocess":
         $options = getopt("a:d:n:");
         if (array_key_exists('d', $options))
@@ -317,7 +317,7 @@ switch ($action)
         $save = false;
         break;
 
-    // =========================== flow connections commands =========================== 
+    // =========================== flow connections commands ===========================
     case "connect":
     case "unconnect":
         $options = getopt("a:f:t:s:");
@@ -364,7 +364,7 @@ switch ($action)
         $save = false;
         break;
 
-    // =========================== clock domain commands =========================== 
+    // =========================== clock domain commands ===========================
     case "setclockdomain":
         $options = getopt("a:n:v:");
         if (array_key_exists('n', $options))
@@ -382,7 +382,7 @@ switch ($action)
         $save = false;
         break;
 
-    // =========================== block attributes commands =========================== 
+    // =========================== block attributes commands ===========================
     case "renameblock":
         $options = getopt("a:n:v:");
         if (array_key_exists('n', $options))
@@ -563,7 +563,7 @@ switch ($action)
         {
             if ($mode == "clockdomain")
             {
-                // 
+                //
             }
             else
             {

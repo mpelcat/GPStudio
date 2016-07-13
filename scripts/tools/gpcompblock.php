@@ -42,7 +42,7 @@ switch ($action)
     // =========================== global commands =====================
     case "-h":
     case "--help":
-        echo "# " . TOOL . " command line tool to manage a gpstudio block (v1.01)" . "\n";
+        echo "# " . TOOL . " command line tool to manage a gpstudio block (" . VERSION . ")" . "\n";
         echo "# === global ===" . "\n";
         echo TOOL . " new -n <" . KIND . "-name>" . "\n";
         echo TOOL . " showblock" . "\n";
@@ -123,7 +123,7 @@ switch ($action)
         break;
     case "-v":
     case "--version":
-        echo "# " . TOOL . " command line tool to manage a gpstudio block (v1.01)" . "\n";
+        echo "# " . TOOL . " command line tool to manage a gpstudio block (" . VERSION . ")" . "\n";
         exit(0);
         break;
 }

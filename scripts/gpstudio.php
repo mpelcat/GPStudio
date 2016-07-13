@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -20,17 +20,20 @@
 
 /**
  * @mainpage
- * 
+ *
  * This document is the complete documentation of GPStudio backend. It composed of two parts :
  * 	- the model and backend develloper documentation
  * 	- the user guide documentation
- * 
+ *
  * @section modelbckend model and backend
- * 
+ *
  * @section usrguide user guide
- * 
+ *
  * @defgroup base Base script model
  * */
+
+define("VERSION", "v1.01");
+
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 {
     $txtred = ""; # Red

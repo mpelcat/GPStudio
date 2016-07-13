@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -39,10 +39,10 @@ $lib = new Lib(SUPPORT_PATH);
 
 switch ($action)
 {
-    // =========================== global commands =========================== 
+    // =========================== global commands ===========================
     case "-h":
     case "--help":
-        echo "# gplib command line tool to manage gpstudio lib (v1.01)" . "\n";
+        echo "# gplib command line tool to manage gpstudio lib (" . VERSION . ")" . "\n";
         echo "gplib listprocess" . "\n";
         echo "gplib listio" . "\n";
         echo "gplib listboard" . "\n";
@@ -50,10 +50,10 @@ switch ($action)
         break;
     case "-v":
     case "--version":
-        echo "# gplib command line tool to manage gpstudio lib (v0.9)" . "\n";
+        echo "# gplib command line tool to manage gpstudio lib (" . VERSION . ")" . "\n";
         break;
 
-    // =========================== list commands =========================== 
+    // =========================== list commands ===========================
     case "listprocess":
         echo implode(" ", $lib->process) . "\n";
         break;
