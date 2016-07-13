@@ -19,4 +19,4 @@
  */
 
 define("TOOL", "gpproc");
-require("gpblock.php");
+require("gpcompblock.php");

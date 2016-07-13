@@ -19,4 +19,4 @@
  */
 
 define("TOOL", "gpdevice");
-require("gpblock.php");
+require("gpcompblock.php");
