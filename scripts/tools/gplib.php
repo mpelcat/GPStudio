@@ -47,6 +47,7 @@ switch ($action)
         echo "gplib listio" . "\n";
         echo "gplib listboard" . "\n";
         echo "gplib listtoolchain" . "\n";
+        echo "gplib listcomponent" . "\n";
         break;
     case "-v":
     case "--version":
@@ -68,6 +69,10 @@ switch ($action)
 
     case "listtoolchain":
         echo implode(" ", $lib->toolchains) . "\n";
+        break;
+
+    case "listcomponent":
+        echo implode(" ", $lib->components) . "\n";
         break;
 
     default:

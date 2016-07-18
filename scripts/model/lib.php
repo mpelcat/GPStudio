@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -50,6 +50,12 @@ class Lib
     public $toolchain;
 
     /**
+     * @brief Array of components name available in library
+     * @var array|string $components
+     */
+    public $components;
+
+    /**
      * @brief Constructor of Lib from an array of library path.
      * @param array|string $libpaths
      */
@@ -59,6 +65,7 @@ class Lib
         $this->boards = array();
         $this->process = array();
         $this->toolchains = array();
+        $this->components = array();
 
         if (!is_array($libpaths))
             $libpaths = array($libpaths);
@@ -120,6 +127,17 @@ class Lib
             {
                 if (file_exists($toolchainDir . $dir . DIRECTORY_SEPARATOR . $dir . ".php"))
                     $this->toolchains[] = $dir;
+            }
+        }
+
+        // components
+        $componentsDir = $libpath . DIRECTORY_SEPARATOR . "component" . DIRECTORY_SEPARATOR;
+        $dirs = scandir($componentsDir);
+        foreach ($dirs as $dir)
+        {
+            if (is_dir($componentsDir . $dir) and $dir != '.' and $dir != '..')
+            {
+                $this->components[] = $dir;
             }
         }
     }
