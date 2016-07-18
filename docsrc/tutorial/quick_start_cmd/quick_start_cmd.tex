@@ -100,9 +100,9 @@ arrow_sockit de0nano dreamcam_c3 stratixcam_s4
 \subsection{Add IO support that you need}
 Until now, we only specify the Dreamcam as platform, but it is a modular one, you can use different types of image sensor and communication. We need to define witch one we want to use by adding the support of theses peripherals. \\
 
-You can use this command to know the available ios for the platform that you have specified before:
+You can use this command to know the available devices for the platform that you have specified before:
 \begin{sample}
-> \textbf{gpnode listavailableio}
+> \textbf{gpnode listavailabledevice}
 \begin{Verbatim}
 led mt9 e2v ethernet usb
 \end{Verbatim}
@@ -111,7 +111,7 @@ led mt9 e2v ethernet usb
 For image sensor, you have two possibilities, mt9 from Aptina or e2v. For this example, we choose mt9:
 
 \begin{sample}
-> \textbf{gpnode addio} -n mt9
+> \textbf{gpnode adddevice} -n mt9
 \end{sample}
 
 By adding mt9 IO, gpnode fetches the name of the driver to use with this IO and copies the hardware driver files implementation. Like that, it allows you to use this image sensor in order to acquire pictures.\\
@@ -119,13 +119,13 @@ By adding mt9 IO, gpnode fetches the name of the driver to use with this IO and 
 Now, to enable a communication, you have the choice between Ethernet or USB. Choose USB support:
 
 \begin{sample}
-> \textbf{gpnode addio} -n usb
+> \textbf{gpnode adddevice} -n usb
 \end{sample}
 
 You can view the list of ios supports with the command \textbf{showio}:
 
 \begin{sample}
-> \textbf{gpnode showio}
+> \textbf{gpnode showdevice}
 \begin{Verbatim}
 ios :
   + mt9 [mt9]

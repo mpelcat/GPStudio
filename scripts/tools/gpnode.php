@@ -166,7 +166,7 @@ switch ($action)
         $node->addIo($deviceName);
         break;
 
-    case "addio":
+    case "delio":
         warning("delio is a deprecated command, please use deldevice instead.", 1);
     case "deldevice":
         $options = getopt("a:n:");
@@ -182,7 +182,7 @@ switch ($action)
         break;
 
     case "showio":
-        warning("addio is a deprecated command, please use showdevice instead.", 1);
+        warning("showio is a deprecated command, please use showdevice instead.", 1);
     case "showdevice":
         $options = getopt("a:");
 
