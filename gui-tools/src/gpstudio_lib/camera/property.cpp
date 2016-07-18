@@ -251,14 +251,17 @@ void Property::setRow(int row)
 
 Property *Property::path(const QString &path) const
 {
-    if(path.isEmpty() || path==_name || path=="value" || path=="bits") return (Property *)this;
+    if(path.isEmpty() || path=="value" || path=="bits")
+        return (Property *)this;
     int index = path.indexOf(".");
     if(index==-1)
     {
-        if(_subPropertiesMap.contains(path)) return _subPropertiesMap[path];
+        if(_subPropertiesMap.contains(path))
+            return _subPropertiesMap[path];
         else return NULL;
     }
-    if(_subPropertiesMap.contains(path.left(index))) return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
+    if(_subPropertiesMap.contains(path.left(index)))
+        return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
     return NULL;
 }
 
