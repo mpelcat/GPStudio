@@ -8,7 +8,7 @@ use altera_mf.altera_mf_components.all;
 use work.harris_package_components.all;
 --use work.harris_package_variables.all;
 
-entity pipliner_7x7 is
+entity pipliner_filter is
 	generic (
 		LINE_WIDTH_MAX : integer;
 		PIX_WIDTH : integer;
@@ -29,32 +29,32 @@ entity pipliner_7x7 is
 		
 		enable_i      : in std_logic;
 		widthimg_i    : in std_logic_vector(15 downto 0);
-                pixel_table_7_7 : out pixel_matrix
+                pixel_table_7_7 : out filter_matrix
 	);
 
-end pipliner_7x7;
+end pipliner_filter;
 
 
 
-architecture rtl of pipliner_7x7 is
+architecture rtl of pipliner_filter is
 
-type              pixel_mask is array (0 to 2,0 to 2) of signed((PIX_WIDTH) downto 0);
+--type              pixel_mask is array (0 to 2,0 to 2) of signed((PIX_WIDTH) downto 0);
 type              pix_out_signal is array (0 to 5) of std_logic_vector((PIX_WIDTH-1) downto 0);
 --type              pixel_matrix is array (0 to 6,0 to 6) of std_logic_vector((PIX_WIDTH-1) downto 0);
 --type              filter_matrix is array (0 to 6,0 to 6) of std_logic_vector(RESULT_LENGTH downto 0);
-constant          RESULT_LENGHT : integer := 64;   
+constant          RESULT_LENGHT : integer := 16;   
 constant          FIFO_LENGHT : integer := LINE_WIDTH_MAX-7;      
 constant          FIFO_LENGHT_WIDTH : integer := integer(ceil(log2(real(FIFO_LENGHT))));
-constant          Ix_sobel_mask:pixel_mask:=((to_signed(-1,9),to_signed(0,9),to_signed(1,9)),(to_signed(-1,9),to_signed(0,9),to_signed(1,9)),(to_signed(-1,9),to_signed(0,9),to_signed(1,9)));
-constant          Iy_sobel_mask:pixel_mask:=((to_signed(-1,9),to_signed(-1,9),to_signed(-1,9)),(to_signed(0,9),to_signed(0,9),to_signed(0,9)),(to_signed(1,9),to_signed(1,9),to_signed(1,9))); 
+--constant          Ix_sobel_mask:pixel_mask:=((to_signed(-1,9),to_signed(0,9),to_signed(1,9)),(to_signed(-1,9),to_signed(0,9),to_signed(1,9)),(to_signed(-1,9),to_signed(0,9),to_signed(1,9)));
+--constant          Iy_sobel_mask:pixel_mask:=((to_signed(-1,9),to_signed(-1,9),to_signed(-1,9)),(to_signed(0,9),to_signed(0,9),to_signed(0,9)),(to_signed(1,9),to_signed(1,9),to_signed(1,9))); 
 signal            fv_signal,out_clk_dv:std_logic; 
 signal            widthimg_temp : std_logic_vector(15 downto 0):=widthimg_i;
 signal            sig_wrreq:std_logic:='1';
 signal            sig_rdreq:std_logic:='0';
 signal            line_pix_out:pix_out_signal;
 shared variable   R:std_logic_vector((RESULT_LENGHT-1) downto 0); 
-shared variable   Prev_R_max:std_logic_vector((RESULT_LENGHT-1) downto 0):=x"00000001DCD65000"; 
-shared variable   R_max:std_logic_vector((RESULT_LENGHT-1) downto 0):=x"00000001DCD65000";   
+shared variable   Prev_R_max:std_logic_vector((RESULT_LENGHT-1) downto 0);--:=x"0001DCD65000"; 
+shared variable   R_max:std_logic_vector((RESULT_LENGHT-1) downto 0);--:=x"0001DCD65000";   
 shared variable   conv_value_x,conv_value_y:signed(17 downto 0):=to_signed(0,18);
 shared variable   conv_value:integer:=0;
 shared variable   param_changing_reset:std_logic:='0';      
@@ -65,15 +65,12 @@ shared variable   Ixx_vec,Iyy_vec:std_logic_vector(31 downto 0);
 shared variable   mult_a,mult_b,mult_2_a,mult_2_b,mult_3_a,mult_3_b:std_logic_vector(31 downto 0);
 shared variable   mult_s,mult_2_s,mult_3_s,comp_a,comp_a_2,comp_b,comp_b_2,add_a_1,add_b_1,add_b_2,add_s_inter,add_s :std_logic_vector(63 downto 0);
 shared variable   comp_s,comp_s_2:std_logic:='1';
-shared variable   pixel_matrix_kernel:pixel_matrix;
-
-
-
+shared variable   pixel_matrix_kernel:filter_matrix;--pixel_matrix;
 
 
 component scfifo
-   generic
-   (        LPM_WIDTH: POSITIVE;
+        generic
+        ( LPM_WIDTH: POSITIVE;
             LPM_WIDTHU: POSITIVE;
 	    LPM_NUMWORDS: POSITIVE;
             LPM_SHOWAHEAD: STRING := "OFF";
@@ -209,7 +206,7 @@ G_1 : for i in 0 to 5 generate
                        else
                    end if;
 	end process;
-	out_data<= std_logic_vector(to_unsigned(conv_value, 8));
+	--out_data<= std_logic_vector(to_unsigned(conv_value, 8));
 	out_dv <=  out_clk_dv; 
 	out_fv <= fv_signal;
         pixel_table_7_7<=pixel_matrix_kernel;

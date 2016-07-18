@@ -32,6 +32,10 @@
 		<file name="harris_process.vhd" path="hdl/harris_process.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="harris_slave.vhd" path="hdl/harris_slave.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="pipliner_7x7.vhd" path="hdl/pipliner_7x7.vhd" type="vhdl" group="hdl" desc=""/>
+                <file name="pipliner_filter.vhd" path="hdl/pipliner_filter.vhd" type="vhdl" group="hdl" desc=""/>
+                <file name="harris_pack.vhd" path="hdl/harris_pack.vhd" type="vhdl" group="hdl" desc=""/>
+                <file name="harris_wrapper.vhd" path="hdl/harris_wrapper.vhd" type="vhdl" group="hdl" desc=""/>
+                
 	</files>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
