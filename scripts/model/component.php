@@ -125,19 +125,26 @@ class Component
         
         $this->parentComponent = NULL;
         
-        $process_file = $component;
-        $this->driver = basename($component);
-        $this->path = getRelativePath(dirname($component));
-        $this->in_lib = false;
-        $this->name = str_replace(".comp", "", basename($component));
+        if($component == NULL)
+        {
+            // nothing to do
+        }
+        else
+        {
+            $process_file = $component;
+            $this->driver = basename($component);
+            $this->path = getRelativePath(dirname($component));
+            $this->in_lib = false;
+            $this->name = str_replace(".comp", "", basename($component));
 
-        if (!file_exists($process_file))
-            error("File $process_file doesn't exist", 5, "Process");
-        if (!($this->xml = simplexml_load_file($process_file)))
-            error("Error when parsing $process_file", 5, "Process");
+            if (!file_exists($process_file))
+                error("File $process_file doesn't exist", 5, "Process");
+            if (!($this->xml = simplexml_load_file($process_file)))
+                error("Error when parsing $process_file", 5, "Process");
 
-        $this->parse_xml($this->xml);
-        $this->path = realpath(dirname($process_file));
+            $this->parse_xml($this->xml);
+            $this->path = realpath(dirname($process_file));
+        }
     }
 
     /**
