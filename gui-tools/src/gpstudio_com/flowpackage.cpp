@@ -108,10 +108,15 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
             QRgb *line = (QRgb*)img->scanLine(y);
             for(x=0; x<width; x++)
             {
-                //img->setPixel(x,y,qRgb(*ptr,*ptr,*ptr));
                 line[x]=qRgb(*ptr,*ptr,*ptr);
                 ptr++;
             }
+        }
+        for(y=rheight; y<height; y++)
+        {
+            QRgb *line = (QRgb*)img->scanLine(y);
+            for(x=0; x<width; x++)
+                line[x]=qRgb(10,0,100);
         }
     }
 
