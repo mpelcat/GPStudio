@@ -100,6 +100,8 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
         int x, y;
         //int rwidth = width;
         int rheight = _data.size()/width;
+        if(rheight > height)
+            rheight = height;
 
         for(y=0; y<rheight; y++)
         {
