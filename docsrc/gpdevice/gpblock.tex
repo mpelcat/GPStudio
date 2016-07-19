@@ -520,7 +520,7 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 \paramcommand{
 -n & name of the bit field composed by the param name, a dot and the bits field name & param.b0 \\
 \hline
--b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
+-b & bits field & 1\newline 8-4 \newline 2,5,10-9 \\
 \hline
 -m & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
 }
@@ -592,11 +592,11 @@ Allows to modify bit field bits selection.\\
 \paramcommand{
 -n & name of the bit field & param0.bf0 \\
 \hline
--b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
+-b & bits field & 1\newline 8-4 \newline 2,5,10-9 \\
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} setparam} -n param0.bf0 -b 0-2
+> \textbf{\tool{} setparam} -n param0.bf0 -b 2-0
 \end{sampletitle}
 \samplecomment{Sets the bit selection of `param0.bf0' to bits 2 downto 0.}
 
