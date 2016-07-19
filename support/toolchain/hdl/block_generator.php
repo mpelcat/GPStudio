@@ -433,16 +433,23 @@ class Block_generator
 
                         $bf_name = $param->name . "_" . $parambitfield->name . "_reg";
 
-                        $count = $size;
-                        foreach ($parambitfield->bitfieldlist as $bit)
+                        if($size==1)
                         {
-                            $bits[$bit] = $bf_name . "(" . ($count - 1) . ")";
-                            $count--;
+                            $bits[$parambitfield->bitfieldlist[0]] = $bf_name;
+                        }
+                        else
+                        {
+                            $count = $size;
+                            foreach ($parambitfield->bitfieldlist as $bit)
+                            {
+                                $bits[$bit] = $bf_name . "(" . ($count - 1) . ")";
+                                $count--;
+                            }
                         }
                     }
 
                     $code_rd.="						datard_o <= ";
-                    $prev = 31;
+                    $prev = 32;
                     $count = 0;
                     ksort($bits);
                     $bits = array_reverse($bits, true);
