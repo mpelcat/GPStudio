@@ -137,7 +137,7 @@ class ParamBitfield
     {
         $bitfieldlist = array();
         // bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
-        preg_match_all("|([-,]?)([0-9])|", $string, $out, PREG_SET_ORDER);
+        preg_match_all("|([-,]?)([0-9]+)|", $string, $out, PREG_SET_ORDER);
 
         $prev = -1;
         $lastsymbole = '';
