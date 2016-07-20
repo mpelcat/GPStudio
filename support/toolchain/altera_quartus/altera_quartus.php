@@ -183,6 +183,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
         if ($this->nopartitions == 0)
         {
             $content.="\n# -------- partitions --------\n";
+            $content.="set_global_assignment -name INCREMENTAL_COMPILATION OFF\n";      // disabled for web edition
             $content.='set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top' . "\n";
         }
 
