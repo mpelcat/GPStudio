@@ -103,7 +103,7 @@ class File
         $this->name = (string) $xml['name'];
         $this->type = (string) $xml['type'];
         $this->group = (string) $xml['group'];
-        $this->path = (string) $xml['path'];
+        $this->path = str_replace("\\", "/", (string) $xml['path']);
         $this->desc = (string) $xml['desc'];
     }
 
