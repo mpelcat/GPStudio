@@ -50,27 +50,38 @@ unsigned int FlowCom::numPacket() const
 
 bool FlowCom::readyToSend() const
 {
-    if(_flowDataToSend.size()!=0) return true;
-    else return false;
+    if(_flowDataToSend.size()!=0)
+        return true;
+    else
+        return false;
 }
 
 QByteArray FlowCom::dataToSend(const int size)
 {
     QByteArray dataToSend;
 
-    if(_flowDataToSend.head().empty()) _flowDataToSend.dequeue();
-    if(_flowDataToSend.empty()) return QByteArray();
-    if(size<=4) return QByteArray();
+    if(_flowDataToSend.head().empty())
+        _flowDataToSend.dequeue();
+    if(_flowDataToSend.empty())
+        return QByteArray();
+    if(size<=4)
+        return QByteArray();
 
     QByteArray data = _flowDataToSend.head().getPart(size-4);
 
     dataToSend.append(_idFlow);
     if(_flowDataToSend.head().empty())
     {
-        _flowDataToSend.dequeue();
-        dataToSend.append(0xBA);
+        if(_flowDataToSend.head().data().size()<512)
+            dataToSend.append(0xBC);    // start + end
+        else
+        {
+            _flowDataToSend.dequeue();
+            dataToSend.append(0xBA);    // end
+        }
     }
-    else dataToSend.append(0xAA);
+    else
+        dataToSend.append(0xAA);    // start
 
     dataToSend.append((unsigned char)_numPacket);
     dataToSend.append((unsigned char)_numPacket/256);

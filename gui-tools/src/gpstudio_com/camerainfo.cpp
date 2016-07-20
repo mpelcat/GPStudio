@@ -59,7 +59,10 @@ void CameraInfo::setAddr(const QString &addr)
 
 bool CameraInfo::isValid() const
 {
-    if(_name.isEmpty() || _driverType.isEmpty()) return false; else return true;
+    if(_name.isEmpty() || _driverType.isEmpty())
+        return false;
+    else
+        return true;
 }
 
 QDebug operator<<(QDebug d, const CameraInfo &cameraInfo)

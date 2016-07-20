@@ -32,11 +32,10 @@ CameraCom::CameraCom(const CameraInfo &cameraInfo)
     _info = cameraInfo;
 
     if(cameraInfo.driverType().contains("USB", Qt::CaseInsensitive))
-    {
         _cameraIO = new CameraUSB();
-    }
 
-    if(_cameraIO) _cameraIO->connect(cameraInfo);
+    if(_cameraIO)
+        _cameraIO->connect(cameraInfo);
 
     // TODO pass this part dynamic
     _outputFlow.append(new FlowCom(15));   // set param
@@ -62,8 +61,10 @@ CameraCom::~CameraCom()
 
 bool CameraCom::isConnected() const
 {
-    if(_cameraIO) return _cameraIO->isConnected();
-    else return false;
+    if(_cameraIO)
+        return _cameraIO->isConnected();
+    else
+        return false;
 }
 
 void CameraCom::stop()
@@ -86,7 +87,7 @@ void CameraCom::run()
     QMap<int,int> prev_numpacket;
 
     for (int i=0;i<_inputFlow.size();i++)
-    prev_numpacket[_inputFlow[i]->idFlow()] = -1;
+        prev_numpacket[_inputFlow[i]->idFlow()] = -1;
 
     bool succes;
 
@@ -98,6 +99,7 @@ void CameraCom::run()
         if(!succes)
         {
             qDebug()<<"fail";
+            emit disconnected();
             terminate();
         }
 
@@ -105,6 +107,11 @@ void CameraCom::run()
         while(start<received.size())
         {
             const QByteArray &packet = received.mid(start, 512);
+            if(packet.size()<=4)
+            {
+                start+=512;
+                continue;
+            }
 
             unsigned char idFlow = packet[0];
             unsigned char flagFlow = packet[1];
@@ -121,7 +128,8 @@ void CameraCom::run()
                         {
                             int miss_packet = numpacket-prev_numpacket[idFlow]-1;
                             qDebug()<<"miss"<<miss_packet<<numpacket;
-                            for(int j=0; j<miss_packet; j++) _inputFlow[i]->appendData(QByteArray(512,0));
+                            for(int j=0; j<miss_packet; j++)
+                                _inputFlow[i]->appendData(QByteArray(512,0));
                         }
                     }
                     _inputFlow[i]->appendData(packet);
