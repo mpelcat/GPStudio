@@ -351,3 +351,22 @@ function saveIfDifferent($fileName, $content)
         fclose($handle);
     }
 }
+
+function cloneSvg($src, $xml, $dest)
+{
+    $svgNode = $xml->createElement($src->nodeName);
+    foreach ($src->attributes as $name => $attrNode)
+    {
+        $att = $xml->createAttribute($name);
+        $att->value = $attrNode->value;
+        $svgNode->appendChild($att);
+    }
+    foreach ($src->childNodes as $node)
+    {
+        if ($node->nodeType == XML_ELEMENT_NODE)
+        {
+            cloneSvg($node, $xml, $svgNode);
+        }
+    }
+    $dest->appendChild($svgNode);
+}

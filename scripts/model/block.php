@@ -112,8 +112,6 @@ class Block extends Component
      */
     public $parentNode;
 
-    protected $xml;
-
     /**
      * @brief Constructor of the class
      * 
@@ -477,7 +475,7 @@ class Block extends Component
         parent::parse_xml();
 
         if (isset($this->xml['size_addr_rel']))
-            warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'", 12, "Block");
+            warning("Please update your process or device with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'", 12, "Block");
         $this->pi_size_addr_rel = (int) $this->xml['pi_size_addr_rel'];
         $this->configscriptfile = (string) $this->xml['configscriptfile'];
         $this->generatescriptfile = (string) $this->xml['generatescriptfile'];
@@ -625,9 +623,9 @@ class Block extends Component
         if ($format == "complete" or $format == "blockdef")
         {
             // SVG draw
-            if (isset($this->xml->svg))
+            if ($this->svg != NULL)
             {
-                $xml_element->appendChild($xml->importNode(dom_import_simplexml($this->xml->svg), true));
+                cloneSvg($this->svg, $xml, $xml_element);
             }
 
             // files

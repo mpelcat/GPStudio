@@ -107,6 +107,8 @@ class Component
 
     protected $xml;
 
+    protected $svg;
+
     /**
      * @brief constructor of Component
      * 
@@ -123,6 +125,7 @@ class Component
         $this->attributes = array();
         $this->components = array();
         
+        $this->svg = NULL;
         $this->parentComponent = NULL;
         
         if($component == NULL)
@@ -596,6 +599,12 @@ class Component
         $this->categ = (string) $this->xml['categ'];
         $this->desc = (string) $this->xml['desc'];
 
+        // svg
+        if (isset($this->xml->svg))
+        {
+            $this->svg = dom_import_simplexml($this->xml->svg);
+        }
+
         // files
         if (isset($this->xml->files))
         {
@@ -703,7 +712,6 @@ class Component
                 if ($flow->type == "in" or $flow->type == "out")
                 {
                     $xml_flows->appendChild($flow->getXmlElement($xml, $format));
-                    $count++;
                 }
             }
             $xml_element->appendChild($xml_flows);
@@ -716,7 +724,6 @@ class Component
             foreach ($this->params as $param)
             {
                 $xml_params->appendChild($param->getXmlElement($xml, $format));
-                $count++;
             }
             $xml_element->appendChild($xml_params);
         }
@@ -754,6 +761,15 @@ class Component
             $xml_element->appendChild($xml_components);
         }
 
+        if ($format == "complete" or $format == "blockdef")
+        {
+            // SVG draw
+            if ($this->svg != NULL)
+            {
+                cloneSvg($this->svg, $xml, $xml_element);
+            }
+        }
+
         return $xml_element;
     }
 
@@ -770,5 +786,11 @@ class Component
         $xml->appendChild($this->getXmlElement($xml, "blockdef"));
 
         $xml->save($file);
+    }
+
+    function setSvgDraw($svgXml)
+    {
+        unset($this->svg);
+        $this->svg = $svgXml;
     }
 }

@@ -148,8 +148,6 @@ class Process extends Block
         {
             // nothing to do
         }
-
-        unset($this->xml);
     }
 
     /**

@@ -1441,6 +1441,31 @@ switch ($action)
             $component->desc = $desc;
         break;
 
+    case "setdraw":
+        $options = getopt("a:f:v:");
+        if (array_key_exists('v', $options))
+        {
+            $svgcommands = $options['v'];
+            $orgdoc = new DOMDocument;
+            if (!$orgdoc->loadXML("<?xml version='1.0'?><svg>" . $svgcommands . "</svg>\n"))
+                error("Invalid svg commands", 1);
+
+            $component->setSvgDraw($orgdoc->firstChild);
+        }
+        elseif (array_key_exists('f', $options))
+        {
+            $svgfile = $options['f'];
+            $orgdoc = new DOMDocument;
+            if (!$orgdoc->load($svgfile))
+                error("Invalid svg file", 1);
+
+            $component->setSvgDraw($orgdoc->getElementsByTagName("svg")->item(0));
+        }
+        else
+            error("You should specify a svg file with -f or svg commands with -v", 1);
+
+        break;
+
     // ========================== list commands ========================
     case "listfile":
         foreach ($component->files as $file)
