@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("info.php");
 require_once("file.php");
 require_once("param.php");
 require_once("flow.php");
@@ -62,6 +63,12 @@ class Component
      * @var string $desc
      */
     public $desc;
+
+    /**
+     * @brief Array of information on component
+     * @var array|Info $infos
+     */
+    public $infos;
 
     /**
      * @brief Array of parameters class (can be Generic or dynamics parameter on BI)
@@ -116,6 +123,7 @@ class Component
      */
     function __construct($component = NULL)
     {
+        $this->infos = array();
         $this->params = array();
         $this->files = array();
         $this->flows = array();
@@ -148,6 +156,41 @@ class Component
             $this->parse_xml($this->xml);
             $this->path = realpath(dirname($process_file));
         }
+    }
+
+    /** @brief Add an info to the toolchain 
+     *  @param Info $info info to add to the component
+     */
+    function addInfo($info)
+    {
+        array_push($this->infos, $info);
+    }
+
+    /** @brief return a reference to the component with the name $name, if not
+     * found, return null
+     *  @param string $name name of the info to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Info found component
+     */
+    function getInfo($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->infos as $info)
+            {
+                if ($info->name == $name)
+                    return $info;
+            }
+        }
+        else
+        {
+            foreach ($this->infos as $info)
+            {
+                if (strcasecmp($info->name, $name) == 0)
+                    return $info;
+            }
+        }
+        return null;
     }
 
     /**
@@ -509,8 +552,8 @@ class Component
         return null;
     }
 
-    /** @brief Add a component to the toolchain 
-     *  @param Component $component attribute to add to the block
+    /** @brief Add a sub component
+     *  @param Component $component component to add to the block
      */
     function addComponent($component)
     {
@@ -520,7 +563,7 @@ class Component
 
     /** @brief return a reference to the component with the name $name, if not
      * found, return null
-     *  @param string $name name of the component enum to search
+     *  @param string $name name of the component to search
      *  @param bool $casesens take care or not of the case of the name
      *  @return Component found component
      */
@@ -603,6 +646,15 @@ class Component
         if (isset($this->xml->svg))
         {
             $this->svg = dom_import_simplexml($this->xml->svg);
+        }
+
+        // infos
+        if (isset($this->xml->infos))
+        {
+            foreach ($this->xml->infos->info as $infoXml)
+            {
+                $this->addInfo(new Info($infoXml));
+            }
         }
 
         // files
@@ -691,6 +743,17 @@ class Component
         $att = $xml->createAttribute('desc');
         $att->value = $this->desc;
         $xml_element->appendChild($att);
+
+        // infos
+        if (!empty($this->infos))
+        {
+            $xml_infos = $xml->createElement("infos");
+            foreach ($this->infos as $info)
+            {
+                $xml_infos->appendChild($info->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_infos);
+        }
 
         // files
         if (!empty($this->files))

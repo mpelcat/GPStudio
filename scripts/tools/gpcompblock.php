@@ -56,6 +56,8 @@ switch ($action)
         echo TOOL . " sethelp [-n <instance-name>] -v <help-text>" . "\n";
         echo TOOL . " setdraw -v <svg-draw-content>" . "\n";
         echo TOOL . " setdraw -f <svg-file>}" . "\n";
+        echo TOOL . " setinfo -n <info-name> -v <info-value/content>" . "\n";
+        echo TOOL . " info [-n <info-name>]" . "\n";
         echo "" . "\n";
         echo "# === files ===" . "\n";
         echo TOOL . " addfile -p <path> -t <type> -g <group>" . "\n";
@@ -1463,7 +1465,50 @@ switch ($action)
         }
         else
             error("You should specify a svg file with -f or svg commands with -v", 1);
+        break;
 
+    case "setinfo":
+        $options = getopt("a:n:v:");
+        if (array_key_exists('n', $options))
+            $name = $options['n'];
+        else
+            error("You should specify a name for the info with -n", 1);
+        if (array_key_exists('v', $options))
+            $value = $options['v'];
+        else
+            error("You should specify a value for the info with -v", 1);
+
+        if (($info = $component->getInfo($name)) == NULL)
+        {
+            $info = new Info();
+            $info->name = $name;
+            $info->value = $value;
+            $component->addInfo($info);
+        }
+        else
+        {
+            $info->name = $name;
+            $info->value = $value;
+        }
+        break;
+
+    case "info":
+        $options = getopt("a:n:");
+        if (array_key_exists('n', $options))
+        {
+            $name = $options['n'];
+
+            $info = $component->getInfo($name);
+            if ($info == NULL)
+                error("An info does not exist with the name '$name'.", 1);
+
+            echo "\"" . $info->value . "\"\n";
+        }
+        else
+        {
+            foreach ($component->infos as $info)
+                echo $info . "\n";
+        }
         break;
 
     // ========================== list commands ========================

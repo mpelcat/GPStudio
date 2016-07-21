@@ -628,6 +628,17 @@ class Block extends Component
                 cloneSvg($this->svg, $xml, $xml_element);
             }
 
+            // infos
+            if (!empty($this->infos))
+            {
+                $xml_infos = $xml->createElement("infos");
+                foreach ($this->infos as $info)
+                {
+                    $xml_infos->appendChild($info->getXmlElement($xml, $format));
+                }
+                $xml_element->appendChild($xml_infos);
+            }
+
             // files
             if (!empty($this->files))
             {
