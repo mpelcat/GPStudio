@@ -7,7 +7,7 @@ _gpproc()
 
     # see if the user selected a command already
     local COMMANDS=("new"         "showblock"
-                    "generate"    "generatetop" "generateslave" "generateprocess"
+                    "generate"    "generatetop" "generateslave" "generateprocess" "generatetb"
 					"addfile"     "delfile"     "showfile"
 					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
 					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"    "fixparam"  "setpisizeaddr"
@@ -16,7 +16,7 @@ _gpproc()
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
 					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
 					"addenum"     "delenum"     "showenum"
-					"sethelp"
+					"sethelp"     "setdraw"     "setinfo"       "info"
     )
 
     local command i
@@ -34,7 +34,7 @@ _gpproc()
         case $count in
             3)
                 case $command in
-                    generate|generatetop|generateslave|generateprocess)
+                    generate|generatetop|generateslave|generateprocess|generatetb)
                         COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
                         return 0
                         ;;
@@ -42,12 +42,16 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    newprocess|newio|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addport|delport|showport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum)
+                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum|setinfo|info)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
                     sethelp)
                         COMPREPLY=( $( compgen -W '-n -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setdraw)
+                        COMPREPLY=( $( compgen -W '-v -f' -- "$cur" ) )
                         return 0
                         ;;
                     setpisizeaddr)
@@ -98,8 +102,16 @@ _gpproc()
                         [ $SPACE = 1 ] && compopt -o nospace
                         return 0
                         ;;
-                    generate|generatetop|generateslave|generateprocess)
+                    generate|generatetop|generateslave|generateprocess|generatetb)
                         COMPREPLY=( $( compgen -o plusdirs -- "$cur" ) )
+                        return 0
+                        ;;
+                    setdraw)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        return 0
+                        ;;
+                    setinfo|info)
+                        COMPREPLY=( $( compgen -W '$( gpproc listinfo )' -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -160,12 +172,6 @@ _gpproc()
 						fi
 						return 0
 						;;
-                    addport|setport)
-						if [ "$prev" = "-t" ]; then
-							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
-						fi
-						return 0
-						;;
                     addclock|setclock|addreset|setreset|addflow|setflow)
 						if [ "$prev" = "-d" ]; then
 							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
@@ -180,7 +186,7 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
-                    addflow|addport)
+                    addflow)
                         COMPREPLY=( $( compgen -W '-s' -- "$cur" ) )
                         return 0
                         ;;
@@ -231,12 +237,6 @@ _gpproc()
                     addproperty|setproperty)
 						if [ "$prev" = "-t" ]; then
 							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
-						fi
-						return 0
-						;;
-                    addport|setport)
-						if [ "$prev" = "-t" ]; then
-							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
 						fi
 						return 0
 						;;

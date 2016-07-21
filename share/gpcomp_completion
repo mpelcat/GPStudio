@@ -1,22 +1,18 @@
-# Debian gpdevice(8) completion                             -*- shell-script -*-
+# Debian gpproc(8) completion                             -*- shell-script -*-
 
-_gpdevice()
+_gpproc()
 {
     local cur prev words cword
     _init_completion || return
 
     # see if the user selected a command already
     local COMMANDS=("new"         "showblock"
-                    "generate"    "generatetop" "generateslave" "generateprocess" "generatetb"
+                    "generate"    "generatetb"
 					"addfile"     "delfile"     "showfile"
 					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
-					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"    "fixparam"  "setpisizeaddr"
-					"addbitfield" "delbitfield" "showbitfield"  "renamebitfield" "setbitfield"
+					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"
 					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
-					"addextport"  "delextport"  "showextport"
-					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
-					"addenum"     "delenum"     "showenum"
 					"sethelp"     "setdraw"     "setinfo"       "info"
     )
 
@@ -35,7 +31,7 @@ _gpdevice()
         case $count in
             3)
                 case $command in
-                    generate|generatetop|generateslave|generateprocess|generatetb)
+                    generate|generatetb)
                         COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
                         return 0
                         ;;
@@ -43,7 +39,7 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addextport|delextport|showextport|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum|setinfo|info)
+                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|setinfo|info)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -55,10 +51,6 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-v -f' -- "$cur" ) )
                         return 0
                         ;;
-                    setpisizeaddr)
-                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
-                        return 0
-                        ;;
                 esac
                 ;;
             4)
@@ -68,42 +60,26 @@ _gpdevice()
                         return 0
                         ;;
                     delfile)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listfile )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listfile )' -- "$cur" ) )
                         return 0
                         ;;
                     delflow|renameflow|setflow)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listflow )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listflow )' -- "$cur" ) )
                         return 0
                         ;;
-                    delparam|renameparam|setparam|fixparam|showbitfield)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listparam )' -- "$cur" ) )
-                        return 0
-                        ;;
-                    addbitfield)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listparamdot )' -- "$cur" ) ) && compopt -o nospace
-                        return 0
-                        ;;
-                    delbitfield|renamebitfield|setbitfield)
-                        COMP=$( gpdevice listword -w "$cur" -m bitfield) ; SPACE=$?
-                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
-                        [ $SPACE = 1 ] && compopt -o nospace
+                    delparam|renameparam|setparam)
+                        COMPREPLY=( $( compgen -W '$( gpproc listparam )' -- "$cur" ) )
                         return 0
                         ;;
                     delreset|renamereset|setreset)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listreset )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listreset )' -- "$cur" ) )
                         return 0
                         ;;
                     delclock|renameclock|setclock)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listclock )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listclock )' -- "$cur" ) )
                         return 0
                         ;;
-                    delproperty|renameproperty|setproperty)
-                        COMP=$( gpdevice listword -w "$cur" -m property) ; SPACE=$?
-                        COMPREPLY=( $( compgen -W '$COMP' -- "$cur" ) )
-                        [ $SPACE = 1 ] && compopt -o nospace
-                        return 0
-                        ;;
-                    generate|generatetop|generateslave|generateprocess|generatetb)
+                    generate|generatetb)
                         COMPREPLY=( $( compgen -o plusdirs -- "$cur" ) )
                         return 0
                         ;;
@@ -112,7 +88,7 @@ _gpdevice()
                         return 0
                         ;;
                     setinfo|info)
-                        COMPREPLY=( $( compgen -W '$( gpdevice listinfo )' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gpproc listinfo )' -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -127,20 +103,12 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
                         return 0
                         ;;
-                    renameflow|renameparam|renamebitfield|renamereset|renameclock|renameproperty|sethelp|setpisizeaddr|setpropertymap|addenum)
+                    renameflow|renameparam|renamereset|renameclock|sethelp)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;
                     addparam)
                         COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
-                        return 0
-                        ;;
-                    addbitfield|setbitfield)
-                        COMPREPLY=( $( compgen -W '-b' -- "$cur" ) )
-                        return 0
-                        ;;
-                    addproperty)
-                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
                         return 0
                         ;;
                     setflow)
@@ -159,26 +127,10 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-d -g -m -f -r' -- "$cur" ) )
                         return 0
                         ;;
-                    setproperty)
-                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
-                        return 0
-                        ;;
                 esac
                 ;;
             6)
                 case $command in
-                    addproperty|setproperty)
-						if [ "$prev" = "-t" ]; then
-							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
-						fi
-						return 0
-						;;
-                    addextport|setextport)
-						if [ "$prev" = "-t" ]; then
-							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
-						fi
-						return 0
-						;;
                     addclock|setclock|addreset|setreset|addflow|setflow)
 						if [ "$prev" = "-d" ]; then
 							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
@@ -193,7 +145,7 @@ _gpdevice()
                         COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
                         return 0
                         ;;
-                    addflow|addextport)
+                    addflow)
                         COMPREPLY=( $( compgen -W '-s' -- "$cur" ) )
                         return 0
                         ;;
@@ -244,12 +196,6 @@ _gpdevice()
                     addproperty|setproperty)
 						if [ "$prev" = "-t" ]; then
 							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
-						fi
-						return 0
-						;;
-                    addextport|setextport)
-						if [ "$prev" = "-t" ]; then
-							COMPREPLY=( $( compgen -W 'in out inout' -- "$cur" ) )
 						fi
 						return 0
 						;;
@@ -313,6 +259,6 @@ _gpdevice()
 
     return 0
 } &&
-complete -F _gpdevice gpdevice
+complete -F _gpproc gpproc
 
 # ex: ts=4 sw=4 et filetype=sh
