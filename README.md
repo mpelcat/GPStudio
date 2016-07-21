@@ -5,17 +5,35 @@ create high performance image processing.
 
 website : <http://gpstudio.univ-bpclermont.fr>
 
+## Installation
+Yo can install GPStudio by cloning this repository or directly download 
+a binary package from <http://gpstudio.univ-bpclermont.fr/download>.
+
+For installing, follow instructions given in [INSTALL.md](INSTALL.md)
+
 ## Tools
 GPStudio is composed by a set of command line and graphical tools.
 
-### gpnode
+gpnode to manage GPStudio camera projects with board/sensor selection
+and image processing creation (command line and GUI).
 
-### gpproc and gpdevice
+gpcomp, gpproc and gpdevice to create your custom components, block
+processing and device driver block (only in command line).
 
-### gplib
+gplib to view the content of the IPs library (only in command line).
 
-### gpviewer
+gpviewer to visualise result of your process (GUI only).
 
+## Supported FPGA family
+
+Altera families:
+
+* Cyclone III
+* Cyclone IV
+* Cyclone V
+* Stratix V
+
+Xilinx not yet supported for project creation but have been planned.
 
 ## License
 > This program is free software: you can redistribute it and/or modify
