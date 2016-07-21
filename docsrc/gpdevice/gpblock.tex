@@ -1062,4 +1062,59 @@ Sets the help text for an instance of the block if a name is specified, or the b
 \end{sampletitle}
 \samplecomment{Few documentation for the block.}
 
+\subsubsection{setdraw}
+\command{\textbf{\tool{} setdraw} -v <svg-draw-content>\\\textbf{\tool{} setdraw} -f <svg-file>}
+
+Sets the picture of the block from svg commands or a svg file. \\
+
+\paramcommand{
+-v & svg commands & <ellipse fill='red' cx='283.5' cy='487.5' rx='259' ry='80'/> \\
+\hline
+-f & svg file & "hog.svg" \\
+}
+
+\begin{sampletitle}[1]
+> \textbf{\tool{} setdraw} -v "<ellipse fill='red' cx='283.5' cy='487.5' rx='259' ry='80'/>"
+\end{sampletitle}
+\samplecomment{Put an ellipse as draw of the block}
+
+\begin{sampletitle}[2]
+> \textbf{\tool{} setdraw} -f doc/hog.svg
+\end{sampletitle}
+\samplecomment{Put the content of `doc/hog.svg' file as draw of the block}
+
+\subsubsection{setinfo}
+\command{\textbf{\tool{} setinfo} -n <info-name> -v <info-value/content>}
+
+Sets infos of the block. When you develop IPs, it is very important to set some information like author, licence, contact, email and version. \\
+
+\paramcommand{
+-n & name of the info & "author"\newline "email"\newline "company" \\
+\hline
+-v & value to set & "John Doe"\newline "john.doe@company.tld"\newline "The famous company (R)" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setinfo} -n "author"  -v "John Doe"\\
+> \textbf{\tool{} setinfo} -n "email"  -v "john.doe@company.tld"\\
+> \textbf{\tool{} setinfo} -n "company"  -v "The famous company (R)"
+\end{sampletitle}
+
+\subsubsection{info}
+\command{\textbf{\tool{} info} [-n <info-name>]}
+
+Returns infos of the block. \\
+
+\paramcommand{
+-n & name of the info & "author"\newline "email"\newline "company" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} info} -n "company"\\The famous company (R)\\
+> \textbf{\tool{} info}\\
+author: John Doe\\
+email: john.doe@company.tld\\
+company: The famous company (R)
+\end{sampletitle}
+
 \end{document}
