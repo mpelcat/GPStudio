@@ -1512,6 +1512,12 @@ switch ($action)
         break;
 
     // ========================== list commands ========================
+    case "listinfo":
+        foreach ($component->infos as $info)
+            echo $info->name . ' ';
+        $save = false;
+        break;
+
     case "listfile":
         foreach ($component->files as $file)
             echo $file->path . ' ';
