@@ -1,3 +1,5 @@
+-- This entity is used to adapt the interface between the marvell (4 bits double data rate clocked on GE_RXCLK)
+-- and the fpga (8 bits clocked on rising edge of CLK125)
 
 library ieee;
 use ieee.std_logic_1164.all;

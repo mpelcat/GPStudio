@@ -1,3 +1,6 @@
+-- This entity has been generated via GPStudio.
+-- The values at reset has been modified.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -63,9 +66,9 @@ begin
         mac_addr_hal_lsb    <= x"430001";
 		mac_addr_dest_msb   <= x"7845C4";
         mac_addr_dest_lsb   <= x"192509";
-        ip_hal              <= x"AC010203";
-        ip_dest             <= x"AC1B016D";
-        port_dest           <= x"7FFF";
+        ip_hal              <= x"C0A8010A";--192.168.1.10
+        ip_dest             <= x"C0A80101";--192.168.1.1
+        port_dest           <= x"079B";--1947
         
 	elsif rising_edge(clk) then
 		if(wr_i = '1') then

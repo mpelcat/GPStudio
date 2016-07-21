@@ -1,3 +1,8 @@
+-- This code is used to configure the Marvell 88e1111 and handle the MDIO pins (PHY_RESET, PHY_MDC and PHY_MDIO).
+-- It can write and read the internals registers of the marvell.
+-- Right now, the configuration used is the configuration by default and this entity only outputs an hardware reset when power up.
+-- You can add a configuration only by uncommenting the request signal (just set your address register and the data you want to write).
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -17,7 +22,7 @@ architecture Behavioral of eth_mdio is
 	signal request      : unsigned(0 to 31);--write
 	signal request_r    : unsigned(0 to 13);--read
 	signal stop_count_s : std_logic:='0';
-	type state_mdio is (idle, set_gmii, reset_st,read_st,wait_st,config);
+	type state_mdio is (idle, set_conf, reset_st,read_st,wait_st,config);
 	signal state        : state_mdio;
 	signal count_conf   : unsigned(3 downto 0):=x"0";
 	signal reset_done   : std_logic:='0';
@@ -60,7 +65,7 @@ begin
                 if count = x"FFFFFFF" then
                     count <= x"8000000";
                     if reset_done='0' then
-                        state <= set_gmii;
+                        state <= set_conf;
                     elsif reset_done='1' and tempo='1' then 
                         state <= wait_st;
                         tempo <= '0';
@@ -72,7 +77,7 @@ begin
                 end if;
                     
             
-            when set_gmii =>
+            when set_conf =>
                     --request <= "0101" & "10010" & "10100" & "100000110011100000"; -- set delay for RX and TX in rgmii mode
                 if count=x"8000FFF" then
                     state <= reset_st;
@@ -130,8 +135,8 @@ begin
     end if;
 end process;
 
-    E_MDIO <= '1' when count(11 downto 5) < "0100000" and (state=set_gmii or state=reset_st or state=read_st or state=config) --32 1's preamble
-                         else request(to_integer(count(9 downto 5))) when (state=set_gmii or state=reset_st or state=config) and count(11 downto 5) <= "0111111" --write data
+    E_MDIO <= '1' when count(11 downto 5) < "0100000" and (state=set_conf or state=reset_st or state=read_st or state=config) --32 1's preamble
+                         else request(to_integer(count(9 downto 5))) when (state=set_conf or state=reset_st or state=config) and count(11 downto 5) <= "0111111" --write data
                          else request_r(to_integer(count(9 downto 5))) when state=read_st and count(11 downto 5) <= "0101101" -- read data
                          else 'Z';
 end Behavioral;

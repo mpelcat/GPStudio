@@ -1,3 +1,5 @@
+-- This code filters the incoming packet (MAC + IP) and extract some other infos such as size or the port.
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -58,7 +60,8 @@ begin
 						ip_f.bad 		<= '0';
 						ip_f.good 		<= '0';
 					end if;
-					
+			
+            -- Check if MAC address fit the value in eth_slave		
 			when mac =>				
 					if count = x"05" then
 						state   <= size_st;
@@ -73,6 +76,7 @@ begin
 						count <= count +1;
 					end if;				
 			
+            -- Get size of the packet
             when size_st =>
                     count <= count +1;
 					if count > x"08" then	
@@ -83,6 +87,7 @@ begin
 						rcv_size        <= rcv_size(7 downto 0) & RX_i.data;
 					end if;
           
+            -- Check if IP address fit the value in eth_slave
 			when ip =>
                     size_detected	<= unsigned(rcv_size) - x"1C"; -- 28 bytes of ip header + udp header 
 					count           <= count +1;
@@ -100,7 +105,7 @@ begin
 						end if;
 					end if;
 					
-					
+			-- Get port		
 			when port_st =>
 					count <= count +1;
 					if count > x"00" then
@@ -113,7 +118,8 @@ begin
 							rcv_port <=rcv_port(7 downto 0) & RX_i.data;
 						end if;
 					end if;
-					
+			
+            -- If MAC and IP are verified then the data is transmitted to the next block		
 			when data =>
 					count <= count +1;
 					if count > x"02" then

@@ -1,4 +1,4 @@
-
+-- This is the top level of the ethernet block.
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
@@ -16,6 +16,7 @@ entity ethernet_udp is
 		PHY_MDIO 			: inout STD_LOGIC;
 		TX					: out rgmii_t;
 		RX					: in rgmii_t;
+        GE_TXCLK            : out std_logic;
 		
         --- Clock from PLL to synchronize received data
         clk250_marvell      : in STD_LOGIC;
@@ -65,16 +66,13 @@ signal TX_s_dl                  : std_logic;
 
 begin
 
-data_o	    <= RX_filtered.data;
-write_o		<= RX_filtered.dv;
-
---ID_port_out		<= port_detected;
+data_o	        <= RX_filtered.data;
+write_o		    <= RX_filtered.dv;
 eth_tx_stream   <= TX_encapsulated.dv & TX_encapsulated.data;
 TX              <= TX_s;
-
-
 read_data_o     <= read_data_s;
 hal_ready       <= hal_ready_s;
+GE_TXCLK        <= CLK125;
 
 ----- Read data from com, read data when the flow_to_com is ready
 process(CLK125,reset_n)		

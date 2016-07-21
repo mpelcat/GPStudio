@@ -1,3 +1,4 @@
+-- This entity add the Ethernet/IP/UDP header for each packet depending on the values set in eth_slave.
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -74,6 +75,7 @@ reset   <= not reset_n;
 		data_out    => fifo_udp_out
 	);
 		
+    -- Not tested
 	checksum_udp : process(clk125,reset_n)
 		begin
 			if reset_n ='0' then
@@ -101,7 +103,6 @@ reset   <= not reset_n;
 					CS_sum <= CS_sum + TX_i.data;
 				elsif dv_uncap_dl='1' and TX_i.dv='0' then 
 					CS_sum	<= CS_sum + port_dest + port_src + len_udp;
-					--CS_ip		<= ;
 				elsif dv_uncap_dl='0' and dv_uncap_dl2='1' then
 					CS_udp 	<= not (CS_sum(15 downto 0) + CS_sum(31 downto 16));
 					CS_ip 	<= x"AAAA";
@@ -125,6 +126,7 @@ reset   <= not reset_n;
 			elsif CLK125'event and CLK125='1' then
 					case(state_encap) is
 					
+                        -- Prepare registers that contains every information about the header to add
 						when idle => 
                                 if TX_i.dv='1' and dv_uncap_dl='0' then
                                     rd_fifo_udp <= '1';
@@ -142,6 +144,7 @@ reset   <= not reset_n;
                                     rd_fifo_udp <= '0';
 								end if;
 						
+                        -- Add Ethernet header
 						when ethernet =>
 								TX.dv	    <= '1';
 								eth_hdr		<= eth_hdr(103 downto 0) & eth_hdr(111 downto 104);
@@ -152,7 +155,8 @@ reset   <= not reset_n;
 								else
 									count_udp <= count_udp +1;
 								end if;
-								
+						
+                        -- Add IP header		
 						when ip =>
 								ip_hdr			<= ip_hdr(151 downto 0) & ip_hdr(159 downto 152);		
 								TX.data 	    <= ip_hdr(159 downto 152);
@@ -163,7 +167,8 @@ reset   <= not reset_n;
 									count_udp <= count_udp +1;
 								end if;
 						
-                        when udp => --- Header for GPStudio
+                        -- Add UDP header
+                        when udp => 
                                 udp_hdr		<= udp_hdr(55 downto 0) & udp_hdr(63 downto 56);	
 								TX.data     <= udp_hdr(63 downto 56);
                                 count_udp <= count_udp +1;
@@ -173,6 +178,7 @@ reset   <= not reset_n;
                                     rd_fifo_udp	<= '1';
 								end if;
                         
+                        -- Read data from fifo
 						when data =>
 								TX.data <= fifo_udp_out;
 								if empty_fifo_udp='1' and rd_fifo_udp='1' then 
