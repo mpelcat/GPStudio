@@ -1,3 +1,5 @@
+-- Top level of the com block, contains the flow to com and com to flow mux.
+-- Also instantiates the flow to com and com to flow block.
 
 library ieee;
 use ieee.std_logic_1164.all;

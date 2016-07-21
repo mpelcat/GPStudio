@@ -1,3 +1,6 @@
+-- This entity receives packets that are send on MASTER_PORT then extracts parameters values
+-- and address before sending them on the Parameter Interconnect.
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;

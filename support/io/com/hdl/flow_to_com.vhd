@@ -1,3 +1,6 @@
+-- This block receives a flow from a GPStudio block.
+-- Depending on the data valid and flow valid, it add the GPStudio header (Start of Frame and End of Frame flags and the number of the packet)
+-- before sending the data to the HAL block.
 
 library ieee;
 use ieee.std_logic_1164.all;

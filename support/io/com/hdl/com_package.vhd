@@ -1,3 +1,6 @@
+-- Package used in com block.
+-- Can be modified to change the size max of the fifo.
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -21,8 +24,3 @@ package com_package is
     type array_bus16	    is array (0 to 15) of std_logic_vector(15 downto 0);
     type array_bus8 	    is array (0 to 15) of std_logic_vector(7 downto 0);
 end com_package;
-
-
-
-
-

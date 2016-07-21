@@ -1,3 +1,5 @@
+-- This block extracts the GPStudio header and gets flags Start of Frame and End of Frame.
+-- It outputs a flow depending on this header (generate Flow valid and Data valid according to the flags).
 
 library ieee;
 use ieee.std_logic_1164.all;
