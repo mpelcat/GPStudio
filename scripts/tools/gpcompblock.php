@@ -42,7 +42,7 @@ switch ($action)
     // =========================== global commands =====================
     case "-h":
     case "--help":
-        echo "# " . TOOL . " command line tool to manage a gpstudio block (" . VERSION . ")" . "\n";
+        echo "# " . TOOL . " command line tool to manage a gpstudio " . KIND . " (" . VERSION . ")" . "\n";
         echo "# === global ===" . "\n";
         echo TOOL . " new -n <" . KIND . "-name>" . "\n";
         echo TOOL . " showblock" . "\n";
@@ -54,6 +54,8 @@ switch ($action)
         }
         echo TOOL . " generate [-o <dir>]" . "\n";
         echo TOOL . " sethelp [-n <instance-name>] -v <help-text>" . "\n";
+        echo TOOL . " setdraw -v <svg-draw-content>" . "\n";
+        echo TOOL . " setdraw -f <svg-file>}" . "\n";
         echo "" . "\n";
         echo "# === files ===" . "\n";
         echo TOOL . " addfile -p <path> -t <type> -g <group>" . "\n";
@@ -123,7 +125,7 @@ switch ($action)
         break;
     case "-v":
     case "--version":
-        echo "# " . TOOL . " command line tool to manage a gpstudio block (" . VERSION . ")" . "\n";
+        echo "# " . TOOL . " command line tool to manage a gpstudio " . KIND . " (" . VERSION . ")" . "\n";
         exit(0);
         break;
 }
@@ -170,7 +172,7 @@ elseif ($action == "new" and TOOL == "gpcomp")
     if (array_key_exists('n', $options))
         $componentName = $options['n'];
     else
-        error("You should specify a device name with -n", 1);
+        error("You should specify a component name with -n", 1);
 
     $component = new Component();
     $component->name = $componentName;
@@ -334,7 +336,7 @@ switch ($action)
     case "addfile":
         $options = getopt("a:p:t:g:");
         if (array_key_exists('p', $options))
-            $path = $options['p'];
+            $path = str_replace("\\", "/", $options['p']);
         else
             error("You should specify a path for the file with -p", 1);
         if (array_key_exists('t', $options))
@@ -1422,20 +1424,21 @@ switch ($action)
     // ========================= global commands =======================
     case "sethelp":
         $options = getopt("a:n:v:");
-        if (array_key_exists('n', $options))
-            $name = $options['n'];
-        else
-            error("You should specify a name of the instance to set help with -n", 1);
         if (array_key_exists('v', $options))
             $desc = $options['v'];
         else
             error("You should specify the help text with -v", 1);
 
-        if (($instance = $component->getInstance($name)) == NULL)
-            error("An instance does not exist with the name '$name'.", 1);
+        if (array_key_exists('n', $options))
+        {
+            $name = $options['n'];
 
-        $instance->desc = $desc;
-
+            if (($instance = $component->getInstance($name)) == NULL)
+                error("An instance does not exist with the name '$name'.", 1);
+            $instance->desc = $desc;
+        }
+        else
+            $component->desc = $desc;
         break;
 
     // ========================== list commands ========================
