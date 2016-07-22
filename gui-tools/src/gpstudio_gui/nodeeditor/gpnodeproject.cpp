@@ -106,6 +106,15 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
     if(!node)
         return false;
 
+    // load library with project IPs
+    foreach (ModelBlock *block, node->blocks())
+    {
+        if(block->driver().endsWith(".proc") || block->driver().endsWith(".io"))
+        {
+            Lib::getLib().addIp(block->path() + "/" + block->driver());
+        }
+    }
+
     setPath(fileName);
     setModified(false);
     setNode(node);
@@ -260,7 +269,7 @@ void GPNodeProject::cmdSetBoard(QString boardName, QStringList iosName)
         if(_node->getBlock(ioName) == NULL)
         {
             QString ioDriver = boardLib->io(ioName)->driver();
-            IOLib *ioLib = Lib::getLib().io(ioDriver);
+            BlockLib *ioLib = Lib::getLib().io(ioDriver);
             if(ioLib)
             {
                 ModelIO *io = ioLib->modelIO();

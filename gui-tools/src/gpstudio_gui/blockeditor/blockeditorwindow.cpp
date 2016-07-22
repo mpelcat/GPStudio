@@ -23,12 +23,12 @@ BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
 
     setBlock(block);
 
-    ProcessLib *process = Lib::getLib().process(_block->driver());
+    BlockLib *process = Lib::getLib().process(_block->driver());
     if(process)
         _path = process->path();
     else
     {
-        IOLib *io = Lib::getLib().io(_block->driver());
+        BlockLib *io = Lib::getLib().io(_block->driver());
         if(io)
             _path = io->path();
     }

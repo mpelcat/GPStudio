@@ -61,7 +61,7 @@ int BlockItem::type() const
 
 QRectF BlockItem::boundingRect() const
 {
-    return _boundingRect.adjusted(-2,-2,2,15);
+    return _boundingRect.adjusted(-2,-2,2,20);
 }
 
 void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -75,17 +75,18 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     if(_svgRenderer.isValid())
     {
-        _svgRenderer.render(painter, _svgRenderer.viewBox());
-        painter->drawRect(_svgRenderer.viewBox());
+        _svgRenderer.render(painter, _boundingRect);
+        painter->drawRect(_boundingRect);
     }
     else
     {
+        painter->setBrush(Qt::white);
         painter->drawRect(QRect(0,0,125,50));
     }
 
     // block name
     painter->setPen(QPen(Qt::black, 1));
-    QRectF textRect = QRectF(_boundingRect.x(), _boundingRect.height(), _boundingRect.width(), 15);
+    QRectF textRect = QRectF(0, _boundingRect.height(), _boundingRect.width(), painter->fontMetrics().height() + 3);
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignBottom, _name);
 }
 
@@ -117,13 +118,21 @@ Block *BlockItem::block() const
 void BlockItem::updateBlock()
 {
     if(_svgRenderer.isValid())
-    {
         _boundingRect = _svgRenderer.viewBoxF();
-    }
     else
-    {
         _boundingRect = QRectF(0,0,125,50);
-    }
+    _boundingRect.setX(0);
+    _boundingRect.setY(0);
+
+    float ratioW = 1;
+    float ratioH = 1;
+    if(_boundingRect.width()>300)
+        ratioW = 300.0/_boundingRect.width();
+    if(_boundingRect.height()>200)
+        ratioH = 200.0/_boundingRect.height();
+    float ratio = qMin(ratioW, ratioH);
+    _boundingRect.setWidth(_boundingRect.width()*ratio);
+    _boundingRect.setHeight(_boundingRect.height()*ratio);
 
     // port placement
     int inCount=0, outCount=0;
@@ -220,15 +229,26 @@ BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
         blockLib = Lib::getLib().process(modelBlock->driver());
     else
         blockLib = Lib::getLib().io(modelBlock->driver());
-    item = fromBlockLib(blockLib);
+
+    if(!item)
+        item = fromBlockLib(blockLib);
 
     if(!item)
         item = new BlockItem();
 
     if(blockLib)
-    foreach (ModelFlow *flow, blockLib->modelProcess()->flows())
     {
-        item->addPort(BlockPortItem::fromModelFlow(flow));
+        foreach (ModelFlow *flow, blockLib->modelProcess()->flows())
+        {
+            item->addPort(BlockPortItem::fromModelFlow(flow));
+        }
+    }
+    else
+    {
+        foreach (ModelFlow *flow, modelBlock->flows())
+        {
+            item->addPort(BlockPortItem::fromModelFlow(flow));
+        }
     }
 
     item->setPos(modelBlock->pos());
