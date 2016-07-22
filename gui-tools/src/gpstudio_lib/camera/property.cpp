@@ -38,8 +38,10 @@ Property::Property(QString name)
 
 Property::~Property()
 {
-    foreach (Property *property, _subProperties) delete property;
-    foreach (PropertyEnum *propertyEnum, _enumsMap) delete propertyEnum;
+    foreach (Property *property, _subProperties)
+        delete property;
+    foreach (PropertyEnum *propertyEnum, _enumsMap)
+        delete propertyEnum;
 }
 
 const QString &Property::name() const

@@ -248,7 +248,8 @@ void MainWindow::connectCam()
 
 void MainWindow::setBiSpace()
 {
-    if(!_cam) return;
+    if(!_cam)
+        return;
     _piSpaceHex->setData(_cam->registerData());
 }
 
@@ -330,7 +331,7 @@ void MainWindow::setupViewers()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this,"GPStudio: GPNode 1.01","Copyright (C) 2016 Dream IP\n\
+    QMessageBox::about(this,"GPStudio: GPViewer 1.01","Copyright (C) 2016 Dream IP\n\
 \n\
 This sofware is part of GPStudio.\n\
 \n\

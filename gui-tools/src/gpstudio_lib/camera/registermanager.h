@@ -26,6 +26,7 @@
 #include <QMap>
 
 #include "register.h"
+#include "model/model_node.h"
 
 class Register;
 class Camera;
@@ -36,8 +37,9 @@ public:
     RegisterManager(Camera *camera);
     ~RegisterManager();
 
+    void setNode(ModelNode *node);
+
     Register *operator[](const uint addr);
-    void addRegister(Register *cameraRegister);
     const QMap<uint, Register *> &registersMap() const;
 
     QByteArray registerData() const;
@@ -49,6 +51,7 @@ public:
     void setRegister(uint addr, uint value);
 
 private:
+    void addRegister(Register *cameraRegister);
     QMap<uint, Register *> _registersMap;
 
     QMap<uint, uint> _regToSend;

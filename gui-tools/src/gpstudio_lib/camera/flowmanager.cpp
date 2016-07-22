@@ -43,7 +43,8 @@ Camera *FlowManager::camera() const
 void FlowManager::setCamera(Camera *camera)
 {
     _camera = camera;
-    if(camera==NULL) return;
+    if(camera==NULL)
+        return;
 
     _blockCom=_camera->comBlock();
     ModelIOCom *iOCom = camera->node()->getIOCom();
@@ -53,9 +54,7 @@ void FlowManager::setCamera(Camera *camera)
         foreach (Flow *flow, block->flows())
         {
             foreach (Property *property, flow->assocProperty()->subProperties())
-            {
                 property->eval();
-            }
         }
     }
 
@@ -96,7 +95,8 @@ const QList<FlowConnection *> FlowManager::flowConnections() const
 
 void FlowManager::processFlow(int idFlow)
 {
-    if(idFlow>=_camera->com()->inputFlow().count()) return;
+    if(idFlow>=_camera->com()->inputFlow().count())
+        return;
 
     int id = _camera->com()->inputFlow()[idFlow]->idFlow();
     FlowPackage data = _camera->com()->inputFlow()[idFlow]->getData();

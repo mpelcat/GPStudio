@@ -95,31 +95,14 @@ void Camera::setNode(ModelNode *node)
         _blocksMap.insert(block->name(), block);
 
         _paramsBlocks.addSubProperty(block->assocProperty());
-
-        // TODO move this part to dynamic model
-        // registers and const values
-        foreach (ModelParam *param, modelBlock->params())
-        {
-            // register
-            if(param->isDynamicParam())
-            {
-                Register *cameraRegister = Register::fromParam(param);
-                _registermanager.addRegister(cameraRegister);
-            }
-            // const values
-            else
-            {
-                // TODO add const value as RO property
-            }
-        }
     }
 
     ModelIOCom *iOCom = node->getIOCom();
     if(iOCom)
         _comBlock = block(iOCom->name());
 
+    _registermanager.setNode(node);
     ScriptEngine::getEngine().setRootProperty(&_paramsBlocks);
-
     _registermanager.start();
 
     _flowManager = new FlowManager(this);
