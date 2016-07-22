@@ -64,6 +64,7 @@ class IO extends Block
         $this->ext_ports = array();
 
         parent::__construct();
+        $io_file = "";
 
         if (is_object($io_device_element) and get_class($io_device_element) === 'SimpleXMLElement')
         {
@@ -75,13 +76,6 @@ class IO extends Block
                 $this->x_pos = (int) $io_node_element['x_pos'];
             if (isset($io_node_element['y_pos']))
                 $this->y_pos = (int) $io_node_element['y_pos'];
-
-            // add io file to the list of files
-            $file_config = new File();
-            $file_config->name = $io_driver . ".io";
-            $file_config->path = $io_driver . ".io";
-            $file_config->parentBlock = $this;
-            $this->addFile($file_config);
 
             $this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
             $this->in_lib = true;
@@ -121,6 +115,16 @@ class IO extends Block
                 error("Error when parsing $io_file", 5, "IO");
 
             $this->parse_xml($io_device_element, $io_node_element);
+        }
+
+        if ($io_file != "")
+        {
+            $file_config = new File();
+            $file_config->name = basename($io_file);
+            $file_config->path = getRelativePath($io_file, $this->path);
+            $file_config->type = "io";
+            $file_config->group = "blockdef";
+            $this->addFile($file_config);
         }
     }
 

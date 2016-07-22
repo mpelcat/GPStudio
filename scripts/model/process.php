@@ -45,6 +45,8 @@ class Process extends Block
     {
         parent::__construct();
 
+        $process_file = "";
+
         if (is_object($process_node_element) and get_class($process_node_element) === 'SimpleXMLElement')
         {
             $inlib = false;
@@ -147,6 +149,16 @@ class Process extends Block
         else
         {
             // nothing to do
+        }
+
+        if ($process_file != "")
+        {
+            $file_config = new File();
+            $file_config->name = basename($process_file);
+            $file_config->path = getRelativePath($process_file, $this->path);
+            $file_config->type = "proc";
+            $file_config->group = "blockdef";
+            $this->addFile($file_config);
         }
     }
 
