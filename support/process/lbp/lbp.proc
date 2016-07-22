@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<process name="lbp" categ="descriptor" description="Software reconfigurable histogram core" pi_size_addr_rel="2">
+<process name="lbp" categ="descriptor" desc="Software reconfigurable histogram core" pi_size_addr_rel="2">
 	<svg width="160" height="110">
 		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
 		<text x="50" y="50">LBP</text>
 	</svg>
 	<flows>
 		<flow name="in" type="in" size="8" desc="Input image to describe"/>
-		<flow name="out" type="out" size="8" desc="Descriptor output"/>
+		<flow name="out" type="out" size="8" desc="Descriptor output">
+			<properties>
+				<property name="datatype" value="image" type="flowtype"/>
+				<property name="width" propertymap="in.width.value" type="int" min="" max=""/>
+				<property name="height" propertymap="in.height.value" type="int" min="" max=""/>
+			</properties>
+		</flow>
 	</flows>	
 	<params>
 		<param name="LINE_WIDTH_MAX" type="int" value="1024" desc="maximum line width" hard="true"/>

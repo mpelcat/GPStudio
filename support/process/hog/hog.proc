@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<process name="HOG" categ="descriptor" description="Descriptor which output a HOG from image flow" configscriptfile="config.php" generatescriptfile="generate.php">
+<process name="HOG" categ="descriptor" desc="Descriptor which output a HOG from image flow" configscriptfile="config.php" generatescriptfile="generate.php">
 	<svg width="150" height="100">
 		<rect width="150" height="100" x="0" y="0" fill="lightgray"/>
 		<g stroke="gray" stroke-width="10" transform="translate(5,0)">
