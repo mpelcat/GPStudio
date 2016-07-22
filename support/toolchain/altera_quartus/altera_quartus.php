@@ -68,16 +68,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
                 }
                 else
                 {
-                    if ($block->in_lib)
-                    {
-                        $filepath = $block->path . $file->path;
-                        $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver . DIRECTORY_SEPARATOR . dirname($file->path);
-                    }
-                    else
-                    {
-                        $filepath = $block->path . $file->path;
-                        $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver . DIRECTORY_SEPARATOR . dirname($file->path);
-                    }
+                    $filepath = $block->path . $file->path;
+                    $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver;
+                    if (dirname($file->path) != ".")
+                        $subpath .= DIRECTORY_SEPARATOR . dirname($file->path);
                 }
 
                 // check if file ever added
