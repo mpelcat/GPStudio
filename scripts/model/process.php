@@ -151,7 +151,7 @@ class Process extends Block
             // nothing to do
         }
 
-        if ($process_file != "")
+        if ($process_file != "" and $this->getFile(basename($process_file)) == NULL)
         {
             $file_config = new File();
             $file_config->name = basename($process_file);

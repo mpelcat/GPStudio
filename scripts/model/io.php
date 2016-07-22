@@ -117,7 +117,7 @@ class IO extends Block
             $this->parse_xml($io_device_element, $io_node_element);
         }
 
-        if ($io_file != "")
+        if ($io_file != "" and $this->getFile(basename($io_file)) == NULL)
         {
             $file_config = new File();
             $file_config->name = basename($io_file);
