@@ -23,3 +23,4 @@ La seconde PLL prend en entrée CLK_125 et sort clk250_fpga (250MHz).
 
 ######################                   Exemple d'un bloc com+ethernet                      ##########################
 Un exemple de top contenant le bloc de com et l'ethernet est fournit dans le fichier "com_ethernet_example.vhd".
+Ne pas oublie de faire un reset à l'allumage pour bien valider les valeurs des registres.
