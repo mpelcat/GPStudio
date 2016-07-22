@@ -27,9 +27,8 @@
 #include <QList>
 #include <QMap>
 
-#include "processlib.h"
+#include "blocklib.h"
 #include "ioboardlib.h"
-#include "iolib.h"
 #include "boardlib.h"
 
 class GPSTUDIO_LIB_EXPORT Lib
@@ -43,19 +42,21 @@ public:
     ~Lib();
 
     void reloadProcess();
-    void addProcess(ProcessLib *process);
-    const QList<ProcessLib *> &processes() const;
-    ProcessLib *process(const QString &name);
+    void addProcess(BlockLib *process);
+    const QList<BlockLib *> &processes() const;
+    BlockLib *process(const QString &name);
 
     void reloadIos();
-    void addIo(IOLib *io);
-    const QList<IOLib *> &ios() const;
-    IOLib *io(const QString &name);
+    void addIo(BlockLib *io);
+    const QList<BlockLib *> &ios() const;
+    BlockLib *io(const QString &name);
 
     void reloadBoards();
     void addBoard(BoardLib *board);
     const QList<BoardLib *> &boards()const;
     BoardLib *board(const QString &name);
+
+    bool addIp(const QString &fileName);
 
     void reloadLib();
 
@@ -67,11 +68,11 @@ protected:
     void closeBoards();
 
 protected:
-    QList<ProcessLib*> _process;
-    QMap<QString, ProcessLib*> _processMap;
+    QList<BlockLib*> _process;
+    QMap<QString, BlockLib*> _processMap;
 
-    QList<IOLib*> _ios;
-    QMap<QString, IOLib*> _iosMap;
+    QList<BlockLib*> _ios;
+    QMap<QString, BlockLib*> _iosMap;
 
     QList<BoardLib*> _boards;
     QMap<QString, BoardLib*> _boardsMap;

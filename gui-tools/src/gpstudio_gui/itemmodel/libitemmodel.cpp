@@ -55,7 +55,7 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
 {
     if(index.row()>=_processList.count()) return QVariant();
 
-    ProcessLib *processLib = _processList[index.row()];
+    BlockLib *processLib = _processList[index.row()];
 
     switch (role)
     {
@@ -114,7 +114,7 @@ void LibItemModel::setLib(const Lib *lib)
     emit layoutAboutToBeChanged();
 
     _processList.clear();
-    foreach(ProcessLib *processLib, lib->processes())
+    foreach(BlockLib *processLib, lib->processes())
     {
         _processList.append(processLib);
     }
@@ -122,7 +122,7 @@ void LibItemModel::setLib(const Lib *lib)
     emit layoutChanged();
 }
 
-const QList<ProcessLib*> &LibItemModel::processList() const
+const QList<BlockLib*> &LibItemModel::processList() const
 {
     return _processList;
 }

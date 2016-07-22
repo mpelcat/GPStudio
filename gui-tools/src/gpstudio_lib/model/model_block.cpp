@@ -118,6 +118,16 @@ void ModelBlock::setDriver(const QString &driver)
     _driver = driver;
 }
 
+QString ModelBlock::path() const
+{
+    return _path;
+}
+
+void ModelBlock::setPath(const QString &path)
+{
+    _path = path;
+}
+
 const QString &ModelBlock::categ() const
 {
     return _categ;
@@ -507,6 +517,7 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
     block->setInLib((domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true"));
 
     block->setDriver(domElement.attribute("driver",""));
+    block->setPath(domElement.attribute("path",""));
     block->setCateg(domElement.attribute("categ",""));
 
     QPoint pos;
@@ -577,6 +588,7 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
 
     block->setName(domElement.attribute("name","no_name"));
     block->setDriver(domElement.attribute("driver",""));
+    block->setPath(domElement.attribute("path",""));
 
     QPoint pos;
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
@@ -672,6 +684,7 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
 
     element.setAttribute("name", _name);
     element.setAttribute("driver", _driver);
+    element.setAttribute("path", _path);
 
     if(type()!="io" && type()!="iocom")
         element.setAttribute("inlib", _inLib ? "true" : "false");

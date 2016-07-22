@@ -56,6 +56,9 @@ public:
     const QString &driver() const;
     void setDriver(const QString &driver);
 
+    QString path() const;
+    void setPath(const QString &path);
+
     const QString &categ() const;
     void setCateg(const QString &categ);
 
@@ -140,6 +143,7 @@ protected:
     QString _name;
     bool _inLib;
     QString _driver;
+    QString _path;
     QString _categ;
     qint32 _addrAbs;
     quint8 _sizeAddrRel;

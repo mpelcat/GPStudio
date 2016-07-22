@@ -195,22 +195,7 @@ ModelBlock *BlockItem::modelBlock() const
     return _modelBlock;
 }
 
-BlockItem *BlockItem::fromIoLib(const IOLib *ioLib, BlockItem *item)
-{
-    if(!ioLib)
-        return NULL;
-
-    if(!item)
-        item = new BlockItem();
-
-    item->_svgRenderer.load(ioLib->draw().toUtf8());
-    item->setName(ioLib->name());
-    item->updateBlock();
-
-    return item;
-}
-
-BlockItem *BlockItem::fromProcessLib(const ProcessLib *processLib, BlockItem *item)
+BlockItem *BlockItem::fromBlockLib(const BlockLib *processLib, BlockItem *item)
 {
     if(!processLib)
         return NULL;
@@ -230,20 +215,21 @@ BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
     if(!modelBlock)
         return NULL;
 
+    BlockLib *blockLib;
     if(modelBlock->type()=="process")
-    {
-        item = fromProcessLib(Lib::getLib().process(modelBlock->driver()));
-    }
+        blockLib = Lib::getLib().process(modelBlock->driver());
     else
-    {
-        item = fromIoLib(Lib::getLib().io(modelBlock->driver()));
-    }
+        blockLib = Lib::getLib().io(modelBlock->driver());
+    item = fromBlockLib(blockLib);
 
     if(!item)
         item = new BlockItem();
 
-    foreach (ModelFlow *flow, modelBlock->flows())
+    if(blockLib)
+    foreach (ModelFlow *flow, blockLib->modelProcess()->flows())
+    {
         item->addPort(BlockPortItem::fromModelFlow(flow));
+    }
 
     item->setPos(modelBlock->pos());
     item->setName(modelBlock->name());

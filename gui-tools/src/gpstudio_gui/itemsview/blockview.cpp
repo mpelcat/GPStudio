@@ -116,7 +116,7 @@ void BlockView::dropEvent(QDropEvent *event)
     if(_editMode)
     {
         QString driver = event->mimeData()->text();
-        ProcessLib *processLib = Lib::getLib().process(driver);
+        BlockLib *processLib = Lib::getLib().process(driver);
         if(processLib)
         {
             ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());

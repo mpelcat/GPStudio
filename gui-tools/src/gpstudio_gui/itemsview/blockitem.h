@@ -27,7 +27,7 @@
 #include <QSvgRenderer>
 #include <QMap>
 
-class ProcessLib;
+class BlockLib;
 class IOLib;
 class ModelBlock;
 class Block;
@@ -64,8 +64,7 @@ public:
 
 public:
     // lib
-    static BlockItem *fromIoLib(const IOLib *ioLib, BlockItem *item = NULL);
-    static BlockItem *fromProcessLib(const ProcessLib *processLib, BlockItem *item = NULL);
+    static BlockItem *fromBlockLib(const BlockLib *processLib, BlockItem *item = NULL);
 
     // model
     static BlockItem *fromModelBlock(ModelBlock *modelBlock, BlockItem *item = NULL);

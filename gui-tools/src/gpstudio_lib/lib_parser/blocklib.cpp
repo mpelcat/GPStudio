@@ -18,7 +18,7 @@
 **
 ****************************************************************************/
 
-#include "processlib.h"
+#include "blocklib.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -26,91 +26,91 @@
 #include <QDebug>
 #include <QPainter>
 
-ProcessLib::ProcessLib()
+BlockLib::BlockLib()
 {
-    _modelProcess = NULL;
+    _modelBlock = NULL;
 }
 
-ProcessLib::~ProcessLib()
+BlockLib::~BlockLib()
 {
-    delete _modelProcess;
+    delete _modelBlock;
 }
 
-const QString &ProcessLib::name() const
+const QString &BlockLib::name() const
 {
     return _name;
 }
 
-void ProcessLib::setName(const QString &name)
+void BlockLib::setName(const QString &name)
 {
     _name = name;
 }
 
-const QString &ProcessLib::description() const
+const QString &BlockLib::description() const
 {
     return _description;
 }
 
-void ProcessLib::setDescription(const QString &description)
+void BlockLib::setDescription(const QString &description)
 {
     _description = description;
 }
 
-const QString &ProcessLib::categ() const
+const QString &BlockLib::categ() const
 {
     return _categ;
 }
 
-void ProcessLib::setCateg(const QString &categ)
+void BlockLib::setCateg(const QString &categ)
 {
     _categ = categ;
 }
 
-const QString &ProcessLib::path() const
+const QString &BlockLib::path() const
 {
     return _path;
 }
 
-void ProcessLib::setPath(const QString &path)
+void BlockLib::setPath(const QString &path)
 {
     _path = path;
 }
 
-const QString &ProcessLib::configFile() const
+const QString &BlockLib::configFile() const
 {
     return _configFile;
 }
 
-void ProcessLib::setConfigFile(const QString &configFile)
+void BlockLib::setConfigFile(const QString &configFile)
 {
     _configFile = configFile;
 }
 
-const QString &ProcessLib::draw() const
+const QString &BlockLib::draw() const
 {
     return _draw;
 }
 
-void ProcessLib::setDraw(const QString &draw)
+void BlockLib::setDraw(const QString &draw)
 {
     _draw = draw;
 }
 
-const QIcon &ProcessLib::icon() const
+const QIcon &BlockLib::icon() const
 {
     return _icon;
 }
 
-void ProcessLib::setIcon(const QIcon &icon)
+void BlockLib::setIcon(const QIcon &icon)
 {
     _icon = icon;
 }
 
-ProcessLib *ProcessLib::readFromFile(const QString &fileName)
+BlockLib *BlockLib::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
     QFile file(fileName);
-    ProcessLib *processLib = NULL;
+    BlockLib *blockLib = NULL;
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug()<<"Cannot open"<<file.fileName();
@@ -120,21 +120,25 @@ ProcessLib *ProcessLib::readFromFile(const QString &fileName)
             qDebug()<<"Cannot open"<<file.fileName();
         else
         {
-            processLib = ProcessLib::fromDomElement(doc.documentElement());
-            if(processLib)
-                processLib->setPath(QFileInfo(file).absolutePath());
+            blockLib = BlockLib::fromDomElement(doc.documentElement());
+            if(blockLib)
+                blockLib->setPath(QFileInfo(file).absolutePath());
         }
         file.close();
     }
-    return processLib;
+    return blockLib;
 }
 
-ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
+BlockLib *BlockLib::fromDomElement(const QDomElement &domElement)
 {
-    ProcessLib *processLib = new ProcessLib();
-    processLib->setName(domElement.attribute("name","no_name"));
-    processLib->setCateg(domElement.attribute("categ",""));
-    processLib->setDescription(domElement.attribute("description",""));
+    BlockLib *blockLib = new BlockLib();
+    if(domElement.tagName()=="process")
+        blockLib->setName(domElement.attribute("name","no_name"));
+    else
+        blockLib->setName(domElement.attribute("driver","no_name"));
+
+    blockLib->setCateg(domElement.attribute("categ",""));
+    blockLib->setDescription(domElement.attribute("desc",""));
 
     // get svg part of file and save as string
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
@@ -143,27 +147,41 @@ ProcessLib *ProcessLib::fromDomElement(const QDomElement &domElement)
         QString svg;
         QTextStream streamSvg(&svg);
         streamSvg << nodesSvg.at(0);
-        processLib->setDraw(svg);
+        blockLib->setDraw(svg);
     }
 
     // render an 32px icon from svg
     QSvgRenderer render;
     QPixmap pixIcon(32,32);
     QPainter painter(&pixIcon);
-    render.load(processLib->draw().toUtf8());
+    render.load(blockLib->draw().toUtf8());
     render.render(&painter, QRectF(0,0,32,32));
     painter.end();
-    processLib->_icon.addPixmap(pixIcon);
+    blockLib->_icon.addPixmap(pixIcon);
 
     // get process model for creating instance of ModelProcess
-    processLib->_modelProcess = ModelProcess::fromNodeGenerated(domElement);
-    processLib->_modelProcess->setInLib(true);
-    processLib->_modelProcess->setDriver(processLib->_name); // TODO fixe me
+    if(domElement.tagName()=="process")
+        blockLib->_modelBlock = ModelProcess::fromNodeGenerated(domElement);
+    else
+        blockLib->_modelBlock = ModelIO::fromNodeGenerated(domElement);
 
-    return processLib;
+    blockLib->_modelBlock->setInLib(true);
+    blockLib->_modelBlock->setDriver(blockLib->_name); // TODO fixe me
+
+    return blockLib;
 }
 
-ModelProcess *ProcessLib::modelProcess() const
+ModelBlock *BlockLib::modelBlock() const
 {
-    return _modelProcess;
+    return _modelBlock;
+}
+
+ModelProcess *BlockLib::modelProcess() const
+{
+    return static_cast<ModelProcess*>(_modelBlock);
+}
+
+ModelIO *BlockLib::modelIO() const
+{
+    return static_cast<ModelIO*>(_modelBlock);
 }

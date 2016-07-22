@@ -18,8 +18,8 @@
 **
 ****************************************************************************/
 
-#ifndef IOLIB_H
-#define IOLIB_H
+#ifndef PROCESSLIB_H
+#define PROCESSLIB_H
 
 #include "gpstudio_lib_common.h"
 
@@ -28,13 +28,14 @@
 #include <QList>
 #include <QIcon>
 
+#include "model/model_process.h"
 #include "model/model_io.h"
 
-class GPSTUDIO_LIB_EXPORT IOLib
+class GPSTUDIO_LIB_EXPORT BlockLib
 {
 public:
-    IOLib();
-    ~IOLib();
+    BlockLib();
+    ~BlockLib();
 
     const QString &name() const;
     void setName(const QString &name);
@@ -57,11 +58,13 @@ public:
     const QIcon &icon() const;
     void setIcon(const QIcon &icon);
 
+    ModelBlock *modelBlock() const;
+    ModelProcess *modelProcess() const;
     ModelIO *modelIO() const;
 
 public:
-    static IOLib *readFromFile(const QString &fileName);
-    static IOLib *fromDomElement(const QDomElement &domElement);
+    static BlockLib *readFromFile(const QString &fileName);
+    static BlockLib *fromDomElement(const QDomElement &domElement);
 
 protected:
     QString _name;
@@ -72,7 +75,7 @@ protected:
     QString _draw;
     QIcon _icon;
 
-    ModelIO *_modelIO;
+    ModelBlock *_modelBlock;
 };
 
-#endif // IOLIB_H
+#endif // PROCESSLIB_H

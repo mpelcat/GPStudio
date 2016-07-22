@@ -25,8 +25,7 @@
 #include <QDebug>
 #include <QCursor>
 
-#include "lib_parser/processlib.h"
-#include "lib_parser/iolib.h"
+#include "lib_parser/blocklib.h"
 
 #include "model/model_flow.h"
 
