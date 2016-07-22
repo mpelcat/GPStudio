@@ -241,8 +241,9 @@ class Altera_quartus_toolchain extends HDL_toolchain
                     }
 
                     $file_path = str_replace("\\", '/', $file->path);
+                    $file_path = str_replace("/./", '/', $file_path);
 
-                    if (!in_array($file_path, $fileList))
+                    if (!in_array($file_path, $fileList) and $type != "")
                     {
                         $fileList[] = $file_path;
 
