@@ -87,6 +87,7 @@ public:
     void addFile(ModelFile *file);
     void addFiles(const QList<ModelFile *> &files);
     ModelFile *getFile(const QString &name) const;
+    ModelFile *getDefFile() const;
 
     QList<ModelParam *> &params();
     const QList<ModelParam *> &params() const;

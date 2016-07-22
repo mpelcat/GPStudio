@@ -50,6 +50,8 @@ public:
     Camera(const QString &fileCameraConfig=QString());
     ~Camera();
 
+    bool loadFromFile(const QString &fileCameraConfig);
+
     const ModelNode *node() const;
 
     const Property &rootProperty() const;

@@ -29,6 +29,8 @@
 #include "flowmanager.h"
 #include "cameracom.h"
 
+#include "lib_parser/lib.h"
+
 #include <model/model_iocom.h>
 
 Camera::Camera(const QString &fileCameraConfig)
@@ -40,13 +42,32 @@ Camera::Camera(const QString &fileCameraConfig)
     _comBlock = NULL;
     _fiBlock = NULL;
 
-    setNode(ModelNode::readFromFile(fileCameraConfig));
+    loadFromFile(fileCameraConfig);
 }
 
 Camera::~Camera()
 {
     delete _modelNode;
     delete _com;
+}
+
+bool Camera::loadFromFile(const QString &fileCameraConfig)
+{
+    ModelNode *node = ModelNode::readFromFile(fileCameraConfig);
+    setNode(node);
+
+    // load library with project IPs
+    foreach (ModelBlock *block, node->blocks())
+    {
+        if(block->driver().endsWith(".proc") || block->driver().endsWith(".io"))
+        {
+            ModelFile *file = block->getDefFile();
+            if(file)
+                Lib::getLib().addIp(file->path());
+        }
+    }
+
+    return (node != NULL);
 }
 
 const ModelNode *Camera::node() const
@@ -56,10 +77,12 @@ const ModelNode *Camera::node() const
 
 void Camera::setNode(ModelNode *node)
 {
-    if(_modelNode) delete _modelNode;
+    if(_modelNode)
+        delete _modelNode;
     _modelNode = node;
 
-    if(!_modelNode) return;
+    if(!_modelNode)
+        return;
 
     _paramsBlocks.removeAllSubProperties();
     _paramsBlocks.setName(node->name());
@@ -92,7 +115,8 @@ void Camera::setNode(ModelNode *node)
     }
 
     ModelIOCom *iOCom = node->getIOCom();
-    if(iOCom) _comBlock = block(iOCom->name());
+    if(iOCom)
+        _comBlock = block(iOCom->name());
 
     ScriptEngine::getEngine().setRootProperty(&_paramsBlocks);
 
@@ -144,14 +168,16 @@ const QList<Block*> &Camera::blocks() const
 
 Block *Camera::block(int i) const
 {
-    if(i<_blocks.count()) return _blocks[i];
+    if(i<_blocks.count())
+        return _blocks[i];
     return NULL;
 }
 
 Block *Camera::block(QString name) const
 {
     QMap<QString, Block*>::const_iterator localConstFind = _blocksMap.constFind(name);
-    if(localConstFind!=_blocksMap.constEnd()) return *localConstFind;
+    if(localConstFind!=_blocksMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -173,10 +199,9 @@ FlowManager *Camera::flowManager() const
 bool Camera::isConnected() const
 {
     if(_com)
-    {
         return _com->isConnected();
-    }
-    else return false;
+    else
+        return false;
 }
 
 void Camera::connectCam(const CameraInfo &cameraInfo)

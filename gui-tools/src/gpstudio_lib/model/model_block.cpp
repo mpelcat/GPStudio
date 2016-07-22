@@ -238,6 +238,17 @@ ModelFile *ModelBlock::getFile(const QString &name) const
     return NULL;
 }
 
+ModelFile *ModelBlock::getDefFile() const
+{
+    for(int i=0; i<this->files().size(); i++)
+    {
+        ModelFile *file = this->files().at(i);
+        if(file->group()=="blockdef")
+            return file;
+    }
+    return NULL;
+}
+
 QList<ModelParam *> &ModelBlock::params()
 {
     return _params;
