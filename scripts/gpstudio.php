@@ -363,10 +363,13 @@ function cloneSvg($src, $xml, $dest)
     }
     foreach ($src->childNodes as $node)
     {
-        if ($node->nodeType == XML_ELEMENT_NODE)
+        if ($node->nodeType == XML_TEXT_NODE)
         {
-            cloneSvg($node, $xml, $svgNode);
+            if(!empty($node->nodeValue) and $src->childNodes->length==1)
+                $svgNode->nodeValue = $node->nodeValue;
         }
+        if ($node->nodeType == XML_ELEMENT_NODE)
+            cloneSvg($node, $xml, $svgNode);
     }
     $dest->appendChild($svgNode);
 }
