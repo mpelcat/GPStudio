@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="threshold" categ="" pi_size_addr_rel="2" desc="Simple process to create binary image from grayscale">
+  <svg width="100" height="80">
+    <rect width="100" height="80" x="0" y="0" fill="lightgray"/>
+    <path d="M30 20 L60 40 L30 60" fill="transparent" stroke="black" stroke-width="10"/>
+    <text x="70" y="20">HOG</text>
+  </svg>
+  <files>
+    <file name="threshold.vhd" type="vhdl" group="hdl" path="hdl/threshold.vhd" desc=""/>
+    <file name="threshold_process.vhd" type="vhdl" group="hdl" path="hdl/threshold_process.vhd" desc=""/>
+    <file name="threshold_slave.vhd" type="vhdl" group="hdl" path="hdl/threshold_slave.vhd" desc=""/>
+    <file name="threshold.proc" type="proc" group="blockdef" path="threshold.proc" desc=""/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in" desc=""/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in" desc=""/>
+    <flow name="out" size="8" type="out" desc="">
+      <properties>
+        <property name="datatype" value="image" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="width" value="" caption="width" type="int" min="" max="" step="" assert="" propertymap="in.width.value" onchange="" desc=""/>
+        <property name="height" value="" caption="height" type="int" min="" max="" step="" assert="" propertymap="in.height.value" onchange="" desc=""/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="threshold_reg" value="" regaddr="0" propertymap="threshold.value" default="" min="" max="" desc=""/>
+  </params>
+  <properties>
+    <property name="threshold" value="0" caption="threshold" type="sint" min="0" max="255" step="" assert="" propertymap="" onchange="" desc=""/>
+  </properties>
+</process>
