@@ -195,9 +195,9 @@ To do it, you need to add a connection with the command \textbf{connect}:
 > \textbf{gpnode connect} -f mt9.out -t usb.in0
 \end{sample}
 
-To check effective connections, it is possible to print the list of connection with \textbf{showconnects}:
+To check effective connections, it is possible to print the list of connection with \textbf{showconnect}:
 \begin{sample}
-> \textbf{gpnode showconnects}
+> \textbf{gpnode showconnect}
 \begin{Verbatim}
 connects:
   + mt9.out -> usb.in0 (msb)
@@ -730,10 +730,10 @@ A new component mythreshold\_slave.vhd is generated because your process block h
 To enable the threshold value that could change dynamically, get the `threshold\_reg' register value to compare with the pixel value insted of a constant value in \texttt{threshold\_process.vhd}:
 \begin{lstlisting}[frame=single]
 	if(in_dv='1' and in_fv='1') then
-		if(in_data<threshold_reg) then
-			out_data <= (others => '0');
-		else
+		if(in_data >= threshold_reg(IN_SIZE-1 downto 0)) then
 			out_data <= (others => '1');
+		else
+			out_data <= (others => '0');
 		end if;
 	end if;
 \end{lstlisting}
