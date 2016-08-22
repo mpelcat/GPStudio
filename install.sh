@@ -20,6 +20,7 @@ if [ -d "/usr/share/bash-completion/completions/" ]; then
 	echo "install bash completion";
 	cp share/gpnode_completion /usr/share/bash-completion/completions/gpnode
 	cp share/gplib_completion /usr/share/bash-completion/completions/gplib
+	cp share/gpcomp_completion /usr/share/bash-completion/completions/gpcomp
 	cp share/gpproc_completion /usr/share/bash-completion/completions/gpproc
 	cp share/gpdevice_completion /usr/share/bash-completion/completions/gpdevice
 fi
