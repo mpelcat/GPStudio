@@ -440,8 +440,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 
         switch ($family)
         {
+            case 'MAX 10': // 10M50SAE144C8GES
+                preg_match_all("|(10M[0-9]{2})([SD][CFA])([VEMUF])([0-9]+)([CIA])([6-8]).*|", $device, $out, PREG_SET_ORDER);
+                $deviceMember = $out[0][1];
+                $speedgrade = $out[0][6];
+                $package = $out[0][3];
+                break;
             case 'Cyclone III':
-                preg_match_all("|(EP[0-9])([A-Z]{1,3}[0-9]+)([A-Z]{1,3}[0-9]+)([A-Z][0-9]+[A-Z]*).*|", $device, $out, PREG_SET_ORDER);
+                preg_match_all("|(EP3)([A-Z]{1,3}[0-9]+)([A-Z]{1,3}[0-9]+)([A-Z][0-9]+[A-Z]*).*|", $device, $out, PREG_SET_ORDER);
                 $deviceMember = $out[0][2];
                 $speedgrade = $out[0][4];
                 break;
@@ -451,7 +457,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
                 $speedgrade = $out[0][4];
                 break;
             case 'Stratix IV': // EP4SE820F43C3
-                preg_match_all("|(EP[0-9])(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
+                preg_match_all("|(EP4)(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
                 $deviceMember = $out[0][4];
                 $speedgrade = $out[0][5];
                 echo $deviceMember . '   ' . $speedgrade . "\n";
@@ -465,6 +471,15 @@ class Altera_quartus_toolchain extends HDL_toolchain
             case 'pll':
                 switch ($family)
                 {
+                    case 'MAX 10':
+                        $attr['maxPLL'] = 1;
+                        $attr['clkByPLL'] = 5;
+                        $attr['vcomin'] = 600000000;
+                        $attr['vcomax'] = 1300000000;
+                        $attr['mulmax'] = 512;
+                        $attr['divmax'] = array(512, 512, 512, 512, 512);
+                        $attr['pllclkcanbechain'] = true;
+                        break;
                     case 'Cyclone III':
                         if ($deviceMember == 'C5' or $deviceMember == 'C10')
                             $attr['maxPLL'] = 2;
