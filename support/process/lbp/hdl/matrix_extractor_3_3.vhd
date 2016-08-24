@@ -78,25 +78,23 @@ signal p00_s, p01_s, p02_s : std_logic_vector((PIX_WIDTH-1) downto 0);
 signal p10_s, p11_s, p12_s : std_logic_vector((PIX_WIDTH-1) downto 0);
 signal p20_s, p21_s, p22_s : std_logic_vector((PIX_WIDTH-1) downto 0);
 
+signal line_reset : std_logic;
+
 signal line0_read : std_logic;
+signal line0_out : std_logic_vector((PIX_WIDTH-1) downto 0);
 signal line0_write : std_logic;
 signal line0_empty : std_logic;
 signal line0_pix_out : std_logic_vector((PIX_WIDTH-1) downto 0);
 
 signal line1_read : std_logic;
+signal line1_out : std_logic_vector((PIX_WIDTH-1) downto 0);
 signal line1_write : std_logic;
 signal line1_empty : std_logic;
 signal line1_pix_out : std_logic_vector((PIX_WIDTH-1) downto 0);
 
-signal linedv_read : std_logic;
-signal linedv_write : std_logic;
-signal linedv_empty : std_logic;
-
 signal dummy_dv : std_logic;
 signal out_dv_s : std_logic;
 signal cell : std_logic_vector((LINE_WIDTH_MAX-1) downto 0);
-
-signal matrix_dv_s : std_logic;
 
 begin
 
@@ -107,12 +105,12 @@ begin
     	LPM_NUMWORDS => FIFO_LENGHT
 	)
     port map (
-		data => p20_s,
+		data => p10_s,
 		clock => clk_proc,
 		wrreq => line0_write,
-		q => p12_s,
+		q => p02_s,
 		rdreq => line0_read,
-		aclr => not(reset_n),
+		aclr => (line_reset),
 		empty => line0_empty
     );
 
@@ -123,12 +121,12 @@ begin
     	LPM_NUMWORDS => FIFO_LENGHT
 	)
     port map (
-		data => p10_s,
+		data => p20_s,
 		clock => clk_proc,
 		wrreq => line1_write,
-		q => p02_s,
+		q => p12_s,
 		rdreq => line1_read,
-		aclr => not(reset_n),
+		aclr => (line_reset),
 		empty => line1_empty
     );
 
@@ -140,70 +138,97 @@ begin
 			line0_read <= '0';
 			line0_write <= '0';
 			line1_read <= '0';
-			line0_write <= '0';
+			line1_write <= '0';
+			line_reset <= '1';
 			
 		elsif(rising_edge(clk_proc)) then
-			matrix_dv <= matrix_dv_s;
-			dummy_dv <= matrix_dv_s;
-			matrix_dv_s <= '0';
+			matrix_dv <= '0';
 			if(in_fv='0') then
 				x_pos <= to_unsigned(0, 16);
 				y_pos <= to_unsigned(0, 16);
 				line0_read <= '0';
 				line0_write <= '0';
 				line1_read <= '0';
-				line0_write <= '0';
+				line1_write <= '0';
+                line_reset <= '1';
 
 			else
+                line_reset <= '0';
 				if (line0_read='1') then
-					p11_s <= p12_s;
-					p10_s <= p11_s;
-				end if;
-				if (line1_read='1') then
 					p01_s <= p02_s;
 					p00_s <= p01_s;
 				end if;
+				if (line1_read='1') then
+					p11_s <= p12_s;
+					p10_s <= p11_s;
+				end if;
 				
 				if (in_dv='1') then
+					
+                    -- counter y_pos and x_pos
 					x_pos <= x_pos+1;
+					if(x_pos = unsigned(widthimg_i)-1) then
+						y_pos <= y_pos + 1;
+						x_pos <= to_unsigned(0, 16);
+					end if;
 					
 					p22_s <= in_data;
 					p21_s <= p22_s;
 					p20_s <= p21_s;
-					
-					if(x_pos<=to_unsigned(1, 16)) then
-						line0_write <= '0';
-						line1_write <= '0';
-					elsif(x_pos=unsigned(widthimg_i)-1) then
-						line0_write <= '0';
-						line1_write <= '0';
-						y_pos <= y_pos+1;
-						x_pos <= to_unsigned(0, 16);
-					else
-						line0_write <= '1';
-						if(y_pos>to_unsigned(1, 16)) then
-							line1_write <= '1';
-							matrix_dv_s <= '1';
-						else
-							line1_write <= '0';
-						end if;
+                    
+                    -- line1 write command
+                    if((y_pos = to_unsigned(0, 16)) and (x_pos >= to_unsigned(2, 16))) then
+                        line1_write <= '1';
+                    elsif(y_pos > to_unsigned(0, 16)) then
+                        line1_write <= '1';
+                    else
+                        line1_write <= '0';
+                    end if;
+                    
+                    -- line0 write command
+                    if(y_pos = to_unsigned(0, 16)) then
+                        line0_write <= '0';
+                    elsif((y_pos = to_unsigned(1, 16)) and (x_pos >= to_unsigned(2, 16))) then
+                        line0_write <= '1';
+                    elsif((y_pos > to_unsigned(1, 16))) then
+                        line0_write <= '1';
+                    else
+                        line0_write <= '0';
+                    end if;
+                    
+                    -- matrix_dv_next command
+                    if((x_pos >= to_unsigned(2, 16)) and (y_pos >= to_unsigned(2, 16))) then
+						matrix_dv <= '1';
 					end if;
 					
-					if(y_pos=to_unsigned(0, 16)) then
-						line0_read <= '0';
-						line1_read <= '0';
-					elsif(y_pos>to_unsigned(1, 16)) then
-						line0_read <= '1';
-						line1_read <= '1';
+                    -- line1 read command
+					if(y_pos = to_unsigned(0, 16)) then
+                        if(x_pos = unsigned(widthimg_i)-2) then
+                            line1_read <= '1';
+                        else
+                            line1_read <= '0';
+                        end if;
 					else
-						line1_read <= '0';
+						line1_read <= '1';
+					end if;
+					
+                    -- line0 read command
+					if(y_pos = to_unsigned(0, 16)) then
+						line0_read <= '0';
+					elsif(y_pos = to_unsigned(1, 16)) then
+                        if(x_pos = unsigned(widthimg_i)-2) then
+                            line0_read <= '1';
+                        else
+                            line0_read <= '0';
+                        end if;
+					else
 						line0_read <= '1';
 					end if;
 				else
 					line0_read <= '0';
 					line0_write <= '0';
 					line1_read <= '0';
-					line0_write <= '0';
+					line1_write <= '0';
 				end if;
 			end if;
 		end if;

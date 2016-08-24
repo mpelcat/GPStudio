@@ -9,8 +9,8 @@
 		<flow name="out" type="out" size="8" desc="Descriptor output">
 			<properties>
 				<property name="datatype" value="image" type="flowtype"/>
-				<property name="width" propertymap="in.width.value" type="int" min="" max=""/>
-				<property name="height" propertymap="in.height.value" type="int" min="" max=""/>
+				<property name="width" propertymap="in.width.value-2" type="int" min="" max=""/>
+				<property name="height" propertymap="in.height.value-2" type="int" min="" max=""/>
 			</properties>
 		</flow>
 	</flows>	
@@ -22,12 +22,11 @@
 				<bitfield name="enable" bitfield="0" default="0" propertymap="enable.value" desc="On/Off bit"/>
 			</bitfields>
 		</param>
-		<param name="width" regaddr="1" default="320" propertymap="imgwidth.value" desc="Image width"/>
+		<param name="width" regaddr="1" default="320" propertymap="in.width.value" desc="Image width"/>
 		<param name="theshold" regaddr="2" default="1" propertymap="theshold.value" desc="Theshold LBP"/>
 	</params>
 	<properties>
 		<property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
-		<property name="imgwidth" caption="imgwidth" type="int" value="320" min="0" max="1280" desc="Width of input image"/>
 		<property name="theshold" caption="theshold" type="sint" value="0" min="0" max="128" desc="Theshold LBP"/>
 	</properties>
 	<files>

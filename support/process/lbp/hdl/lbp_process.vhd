@@ -103,30 +103,27 @@ begin
 		widthimg_i => widthimg_i
     );
 	
-	--~ process (clk_proc, reset_n, matrix_dv)
-	--~ begin
-		--~ if(reset_n='0') then
-				--~ 
-		--~ elsif(rising_edge(clk_proc)) then
-			--~ value_dv<='0';
-			--~ if(matrix_dv='1') then
+	process (clk_proc, reset_n, matrix_dv)
+	begin
+		if(reset_n='0') then
+				
+		elsif(rising_edge(clk_proc)) then
+			value_dv<='0';
+			if(matrix_dv='1') then
 			
-				--~ if(unsigned(p11)>unsigned(p00)+unsigned(theshold_i)) then value_data(0) <= '1'; else value_data(0) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p01)+unsigned(theshold_i)) then value_data(1) <= '1'; else value_data(1) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p02)+unsigned(theshold_i)) then value_data(2) <= '1'; else value_data(2) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p10)+unsigned(theshold_i)) then value_data(3) <= '1'; else value_data(3) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p12)+unsigned(theshold_i)) then value_data(4) <= '1'; else value_data(4) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p20)+unsigned(theshold_i)) then value_data(5) <= '1'; else value_data(5) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p21)+unsigned(theshold_i)) then value_data(6) <= '1'; else value_data(6) <= '0'; end if;
-				--~ if(unsigned(p11)>unsigned(p22)+unsigned(theshold_i)) then value_data(7) <= '1'; else value_data(7) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p00)+unsigned(theshold_i)) then value_data(0) <= '1'; else value_data(0) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p01)+unsigned(theshold_i)) then value_data(1) <= '1'; else value_data(1) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p02)+unsigned(theshold_i)) then value_data(2) <= '1'; else value_data(2) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p10)+unsigned(theshold_i)) then value_data(3) <= '1'; else value_data(3) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p12)+unsigned(theshold_i)) then value_data(4) <= '1'; else value_data(4) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p20)+unsigned(theshold_i)) then value_data(5) <= '1'; else value_data(5) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p21)+unsigned(theshold_i)) then value_data(6) <= '1'; else value_data(6) <= '0'; end if;
+				if(unsigned(p11)>unsigned(p22)+unsigned(theshold_i)) then value_data(7) <= '1'; else value_data(7) <= '0'; end if;
 				
 				--~ value_data<=p11;
-				--~ value_dv<='1';
-			--~ end if;
-		--~ end if;
-	--~ end process;
-	
-	value_data<=p11;
-	value_dv<=matrix_dv;
+				value_dv<='1';
+			end if;
+		end if;
+	end process;
 
 end rtl;
