@@ -99,6 +99,52 @@
 -->
 		<property name="exposuretime" value="1000" caption="exposure time" type="sint" min="0" max="4500"/>
 		<property name="linelenght" value="1650" type="int" assert="" min="1650" max="4500"/>
+        
+		<property name="resolutions" caption="standard resolutions" type="enum" onchange="switch(resolutions.bits) { 
+	case 0:
+		roi1.w.value=640;
+		roi1.h.value=480;
+        binning.value=1;
+		roi1.x.value=320;
+		roi1.y.value=240;
+		break;
+	case 1:
+		roi1.w.value=1280;
+		roi1.h.value=960;
+        binning.value=1;
+		roi1.x.value=0;
+		roi1.y.value=0;
+		break;
+	case 2:
+		roi1.w.value=800;
+		roi1.h.value=600;
+        binning.value=0;
+		roi1.x.value=240;
+		roi1.y.value=180;
+		break;
+	case 3:
+		roi1.w.value=1024;
+		roi1.h.value=768;
+        binning.value=0;
+		roi1.x.value=128;
+		roi1.y.value=96;
+		break;
+	case 4:
+		roi1.w.value=1280;
+		roi1.h.value=960;
+        binning.value=0;
+		roi1.x.value=0;
+		roi1.y.value=0;
+		break;
+	}">
+			<enums>
+				<enum name="320*240"  	value="0" />
+				<enum name="640*480"  	value="1" />
+				<enum name="800*600"    value="2" />
+				<enum name="1024*768" 	value="3" />
+				<enum name="1280*1024" 	value="4" />
+			</enums>
+		</property>
 	</properties>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
