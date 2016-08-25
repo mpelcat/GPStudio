@@ -159,7 +159,7 @@ _gpproc()
                         return 0
                         ;;
                     setproperty)
-                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s -c' -- "$cur" ) )
                         return 0
                         ;;
                 esac

@@ -1263,7 +1263,7 @@ switch ($action)
         if (TOOL == "gpcomp")
             error("Component cannot have properties.", 1);
 
-        $options = getopt("a:n:l:t:v:r:s:");
+        $options = getopt("a:n:l:t:v:r:s:c:");
         if (array_key_exists('n', $options))
             $name = $options['n'];
         else
@@ -1301,6 +1301,10 @@ switch ($action)
             $step = $options['s'];
         else
             $step = $property->step;
+        if (array_key_exists('c', $options))
+            $onchange = $options['c'];
+        else
+            $onchange = $property->onchange;
 
         $property->caption = $caption;
         $property->type = $type;
@@ -1308,7 +1312,7 @@ switch ($action)
         $property->min = $min;
         $property->max = $max;
         $property->step = $step;
-
+        $property->onchange = $onchange;
         break;
 
     case "setpropertymap":
