@@ -99,7 +99,8 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->drawPath(path);
 
         painter->setPen(QPen());
-        painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
+        if(_name != "in")
+            painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
     }
     else
     {
@@ -110,7 +111,8 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->drawPath(path);
 
         painter->setPen(QPen());
-        painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
+        if(_name != "out")
+            painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
     }
 }
 
