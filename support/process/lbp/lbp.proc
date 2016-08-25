@@ -33,7 +33,7 @@
 		<file name="lbp.vhd" path="hdl/lbp.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="lbp_slave.vhd" path="hdl/lbp_slave.vhd" type="vhdl" group="hdl" desc=""/>
 		<file name="lbp_process.vhd" path="hdl/lbp_process.vhd" type="vhdl" group="hdl" desc=""/>
-		<file name="matrix_extractor_3_3.vhd" path="hdl/matrix_extractor_3_3.vhd" type="vhdl" group="hdl" desc=""/>
+		<file name="matrix_extractor.vhd" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd" type="vhdl" group="hdl" desc=""/>
 	</files>
 	<resets>
 		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
