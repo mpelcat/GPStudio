@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="roi" categ="" pi_size_addr_rel="2" desc="Region of interest extractor">
+  <svg width="150" height="100">
+    <rect width="150" height="100" x="0" y="0" fill="gray"/>
+    <rect width="45" height="30" x="35" y="30" fill="lightgray" stroke="red" stroke-width="2"/>
+  </svg>
+  <infos>
+    <info name="author" value="Sebastien CAUX"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-08-25"/>
+  </infos>
+  <files>
+    <file name="roi.vhd" type="vhdl" group="hdl" path="hdl/roi.vhd" desc=""/>
+    <file name="roi_process.vhd" type="vhdl" group="hdl" path="hdl/roi_process.vhd" desc=""/>
+    <file name="roi_slave.vhd" type="vhdl" group="hdl" path="hdl/roi_slave.vhd" desc=""/>
+    <file name="roi.proc" type="proc" group="blockdef" path="roi.proc" desc=""/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in" desc=""/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in" desc=""/>
+    <flow name="out" size="8" type="out" desc="">
+      <properties>
+        <property name="datatype" value="image" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+        <property name="width" value="" caption="width" type="int" min="" max="" step="" assert="" propertymap="bypass.value ? in.width.value : ((x.value + w.value &gt; in.width.value) ? ((x.value &gt; in.width.value) ? 0 : in.width.value - x.value) : w.value)" onchange="" desc=""/>
+        <property name="height" value="" caption="height" type="int" min="" max="" step="" assert="" propertymap="bypass.value ? in.height.value : ((y.value + h.value &gt; in.height.value) ? ((y.value &gt; in.height.value) ? 0 : in.height.value - y.value) : h.value)" onchange="" desc=""/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="status_reg" value="" regaddr="0" propertymap="" default="" min="" max="" desc="">
+      <bitfields>
+        <bitfield name="enable_bit" type="" value="" bitfield="0" propertymap="enable.value" desc=""/>
+        <bitfield name="bypass_bit" type="" value="" bitfield="1" propertymap="bypass.value" desc=""/>
+      </bitfields>
+    </param>
+    <param name="in_size_reg" value="" regaddr="1" propertymap="" default="" min="" max="" desc="">
+      <bitfields>
+        <bitfield name="in_w_reg" type="" value="" bitfield="11-0" propertymap="in.width.value" desc=""/>
+        <bitfield name="in_h_reg" type="" value="" bitfield="27-16" propertymap="in.height.value" desc=""/>
+      </bitfields>
+    </param>
+    <param name="out_size_reg" value="" regaddr="2" propertymap="" default="" min="" max="" desc="">
+      <bitfields>
+        <bitfield name="out_w_reg" type="" value="" bitfield="11-0" propertymap="w.value" desc=""/>
+        <bitfield name="out_h_reg" type="" value="" bitfield="27-16" propertymap="h.value" desc=""/>
+      </bitfields>
+    </param>
+    <param name="out_offset_reg" value="" regaddr="3" propertymap="" default="" min="" max="" desc="">
+      <bitfields>
+        <bitfield name="out_x_reg" type="" value="" bitfield="11-0" propertymap="x.value" desc=""/>
+        <bitfield name="out_y_reg" type="" value="" bitfield="27-16" propertymap="y.value" desc=""/>
+      </bitfields>
+    </param>
+  </params>
+  <properties>
+    <property name="enable" value="1" caption="enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="bypass" value="0" caption="bypass" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="x" value="0" caption="x" type="int" min="0" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="y" value="0" caption="y" type="int" min="0" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="w" value="32" caption="w" type="int" min="1" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="h" value="24" caption="h" type="int" min="1" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
+  </properties>
+</process>
