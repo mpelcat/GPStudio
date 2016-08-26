@@ -109,7 +109,7 @@ void CamExplorerWidget::setRootProperty(const Property *property)
 
             if(property)
             {
-                foreach (Property *subProperty, property->subPropertiesMap())
+                foreach (Property *subProperty, property->subProperties())
                 {
                     PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(subProperty);
                     if(propertyWidget)
