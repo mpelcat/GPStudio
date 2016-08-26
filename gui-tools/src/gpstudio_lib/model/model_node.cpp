@@ -114,6 +114,17 @@ void ModelNode::removeBlock(const QString &block_name)
         removeBlock(block);
 }
 
+QStringList ModelNode::iosList()
+{
+    QStringList ios;
+    foreach (ModelBlock *block, _blocks)
+    {
+        if(block->type()=="io" || block->type()=="iocom")
+            ios.append(block->name());
+    }
+    return ios;
+}
+
 ModelFIBlock *ModelNode::getFIBlock() const
 {
     for(int i=0; i<this->blocks().size(); i++)

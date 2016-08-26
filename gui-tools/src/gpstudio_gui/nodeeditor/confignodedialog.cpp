@@ -61,11 +61,21 @@ void ConfigNodeDialog::setProject(GPNodeProject *project)
         _boardComboBox->setCurrentIndex(_boardComboBox->findText(project->node()->board()->name()));
 }
 
+QString ConfigNodeDialog::boardName()
+{
+    return _boardComboBox->currentText();
+}
+
 void ConfigNodeDialog::selectBoard(const QString &boardName)
 {
     BoardLib *board = Lib::getLib().board(boardName);
     if(!board)
         return;
+
+    bool rec = false;
+    if(_project->node()->board())
+        if(_project->node()->board()->name() == boardName)
+            rec = true;
 
     QWidget *widget = new QWidget();
     widget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -88,15 +98,21 @@ void ConfigNodeDialog::selectBoard(const QString &boardName)
             IOBoardLib *io = board->io(ioName);
             if(io)
             {
+                QAbstractButton *checkBox;
                 if(io->isOptional())
                 {
-                    QCheckBox *checkBox = new QCheckBox(io->name());
+                    checkBox = new QCheckBox(io->name());
                     groupLayout->addWidget(checkBox);
                 }
                 else
                 {
-                    QRadioButton *checkBox = new QRadioButton(io->name());
+                    checkBox = new QRadioButton(io->name());
                     groupLayout->addWidget(checkBox);
+                }
+                if(rec)
+                {
+                    if(_project->node()->getBlock(ioName) != NULL)
+                        checkBox->setChecked(true);
                 }
             }
         }
@@ -107,15 +123,6 @@ void ConfigNodeDialog::selectBoard(const QString &boardName)
 
     widget->setLayout(_iosLayout);
     _iosWidget->setWidget(widget);
-}
-
-void ConfigNodeDialog::accept()
-{
-    QString boardName = _boardComboBox->currentText();
-
-    _project->setBoard(boardName, iosName());
-
-    QDialog::accept();
 }
 
 void ConfigNodeDialog::setupWidgets()

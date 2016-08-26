@@ -24,13 +24,14 @@
 #include <QDebug>
 #include <QDir>
 #include <QCoreApplication>
+#include <QMessageBox>
 
 CompileLogWidget::CompileLogWidget(QWidget *parent) : QWidget(parent)
 {
     setupWidgets();
     _process = NULL;
 
-    emit actionAvailable(true);
+    emit actionsAvailable(true);
     emit stopAvailable(false);
 }
 
@@ -47,7 +48,7 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     connect(_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(exitProcess()));
     connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(errorProcess()));
 
-    emit actionAvailable(false);
+    emit actionsAvailable(false);
     emit stopAvailable(true);
 
     /*QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -100,17 +101,19 @@ void CompileLogWidget::readProcess()
     appendLog(html);
 }
 
-void CompileLogWidget::launchClear()
+void CompileLogWidget::launchClean()
 {
     QString program = "make";
     QStringList arguments;
-    arguments << "clear";
+    arguments << "clean";
 
     launch(program, arguments);
 }
 
 void CompileLogWidget::launchGenerate()
 {
+    if(!_project->saveProject())
+        return;
 #if defined(Q_OS_WIN)
     QString program = "gpnode.bat";
 #else
@@ -163,7 +166,7 @@ void CompileLogWidget::exitProcess()
               .arg(QDateTime::currentDateTime().toString())
               .arg((QDateTime::currentMSecsSinceEpoch() - _startProcessDate.toMSecsSinceEpoch())/1000));
 
-    emit actionAvailable(true);
+    emit actionsAvailable(true);
     emit stopAvailable(false);
 
     _process->deleteLater();
@@ -172,7 +175,6 @@ void CompileLogWidget::exitProcess()
 
 void CompileLogWidget::errorProcess()
 {
-
     if(_process)
     {
         appendLog(QString("failed exit code:%1 %2").arg(_process->exitCode()).arg(_process->errorString()));
@@ -182,8 +184,16 @@ void CompileLogWidget::errorProcess()
     else
         appendLog("failed...");
 
-    emit actionAvailable(true);
+    emit actionsAvailable(true);
     emit stopAvailable(false);
+}
+
+void CompileLogWidget::updatePath(QString path)
+{
+    if(path.isEmpty())
+        emit actionsAvailable(false);
+    else
+        emit actionsAvailable(true);
 }
 
 void CompileLogWidget::setupWidgets()
@@ -210,4 +220,5 @@ GPNodeProject *CompileLogWidget::project() const
 void CompileLogWidget::setProject(GPNodeProject *project)
 {
     _project = project;
+    connect(project, SIGNAL(nodePathChanged(QString)), this, SLOT(updatePath(QString)));
 }

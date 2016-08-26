@@ -44,14 +44,14 @@ protected:
     void launch(const QString &cmd, const QStringList &args);
 
 signals:
-    void actionAvailable(bool available);
+    void actionsAvailable(bool available);
     void stopAvailable(bool available);
 
 public slots:
     void readProcess();
     void appendLog(const QString &log);
 
-    void launchClear();
+    void launchClean();
     void launchGenerate();
     void launchCompile();
     void launchSend();
@@ -62,6 +62,7 @@ public slots:
 protected slots:
     void exitProcess();
     void errorProcess();
+    void updatePath(QString path);
 
 private:
     void setupWidgets();

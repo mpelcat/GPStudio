@@ -56,6 +56,7 @@ public:
     void addBlock(QList<ModelBlock *> blocks);
     void removeBlock(ModelBlock *block);
     void removeBlock(const QString &block_name);
+    QStringList iosList();
 
     ModelFIBlock *getFIBlock() const;
     ModelCIBlock *getCIBlock() const;

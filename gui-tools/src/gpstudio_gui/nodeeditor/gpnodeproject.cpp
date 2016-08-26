@@ -18,6 +18,7 @@
 **
 ****************************************************************************/
 
+#include "confignodedialog.h"
 #include "gpnodeproject.h"
 
 #include <QDebug>
@@ -25,6 +26,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include "undostack/nodecommands.h"
 #include "undostack/blockcommands.h"
 
 #include <model/model_fiblock.h>
@@ -133,13 +135,21 @@ bool GPNodeProject::saveProjectAs(const QString &nodeFileName)
 
     if(nodeFileName.isEmpty())
     {
-        fileName = QFileDialog::getSaveFileName(0, "Save node project", "", "Node project (*.node)");
+        QFileDialog fileDialog(0);
+        fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+        fileDialog.setDefaultSuffix(".node");
+        fileDialog.setNameFilter("Node project (*.node)");
+        fileDialog.setWindowTitle("Save node project");
+        if (fileDialog.exec())
+            fileName = fileDialog.selectedFiles().first();
         if(fileName.isEmpty())
             return false;
     }
     else
         fileName = nodeFileName;
 
+    if(!fileName.endsWith(".node"))
+        fileName.append(".node");
     setPath(fileName);
 
     _node->saveToFile(_path);
@@ -161,9 +171,20 @@ void GPNodeProject::closeProject()
     delete _node;
 }
 
-void GPNodeProject::setBoard(QString boardName, QStringList iosName)
+void GPNodeProject::configBoard()
 {
-    cmdSetBoard(boardName, iosName);
+    ConfigNodeDialog configNodeDialog(0);
+    configNodeDialog.setProject(this);
+    if(configNodeDialog.exec() == QDialog::Accepted)
+    {
+        QString boardName;
+        if(_node->board())
+            boardName = _node->board()->name();
+
+        _undoStack->push(new NodeCmdConfigBoard(this,
+                         boardName, _node->iosList(),
+                         configNodeDialog.boardName(), configNodeDialog.iosName()));
+    }
 }
 
 void GPNodeProject::setPath(const QString &path)
@@ -180,12 +201,12 @@ void GPNodeProject::setModified(bool modified)
     emit nodeModified(_modified);
 }
 
-void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &name)
+void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &newName)
 {
     ModelBlock *block = _node->getBlock(block_name);
     if(block)
     {
-        block->setName(name);
+        block->setName(newName);
         emit blockUpdated(block);
         setModified(true);
     }
@@ -266,7 +287,12 @@ void GPNodeProject::cmdDisconnectFlow(const ModelFlowConnect &flowConnect)
     setModified(true);
 }
 
-void GPNodeProject::cmdSetBoard(QString boardName, QStringList iosName)
+void GPNodeProject::cmdRenameNode(QString nodeName)
+{
+    _node->setName(nodeName);
+}
+
+void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
 {
     BoardLib *boardLib = Lib::getLib().board(boardName);
     if(!boardLib)
@@ -274,6 +300,14 @@ void GPNodeProject::cmdSetBoard(QString boardName, QStringList iosName)
 
     ModelBoard *board = new ModelBoard(*boardLib->modelBoard());
     _node->setBoard(board);
+
+    int count = 0;
+    foreach (QString ioName, _node->iosList())
+    {
+        count++;
+        if(!iosName.contains(ioName))
+            cmdRemoveBlock(ioName);
+    }
 
     foreach (QString ioName, iosName)
     {
@@ -283,8 +317,10 @@ void GPNodeProject::cmdSetBoard(QString boardName, QStringList iosName)
             BlockLib *ioLib = Lib::getLib().io(ioDriver);
             if(ioLib)
             {
-                ModelIO *io = ioLib->modelIO();
+                count++;
+                ModelIO *io = new ModelIO(*ioLib->modelIO());
                 io->setName(ioName);
+                io->setPos(QPoint(count*200, 0));
                 cmdAddBlock(io);
             }
         }
