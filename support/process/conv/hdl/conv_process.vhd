@@ -1,160 +1,181 @@
---||================================================================||--
---||-------  VHDL code for a 3x3 kernel image convolution --------- ||--                                                       
---||----------------------------------------------------------------||--
---|| Author	: 	Kamel Eddine ABDELOUAHAB - PhD Student              ||--
---|| Institution :	Institut Pascal - DREAM team                    ||--                                          
---||                Université Blaise Pascal - Clermont Ferrand     ||--                                         
---|| Contact:	abdelouahab.kamel.eddine (at) gmail.com             ||--                                                  
---||================================================================||--
-
-library ieee;
-	use ieee.std_logic_1164.all;
-	use ieee.numeric_std.all;
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+library std;
 
 entity conv_process is
+	generic (
+		CLK_PROC_FREQ : integer;
+		IN_SIZE       : integer;
+		OUT_SIZE      : integer;
+		WEIGHT_SIZE   : integer := 8
+	);
+	port (
+		clk_proc              : in std_logic;
+		reset_n               : in std_logic;
 
-		generic (
-			LINE_WIDTH_MAX 	: integer;
-			PIX_WIDTH 	: integer
-		);
-		
-		port(
-			clk_proc 		: in std_logic;
-			reset_n 		: in std_logic;
-	
---============================ IN FLOW =================================		
-			in_data 		: in std_logic_vector((PIX_WIDTH-1) downto 0);
-			in_fv 			: in std_logic;
-			in_dv 			: in std_logic;
+		---------------- dynamic parameters ports ---------------
+		status_reg_enable_bit : in std_logic;
+		widthimg_reg          : in std_logic_vector(31 downto 0);
+		w00_reg_m00           : in std_logic_vector(7 downto 0);
+		w01_reg_m01           : in std_logic_vector(7 downto 0);
+		w02_reg_m02           : in std_logic_vector(7 downto 0);
+		w10_reg_m10           : in std_logic_vector(7 downto 0);
+		w11_reg_m11           : in std_logic_vector(7 downto 0);
+		w12_reg_m12           : in std_logic_vector(7 downto 0);
+		w20_reg_m20           : in std_logic_vector(7 downto 0);
+		w21_reg_m21           : in std_logic_vector(7 downto 0);
+		w22_reg_m22           : in std_logic_vector(7 downto 0);
+		norm_reg              : in std_logic_vector(4 downto 0);
 
---============================ IN KERNEL ===============================
-			w11,w12,w13		: in std_logic_vector ((PIX_WIDTH-1) downto 0);
-			w21,w22,w23		: in std_logic_vector ((PIX_WIDTH-1) downto 0);
-			w31,w32,w33		: in std_logic_vector ((PIX_WIDTH-1) downto 0);
-			norm			: in std_logic_vector ((PIX_WIDTH-1) downto 0);
-		
---============================ OUT FLOW =================================-
-			out_data		: out	std_logic_vector (PIX_WIDTH-1 downto 0);
-			out_fv			: out	std_logic;
-			out_dv			: out	std_logic;
+		------------------------- in flow -----------------------
+		in_data               : in std_logic_vector(IN_SIZE-1 downto 0);
+		in_fv                 : in std_logic;
+		in_dv                 : in std_logic;
 
---============================ PARAMS ==================================
-			enable_i 		: in std_logic;
-			widthimg_i 		: in std_logic_vector(15 downto 0)
-			);
+		------------------------ out flow -----------------------
+		out_data              : out std_logic_vector(OUT_SIZE-1 downto 0);
+		out_fv                : out std_logic;
+		out_dv                : out std_logic
+	);
 end conv_process;
 
+architecture rtl of conv_process is
 
-architecture DataFlow of conv_process is
-	signal 	i00,i01,i02 	: std_logic_vector (PIX_WIDTH-1 downto 0);
-	signal	i10,i11,i12		: std_logic_vector (PIX_WIDTH-1 downto 0);
-	signal	i20,i21,i22		: std_logic_vector (PIX_WIDTH-1 downto 0); 
-
-	signal	out_dvp,out_fvp	: std_logic;
-	
-	component kernel_3x3
-		generic(
-		PIX_WIDTH	: integer
-		);
-		
-		port(
-		clk_proc,reset_n	:	in	std_logic;
-		in_fv,in_dv			:	in	std_logic;
-		enable_i			:	in	std_logic;
-
-		p11,p12,p13			:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		p21,p22,p23			:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		p31,p32,p33			:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		
-		ker11,ker12,ker13	:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		ker21,ker22,ker23	:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		ker31,ker32,ker33	:	in	std_logic_vector(PIX_WIDTH-1 downto 0);
-		norm				:	in 	std_logic_vector(PIX_WIDTH-1 downto 0);		
-		
-		out_data			:	out	std_logic_vector(PIX_WIDTH-1 downto 0);
-		out_fv,out_dv		:	out	std_logic		
-		);
-	end component;
-	
-	component pipliner_3x3
-		generic (
-			LINE_WIDTH_MAX 	: integer;
-			PIX_WIDTH 		: integer
-		);
-	
-		port (
-		clk_proc		: in std_logic;
-		reset_n 		: in std_logic;
-
---============================ IN FLOW =================================
-		in_data 		: in std_logic_vector((PIX_WIDTH-1) downto 0);
-		in_fv 			: in std_logic;
-		in_dv 			: in std_logic;
-
---========================  OUT CONTROL FLOW =========================== 
-		out_fv 			: out std_logic;
-		out_dv 			: out std_logic;
-		
---=========================== 3x3 MATRIX ============================
-		p00, p01, p02 	: out std_logic_vector((PIX_WIDTH-1) downto 0);
-		p10, p11, p12 	: out std_logic_vector((PIX_WIDTH-1) downto 0);
-		p20, p21, p22 	: out std_logic_vector((PIX_WIDTH-1) downto 0);
-		
---============================= PARAMETERS =============================
-		enable_i    	: in std_logic;
-		widthimg_i 		: in std_logic_vector(15 downto 0)
-		
+component matrix_extractor_3_3
+	generic (
+		LINE_WIDTH_MAX : integer;
+		PIX_WIDTH : integer;
+		OUTVALUE_WIDTH : integer
 	);
-	end component;
-	
-	begin
-	
-	
-	inst_pipliner	:	pipliner_3x3	
-		generic map(
-		LINE_WIDTH_MAX 	=> LINE_WIDTH_MAX,
-		PIX_WIDTH 		=> PIX_WIDTH 		 
-		)
-		
-		port map (
-		clk_proc=>	clk_proc 	,						
-		reset_n =>	reset_n ,				
-		in_data	=>	in_data ,				
-		in_fv 	=>	in_fv ,					
-		in_dv 	=>	in_dv ,				
-		out_fv 	=>	out_fvp,		
-		out_dv 	=>	out_dvp,			
-		p00 => i00	,	 p01 => i01 	,	 p02 => i02, 	
-		p10 => i10	,	 p11 => i11 	,	 p12 => i12, 	
-		p20 => i20	,	 p21 => i21 	,	 p22 => i22 ,
-		enable_i    =>	enable_i ,   	
-		widthimg_i 	=>	widthimg_i 	
-		);
-	
-	
-	inst_ker		:	kernel_3x3	
-		generic map(
-		PIX_WIDTH	=>	PIX_WIDTH
-		)	
-		port map	(		
-		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,	
-		in_fv		=>	out_fvp,
-		in_dv		=>	out_dvp,	
-        enable_i	=>	enable_i,			
-		
-		p11	=> i00	,	p12	=> i01	,	p13	=> i02,			
-		p21	=> i10	,	p22	=> i11	,	p23	=> i12,			
-		p31	=> i20	,	p32	=> i21	,	p33	=> i22,			
-		
-		ker11 => w11,	ker12 => w12,	ker13 => w13,	
-		ker21 => w21,	ker22 => w22,	ker23 => w23,	
-		ker31 => w31,	ker32 => w32,	ker33 => w33,	
-		norm  => norm,
-		
-		out_data	=> out_data,			
-		out_fv		=> out_fv,
-		out_dv		=> out_dv		
-		);
+	port (
+		clk_proc : in std_logic;
+		reset_n : in std_logic;
 
-	end DataFlow;	
+		------------------------- in flow -----------------------
+		in_data : in std_logic_vector((PIX_WIDTH-1) downto 0);
+		in_fv : in std_logic;
+		in_dv : in std_logic;
+
+		------------------------ out flow -----------------------
+		out_data : out std_logic_vector((PIX_WIDTH-1) downto 0);
+		out_fv : out std_logic;
+		out_dv : out std_logic;
+		
+		------------------------ matrix out ---------------------
+		p00, p01, p02 : out std_logic_vector((PIX_WIDTH-1) downto 0);
+		p10, p11, p12 : out std_logic_vector((PIX_WIDTH-1) downto 0);
+		p20, p21, p22 : out std_logic_vector((PIX_WIDTH-1) downto 0);
+		matrix_dv : out std_logic;
+		
+		---------------------- computed value -------------------
+		value_data : in std_logic_vector((PIX_WIDTH-1) downto 0);
+		value_dv : in std_logic;
+
+		------------------------- params ------------------------
+		enable_i : in std_logic;
+		widthimg_i : in std_logic_vector(15 downto 0)
+	);
+end component;
+
+-- buffered kernell weights and norm
+signal w00, w01, w02 : signed((IN_SIZE-1) downto 0);
+signal w10, w11, w12 : signed((IN_SIZE-1) downto 0);
+signal w20, w21, w22 : signed((IN_SIZE-1) downto 0);
+signal norm : signed((IN_SIZE-1) downto 0);
+
+-- neighbors extraction
+signal p00, p01, p02 : std_logic_vector((IN_SIZE-1) downto 0);
+signal p10, p11, p12 : std_logic_vector((IN_SIZE-1) downto 0);
+signal p20, p21, p22 : std_logic_vector((IN_SIZE-1) downto 0);
+signal matrix_dv : std_logic;
+
+-- products calculation
+signal prod00, prod01, prod02 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
+signal prod10, prod11, prod12 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
+signal prod20, prod21, prod22 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
+signal prod_dv : std_logic;
+
+variable sum   : signed((WEIGHT_SIZE - 1 + IN_SIZE)+3 downto 0);
+variable normi : integer range 0 to 8;
+
+signal value_data : std_logic_vector((IN_SIZE-3) downto 0);
+signal value_dv : std_logic;
+
+begin
+
+	matrix_extractor : matrix_extractor_3_3
+    generic map (
+    	LINE_WIDTH_MAX		=> LINE_WIDTH_MAX,
+    	PIX_WIDTH			=> PIX_WIDTH,
+    	OUTVALUE_WIDTH		=> PIX_WIDTH
+	)
+    port map (
+		clk_proc => clk_proc,
+		reset_n => reset_n,
+		in_data => in_data,
+		in_fv => in_fv,
+		in_dv => in_dv,
+		p00 => p00, p01 => p01, p02 => p02,
+		p10 => p10, p11 => p11, p12 => p12,
+		p20 => p20, p21 => p21, p22 => p22,
+		matrix_dv => matrix_dv,
+		value_data => value_data,
+		value_dv => value_dv,
+		out_data => out_data,
+		out_fv => out_fv,
+		out_dv => out_dv,
+		enable_i => enable_i,
+		widthimg_i => widthimg_i
+    );
+
+	process (clk_proc, reset_n, matrix_dv)
+	begin
+		if(reset_n='0') then
+				
+		elsif(rising_edge(clk_proc)) then
+            if(in_fv='0') then
+                w00 <= signed(w00_reg_m00);
+                w01 <= signed(w01_reg_m01);
+                w02 <= signed(w02_reg_m02);
+                w10 <= signed(w10_reg_m10);
+                w11 <= signed(w11_reg_m11);
+                w12 <= signed(w12_reg_m12);
+                w20 <= signed(w20_reg_m20);
+                w21 <= signed(w21_reg_m21);
+                w22 <= signed(w22_reg_m22);
+            end if;
+
+            -- product calculation pipeline stage
+			prod_dv<='0';
+			if(matrix_dv='1') then
+                prod00 <= w00 * signed('0' & p00);
+                prod01 <= w01 * signed('0' & p01);
+                prod02 <= w02 * signed('0' & p02);
+                prod10 <= w10 * signed('0' & p10);
+                prod11 <= w11 * signed('0' & p11);
+                prod12 <= w12 * signed('0' & p12);
+                prod20 <= w20 * signed('0' & p20);
+                prod21 <= w21 * signed('0' & p21);
+                prod22 <= w22 * signed('0' & p22);
+
+				prod_dv <= '1';
+			end if;
+            
+			value_dv<='0';
+			if(prod_dv='1') then
+                sum <= prod00 + prod01 + prod02 +
+                       prod10 + prod11 + prod12 +
+                       prod20 + prod21 + prod22;
+
+                if (sum(sum'left) = '1')	then
+                    sum := (others => '0');
+                end if;
+                normi	<=  to_integer (unsigned(norm));
+                value_data <=	std_logic_vector((sum srl normi)(OUT_SIZE -1  downto 0));
+
+				value_dv <= '1';
+			end if;
+		end if;
+	end process;
+end rtl;
