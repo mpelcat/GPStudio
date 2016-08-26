@@ -90,16 +90,6 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignBottom, _name);
 }
 
-QString BlockItem::processName() const
-{
-    return _processName;
-}
-
-void BlockItem::setProcessName(const QString &processName)
-{
-    _processName = processName;
-}
-
 QString BlockItem::name() const
 {
     return _name;
@@ -108,6 +98,8 @@ QString BlockItem::name() const
 void BlockItem::setName(const QString &name)
 {
     _name = name;
+    foreach (BlockPortItem *port, _ports)
+        port->setBlockName(_name);
 }
 
 Block *BlockItem::block() const
@@ -168,6 +160,7 @@ void BlockItem::updatePos()
 void BlockItem::addPort(BlockPortItem *portItem)
 {
     portItem->setParentItem(this);
+    portItem->setBlockName(_name);
     _ports.insert(portItem->name(), portItem);
 }
 
@@ -236,25 +229,20 @@ BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
     if(!item)
         item = new BlockItem();
 
+    item->setPos(modelBlock->pos());
+    item->setName(modelBlock->name());
+    item->_modelBlock = modelBlock;
+
     if(blockLib)
     {
         foreach (ModelFlow *flow, blockLib->modelProcess()->flows())
-        {
             item->addPort(BlockPortItem::fromModelFlow(flow));
-        }
     }
     else
     {
         foreach (ModelFlow *flow, modelBlock->flows())
-        {
             item->addPort(BlockPortItem::fromModelFlow(flow));
-        }
     }
-
-    item->setPos(modelBlock->pos());
-    item->setName(modelBlock->name());
-
-    item->_modelBlock = modelBlock;
 
     item->updateBlock();
 

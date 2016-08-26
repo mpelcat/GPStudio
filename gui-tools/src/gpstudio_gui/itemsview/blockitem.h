@@ -46,9 +46,6 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QString processName() const;
-    void setProcessName(const QString &processName);
-
     QString name() const;
     void setName(const QString &name);
 
@@ -76,7 +73,6 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    QString _processName;
     QString _name;
 
     QRectF _boundingRect;

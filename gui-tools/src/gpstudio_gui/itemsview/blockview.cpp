@@ -95,6 +95,7 @@ void BlockView::attachProject(GPNodeProject *project)
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
 {
+    QGraphicsView::dragEnterEvent(event);
     if(_editMode)
     {
         if(event->mimeData()->hasText())
@@ -104,6 +105,7 @@ void BlockView::dragEnterEvent(QDragEnterEvent *event)
 
 void BlockView::dragMoveEvent(QDragMoveEvent *event)
 {
+    QGraphicsView::dragMoveEvent(event);
     if(_editMode)
     {
         if(event->mimeData()->hasText())
@@ -113,6 +115,7 @@ void BlockView::dragMoveEvent(QDragMoveEvent *event)
 
 void BlockView::dropEvent(QDropEvent *event)
 {
+    QGraphicsView::dropEvent(event);
     if(_editMode)
     {
         QString driver = event->mimeData()->text();
@@ -167,10 +170,8 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
         if(processItem && processItem!=_startConnectItem)
-            emit blockPortConnected(ModelFlowConnect(_startConnectItem->modelFlow()->parent()->name(),
-                                    _startConnectItem->modelFlow()->name(),
-                                    processItem->modelFlow()->parent()->name(),
-                                    processItem->modelFlow()->name()));
+            emit blockPortConnected(ModelFlowConnect(_startConnectItem->blockName(), _startConnectItem->name(),
+                                                     processItem->blockName(),       processItem->name()));
 
         _lineConector->disconnectPorts();
         scene()->removeItem(_lineConector);

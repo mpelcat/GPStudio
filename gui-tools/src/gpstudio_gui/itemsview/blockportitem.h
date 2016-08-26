@@ -44,6 +44,9 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    QString blockName() const;
+    void setBlockName(const QString &blockName);
+
     enum Direction {
         Input,
         Output
@@ -70,6 +73,7 @@ protected:
 
 private:
     QString _name;
+    QString _blockName;
     Direction _direction;
     ModelFlow *_modelFlow;
     bool _hover;

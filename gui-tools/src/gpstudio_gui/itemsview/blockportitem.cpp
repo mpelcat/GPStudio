@@ -127,6 +127,16 @@ void BlockPortItem::setName(const QString &name)
     update();
 }
 
+QString BlockPortItem::blockName() const
+{
+    return _blockName;
+}
+
+void BlockPortItem::setBlockName(const QString &blockName)
+{
+    _blockName = blockName;
+}
+
 BlockPortItem::Direction BlockPortItem::direction() const
 {
     return _direction;
