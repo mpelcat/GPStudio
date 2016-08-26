@@ -180,17 +180,26 @@ void GPNodeProject::setModified(bool modified)
     emit nodeModified(_modified);
 }
 
-void GPNodeProject::cmdRenameBlock(ModelBlock *block, const QString &name)
+void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &name)
 {
-    block->setName(name);
-    emit blockUpdated(block);
+    ModelBlock *block = _node->getBlock(block_name);
+    if(block)
+    {
+        block->setName(name);
+        emit blockUpdated(block);
+        setModified(true);
+    }
 }
 
-void GPNodeProject::cmdMoveBlockTo(ModelBlock *block, QPoint pos)
+void GPNodeProject::cmdMoveBlockTo(const QString &block_name, QPoint pos)
 {
-    block->setPos(pos);
-    emit blockUpdated(block);
-    setModified(true);
+    ModelBlock *block = _node->getBlock(block_name);
+    if(block)
+    {
+        block->setPos(pos);
+        emit blockUpdated(block);
+        setModified(true);
+    }
 }
 
 void GPNodeProject::cmdAddBlock(ModelBlock *block)
@@ -207,7 +216,7 @@ void GPNodeProject::cmdAddBlock(ModelBlock *block)
     setModified(true);
 }
 
-void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
+void GPNodeProject::cmdRemoveBlock(const QString &block_name)
 {
     ModelFIBlock *fiBlock = _node->getFIBlock();
     if(!fiBlock)
@@ -216,15 +225,17 @@ void GPNodeProject::cmdRemoveBlock(ModelBlock *block)
         _node->addBlock(fiBlock);
     }
 
-    foreach (ModelFlowConnect *flowConnect, fiBlock->flowConnects(block->name()))
+    foreach (ModelFlowConnect *flowConnect, fiBlock->flowConnects(block_name))
     {
         cmdDisconnectFlow(*flowConnect);
     }
 
+    ModelBlock *block = _node->getBlock(block_name);
     _node->removeBlock(block);
-    emit blockRemoved(block);
+    emit blockRemoved(block_name);
     setModified(true);
-    delete block;
+    if(block)
+        delete block;
 }
 
 void GPNodeProject::cmdConnectFlow(const ModelFlowConnect &flowConnect)
@@ -291,14 +302,14 @@ void GPNodeProject::setNode(ModelNode *node)
     emit nodeChanged(_node);
 }
 
-void GPNodeProject::moveBlock(ModelBlock *block, const QPoint &newPos)
+void GPNodeProject::moveBlock(const QString &block_name, const QPoint &oldPos, const QPoint &newPos)
 {
-    _undoStack->push(new BlockCmdMove(this, block, block->pos(), newPos));
+    _undoStack->push(new BlockCmdMove(this, block_name, oldPos, newPos));
 }
 
-void GPNodeProject::renameBlock(ModelBlock *block, const QString &newName)
+void GPNodeProject::renameBlock(const QString &block_name, const QString &newName)
 {
-    _undoStack->push(new BlockCmdRename(this, block, block->name(), newName));
+    _undoStack->push(new BlockCmdRename(this, block_name, newName));
 }
 
 void GPNodeProject::addBlock(ModelBlock *block)

@@ -104,7 +104,14 @@ void ModelNode::addBlock(QList<ModelBlock *> blocks)
 void ModelNode::removeBlock(ModelBlock *block)
 {
     _blocks.removeOne(block);
-    block->setNode(NULL);
+    //block->setNode(NULL);
+}
+
+void ModelNode::removeBlock(const QString &block_name)
+{
+    ModelBlock *block = getBlock(block_name);
+    if(block)
+        removeBlock(block);
 }
 
 ModelFIBlock *ModelNode::getFIBlock() const

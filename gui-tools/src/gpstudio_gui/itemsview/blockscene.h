@@ -47,6 +47,7 @@ public:
     BlockItem *addBlock(ModelBlock *blockModel);
     BlockItem *addBlock(Block *block);
     void removeBlock(ModelBlock *blockModel);
+    void removeBlock(const QString &block_name);
     BlockItem *block(const QString &name) const;
     BlockItem *block(ModelBlock *modelBlock) const;
 

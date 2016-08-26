@@ -55,8 +55,8 @@ public slots:
     void setBoard(QString boardName, QStringList iosName);
 
     // block commands
-    void moveBlock(ModelBlock *block, const QPoint &newPos);
-    void renameBlock(ModelBlock *block, const QString &newName);
+    void moveBlock(const QString &block_name, const QPoint &oldPos, const QPoint &newPos);
+    void renameBlock(const QString &block_name, const QString &newName);
     void addBlock(ModelBlock *block);
     void removeBlock(ModelBlock *block);
     void connectBlockFlows(const ModelFlowConnect &flowConnect);
@@ -69,7 +69,7 @@ signals:
 
     void blockUpdated(ModelBlock *block);
     void blockAdded(ModelBlock *block);
-    void blockRemoved(ModelBlock *block);
+    void blockRemoved(const QString &block_name);
     void blockConnected(const ModelFlowConnect flowConnect);
     void blockDisconected(const ModelFlowConnect flowConnect);
 
@@ -88,15 +88,15 @@ private:
 protected:
     // commands from undo stack
     friend class BlockCmdRename;
-    void cmdRenameBlock(ModelBlock *block, const QString &name);
+    void cmdRenameBlock(const QString &block_name, const QString &name);
 
     friend class BlockCmdMove;
-    void cmdMoveBlockTo(ModelBlock *block, QPoint pos);
+    void cmdMoveBlockTo(const QString &block_name, QPoint pos);
 
     friend class BlockCmdAdd;
     friend class BlockCmdRemove;
     void cmdAddBlock(ModelBlock *block);
-    void cmdRemoveBlock(ModelBlock *block);
+    void cmdRemoveBlock(const QString &block_name);
 
     friend class BlockCmdConnectFlow;
     friend class BlockCmdDisconnectFlow;

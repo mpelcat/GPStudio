@@ -79,7 +79,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
     connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
 
     connect(_project, SIGNAL(blockAdded(ModelBlock*)), _camExplorerWidget, SLOT(update()));
-    connect(_project, SIGNAL(blockRemoved(ModelBlock*)), _camExplorerWidget, SLOT(update()));
+    connect(_project, SIGNAL(blockRemoved(QString)), _camExplorerWidget, SLOT(update()));
 
     if(project->node())
     {

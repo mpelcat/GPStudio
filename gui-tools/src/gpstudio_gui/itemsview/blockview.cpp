@@ -24,6 +24,7 @@
 #include <QMouseEvent>
 #include <QMimeData>
 #include <qmath.h>
+#include <QMenu>
 
 #include "blockitem.h"
 #include "blockconnectoritem.h"
@@ -71,15 +72,15 @@ void BlockView::attachProject(GPNodeProject *project)
             this, SLOT(updateBlock(ModelBlock*)));
     connect(_project, SIGNAL(blockAdded(ModelBlock*)),
             this, SLOT(addBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockRemoved(ModelBlock*)),
-            this, SLOT(removeBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockRemoved(QString)),
+            this, SLOT(removeBlock(QString)));
     connect(_project, SIGNAL(blockConnected(ModelFlowConnect)),
             this, SLOT(connectBlock(ModelFlowConnect)));
     connect(_project, SIGNAL(blockDisconected(ModelFlowConnect)),
             this, SLOT(disconnectBlock(ModelFlowConnect)));
 
-    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)),
-            project, SLOT(moveBlock(ModelBlock*,QPoint)));
+    connect(this, SIGNAL(blockMoved(QString,QPoint,QPoint)),
+            project, SLOT(moveBlock(QString,QPoint,QPoint)));
     connect(this, SIGNAL(blockDeleted(ModelBlock*)),
             project, SLOT(removeBlock(ModelBlock*)));
     connect(this, SIGNAL(blockPortConnected(ModelFlowConnect)),
@@ -164,7 +165,7 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
     if(blockItem)
         if(blockItem->pos() != blockItem->modelBlock()->pos())
-            emit blockMoved(blockItem->modelBlock(), blockItem->pos().toPoint());
+            emit blockMoved(blockItem->name(), blockItem->modelBlock()->pos(), blockItem->pos().toPoint());
 
     if(_startConnectItem)
     {
@@ -234,9 +235,9 @@ void BlockView::addBlock(ModelBlock *block)
     _scene->addBlock(block);
 }
 
-void BlockView::removeBlock(ModelBlock *block)
+void BlockView::removeBlock(const QString &block_name)
 {
-    _scene->removeBlock(block);
+    _scene->removeBlock(block_name);
 }
 
 void BlockView::connectBlock(const ModelFlowConnect &flowConnect)
@@ -322,6 +323,8 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         zoomOut();
     if(event->key()==Qt::Key_Asterisk)
         zoomFit();
+    if(event->key()==Qt::Key_F2)
+        zoomFit();
     if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
     {
         if(_scene->selectedItems().count()>0)
@@ -344,4 +347,26 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         }
     }
     QGraphicsView::keyPressEvent(event);
+}
+
+void BlockView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QGraphicsItem *item;
+    if(_scene->selectedItems().count()>0)
+        item = _scene->selectedItems().at(0);
+    else
+        item = _scene->itemAt(event->globalPos(), QTransform());
+
+    if(item)
+    {
+        BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+        if(blockItem)
+        {
+            QMenu menu;
+            QAction *removeAction = menu.addAction("Remove");
+            QAction *markAction = menu.addAction("Mark");
+            menu.exec(event->globalPos());
+            //emit blockDeleted(blockItem->modelBlock());
+        }
+    }
 }

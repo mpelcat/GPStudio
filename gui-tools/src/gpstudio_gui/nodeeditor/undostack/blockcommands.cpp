@@ -26,72 +26,48 @@
 #include "model/model_process.h"
 #include "model/model_iocom.h"
 
-BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
-    : _project(project), _block(block)
+BlockCommand::BlockCommand(GPNodeProject *project, const QString &block_name)
+    : _project(project), _block_name(block_name)
 {
 }
 
 // Rename block
-BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName)
-    : BlockCommand(project, block), _oldName(oldName), _newName(newName)
+BlockCmdRename::BlockCmdRename(GPNodeProject *project, const QString &oldName, const QString &newName)
+    : BlockCommand(project, oldName), _newName(newName)
 {
     setText(QString("renamed block '%1'").arg(newName));
 }
 
 void BlockCmdRename::undo()
 {
-    _project->cmdRenameBlock(_block, _oldName);
+    _project->cmdRenameBlock(_block_name, _block_name);
 }
 
 void BlockCmdRename::redo()
 {
-    _project->cmdRenameBlock(_block, _newName);
-}
-
-bool BlockCmdRename::mergeWith(const QUndoCommand *command)
-{
-    const BlockCmdRename *blockCmdRename = static_cast<const BlockCmdRename *>(command);
-
-    if (_block != blockCmdRename->_block)
-        return false;
-
-    _newName = blockCmdRename->_newName;
-
-    return true;
+    _project->cmdRenameBlock(_block_name, _newName);
 }
 
 // Move block
-BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos)
-    : BlockCommand(project, block), _oldPos(oldPos), _newPos(newPos)
+BlockCmdMove::BlockCmdMove(GPNodeProject *project, const QString &block_name, const QPoint &oldPos, const QPoint &newPos)
+    : BlockCommand(project, block_name), _oldPos(oldPos), _newPos(newPos)
 {
-    setText(QString("moved block '%1'").arg(block->name()));
+    setText(QString("moved block '%1'").arg(block_name));
 }
 
 void BlockCmdMove::undo()
 {
-    _project->cmdMoveBlockTo(_block, _oldPos);
+    _project->cmdMoveBlockTo(_block_name, _oldPos);
 }
 
 void BlockCmdMove::redo()
 {
-    _project->cmdMoveBlockTo(_block, _newPos);
-}
-
-bool BlockCmdMove::mergeWith(const QUndoCommand *command)
-{
-    const BlockCmdMove *blockCmdMove = static_cast<const BlockCmdMove *>(command);
-
-    if (_block != blockCmdMove->_block)
-        return false;
-
-    _newPos = blockCmdMove->_newPos;
-
-    return true;
+    _project->cmdMoveBlockTo(_block_name, _newPos);
 }
 
 // Add block
 BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
-    : BlockCommand(project, block)
+    : BlockCommand(project, block->name()), _block(block)
 {
     _backupBlock = block;
     setText(QString("added block '%1'").arg(block->name()));
@@ -104,15 +80,19 @@ BlockCmdAdd::~BlockCmdAdd()
 
 void BlockCmdAdd::undo()
 {
-    // backup block
-    if(_block->type()=="process")
-        _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(_block));
-    else if(_block->type()=="io")
-        _backupBlock = new ModelIO(*static_cast<ModelIO*>(_block));
-    else if(_block->type()=="iocom")
-        _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(_block));
+    ModelBlock *block = _project->node()->getBlock(_block_name);
+    if(block)
+    {
+        // backup block
+        if(block->type()=="process")
+            _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
+        else if(block->type()=="io")
+            _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
+        else if(block->type()=="iocom")
+            _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
+    }
 
-    _project->cmdRemoveBlock(_block);
+    _project->cmdRemoveBlock(_block_name);
 }
 
 void BlockCmdAdd::redo()
@@ -124,7 +104,7 @@ void BlockCmdAdd::redo()
 
 // Remove block
 BlockCmdRemove::BlockCmdRemove(GPNodeProject *project, ModelBlock *block)
-    : BlockCommand(project, block)
+    : BlockCommand(project, block->name()), _block(block)
 {
     setText(QString("remove block '%1'").arg(block->name()));
 }
@@ -146,22 +126,26 @@ void BlockCmdRemove::undo()
 
 void BlockCmdRemove::redo()
 {
-    // backup block
-    if(_block->type()=="process")
-        _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(_block));
-    else if(_block->type()=="io")
-        _backupBlock = new ModelIO(*static_cast<ModelIO*>(_block));
-    else if(_block->type()=="iocom")
-        _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(_block));
+    ModelBlock *block = _project->node()->getBlock(_block_name);
+    if(block)
+    {
+        // backup block
+        if(block->type()=="process")
+            _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
+        else if(block->type()=="io")
+            _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
+        else if(block->type()=="iocom")
+            _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
+    }
 
     // backup connection to/from block
     _flowConnects.clear();
     QList<ModelFlowConnect *> _flowConnectsPtr;
-    _flowConnectsPtr = _project->node()->getFIBlock()->flowConnects(_block->name());
+    _flowConnectsPtr = _project->node()->getFIBlock()->flowConnects(_block_name);
     foreach (ModelFlowConnect *flowConnect, _flowConnectsPtr)
         _flowConnects.append(*flowConnect);
 
-    _project->cmdRemoveBlock(_block);
+    _project->cmdRemoveBlock(_block_name);
 }
 
 // Flow connection

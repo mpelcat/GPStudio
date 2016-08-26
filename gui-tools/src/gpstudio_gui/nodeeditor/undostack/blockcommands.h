@@ -33,25 +33,23 @@
 class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
 public:
-    BlockCommand(GPNodeProject *project, ModelBlock *block=NULL);
+    BlockCommand(GPNodeProject *project, const QString &block_name=QString());
 
 protected:
     GPNodeProject *_project;
-    ModelBlock *_block;
+    QString _block_name;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdRename : public BlockCommand
 {
 public:
     enum { Id = 0x0101 };
-    BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName);
+    BlockCmdRename(GPNodeProject *project, const QString &oldName, const QString &newName);
     void undo();
     void redo();
-    bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
 protected:
-    QString _oldName;
     QString _newName;
 };
 
@@ -59,10 +57,9 @@ class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
 {
 public:
     enum { Id = 0x0102 };
-    BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos);
+    BlockCmdMove(GPNodeProject *project, const QString &block_name, const QPoint &oldPos, const QPoint &newPos);
     void undo();
     void redo();
-    bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
 protected:
@@ -81,6 +78,7 @@ public:
     int id() const { return Id; }
 
 protected:
+    ModelBlock *_block;
     ModelBlock *_backupBlock;
 };
 
@@ -95,6 +93,7 @@ public:
     int id() const { return Id; }
 
 protected:
+    ModelBlock *_block;
     ModelBlock *_backupBlock;
     QList<ModelFlowConnect> _flowConnects;
 };

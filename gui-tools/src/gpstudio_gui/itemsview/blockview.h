@@ -65,6 +65,11 @@ protected:
     void setZoomLevel(int step);
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
+
+#ifndef QT_NO_CONTEXTMENU
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+#endif // QT_NO_CONTEXTMENU
+
 protected slots:
     void updateSelection();
 
@@ -74,7 +79,7 @@ public slots:
 
     void updateBlock(ModelBlock *block);
     void addBlock(ModelBlock *block);
-    void removeBlock(ModelBlock *block);
+    void removeBlock(const QString &block_name);
     void connectBlock(const ModelFlowConnect &flowConnect);
     void disconnectBlock(const ModelFlowConnect &flowConnect);
 
@@ -86,7 +91,7 @@ signals:
     void blockDetailsRequest(QString blockName);
     void blockSelected(QString blockName);
 
-    void blockMoved(ModelBlock *block, QPoint newPos);
+    void blockMoved(const QString block_name, const QPoint oldPos, const QPoint newPos);
     void blockDeleted(ModelBlock *block);
     void blockPortConnected(ModelFlowConnect flowConnect);
     void blockPortDisconnected(ModelFlowConnect flowConnect);
