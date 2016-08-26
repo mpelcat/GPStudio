@@ -86,6 +86,8 @@ public:
 
     QStringList dependsProperties() const;
 
+    const ModelProperty *modelProperty() const;
+
 signals:
     void valueChanged(QVariant value);
     void bitsChanged(uint value);
@@ -105,7 +107,6 @@ public:
     static Property *fromModelBlock(const ModelBlock *modelBlock);
 
 protected:
-
     void setMin(const QVariant &min);
     void setMax(const QVariant &max);
     void setStep(const QVariant &step);
@@ -138,6 +139,8 @@ protected:
 
     QMap<QString, Property* > _subPropertiesMap;
     QList<Property*> _subProperties;
+
+    const ModelProperty *_modelProperty;
 };
 
 #endif // PROPERTY_H

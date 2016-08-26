@@ -34,6 +34,7 @@ Property::Property(QString name)
     _type = Group;
     _row = 0;
     _bits = 0;
+    _modelProperty = NULL;
 }
 
 Property::~Property()
@@ -236,6 +237,11 @@ Property *Property::parent() const
     return _parent;
 }
 
+const ModelProperty *Property::modelProperty() const
+{
+    return _modelProperty;
+}
+
 void Property::setParent(Property *parent)
 {
     _parent = parent;
@@ -306,6 +312,7 @@ Property *Property::fromModelProperty(const ModelProperty *modelProperty)
     paramprop->setCaption(modelProperty->caption());
     paramprop->setOnchange(modelProperty->onchange());
     paramprop->setPropertymap(modelProperty->propertymap());
+    paramprop->_modelProperty = modelProperty;
     if(!modelProperty->propertyEnums().empty())
     {
         foreach (ModelPropertyEnum *blockPropertyEnum, modelProperty->propertyEnums())
