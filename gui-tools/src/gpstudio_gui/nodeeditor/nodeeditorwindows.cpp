@@ -142,6 +142,7 @@ void NodeEditorWindows::createDocks()
     _libTreeView = new LibTreeView();
     _libTreeView->setLib(&Lib::getLib());
     libTreeViewLayout->addWidget(_libTreeView);
+    connect(_libTreeView, SIGNAL(processAdded(QString)), this, SLOT(addProcess(QString)));
     libTreeViewContent->setLayout(libTreeViewLayout);
     _libTreeViewDock->setWidget(libTreeViewContent);
     addDockWidget(Qt::RightDockWidgetArea, _libTreeViewDock);
@@ -296,6 +297,11 @@ void NodeEditorWindows::createToolBarAndMenu()
 void NodeEditorWindows::configNode()
 {
     _project->configBoard();
+}
+
+void NodeEditorWindows::addProcess(QString driver)
+{
+    _project->addBlock(driver, QPoint(0, 0));
 }
 
 void NodeEditorWindows::reloadNode()

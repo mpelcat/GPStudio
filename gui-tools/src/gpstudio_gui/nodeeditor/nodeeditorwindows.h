@@ -49,6 +49,7 @@ protected:
 
 private slots:
     void configNode();
+    void addProcess(QString driver);
 
     void reloadNode();
     void reloadNodePath();

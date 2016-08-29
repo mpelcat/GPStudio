@@ -58,6 +58,7 @@ public slots:
     void moveBlock(const QString &block_name, const QPoint &oldPos, const QPoint &newPos);
     void renameBlock(const QString &block_name, const QString &newName);
     void addBlock(ModelBlock *block);
+    void addBlock(const QString &driver, const QPoint &pos);
     void removeBlock(ModelBlock *block);
     void connectBlockFlows(const ModelFlowConnect &flowConnect);
     void disConnectBlockFlows(const ModelFlowConnect &flowConnect);

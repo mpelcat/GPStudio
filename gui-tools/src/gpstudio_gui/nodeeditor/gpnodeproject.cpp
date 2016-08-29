@@ -357,6 +357,17 @@ void GPNodeProject::addBlock(ModelBlock *block)
     _undoStack->push(new BlockCmdAdd(this, block));
 }
 
+void GPNodeProject::addBlock(const QString &driver, const QPoint &pos)
+{
+    BlockLib *processLib = Lib::getLib().process(driver);
+    if(!processLib)
+        return;
+
+    ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
+    modelProcess->setPos(pos);
+    addBlock(modelProcess);
+}
+
 void GPNodeProject::removeBlock(ModelBlock *block)
 {
     _undoStack->push(new BlockCmdRemove(this, block));

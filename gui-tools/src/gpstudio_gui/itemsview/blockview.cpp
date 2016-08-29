@@ -120,13 +120,9 @@ void BlockView::dropEvent(QDropEvent *event)
     if(_editMode)
     {
         QString driver = event->mimeData()->text();
-        BlockLib *processLib = Lib::getLib().process(driver);
-        if(processLib)
-        {
-            ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
-            modelProcess->setPos(mapToScene(event->pos()).toPoint());
-            _project->addBlock(modelProcess);
-        }
+        QPoint pos = mapToScene(event->pos()).toPoint();
+
+        _project->addBlock(driver, pos);
     }
 }
 
