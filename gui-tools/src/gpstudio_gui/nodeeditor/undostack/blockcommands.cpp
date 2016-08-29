@@ -40,7 +40,7 @@ BlockCmdRename::BlockCmdRename(GPNodeProject *project, const QString &oldName, c
 
 void BlockCmdRename::undo()
 {
-    _project->cmdRenameBlock(_block_name, _block_name);
+    _project->cmdRenameBlock(_newName, _block_name);
 }
 
 void BlockCmdRename::redo()

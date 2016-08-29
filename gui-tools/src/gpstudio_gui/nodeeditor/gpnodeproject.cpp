@@ -216,12 +216,27 @@ void GPNodeProject::setNodeEditorWindow(QWidget *nodeEditorWindow)
 void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &newName)
 {
     ModelBlock *block = _node->getBlock(block_name);
-    if(block)
+    if(!block)
+        return;
+
+    // rename connection to this block
+    ModelFIBlock *fiBlock = _node->getFIBlock();
+    if(!fiBlock)
     {
-        block->setName(newName);
-        emit blockUpdated(block);
-        setModified(true);
+        fiBlock = new ModelFIBlock();
+        _node->addBlock(fiBlock);
     }
+    foreach (ModelFlowConnect *flowConnect, fiBlock->flowConnects())
+    {
+        if(flowConnect->fromblock()==block_name)
+            flowConnect->setFromblock(newName);
+        if(flowConnect->toblock()==block_name)
+            flowConnect->setToblock(newName);
+    }
+
+    block->setName(newName);
+    emit blockUpdated(block);
+    setModified(true);
 }
 
 void GPNodeProject::cmdMoveBlockTo(const QString &block_name, QPoint pos)
@@ -358,8 +373,31 @@ void GPNodeProject::moveBlock(const QString &block_name, const QPoint &oldPos, c
 void GPNodeProject::renameBlock(const QString &block_name, const QString &newName)
 {
     QString name = newName;
+    QRegExp nameChecker("^[a-zA-Z][a-zA-Z0-9_]*$");
+
     if(name.isEmpty())
         name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
+
+    if(block_name == name)
+        return;
+    ModelBlock *block = _node->getBlock(name);
+    while(block != NULL || nameChecker.indexIn(name)==-1)
+    {
+        if(block != NULL)
+        {
+            name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "This name already exists, try another name", QLineEdit::Normal, name + "_1");
+            if(name.isEmpty())
+                return;
+        }
+        else
+        {
+            name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "Invalid name, try another name", QLineEdit::Normal, name.replace(QRegExp("\\W"),""));
+            if(name.isEmpty())
+                return;
+        }
+        block = _node->getBlock(name);
+    }
+
     if(!name.isEmpty())
         _undoStack->push(new BlockCmdRename(this, block_name, name));
 }

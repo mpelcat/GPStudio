@@ -227,7 +227,11 @@ void BlockView::updateBlock(ModelBlock *block)
     if(blockItem)
     {
         blockItem->updatePos();
-        blockItem->setName(block->name());
+        if(blockItem->name() != block->name())
+        {
+            blockItem->setName(block->name());
+            blockItem->update();
+        }
     }
 }
 
@@ -372,10 +376,10 @@ void BlockView::contextMenuEvent(QContextMenuEvent *event)
         if(blockItem)
         {
             QMenu menu;
-            QAction *deleteAction = menu.addAction("Delete");
-            deleteAction->setShortcut(Qt::Key_Delete);
             QAction *renameAction = menu.addAction("Rename");
             renameAction->setShortcut(Qt::Key_F2);
+            QAction *deleteAction = menu.addAction("Delete");
+            deleteAction->setShortcut(Qt::Key_Delete);
             QAction *infosIPAction = menu.addAction("View implementation files");
             QAction *trigered = menu.exec(event->globalPos());
             if(trigered == deleteAction)
