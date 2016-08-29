@@ -37,6 +37,7 @@
 GPNodeProject::GPNodeProject(QObject *parent)
     : QObject(parent)
 {
+    _nodeEditorWindow = NULL;
     _node = NULL;
     _modified = false;
     _undoStack = new QUndoStack();
@@ -89,7 +90,7 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
 
     if(nodeFileName.isEmpty())
     {
-        fileName = QFileDialog::getOpenFileName(0, "Open node project", "", "Node project (*.node)");
+        fileName = QFileDialog::getOpenFileName(_nodeEditorWindow, "Open node project", "", "Node project (*.node)");
         if(fileName.isEmpty())
         {
             newProject();
@@ -136,7 +137,7 @@ bool GPNodeProject::saveProjectAs(const QString &nodeFileName)
 
     if(nodeFileName.isEmpty())
     {
-        QFileDialog fileDialog(0);
+        QFileDialog fileDialog(_nodeEditorWindow);
         fileDialog.setAcceptMode(QFileDialog::AcceptSave);
         fileDialog.setDefaultSuffix(".node");
         fileDialog.setNameFilter("Node project (*.node)");
@@ -162,7 +163,7 @@ void GPNodeProject::closeProject()
 {
     if(_modified)
     {
-        if(QMessageBox::question(0, "Project modified", "Would you like to save the project before close it ?", QMessageBox::Save | QMessageBox::Cancel)==QMessageBox::Save)
+        if(QMessageBox::question(_nodeEditorWindow, "Project modified", "Would you like to save the project before close it ?", QMessageBox::Save | QMessageBox::Cancel)==QMessageBox::Save)
             saveProject();
     }
 
@@ -174,7 +175,7 @@ void GPNodeProject::closeProject()
 
 void GPNodeProject::configBoard()
 {
-    ConfigNodeDialog configNodeDialog(0);
+    ConfigNodeDialog configNodeDialog(_nodeEditorWindow);
     configNodeDialog.setProject(this);
     if(configNodeDialog.exec() == QDialog::Accepted)
     {
@@ -200,6 +201,16 @@ void GPNodeProject::setModified(bool modified)
 {
     _modified = modified;
     emit nodeModified(_modified);
+}
+
+QWidget *GPNodeProject::nodeEditorWindow() const
+{
+    return _nodeEditorWindow;
+}
+
+void GPNodeProject::setNodeEditorWindow(QWidget *nodeEditorWindow)
+{
+    _nodeEditorWindow = nodeEditorWindow;
 }
 
 void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &newName)
@@ -295,13 +306,6 @@ void GPNodeProject::cmdRenameNode(QString nodeName)
 
 void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
 {
-    BoardLib *boardLib = Lib::getLib().board(boardName);
-    if(!boardLib)
-        return;
-
-    ModelBoard *board = new ModelBoard(*boardLib->modelBoard());
-    _node->setBoard(board);
-
     int count = 0;
     foreach (QString ioName, _node->iosList())
     {
@@ -309,6 +313,13 @@ void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
         if(!iosName.contains(ioName))
             cmdRemoveBlock(ioName);
     }
+
+    BoardLib *boardLib = Lib::getLib().board(boardName);
+    if(!boardLib)
+        return;
+
+    ModelBoard *board = new ModelBoard(*boardLib->modelBoard());
+    _node->setBoard(board);
 
     foreach (QString ioName, iosName)
     {
@@ -348,7 +359,7 @@ void GPNodeProject::renameBlock(const QString &block_name, const QString &newNam
 {
     QString name = newName;
     if(name.isEmpty())
-        name = QInputDialog::getText(0, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
+        name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
     if(!name.isEmpty())
         _undoStack->push(new BlockCmdRename(this, block_name, name));
 }

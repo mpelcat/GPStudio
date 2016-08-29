@@ -44,6 +44,9 @@ public:
 
     QUndoStack *undoStack() const;
 
+    QWidget *nodeEditorWindow() const;
+    void setNodeEditorWindow(QWidget *nodeEditorWindow);
+
 public slots:
     // project commands
     void newProject();
@@ -85,6 +88,7 @@ private:
     bool _modified;
 
     QUndoStack *_undoStack;
+    QWidget *_nodeEditorWindow;
 
 protected:
     // commands from undo stack

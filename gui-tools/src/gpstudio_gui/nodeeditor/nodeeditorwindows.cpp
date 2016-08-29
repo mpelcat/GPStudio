@@ -68,6 +68,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
         disconnect(_project);*/
 
     _project = project;
+    _project->setNodeEditorWindow(this);
 
     connect(_project, SIGNAL(nodeChanged(ModelNode *)), this, SLOT(reloadNode()));
     connect(_project, SIGNAL(nodePathChanged(QString)), this, SLOT(reloadNodePath()));
