@@ -114,12 +114,13 @@ void CompileLogWidget::launchGenerate()
 {
     if(!_project->saveProject())
         return;
+    QStringList arguments;
 #if defined(Q_OS_WIN)
-    QString program = "gpnode.bat";
+    QString program = "cmd";
+    arguments << "/c" << "gpnode.bat";
 #else
     QString program = "gpnode";
 #endif
-    QStringList arguments;
     arguments << "generate" << "-o" << "build";
 
     launch(program, arguments);
