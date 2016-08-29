@@ -333,10 +333,10 @@ void BlockView::keyPressEvent(QKeyEvent *event)
             BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
             if(connectorItem)
             {
-                emit blockPortDisconnected(ModelFlowConnect(connectorItem->portItem1()->modelFlow()->parent()->name(),
-                                                            connectorItem->portItem1()->modelFlow()->name(),
-                                                            connectorItem->portItem2()->modelFlow()->parent()->name(),
-                                                            connectorItem->portItem2()->modelFlow()->name()));
+                emit blockPortDisconnected(ModelFlowConnect(connectorItem->portItem1()->blockName(),
+                                                            connectorItem->portItem1()->name(),
+                                                            connectorItem->portItem2()->blockName(),
+                                                            connectorItem->portItem2()->name()));
             }
             else
             {
