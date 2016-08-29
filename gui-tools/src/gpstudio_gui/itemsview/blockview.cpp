@@ -81,6 +81,8 @@ void BlockView::attachProject(GPNodeProject *project)
 
     connect(this, SIGNAL(blockAdded(QString,QPoint)),
             _project, SLOT(addBlock(QString,QPoint)));
+    connect(this, SIGNAL(blockRenamed(QString,QString)),
+            _project, SLOT(renameBlock(QString,QString)));
     connect(this, SIGNAL(blockMoved(QString,QPoint,QPoint)),
             _project, SLOT(moveBlock(QString,QPoint,QPoint)));
     connect(this, SIGNAL(blockDeleted(ModelBlock*)),
@@ -225,6 +227,7 @@ void BlockView::updateBlock(ModelBlock *block)
     if(blockItem)
     {
         blockItem->updatePos();
+        blockItem->setName(block->name());
     }
 }
 
@@ -322,7 +325,15 @@ void BlockView::keyPressEvent(QKeyEvent *event)
     if(event->key()==Qt::Key_Asterisk)
         zoomFit();
     if(event->key()==Qt::Key_F2)
-        zoomFit();
+    {
+        if(_scene->selectedItems().count()>0)
+        {
+            QGraphicsItem *item = _scene->selectedItems().at(0);
+            BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+            if(blockItem)
+                emit blockRenamed(blockItem->name(), "");
+        }
+    }
     if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
     {
         if(_scene->selectedItems().count()>0)

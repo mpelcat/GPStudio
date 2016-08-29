@@ -25,6 +25,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include "undostack/nodecommands.h"
 #include "undostack/blockcommands.h"
@@ -345,7 +346,11 @@ void GPNodeProject::moveBlock(const QString &block_name, const QPoint &oldPos, c
 
 void GPNodeProject::renameBlock(const QString &block_name, const QString &newName)
 {
-    _undoStack->push(new BlockCmdRename(this, block_name, newName));
+    QString name = newName;
+    if(name.isEmpty())
+        name = QInputDialog::getText(0, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
+    if(!name.isEmpty())
+        _undoStack->push(new BlockCmdRename(this, block_name, name));
 }
 
 void GPNodeProject::addBlock(ModelBlock *block)

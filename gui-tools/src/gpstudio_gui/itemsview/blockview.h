@@ -92,6 +92,7 @@ signals:
     void blockSelected(QString blockName);
 
     void blockAdded(const QString driver, const QPoint pos);
+    void blockRenamed(const QString block_name, const QString newName);
     void blockMoved(const QString block_name, const QPoint oldPos, const QPoint newPos);
     void blockDeleted(ModelBlock *block);
     void blockPortConnected(ModelFlowConnect flowConnect);

@@ -165,6 +165,7 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     // ============= Node =============
     QMenu *nodeMenu = menuBar()->addMenu("&Node");
+    nodeMenu->setStatusTip("tototo");
 
     QAction *newDocAction = new QAction("&New",this);
     newDocAction->setIcon(QIcon(":/icons/img/new.png"));
@@ -346,6 +347,11 @@ void NodeEditorWindows::showBlockDetails(QString blockName)
         return;
     if(_blockEditor)
         delete _blockEditor;
-    _blockEditor = new BlockEditorWindow (this, _project->node()->getBlock(blockName));
-    _blockEditor->show();
+    _blockEditor = NULL;
+    ModelBlock *block = _project->node()->getBlock(blockName);
+    if(block)
+    {
+        _blockEditor = new BlockEditorWindow (this, block);
+        _blockEditor->show();
+    }
 }
