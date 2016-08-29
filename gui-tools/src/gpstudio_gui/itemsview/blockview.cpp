@@ -358,24 +358,33 @@ void BlockView::keyPressEvent(QKeyEvent *event)
     QGraphicsView::keyPressEvent(event);
 }
 
+#ifndef QT_NO_CONTEXTMENU
 void BlockView::contextMenuEvent(QContextMenuEvent *event)
 {
     QGraphicsItem *item;
-    if(_scene->selectedItems().count()>0)
-        item = _scene->selectedItems().at(0);
-    else
-        item = _scene->itemAt(event->globalPos(), QTransform());
-
+    item = _scene->itemAt(mapToScene(event->pos()), QTransform());
     if(item)
     {
+        scene()->clearSelection();
+        item->setSelected(true);
+
         BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
         if(blockItem)
         {
             QMenu menu;
-            QAction *removeAction = menu.addAction("Remove");
-            QAction *markAction = menu.addAction("Mark");
-            menu.exec(event->globalPos());
-            //emit blockDeleted(blockItem->modelBlock());
+            QAction *deleteAction = menu.addAction("Delete");
+            deleteAction->setShortcut(Qt::Key_Delete);
+            QAction *renameAction = menu.addAction("Rename");
+            renameAction->setShortcut(Qt::Key_F2);
+            QAction *infosIPAction = menu.addAction("View implementation files");
+            QAction *trigered = menu.exec(event->globalPos());
+            if(trigered == deleteAction)
+                emit blockDeleted(blockItem->modelBlock());
+            else if(trigered == renameAction)
+                emit blockRenamed(blockItem->name(), "");
+            else if(trigered == infosIPAction)
+                emit blockDetailsRequest(blockItem->name());
         }
     }
 }
+#endif // QT_NO_CONTEXTMENU
