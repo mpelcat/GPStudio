@@ -25,7 +25,9 @@
 
 #include <QMouseEvent>
 #include <QTreeView>
+
 #include "libitemmodel.h"
+#include "nodeeditor/gpnodeproject.h"
 
 class GPSTUDIO_GUI_EXPORT LibTreeView : public QTreeView
 {
@@ -33,10 +35,12 @@ class GPSTUDIO_GUI_EXPORT LibTreeView : public QTreeView
 public:
     explicit LibTreeView(QWidget *parent = 0);
 
+    void attachProject(GPNodeProject *project);
+
     void setLib(const Lib *lib);
 
 signals:
-    void processAdded(QString driver);
+    void blockAdded(const QString driver, const QPoint pos);
 
 protected slots:
     void doubleClickProcess(QModelIndex index);
@@ -45,6 +49,8 @@ protected:
     void startDrag(Qt::DropActions supportedActions);
 
 private:
+    GPNodeProject *_project;
+
     LibItemModel *_model;
 };
 

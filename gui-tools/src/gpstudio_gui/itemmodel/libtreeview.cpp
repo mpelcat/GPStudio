@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QDrag>
 #include <QMimeData>
+
 LibTreeView::LibTreeView(QWidget *parent) :
     QTreeView(parent)
 {
@@ -34,6 +35,17 @@ LibTreeView::LibTreeView(QWidget *parent) :
     setDragDropMode(QAbstractItemView::DragOnly);
 
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClickProcess(QModelIndex)));
+}
+
+void LibTreeView::attachProject(GPNodeProject *project)
+{
+    if(_project)
+        disconnect(_project);
+
+    _project = project;
+
+    connect(this, SIGNAL(blockAdded(QString,QPoint)),
+            _project, SLOT(addBlock(QString,QPoint)));
 }
 
 void LibTreeView::setLib(const Lib *lib)
@@ -68,5 +80,5 @@ void LibTreeView::doubleClickProcess(QModelIndex index)
     const BlockLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
 
     if(proc)
-        emit processAdded(proc->name());
+        emit blockAdded(proc->name(), QPoint());
 }

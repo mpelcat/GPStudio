@@ -79,14 +79,16 @@ void BlockView::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(blockDisconected(ModelFlowConnect)),
             this, SLOT(disconnectBlock(ModelFlowConnect)));
 
+    connect(this, SIGNAL(blockAdded(QString,QPoint)),
+            _project, SLOT(addBlock(QString,QPoint)));
     connect(this, SIGNAL(blockMoved(QString,QPoint,QPoint)),
-            project, SLOT(moveBlock(QString,QPoint,QPoint)));
+            _project, SLOT(moveBlock(QString,QPoint,QPoint)));
     connect(this, SIGNAL(blockDeleted(ModelBlock*)),
-            project, SLOT(removeBlock(ModelBlock*)));
+            _project, SLOT(removeBlock(ModelBlock*)));
     connect(this, SIGNAL(blockPortConnected(ModelFlowConnect)),
-            project, SLOT(connectBlockFlows(ModelFlowConnect)));
+            _project, SLOT(connectBlockFlows(ModelFlowConnect)));
     connect(this, SIGNAL(blockPortDisconnected(ModelFlowConnect)),
-            project, SLOT(disConnectBlockFlows(ModelFlowConnect)));
+            _project, SLOT(disConnectBlockFlows(ModelFlowConnect)));
 
     if(project->node())
     {
@@ -122,7 +124,7 @@ void BlockView::dropEvent(QDropEvent *event)
         QString driver = event->mimeData()->text();
         QPoint pos = mapToScene(event->pos()).toPoint();
 
-        _project->addBlock(driver, pos);
+        emit blockAdded(driver, pos);
     }
 }
 

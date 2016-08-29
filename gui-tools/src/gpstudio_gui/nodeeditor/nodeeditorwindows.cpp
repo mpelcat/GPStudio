@@ -88,6 +88,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
     // attach project to editors and viewers
     _blocksView->attachProject(_project);
     _compileLog->setProject(_project);
+    _libTreeView->attachProject(_project);
 }
 
 void NodeEditorWindows::closeEvent(QCloseEvent *event)
@@ -142,7 +143,6 @@ void NodeEditorWindows::createDocks()
     _libTreeView = new LibTreeView();
     _libTreeView->setLib(&Lib::getLib());
     libTreeViewLayout->addWidget(_libTreeView);
-    connect(_libTreeView, SIGNAL(processAdded(QString)), this, SLOT(addProcess(QString)));
     libTreeViewContent->setLayout(libTreeViewLayout);
     _libTreeViewDock->setWidget(libTreeViewContent);
     addDockWidget(Qt::RightDockWidgetArea, _libTreeViewDock);
