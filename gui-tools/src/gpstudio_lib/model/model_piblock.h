@@ -34,7 +34,7 @@ public:
     ModelPIBlock(const ModelPIBlock &modelPIBlock);
     virtual ~ModelPIBlock();
 
-    QString type() const;
+    Type type() const;
 
 public:
     static ModelPIBlock *fromNodeGenerated(const QDomElement &domElement, ModelPIBlock *piBlock=NULL);

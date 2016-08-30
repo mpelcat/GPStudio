@@ -45,9 +45,9 @@ ModelFIBlock::~ModelFIBlock()
         delete _treeConnects[i];
 }
 
-QString ModelFIBlock::type() const
+ModelBlock::Type ModelFIBlock::type() const
 {
-    return "fi";
+    return FI;
 }
 
 QList<ModelFlowConnect *> &ModelFIBlock::flowConnects()

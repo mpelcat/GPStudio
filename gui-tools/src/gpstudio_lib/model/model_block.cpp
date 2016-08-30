@@ -188,9 +188,16 @@ void ModelBlock::setDescription(const QString &description)
     _description = description;
 }
 
-QString ModelBlock::type() const
+ModelBlock::Type ModelBlock::type() const
 {
-    return "block";
+    return Block;
+}
+
+bool ModelBlock::isIO() const
+{
+    if(type()==IO || type()==IOCom)
+        return true;
+    return false;
 }
 
 ModelNode *ModelBlock::node() const
@@ -685,7 +692,7 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     QDomElement element;
     if(other.isNull())
     {
-        if(type()=="io" || type()=="iocom")
+        if(type()==IO || type()==IOCom)
             element = doc.createElement("io");
         else
             element = doc.createElement("process");
@@ -697,7 +704,7 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     element.setAttribute("driver", _driver);
     element.setAttribute("path", _path);
 
-    if(type()!="io" && type()!="iocom")
+    if(!isIO())
         element.setAttribute("inlib", _inLib ? "true" : "false");
 
     element.setAttribute("x_pos", _pos.x());

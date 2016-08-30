@@ -119,7 +119,7 @@ QStringList ModelNode::iosList()
     QStringList ios;
     foreach (ModelBlock *block, _blocks)
     {
-        if(block->type()=="io" || block->type()=="iocom")
+        if(block->isIO())
             ios.append(block->name());
     }
     return ios;
@@ -130,7 +130,7 @@ ModelFIBlock *ModelNode::getFIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="fi")
+        if(block->type()==ModelBlock::FI)
             return (ModelFIBlock*)block;
     }
     return NULL;
@@ -141,7 +141,7 @@ ModelCIBlock *ModelNode::getCIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="ci")
+        if(block->type()==ModelBlock::CI)
             return (ModelCIBlock*)block;
     }
     return NULL;
@@ -152,7 +152,7 @@ ModelPIBlock *ModelNode::getPIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="pi")
+        if(block->type()==ModelBlock::PI)
             return (ModelPIBlock*)block;
     }
     return NULL;
@@ -163,7 +163,7 @@ ModelIOCom *ModelNode::getIOCom() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="iocom")
+        if(block->type()==ModelBlock::IOCom)
             return (ModelIOCom*)block;
     }
     return NULL;
@@ -208,7 +208,7 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
     QDomElement processList = doc.createElement("process");
     foreach (ModelBlock *process, blocks())
     {
-        if(process->type()=="process")
+        if(process->type()==ModelBlock::Process)
         {
             processList.appendChild(process->toXMLElement(doc));
         }

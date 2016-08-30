@@ -34,9 +34,9 @@ ModelCIBlock::~ModelCIBlock()
 {
 }
 
-QString ModelCIBlock::type() const
+ModelBlock::Type ModelCIBlock::type() const
 {
-    return "ci";
+    return CI;
 }
 
 ModelCIBlock *ModelCIBlock::fromNodeGenerated(const QDomElement &domElement, ModelCIBlock *ciBlock)

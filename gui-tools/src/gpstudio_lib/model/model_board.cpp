@@ -96,7 +96,7 @@ QDomElement ModelBoard::toXMLElement(QDomDocument &doc)
         QDomElement iosList = doc.createElement("ios");
         foreach (ModelBlock *io, _parent->blocks())
         {
-            if(io->type()=="io" || io->type()=="iocom")
+            if(io->isIO())
             {
                 iosList.appendChild(io->toXMLElement(doc));
             }

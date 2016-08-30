@@ -340,9 +340,8 @@ void BlockView::keyPressEvent(QKeyEvent *event)
     }
     if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
     {
-        if(_scene->selectedItems().count()>0)
+        foreach (QGraphicsItem *item, _scene->selectedItems())
         {
-            QGraphicsItem *item = _scene->selectedItems().at(0);
             BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
             if(connectorItem)
             {

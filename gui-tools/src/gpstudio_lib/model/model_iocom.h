@@ -34,7 +34,7 @@ public:
     ModelIOCom(const ModelIOCom &modelIOCom);
     virtual ~ModelIOCom();
 
-    QString type() const;
+    Type type() const;
 
     const QString &driverIO() const;
     void setDriverIO(const QString &driverIO);

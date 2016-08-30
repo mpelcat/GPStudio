@@ -37,9 +37,9 @@ ModelIO::~ModelIO()
 {
 }
 
-QString ModelIO::type() const
+ModelBlock::Type ModelIO::type() const
 {
-    return "io";
+    return IO;
 }
 
 ModelIO *ModelIO::fromNodeGenerated(const QDomElement &domElement, ModelIO *io)

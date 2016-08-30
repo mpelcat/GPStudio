@@ -77,7 +77,18 @@ public:
     const QString &description() const;
     void setDescription(const QString &description);
 
-    virtual QString type() const;
+    enum Type
+    {
+        Block,
+        Process,
+        IO,
+        IOCom,
+        PI,
+        FI,
+        CI
+    };
+    virtual Type type() const;
+    bool isIO() const;
 
     ModelNode *node() const;
     void setNode(ModelNode *node);

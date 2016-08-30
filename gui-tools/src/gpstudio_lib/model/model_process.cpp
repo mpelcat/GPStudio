@@ -37,9 +37,9 @@ ModelProcess::~ModelProcess()
 {
 }
 
-QString ModelProcess::type() const
+ModelBlock::Type ModelProcess::type() const
 {
-    return "process";
+    return Process;
 }
 
 ModelProcess *ModelProcess::fromNodeGenerated(const QDomElement &domElement, ModelProcess *process)

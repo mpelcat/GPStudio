@@ -36,7 +36,7 @@ public:
     ModelFIBlock(const ModelFIBlock &modelFIBlock);
     virtual ~ModelFIBlock();
 
-    QString type() const;
+    Type type() const;
 
     QList<ModelFlowConnect *> &flowConnects();
     QList<ModelFlowConnect *> flowConnects(const QString blockName);

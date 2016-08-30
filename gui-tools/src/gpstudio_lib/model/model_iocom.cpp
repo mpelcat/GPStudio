@@ -41,9 +41,9 @@ ModelIOCom::~ModelIOCom()
         delete _comConnects[i];
 }
 
-QString ModelIOCom::type() const
+ModelBlock::Type ModelIOCom::type() const
 {
-    return "iocom";
+    return IOCom;
 }
 
 const QString &ModelIOCom::driverIO() const

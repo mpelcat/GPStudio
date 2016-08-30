@@ -84,11 +84,11 @@ void BlockCmdAdd::undo()
     if(block)
     {
         // backup block
-        if(block->type()=="process")
+        if(block->type()==ModelBlock::Process)
             _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
-        else if(block->type()=="io")
+        else if(block->type()==ModelBlock::IO)
             _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
-        else if(block->type()=="iocom")
+        else if(block->type()==ModelBlock::IOCom)
             _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
     }
 
@@ -130,11 +130,11 @@ void BlockCmdRemove::redo()
     if(block)
     {
         // backup block
-        if(block->type()=="process")
+        if(block->type()==ModelBlock::Process)
             _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
-        else if(block->type()=="io")
+        else if(block->type()==ModelBlock::IO)
             _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
-        else if(block->type()=="iocom")
+        else if(block->type()==ModelBlock::IOCom)
             _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
     }
 

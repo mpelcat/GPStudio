@@ -218,7 +218,7 @@ BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
         return NULL;
 
     BlockLib *blockLib;
-    if(modelBlock->type()=="process")
+    if(modelBlock->type()==ModelBlock::Process)
         blockLib = Lib::getLib().process(modelBlock->driver());
     else
         blockLib = Lib::getLib().io(modelBlock->driver());
