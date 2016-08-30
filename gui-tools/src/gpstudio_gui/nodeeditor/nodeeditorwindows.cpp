@@ -129,7 +129,7 @@ void NodeEditorWindows::createDocks()
     setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
 
     // cam explorer dock
-    _camExplorerDock = new QDockWidget("CamExplorer", this);
+    _camExplorerDock = new QDockWidget("Node project explorer", this);
     QWidget *camExplorerContent = new QWidget(_camExplorerDock);
     QLayout *camExplorerLayout = new QVBoxLayout();
     _camExplorerWidget = new CamExplorerWidget();
@@ -139,7 +139,7 @@ void NodeEditorWindows::createDocks()
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
     // lib treeview dock
-    _libTreeViewDock = new QDockWidget("LibExplorer", this);
+    _libTreeViewDock = new QDockWidget("IP library explorer", this);
     QWidget *libTreeViewContent = new QWidget(_libTreeViewDock);
     QLayout *libTreeViewLayout = new QVBoxLayout();
     _libTreeView = new LibTreeView();
@@ -150,7 +150,7 @@ void NodeEditorWindows::createDocks()
     addDockWidget(Qt::RightDockWidgetArea, _libTreeViewDock);
 
     // compile log dock
-    _compileLogDock = new QDockWidget("Log", this);
+    _compileLogDock = new QDockWidget("Compilation log", this);
     QWidget *compileLogContent = new QWidget(_compileLogDock);
     QLayout *compileLogLayout = new QVBoxLayout();
     _compileLog = new CompileLogWidget();
@@ -167,9 +167,9 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     // ============= Node =============
     QMenu *nodeMenu = menuBar()->addMenu("&Node");
-    nodeMenu->setStatusTip("tototo");
 
     QAction *newDocAction = new QAction("&New",this);
+    newDocAction->setStatusTip("Creates a new node project");
     newDocAction->setIcon(QIcon(":/icons/img/new.png"));
     newDocAction->setShortcut(QKeySequence::New);
     _mainToolBar->addAction(newDocAction);
@@ -177,6 +177,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     connect(newDocAction, SIGNAL(triggered(bool)), _project, SLOT(newProject()));
 
     QAction *openDocAction = new QAction("&Open",this);
+    openDocAction->setStatusTip("Opens a node project");
     openDocAction->setIcon(QIcon(":/icons/img/open.png"));
     openDocAction->setShortcut(QKeySequence::Open);
     _mainToolBar->addAction(openDocAction);
@@ -184,6 +185,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     connect(openDocAction, SIGNAL(triggered(bool)), _project, SLOT(openProject()));
 
     QAction *saveDocAction = new QAction("&Save",this);
+    saveDocAction->setStatusTip("Saves the current node project");
     saveDocAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAction->setShortcut(QKeySequence::Save);
     saveDocAction->setEnabled(false);
@@ -193,6 +195,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     connect(_project, SIGNAL(nodeModified(bool)), saveDocAction, SLOT(setEnabled(bool)));
 
     QAction *saveDocAsAction = new QAction("Save &as...",this);
+    saveDocAsAction->setStatusTip("Saves the current node project with a new name");
     saveDocAsAction->setIcon(QIcon(":/icons/img/save.png"));
     saveDocAsAction->setShortcut(QKeySequence::SaveAs);
     nodeMenu->addAction(saveDocAsAction);
@@ -202,6 +205,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addSeparator();
 
     QAction *configNode = new QAction("&Configure node",this);
+    configNode->setStatusTip("Permits to choose the targeted platform and to choose associated periphericals");
     configNode->setIcon(QIcon(":/icons/img/settings.png"));
     configNode->setShortcut(QKeySequence::Preferences);
     nodeMenu->addAction(configNode);
@@ -210,6 +214,7 @@ void NodeEditorWindows::createToolBarAndMenu()
 
     nodeMenu->addSeparator();
     QAction *exit = new QAction("E&xit",this);
+    exit->setStatusTip("Exits GPNode");
     exit->setIcon(QIcon(":/icons/img/exit.png"));
     exit->setShortcut(QKeySequence::Quit);
     nodeMenu->addAction(exit);
@@ -220,12 +225,14 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addSeparator();
 
     QAction *undoAction = _project->undoStack()->createUndoAction(this, "&Undo");
+    undoAction->setStatusTip("Undo the latest action");
     undoAction->setIcon(QIcon(":/icons/img/edit-undo.png"));
     undoAction->setShortcut(QKeySequence::Undo);
     _mainToolBar->addAction(undoAction);
     editMenu->addAction(undoAction);
 
     QAction *redoAction = _project->undoStack()->createRedoAction(this, "&Redo");
+    redoAction->setStatusTip("Redo the latest action");
     redoAction->setIcon(QIcon(":/icons/img/edit-redo.png"));
     redoAction->setShortcut(QKeySequence::Redo);
     _mainToolBar->addAction(redoAction);
@@ -235,15 +242,24 @@ void NodeEditorWindows::createToolBarAndMenu()
     QMenu *viewMenu = menuBar()->addMenu("&View");
 
     viewMenu->addSeparator();
-    viewMenu->addAction(_libTreeViewDock->toggleViewAction());
-    viewMenu->addAction(_camExplorerDock->toggleViewAction());
-    viewMenu->addAction(_compileLogDock->toggleViewAction());
+    QAction *viewLibAction = _libTreeViewDock->toggleViewAction();
+    viewLibAction->setStatusTip("Shows or hide the IP library explorer");
+    viewMenu->addAction(viewLibAction);
+
+    QAction *viewCamexAction = _camExplorerDock->toggleViewAction();
+    viewCamexAction->setStatusTip("Shows or hide the camera explorer");
+    viewMenu->addAction(viewCamexAction);
+
+    QAction *viewLogAction = _compileLogDock->toggleViewAction();
+    viewLogAction->setStatusTip("Shows or hide the compilation log");
+    viewMenu->addAction(viewLogAction);
 
     // ============= Project =============
     QMenu *projectMenu = menuBar()->addMenu("&Project");
     _mainToolBar->addSeparator();
 
     QAction *makecleanAction = new QAction("&Clean project", this);
+    makecleanAction->setStatusTip("Removes all intermediary files");
     makecleanAction->setIcon(QIcon(":/icons/img/make-clean.png"));
     connect(makecleanAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchClean()));
     connect(_compileLog, SIGNAL(actionsAvailable(bool)), makecleanAction, SLOT(setEnabled(bool)));
@@ -251,12 +267,14 @@ void NodeEditorWindows::createToolBarAndMenu()
     projectMenu->addAction(makecleanAction);
 
     QAction *makegenerateAction = new QAction("&Generate project", this);
+    makegenerateAction->setStatusTip("Generate a synthetisable project");
     makegenerateAction->setIcon(QIcon(":/icons/img/make-generate.png"));
     connect(makegenerateAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchGenerate()));
     _mainToolBar->addAction(makegenerateAction);
     projectMenu->addAction(makegenerateAction);
 
-    QAction *makecompileAction = new QAction("&Compile project", this);
+    QAction *makecompileAction = new QAction("Comp&ile project", this);
+    makecompileAction->setStatusTip("Synthetises the HDL project");
     makecompileAction->setIcon(QIcon(":/icons/img/make-compile.png"));
     connect(makecompileAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchCompile()));
     connect(_compileLog, SIGNAL(actionsAvailable(bool)), makecompileAction, SLOT(setEnabled(bool)));
@@ -264,6 +282,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     projectMenu->addAction(makecompileAction);
 
     QAction *makesendAction = new QAction("&Program camera", this);
+    makesendAction->setStatusTip("Programs your camera");
     makesendAction->setIcon(QIcon(":/icons/img/make-send.png"));
     connect(makesendAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchSend()));
     connect(_compileLog, SIGNAL(actionsAvailable(bool)), makesendAction, SLOT(setEnabled(bool)));
@@ -271,13 +290,15 @@ void NodeEditorWindows::createToolBarAndMenu()
     projectMenu->addAction(makesendAction);
 
     QAction *makerunAction = new QAction("&Launch camera with viewer", this);
+    makerunAction->setStatusTip("Launch your project on your camera with GPViewer");
     makerunAction->setIcon(QIcon(":/icons/img/run.png"));
     connect(makerunAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchView()));
     connect(_compileLog, SIGNAL(actionsAvailable(bool)), makerunAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makerunAction);
     projectMenu->addAction(makerunAction);
 
-    QAction *stopAction = new QAction("&Stop current compilation", this);
+    QAction *stopAction = new QAction("&Abort command", this);
+    stopAction->setStatusTip("Aborts current launched command");
     stopAction->setIcon(QIcon(":/icons/img/stop.png"));
     stopAction->setEnabled(false);
     connect(stopAction, SIGNAL(triggered(bool)), _compileLog, SLOT(stopAll()));
@@ -289,10 +310,12 @@ void NodeEditorWindows::createToolBarAndMenu()
     QMenu *helpMenu = menuBar()->addMenu("&Help");
 
     QAction *aboutAction = new QAction("&About", this);
+    aboutAction->setStatusTip("Shows abou");
     connect(aboutAction, SIGNAL(triggered(bool)), this, SLOT(about()));
     helpMenu->addAction(aboutAction);
 
     QAction *aboutQtAction = new QAction("About &Qt", this);
+    aboutQtAction->setStatusTip("About Qt version");
     connect(aboutQtAction, SIGNAL(triggered(bool)), this, SLOT(aboutQt()));
     helpMenu->addAction(aboutQtAction);
 }
