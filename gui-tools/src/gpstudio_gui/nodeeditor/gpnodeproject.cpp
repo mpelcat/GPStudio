@@ -404,10 +404,14 @@ void GPNodeProject::renameBlock(const QString &block_name, const QString &newNam
 
 void GPNodeProject::addBlock(ModelBlock *block)
 {
-    if(block->name().isEmpty())
-        block->setName(QString("%1_%2").arg(block->driver()).arg(_node->blocks().count()));
-    if(block->name()==block->driver())
-        block->setName(QString("%1_%2").arg(block->driver()).arg(_node->blocks().count()));
+    if(block->name().isEmpty() || block->name()==block->driver())
+    {
+        int i = 1;
+        QString name = QString("%1_%2").arg(block->driver()).arg(i);
+        while(_node->getBlock(name)!=NULL)
+            name = QString("%1_%2").arg(block->driver()).arg(++i);
+        block->setName(name);
+    }
     _undoStack->push(new BlockCmdAdd(this, block));
 }
 
