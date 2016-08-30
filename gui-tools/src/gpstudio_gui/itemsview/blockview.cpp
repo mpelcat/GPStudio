@@ -354,7 +354,8 @@ void BlockView::keyPressEvent(QKeyEvent *event)
             {
                 BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
                 if(blockItem)
-                    emit blockDeleted(blockItem->modelBlock());
+                    if(!blockItem->modelBlock()->isIO())
+                        emit blockDeleted(blockItem->modelBlock());
             }
         }
     }
@@ -379,6 +380,11 @@ void BlockView::contextMenuEvent(QContextMenuEvent *event)
             renameAction->setShortcut(Qt::Key_F2);
             QAction *deleteAction = menu.addAction("Delete");
             deleteAction->setShortcut(Qt::Key_Delete);
+            if(blockItem->modelBlock()->isIO())
+            {
+                renameAction->setEnabled(false);
+                deleteAction->setEnabled(false);
+            }
             QAction *infosIPAction = menu.addAction("View implementation files");
             QAction *trigered = menu.exec(event->globalPos());
             if(trigered == deleteAction)
