@@ -98,6 +98,9 @@ signals:
     void blockPortConnected(ModelFlowConnect flowConnect);
     void blockPortDisconnected(ModelFlowConnect flowConnect);
 
+    void beginMacroAsked(QString text);
+    void endMacroAsked();
+
 private:
     GPNodeProject *_project;
 
@@ -105,6 +108,7 @@ private:
     bool _editMode;
 
     // connector system
+    QGraphicsRectItem *_rectSelect;
     BlockPortItem *_startConnectItem;
     BlockConnectorItem *_lineConector;
 };

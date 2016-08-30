@@ -66,6 +66,9 @@ public slots:
     void connectBlockFlows(const ModelFlowConnect &flowConnect);
     void disConnectBlockFlows(const ModelFlowConnect &flowConnect);
 
+    void beginMacro(const QString &text);
+    void endMacro();
+
 signals:
     void nodeChanged(ModelNode *node);
     void nodePathChanged(QString path);

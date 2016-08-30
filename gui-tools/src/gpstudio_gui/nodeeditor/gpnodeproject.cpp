@@ -440,3 +440,13 @@ void GPNodeProject::disConnectBlockFlows(const ModelFlowConnect &flowConnect)
 {
     _undoStack->push(new BlockCmdDisconnectFlow(this, flowConnect));
 }
+
+void GPNodeProject::beginMacro(const QString &text)
+{
+    _undoStack->beginMacro(text);
+}
+
+void GPNodeProject::endMacro()
+{
+    _undoStack->endMacro();
+}
