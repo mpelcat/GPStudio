@@ -138,8 +138,6 @@ void BlockView::dropEvent(QDropEvent *event)
 
 void BlockView::mousePressEvent(QMouseEvent *event)
 {
-    QGraphicsView::mousePressEvent(event);
-
     if(event->button() == Qt::LeftButton)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
@@ -150,23 +148,43 @@ void BlockView::mousePressEvent(QMouseEvent *event)
             blockScene()->addItem(_lineConector);
             _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
         }
+        setDragMode(QGraphicsView::RubberBandDrag);
     }
-    else if(event->button() == Qt::LeftButton)
+    if(event->button() == Qt::MidButton)
     {
+        setDragMode(QGraphicsView::NoDrag);
+        setCursor(Qt::ClosedHandCursor);
+
+        _refDrag = mapToScene(event->pos());
+        _centerDrag = mapToScene(this->viewport()->rect()).boundingRect().center();
+
     }
+    QGraphicsView::mousePressEvent(event);
 }
 
 void BlockView::mouseMoveEvent(QMouseEvent *event)
 {
-    QGraphicsView::mouseMoveEvent(event);
-
     if(_startConnectItem)
         _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
+
+    if ((event->buttons() & Qt::MidButton) == Qt::MidButton)
+    {
+        QPointF move = _refDrag - mapToScene(event->pos());
+        centerOn(_centerDrag + move);
+        _centerDrag = mapToScene(viewport()->rect()).boundingRect().center();
+    }
+
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void BlockView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
+
+    if(event->button() == Qt::MidButton)
+    {
+        setCursor(Qt::ArrowCursor);
+    }
 
     // move blocks
     QList<BlockItem*> movedBlocks;
@@ -380,12 +398,17 @@ void BlockView::keyPressEvent(QKeyEvent *event)
             }
 
         }
-        emit beginMacroAsked("multiple blocks suppression");
+        if(block2delete.count()>1)
+            emit beginMacroAsked("multiple blocks suppression");
+        else if(link2delete.count()>1)
+            emit beginMacroAsked("multiple links suppression");
         foreach (ModelBlock *block, block2delete)
             emit blockDeleted(block);
         foreach (ModelFlowConnect connect, link2delete)
             emit blockPortDisconnected(connect);
-        emit endMacroAsked();
+
+        if(block2delete.count()>1 || link2delete.count()>1)
+            emit endMacroAsked();
     }
     QGraphicsView::keyPressEvent(event);
 }

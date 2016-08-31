@@ -107,6 +107,9 @@ private:
     BlockScene *_scene;
     bool _editMode;
 
+    QPointF _refDrag;
+    QPointF _centerDrag;
+
     // connector system
     QGraphicsRectItem *_rectSelect;
     BlockPortItem *_startConnectItem;
