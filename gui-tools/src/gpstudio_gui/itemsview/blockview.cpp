@@ -427,14 +427,18 @@ void BlockView::contextMenuEvent(QContextMenuEvent *event)
         if(blockItem)
         {
             QMenu menu;
-            QAction *renameAction = menu.addAction("Rename");
-            renameAction->setShortcut(Qt::Key_F2);
-            QAction *deleteAction = menu.addAction("Delete");
-            deleteAction->setShortcut(Qt::Key_Delete);
-            if(blockItem->modelBlock()->isIO())
+            QAction *renameAction=NULL, *deleteAction=NULL;
+            if(_editMode)
             {
-                renameAction->setEnabled(false);
-                deleteAction->setEnabled(false);
+                renameAction = menu.addAction("Rename");
+                renameAction->setShortcut(Qt::Key_F2);
+                deleteAction = menu.addAction("Delete");
+                deleteAction->setShortcut(Qt::Key_Delete);
+                if(blockItem->modelBlock()->isIO())
+                {
+                    renameAction->setEnabled(false);
+                    deleteAction->setEnabled(false);
+                }
             }
             QAction *infosIPAction = menu.addAction("View implementation files");
             QAction *trigered = menu.exec(event->globalPos());

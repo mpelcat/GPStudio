@@ -46,6 +46,7 @@ BlockItem::BlockItem()
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
+    setCacheMode(QGraphicsItem::NoCache);
 
     update();
 }
@@ -69,14 +70,24 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(option); Q_UNUSED(widget);
 
     if(isSelected())
-        painter->setPen(QPen(QColor("orange"), 3));
+    {
+        if(_modelBlock->isIO())
+            painter->setPen(QPen(Qt::red, 3));
+        else
+            painter->setPen(QPen(QColor("orange"), 3));
+    }
     else
-        painter->setPen(QPen(Qt::black, 1));
+    {
+        if(_modelBlock->isIO())
+            painter->setPen(QPen(Qt::darkRed, 1));
+        else
+            painter->setPen(QPen(Qt::black, 1));
+    }
 
     if(_svgRenderer.isValid())
     {
         _svgRenderer.render(painter, _boundingRect);
-        painter->drawRect(_boundingRect);
+        painter->drawRoundedRect(_boundingRect,2,2);
     }
     else
     {
