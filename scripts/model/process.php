@@ -68,11 +68,6 @@ class Process extends Block
             else
                 $this->name = (string) $process_node_element['name'];
 
-            if (isset($process_node_element['x_pos']))
-                $this->x_pos = (int) $process_node_element['x_pos'];
-            if (isset($process_node_element['y_pos']))
-                $this->y_pos = (int) $process_node_element['y_pos'];
-
             $this->in_lib = $inlib;
             if ($this->in_lib)
             {
@@ -118,6 +113,20 @@ class Process extends Block
                     // process defined inside .node
                     $this->parse_xml($process_node_element);
                 }
+            }
+
+            if (isset($process_node_element['x_pos']) or isset($process_node_element['y_pos']))
+            {
+                if (count($this->parts)>0)
+                    $part = $this->parts[0];
+                else
+                {
+                    $part = new ComponentPart();
+                    $part->name = "main";
+                    $this->addPart($part);
+                }
+                $part->x_pos = (int) $process_node_element['x_pos'];
+                $part->y_pos = (int) $process_node_element['y_pos'];
             }
         }
         elseif (is_string($process_node_element))

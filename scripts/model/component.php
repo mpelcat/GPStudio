@@ -29,6 +29,7 @@ require_once("interfacebus.php");
 require_once("attribute.php");
 require_once("pin.php");
 require_once("port.php");
+require_once("componentpart.php");
 
 /**
  * Component is the the definition of hardware components. It could be
@@ -107,14 +108,18 @@ class Component
     public $components;
 
     /**
+     * @brief Array of graphical part
+     * @var array|ComponentPart $parts
+     */
+    public $parts;
+
+    /**
      * @brief Parent components, null if the component does not have a parent
      * @var Component $parentComponent
      */
     public $parentComponent;
 
     protected $xml;
-
-    protected $svg;
 
     /**
      * @brief constructor of Component
@@ -132,8 +137,8 @@ class Component
         $this->interfaces = array();
         $this->attributes = array();
         $this->components = array();
+        $this->parts = array();
         
-        $this->svg = NULL;
         $this->parentComponent = NULL;
         
         if($component == NULL)
@@ -571,18 +576,53 @@ class Component
     {
         if ($casesens)
         {
-            foreach ($this->attributes as $attribute)
+            foreach ($this->components as $component)
             {
-                if ($attribute->name == $name)
-                    return $attribute;
+                if ($component->name == $name)
+                    return $component;
             }
         }
         else
         {
-            foreach ($this->attributes as $attribute)
+            foreach ($this->components as $component)
             {
-                if (strcasecmp($attribute->name, $name) == 0)
-                    return $attribute;
+                if (strcasecmp($component->name, $name) == 0)
+                    return $component;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add a gui part
+     *  @param ComponentPart $part component to add to the block
+     */
+    function addPart($part)
+    {
+        array_push($this->parts, $part);
+    }
+
+    /** @brief return a reference to the part with the name $name, if not
+     * found, return null
+     *  @param string $name name of the component to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return ComponentPart found component
+     */
+    function getPart($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->parts as $part)
+            {
+                if ($part->name == $name)
+                    return $part;
+            }
+        }
+        else
+        {
+            foreach ($this->parts as $part)
+            {
+                if (strcasecmp($part->name, $name) == 0)
+                    return $part;
             }
         }
         return null;
@@ -641,13 +681,7 @@ class Component
     {
         $this->categ = (string) $this->xml['categ'];
         $this->desc = (string) $this->xml['desc'];
-
-        // svg
-        if (isset($this->xml->svg))
-        {
-            $this->svg = dom_import_simplexml($this->xml->svg);
-        }
-
+        
         // infos
         if (isset($this->xml->infos))
         {
@@ -707,7 +741,23 @@ class Component
         {
             foreach ($this->xml->components->component as $componentXml)
             {
-                $this->addComponent(new Reset($componentXml));
+                $this->addComponent(new Component($componentXml));
+            }
+        }
+
+        // parts
+        if (isset($this->xml->svg))
+        {
+            $part = new ComponentPart();
+            $part->name = "main";
+            $part->svg = dom_import_simplexml($this->xml->svg);
+            $this->addPart($part);
+        }
+        if (isset($this->xml->parts))
+        {
+            foreach ($this->xml->parts->part as $partXml)
+            {
+                $this->addPart(new ComponentPart($partXml));
             }
         }
     }
@@ -753,6 +803,17 @@ class Component
                 $xml_infos->appendChild($info->getXmlElement($xml, $format));
             }
             $xml_element->appendChild($xml_infos);
+        }
+
+        // parts
+        if (!empty($this->parts))
+        {
+            $xml_parts = $xml->createElement("parts");
+            foreach ($this->parts as $part)
+            {
+                $xml_parts->appendChild($part->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_parts);
         }
 
         // files
@@ -824,15 +885,6 @@ class Component
             $xml_element->appendChild($xml_components);
         }
 
-        if ($format == "complete" or $format == "blockdef")
-        {
-            // SVG draw
-            if ($this->svg != NULL)
-            {
-                cloneSvg($this->svg, $xml, $xml_element);
-            }
-        }
-
         return $xml_element;
     }
 
@@ -851,9 +903,17 @@ class Component
         $xml->save($file);
     }
 
-    function setSvgDraw($svgXml)
+    function setSvgDraw($svgXml, $partName="main")
     {
-        unset($this->svg);
-        $this->svg = $svgXml;
+        $part = $this->getPart($partName);
+        if($part==NULL)
+        {
+            $part = new ComponentPart();
+            $part->name = $partName;
+            $this->addPart($part);
+        }
+
+        unset($part->this->svg);
+        $part->svg = $svgXml;
     }
 }

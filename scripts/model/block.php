@@ -71,18 +71,6 @@ class Block extends Component
     public $master_count;
 
     /**
-     * @brief X position on schematic (optional)
-     * @var int $x_pos
-     */
-    public $x_pos;
-
-    /**
-     * @brief Y position on schematic (optional)
-     * @var int $y_pos
-     */
-    public $y_pos;
-
-    /**
      * @brief Specify the external file script to configure the block (optional)
      * @var string $configscriptfile
      */
@@ -125,8 +113,6 @@ class Block extends Component
 
         $this->addr_abs = -1;
         $this->master_count = 0;
-        $this->x_pos = -1;
-        $this->y_pos = -1;
         $this->configscriptfile = '';
         $this->generatescriptfile = '';
 
@@ -603,31 +589,20 @@ class Block extends Component
             $att->value = $this->desc;
             $xml_element->appendChild($att);
         }
-
-        // x_pos
-        if (isset($this->x_pos) and $this->x_pos != -1)
+        
+        // parts
+        if (!empty($this->parts))
         {
-            $att = $xml->createAttribute('x_pos');
-            $att->value = $this->x_pos;
-            $xml_element->appendChild($att);
-        }
-
-        // y_pos
-        if (isset($this->y_pos) and $this->y_pos != -1)
-        {
-            $att = $xml->createAttribute('y_pos');
-            $att->value = $this->y_pos;
-            $xml_element->appendChild($att);
+            $xml_parts = $xml->createElement("parts");
+            foreach ($this->parts as $part)
+            {
+                $xml_parts->appendChild($part->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_parts);
         }
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // SVG draw
-            if ($this->svg != NULL)
-            {
-                cloneSvg($this->svg, $xml, $xml_element);
-            }
-
             // infos
             if (!empty($this->infos))
             {

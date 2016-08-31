@@ -72,11 +72,6 @@ class IO extends Block
             $this->name = $io_name;
             $io_driver = (string) $io_device_element['driver'];
 
-            if (isset($io_node_element['x_pos']))
-                $this->x_pos = (int) $io_node_element['x_pos'];
-            if (isset($io_node_element['y_pos']))
-                $this->y_pos = (int) $io_node_element['y_pos'];
-
             $this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
             $this->in_lib = true;
             $io_file = $this->path . $io_driver . ".io";
@@ -115,6 +110,20 @@ class IO extends Block
                 error("Error when parsing $io_file", 5, "IO");
 
             $this->parse_xml($io_device_element, $io_node_element);
+
+            if (isset($io_node_element['x_pos']) or isset($io_node_element['y_pos']))
+            {
+                if (count($this->parts)>0)
+                    $part = $this->parts[0];
+                else
+                {
+                    $part = new ComponentPart();
+                    $part->name = "main";
+                    $this->addPart($part);
+                }
+                $part->x_pos = (int) $io_node_element['x_pos'];
+                $part->y_pos = (int) $io_node_element['y_pos'];
+            }
         }
 
         if ($io_file != "" and $this->getFile(basename($io_file)) == NULL)

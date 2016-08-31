@@ -122,6 +122,10 @@ switch ($action)
         // nothing to do
         break;
 
+    case "readwrite":
+        $save = true;
+        break;
+
     case "setboard":
         $options = getopt("a:n:");
         if (array_key_exists('n', $options))

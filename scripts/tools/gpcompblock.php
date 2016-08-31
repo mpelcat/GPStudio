@@ -245,6 +245,10 @@ switch ($action)
         // nothing to do
         break;
 
+    case "readwrite":
+        $save = true;
+        break;
+
     case "generate":
         $options = getopt("a:o:");
         if (array_key_exists('o', $options))
