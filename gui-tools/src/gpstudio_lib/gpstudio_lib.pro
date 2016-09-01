@@ -83,7 +83,9 @@ HEADERS += gpstudio_lib_common.h \
     camera/flowviewerinterface.h \
     camera/registermanager.h \
     camera/registerbitfield.h \
-    camera/register.h
+    camera/register.h \
+    model/model_componentpart.h \
+    model/model_componentpartflow.h
 
 SOURCES += \
     lib_parser/lib.cpp \
@@ -130,7 +132,9 @@ SOURCES += \
     camera/flowviewerinterface.cpp \
     camera/registermanager.cpp \
     camera/registerbitfield.cpp \
-    camera/register.cpp
+    camera/register.cpp \
+    model/model_componentpart.cpp \
+    model/model_componentpartflow.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

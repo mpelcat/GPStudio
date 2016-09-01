@@ -92,6 +92,7 @@ QByteArray RegisterManager::registerData() const
 
 void RegisterManager::evalAll()
 {
+    //qDebug()<<"eval";
     QMapIterator<uint, Register *> it(_registersMap);
     while (it.hasNext())
     {
@@ -102,8 +103,12 @@ void RegisterManager::evalAll()
             cameraRegister->eval();
         else
         {
+            //qDebug()<<cameraRegister->name();
             foreach (RegisterBitField *bitField, cameraRegister->bitFields())
+            {
+                //qDebug()<<"+ "<<bitField->bits();
                 bitField->eval();
+            }
         }
     }
 }

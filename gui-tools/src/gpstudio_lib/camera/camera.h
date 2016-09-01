@@ -74,6 +74,8 @@ public:
     Block *comBlock() const;
     Block *fiBlock() const;
 
+    RegisterManager &registermanager();
+
 signals:
     void registerDataChanged();
 

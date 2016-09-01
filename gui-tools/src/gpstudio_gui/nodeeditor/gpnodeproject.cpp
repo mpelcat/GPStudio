@@ -239,14 +239,18 @@ void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &new
     setModified(true);
 }
 
-void GPNodeProject::cmdMoveBlockTo(const QString &block_name, QPoint pos)
+void GPNodeProject::cmdMoveBlockTo(const QString &block_name, const QString &part_name, QPoint pos)
 {
     ModelBlock *block = _node->getBlock(block_name);
     if(block)
     {
-        block->setPos(pos);
-        emit blockUpdated(block);
-        setModified(true);
+        ModelComponentPart *part = block->getPart(part_name);
+        if(part)
+        {
+            part->setPos(pos);
+            emit blockUpdated(block);
+            setModified(true);
+        }
     }
 }
 
@@ -347,7 +351,8 @@ void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
                 count++;
                 ModelIO *io = new ModelIO(*ioLib->modelIO());
                 io->setName(ioName);
-                io->setPos(QPoint(count*200, 0));
+                //TODO
+                //io->setPos(QPoint(count*200, 0));
                 cmdAddBlock(io);
             }
         }
@@ -365,9 +370,9 @@ void GPNodeProject::setNode(ModelNode *node)
     emit nodeChanged(_node);
 }
 
-void GPNodeProject::moveBlock(const QString &block_name, const QPoint &oldPos, const QPoint &newPos)
+void GPNodeProject::moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos)
 {
-    _undoStack->push(new BlockCmdMove(this, block_name, oldPos, newPos));
+    _undoStack->push(new BlockCmdMove(this, block_name, part_name, oldPos, newPos));
 }
 
 void GPNodeProject::renameBlock(const QString &block_name, const QString &newName)
@@ -422,7 +427,8 @@ void GPNodeProject::addBlock(const QString &driver, const QPoint &pos)
         return;
 
     ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
-    modelProcess->setPos(pos);
+    //TODO
+    //modelProcess->setPos(pos);
     addBlock(modelProcess);
 }
 

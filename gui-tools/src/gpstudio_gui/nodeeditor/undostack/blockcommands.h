@@ -57,7 +57,7 @@ class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
 {
 public:
     enum { Id = 0x0102 };
-    BlockCmdMove(GPNodeProject *project, const QString &block_name, const QPoint &oldPos, const QPoint &newPos);
+    BlockCmdMove(GPNodeProject *project, const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos);
     void undo();
     void redo();
     int id() const { return Id; }
@@ -65,6 +65,7 @@ public:
 protected:
     QPoint _oldPos;
     QPoint _newPos;
+    QString _part_name;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdAdd : public BlockCommand

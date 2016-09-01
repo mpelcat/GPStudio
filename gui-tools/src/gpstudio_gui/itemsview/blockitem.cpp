@@ -42,6 +42,7 @@
 BlockItem::BlockItem()
 {
     _block = NULL;
+    _modelPart = NULL;
 
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
@@ -72,14 +73,14 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     if(isSelected())
     {
         if(_modelBlock->isIO())
-            painter->setPen(QPen(Qt::red, 3));
+            painter->setPen(QPen(Qt::red, 3, Qt::DashLine));
         else
             painter->setPen(QPen(QColor("orange"), 3));
     }
     else
     {
         if(_modelBlock->isIO())
-            painter->setPen(QPen(Qt::darkRed, 1));
+            painter->setPen(QPen(Qt::darkRed, 1, Qt::DashLine));
         else
             painter->setPen(QPen(Qt::black, 1));
     }
@@ -120,6 +121,8 @@ Block *BlockItem::block() const
 
 void BlockItem::updateBlock()
 {
+    _svgRenderer.load(_modelPart->draw().toUtf8());
+
     if(_svgRenderer.isValid())
         _boundingRect = _svgRenderer.viewBoxF();
     else
@@ -158,7 +161,7 @@ void BlockItem::updateBlock()
 
 void BlockItem::updatePos()
 {
-    setPos(_modelBlock->pos());
+    setPos(_modelPart->pos());
     foreach (BlockPortItem *portItem, _ports)
     {
         foreach (BlockConnectorItem *connectItem, portItem->connects())
@@ -208,50 +211,45 @@ ModelBlock *BlockItem::modelBlock() const
     return _modelBlock;
 }
 
-BlockItem *BlockItem::fromBlockLib(const BlockLib *processLib, BlockItem *item)
+ModelComponentPart *BlockItem::modelPart() const
 {
-    if(!processLib)
-        return NULL;
-
-    if(!item)
-        item = new BlockItem();
-
-    item->_svgRenderer.load(processLib->draw().toUtf8());
-    item->setName(processLib->name());
-    item->updateBlock();
-
-    return item;
+    return _modelPart;
 }
 
-BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
+QList<BlockItem *> BlockItem::fromModelBlock(ModelBlock *modelBlock)
 {
+    QList<BlockItem *> list;
     if(!modelBlock)
+        return list;
+
+    foreach (ModelComponentPart *part, modelBlock->parts())
+    {
+        BlockItem *item = fromModelComponentPart(part);
+        if(item)
+        {
+            item->_modelBlock = modelBlock;
+            list.append(item);
+        }
+    }
+
+    return list;
+}
+
+BlockItem *BlockItem::fromModelComponentPart(ModelComponentPart *modelPart)
+{
+    if(!modelPart)
         return NULL;
 
-    BlockLib *blockLib;
-    if(modelBlock->type()==ModelBlock::Process)
-        blockLib = Lib::getLib().process(modelBlock->driver());
-    else
-        blockLib = Lib::getLib().io(modelBlock->driver());
+    BlockItem *item = new BlockItem();
 
-    if(!item)
-        item = fromBlockLib(blockLib);
+    item->setPos(modelPart->pos());
+    if(modelPart->parent())
+        item->setName(modelPart->parent()->name());
+    item->_modelPart = modelPart;
 
-    if(!item)
-        item = new BlockItem();
-
-    item->setPos(modelBlock->pos());
-    item->setName(modelBlock->name());
-    item->_modelBlock = modelBlock;
-
-    if(blockLib)
+    foreach (ModelFlow *flow, modelPart->parent()->flows())
     {
-        foreach (ModelFlow *flow, blockLib->modelProcess()->flows())
-            item->addPort(BlockPortItem::fromModelFlow(flow));
-    }
-    else
-    {
-        foreach (ModelFlow *flow, modelBlock->flows())
+        if(modelPart->getFlow(flow->name()) || modelPart->flows().size()==0)
             item->addPort(BlockPortItem::fromModelFlow(flow));
     }
 
@@ -260,23 +258,25 @@ BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
     return item;
 }
 
-BlockItem *BlockItem::fromBlock(Block *block, BlockItem *item)
+QList<BlockItem *> BlockItem::fromBlock(Block *block)
 {
-    if(!item)
-        item = BlockItem::fromModelBlock(block->modelBlock());
+    QList<BlockItem *> list = fromModelBlock(block->modelBlock());
 
-    Property *propertyEnable = NULL;
-    propertyEnable = block->assocProperty()->path("enable");
-    if(propertyEnable)
+    foreach (BlockItem * item, list)
     {
-        QWidget *propertyEnableWidget = PropertyWidget::getWidgetFromProperty(propertyEnable);
-        QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
-        propertyEnableWidget->setGeometry(5,5,50,20);
-        propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
-        proxy->setWidget(propertyEnableWidget);
+        Property *propertyEnable = NULL;
+        propertyEnable = block->assocProperty()->path("enable");
+        if(propertyEnable)
+        {
+            QWidget *propertyEnableWidget = PropertyWidget::getWidgetFromProperty(propertyEnable);
+            QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
+            propertyEnableWidget->setGeometry(5,5,50,20);
+            propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
+            proxy->setWidget(propertyEnableWidget);
+        }
+
+        item->_block = block;
     }
 
-    item->_block = block;
-
-    return item;
+    return list;
 }

@@ -52,9 +52,6 @@ public:
     const QString &configFile() const;
     void setConfigFile(const QString &configFile);
 
-    const QString &draw() const;
-    void setDraw(const QString &draw);
-
     const QIcon &icon() const;
     void setIcon(const QIcon &icon);
 
@@ -72,7 +69,6 @@ protected:
     QString _path;
     QString _configFile;
     QString _description;
-    QString _draw;
     QIcon _icon;
 
     ModelBlock *_modelBlock;

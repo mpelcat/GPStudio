@@ -243,6 +243,7 @@ void MainWindow::connectCam()
                 _cam->connectCam(cameraInfo);
             }
         }
+        _cam->registermanager().evalAll();
     }
 }
 

@@ -84,8 +84,8 @@ void BlockView::attachProject(GPNodeProject *project)
             _project, SLOT(addBlock(QString,QPoint)));
     connect(this, SIGNAL(blockRenamed(QString,QString)),
             _project, SLOT(renameBlock(QString,QString)));
-    connect(this, SIGNAL(blockMoved(QString,QPoint,QPoint)),
-            _project, SLOT(moveBlock(QString,QPoint,QPoint)));
+    connect(this, SIGNAL(blockMoved(QString,QString,QPoint,QPoint)),
+            _project, SLOT(moveBlock(QString,QString,QPoint,QPoint)));
     connect(this, SIGNAL(blockDeleted(ModelBlock*)),
             _project, SLOT(removeBlock(ModelBlock*)));
     connect(this, SIGNAL(blockPortConnected(ModelFlowConnect)),
@@ -192,13 +192,13 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     {
         BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(item);
         if(blockItem)
-            if(blockItem->pos() != blockItem->modelBlock()->pos())
+            if(blockItem->pos() != blockItem->modelPart()->pos())
                 movedBlocks.append(blockItem);
     }
     if(movedBlocks.size()>1)
         emit beginMacroAsked("multiple blocks moved");
     foreach (BlockItem *blockItem, movedBlocks)
-        emit blockMoved(blockItem->name(), blockItem->modelBlock()->pos(), blockItem->pos().toPoint());
+        emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), blockItem->pos().toPoint());
     if(movedBlocks.size()>1)
         emit endMacroAsked();
 
@@ -248,8 +248,7 @@ void BlockView::selectBlock(QString blockName)
     _scene->blockSignals(true);
     _scene->clearSelection();
 
-    BlockItem *blockItem = _scene->block(blockName);
-    if(blockItem)
+    foreach(BlockItem *blockItem, _scene->block(blockName))
     {
         blockItem->setSelected(true);
         blockItem->ensureVisible();
@@ -260,8 +259,7 @@ void BlockView::selectBlock(QString blockName)
 
 void BlockView::updateBlock(ModelBlock *block)
 {
-    BlockItem *blockItem = _scene->block(block);
-    if(blockItem)
+    foreach(BlockItem *blockItem, _scene->block(block->name()))
     {
         blockItem->updatePos();
         if(blockItem->name() != block->name())

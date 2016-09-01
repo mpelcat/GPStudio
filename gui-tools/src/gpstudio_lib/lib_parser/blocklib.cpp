@@ -86,16 +86,6 @@ void BlockLib::setConfigFile(const QString &configFile)
     _configFile = configFile;
 }
 
-const QString &BlockLib::draw() const
-{
-    return _draw;
-}
-
-void BlockLib::setDraw(const QString &draw)
-{
-    _draw = draw;
-}
-
 const QIcon &BlockLib::icon() const
 {
     return _icon;
@@ -141,20 +131,19 @@ BlockLib *BlockLib::fromDomElement(const QDomElement &domElement)
     blockLib->setDescription(domElement.attribute("desc",""));
 
     // get svg part of file and save as string
+    QString svg;
     const QDomNodeList &nodesSvg = domElement.elementsByTagName("svg");
     if(nodesSvg.size()>0)
     {
-        QString svg;
         QTextStream streamSvg(&svg);
         streamSvg << nodesSvg.at(0);
-        blockLib->setDraw(svg);
     }
 
     // render an 32px icon from svg
     QSvgRenderer render;
     QPixmap pixIcon(32,32);
     QPainter painter(&pixIcon);
-    render.load(blockLib->draw().toUtf8());
+    render.load(svg.toUtf8());
     render.render(&painter, QRectF(0,0,32,32));
     painter.end();
     blockLib->_icon.addPixmap(pixIcon);

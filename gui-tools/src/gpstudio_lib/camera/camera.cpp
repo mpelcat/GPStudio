@@ -108,6 +108,11 @@ void Camera::setNode(ModelNode *node)
     _flowManager = new FlowManager(this);
 }
 
+RegisterManager &Camera::registermanager()
+{
+    return _registermanager;
+}
+
 Block *Camera::fiBlock() const
 {
     return _fiBlock;
@@ -193,7 +198,7 @@ void Camera::connectCam(const CameraInfo &cameraInfo)
 
     if(_com->isConnected())
     {
-        _registermanager.evalAll();
+        //_registermanager.evalAll();
     }
 
     connect(_com, SIGNAL(flowReadyToRead(int)), _flowManager, SLOT(processFlow(int)));

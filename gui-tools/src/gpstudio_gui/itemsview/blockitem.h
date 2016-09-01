@@ -30,6 +30,7 @@
 class BlockLib;
 class IOLib;
 class ModelBlock;
+class ModelComponentPart;
 class Block;
 
 class BlockPortItem;
@@ -51,6 +52,7 @@ public:
 
     Block *block() const;
     ModelBlock *modelBlock() const;
+    ModelComponentPart *modelPart() const;
 
     void updateBlock();
     void updatePos();
@@ -60,14 +62,13 @@ public:
     const QMap<QString, BlockPortItem *> &ports() const;
 
 public:
-    // lib
-    static BlockItem *fromBlockLib(const BlockLib *processLib, BlockItem *item = NULL);
-
     // model
-    static BlockItem *fromModelBlock(ModelBlock *modelBlock, BlockItem *item = NULL);
+    static QList<BlockItem *> fromModelBlock(ModelBlock *modelBlock);
+    static BlockItem *fromModelComponentPart(ModelComponentPart *modelPart);
 
     // camera model
-    static BlockItem *fromBlock(Block *block, BlockItem *item = NULL);
+    static QList<BlockItem *> fromBlock(Block *block);
+
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -82,6 +83,7 @@ private:
 
     Block *_block;
     ModelBlock *_modelBlock;
+    ModelComponentPart *_modelPart;
 };
 
 #endif // BLOCKITEM_H

@@ -37,6 +37,7 @@
 #include "model_port.h"
 #include "model_pin.h"
 #include "model_reset.h"
+#include "model_componentpart.h"
 
 class ModelNode;
 
@@ -70,9 +71,6 @@ public:
 
     quint8 masterCount() const;
     void setMasterCount(const quint8 &value);
-
-    const QPoint &pos() const;
-    void setPos(const QPoint &pos);
 
     const QString &description() const;
     void setDescription(const QString &description);
@@ -142,6 +140,12 @@ public:
     void addResets(const QList<ModelReset *> &resets);
     ModelReset *getReset(const QString &name) const;
 
+    QList<ModelComponentPart *> &parts();
+    const QList<ModelComponentPart *> &parts() const;
+    void addPart(ModelComponentPart *part);
+    void addParts(const QList<ModelComponentPart *> &parts);
+    ModelComponentPart *getPart(const QString &name) const;
+
 public:
     static ModelBlock *readFromFile(const QString &fileName);
 
@@ -160,7 +164,6 @@ protected:
     qint32 _addrAbs;
     quint8 _sizeAddrRel;
     quint8 _masterCount;
-    QPoint _pos;
     QString _description;
 
     QList<ModelFile *> _files;
@@ -171,6 +174,7 @@ protected:
     QList<ModelPort *> _ports;
     QList<ModelPin *> _pins;
     QList<ModelReset *> _resets;
+    QList<ModelComponentPart *> _parts;
 
     ModelNode *_node;
 };

@@ -58,7 +58,7 @@ public slots:
     void configBoard();
 
     // block commands
-    void moveBlock(const QString &block_name, const QPoint &oldPos, const QPoint &newPos);
+    void moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos);
     void renameBlock(const QString &block_name, const QString &newName);
     void addBlock(ModelBlock *block);
     void addBlock(const QString &driver, const QPoint &pos);
@@ -99,7 +99,7 @@ protected:
     void cmdRenameBlock(const QString &block_name, const QString &newName);
 
     friend class BlockCmdMove;
-    void cmdMoveBlockTo(const QString &block_name, QPoint pos);
+    void cmdMoveBlockTo(const QString &block_name, const QString &part_name, QPoint pos);
 
     friend class BlockCmdAdd;
     friend class BlockCmdRemove;

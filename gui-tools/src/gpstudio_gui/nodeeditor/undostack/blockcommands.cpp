@@ -49,20 +49,20 @@ void BlockCmdRename::redo()
 }
 
 // Move block
-BlockCmdMove::BlockCmdMove(GPNodeProject *project, const QString &block_name, const QPoint &oldPos, const QPoint &newPos)
-    : BlockCommand(project, block_name), _oldPos(oldPos), _newPos(newPos)
+BlockCmdMove::BlockCmdMove(GPNodeProject *project, const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos)
+    : BlockCommand(project, block_name), _part_name(part_name), _oldPos(oldPos), _newPos(newPos)
 {
     setText(QString("moved block '%1'").arg(block_name));
 }
 
 void BlockCmdMove::undo()
 {
-    _project->cmdMoveBlockTo(_block_name, _oldPos);
+    _project->cmdMoveBlockTo(_block_name, _part_name, _oldPos);
 }
 
 void BlockCmdMove::redo()
 {
-    _project->cmdMoveBlockTo(_block_name, _newPos);
+    _project->cmdMoveBlockTo(_block_name, _part_name, _newPos);
 }
 
 // Add block
