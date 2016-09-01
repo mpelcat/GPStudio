@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("componentpartflow.php");
 
 /**
  * Multiple parts could be used to define a component
@@ -45,12 +46,22 @@ class ComponentPart
      */
     public $y_pos;
 
+    /**
+     * @brief SVG draw for the part
+     * @var string $svg
+     */
     public $svg;
 
     /**
+     * @brief Array of bitfields if param contain different bitfield (optional)
+     * @var array|ComponentPartFlow $partflows
+     */
+    public $partflows;
+
+    /**
      * @brief Constructor of the class
-     * 
-     * Build an empty Attribute if $xml is empty, fill it with $xml if set
+     *
+     * Build an empty ComponentPart if $xml is empty, fill it with $xml if set
      * @param SimpleXMLElement|null $xml XML element to parse if not null
      */
     function __construct($xml = null)
@@ -58,14 +69,15 @@ class ComponentPart
         $this->svg = NULL;
         $this->x_pos = -1;
         $this->y_pos = -1;
-        
+        $this->partflows = array();
+
         if ($xml)
             $this->parse_xml($xml);
     }
-    
+
     /**
      * @brief internal function to fill this instance from input xml structure
-     * 
+     *
      * Can be call only from this node into the constructor
      * @param SimpleXMLElement $xml xml element to parse
      */
@@ -81,11 +93,20 @@ class ComponentPart
         {
             $this->svg = dom_import_simplexml($xml->svg);
         }
+
+        // partflows
+        if (isset($xml->flows))
+        {
+            foreach ($xml->flows->flow as $flow)
+            {
+                $this->addPartFlow(new ComponentPartFlow($flow));
+            }
+        }
     }
-    
+
     /**
      * @brief permits to output this instance
-     * 
+     *
      * Return a formated node for the node_generated file. This method call all
      * the children getXmlElement to add into this node.
      * @param DOMDocument $xml reference of the output xml document
@@ -109,7 +130,21 @@ class ComponentPart
                 cloneSvg($this->svg, $xml, $xml_element);
             }
         }
-        
+
+        if ($format == "blockdef")
+        {
+            // partflows
+            if (!empty($this->partflows))
+            {
+                $xml_partflows = $xml->createElement("flows");
+                foreach ($this->partflows as $partflow)
+                {
+                    $xml_partflows->appendChild($partflow->getXmlElement($xml, $format));
+                }
+                $xml_element->appendChild($xml_partflows);
+            }
+        }
+
         if ($format == "complete" or $format == "project")
         {
             // x_pos
@@ -130,5 +165,61 @@ class ComponentPart
         }
 
         return $xml_element;
+    }
+
+    /**
+     * @brief Add a partflow to the param
+     * @param PartFlow $partflow partflow to add to the param
+     */
+    function addPartFlow($partflow)
+    {
+        array_push($this->partflows, $partflow);
+    }
+
+    /**
+     * @brief return a reference to the bitfield with the name $name, if not
+     * found, return null
+     * @param string $name name of the partflow to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return PartFlow found bitfield
+     */
+    function getPartFlow($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->partflows as $partflow)
+            {
+                if ($partflow->name == $name)
+                    return $partflow;
+            }
+        }
+        else
+        {
+            foreach ($this->partflows as $partflow)
+            {
+                if (strcasecmp($partflow->name, $name) == 0)
+                    return $partflow;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @brief delete a bitfield from his name
+     * @param string $name name of the bitfield to delete
+     */
+    function delPartFlow($name)
+    {
+        $i = 0;
+        foreach ($this->partflows as $partflow)
+        {
+            if ($partflow->name == $name)
+            {
+                unset($this->partflows[$i]);
+                return;
+            }
+            $i++;
+        }
+        return null;
     }
 }
