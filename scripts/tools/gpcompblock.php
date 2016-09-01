@@ -28,6 +28,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . LIB_PATH . DIRECTORY_SEPA
 
 require_once("process.php");
 require_once("io.php");
+require_once("iocom.php");
 require_once("gpstudio.php");
 require_once('toolchain' . DIRECTORY_SEPARATOR . 'hdl' . DIRECTORY_SEPARATOR . "block_generator.php");
 
@@ -215,7 +216,14 @@ else
                 exit(1);
         }
         else
-            $component = new IO($componentName);
+        {
+            $xml = simplexml_load_file($componentName);
+            if (isset($xml->com_connects))
+                $component = new IOCom($componentName);
+            else
+                $component = new IO($componentName);
+            unset($xml);
+        }
     }
     elseif (TOOL == "gpcomp")
     {

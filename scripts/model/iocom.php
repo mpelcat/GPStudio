@@ -107,7 +107,7 @@ class IOCom extends IO
     {
         $xml_element = parent::getXmlElement($xml, $format);
 
-        if ($format == "complete")
+        if ($format == "complete" or "blockdef")
         {
             // com_connects
             $xml_com_connects = $xml->createElement("com_connects");
