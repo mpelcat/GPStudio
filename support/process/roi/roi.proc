@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <process name="roi" categ="" pi_size_addr_rel="2" desc="Region of interest extractor">
-  <svg width="150" height="100">
-    <rect width="150" height="100" x="0" y="0" fill="gray"/>
-    <rect width="45" height="30" x="35" y="30" fill="lightgray" stroke="red" stroke-width="2"/>
-  </svg>
+  <parts>
+    <part name="main">
+      <svg width="150" height="100">
+        <rect width="150" height="100" x="0" y="0" fill="gray"/>
+        <rect width="45" height="30" x="35" y="30" fill="lightgray" stroke="red" stroke-width="2"/>
+      </svg>
+    </part>
+  </parts>
   <infos>
     <info name="author" value="Sebastien CAUX"/>
     <info name="company" value="Institut Pascal"/>
@@ -11,44 +15,44 @@
     <info name="releasedate" value="2016-08-25"/>
   </infos>
   <files>
-    <file name="roi.vhd" type="vhdl" group="hdl" path="hdl/roi.vhd" desc=""/>
-    <file name="roi_process.vhd" type="vhdl" group="hdl" path="hdl/roi_process.vhd" desc=""/>
-    <file name="roi_slave.vhd" type="vhdl" group="hdl" path="hdl/roi_slave.vhd" desc=""/>
-    <file name="roi.proc" type="proc" group="blockdef" path="roi.proc" desc=""/>
+    <file name="roi.vhd" type="vhdl" group="hdl" path="hdl/roi.vhd"/>
+    <file name="roi_process.vhd" type="vhdl" group="hdl" path="hdl/roi_process.vhd"/>
+    <file name="roi_slave.vhd" type="vhdl" group="hdl" path="hdl/roi_slave.vhd"/>
+    <file name="roi.proc" type="proc" group="blockdef" path="roi.proc"/>
   </files>
   <resets>
-    <reset name="reset_n" group="reset_n" direction="in" desc=""/>
+    <reset name="reset_n" group="reset_n" direction="in"/>
   </resets>
   <flows>
-    <flow name="in" size="8" type="in" desc=""/>
-    <flow name="out" size="8" type="out" desc="">
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
       <properties>
-        <property name="datatype" value="image" caption="datatype" type="flowtype" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-        <property name="width" value="" caption="width" type="int" min="" max="" step="" assert="" propertymap="bypass.value ? in.width.value : ((x.value + w.value &gt; in.width.value) ? ((x.value &gt; in.width.value) ? 0 : in.width.value - x.value) : w.value)" onchange="" desc=""/>
-        <property name="height" value="" caption="height" type="int" min="" max="" step="" assert="" propertymap="bypass.value ? in.height.value : ((y.value + h.value &gt; in.height.value) ? ((y.value &gt; in.height.value) ? 0 : in.height.value - y.value) : h.value)" onchange="" desc=""/>
+        <property name="datatype" caption="datatype" type="flowtype" value="image"/>
+        <property name="width" caption="width" type="int" propertymap="bypass.value ? in.width.value : ((x.value + w.value &gt; in.width.value) ? ((x.value &gt; in.width.value) ? 0 : in.width.value - x.value) : w.value)"/>
+        <property name="height" caption="height" type="int" propertymap="bypass.value ? in.height.value : ((y.value + h.value &gt; in.height.value) ? ((y.value &gt; in.height.value) ? 0 : in.height.value - y.value) : h.value)"/>
       </properties>
     </flow>
   </flows>
   <params>
-    <param name="status_reg" value="" regaddr="0" propertymap="" default="" min="" max="" desc="">
+    <param name="status_reg" regaddr="0" propertymap="">
       <bitfields>
         <bitfield name="enable_bit" type="" value="" bitfield="0" propertymap="enable.value" desc=""/>
         <bitfield name="bypass_bit" type="" value="" bitfield="1" propertymap="bypass.value" desc=""/>
       </bitfields>
     </param>
-    <param name="in_size_reg" value="" regaddr="1" propertymap="" default="" min="" max="" desc="">
+    <param name="in_size_reg" regaddr="1" propertymap="">
       <bitfields>
         <bitfield name="in_w_reg" type="" value="" bitfield="11-0" propertymap="in.width.value" desc=""/>
         <bitfield name="in_h_reg" type="" value="" bitfield="27-16" propertymap="in.height.value" desc=""/>
       </bitfields>
     </param>
-    <param name="out_size_reg" value="" regaddr="2" propertymap="" default="" min="" max="" desc="">
+    <param name="out_size_reg" regaddr="2" propertymap="">
       <bitfields>
         <bitfield name="out_w_reg" type="" value="" bitfield="11-0" propertymap="w.value" desc=""/>
         <bitfield name="out_h_reg" type="" value="" bitfield="27-16" propertymap="h.value" desc=""/>
       </bitfields>
     </param>
-    <param name="out_offset_reg" value="" regaddr="3" propertymap="" default="" min="" max="" desc="">
+    <param name="out_offset_reg" regaddr="3" propertymap="">
       <bitfields>
         <bitfield name="out_x_reg" type="" value="" bitfield="11-0" propertymap="x.value" desc=""/>
         <bitfield name="out_y_reg" type="" value="" bitfield="27-16" propertymap="y.value" desc=""/>
@@ -56,11 +60,11 @@
     </param>
   </params>
   <properties>
-    <property name="enable" value="1" caption="enable" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="bypass" value="0" caption="bypass" type="bool" min="" max="" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="x" value="0" caption="x" type="int" min="0" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="y" value="0" caption="y" type="int" min="0" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="w" value="32" caption="w" type="int" min="1" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
-    <property name="h" value="24" caption="h" type="int" min="1" max="4095" step="" assert="" propertymap="" onchange="" desc=""/>
+    <property name="enable" caption="enable" type="bool" value="1"/>
+    <property name="bypass" caption="bypass" type="bool" value="0"/>
+    <property name="x" caption="x" type="int" value="0" min="0" max="4095"/>
+    <property name="y" caption="y" type="int" value="0" min="0" max="4095"/>
+    <property name="w" caption="w" type="int" value="32" min="1" max="4095"/>
+    <property name="h" caption="h" type="int" value="24" min="1" max="4095"/>
   </properties>
 </process>

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <io driver="mt9" categ="imagesensor" pi_size_addr_rel="5">
-	<svg width="160" height="110">
-		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-		<text x="50" y="50">MT9</text>
+  <parts>
+    <part name="inputs">
+	<svg width="100" height="100">
+		<rect width="100" height="100" x="0" y="0" fill="lightgray"/>
+        <path d="M10 20 L40 40 L40 25 L90 25 L90 75 L40 75 L40 60 L10 80 Z" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round"/>
 	</svg>
+    </part>
+  </parts>
 	<files>
 		<file name="mt9.sdc" path="hdl/mt9.sdc" type="sdc" group="hdl" desc=""/>
 		<file name="video_sampler.v" path="hwlib:video_sampler/video_sampler.v" type="verilog" group="hdl" desc=""/>
@@ -142,7 +146,7 @@
 				<enum name="640*480"  	value="1" />
 				<enum name="800*600"    value="2" />
 				<enum name="1024*768" 	value="3" />
-				<enum name="1280*1024" 	value="4" />
+				<enum name="1280*960" 	value="4" />
 			</enums>
 		</property>
 	</properties>
