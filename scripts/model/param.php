@@ -230,9 +230,12 @@ class Param
                 $xml_element->appendChild($att);
 
                 // propertymap
-                $att = $xml->createAttribute('propertymap');
-                $att->value = $this->propertymap;
-                $xml_element->appendChild($att);
+                if (!empty($this->propertymap))
+                {
+                    $att = $xml->createAttribute('propertymap');
+                    $att->value = $this->propertymap;
+                    $xml_element->appendChild($att);
+                }
             }
 
             // value

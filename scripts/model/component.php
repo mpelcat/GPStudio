@@ -102,6 +102,12 @@ class Component
     public $resets;
 
     /**
+     * @brief Array of attributes
+     * @var array|Attribute $attributes
+     */
+    public $attributes;
+
+    /**
      * @brief Array of children components
      * @var array|Component $components
      */
@@ -736,6 +742,15 @@ class Component
             }
         }
 
+        // attributes
+        if (isset($this->xml->attributes))
+        {
+            foreach ($this->xml->attributes->attribute as $attributeXml)
+            {
+                $this->addAttribute(new Attribute($attributeXml));
+            }
+        }
+
         // components
         if (isset($this->xml->components))
         {
@@ -872,6 +887,17 @@ class Component
                 $xml_resets->appendChild($reset->getXmlElement($xml, $format));
             }
             $xml_element->appendChild($xml_resets);
+        }
+
+        // attributes
+        if (!empty($this->attributes))
+        {
+            $xml_attributes = $xml->createElement("attributes");
+            foreach ($this->attributes as $attribute)
+            {
+                $xml_attributes->appendChild($attribute->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_attributes);
         }
 
         // components

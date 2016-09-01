@@ -165,7 +165,12 @@ class Property
         $this->name = (string) $xml['name'];
         if (strpos($this->name, '.') !== false)
             error("Property name cannot contains . (dot) in \"$this->name\"", 5, "Property");
-        $this->caption = (string) $xml['caption'];
+
+        if (isset($xml['caption']))
+            $this->caption = (string) $xml['caption'];
+        else
+            $this->caption = $this->name;
+
         $this->type = (string) $xml['type'];
         $this->value = (string) $xml['value'];
         $this->min = (string) $xml['min'];
@@ -223,10 +228,13 @@ class Property
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // caption
-            $att = $xml->createAttribute('caption');
-            $att->value = $this->caption;
-            $xml_element->appendChild($att);
+            if ($this->caption != $this->name)
+            {
+                // caption
+                $att = $xml->createAttribute('caption');
+                $att->value = $this->caption;
+                $xml_element->appendChild($att);
+            }
 
             // type
             $att = $xml->createAttribute('type');
