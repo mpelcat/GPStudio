@@ -25,23 +25,23 @@
     <flow name="in" size="8" type="in" desc="Input image to describe"/>
     <flow name="out" size="8" type="out" desc="Output image convoluted">
       <properties>
-        <property name="datatype" caption="" type="flowtype" value="image"/>
-        <property name="width" caption="" type="int" propertymap="in.width.value"/>
-        <property name="height" caption="" type="int" propertymap="in.height.value"/>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value"/>
+        <property name="height" type="int" propertymap="in.height.value"/>
       </properties>
     </flow>
   </flows>
   <params>
     <param name="LINE_WIDTH_MAX" type="int" hard="1" value="320" desc="maximum line width"/>
-    <param name="control" regaddr="0" propertymap="" default="0" desc="Status Control Register">
+    <param name="control" regaddr="0" default="0" desc="Status Control Register">
       <bitfields>
-        <bitfield name="enable" type="" value="" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
+        <bitfield name="enable" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
       </bitfields>
     </param>
     <param name="width" regaddr="1" propertymap="imgwidth.value" default="320" desc="Image width"/>
   </params>
   <properties>
-    <property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
-    <property name="imgwidth" caption="imgwidth" type="int" value="320" min="0" max="1080" desc="Width of input image"/>
+    <property name="enable" type="bool" desc="Enable or disable process"/>
+    <property name="imgwidth" type="int" value="320" min="0" max="1080" desc="Width of input image"/>
   </properties>
 </process>

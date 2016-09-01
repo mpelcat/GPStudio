@@ -28,10 +28,10 @@
   <flows>
     <flow name="out" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="vector"/>
-        <property name="itemdatatype" caption="itemdatatype" type="hwtype" value="s16"/>
-        <property name="swtype" caption="swtype" type="swtype" value="float"/>
-        <property name="scaling" caption="scaling" type="function" value="item.value*2"/>
+        <property name="datatype" type="flowtype" value="vector"/>
+        <property name="itemdatatype" type="hwtype" value="s16"/>
+        <property name="swtype" type="swtype" value="float"/>
+        <property name="scaling" type="function" value="item.value*2"/>
       </properties>
     </flow>
   </flows>
@@ -44,27 +44,27 @@
     <property name="enable" caption="Enable" type="bool"/>
     <property name="sat_mode" caption="Mode" type="enum">
       <enums>
-        <enum name="s0" value="0" caption="GPS/Glonass" desc=""/>
-        <enum name="s1" value="1" caption="GPS" desc=""/>
+        <enum name="s0" value="0" caption="GPS/Glonass"/>
+        <enum name="s1" value="1" caption="GPS"/>
       </enums>
     </property>
     <property name="update" caption="Update rate" type="enum">
       <enums>
-        <enum name="u1" value="1" caption="1 Hz" desc=""/>
-        <enum name="u2" value="2" caption="2 Hz" desc=""/>
-        <enum name="u4" value="4" caption="4 Hz" desc=""/>
-        <enum name="u5" value="5" caption="5 Hz" desc=""/>
-        <enum name="u8" value="8" caption="8 Hz" desc=""/>
-        <enum name="u10" value="10" caption="10 Hz" desc=""/>
-        <enum name="u20" value="20" caption="20 Hz" desc=""/>
-        <enum name="u25" value="25" caption="25 Hz" desc=""/>
-        <enum name="u40" value="40" caption="40 Hz" desc=""/>
+        <enum name="u1" value="1" caption="1 Hz"/>
+        <enum name="u2" value="2" caption="2 Hz"/>
+        <enum name="u4" value="4" caption="4 Hz"/>
+        <enum name="u5" value="5" caption="5 Hz"/>
+        <enum name="u8" value="8" caption="8 Hz"/>
+        <enum name="u10" value="10" caption="10 Hz"/>
+        <enum name="u20" value="20" caption="20 Hz"/>
+        <enum name="u25" value="25" caption="25 Hz"/>
+        <enum name="u40" value="40" caption="40 Hz"/>
       </enums>
     </property>
   </properties>
   <ports>
-    <port name="RXD" type="in" size="1" desc=""/>
-    <port name="TXD" type="out" size="1" desc=""/>
+    <port name="RXD" type="in" size="1"/>
+    <port name="TXD" type="out" size="1"/>
   </ports>
   <pins/>
 </io>

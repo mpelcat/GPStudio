@@ -28,26 +28,26 @@
   <flows>
     <flow name="accelero" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="vector"/>
-        <property name="itemdatatype" caption="itemdatatype" type="hwtype" value="s16"/>
-        <property name="swtype" caption="swtype" type="swtype" value="float"/>
-        <property name="scaling" caption="scaling" type="function" value="item.value*2"/>
+        <property name="datatype" type="flowtype" value="vector"/>
+        <property name="itemdatatype" type="hwtype" value="s16"/>
+        <property name="swtype" type="swtype" value="float"/>
+        <property name="scaling" type="function" value="item.value*2"/>
       </properties>
     </flow>
     <flow name="gyroscope" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="vector"/>
-        <property name="itemdatatype" caption="itemdatatype" type="hwtype" value="s16"/>
-        <property name="swtype" caption="swtype" type="swtype" value="float"/>
-        <property name="scaling" caption="scaling" type="function" value="item.value*2"/>
+        <property name="datatype" type="flowtype" value="vector"/>
+        <property name="itemdatatype" type="hwtype" value="s16"/>
+        <property name="swtype" type="swtype" value="float"/>
+        <property name="scaling" type="function" value="item.value*2"/>
       </properties>
     </flow>
     <flow name="compass" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="vector"/>
-        <property name="itemdatatype" caption="itemdatatype" type="hwtype" value="s16"/>
-        <property name="swtype" caption="swtype" type="swtype" value="float"/>
-        <property name="scaling" caption="scaling" type="function" value="item.value*2"/>
+        <property name="datatype" type="flowtype" value="vector"/>
+        <property name="itemdatatype" type="hwtype" value="s16"/>
+        <property name="swtype" type="swtype" value="float"/>
+        <property name="scaling" type="function" value="item.value*2"/>
       </properties>
     </flow>
   </flows>
@@ -71,10 +71,10 @@
       <properties>
         <property name="gyro_config" caption="Sensibility" type="enum">
           <enums>
-            <enum name="g0" value="0" caption="± 250 °/s" desc=""/>
-            <enum name="g1" value="1" caption="± 500 °/s" desc=""/>
-            <enum name="g2" value="2" caption="± 1000 °/s" desc=""/>
-            <enum name="g3" value="3" caption="± 2000 °/s" desc=""/>
+            <enum name="g0" value="0" caption="± 250 °/s"/>
+            <enum name="g1" value="1" caption="± 500 °/s"/>
+            <enum name="g2" value="2" caption="± 1000 °/s"/>
+            <enum name="g3" value="3" caption="± 2000 °/s"/>
           </enums>
         </property>
         <property name="gyro_offx" caption="Offset X" type="int" value="0" min="-16384" max="+16384" step="1"/>
@@ -86,10 +86,10 @@
       <properties>
         <property name="accel_config" caption="Sensibility" type="enum">
           <enums>
-            <enum name="a0" value="0" caption="± 2g" desc=""/>
-            <enum name="a1" value="1" caption="± 4g" desc=""/>
-            <enum name="a2" value="2" caption="± 8g" desc=""/>
-            <enum name="a3" value="3" caption="± 16g" desc=""/>
+            <enum name="a0" value="0" caption="± 2g"/>
+            <enum name="a1" value="1" caption="± 4g"/>
+            <enum name="a2" value="2" caption="± 8g"/>
+            <enum name="a3" value="3" caption="± 16g"/>
           </enums>
         </property>
         <property name="accel_offx" caption="Offset X" type="int" value="0" min="-16384" max="+16384" step="1"/>
@@ -102,34 +102,34 @@
       <properties>
         <property name="gain_compass" caption="Sensibility" type="enum">
           <enums>
-            <enum name="c0" value="0" caption="± 0.88 Ga" desc=""/>
-            <enum name="c1" value="1" caption="± 1.3 Ga" desc=""/>
-            <enum name="c2" value="2" caption="± 1.9 Ga" desc=""/>
-            <enum name="c3" value="3" caption="± 2.5 Ga" desc=""/>
-            <enum name="c4" value="4" caption="± 4.0 Ga" desc=""/>
-            <enum name="c5" value="5" caption="± 4.7 Ga" desc=""/>
-            <enum name="c6" value="6" caption="± 5.6 Ga" desc=""/>
-            <enum name="c7" value="7" caption="± 8.1 Ga" desc=""/>
+            <enum name="c0" value="0" caption="± 0.88 Ga"/>
+            <enum name="c1" value="1" caption="± 1.3 Ga"/>
+            <enum name="c2" value="2" caption="± 1.9 Ga"/>
+            <enum name="c3" value="3" caption="± 2.5 Ga"/>
+            <enum name="c4" value="4" caption="± 4.0 Ga"/>
+            <enum name="c5" value="5" caption="± 4.7 Ga"/>
+            <enum name="c6" value="6" caption="± 5.6 Ga"/>
+            <enum name="c7" value="7" caption="± 8.1 Ga"/>
           </enums>
         </property>
         <property name="fz_compass" caption="Update rate" type="enum">
           <enums>
-            <enum name="c0" value="0" caption="0.75 Hz" desc=""/>
-            <enum name="c1" value="1" caption="1.5 Hz" desc=""/>
-            <enum name="c2" value="2" caption="3 Hz" desc=""/>
-            <enum name="c3" value="3" caption="7.5 Hz" desc=""/>
-            <enum name="c4" value="4" caption="15 Hz" desc=""/>
-            <enum name="c5" value="5" caption="30 Hz" desc=""/>
-            <enum name="c6" value="6" caption="75 Hz" desc=""/>
+            <enum name="c0" value="0" caption="0.75 Hz"/>
+            <enum name="c1" value="1" caption="1.5 Hz"/>
+            <enum name="c2" value="2" caption="3 Hz"/>
+            <enum name="c3" value="3" caption="7.5 Hz"/>
+            <enum name="c4" value="4" caption="15 Hz"/>
+            <enum name="c5" value="5" caption="30 Hz"/>
+            <enum name="c6" value="6" caption="75 Hz"/>
           </enums>
         </property>
       </properties>
     </property>
   </properties>
   <ports>
-    <port name="ad0" type="out" size="1" desc=""/>
-    <port name="sda" type="inout" size="1" desc=""/>
-    <port name="scl" type="inout" size="1" desc=""/>
+    <port name="ad0" type="out" size="1"/>
+    <port name="sda" type="inout" size="1"/>
+    <port name="scl" type="inout" size="1"/>
   </ports>
   <pins/>
 </io>

@@ -5,6 +5,7 @@
       <svg width="100" height="80">
         <rect width="100" height="80" x="0" y="0" fill="lightgray"/>
         <path d="M30 20 L60 40 L30 60" fill="transparent" stroke="black" stroke-width="10"/>
+        <text x="70" y="20">HOG</text>
       </svg>
     </part>
   </parts>
@@ -21,9 +22,9 @@
     <flow name="in" size="8" type="in"/>
     <flow name="out" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="image"/>
-        <property name="width" caption="width" type="int" propertymap="in.width.value"/>
-        <property name="height" caption="height" type="int" propertymap="in.height.value"/>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value"/>
+        <property name="height" type="int" propertymap="in.height.value"/>
       </properties>
     </flow>
   </flows>
@@ -31,6 +32,6 @@
     <param name="threshold_reg" regaddr="0" propertymap="threshold.value"/>
   </params>
   <properties>
-    <property name="threshold" caption="threshold" type="sint" value="0" min="0" max="255"/>
+    <property name="threshold" type="sint" value="0" min="0" max="255"/>
   </properties>
 </process>

@@ -38,88 +38,88 @@
     <flow name="in" size="8" type="in"/>
     <flow name="out" size="8" type="out">
       <properties>
-        <property name="datatype" caption="datatype" type="flowtype" value="image"/>
-        <property name="width" caption="width" type="int" propertymap="in.width.value-2"/>
-        <property name="height" caption="height" type="int" propertymap="in.height.value-2"/>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value-2"/>
+        <property name="height" type="int" propertymap="in.height.value-2"/>
       </properties>
     </flow>
   </flows>
   <params>
-    <param name="status_reg" regaddr="0" propertymap="">
+    <param name="status_reg" regaddr="0">
       <bitfields>
-        <bitfield name="enable_bit" type="" value="" bitfield="0" propertymap="enable.value" desc=""/>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
       </bitfields>
     </param>
     <param name="widthimg_reg" regaddr="1" propertymap="in.width.value"/>
-    <param name="w00_reg" regaddr="2" propertymap="" desc="kernel register for w[0][0]">
+    <param name="w00_reg" regaddr="2" desc="kernel register for w[0][0]">
       <bitfields>
-        <bitfield name="m00" type="" value="" bitfield="7-0" propertymap="weight.m00.value" desc=""/>
+        <bitfield name="m00" bitfield="7-0" propertymap="weight.m00.value"/>
       </bitfields>
     </param>
-    <param name="w01_reg" regaddr="3" propertymap="" desc="kernel register for w[0][1]">
+    <param name="w01_reg" regaddr="3" desc="kernel register for w[0][1]">
       <bitfields>
-        <bitfield name="m01" type="" value="" bitfield="7-0" propertymap="weight.m01.value" desc=""/>
+        <bitfield name="m01" bitfield="7-0" propertymap="weight.m01.value"/>
       </bitfields>
     </param>
-    <param name="w02_reg" regaddr="4" propertymap="" desc="kernel register for w[0][2]">
+    <param name="w02_reg" regaddr="4" desc="kernel register for w[0][2]">
       <bitfields>
-        <bitfield name="m02" type="" value="" bitfield="7-0" propertymap="weight.m02.value" desc=""/>
+        <bitfield name="m02" bitfield="7-0" propertymap="weight.m02.value"/>
       </bitfields>
     </param>
-    <param name="w10_reg" regaddr="5" propertymap="" desc="kernel register for w[1][0]">
+    <param name="w10_reg" regaddr="5" desc="kernel register for w[1][0]">
       <bitfields>
-        <bitfield name="m10" type="" value="" bitfield="7-0" propertymap="weight.m10.value" desc=""/>
+        <bitfield name="m10" bitfield="7-0" propertymap="weight.m10.value"/>
       </bitfields>
     </param>
-    <param name="w11_reg" regaddr="6" propertymap="" desc="kernel register for w[1][1]">
+    <param name="w11_reg" regaddr="6" desc="kernel register for w[1][1]">
       <bitfields>
-        <bitfield name="m11" type="" value="" bitfield="7-0" propertymap="weight.m11.value" desc=""/>
+        <bitfield name="m11" bitfield="7-0" propertymap="weight.m11.value"/>
       </bitfields>
     </param>
-    <param name="w12_reg" regaddr="7" propertymap="" desc="kernel register for w[1][2]">
+    <param name="w12_reg" regaddr="7" desc="kernel register for w[1][2]">
       <bitfields>
-        <bitfield name="m12" type="" value="" bitfield="7-0" propertymap="weight.m12.value" desc=""/>
+        <bitfield name="m12" bitfield="7-0" propertymap="weight.m12.value"/>
       </bitfields>
     </param>
-    <param name="w20_reg" regaddr="8" propertymap="" desc="kernel register for w[2][0]">
+    <param name="w20_reg" regaddr="8" desc="kernel register for w[2][0]">
       <bitfields>
-        <bitfield name="m20" type="" value="" bitfield="7-0" propertymap="weight.m20.value" desc=""/>
+        <bitfield name="m20" bitfield="7-0" propertymap="weight.m20.value"/>
       </bitfields>
     </param>
-    <param name="w21_reg" regaddr="9" propertymap="" desc="kernel register for w[2][1]">
+    <param name="w21_reg" regaddr="9" desc="kernel register for w[2][1]">
       <bitfields>
-        <bitfield name="m21" type="" value="" bitfield="7-0" propertymap="weight.m21.value" desc=""/>
+        <bitfield name="m21" bitfield="7-0" propertymap="weight.m21.value"/>
       </bitfields>
     </param>
-    <param name="w22_reg" regaddr="10" propertymap="" desc="kernel register for w[2][2]">
+    <param name="w22_reg" regaddr="10" desc="kernel register for w[2][2]">
       <bitfields>
-        <bitfield name="m22" type="" value="" bitfield="7-0" propertymap="weight.m22.value" desc=""/>
+        <bitfield name="m22" bitfield="7-0" propertymap="weight.m22.value"/>
       </bitfields>
     </param>
     <param name="norm_reg" regaddr="11" propertymap="norm.value" desc="Normalisation register"/>
   </params>
   <properties>
-    <property name="enable" caption="enable" type="bool" value="1"/>
-    <property name="weight" caption="weight" type="matrix" value="3">
+    <property name="enable" type="bool" value="1"/>
+    <property name="weight" type="matrix" value="3">
       <properties>
-        <property name="m00" caption="m00" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][0]"/>
-        <property name="m01" caption="m01" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][1]"/>
-        <property name="m02" caption="m02" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][2]"/>
-        <property name="m10" caption="m10" type="int" value="0" min="-127" max="128" desc="kernel value for w[1][0]"/>
-        <property name="m11" caption="m11" type="int" value="1" min="-127" max="128" desc="kernel value for w[1][1]"/>
-        <property name="m12" caption="m12" type="int" value="0" min="-127" max="128" desc="kernel value for w[1][2]"/>
-        <property name="m20" caption="m20" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][0]"/>
-        <property name="m21" caption="m21" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][1]"/>
-        <property name="m22" caption="m22" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][2]"/>
+        <property name="m00" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][0]"/>
+        <property name="m01" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][1]"/>
+        <property name="m02" type="int" value="0" min="-127" max="128" desc="kernel value for w[0][2]"/>
+        <property name="m10" type="int" value="0" min="-127" max="128" desc="kernel value for w[1][0]"/>
+        <property name="m11" type="int" value="1" min="-127" max="128" desc="kernel value for w[1][1]"/>
+        <property name="m12" type="int" value="0" min="-127" max="128" desc="kernel value for w[1][2]"/>
+        <property name="m20" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][0]"/>
+        <property name="m21" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][1]"/>
+        <property name="m22" type="int" value="0" min="-127" max="128" desc="kernel value for w[2][2]"/>
       </properties>
     </property>
-    <property name="norm" caption="norm" type="int" value="0" min="0" max="8" desc="Normalisation term log2(sum of kernel)"/>
-    <property name="filtertype" caption="filtertype" type="enum" onchange="switch(filtertype.bits) { case 0: weight.m00.value=0; weight.m01.value=0; weight.m02.value=0; weight.m10.value=0; weight.m11.value=1; weight.m12.value=0; weight.m20.value=0; weight.m21.value=0; weight.m22.value=0; norm.value=0; break; case 1: weight.m00.value=1; weight.m01.value=2; weight.m02.value=1; weight.m10.value=1; weight.m11.value=4; weight.m12.value=1; weight.m20.value=1; weight.m21.value=2; weight.m22.value=1; norm.value=4; break; case 2: weight.m00.value=1; weight.m01.value=1; weight.m02.value=1; weight.m10.value=1; weight.m11.value=-8; weight.m12.value=1; weight.m20.value=1; weight.m21.value=1; weight.m22.value=1; norm.value=0; break; case 3: weight.m00.value=1; weight.m01.value=0; weight.m02.value=-1; weight.m10.value=2; weight.m11.value=0; weight.m12.value=-2; weight.m20.value=1; weight.m21.value=0; weight.m22.value=-1; norm.value=0; break; }" desc="Pre configured standard kernells">
+    <property name="norm" type="int" value="0" min="0" max="8" desc="Normalisation term log2(sum of kernel)"/>
+    <property name="filtertype" type="enum" onchange="switch(filtertype.bits) { case 0: weight.m00.value=0; weight.m01.value=0; weight.m02.value=0; weight.m10.value=0; weight.m11.value=1; weight.m12.value=0; weight.m20.value=0; weight.m21.value=0; weight.m22.value=0; norm.value=0; break; case 1: weight.m00.value=1; weight.m01.value=2; weight.m02.value=1; weight.m10.value=1; weight.m11.value=4; weight.m12.value=1; weight.m20.value=1; weight.m21.value=2; weight.m22.value=1; norm.value=4; break; case 2: weight.m00.value=1; weight.m01.value=1; weight.m02.value=1; weight.m10.value=1; weight.m11.value=-8; weight.m12.value=1; weight.m20.value=1; weight.m21.value=1; weight.m22.value=1; norm.value=0; break; case 3: weight.m00.value=1; weight.m01.value=0; weight.m02.value=-1; weight.m10.value=2; weight.m11.value=0; weight.m12.value=-2; weight.m20.value=1; weight.m21.value=0; weight.m22.value=-1; norm.value=0; break; }" desc="Pre configured standard kernells">
       <enums>
-        <enum name="normal" value="0" caption="normal" desc=""/>
-        <enum name="gaussien" value="1" caption="gaussien" desc=""/>
-        <enum name="laplacien" value="2" caption="laplacien" desc=""/>
-        <enum name="sobel" value="3" caption="sobel" desc=""/>
+        <enum name="normal" value="0"/>
+        <enum name="gaussien" value="1"/>
+        <enum name="laplacien" value="2"/>
+        <enum name="sobel" value="3"/>
       </enums>
     </property>
   </properties>

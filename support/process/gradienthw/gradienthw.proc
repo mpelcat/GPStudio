@@ -21,36 +21,36 @@
     <flow name="in" size="8" type="in" desc="input flow"/>
     <flow name="magnitude" size="16" type="out" desc="magnitude">
       <properties>
-        <property name="datatype" caption="" type="flowtype" value="image"/>
-        <property name="width" caption="" type="int" propertymap="in.width.value"/>
-        <property name="height" caption="" type="int" propertymap="in.height.value"/>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value"/>
+        <property name="height" type="int" propertymap="in.height.value"/>
       </properties>
     </flow>
     <flow name="angle" size="16" type="out" desc="angle"/>
   </flows>
   <params>
-    <param name="scr" regaddr="0" propertymap="" default="0" desc="Status Control Register">
+    <param name="scr" regaddr="0" default="0" desc="Status Control Register">
       <bitfields>
-        <bitfield name="enable" type="int" value="" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
-        <bitfield name="width" type="int" value="" bitfield="10-3" propertymap="width.bits" desc="Input image width"/>
+        <bitfield name="enable" type="int" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
+        <bitfield name="width" type="int" bitfield="10-3" propertymap="width.bits" desc="Input image width"/>
       </bitfields>
     </param>
     <param name="threshold" regaddr="1" propertymap="threshold.value" default="50" desc="Threshold"/>
   </params>
   <properties>
-    <property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
-    <property name="width" caption="width" type="" desc="Input image width">
+    <property name="enable" type="bool" desc="Enable or disable process"/>
+    <property name="width" type="" desc="Input image width">
       <enums>
-        <enum name="64" value="0" caption="64" desc=""/>
-        <enum name="128" value="1" caption="128" desc=""/>
-        <enum name="192" value="2" caption="192" desc=""/>
-        <enum name="256" value="3" caption="256" desc=""/>
-        <enum name="320" value="4" caption="320" desc=""/>
-        <enum name="640" value="5" caption="640" desc=""/>
-        <enum name="960" value="6" caption="960" desc=""/>
-        <enum name="1280" value="7" caption="1280" desc=""/>
+        <enum name="64" value="0"/>
+        <enum name="128" value="1"/>
+        <enum name="192" value="2"/>
+        <enum name="256" value="3"/>
+        <enum name="320" value="4"/>
+        <enum name="640" value="5"/>
+        <enum name="960" value="6"/>
+        <enum name="1280" value="7"/>
       </enums>
     </property>
-    <property name="threshold" caption="threshold" type="sint" value="2000" min="0" max="65000" desc="Gradiant threshold"/>
+    <property name="threshold" type="sint" value="2000" min="0" max="65000" desc="Gradiant threshold"/>
   </properties>
 </process>

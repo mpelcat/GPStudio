@@ -17,10 +17,10 @@
   </resets>
   <params>
     <param name="LEDCOUNT" type="" hard="1" value="1"/>
-    <param name="ENABLE" regaddr="0" propertymap=""/>
+    <param name="ENABLE" regaddr="0"/>
   </params>
   <ports>
-    <port name="o" type="out" size="LEDCOUNT" desc=""/>
+    <port name="o" type="out" size="LEDCOUNT"/>
   </ports>
   <pins/>
 </io>

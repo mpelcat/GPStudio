@@ -24,40 +24,40 @@
   </flows>
   <params>
     <param name="HISTMEM_WORD" type="int" hard="1" value="2048" desc="HISTMEM_WORD: M9K memory footprint"/>
-    <param name="scr" regaddr="0" propertymap="" default="0" desc="Status Control Register">
+    <param name="scr" regaddr="0" default="0" desc="Status Control Register">
       <bitfields>
-        <bitfield name="enable" type="" value="" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
-        <bitfield name="mode" type="" value="" bitfield="1" propertymap="mode.bits" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
-        <bitfield name="nbin" type="" value="" bitfield="5-2" propertymap="nbin.bits" desc="Histogram NBin"/>
+        <bitfield name="enable" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
+        <bitfield name="mode" bitfield="1" propertymap="mode.bits" desc="Histogram mode setup: 0 for luminance, 1 for HOG"/>
+        <bitfield name="nbin" bitfield="5-2" propertymap="nbin.bits" desc="Histogram NBin"/>
       </bitfields>
     </param>
-    <param name="cellcontrol" regaddr="1" propertymap="" default="1799" desc="Cell size control">
+    <param name="cellcontrol" regaddr="1" default="1799" desc="Cell size control">
       <bitfields>
-        <bitfield name="cellwidth" type="" value="" bitfield="9-0" propertymap="cellwidth.value-1" desc="Histogram cell width minus one"/>
-        <bitfield name="cellheight" type="" value="" bitfield="25-16" propertymap="cellheight.value-1" desc="Histogram cell height minus one"/>
+        <bitfield name="cellwidth" bitfield="9-0" propertymap="cellwidth.value-1" desc="Histogram cell width minus one"/>
+        <bitfield name="cellheight" bitfield="25-16" propertymap="cellheight.value-1" desc="Histogram cell height minus one"/>
       </bitfields>
     </param>
     <param name="imagecontrol" regaddr="2" propertymap="imgwidth.value/cellwidth.value-1" default="39" desc="Image size divided by cell width"/>
     <param name="storecycles" regaddr="3" propertymap="nbin.value*(imgwidth.value/cellwidth.value)" default="640" desc="Memory locations each cell row"/>
   </params>
   <properties>
-    <property name="enable" caption="enable" type="bool" desc="Enable or disable process"/>
-    <property name="mode" caption="mode" type="" desc="Histogram mode setup">
+    <property name="enable" type="bool" desc="Enable or disable process"/>
+    <property name="mode" type="" desc="Histogram mode setup">
       <enums>
-        <enum name="luminance" value="0" caption="luminance" desc="Histogram of luminance"/>
-        <enum name="HOG" value="1" caption="HOG" desc="Output for HOG"/>
+        <enum name="luminance" value="0" desc="Histogram of luminance"/>
+        <enum name="HOG" value="1" desc="Output for HOG"/>
       </enums>
     </property>
     <property name="cellwidth" caption="cell width" type="int" value="8" min="0" max="1023" desc="Width of cell"/>
     <property name="cellheight" caption="cell height" type="int" value="8" min="0" max="1023" desc="Height of cell"/>
     <property name="nbin" caption="Nb bin" type="" desc="Height of cell">
       <enums>
-        <enum name="4" value="2" caption="4" desc=""/>
-        <enum name="8" value="3" caption="8" desc=""/>
-        <enum name="16" value="4" caption="16" desc=""/>
-        <enum name="256" value="8" caption="256" desc=""/>
+        <enum name="4" value="2"/>
+        <enum name="8" value="3"/>
+        <enum name="16" value="4"/>
+        <enum name="256" value="8"/>
       </enums>
     </property>
-    <property name="imgwidth" caption="imgwidth" type="int" value="320" min="0" max="1280" desc="Width of input image"/>
+    <property name="imgwidth" type="int" value="320" min="0" max="1280" desc="Width of input image"/>
   </properties>
 </process>
