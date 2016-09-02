@@ -138,13 +138,10 @@ void ModelFIBlock::disConnectFlow(const ModelFlowConnect &flowConnect)
 {
     for(int i=0; i<_flowConnects.size(); i++)
     {
-        for(int i=0; i<_flowConnects.size(); i++)
+        if(*(_flowConnects[i])==flowConnect)
         {
-            if(*(_flowConnects[i])==flowConnect)
-            {
-                removeFlowConnect(_flowConnects[i]);
-                return;
-            }
+            removeFlowConnect(_flowConnects[i]);
+            return;
         }
     }
 }

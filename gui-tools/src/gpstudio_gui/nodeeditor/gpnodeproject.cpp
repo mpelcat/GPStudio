@@ -427,8 +427,8 @@ void GPNodeProject::addBlock(const QString &driver, const QPoint &pos)
         return;
 
     ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
-    //TODO
-    //modelProcess->setPos(pos);
+    foreach (ModelComponentPart *part, modelProcess->parts())
+        part->setPos(pos);
     addBlock(modelProcess);
 }
 

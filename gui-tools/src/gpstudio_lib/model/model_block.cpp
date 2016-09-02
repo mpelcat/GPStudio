@@ -614,8 +614,6 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
 
 ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *block)
 {
-    bool ok;
-
     if(block==NULL)
         block = new ModelBlock();
 
@@ -645,6 +643,24 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
     block->setName(domElement.attribute("name","no_name"));
     block->setDriver(domElement.attribute("driver",""));
     block->setPath(domElement.attribute("path",""));
+
+    // compatibility mode
+    if(domElement.hasAttribute("x_pos") || domElement.hasAttribute("y_pos"))
+    {
+        QPoint pos;
+        pos.setX(domElement.attribute("x_pos","0").toInt());
+        pos.setX(domElement.attribute("y_pos","0").toInt());
+
+        if(block->parts().empty())
+        {
+            ModelComponentPart *part = new ModelComponentPart();
+            part->setName("main");
+            block->addPart(part);
+        }
+
+        foreach (ModelComponentPart *part, block->parts())
+            part->setPos(pos);
+    }
 
     return block;
 }
@@ -727,7 +743,7 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     element.setAttribute("name", _name);
     element.setAttribute("driver", _driver);
 
-    if(!_driver.isEmpty())
+    if(!_inLib)
         element.setAttribute("path", _path);
 
     if(!isIO())

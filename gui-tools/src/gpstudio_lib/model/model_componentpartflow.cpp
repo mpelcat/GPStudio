@@ -78,8 +78,6 @@ ModelComponentPartFlow *ModelComponentPartFlow::fromNodeGenerated(const QDomElem
     ModelComponentPartFlow *part = new ModelComponentPartFlow();
 
     part->setName(domElement.attribute("name","no_name"));
-    if(part->parent())
-        qDebug()<<part->name()<<part->parent()->name();
 
     int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
     if(ok)

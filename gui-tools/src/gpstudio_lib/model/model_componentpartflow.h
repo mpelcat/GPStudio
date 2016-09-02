@@ -50,7 +50,7 @@ public:
     static ModelComponentPartFlow *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelComponentPartFlow *> listFromNodeGenerated(const QDomElement &domElement);
 
-    virtual QDomElement toXMLElement(QDomDocument &doc);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;

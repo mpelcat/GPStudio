@@ -227,7 +227,5 @@ bool ModelFlowConnect::operator ==(const ModelFlowConnect &other) const
         return false;
     if(_toflow != other._toflow)
         return false;
-    if(_order != other._order)
-        return false;
     return true;
 }

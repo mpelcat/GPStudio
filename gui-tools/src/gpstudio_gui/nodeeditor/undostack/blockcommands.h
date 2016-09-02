@@ -63,9 +63,9 @@ public:
     int id() const { return Id; }
 
 protected:
+    QString _part_name;
     QPoint _oldPos;
     QPoint _newPos;
-    QString _part_name;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdAdd : public BlockCommand

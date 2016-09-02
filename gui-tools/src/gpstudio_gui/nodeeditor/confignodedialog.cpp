@@ -91,7 +91,7 @@ void ConfigNodeDialog::selectBoard(const QString &boardName)
         QGroupBox *group = new QGroupBox(i.value().name());
 
         QLayout *groupLayout = new QVBoxLayout();
-        groupLayout->setContentsMargins(0,0,0,0);
+        groupLayout->setContentsMargins(0,10,0,0);
 
         foreach(QString ioName, i.value().ios())
         {
