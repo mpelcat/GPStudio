@@ -1,9 +1,13 @@
 # GPStudio
 
 A toolchain for FPGA-based smart camera that helps devellopers to
-create high performance image processing. 
+create high performance image processing.
 
 website : <http://gpstudio.univ-bpclermont.fr>
+
+Actual version 1.10
+
+Find a changelog in [CHANGELOG.md](CHANGELOG.md)
 
 ## Installation
 Yo can install GPStudio by cloning this repository or directly download 
@@ -28,6 +32,7 @@ gpviewer to visualise result of your process (GUI only).
 
 Altera families:
 
+* MAX X
 * Cyclone III
 * Cyclone IV
 * Cyclone V

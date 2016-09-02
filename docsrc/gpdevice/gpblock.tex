@@ -244,7 +244,7 @@ Generates an empty skeleton to implement your custom \kind{}. The generated file
 \subsubsection{generate}
 \command{\textbf{\tool{} generate} [-o <dir>]}
 
-This command is an alias for the three previous command. Generates all the tree files.\\
+This command is an alias for the \gpdevice{three}\gpproc{three}\gpcomp{two} previous command. Generates all the \gpdevice{three}\gpproc{three}\gpcomp{two} files.\\
 
 \paramcommand{
 -o & output directory & build \\ 
@@ -1093,6 +1093,16 @@ Sets infos of the block. When you develop IPs, it is very important to set some 
 \hline
 -v & value to set & "John Doe"\newline "john.doe@company.tld"\newline "The famous company (R)" \\
 }
+
+Standard infos :
+
+\begin{tabular}{|c|c|c|}
+\hline 
+author & email & company \\ 
+\hline 
+revision & releasedate &  \\ 
+\hline 
+\end{tabular} 
 
 \begin{sampletitle}
 > \textbf{\tool{} setinfo} -n "author"  -v "John Doe"\\

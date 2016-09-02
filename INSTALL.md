@@ -3,7 +3,7 @@
 ## Dependencies
 
 * make (with bin in your path) to generate your projects
-* php-cli (with php bin in your path) to execute command lines tools and 
+* php5-cli (with php bin in your path) to execute command lines tools and 
 back-end generation
 * Qt (with qmake bin in your path) Qt 4.7 or more recent version (Qt5 
 supported) for GUI tools
@@ -12,7 +12,9 @@ supported) for GUI tools
 
 Optionnal :
 
-* dot (optional) to draw process connection in command line mode
+* graphviz (optional) to draw process connection in command line mode with dot
+
+> sudo apt-get install make php5-cli 
 
 ## GUI tools compilation
 
@@ -47,11 +49,11 @@ You also can download it from <https://www.qt.io/download-open-source/>
 
 ### Graphical mode
 
-Download a Qt package with Qt Creator at <https://www.qt.io/download-open-source/>.
+Download a Qt package with Qt Creator at <https://www.qt.io/download-open-source/>
 and install it.
 
 Open Qt Creator and open the project gui-tools/src/gpstudio.pro.
 
-Configure the project to be compiled in gui-tools/build.
+Configure the project to be compiled in gui-tools/build. (important)
 
 Click on compile and run or Ctrl + R. Enjoy.

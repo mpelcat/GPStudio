@@ -178,7 +178,7 @@ void BlockEditorWindow::setBlock(ModelBlock *block)
 
 void BlockEditorWindow::about()
 {
-    QMessageBox::about(this,"GPStudio: GPBlock 1.01","Copyright (C) 2016 Dream IP\n\
+    QMessageBox::about(this,"GPStudio: GPBlock 1.10","Copyright (C) 2016 Dream IP\n\
 \n\
 This sofware is part of GPStudio.\n\
 \n\
