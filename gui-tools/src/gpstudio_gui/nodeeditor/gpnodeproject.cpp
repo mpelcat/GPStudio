@@ -351,8 +351,9 @@ void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
                 count++;
                 ModelIO *io = new ModelIO(*ioLib->modelIO());
                 io->setName(ioName);
-                //TODO
-                //io->setPos(QPoint(count*200, 0));
+                int count2=0;
+                foreach (ModelComponentPart *part, io->parts())
+                    part->setPos(QPoint(count*200, (count2++)*200));
                 cmdAddBlock(io);
             }
         }

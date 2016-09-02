@@ -41,6 +41,8 @@ bool BlockScene::loadFromNode(const ModelNode *node)
     if(!node)
         return false;
 
+    _blocksName.clear();
+    _blocksModel.clear();
     clear();
 
     foreach (ModelBlock *modelBlock, node->blocks())
@@ -58,6 +60,11 @@ bool BlockScene::loadFromNode(const ModelNode *node)
 
 bool BlockScene::loadFromCamera(const Camera *camera)
 {
+    if(!camera)
+        return false;
+
+    _blocksName.clear();
+    _blocksModel.clear();
     clear();
 
     foreach (Block *block, camera->blocks())

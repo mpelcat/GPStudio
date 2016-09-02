@@ -187,18 +187,22 @@ void BlockView::mouseReleaseEvent(QMouseEvent *event)
     }
 
     // move blocks
-    QList<BlockItem*> movedBlocks;
+    QList<QPair<BlockItem*,QPoint> > movedBlocks;
     foreach (QGraphicsItem *item, _scene->selectedItems())
     {
         BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(item);
         if(blockItem)
             if(blockItem->pos() != blockItem->modelPart()->pos())
-                movedBlocks.append(blockItem);
+                movedBlocks.append(qMakePair(blockItem, blockItem->pos().toPoint()));
     }
     if(movedBlocks.size()>1)
         emit beginMacroAsked("multiple blocks moved");
-    foreach (BlockItem *blockItem, movedBlocks)
-        emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), blockItem->pos().toPoint());
+    for (int i=0; i<movedBlocks.size(); i++)
+    {
+        QPair<BlockItem*,QPoint> pairMove = movedBlocks.at(i);
+        BlockItem *blockItem = pairMove.first;
+        emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), pairMove.second);
+    }
     if(movedBlocks.size()>1)
         emit endMacroAsked();
 
@@ -263,10 +267,7 @@ void BlockView::updateBlock(ModelBlock *block)
     {
         blockItem->updatePos();
         if(blockItem->name() != block->name())
-        {
             blockItem->setName(block->name());
-            blockItem->update();
-        }
     }
 }
 

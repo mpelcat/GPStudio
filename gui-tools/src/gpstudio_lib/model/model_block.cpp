@@ -636,6 +636,19 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
                     part->setPos(nodePart->pos());
                 }
             }
+            /*if(e.tagName()=="properties")
+            {
+                foreach(ModelProperty *nodePart, ModelComponentPart::listFromNodeGenerated(e))
+                {
+                    ModelComponentPart *part = block->getPart(nodePart->name());
+                    if(!part)
+                    {
+                        part = nodePart;
+                        block->addPart(part);
+                    }
+                    part->setPos(nodePart->pos());
+                }
+            }*/
         }
         n = n.nextSibling();
     }

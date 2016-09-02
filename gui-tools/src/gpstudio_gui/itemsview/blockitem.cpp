@@ -43,6 +43,7 @@ BlockItem::BlockItem()
 {
     _block = NULL;
     _modelPart = NULL;
+    _modelBlock = NULL;
 
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
@@ -110,6 +111,7 @@ QString BlockItem::name() const
 void BlockItem::setName(const QString &name)
 {
     _name = name;
+    update();
     foreach (BlockPortItem *port, _ports)
         port->setBlockName(_name);
 }
@@ -161,7 +163,8 @@ void BlockItem::updateBlock()
 
 void BlockItem::updatePos()
 {
-    setPos(_modelPart->pos());
+    if(_modelPart)
+        setPos(_modelPart->pos());
     foreach (BlockPortItem *portItem, _ports)
     {
         foreach (BlockConnectorItem *connectItem, portItem->connects())

@@ -35,6 +35,7 @@ ModelComponentPart::ModelComponentPart(const ModelComponentPart &other)
     _name = other._name;
     _draw = other._draw;
     _pos = other._pos;
+    _parent = NULL;
 
     for(int i=0; i<other._flows.size(); i++)
         addFlow(new ModelComponentPartFlow(*other._flows[i]));
