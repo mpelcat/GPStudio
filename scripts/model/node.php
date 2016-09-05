@@ -120,6 +120,22 @@ class Node
                     }
                 }
 
+                // redef part position
+                if (isset($process->parts))
+                {
+                    foreach ($process->parts->part as $part)
+                    {
+                        if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
+                        {
+                            if ($concerned_part = $processBlock->getPart((string) $part['name']))
+                            {
+                                $concerned_part->x_pos = $part['x_pos'];
+                                $concerned_part->y_pos = $part['y_pos'];
+                            }
+                        }
+                    }
+                }
+
                 // redef properties
                 if (isset($process->properties))
                 {

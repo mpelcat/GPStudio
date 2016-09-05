@@ -332,6 +332,22 @@ class Board
                         }
                     }
 
+                    // redef part position
+                    if (isset($io->parts))
+                    {
+                        foreach ($io->parts->part as $part)
+                        {
+                            if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
+                            {
+                                if ($concerned_part = $concerned_block->getPart((string) $part['name']))
+                                {
+                                    $concerned_part->x_pos = $part['x_pos'];
+                                    $concerned_part->y_pos = $part['y_pos'];
+                                }
+                            }
+                        }
+                    }
+
                     // redef properties
                     if (isset($io->properties))
                     {
