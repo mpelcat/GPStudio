@@ -153,7 +153,11 @@ Commands of \tool{} always have the same naming convention. This table is a brie
 }
 \end{tabular}\\
 
-Few over commands can be used to create the block and generate the skeleton defined in project section. The command \textbf{sethelp} is useful to document the block. \textbf{setpropertymap} defines link of properties.
+Few over commands can be used to create the block and generate the skeleton defined in project section. The command \hyperref[subsec:sethelp]{sethelp} is useful to document the block. In addition, \hyperref[subsec:setinfo]{setinfo} saves the informations about the block.
+
+\hyperref[subsec:setpropertymap]{setpropertymap} defines link between properties.
+
+For Parameters Interconnect configuration, you should use \hyperref[subsec:setpisizeaddr]{setpisizeaddr} and \hyperref[subsec:setpimastercount]{setpimastercount}.
 
 \subsection{project}
 % ==============================================
@@ -244,7 +248,7 @@ Generates an empty skeleton to implement your custom \kind{}. The generated file
 \subsubsection{generate}
 \command{\textbf{\tool{} generate} [-o <dir>]}
 
-This command is an alias for the \gpdevice{three}\gpproc{three}\gpcomp{two} previous command. Generates all the \gpdevice{three}\gpproc{three}\gpcomp{two} files.\\
+This command is an alias for the three previous command. Generates all the tree files.\\
 
 \paramcommand{
 -o & output directory & build \\ 
@@ -508,6 +512,38 @@ Transforms a param to a fixed parameter  if -v is true or a dynamic parameter el
 \end{sampletitle}
 \samplecomment{Sets the parameter `mode' to a fixed parameter, eg generic value for a VHDL backend}
 
+% ==============================================
+\subsubsection{setpisizeaddr}
+\label{subsec:setpisizeaddr}
+\command{\textbf{\tool{} setpisizeaddr} -v <pisizeaddr>}
+
+Sets the width of PI address bus in bits. For example, with the highest address 9 you should use 4 as the pisizeaddr to have a range of 16 addresses.\\
+
+\paramcommand{
+-v & width of PI slave address port in bits & 3 \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setpisizeaddr} -v 5 \\
+\end{sampletitle}
+\samplecomment{Sets the parameter pisizeaddr to 5 bits to have 32 possible registers}
+
+% ==============================================
+\subsubsection{setpimastercount}
+\label{subsec:setpimastercount}
+\command{\textbf{\tool{} setpimastercount} -v <pimastercount>}
+
+Sets the number of PI master port.\\
+
+\paramcommand{
+-v & number of master port & 1 \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setpimastercount} -v 1 \\
+\end{sampletitle}
+\samplecomment{Adds a PI master port to the current \kind{}}
+
 \gpprocdevice{
 \subsection{bitfields}
 % ==============================================
@@ -703,6 +739,7 @@ Allows to modify one or more property parameters like the label, the type or the
 
 % ==============================================
 \subsubsection{setpropertymap}
+\label{subsec:setpropertymap}
 \command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
 
 Allows to set the property map of a dynamic parameter, a property or a bit field. It's the mathematical expression to dynamically link a property value to another value. High level interface or API only have access to property, so if you need to modify a register from the external, creates a property and link his value to the register. When the property value change, the property map expression is re evaluated to set the new computed value to the register.\\
@@ -1045,6 +1082,7 @@ Prints the list of external ports in the current block project.
 \subsection{global}
 % ==============================================
 \subsubsection{sethelp}
+\label{subsec:sethelp}
 \command{\textbf{\tool{} sethelp} [-n <instance-name>] -v <help-text>}
 
 Sets the help text for an instance of the block if a name is specified, or the block itself is name is omitted. This is useful for the automatic documentation generation. \\
@@ -1093,16 +1131,6 @@ Sets infos of the block. When you develop IPs, it is very important to set some 
 \hline
 -v & value to set & "John Doe"\newline "john.doe@company.tld"\newline "The famous company (R)" \\
 }
-
-Standard infos :
-
-\begin{tabular}{|c|c|c|}
-\hline 
-author & email & company \\ 
-\hline 
-revision & releasedate &  \\ 
-\hline 
-\end{tabular} 
 
 \begin{sampletitle}
 > \textbf{\tool{} setinfo} -n "author"  -v "John Doe"\\
