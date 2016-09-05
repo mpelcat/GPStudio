@@ -31,7 +31,8 @@ gpproc addproperty -n enable -t bool -v 1
 gpproc addbitfield -n status_reg.enable_bit -b 0 -m enable.value
 
 # input image width register
-gpproc addparam -n widthimg_reg -m in.width.value -r 1
+gpproc addparam -n widthimg_reg -r 1
+gpproc addbitfield -n "widthimg_reg.width" -b 15-0 -m in.width.value
 
 # weights registers and properties
 addr=2
@@ -98,7 +99,7 @@ gpproc addenum -n filtertype.sobel -v 3
 gpproc setdraw -f conv.svg
 
 # generate patterns files
-#gpproc generate -o hdl
+# gpproc generate -o hdl
 gpproc addfile -p hdl/conv.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/conv_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/conv_slave.vhd -t vhdl -g hdl

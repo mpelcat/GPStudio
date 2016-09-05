@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="conv" categ="" pi_size_addr_rel="4" desc="Dynamic image convolution block">
+<process name="conv" categ="" master_count="0" pi_size_addr_rel="4" desc="Dynamic image convolution block">
   <parts>
     <part name="main">
       <svg width="100" height="115">
@@ -45,12 +45,17 @@
     </flow>
   </flows>
   <params>
+    <param name="LINE_WIDTH_MAX" type="int" hard="1" value="1280" desc="maximum line width"/>
     <param name="status_reg" regaddr="0">
       <bitfields>
         <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
       </bitfields>
     </param>
-    <param name="widthimg_reg" regaddr="1" propertymap="in.width.value"/>
+    <param name="widthimg_reg" regaddr="1">
+      <bitfields>
+        <bitfield name="width" bitfield="15-0" propertymap="in.width.value"/>
+      </bitfields>
+    </param>
     <param name="w00_reg" regaddr="2" desc="kernel register for w[0][0]">
       <bitfields>
         <bitfield name="m00" bitfield="7-0" propertymap="weight.m00.value"/>
@@ -96,7 +101,11 @@
         <bitfield name="m22" bitfield="7-0" propertymap="weight.m22.value"/>
       </bitfields>
     </param>
-    <param name="norm_reg" regaddr="11" propertymap="norm.value" desc="Normalisation register"/>
+    <param name="norm_reg" regaddr="11" desc="Normalisation register">
+      <bitfields>
+        <bitfield name="norm" bitfield="4-0" propertymap="norm.value"/>
+      </bitfields>
+    </param>
   </params>
   <properties>
     <property name="enable" type="bool" value="1"/>

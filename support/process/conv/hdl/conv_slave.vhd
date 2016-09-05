@@ -13,7 +13,7 @@ entity conv_slave is
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : out std_logic;
-		widthimg_reg          : out std_logic_vector(31 downto 0);
+		widthimg_reg_width    : out std_logic_vector(15 downto 0);
 		w00_reg_m00           : out std_logic_vector(7 downto 0);
 		w01_reg_m01           : out std_logic_vector(7 downto 0);
 		w02_reg_m02           : out std_logic_vector(7 downto 0);
@@ -23,7 +23,7 @@ entity conv_slave is
 		w20_reg_m20           : out std_logic_vector(7 downto 0);
 		w21_reg_m21           : out std_logic_vector(7 downto 0);
 		w22_reg_m22           : out std_logic_vector(7 downto 0);
-		norm_reg              : out std_logic_vector(31 downto 0);
+		norm_reg_norm         : out std_logic_vector(4 downto 0);
 
 		--======================= Slaves ========================
 
@@ -54,7 +54,7 @@ architecture rtl of conv_slave is
 
 	-- Internal registers      
 	signal status_reg_enable_bit_reg : std_logic;
-	signal widthimg_reg_reg          : std_logic_vector (31 downto 0);
+	signal widthimg_reg_width_reg    : std_logic_vector (15 downto 0);
 	signal w00_reg_m00_reg           : std_logic_vector (7 downto 0);
 	signal w01_reg_m01_reg           : std_logic_vector (7 downto 0);
 	signal w02_reg_m02_reg           : std_logic_vector (7 downto 0);
@@ -64,14 +64,14 @@ architecture rtl of conv_slave is
 	signal w20_reg_m20_reg           : std_logic_vector (7 downto 0);
 	signal w21_reg_m21_reg           : std_logic_vector (7 downto 0);
 	signal w22_reg_m22_reg           : std_logic_vector (7 downto 0);
-	signal norm_reg_reg              : std_logic_vector (31 downto 0);
+	signal norm_reg_norm_reg         : std_logic_vector (4 downto 0);
 
 begin
 	write_reg : process (clk_proc, reset_n)
 	begin
 		if(reset_n='0') then
 			status_reg_enable_bit_reg <= '0';
-			widthimg_reg_reg <= x"00000000";
+			widthimg_reg_width_reg <= "0000000000000000";
 			w00_reg_m00_reg <= "00000000";
 			w01_reg_m01_reg <= "00000000";
 			w02_reg_m02_reg <= "00000000";
@@ -81,14 +81,14 @@ begin
 			w20_reg_m20_reg <= "00000000";
 			w21_reg_m21_reg <= "00000000";
 			w22_reg_m22_reg <= "00000000";
-			norm_reg_reg <= x"00000000";
+			norm_reg_norm_reg <= "00000";
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
 					when std_logic_vector(to_unsigned(STATUS_REG_REG_ADDR, 4))=>
 						status_reg_enable_bit_reg <= datawr_i(0);
 					when std_logic_vector(to_unsigned(WIDTHIMG_REG_REG_ADDR, 4))=>
-						widthimg_reg_reg <= datawr_i;
+						widthimg_reg_width_reg <= datawr_i(15) & datawr_i(14) & datawr_i(13) & datawr_i(12) & datawr_i(11) & datawr_i(10) & datawr_i(9) & datawr_i(8) & datawr_i(7) & datawr_i(6) & datawr_i(5) & datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when std_logic_vector(to_unsigned(W00_REG_REG_ADDR, 4))=>
 						w00_reg_m00_reg <= datawr_i(7) & datawr_i(6) & datawr_i(5) & datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when std_logic_vector(to_unsigned(W01_REG_REG_ADDR, 4))=>
@@ -108,7 +108,7 @@ begin
 					when std_logic_vector(to_unsigned(W22_REG_REG_ADDR, 4))=>
 						w22_reg_m22_reg <= datawr_i(7) & datawr_i(6) & datawr_i(5) & datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when std_logic_vector(to_unsigned(NORM_REG_REG_ADDR, 4))=>
-						norm_reg_reg <= datawr_i;
+						norm_reg_norm_reg <= datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when others=>
 				end case;
 			end if;
@@ -125,7 +125,7 @@ begin
 					when std_logic_vector(to_unsigned(STATUS_REG_REG_ADDR, 4))=>
 						datard_o <= "0000000000000000000000000000000" & status_reg_enable_bit_reg;
 					when std_logic_vector(to_unsigned(WIDTHIMG_REG_REG_ADDR, 4))=>
-						datard_o <= widthimg_reg_reg;
+						datard_o <= "0000000000000000" & widthimg_reg_width_reg(15) & widthimg_reg_width_reg(14) & widthimg_reg_width_reg(13) & widthimg_reg_width_reg(12) & widthimg_reg_width_reg(11) & widthimg_reg_width_reg(10) & widthimg_reg_width_reg(9) & widthimg_reg_width_reg(8) & widthimg_reg_width_reg(7) & widthimg_reg_width_reg(6) & widthimg_reg_width_reg(5) & widthimg_reg_width_reg(4) & widthimg_reg_width_reg(3) & widthimg_reg_width_reg(2) & widthimg_reg_width_reg(1) & widthimg_reg_width_reg(0);
 					when std_logic_vector(to_unsigned(W00_REG_REG_ADDR, 4))=>
 						datard_o <= "000000000000000000000000" & w00_reg_m00_reg(7) & w00_reg_m00_reg(6) & w00_reg_m00_reg(5) & w00_reg_m00_reg(4) & w00_reg_m00_reg(3) & w00_reg_m00_reg(2) & w00_reg_m00_reg(1) & w00_reg_m00_reg(0);
 					when std_logic_vector(to_unsigned(W01_REG_REG_ADDR, 4))=>
@@ -145,7 +145,7 @@ begin
 					when std_logic_vector(to_unsigned(W22_REG_REG_ADDR, 4))=>
 						datard_o <= "000000000000000000000000" & w22_reg_m22_reg(7) & w22_reg_m22_reg(6) & w22_reg_m22_reg(5) & w22_reg_m22_reg(4) & w22_reg_m22_reg(3) & w22_reg_m22_reg(2) & w22_reg_m22_reg(1) & w22_reg_m22_reg(0);
 					when std_logic_vector(to_unsigned(NORM_REG_REG_ADDR, 4))=>
-						datard_o <= norm_reg_reg;
+						datard_o <= "000000000000000000000000000" & norm_reg_norm_reg(4) & norm_reg_norm_reg(3) & norm_reg_norm_reg(2) & norm_reg_norm_reg(1) & norm_reg_norm_reg(0);
 					when others=>
 						datard_o <= (others => '0');
 				end case;
@@ -154,7 +154,7 @@ begin
 	end process;
 
 	status_reg_enable_bit <= status_reg_enable_bit_reg;
-	widthimg_reg <= widthimg_reg_reg;
+	widthimg_reg_width <= widthimg_reg_width_reg;
 	w00_reg_m00 <= w00_reg_m00_reg;
 	w01_reg_m01 <= w01_reg_m01_reg;
 	w02_reg_m02 <= w02_reg_m02_reg;
@@ -164,6 +164,6 @@ begin
 	w20_reg_m20 <= w20_reg_m20_reg;
 	w21_reg_m21 <= w21_reg_m21_reg;
 	w22_reg_m22 <= w22_reg_m22_reg;
-	norm_reg <= norm_reg_reg;
+	norm_reg_norm <= norm_reg_norm_reg;
 
 end rtl;

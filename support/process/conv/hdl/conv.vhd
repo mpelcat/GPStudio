@@ -5,9 +5,10 @@ library std;
 
 entity conv is
 	generic (
-		CLK_PROC_FREQ : integer;
-		IN_SIZE       : integer;
-		OUT_SIZE      : integer
+		LINE_WIDTH_MAX : integer;
+		CLK_PROC_FREQ  : integer;
+		IN_SIZE        : integer;
+		OUT_SIZE       : integer
 	);
 	port (
 		clk_proc   : in std_logic;
@@ -37,9 +38,10 @@ end conv;
 architecture rtl of conv is
 component conv_process
 	generic (
-		CLK_PROC_FREQ : integer;
-		IN_SIZE       : integer;
-		OUT_SIZE      : integer
+		LINE_WIDTH_MAX : integer;
+		CLK_PROC_FREQ  : integer;
+		IN_SIZE        : integer;
+		OUT_SIZE       : integer
 	);
 	port (
 		clk_proc              : in std_logic;
@@ -47,7 +49,7 @@ component conv_process
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : in std_logic;
-		widthimg_reg          : in std_logic_vector(31 downto 0);
+		widthimg_reg_width    : in std_logic_vector(15 downto 0);
 		w00_reg_m00           : in std_logic_vector(7 downto 0);
 		w01_reg_m01           : in std_logic_vector(7 downto 0);
 		w02_reg_m02           : in std_logic_vector(7 downto 0);
@@ -57,7 +59,7 @@ component conv_process
 		w20_reg_m20           : in std_logic_vector(7 downto 0);
 		w21_reg_m21           : in std_logic_vector(7 downto 0);
 		w22_reg_m22           : in std_logic_vector(7 downto 0);
-		norm_reg              : in std_logic_vector(31 downto 0);
+		norm_reg_norm         : in std_logic_vector(4 downto 0);
 
 		------------------------- in flow -----------------------
 		in_data               : in std_logic_vector(IN_SIZE-1 downto 0);
@@ -81,7 +83,7 @@ component conv_slave
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : out std_logic;
-		widthimg_reg          : out std_logic_vector(31 downto 0);
+		widthimg_reg_width    : out std_logic_vector(15 downto 0);
 		w00_reg_m00           : out std_logic_vector(7 downto 0);
 		w01_reg_m01           : out std_logic_vector(7 downto 0);
 		w02_reg_m02           : out std_logic_vector(7 downto 0);
@@ -91,7 +93,7 @@ component conv_slave
 		w20_reg_m20           : out std_logic_vector(7 downto 0);
 		w21_reg_m21           : out std_logic_vector(7 downto 0);
 		w22_reg_m22           : out std_logic_vector(7 downto 0);
-		norm_reg              : out std_logic_vector(31 downto 0);
+		norm_reg_norm         : out std_logic_vector(4 downto 0);
 
 		--======================= Slaves ========================
 
@@ -105,7 +107,7 @@ component conv_slave
 end component;
 
 	signal status_reg_enable_bit : std_logic;
-	signal widthimg_reg          : std_logic_vector (31 downto 0);
+	signal widthimg_reg_width    : std_logic_vector (15 downto 0);
 	signal w00_reg_m00           : std_logic_vector (7 downto 0);
 	signal w01_reg_m01           : std_logic_vector (7 downto 0);
 	signal w02_reg_m02           : std_logic_vector (7 downto 0);
@@ -115,20 +117,21 @@ end component;
 	signal w20_reg_m20           : std_logic_vector (7 downto 0);
 	signal w21_reg_m21           : std_logic_vector (7 downto 0);
 	signal w22_reg_m22           : std_logic_vector (7 downto 0);
-	signal norm_reg              : std_logic_vector (31 downto 0);
+	signal norm_reg_norm         : std_logic_vector (4 downto 0);
 
 begin
 	conv_process_inst : conv_process
     generic map (
-		CLK_PROC_FREQ => CLK_PROC_FREQ,
-		IN_SIZE       => IN_SIZE,
-		OUT_SIZE      => OUT_SIZE
+		CLK_PROC_FREQ  => CLK_PROC_FREQ,
+		LINE_WIDTH_MAX => LINE_WIDTH_MAX,
+		IN_SIZE        => IN_SIZE,
+		OUT_SIZE       => OUT_SIZE
 	)
     port map (
 		clk_proc              => clk_proc,
 		reset_n               => reset_n,
 		status_reg_enable_bit => status_reg_enable_bit,
-		widthimg_reg          => widthimg_reg,
+		widthimg_reg_width    => widthimg_reg_width,
 		w00_reg_m00           => w00_reg_m00,
 		w01_reg_m01           => w01_reg_m01,
 		w02_reg_m02           => w02_reg_m02,
@@ -138,7 +141,7 @@ begin
 		w20_reg_m20           => w20_reg_m20,
 		w21_reg_m21           => w21_reg_m21,
 		w22_reg_m22           => w22_reg_m22,
-		norm_reg              => norm_reg,
+		norm_reg_norm         => norm_reg_norm,
 		in_data               => in_data,
 		in_fv                 => in_fv,
 		in_dv                 => in_dv,
@@ -155,7 +158,7 @@ begin
 		clk_proc              => clk_proc,
 		reset_n               => reset_n,
 		status_reg_enable_bit => status_reg_enable_bit,
-		widthimg_reg          => widthimg_reg,
+		widthimg_reg_width    => widthimg_reg_width,
 		w00_reg_m00           => w00_reg_m00,
 		w01_reg_m01           => w01_reg_m01,
 		w02_reg_m02           => w02_reg_m02,
@@ -165,7 +168,7 @@ begin
 		w20_reg_m20           => w20_reg_m20,
 		w21_reg_m21           => w21_reg_m21,
 		w22_reg_m22           => w22_reg_m22,
-		norm_reg              => norm_reg,
+		norm_reg_norm         => norm_reg_norm,
 		addr_rel_i            => addr_rel_i,
 		wr_i                  => wr_i,
 		rd_i                  => rd_i,

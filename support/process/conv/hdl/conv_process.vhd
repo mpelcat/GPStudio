@@ -5,38 +5,39 @@ library std;
 
 entity conv_process is
 	generic (
-		CLK_PROC_FREQ : integer;
-		IN_SIZE       : integer;
-		OUT_SIZE      : integer;
-		WEIGHT_SIZE   : integer := 8
+		LINE_WIDTH_MAX : integer;
+		CLK_PROC_FREQ  : integer;
+		IN_SIZE        : integer;
+		OUT_SIZE       : integer;
+		WEIGHT_SIZE    : integer := 8
 	);
 	port (
-		clk_proc              : in std_logic;
-		reset_n               : in std_logic;
+		clk_proc               : in std_logic;
+		reset_n                : in std_logic;
 
 		---------------- dynamic parameters ports ---------------
-		status_reg_enable_bit : in std_logic;
-		widthimg_reg          : in std_logic_vector(31 downto 0);
-		w00_reg_m00           : in std_logic_vector(7 downto 0);
-		w01_reg_m01           : in std_logic_vector(7 downto 0);
-		w02_reg_m02           : in std_logic_vector(7 downto 0);
-		w10_reg_m10           : in std_logic_vector(7 downto 0);
-		w11_reg_m11           : in std_logic_vector(7 downto 0);
-		w12_reg_m12           : in std_logic_vector(7 downto 0);
-		w20_reg_m20           : in std_logic_vector(7 downto 0);
-		w21_reg_m21           : in std_logic_vector(7 downto 0);
-		w22_reg_m22           : in std_logic_vector(7 downto 0);
-		norm_reg              : in std_logic_vector(4 downto 0);
+		status_reg_enable_bit  : in std_logic;
+		widthimg_reg_width     : in std_logic_vector(15 downto 0);
+		w00_reg_m00            : in std_logic_vector(7 downto 0);
+		w01_reg_m01            : in std_logic_vector(7 downto 0);
+		w02_reg_m02            : in std_logic_vector(7 downto 0);
+		w10_reg_m10            : in std_logic_vector(7 downto 0);
+		w11_reg_m11            : in std_logic_vector(7 downto 0);
+		w12_reg_m12            : in std_logic_vector(7 downto 0);
+		w20_reg_m20            : in std_logic_vector(7 downto 0);
+		w21_reg_m21            : in std_logic_vector(7 downto 0);
+		w22_reg_m22            : in std_logic_vector(7 downto 0);
+		norm_reg_norm          : in std_logic_vector(4 downto 0);
 
 		------------------------- in flow -----------------------
-		in_data               : in std_logic_vector(IN_SIZE-1 downto 0);
-		in_fv                 : in std_logic;
-		in_dv                 : in std_logic;
+		in_data                : in std_logic_vector(IN_SIZE-1 downto 0);
+		in_fv                  : in std_logic;
+		in_dv                  : in std_logic;
 
 		------------------------ out flow -----------------------
-		out_data              : out std_logic_vector(OUT_SIZE-1 downto 0);
-		out_fv                : out std_logic;
-		out_dv                : out std_logic
+		out_data               : out std_logic_vector(OUT_SIZE-1 downto 0);
+		out_fv                 : out std_logic;
+		out_dv                 : out std_logic
 	);
 end conv_process;
 
@@ -91,15 +92,12 @@ signal p20, p21, p22 : std_logic_vector((IN_SIZE-1) downto 0);
 signal matrix_dv : std_logic;
 
 -- products calculation
-signal prod00, prod01, prod02 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
-signal prod10, prod11, prod12 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
-signal prod20, prod21, prod22 : signed((WEIGHT_SIZE - 1 + IN_SIZE) downto 0);
+signal prod00, prod01, prod02 : signed((WEIGHT_SIZE + IN_SIZE) downto 0);
+signal prod10, prod11, prod12 : signed((WEIGHT_SIZE + IN_SIZE) downto 0);
+signal prod20, prod21, prod22 : signed((WEIGHT_SIZE + IN_SIZE) downto 0);
 signal prod_dv : std_logic;
 
-variable sum   : signed((WEIGHT_SIZE - 1 + IN_SIZE)+3 downto 0);
-variable normi : integer range 0 to 8;
-
-signal value_data : std_logic_vector((IN_SIZE-3) downto 0);
+signal value_data : std_logic_vector((IN_SIZE-1) downto 0);
 signal value_dv : std_logic;
 
 begin
@@ -107,8 +105,8 @@ begin
 	matrix_extractor : matrix_extractor_3_3
     generic map (
     	LINE_WIDTH_MAX		=> LINE_WIDTH_MAX,
-    	PIX_WIDTH			=> PIX_WIDTH,
-    	OUTVALUE_WIDTH		=> PIX_WIDTH
+    	PIX_WIDTH			=> IN_SIZE,
+    	OUTVALUE_WIDTH		=> IN_SIZE
 	)
     port map (
 		clk_proc => clk_proc,
@@ -125,11 +123,13 @@ begin
 		out_data => out_data,
 		out_fv => out_fv,
 		out_dv => out_dv,
-		enable_i => enable_i,
-		widthimg_i => widthimg_i
+		enable_i => status_reg_enable_bit,
+		widthimg_i => widthimg_reg_width
     );
 
 	process (clk_proc, reset_n, matrix_dv)
+        variable sum   : signed((WEIGHT_SIZE + IN_SIZE) downto 0);
+        variable normi : integer range 0 to 8;
 	begin
 		if(reset_n='0') then
 				
@@ -164,15 +164,16 @@ begin
             
 			value_dv<='0';
 			if(prod_dv='1') then
-                sum <= prod00 + prod01 + prod02 +
+                sum := prod00 + prod01 + prod02 +
                        prod10 + prod11 + prod12 +
                        prod20 + prod21 + prod22;
 
-                if (sum(sum'left) = '1')	then
+                if (sum(sum'left) = '1') then
                     sum := (others => '0');
                 end if;
-                normi	<=  to_integer (unsigned(norm));
-                value_data <=	std_logic_vector((sum srl normi)(OUT_SIZE -1  downto 0));
+                -- normi <= to_integer (unsigned(norm));
+                -- value_data <= std_logic_vector((sum srl normi)(OUT_SIZE -1  downto 0));
+                value_data <= std_logic_vector(sum(OUT_SIZE -1  downto 0));
 
 				value_dv <= '1';
 			end if;
