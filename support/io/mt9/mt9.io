@@ -63,15 +63,15 @@
     <property name="enable" type="bool" desc="Enable or disable image sensor"/>
     <property name="roi1" type="group">
       <properties>
-        <property name="x" type="int" value="0" min="0" max="1280"/>
-        <property name="y" type="int" value="0" min="0" max="960"/>
-        <property name="w" type="int" value="320" min="2" max="1280" step="2" assert="roi.w%2==0"/>
-        <property name="h" type="int" value="240" min="2" max="960" step="2" assert="roi.h%2==0"/>
+        <property name="x" type="int" value="320" min="0" max="1280"/>
+        <property name="y" type="int" value="240" min="0" max="960"/>
+        <property name="w" type="int" value="640" min="2" max="1280" step="2" assert="roi.w%2==0"/>
+        <property name="h" type="int" value="480" min="2" max="960" step="2" assert="roi.h%2==0"/>
       </properties>
     </property>
     <property name="flipx" caption="X mirror" type="bool"/>
     <property name="flipy" caption="Y flip" type="bool"/>
-    <property name="binning" caption="binning (/2)" type="bool"/>
+    <property name="binning" caption="binning (/2)" type="bool" value="1"/>
     <property name="autoexposure" type="group">
       <properties>
         <property name="enable" type="bool"/>
@@ -86,7 +86,7 @@
       </properties>
     </property>
     <property name="exposuretime" caption="exposure time" type="sint" value="1000" min="0" max="4500"/>
-    <property name="linelenght" type="int" value="1650" min="1650" max="4500"/>
+    <property name="linelenght" type="int" value="1650" min="3000" max="4500"/>
     <property name="resolutions" caption="standard resolutions" type="enum" onchange="switch(resolutions.bits) {   case 0:   roi1.w.value=640;   roi1.h.value=480;         binning.value=1;   roi1.x.value=320;   roi1.y.value=240;   break;  case 1:   roi1.w.value=1280;   roi1.h.value=960;         binning.value=1;   roi1.x.value=0;   roi1.y.value=0;   break;  case 2:   roi1.w.value=800;   roi1.h.value=600;         binning.value=0;   roi1.x.value=240;   roi1.y.value=180;   break;  case 3:   roi1.w.value=1024;   roi1.h.value=768;         binning.value=0;   roi1.x.value=128;   roi1.y.value=96;   break;  case 4:   roi1.w.value=1280;   roi1.h.value=960;         binning.value=0;   roi1.x.value=0;   roi1.y.value=0;   break;  }">
       <enums>
         <enum name="320*240" value="0"/>
