@@ -129,10 +129,7 @@ class ComponentPart
             {
                 cloneSvg($this->svg, $xml, $xml_element);
             }
-        }
 
-        if ($format == "blockdef")
-        {
             // partflows
             if (!empty($this->partflows))
             {
