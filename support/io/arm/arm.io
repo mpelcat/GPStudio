@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="arm" categ="hps" pi_size_addr_rel="0" desc="">
+<io driver="arm" categ="hps" pi_size_addr_rel="0" master_count="1" desc="">
   <parts>
     <part name="main">
       <svg width="160" height="110">

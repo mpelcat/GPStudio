@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="usb_cypress_CY7C68014A" categ="communication" pi_size_addr_rel="4" desc="">
+<io driver="usb_cypress_CY7C68014A" categ="communication" pi_size_addr_rel="4" master_count="1" desc="">
   <parts>
     <part name="inputs">
       <svg width="160" height="150">

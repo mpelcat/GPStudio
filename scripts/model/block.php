@@ -570,15 +570,15 @@ class Block extends Component
             $att = $xml->createAttribute('addr_abs');
             $att->value = $this->addr_abs;
             $xml_element->appendChild($att);
-
-            // master_count
-            $att = $xml->createAttribute('master_count');
-            $att->value = $this->master_count;
-            $xml_element->appendChild($att);
         }
 
         if ($format == "complete" or $format == "blockdef")
         {
+            // master_count
+            $att = $xml->createAttribute('master_count');
+            $att->value = $this->master_count;
+            $xml_element->appendChild($att);
+
             // pi_size_addr_rel
             $att = $xml->createAttribute('pi_size_addr_rel');
             $att->value = $this->pi_size_addr_rel;
