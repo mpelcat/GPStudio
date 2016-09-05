@@ -79,6 +79,8 @@ switch ($action)
         echo TOOL . " renameparam -n <param-name> -v <new-name>" . "\n";
         echo TOOL . " setparam -n <param-name> [-t <type>] [-r <relative-address>] [-v <default-value>]" . "\n";
         echo TOOL . " fixparam -n <param-name> -v <true/false>" . "\n";
+        echo TOOL . " setpisizeaddr -v <pisizeaddr>" . "\n";
+        echo TOOL . " setpimastercount -v <pimastercount>" . "\n";
         echo "" . "\n";
         if (TOOL != "gpcomp")
         {
@@ -698,6 +700,22 @@ switch ($action)
             error("You should specify a PI address relative size in bit with -v", 1);
 
         $component->pi_size_addr_rel = $size;
+
+        break;
+
+    case "setpimastercount":
+        if (TOOL == "gpcomp")
+            error("Component cannot have pi interface.", 1);
+
+        $options = getopt("a:v:");
+        if (array_key_exists('v', $options))
+            $size = $options['v'];
+        else
+            error("You should specify a master count with -v", 1);
+        if (!is_numeric($size))
+            error("You should specify a master count with -v", 1);
+
+        $component->master_count = $size;
 
         break;
 
