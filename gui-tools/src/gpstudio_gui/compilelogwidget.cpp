@@ -30,9 +30,9 @@ CompileLogWidget::CompileLogWidget(QWidget *parent) : QWidget(parent)
 {
     setupWidgets();
     _process = NULL;
+    _project = NULL;
 
-    emit actionsAvailable(true);
-    emit stopAvailable(false);
+    checkAction();
 }
 
 void CompileLogWidget::appendLog(const QString &log)
@@ -48,8 +48,7 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     connect(_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(exitProcess()));
     connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(errorProcess()));
 
-    emit actionsAvailable(false);
-    emit stopAvailable(true);
+    checkAction();
 
     /*QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("PATH", env.value("PATH")+";C:\\altera\\13.1\\quartus\\bin64");
@@ -61,6 +60,46 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     _startProcessDate = QDateTime::currentDateTime();
     _process->setWorkingDirectory(QFileInfo(_project->path()).path());
     _process->start(cmd, args);
+
+    appendLog(QString("process '%1' start at %2...")
+              .arg(_program + " " + _arguments.join(" "))
+              .arg(QDateTime::currentDateTime().toString()));
+}
+
+void CompileLogWidget::checkAction()
+{
+    if(_project == NULL)
+    {
+        emit cleanAvailable(false);
+        emit compileAvailable(false);
+        emit generateAvailable(false);
+        emit sendAvailable(false);
+        emit runAvailable(false);
+        emit stopAvailable(false);
+        return;
+    }
+
+    if(_process)
+    {
+        emit cleanAvailable(false);
+        emit compileAvailable(false);
+        emit generateAvailable(false);
+        emit sendAvailable(false);
+        emit runAvailable(false);
+        emit stopAvailable(true);
+    }
+    else
+    {
+        bool okMakefile = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/Makefile");
+        emit cleanAvailable(okMakefile);
+        emit compileAvailable(okMakefile);
+
+        bool okSof = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/build/output_files/"+_project->name()+".sof");
+        emit sendAvailable(okSof);
+        emit runAvailable(okSof);
+        emit generateAvailable(true);
+        emit stopAvailable(false);
+    }
 }
 
 void CompileLogWidget::readProcess()
@@ -112,8 +151,12 @@ void CompileLogWidget::launchClean()
 
 void CompileLogWidget::launchGenerate()
 {
+    if(!_project->node()->board())
+        _project->configBoard();
+
     if(!_project->saveProject())
         return;
+
     QStringList arguments;
 #if defined(Q_OS_WIN)
     QString program = "cmd";
@@ -159,6 +202,11 @@ void CompileLogWidget::stopAll()
         _process->terminate();
 }
 
+void CompileLogWidget::clear()
+{
+    _textWidget->clear();
+}
+
 void CompileLogWidget::exitProcess()
 {
     appendLog(QString("process '%1' exit with code %2 at %3, elapsed time: %4s")
@@ -167,11 +215,10 @@ void CompileLogWidget::exitProcess()
               .arg(QDateTime::currentDateTime().toString())
               .arg((QDateTime::currentMSecsSinceEpoch() - _startProcessDate.toMSecsSinceEpoch())/1000));
 
-    emit actionsAvailable(true);
-    emit stopAvailable(false);
-
     _process->deleteLater();
     _process = NULL;
+
+    checkAction();
 }
 
 void CompileLogWidget::errorProcess()
@@ -185,16 +232,12 @@ void CompileLogWidget::errorProcess()
     else
         appendLog("failed...");
 
-    emit actionsAvailable(true);
-    emit stopAvailable(false);
+    checkAction();
 }
 
 void CompileLogWidget::updatePath(QString path)
 {
-    if(path.isEmpty())
-        emit actionsAvailable(false);
-    else
-        emit actionsAvailable(true);
+    checkAction();
 }
 
 void CompileLogWidget::setupWidgets()
@@ -222,4 +265,5 @@ void CompileLogWidget::setProject(GPNodeProject *project)
 {
     _project = project;
     connect(project, SIGNAL(nodePathChanged(QString)), this, SLOT(updatePath(QString)));
+    checkAction();
 }

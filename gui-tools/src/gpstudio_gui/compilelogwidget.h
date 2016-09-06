@@ -42,9 +42,14 @@ public:
 
 protected:
     void launch(const QString &cmd, const QStringList &args);
+    void checkAction();
 
 signals:
-    void actionsAvailable(bool available);
+    void generateAvailable(bool available);
+    void cleanAvailable(bool available);
+    void compileAvailable(bool available);
+    void sendAvailable(bool available);
+    void runAvailable(bool available);
     void stopAvailable(bool available);
 
 public slots:
@@ -58,6 +63,7 @@ public slots:
     void launchView();
 
     void stopAll();
+    void clear();
 
 protected slots:
     void exitProcess();

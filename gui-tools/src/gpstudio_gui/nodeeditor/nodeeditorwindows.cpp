@@ -175,6 +175,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addAction(newDocAction);
     nodeMenu->addAction(newDocAction);
     connect(newDocAction, SIGNAL(triggered(bool)), _project, SLOT(newProject()));
+    connect(newDocAction, SIGNAL(triggered(bool)), _compileLog, SLOT(clear()));
 
     QAction *openDocAction = new QAction("&Open",this);
     openDocAction->setStatusTip("Opens a node project");
@@ -262,7 +263,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     makecleanAction->setStatusTip("Removes all intermediary files");
     makecleanAction->setIcon(QIcon(":/icons/img/make-clean.png"));
     connect(makecleanAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchClean()));
-    connect(_compileLog, SIGNAL(actionsAvailable(bool)), makecleanAction, SLOT(setEnabled(bool)));
+    connect(_compileLog, SIGNAL(cleanAvailable(bool)), makecleanAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makecleanAction);
     projectMenu->addAction(makecleanAction);
 
@@ -270,6 +271,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     makegenerateAction->setStatusTip("Generate a synthetisable project");
     makegenerateAction->setIcon(QIcon(":/icons/img/make-generate.png"));
     connect(makegenerateAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchGenerate()));
+    connect(_compileLog, SIGNAL(generateAvailable(bool)), makegenerateAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makegenerateAction);
     projectMenu->addAction(makegenerateAction);
 
@@ -277,7 +279,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     makecompileAction->setStatusTip("Synthetises the HDL project");
     makecompileAction->setIcon(QIcon(":/icons/img/make-compile.png"));
     connect(makecompileAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchCompile()));
-    connect(_compileLog, SIGNAL(actionsAvailable(bool)), makecompileAction, SLOT(setEnabled(bool)));
+    connect(_compileLog, SIGNAL(compileAvailable(bool)), makecompileAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makecompileAction);
     projectMenu->addAction(makecompileAction);
 
@@ -285,7 +287,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     makesendAction->setStatusTip("Programs your camera");
     makesendAction->setIcon(QIcon(":/icons/img/make-send.png"));
     connect(makesendAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchSend()));
-    connect(_compileLog, SIGNAL(actionsAvailable(bool)), makesendAction, SLOT(setEnabled(bool)));
+    connect(_compileLog, SIGNAL(sendAvailable(bool)), makesendAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makesendAction);
     projectMenu->addAction(makesendAction);
 
@@ -293,7 +295,7 @@ void NodeEditorWindows::createToolBarAndMenu()
     makerunAction->setStatusTip("Launch your project on your camera with GPViewer");
     makerunAction->setIcon(QIcon(":/icons/img/run.png"));
     connect(makerunAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchView()));
-    connect(_compileLog, SIGNAL(actionsAvailable(bool)), makerunAction, SLOT(setEnabled(bool)));
+    connect(_compileLog, SIGNAL(runAvailable(bool)), makerunAction, SLOT(setEnabled(bool)));
     _mainToolBar->addAction(makerunAction);
     projectMenu->addAction(makerunAction);
 
