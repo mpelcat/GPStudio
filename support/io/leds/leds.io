@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<io driver="leds" categ="imagesensor" pi_size_addr_rel="2" desc="">
+<io driver="leds" categ="imagesensor" master_count="0" pi_size_addr_rel="2" desc="" configscriptfile="config.php">
   <parts>
     <part name="main">
       <svg width="160" height="110">

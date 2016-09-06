@@ -588,6 +588,22 @@ class Block extends Component
             $att = $xml->createAttribute('desc');
             $att->value = $this->desc;
             $xml_element->appendChild($att);
+            
+            // configscriptfile
+            if (!empty($this->configscriptfile))
+            {
+                $att = $xml->createAttribute('configscriptfile');
+                $att->value = $this->configscriptfile;
+                $xml_element->appendChild($att);
+            }
+            
+            // generatescriptfile
+            if (!empty($this->generatescriptfile))
+            {
+                $att = $xml->createAttribute('generatescriptfile');
+                $att->value = $this->generatescriptfile;
+                $xml_element->appendChild($att);
+            }
         }
         
         // parts
