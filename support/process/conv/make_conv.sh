@@ -57,7 +57,7 @@ gpproc addproperty -n "norm" -t int -v 0
 gpproc setproperty -n "norm" -r 0:8
 gpproc sethelp -n "norm" -v "Normalisation term log2(sum of kernel)"
 gpproc addparam -n "norm_reg" -m "norm.value" -r ${addr}
-gpproc addbitfield -n "norm_reg.norm" -b 4-0 -m "norm.value"
+gpproc addbitfield -n "norm_reg.norm" -b 3-0 -m "norm.value"
 gpproc sethelp -n "norm_reg" -v "Normalisation register"
 
 # filtertype, basic kernels

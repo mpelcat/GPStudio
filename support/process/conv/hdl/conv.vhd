@@ -59,7 +59,7 @@ component conv_process
 		w20_reg_m20           : in std_logic_vector(7 downto 0);
 		w21_reg_m21           : in std_logic_vector(7 downto 0);
 		w22_reg_m22           : in std_logic_vector(7 downto 0);
-		norm_reg_norm         : in std_logic_vector(4 downto 0);
+		norm_reg_norm         : in std_logic_vector(3 downto 0);
 
 		------------------------- in flow -----------------------
 		in_data               : in std_logic_vector(IN_SIZE-1 downto 0);
@@ -93,7 +93,7 @@ component conv_slave
 		w20_reg_m20           : out std_logic_vector(7 downto 0);
 		w21_reg_m21           : out std_logic_vector(7 downto 0);
 		w22_reg_m22           : out std_logic_vector(7 downto 0);
-		norm_reg_norm         : out std_logic_vector(4 downto 0);
+		norm_reg_norm         : out std_logic_vector(3 downto 0);
 
 		--======================= Slaves ========================
 
@@ -117,7 +117,7 @@ end component;
 	signal w20_reg_m20           : std_logic_vector (7 downto 0);
 	signal w21_reg_m21           : std_logic_vector (7 downto 0);
 	signal w22_reg_m22           : std_logic_vector (7 downto 0);
-	signal norm_reg_norm         : std_logic_vector (4 downto 0);
+	signal norm_reg_norm         : std_logic_vector (3 downto 0);
 
 begin
 	conv_process_inst : conv_process

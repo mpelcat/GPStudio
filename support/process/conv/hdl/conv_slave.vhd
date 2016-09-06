@@ -23,7 +23,7 @@ entity conv_slave is
 		w20_reg_m20           : out std_logic_vector(7 downto 0);
 		w21_reg_m21           : out std_logic_vector(7 downto 0);
 		w22_reg_m22           : out std_logic_vector(7 downto 0);
-		norm_reg_norm         : out std_logic_vector(4 downto 0);
+		norm_reg_norm         : out std_logic_vector(3 downto 0);
 
 		--======================= Slaves ========================
 
@@ -64,7 +64,7 @@ architecture rtl of conv_slave is
 	signal w20_reg_m20_reg           : std_logic_vector (7 downto 0);
 	signal w21_reg_m21_reg           : std_logic_vector (7 downto 0);
 	signal w22_reg_m22_reg           : std_logic_vector (7 downto 0);
-	signal norm_reg_norm_reg         : std_logic_vector (4 downto 0);
+	signal norm_reg_norm_reg         : std_logic_vector (3 downto 0);
 
 begin
 	write_reg : process (clk_proc, reset_n)
@@ -81,7 +81,7 @@ begin
 			w20_reg_m20_reg <= "00000000";
 			w21_reg_m21_reg <= "00000000";
 			w22_reg_m22_reg <= "00000000";
-			norm_reg_norm_reg <= "00000";
+			norm_reg_norm_reg <= "0000";
 		elsif(rising_edge(clk_proc)) then
 			if(wr_i='1') then
 				case addr_rel_i is
@@ -108,7 +108,7 @@ begin
 					when std_logic_vector(to_unsigned(W22_REG_REG_ADDR, 4))=>
 						w22_reg_m22_reg <= datawr_i(7) & datawr_i(6) & datawr_i(5) & datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when std_logic_vector(to_unsigned(NORM_REG_REG_ADDR, 4))=>
-						norm_reg_norm_reg <= datawr_i(4) & datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
+						norm_reg_norm_reg <= datawr_i(3) & datawr_i(2) & datawr_i(1) & datawr_i(0);
 					when others=>
 				end case;
 			end if;
@@ -145,7 +145,7 @@ begin
 					when std_logic_vector(to_unsigned(W22_REG_REG_ADDR, 4))=>
 						datard_o <= "000000000000000000000000" & w22_reg_m22_reg(7) & w22_reg_m22_reg(6) & w22_reg_m22_reg(5) & w22_reg_m22_reg(4) & w22_reg_m22_reg(3) & w22_reg_m22_reg(2) & w22_reg_m22_reg(1) & w22_reg_m22_reg(0);
 					when std_logic_vector(to_unsigned(NORM_REG_REG_ADDR, 4))=>
-						datard_o <= "000000000000000000000000000" & norm_reg_norm_reg(4) & norm_reg_norm_reg(3) & norm_reg_norm_reg(2) & norm_reg_norm_reg(1) & norm_reg_norm_reg(0);
+						datard_o <= "0000000000000000000000000000" & norm_reg_norm_reg(3) & norm_reg_norm_reg(2) & norm_reg_norm_reg(1) & norm_reg_norm_reg(0);
 					when others=>
 						datard_o <= (others => '0');
 				end case;

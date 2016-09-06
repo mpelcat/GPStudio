@@ -103,7 +103,7 @@
     </param>
     <param name="norm_reg" regaddr="11" desc="Normalisation register">
       <bitfields>
-        <bitfield name="norm" bitfield="4-0" propertymap="norm.value"/>
+        <bitfield name="norm" bitfield="3-0" propertymap="norm.value"/>
       </bitfields>
     </param>
   </params>

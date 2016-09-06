@@ -27,7 +27,7 @@ entity conv_process is
 		w20_reg_m20            : in std_logic_vector(7 downto 0);
 		w21_reg_m21            : in std_logic_vector(7 downto 0);
 		w22_reg_m22            : in std_logic_vector(7 downto 0);
-		norm_reg_norm          : in std_logic_vector(4 downto 0);
+		norm_reg_norm          : in std_logic_vector(3 downto 0);
 
 		------------------------- in flow -----------------------
 		in_data                : in std_logic_vector(IN_SIZE-1 downto 0);
@@ -83,7 +83,7 @@ end component;
 signal w00, w01, w02 : signed((IN_SIZE-1) downto 0);
 signal w10, w11, w12 : signed((IN_SIZE-1) downto 0);
 signal w20, w21, w22 : signed((IN_SIZE-1) downto 0);
-signal norm : signed((IN_SIZE-1) downto 0);
+signal norm : std_logic_vector(3 downto 0);
 
 -- neighbors extraction
 signal p00, p01, p02 : std_logic_vector((IN_SIZE-1) downto 0);
@@ -99,6 +99,9 @@ signal prod_dv : std_logic;
 
 signal value_data : std_logic_vector((IN_SIZE-1) downto 0);
 signal value_dv : std_logic;
+signal out_fv_s : std_logic;
+
+signal enable_s : std_logic;
 
 begin
 
@@ -121,7 +124,7 @@ begin
 		value_data => value_data,
 		value_dv => value_dv,
 		out_data => out_data,
-		out_fv => out_fv,
+		out_fv => out_fv_s,
 		out_dv => out_dv,
 		enable_i => status_reg_enable_bit,
 		widthimg_i => widthimg_reg_width
@@ -129,12 +132,15 @@ begin
 
 	process (clk_proc, reset_n, matrix_dv)
         variable sum   : signed((WEIGHT_SIZE + IN_SIZE) downto 0);
-        variable normi : integer range 0 to 8;
+
 	begin
 		if(reset_n='0') then
-				
+			enable_s <= '0';
+            prod_dv <= '0';
+            value_dv <= '0';
+
 		elsif(rising_edge(clk_proc)) then
-            if(in_fv='0') then
+            if(in_fv = '0') then
                 w00 <= signed(w00_reg_m00);
                 w01 <= signed(w01_reg_m01);
                 w02 <= signed(w02_reg_m02);
@@ -144,11 +150,16 @@ begin
                 w20 <= signed(w20_reg_m20);
                 w21 <= signed(w21_reg_m21);
                 w22 <= signed(w22_reg_m22);
+                norm <= norm_reg_norm;
+                
+                enable_s <= status_reg_enable_bit;
+                prod_dv <= '0';
+                value_dv <= '0';
             end if;
 
             -- product calculation pipeline stage
-			prod_dv<='0';
-			if(matrix_dv='1') then
+			prod_dv <= '0';
+			if(matrix_dv = '1' and enable_s = '1') then
                 prod00 <= w00 * signed('0' & p00);
                 prod01 <= w01 * signed('0' & p01);
                 prod02 <= w02 * signed('0' & p02);
@@ -162,8 +173,8 @@ begin
 				prod_dv <= '1';
 			end if;
             
-			value_dv<='0';
-			if(prod_dv='1') then
+			value_dv <= '0';
+			if(prod_dv='1' and enable_s = '1') then
                 sum := prod00 + prod01 + prod02 +
                        prod10 + prod11 + prod12 +
                        prod20 + prod21 + prod22;
@@ -171,12 +182,12 @@ begin
                 if (sum(sum'left) = '1') then
                     sum := (others => '0');
                 end if;
-                -- normi <= to_integer (unsigned(norm));
-                -- value_data <= std_logic_vector((sum srl normi)(OUT_SIZE -1  downto 0));
-                value_data <= std_logic_vector(sum(OUT_SIZE -1  downto 0));
+                value_data <= std_logic_vector(shift_right(unsigned(sum), to_integer(unsigned(norm))))(OUT_SIZE -1 downto 0);
 
 				value_dv <= '1';
 			end if;
 		end if;
 	end process;
+
+    out_fv <= enable_s and out_fv_s;
 end rtl;

@@ -151,6 +151,7 @@ begin
 				line1_read <= '0';
 				line1_write <= '0';
                 line_reset <= '1';
+                matrix_dv <= '0';
 
 			else
                 line_reset <= '0';
