@@ -61,6 +61,7 @@ private slots:
     void openNode();
 
     void connectCam();
+    void disconnectCam();
 
     void setBiSpace();
 

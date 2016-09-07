@@ -83,7 +83,14 @@ bool MainWindow::event(QEvent *event)
         {
             if(_cam->com())
             {
-                 _cam->com()->stop();
+                foreach (Block *block, _cam->blocks())
+                {
+                    Property *prop = block->assocProperty()->path("enable");
+                    if(prop)
+                        prop->setValue(false);
+                }
+                QThread::msleep(200);
+                _cam->com()->stop();
             }
         }
     }
@@ -227,6 +234,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     connectCam();
 
     _camExplorerWidget->setCamera(_cam);
+    connect(_cam->com(), SIGNAL(disconnected()), this, SLOT(disconnectCam()));
 }
 
 void MainWindow::connectCam()
@@ -241,10 +249,16 @@ void MainWindow::connectCam()
             if(cameraInfo.isValid())
             {
                 _cam->connectCam(cameraInfo);
+                ui->statusBar->showMessage("camera connected");
             }
         }
         _cam->registermanager().evalAll();
     }
+}
+
+void MainWindow::disconnectCam()
+{
+    ui->statusBar->showMessage("camera disconnected");
 }
 
 void MainWindow::setBiSpace()

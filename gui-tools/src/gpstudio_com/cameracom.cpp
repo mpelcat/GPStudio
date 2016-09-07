@@ -99,6 +99,7 @@ void CameraCom::run()
         if(!succes)
         {
             qDebug()<<"fail";
+            _cameraIO->disconnect();
             emit disconnected();
             terminate();
         }
@@ -190,7 +191,6 @@ void CameraCom::writeParam(const unsigned int addr, const unsigned int value)
     paramFlow.append((char)value);
 
     _paramFlow->send(paramFlow);
-    //qDebug() << "param_trame: "<< byte.toHex();
 }
 
 void CameraCom::writeParam(const unsigned int addr, const unsigned int *data, const unsigned size)

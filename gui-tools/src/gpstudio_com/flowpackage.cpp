@@ -24,12 +24,12 @@
 #include <QDateTime>
 
 FlowPackage::FlowPackage(const QByteArray &data)
-    : _data(data)
+    : _data(data), _newPack(true)
 {
 }
 
 FlowPackage::FlowPackage(const FlowPackage &other)
-    : _data(other._data)
+    : _data(other._data), _newPack(other._newPack)
 {
     // qDebug()<<"copy FLOWDATA"<<other._data.size();
 }
@@ -37,6 +37,7 @@ FlowPackage::FlowPackage(const FlowPackage &other)
 const FlowPackage &FlowPackage::operator=(const FlowPackage &other)
 {
     _data = other._data;
+    _newPack = other._newPack;
     return other;
 }
 
@@ -59,6 +60,8 @@ FlowPackage::FlowPackage(const QImage &image, const int bitCount, const FlowPack
     else
     {
     }
+
+    _newPack = true;
 }
 
 const QByteArray &FlowPackage::data() const
@@ -70,6 +73,7 @@ QByteArray FlowPackage::getPart(const int size)
 {
     QByteArray part = _data.left(size);
     _data.remove(0,size);
+    _newPack = false;
     return part;
 }
 
@@ -126,4 +130,9 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
 QImage *FlowPackage::toImage(const QSize size, const int dataSize) const
 {
     return toImage(size.width(), size.height(), dataSize);
+}
+
+bool FlowPackage::isNewPack() const
+{
+    return _newPack;
 }

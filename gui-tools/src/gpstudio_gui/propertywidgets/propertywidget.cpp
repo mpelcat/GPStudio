@@ -93,7 +93,8 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
     if(widget)
     {
         widget->setLinkedProperty(property);
-        widget->setToolTip(property->modelProperty()->description());
+        if(property->modelProperty())
+            widget->setToolTip(property->modelProperty()->description());
     }
     return widget;
 }

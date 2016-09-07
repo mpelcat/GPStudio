@@ -67,12 +67,13 @@ QByteArray FlowCom::dataToSend(const int size)
     if(size<=4)
         return QByteArray();
 
+    bool newPack = _flowDataToSend.head().isNewPack();
     QByteArray data = _flowDataToSend.head().getPart(size-4);
 
     dataToSend.append(_idFlow);
     if(_flowDataToSend.head().empty())
     {
-        if(_flowDataToSend.head().data().size()<512)
+        if(newPack)
             dataToSend.append(0xBC);    // start + end
         else
         {
@@ -81,7 +82,12 @@ QByteArray FlowCom::dataToSend(const int size)
         }
     }
     else
-        dataToSend.append(0xAA);    // start
+    {
+        if(newPack)
+            dataToSend.append(0xAA);    // start
+        else
+            dataToSend.append(0xCC);    // middle
+    }
 
     dataToSend.append((unsigned char)_numPacket);
     dataToSend.append((unsigned char)_numPacket/256);

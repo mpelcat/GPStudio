@@ -49,8 +49,11 @@ public:
     QImage *toImage(const int width, const int height, const int dataSize) const;
     QImage *toImage(const QSize size, const int dataSize) const;
 
+    bool isNewPack() const;
+
 private:
     QByteArray _data;
+    bool _newPack;
 };
 
 Q_DECLARE_METATYPE(FlowPackage)
