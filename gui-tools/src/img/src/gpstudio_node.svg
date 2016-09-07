@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="155" height="155" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+    <defs>
+        <filter id="f1" x="0" y="0">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+        </filter>
+    </defs>
+    <path d="M10 45 L60 75 L60 25 L125 25 L125 125 L60 125 L60 80 L10 110 Z" fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" transform="translate(10,15) scale(1,0.8)"/>
+    
+    
+    <g transform="translate(75,105) scale(0.02,-0.02)" stroke="none">
+        <path class="node" id="node1" d="M2025 2880 c-317 -40 -586 -299 -635 -610 -46 -300 68 -570 315 -745
+        125 -88 248 -125 421 -125 171 0 293 38 429 135 156 111 261 272 300 462 16
+        77 10 115 -21 127 -23 9 -103 -35 -450 -247 l-45 -27 -67 38 c-37 21 -111 63
+        -164 92 l-98 53 0 188 0 188 83 49 c45 26 160 93 255 147 185 106 203 125 166
+        166 -67 75 -320 131 -489 109z" fill="orange"></path>
+        <path class="node" id="node2" d="M738 1233 c-416 -418 -581 -589 -592 -617 -21 -51 -20 -122 3 -171
+        22 -47 244 -269 285 -284 39 -15 131 -14 170 3 21 9 253 233 616 596 320 320
+        580 583 578 585 -1 1 -20 10 -40 18 -67 28 -172 104 -242 175 -76 77 -113 128
+        -157 215 -16 31 -33 57 -37 57 -4 0 -267 -260 -584 -577z m-47 -506 c42 -36
+        53 -76 34 -123 -30 -76 -109 -96 -168 -44 -39 33 -49 67 -36 114 20 71 115
+        100 170 53z" fill="orange"></path>
+    </g>
+    <g transform="translate(75,105) scale(0.02,-0.02)" stroke="none">
+
+    <path class="node" id="node4" d="M557 727 c-31 -25 -47 -71 -40 -111 7 -37 66 -86 104 -86 73 0 133 80 108 144 -29 73 -115 100 -172 53z" fill="orange"></path>
+    </g>
+</svg>

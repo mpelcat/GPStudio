@@ -49,6 +49,7 @@ MainWindow::MainWindow(QStringList args) :
 {
     _cam = NULL;
 
+    setWindowIcon(QIcon(":/img/img/gpstudio_viewer.ico"));
     ui->setupUi(this);
 
     createDocks();

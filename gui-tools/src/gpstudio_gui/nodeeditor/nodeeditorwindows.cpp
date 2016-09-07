@@ -41,6 +41,8 @@
 NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject) :
     QMainWindow(parent)
 {
+    setWindowIcon(QIcon(":/img/img/gpstudio_node.ico"));
+
     if(nodeProject)
         _project = nodeProject;
     else

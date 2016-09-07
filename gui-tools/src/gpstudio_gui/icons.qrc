@@ -22,4 +22,9 @@
         <file>../img/make-send.png</file>
         <file>../img/stop.png</file>
     </qresource>
+    <qresource prefix="/img">
+        <file>../img/gpstudio_node.ico</file>
+        <file>../img/gpstudio_viewer.ico</file>
+        <file>../img/gpstudio_node.ico</file>
+    </qresource>
 </RCC>

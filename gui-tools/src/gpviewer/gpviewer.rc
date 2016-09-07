@@ -1,0 +1,14 @@
+IDI_ICON1               ICON    DISCARDABLE     "../img/gpstudio_viewer.ico"
+
+BLOCK "StringFileInfo"
+BEGIN
+	BLOCK "040904b0"
+	BEGIN
+		VALUE "CompanyName", "Institut Pascal\0"
+		VALUE "FileDescription", "Viewer and debuger for FPGA based smart camera\0"
+		VALUE "FileVersion", "1.10\0"
+		VALUE "InternalName", "gpviewer\0"
+		VALUE "ProductName", "gpviewer-1.10\0"
+		VALUE "ProductVersion", "v1.10\0"
+	END
+END

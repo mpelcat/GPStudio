@@ -14,6 +14,8 @@
 BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
 {
+    setWindowIcon(QIcon(":/img/img/gpstudio_block.ico"));
+
     _filesModel = new QStandardItemModel();
     setupWidgets();
     createToolBarAndMenu();
