@@ -25,6 +25,6 @@
     <qresource prefix="/img">
         <file>../img/gpstudio_node.ico</file>
         <file>../img/gpstudio_viewer.ico</file>
-        <file>../img/gpstudio_node.ico</file>
+        <file>../img/gpstudio_block.ico</file>
     </qresource>
 </RCC>
