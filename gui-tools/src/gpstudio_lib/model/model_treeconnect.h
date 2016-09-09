@@ -24,6 +24,7 @@
 #include "gpstudio_lib_common.h"
 
 #include <QString>
+#include <QStringList>
 #include <QList>
 #include <QDomElement>
 

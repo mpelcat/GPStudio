@@ -90,7 +90,10 @@ bool MainWindow::event(QEvent *event)
                     if(prop)
                         prop->setValue(false);
                 }
-                QThread::msleep(200);
+                QWaitCondition wc;
+                QMutex mutex;
+                QMutexLocker locker(&mutex);
+                wc.wait(&mutex, 200);
                 _cam->com()->stop();
             }
         }
