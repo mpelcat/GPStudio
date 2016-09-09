@@ -1,5 +1,11 @@
 # GPStudio installation
 
+Important, if you are using a zip or tar package, you need to add the
+bin directory to your PATH. On windows, add also thirdparts/ and 
+thirdparts/php.
+
+You may need a distribution of quartus 13.1 for dreamcam.
+
 ## Dependencies
 
 * make (with bin in your path) to generate your projects

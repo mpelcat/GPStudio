@@ -15,6 +15,12 @@ a binary package from <http://gpstudio.univ-bpclermont.fr/download>.
 
 For installing, follow instructions given in [INSTALL.md](INSTALL.md)
 
+Important, if you are using a zip or tar package, you need to add the
+bin directory to your PATH. On windows, add also thirdparts/ and 
+thirdparts/php.
+
+You may need a distribution of quartus 13.1 for dreamcam.
+
 ## Tools
 GPStudio is composed by a set of command line and graphical tools.
 
