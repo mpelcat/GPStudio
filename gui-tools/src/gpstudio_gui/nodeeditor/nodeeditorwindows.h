@@ -30,7 +30,7 @@
 #include "itemsview/blockview.h"
 #include "itemmodel/libtreeview.h"
 #include "compilelogwidget.h"
-#include "camexplorerwidget.h"
+#include "viewer/camexplorerwidget.h"
 
 #include "blockeditor/blockeditorwindow.h"
 

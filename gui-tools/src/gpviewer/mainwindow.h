@@ -28,7 +28,7 @@
 
 #include "camera/camera.h"
 #include "flowviewerwidget/flowviewerwidget.h"
-#include "camexplorerwidget.h"
+#include "viewer/camexplorerwidget.h"
 #include "lib_parser/lib.h"
 
 #include "../../thirdparts/hexedit/qhexedit.h"
