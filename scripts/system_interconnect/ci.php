@@ -48,7 +48,7 @@ class ClockInterconnect extends Block
         $this->driver = "ci";
     }
 
-    protected function parse_xml($xml)
+    protected function parse_xml($xml=NULL, $dummy2=NULL)
     {
         if (isset($xml->clock_interconnect))
         {

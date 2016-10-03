@@ -84,7 +84,7 @@ class FlowInterconnect extends Block
         return $str;
     }
 
-    protected function parse_xml($xml)
+    protected function parse_xml($xml=NULL, $dummy2=NULL)
     {
         if (isset($xml->flow_interconnect))
         {

@@ -176,7 +176,7 @@ class Toolchain
      * @param string $type Type of ressource requested.
      * @return array
      */
-    function getRessourceDeclare($type)
+    function getRessourceDeclare($type, $params)
     {
         // must be re implemented by childrens
         $declare = '';

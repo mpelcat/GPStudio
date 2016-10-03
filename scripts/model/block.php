@@ -456,7 +456,7 @@ class Block extends Component
      * SimpleXMLElement $xml xml element to parse need to be specified in
      * members before to call this function
      */
-    protected function parse_xml()
+    protected function parse_xml($dummy=NULL, $dummy2=NULL)
     {
         parent::parse_xml();
 

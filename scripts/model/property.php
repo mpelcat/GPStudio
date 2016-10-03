@@ -293,7 +293,7 @@ class Property
             if (!empty($this->onchange))
             {
                 $att = $xml->createAttribute('onchange');
-                $att->value = $this->onchange;
+                $att->value = htmlentities($this->onchange);
                 $xml_element->appendChild($att);
             }
 

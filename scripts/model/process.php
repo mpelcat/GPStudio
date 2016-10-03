@@ -175,7 +175,7 @@ class Process extends Block
      * @brief internal function to fill this instance from input xml structure
      * @param SimpleXMLElement $process_node_element element from io in lib
      */
-    protected function parse_xml($process_node_element)
+    protected function parse_xml($process_node_element=NULL, $dummy=NULL)
     {
         $this->xml = $process_node_element;
         parent::parse_xml();

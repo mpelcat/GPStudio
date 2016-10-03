@@ -142,7 +142,7 @@ class IO extends Block
      * @param SimpleXMLElement $io_device_element element from io in lib
      * @param SimpleXMLElement $io_node_element element from the node
      */
-    protected function parse_xml($io_device_element, $io_node_element)
+    protected function parse_xml($io_device_element=NULL, $io_node_element=NULL)
     {
         parent::parse_xml();
         $this->driver = (string) $this->xml['driver'];
