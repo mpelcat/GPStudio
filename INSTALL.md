@@ -16,6 +16,10 @@ supported) for GUI tools
 * quartus (with bin in your path) if you want to use atlera branded FPGA
 * libusb for USB camera comunication
 
+For PHP7, you need to install : php7.0-mbstring php7.0-zip php7.0-xml
+
+    sudo apt-get install php7.0-mbstring php7.0-zip php7.0-xml
+
 Optionnal :
 
 * graphviz (optional) to draw process connection in command line mode with dot
