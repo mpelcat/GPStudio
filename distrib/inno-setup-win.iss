@@ -20,6 +20,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
+DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=.
 OutputBaseFilename=setup-gpstudio_win64-qt5-v{#MyAppVersion}
@@ -29,6 +30,7 @@ ArchitecturesInstallIn64BitMode=x64
 Uninstallable=yes
 LicenseFile=gpstudio_win64-qt5\license.txt
 ChangesEnvironment=yes
+PrivilegesRequired=admin
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -46,7 +48,11 @@ Source: "gpstudio_win64-qt5\bin\gpnode_gui.exe"; DestDir: "{app}\bin"; Flags: ig
 Source: "gpstudio_win64-qt5\bin\gpviewer.exe"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\*.dll"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "gpstudio_win64-qt5\bin\platforms\*.dll"; DestDir: "{app}\bin\platforms"; Flags: ignoreversion
-Source: "gpstudio_win64-qt5\bin\*.bat"; DestDir: "{app}\bin"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\bin\*.bat"; DestDir: "{app}\bin"; Flags: ignoreversion     
+Source: "gpstudio_win64-qt5\bin\iconengines\*"; DestDir: "{app}\bin\iconengines"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\bin\imageformats\*"; DestDir: "{app}\bin\imageformats"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\bin\platforms\*"; DestDir: "{app}\bin\platforms"; Flags: ignoreversion
+Source: "gpstudio_win64-qt5\bin\translations\*"; DestDir: "{app}\bin\translations"; Flags: ignoreversion
 
 ; doc files
 Source: "gpstudio_win64-qt5\doc\*.pdf"; DestDir: "{app}\doc"; Flags: ignoreversion
