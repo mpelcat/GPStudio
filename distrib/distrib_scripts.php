@@ -97,7 +97,10 @@ function distrib_bin($mainoutpath, $system, $archi, $qtver)
         copy_with_rights(LIB_PATH . "bin" . DIRECTORY_SEPARATOR . "gpproc.bat", $mainoutpath . "bin" . DIRECTORY_SEPARATOR . "gpproc.bat");
         copy_with_rights(LIB_PATH . "setenv.bat", $mainoutpath . "setenv.bat");
         copy_with_rights(LIB_PATH . "install.bat", $mainoutpath . "setenv.bat");
-        copy_with_rights(LIB_PATH . "license.txt", $mainoutpath . "licence.txt");
+        copy_with_rights(LIB_PATH . "license.txt", $mainoutpath . "license.txt");
+        copy_with_rights(LIB_PATH . "README.md", $mainoutpath . "readme.txt");
+        copy_with_rights(LIB_PATH . "INSTALL.md", $mainoutpath . "install.txt");
+        copy_with_rights(LIB_PATH . "CHANGELOG.md", $mainoutpath . "changelog.txt");
     }
     else
     {
@@ -107,7 +110,10 @@ function distrib_bin($mainoutpath, $system, $archi, $qtver)
         copy_with_rights(LIB_PATH . "bin" . DIRECTORY_SEPARATOR . "gpproc", $mainoutpath . "bin" . DIRECTORY_SEPARATOR . "gpproc");
         copy_with_rights(LIB_PATH . "setenv.sh", $mainoutpath . "setenv.sh");
         copy_with_rights(LIB_PATH . "install.sh", $mainoutpath . "install.sh");
-        copy_with_rights(LIB_PATH . "license.txt", $mainoutpath . "licence.txt");
+        copy_with_rights(LIB_PATH . "license.txt", $mainoutpath . "license.txt");
+        copy_with_rights(LIB_PATH . "README.md", $mainoutpath . "README.md");
+        copy_with_rights(LIB_PATH . "INSTALL.md", $mainoutpath . "INSTALL.md");
+        copy_with_rights(LIB_PATH . "CHANGELOG.md", $mainoutpath . "CHANGELOG.md");
         
         copy_with_rights(LIB_PATH . "share" . DIRECTORY_SEPARATOR . "gpnode_completion", $mainoutpath . "gpnode_completion");
         copy_with_rights(LIB_PATH . "share" . DIRECTORY_SEPARATOR . "gplib_completion", $mainoutpath . "gplib_completion");

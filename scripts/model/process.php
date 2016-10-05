@@ -45,6 +45,8 @@ class Process extends Block
     {
         parent::__construct();
 
+        $process_file = "";
+
         if (is_object($process_node_element) and get_class($process_node_element) === 'SimpleXMLElement')
         {
             $inlib = false;
@@ -65,11 +67,6 @@ class Process extends Block
                 $this->name = $this->driver;
             else
                 $this->name = (string) $process_node_element['name'];
-
-            if (isset($process_node_element['x_pos']))
-                $this->x_pos = (int) $process_node_element['x_pos'];
-            if (isset($process_node_element['y_pos']))
-                $this->y_pos = (int) $process_node_element['y_pos'];
 
             $this->in_lib = $inlib;
             if ($this->in_lib)
@@ -117,6 +114,20 @@ class Process extends Block
                     $this->parse_xml($process_node_element);
                 }
             }
+
+            if (isset($process_node_element['x_pos']) or isset($process_node_element['y_pos']))
+            {
+                if (count($this->parts)>0)
+                    $part = $this->parts[0];
+                else
+                {
+                    $part = new ComponentPart();
+                    $part->name = "main";
+                    $this->addPart($part);
+                }
+                $part->x_pos = (int) $process_node_element['x_pos'];
+                $part->y_pos = (int) $process_node_element['y_pos'];
+            }
         }
         elseif (is_string($process_node_element))
         {
@@ -149,14 +160,22 @@ class Process extends Block
             // nothing to do
         }
 
-        unset($this->xml);
+        if ($process_file != "" and $this->getFile(basename($process_file)) == NULL)
+        {
+            $file_config = new File();
+            $file_config->name = basename($process_file);
+            $file_config->path = getRelativePath($process_file, $this->path);
+            $file_config->type = "proc";
+            $file_config->group = "blockdef";
+            $this->addFile($file_config);
+        }
     }
 
     /**
      * @brief internal function to fill this instance from input xml structure
      * @param SimpleXMLElement $process_node_element element from io in lib
      */
-    protected function parse_xml($process_node_element)
+    protected function parse_xml($process_node_element=NULL, $dummy=NULL)
     {
         $this->xml = $process_node_element;
         parent::parse_xml();

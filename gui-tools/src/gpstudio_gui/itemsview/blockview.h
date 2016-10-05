@@ -65,31 +65,41 @@ protected:
     void setZoomLevel(int step);
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
+
+#ifndef QT_NO_CONTEXTMENU
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+#endif // QT_NO_CONTEXTMENU
+
 protected slots:
     void updateSelection();
 
 public slots:
-    void selectBlock(const Block *block);
+    void selectBlock(QString blockName);
     void changeNode(ModelNode *node);
 
     void updateBlock(ModelBlock *block);
     void addBlock(ModelBlock *block);
-    void removeBlock(ModelBlock *block);
-    void connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void removeBlock(const QString &block_name);
+    void connectBlock(const ModelFlowConnect &flowConnect);
+    void disconnectBlock(const ModelFlowConnect &flowConnect);
 
     void zoomIn();
     void zoomOut();
     void zoomFit();
 
 signals:
-    void blockDetailsRequest(const Block *block);
-    void blockSelected(const Block *block);
+    void blockDetailsRequest(QString blockName);
+    void blockSelected(QString blockName);
 
-    void blockMoved(ModelBlock *block, QPoint newPos);
+    void blockAdded(const QString driver, const QPoint pos);
+    void blockRenamed(const QString block_name, const QString newName);
+    void blockMoved(const QString block_name, const QString part_name, const QPoint oldPos, const QPoint newPos);
     void blockDeleted(ModelBlock *block);
-    void blockPortConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void blockPortDisconnected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockPortConnected(ModelFlowConnect flowConnect);
+    void blockPortDisconnected(ModelFlowConnect flowConnect);
+
+    void beginMacroAsked(QString text);
+    void endMacroAsked();
 
 private:
     GPNodeProject *_project;
@@ -97,7 +107,11 @@ private:
     BlockScene *_scene;
     bool _editMode;
 
+    QPointF _refDrag;
+    QPointF _centerDrag;
+
     // connector system
+    QGraphicsRectItem *_rectSelect;
     BlockPortItem *_startConnectItem;
     BlockConnectorItem *_lineConector;
 };

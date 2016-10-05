@@ -41,12 +41,15 @@
 #include "itemmodel/cameraitemmodel.h"
 #include "itemmodel/propertyitemmodel.h"
 
+#include <QMessageBox>
+
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
     ui(new Ui::MainWindow)
 {
     _cam = NULL;
 
+    setWindowIcon(QIcon(":/img/img/gpstudio_viewer.ico"));
     ui->setupUi(this);
 
     createDocks();
@@ -81,7 +84,17 @@ bool MainWindow::event(QEvent *event)
         {
             if(_cam->com())
             {
-                 _cam->com()->stop();
+                foreach (Block *block, _cam->blocks())
+                {
+                    Property *prop = block->assocProperty()->path("enable");
+                    if(prop)
+                        prop->setValue(false);
+                }
+                QWaitCondition wc;
+                QMutex mutex;
+                QMutexLocker locker(&mutex);
+                wc.wait(&mutex, 200);
+                _cam->com()->stop();
             }
         }
     }
@@ -112,6 +125,13 @@ void MainWindow::createToolBarAndMenu()
     ui->mainToolBar->addAction(connectAction);
     nodeMenu->addAction(connectAction);
     connect(connectAction, SIGNAL(triggered()), this, SLOT(connectCam()));
+
+    nodeMenu->addSeparator();
+    QAction *exit = new QAction("E&xit",this);
+    exit->setIcon(QIcon(":/icons/img/exit.png"));
+    exit->setShortcut(QKeySequence::Quit);
+    nodeMenu->addAction(exit);
+    connect(exit, SIGNAL(triggered()), this, SLOT(close()));
 
     // ============= View =============
     QMenu *viewMenu = ui->menuBar->addMenu("&View");
@@ -154,7 +174,15 @@ void MainWindow::createToolBarAndMenu()
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(updateWindowsMenu()));
 
     // ============= Help =============
-    /*QMenu *helpMenu =*/ ui->menuBar->addMenu("&Help");
+    QMenu *helpMenu = menuBar()->addMenu("&Help");
+
+    QAction *aboutAction = new QAction("&About", this);
+    connect(aboutAction, SIGNAL(triggered(bool)), this, SLOT(about()));
+    helpMenu->addAction(aboutAction);
+
+    QAction *aboutQtAction = new QAction("About &Qt", this);
+    connect(aboutQtAction, SIGNAL(triggered(bool)), this, SLOT(aboutQt()));
+    helpMenu->addAction(aboutQtAction);
 
     ui->mainToolBar->addSeparator();
 }
@@ -210,6 +238,7 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     connectCam();
 
     _camExplorerWidget->setCamera(_cam);
+    connect(_cam->com(), SIGNAL(disconnected()), this, SLOT(disconnectCam()));
 }
 
 void MainWindow::connectCam()
@@ -224,14 +253,22 @@ void MainWindow::connectCam()
             if(cameraInfo.isValid())
             {
                 _cam->connectCam(cameraInfo);
+                ui->statusBar->showMessage("camera connected");
             }
         }
+        _cam->registermanager().evalAll();
     }
+}
+
+void MainWindow::disconnectCam()
+{
+    ui->statusBar->showMessage("camera disconnected");
 }
 
 void MainWindow::setBiSpace()
 {
-    if(!_cam) return;
+    if(!_cam)
+        return;
     _piSpaceHex->setData(_cam->registerData());
 }
 
@@ -262,13 +299,13 @@ void MainWindow::updateWindowsMenu()
     }
 }
 
-void MainWindow::showBlockDetails(const Block *block)
+void MainWindow::showBlockDetails(QString blockName)
 {
-    if(!block)
+    if(blockName.isEmpty())
         return;
     if(_blockEditor)
         delete _blockEditor;
-    _blockEditor = new BlockEditorWindow (this, block->modelBlock());
+    _blockEditor = new BlockEditorWindow (this, _cam->block(blockName)->modelBlock());
     _blockEditor->show();
 }
 
@@ -302,11 +339,36 @@ void MainWindow::setupViewers()
     if(_cam)
         _blocksView->loadFromCam(_cam);
     QMdiSubWindow * windows = ui->mdiArea->addSubWindow(_blocksView);
-    connect(_blocksView, SIGNAL(blockSelected(const Block*)), _camExplorerWidget, SLOT(selectBlock(const Block*)));
-    connect(_camExplorerWidget, SIGNAL(blockSelected(const Block*)), _blocksView, SLOT(selectBlock(const Block*)));
-    connect(_blocksView, SIGNAL(blockDetailsRequest(const Block*)), this, SLOT(showBlockDetails(const Block*)));
+    connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
+    connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
+    connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
     windows->setWindowTitle("Blocks view");
     windows->show();
 
     ui->mdiArea->tileSubWindows();
+}
+
+void MainWindow::about()
+{
+    QMessageBox::about(this,"GPStudio: GPViewer 1.10","Copyright (C) 2016 Dream IP\n\
+\n\
+This sofware is part of GPStudio.\n\
+\n\
+GPStudio is a free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program.  If not, see <http://www.gnu.org/licenses/>\n.");
+}
+
+void MainWindow::aboutQt()
+{
+    QMessageBox::aboutQt(this);
 }

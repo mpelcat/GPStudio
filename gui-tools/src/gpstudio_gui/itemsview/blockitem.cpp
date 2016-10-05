@@ -42,10 +42,13 @@
 BlockItem::BlockItem()
 {
     _block = NULL;
+    _modelPart = NULL;
+    _modelBlock = NULL;
 
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
+    setCacheMode(QGraphicsItem::NoCache);
 
     update();
 }
@@ -61,7 +64,7 @@ int BlockItem::type() const
 
 QRectF BlockItem::boundingRect() const
 {
-    return _boundingRect.adjusted(-2,-2,2,15);
+    return _boundingRect.adjusted(-2,-2,2,20);
 }
 
 void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -69,34 +72,35 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(option); Q_UNUSED(widget);
 
     if(isSelected())
-        painter->setPen(QPen(QColor("orange"), 3));
-    else
-        painter->setPen(QPen(Qt::black, 1));
-
-    if(_svgRenderer.isValid())
     {
-        _svgRenderer.render(painter, _svgRenderer.viewBox());
-        painter->drawRect(_svgRenderer.viewBox());
+        if(_modelBlock->isIO())
+            painter->setPen(QPen(Qt::red, 3, Qt::DashLine));
+        else
+            painter->setPen(QPen(QColor("orange"), 3));
     }
     else
     {
+        if(_modelBlock->isIO())
+            painter->setPen(QPen(Qt::darkRed, 1, Qt::DashLine));
+        else
+            painter->setPen(QPen(Qt::black, 1));
+    }
+
+    if(_svgRenderer.isValid())
+    {
+        _svgRenderer.render(painter, _boundingRect);
+        painter->drawRoundedRect(_boundingRect,2,2);
+    }
+    else
+    {
+        painter->setBrush(Qt::white);
         painter->drawRect(QRect(0,0,125,50));
     }
 
     // block name
     painter->setPen(QPen(Qt::black, 1));
-    QRectF textRect = QRectF(_boundingRect.x(), _boundingRect.height(), _boundingRect.width(), 15);
+    QRectF textRect = QRectF(0, _boundingRect.height(), _boundingRect.width(), painter->fontMetrics().height() + 3);
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignBottom, _name);
-}
-
-QString BlockItem::processName() const
-{
-    return _processName;
-}
-
-void BlockItem::setProcessName(const QString &processName)
-{
-    _processName = processName;
 }
 
 QString BlockItem::name() const
@@ -107,6 +111,9 @@ QString BlockItem::name() const
 void BlockItem::setName(const QString &name)
 {
     _name = name;
+    update();
+    foreach (BlockPortItem *port, _ports)
+        port->setBlockName(_name);
 }
 
 Block *BlockItem::block() const
@@ -116,14 +123,24 @@ Block *BlockItem::block() const
 
 void BlockItem::updateBlock()
 {
+    _svgRenderer.load(_modelPart->draw().toUtf8());
+
     if(_svgRenderer.isValid())
-    {
         _boundingRect = _svgRenderer.viewBoxF();
-    }
     else
-    {
         _boundingRect = QRectF(0,0,125,50);
-    }
+    _boundingRect.setX(0);
+    _boundingRect.setY(0);
+
+    float ratioW = 1;
+    float ratioH = 1;
+    if(_boundingRect.width()>300)
+        ratioW = 300.0/_boundingRect.width();
+    if(_boundingRect.height()>200)
+        ratioH = 200.0/_boundingRect.height();
+    float ratio = qMin(ratioW, ratioH);
+    _boundingRect.setWidth(_boundingRect.width()*ratio);
+    _boundingRect.setHeight(_boundingRect.height()*ratio);
 
     // port placement
     int inCount=0, outCount=0;
@@ -146,7 +163,8 @@ void BlockItem::updateBlock()
 
 void BlockItem::updatePos()
 {
-    setPos(_modelBlock->pos());
+    if(_modelPart)
+        setPos(_modelPart->pos());
     foreach (BlockPortItem *portItem, _ports)
     {
         foreach (BlockConnectorItem *connectItem, portItem->connects())
@@ -159,6 +177,7 @@ void BlockItem::updatePos()
 void BlockItem::addPort(BlockPortItem *portItem)
 {
     portItem->setParentItem(this);
+    portItem->setBlockName(_name);
     _ports.insert(portItem->name(), portItem);
 }
 
@@ -195,83 +214,72 @@ ModelBlock *BlockItem::modelBlock() const
     return _modelBlock;
 }
 
-BlockItem *BlockItem::fromIoLib(const IOLib *ioLib, BlockItem *item)
+ModelComponentPart *BlockItem::modelPart() const
 {
-    if(!ioLib)
-        return NULL;
-
-    if(!item)
-        item = new BlockItem();
-
-    item->_svgRenderer.load(ioLib->draw().toUtf8());
-    item->setName(ioLib->name());
-    item->updateBlock();
-
-    return item;
+    return _modelPart;
 }
 
-BlockItem *BlockItem::fromProcessLib(const ProcessLib *processLib, BlockItem *item)
+QList<BlockItem *> BlockItem::fromModelBlock(ModelBlock *modelBlock)
 {
-    if(!processLib)
-        return NULL;
-
-    if(!item)
-        item = new BlockItem();
-
-    item->_svgRenderer.load(processLib->draw().toUtf8());
-    item->setName(processLib->name());
-    item->updateBlock();
-
-    return item;
-}
-
-BlockItem *BlockItem::fromModelBlock(ModelBlock *modelBlock, BlockItem *item)
-{
+    QList<BlockItem *> list;
     if(!modelBlock)
+        return list;
+
+    foreach (ModelComponentPart *part, modelBlock->parts())
+    {
+        BlockItem *item = fromModelComponentPart(part);
+        if(item)
+        {
+            item->_modelBlock = modelBlock;
+            list.append(item);
+        }
+    }
+
+    return list;
+}
+
+BlockItem *BlockItem::fromModelComponentPart(ModelComponentPart *modelPart)
+{
+    if(!modelPart)
         return NULL;
 
-    if(modelBlock->type()=="process")
+    BlockItem *item = new BlockItem();
+
+    item->setPos(modelPart->pos());
+    if(modelPart->parent())
+        item->setName(modelPart->parent()->name());
+    item->_modelPart = modelPart;
+
+    foreach (ModelFlow *flow, modelPart->parent()->flows())
     {
-        item = fromProcessLib(Lib::getLib().process(modelBlock->driver()));
+        if(modelPart->getFlow(flow->name()) || modelPart->flows().size()==0)
+            item->addPort(BlockPortItem::fromModelFlow(flow));
     }
-    else
-    {
-        item = fromIoLib(Lib::getLib().io(modelBlock->driver()));
-    }
-
-    if(!item)
-        item = new BlockItem();
-
-    foreach (ModelFlow *flow, modelBlock->flows())
-        item->addPort(BlockPortItem::fromModelFlow(flow));
-
-    item->setPos(modelBlock->pos());
-    item->setName(modelBlock->name());
-
-    item->_modelBlock = modelBlock;
 
     item->updateBlock();
 
     return item;
 }
 
-BlockItem *BlockItem::fromBlock(Block *block, BlockItem *item)
+QList<BlockItem *> BlockItem::fromBlock(Block *block)
 {
-    if(!item)
-        item = BlockItem::fromModelBlock(block->modelBlock());
+    QList<BlockItem *> list = fromModelBlock(block->modelBlock());
 
-    Property *propertyEnable = NULL;
-    propertyEnable = block->assocProperty()->path("enable");
-    if(propertyEnable)
+    foreach (BlockItem * item, list)
     {
-        QWidget *propertyEnableWidget = PropertyWidget::getWidgetFromProperty(propertyEnable);
-        QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
-        propertyEnableWidget->setGeometry(5,5,50,20);
-        propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
-        proxy->setWidget(propertyEnableWidget);
+        Property *propertyEnable = NULL;
+        propertyEnable = block->assocProperty()->path("enable");
+        if(propertyEnable)
+        {
+            QWidget *propertyEnableWidget = PropertyWidget::getWidgetFromProperty(propertyEnable);
+            QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
+            propertyEnableWidget->setGeometry(5,5,50,20);
+            propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
+            proxy->setWidget(propertyEnableWidget);
+        }
+
+        item->_block = block;
     }
 
-    item->_block = block;
-
-    return item;
+    return list;
 }

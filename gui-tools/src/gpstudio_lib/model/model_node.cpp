@@ -28,7 +28,8 @@
 #include "model_fiblock.h"
 #include "model_piblock.h"
 
-ModelNode::ModelNode()
+ModelNode::ModelNode(const QString &name)
+    : _name(name)
 {
     _valid = false;
     _board = NULL;
@@ -48,6 +49,19 @@ const QString &ModelNode::name() const
 void ModelNode::setName(const QString &name)
 {
     _name = name;
+}
+
+ModelBoard *ModelNode::board() const
+{
+    return _board;
+}
+
+void ModelNode::setBoard(ModelBoard *board)
+{
+    if(_board)
+        delete _board;
+    board->setParent(this);
+    _board = board;
 }
 
 bool ModelNode::isValid() const
@@ -79,10 +93,36 @@ void ModelNode::addBlock(ModelBlock *block)
     block->setNode(this);
 }
 
+void ModelNode::addBlock(QList<ModelBlock *> blocks)
+{
+    foreach (ModelBlock *block, blocks)
+    {
+        addBlock(block);
+    }
+}
+
 void ModelNode::removeBlock(ModelBlock *block)
 {
     _blocks.removeOne(block);
-    block->setNode(NULL);
+    //block->setNode(NULL);
+}
+
+void ModelNode::removeBlock(const QString &block_name)
+{
+    ModelBlock *block = getBlock(block_name);
+    if(block)
+        removeBlock(block);
+}
+
+QStringList ModelNode::iosList()
+{
+    QStringList ios;
+    foreach (ModelBlock *block, _blocks)
+    {
+        if(block->isIO())
+            ios.append(block->name());
+    }
+    return ios;
 }
 
 ModelFIBlock *ModelNode::getFIBlock() const
@@ -90,7 +130,7 @@ ModelFIBlock *ModelNode::getFIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="fi")
+        if(block->type()==ModelBlock::FI)
             return (ModelFIBlock*)block;
     }
     return NULL;
@@ -101,7 +141,7 @@ ModelCIBlock *ModelNode::getCIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="ci")
+        if(block->type()==ModelBlock::CI)
             return (ModelCIBlock*)block;
     }
     return NULL;
@@ -112,7 +152,7 @@ ModelPIBlock *ModelNode::getPIBlock() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="pi")
+        if(block->type()==ModelBlock::PI)
             return (ModelPIBlock*)block;
     }
     return NULL;
@@ -123,7 +163,7 @@ ModelIOCom *ModelNode::getIOCom() const
     for(int i=0; i<this->blocks().size(); i++)
     {
         ModelBlock *block = this->blocks().at(i);
-        if(block->type()=="iocom")
+        if(block->type()==ModelBlock::IOCom)
             return (ModelIOCom*)block;
     }
     return NULL;
@@ -160,10 +200,15 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
 
     element.setAttribute("name", _name);
 
+    if(_board!=NULL)
+    {
+        element.appendChild(_board->toXMLElement(doc));
+    }
+
     QDomElement processList = doc.createElement("process");
     foreach (ModelBlock *process, blocks())
     {
-        if(process->type()=="process")
+        if(process->type()==ModelBlock::Process)
         {
             processList.appendChild(process->toXMLElement(doc));
         }
@@ -209,11 +254,11 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->_board==NULL)
-                    node->_board = ModelBoard::fromNodeGenerated(e);
+                if(node->board()==NULL)
+                    node->setBoard(ModelBoard::fromNodeGenerated(e));
             }
             if(e.tagName()=="blocks")
-                node->_blocks.append(ModelBlock::listFromNodeGenerated(e));
+                node->addBlock(ModelBlock::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -235,29 +280,24 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->_board==NULL)
+                if(node->board()==NULL)
                 {
-                    node->_board = ModelBoard::fromNodeDef(e);
-                    node->_blocks.append(ModelBoard::listIosFromNodeDef(e));
+                    node->setBoard(ModelBoard::fromNodeDef(e));
+                    node->addBlock(ModelBoard::listIosFromNodeDef(e));
                 }
             }
             if(e.tagName()=="process")
-                node->_blocks.append(ModelBlock::listFromNodeDef(e));
+                node->addBlock(ModelBlock::listFromNodeDef(e));
             if(e.tagName()=="flow_interconnect")
-                node->_blocks.append(ModelFIBlock::fromNodeDef(e));
+                node->addBlock(ModelFIBlock::fromNodeDef(e));
             if(e.tagName()=="params_interconnect")
-                node->_blocks.append(ModelPIBlock::fromNodeDef(e));
+                node->addBlock(ModelPIBlock::fromNodeDef(e));
             if(e.tagName()=="clock_interconnect")
-                node->_blocks.append(ModelCIBlock::fromNodeDef(e));
+                node->addBlock(ModelCIBlock::fromNodeDef(e));
         }
         n = n.nextSibling();
     }
 
     node->_valid=true;
     return node;
-}
-
-ModelBoard *ModelNode::getBoard() const
-{
-    return _board;
 }

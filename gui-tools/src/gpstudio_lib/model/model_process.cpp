@@ -37,9 +37,9 @@ ModelProcess::~ModelProcess()
 {
 }
 
-QString ModelProcess::type() const
+ModelBlock::Type ModelProcess::type() const
 {
-    return "process";
+    return Process;
 }
 
 ModelProcess *ModelProcess::fromNodeGenerated(const QDomElement &domElement, ModelProcess *process)
@@ -59,7 +59,7 @@ ModelProcess *ModelProcess::fromNodeDef(const QDomElement &domElement, ModelProc
 
     if(inLib)
     {
-        ProcessLib *processLib = Lib::getLib().process(driver);
+        BlockLib *processLib = Lib::getLib().process(driver);
         if(processLib)
             process = new ModelProcess(*processLib->modelProcess());
     }

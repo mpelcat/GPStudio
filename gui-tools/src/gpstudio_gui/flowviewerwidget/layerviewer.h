@@ -25,7 +25,7 @@
 
 #include "abstractviewer.h"
 
-#include "viewer/layerwidget.h"
+#include "viewer/viewerwidgets/layerwidget.h"
 
 #include <QToolButton>
 

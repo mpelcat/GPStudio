@@ -18,12 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("info.php");
 require_once("file.php");
 require_once("param.php");
 require_once("flow.php");
 require_once("clock.php");
 require_once("reset.php");
 require_once("port.php");
+require_once("interfacebus.php");
+require_once("attribute.php");
+require_once("pin.php");
+require_once("port.php");
+require_once("componentpart.php");
 
 /**
  * Component is the the definition of hardware components. It could be
@@ -60,6 +66,12 @@ class Component
     public $desc;
 
     /**
+     * @brief Array of information on component
+     * @var array|Info $infos
+     */
+    public $infos;
+
+    /**
      * @brief Array of parameters class (can be Generic or dynamics parameter on BI)
      * @var array|Param $params
      */
@@ -89,6 +101,30 @@ class Component
      */
     public $resets;
 
+    /**
+     * @brief Array of attributes
+     * @var array|Attribute $attributes
+     */
+    public $attributes;
+
+    /**
+     * @brief Array of children components
+     * @var array|Component $components
+     */
+    public $components;
+
+    /**
+     * @brief Array of graphical part
+     * @var array|ComponentPart $parts
+     */
+    public $parts;
+
+    /**
+     * @brief Parent components, null if the component does not have a parent
+     * @var Component $parentComponent
+     */
+    public $parentComponent;
+
     protected $xml;
 
     /**
@@ -96,13 +132,76 @@ class Component
      * 
      * Initialise all the internal members
      */
-    function __construct()
+    function __construct($component = NULL)
     {
+        $this->infos = array();
         $this->params = array();
         $this->files = array();
         $this->flows = array();
         $this->clocks = array();
         $this->resets = array();
+        $this->interfaces = array();
+        $this->attributes = array();
+        $this->components = array();
+        $this->parts = array();
+        
+        $this->parentComponent = NULL;
+        
+        if($component == NULL)
+        {
+            // nothing to do
+        }
+        else
+        {
+            $process_file = $component;
+            $this->driver = basename($component);
+            $this->path = getRelativePath(dirname($component));
+            $this->in_lib = false;
+            $this->name = str_replace(".comp", "", basename($component));
+
+            if (!file_exists($process_file))
+                error("File $process_file doesn't exist", 5, "Process");
+            if (!($this->xml = simplexml_load_file($process_file)))
+                error("Error when parsing $process_file", 5, "Process");
+
+            $this->parse_xml($this->xml);
+            $this->path = realpath(dirname($process_file));
+        }
+    }
+
+    /** @brief Add an info to the toolchain 
+     *  @param Info $info info to add to the component
+     */
+    function addInfo($info)
+    {
+        array_push($this->infos, $info);
+    }
+
+    /** @brief return a reference to the component with the name $name, if not
+     * found, return null
+     *  @param string $name name of the info to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Info found component
+     */
+    function getInfo($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->infos as $info)
+            {
+                if ($info->name == $name)
+                    return $info;
+            }
+        }
+        else
+        {
+            foreach ($this->infos as $info)
+            {
+                if (strcasecmp($info->name, $name) == 0)
+                    return $info;
+            }
+        }
+        return null;
     }
 
     /**
@@ -111,6 +210,7 @@ class Component
      */
     function addParam($param)
     {
+        $param->parentBlock = $this;
         array_push($this->params, $param);
     }
 
@@ -166,6 +266,7 @@ class Component
      */
     function addFile($file)
     {
+        $file->parentBlock = $this;
         array_push($this->files, $file);
     }
 
@@ -226,6 +327,7 @@ class Component
      */
     function addFlow($flow)
     {
+        $flow->parentBlock = $this;
         array_push($this->flows, $flow);
     }
 
@@ -282,6 +384,7 @@ class Component
      */
     function addClock($clock)
     {
+        $clock->parentBlock = $this;
         array_push($this->clocks, $clock);
     }
 
@@ -338,6 +441,7 @@ class Component
      */
     function addReset($reset)
     {
+        $reset->parentBlock = $this;
         array_push($this->resets, $reset);
     }
 
@@ -388,62 +492,298 @@ class Component
         return null;
     }
 
+    /** @brief Add an InterfaceBus to the block 
+     *  @param InterfaceBus $interface interface to add to the block
+     */
+    function addInterface($interface)
+    {
+        $interface->parentBlock = $this;
+        array_push($this->interfaces, $interface);
+    }
+
+    /** @brief return a reference to the interface with the name $name, if not
+     * found, return null
+     *  @param string $name name of the interface to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return InterfaceBus found interface
+     */
+    function getInterface($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->interfaces as $interface)
+            {
+                if ($interface->name == $name)
+                    return $interface;
+            }
+        }
+        else
+        {
+            foreach ($this->interfaces as $interface)
+            {
+                if (strcasecmp($interface->name, $name) == 0)
+                    return $interface;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add an attribute to the toolchain 
+     *  @param Attribute $attribute attribute to add to the block
+     */
+    function addAttribute($attribute)
+    {
+        array_push($this->attributes, $attribute);
+    }
+
+    /** @brief return a reference to the attribute with the name $name, if not
+     * found, return null
+     *  @param string $name name of the attribute enum to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Attribute found attribute
+     */
+    function getAttribute($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if ($attribute->name == $name)
+                    return $attribute;
+            }
+        }
+        else
+        {
+            foreach ($this->attributes as $attribute)
+            {
+                if (strcasecmp($attribute->name, $name) == 0)
+                    return $attribute;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add a sub component
+     *  @param Component $component component to add to the block
+     */
+    function addComponent($component)
+    {
+        $component->parentComponent = $this;
+        array_push($this->components, $component);
+    }
+
+    /** @brief return a reference to the component with the name $name, if not
+     * found, return null
+     *  @param string $name name of the component to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return Component found component
+     */
+    function getComponent($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->components as $component)
+            {
+                if ($component->name == $name)
+                    return $component;
+            }
+        }
+        else
+        {
+            foreach ($this->components as $component)
+            {
+                if (strcasecmp($component->name, $name) == 0)
+                    return $component;
+            }
+        }
+        return null;
+    }
+
+    /** @brief Add a gui part
+     *  @param ComponentPart $part component to add to the block
+     */
+    function addPart($part)
+    {
+        array_push($this->parts, $part);
+    }
+
+    /** @brief return a reference to the part with the name $name, if not
+     * found, return null
+     *  @param string $name name of the component to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return ComponentPart found component
+     */
+    function getPart($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->parts as $part)
+            {
+                if ($part->name == $name)
+                    return $part;
+            }
+        }
+        else
+        {
+            foreach ($this->parts as $part)
+            {
+                if (strcasecmp($part->name, $name) == 0)
+                    return $part;
+            }
+        }
+        return null;
+    }
+
+    /** @brief return a reference to the instance with the name $name, if not
+     * found, return null
+     *  @param string $name name of the instance to search
+     *  @param bool $casesens take care or not of the case of the name
+     *  @return mixed found instance
+     */
+    function getInstance($name, $casesens = true)
+    {
+        $instance = $this->getAttribute($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getClock($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getFileByPath($name);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getFlow($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        $instance = $this->getParam($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+        if ($this->type() != "component")
+        {
+            $instance = $this->getPropertyPath($name, $casesens);
+            if ($instance != NULL)
+                return $instance;
+        }
+        $instance = $this->getReset($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
+
+        if ($this->type() == "io" or $this->type() == "iocom")
+        {
+            $instance = $this->getExtPort($name, $casesens);
+            if ($instance != NULL)
+                return $instance;
+        }
+
+        return null;
+    }
+
     /**
      * @brief internal function to fill this instance from input xml structure
      * 
      * Can be call only from this node into the constructor
      * @param SimpleXMLElement $xml xml element to parse
      */
-    protected function parse_xml($xml)
+    protected function parse_xml($dummy=NULL, $dummy2=NULL)
     {
-        $this->name = (string) $this->xml['name'];
         $this->categ = (string) $this->xml['categ'];
         $this->desc = (string) $this->xml['desc'];
+        
+        // infos
+        if (isset($this->xml->infos))
+        {
+            foreach ($this->xml->infos->info as $infoXml)
+            {
+                $this->addInfo(new Info($infoXml));
+            }
+        }
 
         // files
-        if (isset($xml->files))
+        if (isset($this->xml->files))
         {
-            foreach ($xml->files->file as $fileXml)
+            foreach ($this->xml->files->file as $fileXml)
             {
                 $this->addFile(new File($fileXml));
             }
         }
 
         // params
-        if (isset($xml->params))
+        if (isset($this->xml->params))
         {
-            foreach ($xml->params->param as $paramXml)
+            foreach ($this->xml->params->param as $paramXml)
             {
                 $this->addParam(new Param($paramXml));
             }
         }
 
         // flows
-        if (isset($xml->flows))
+        if (isset($this->xml->flows))
         {
-            foreach ($xml->flows->flow as $flowXml)
+            foreach ($this->xml->flows->flow as $flowXml)
             {
                 $this->addFlow(new Flow($flowXml));
             }
         }
 
         // clocks
-        if (isset($xml->clocks))
+        if (isset($this->xml->clocks))
         {
-            foreach ($xml->clocks->clock as $clockXml)
+            foreach ($this->xml->clocks->clock as $clockXml)
             {
                 $this->addClock(new Clock($clockXml));
             }
         }
 
         // resets
-        if (isset($xml->resets))
+        if (isset($this->xml->resets))
         {
-            foreach ($xml->resets->reset as $resetXml)
+            foreach ($this->xml->resets->reset as $resetXml)
             {
                 $this->addReset(new Reset($resetXml));
             }
         }
+
+        // attributes
+        if (isset($this->xml->attributes))
+        {
+            foreach ($this->xml->attributes->attribute as $attributeXml)
+            {
+                $this->addAttribute(new Attribute($attributeXml));
+            }
+        }
+
+        // components
+        if (isset($this->xml->components))
+        {
+            foreach ($this->xml->components->component as $componentXml)
+            {
+                $this->addComponent(new Component($componentXml));
+            }
+        }
+
+        // parts
+        if (isset($this->xml->svg))
+        {
+            $part = new ComponentPart();
+            $part->name = "main";
+            $part->svg = dom_import_simplexml($this->xml->svg);
+            $this->addPart($part);
+        }
+        if (isset($this->xml->parts))
+        {
+            foreach ($this->xml->parts->part as $partXml)
+            {
+                $this->addPart(new ComponentPart($partXml));
+            }
+        }
+    }
+
+    /**
+     * @brief Returns the type of the block as string, redefined by children.
+     * @return string type of the block.
+     */
+    public function type()
+    {
+        return 'component';
     }
 
     /**
@@ -469,6 +809,28 @@ class Component
         $att->value = $this->desc;
         $xml_element->appendChild($att);
 
+        // infos
+        if (!empty($this->infos))
+        {
+            $xml_infos = $xml->createElement("infos");
+            foreach ($this->infos as $info)
+            {
+                $xml_infos->appendChild($info->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_infos);
+        }
+
+        // parts
+        if (!empty($this->parts))
+        {
+            $xml_parts = $xml->createElement("parts");
+            foreach ($this->parts as $part)
+            {
+                $xml_parts->appendChild($part->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_parts);
+        }
+
         // files
         if (!empty($this->files))
         {
@@ -489,7 +851,6 @@ class Component
                 if ($flow->type == "in" or $flow->type == "out")
                 {
                     $xml_flows->appendChild($flow->getXmlElement($xml, $format));
-                    $count++;
                 }
             }
             $xml_element->appendChild($xml_flows);
@@ -502,7 +863,6 @@ class Component
             foreach ($this->params as $param)
             {
                 $xml_params->appendChild($param->getXmlElement($xml, $format));
-                $count++;
             }
             $xml_element->appendChild($xml_params);
         }
@@ -529,6 +889,57 @@ class Component
             $xml_element->appendChild($xml_resets);
         }
 
+        // attributes
+        if (!empty($this->attributes))
+        {
+            $xml_attributes = $xml->createElement("attributes");
+            foreach ($this->attributes as $attribute)
+            {
+                $xml_attributes->appendChild($attribute->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_attributes);
+        }
+
+        // components
+        if (!empty($this->components))
+        {
+            $xml_components = $xml->createElement("components");
+            foreach ($this->components as $component)
+            {
+                $xml_components->appendChild($component->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_components);
+        }
+
         return $xml_element;
+    }
+
+    /**
+     * @brief Helper function that save an '.comp' file.
+     * @param string $file file name to save
+     */
+    function saveComponentDef($file)
+    {
+        $xml = new DOMDocument("1.0", "UTF-8");
+        $xml->preserveWhiteSpace = false;
+        $xml->formatOutput = true;
+
+        $xml->appendChild($this->getXmlElement($xml, "blockdef"));
+
+        $xml->save($file);
+    }
+
+    function setSvgDraw($svgXml, $partName="main")
+    {
+        $part = $this->getPart($partName);
+        if($part==NULL)
+        {
+            $part = new ComponentPart();
+            $part->name = $partName;
+            $this->addPart($part);
+        }
+
+        unset($part->this->svg);
+        $part->svg = $svgXml;
     }
 }

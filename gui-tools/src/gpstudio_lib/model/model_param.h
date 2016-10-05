@@ -83,6 +83,7 @@ public:
 public:
     static ModelParam *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelParam *> listFromNodeGenerated(const QDomElement &domElement);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;

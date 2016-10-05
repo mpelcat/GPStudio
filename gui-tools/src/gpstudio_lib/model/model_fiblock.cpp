@@ -23,6 +23,7 @@
 #include <QDebug>
 
 ModelFIBlock::ModelFIBlock()
+    : ModelBlock::ModelBlock()
 {
     _name = "fi";
 }
@@ -44,9 +45,9 @@ ModelFIBlock::~ModelFIBlock()
         delete _treeConnects[i];
 }
 
-QString ModelFIBlock::type() const
+ModelBlock::Type ModelFIBlock::type() const
 {
-    return "fi";
+    return FI;
 }
 
 QList<ModelFlowConnect *> &ModelFIBlock::flowConnects()
@@ -104,8 +105,16 @@ void ModelFIBlock::connectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
     addFlowConnect(modelFlowConnect);
 }
 
+void ModelFIBlock::connectFlow(const ModelFlowConnect &flowConnect)
+{
+    addFlowConnect(new ModelFlowConnect(flowConnect));
+}
+
 void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
 {
+    if(fromFlow==NULL || toFlow==NULL)
+        return;
+
     for(int i=0; i<_flowConnects.size(); i++)
     {
         if(_flowConnects[i]->fromblock()==fromFlow->parent()->name())
@@ -121,6 +130,18 @@ void ModelFIBlock::disConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow)
                     }
                 }
             }
+        }
+    }
+}
+
+void ModelFIBlock::disConnectFlow(const ModelFlowConnect &flowConnect)
+{
+    for(int i=0; i<_flowConnects.size(); i++)
+    {
+        if(*(_flowConnects[i])==flowConnect)
+        {
+            removeFlowConnect(_flowConnects[i]);
+            return;
         }
     }
 }

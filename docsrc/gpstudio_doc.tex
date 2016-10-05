@@ -12,16 +12,17 @@
 \usepackage[left=3.3cm,right=3.3cm,top=3cm]{geometry}
 
 % version
-\newcommand{\version}{\IfFileExists{../../version.txt}%
-{\input{../../version.txt}\unskip }%
-{\input{../../../version.txt}\unskip }%
-}
+%\newcommand{\version}{\IfFileExists{../../version.txt}%
+%{\input{../../version.txt}\unskip }%
+%{\input{../../../version.txt}\unskip }%
+%}
+\newcommand{\version}{v1.10}
 
 % command definition
 \newcommand{\command}[1]{%
 \setlength{\fboxrule}{0.5mm}
 \indent \fcolorbox{orange}{white}{%
-   \begin{minipage}{\dimexpr\textwidth-\parindent\relax}%
+   \begin{minipage}{\textwidth}%
       #1
    \end{minipage}%
 }

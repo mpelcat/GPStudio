@@ -25,7 +25,10 @@
 
 #include "model/model_node.h"
 
+#include <QStringList>
 #include <QUndoStack>
+
+#include <model/model_flowconnect.h>
 
 class GPSTUDIO_GUI_EXPORT GPNodeProject : public QObject
 {
@@ -41,6 +44,9 @@ public:
 
     QUndoStack *undoStack() const;
 
+    QWidget *nodeEditorWindow() const;
+    void setNodeEditorWindow(QWidget *nodeEditorWindow);
+
 public slots:
     // project commands
     void newProject();
@@ -49,13 +55,19 @@ public slots:
     bool saveProjectAs(const QString &nodeFileName=QString());
     void closeProject();
 
+    void configBoard();
+
     // block commands
-    void moveBlock(ModelBlock *block, const QPoint &newPos);
-    void renameBlock(ModelBlock *block, const QString &newName);
+    void moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos);
+    void renameBlock(const QString &block_name, const QString &newName);
     void addBlock(ModelBlock *block);
+    void addBlock(const QString &driver, const QPoint &pos);
     void removeBlock(ModelBlock *block);
-    void connectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void disConnectBlockFlows(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void connectBlockFlows(const ModelFlowConnect &flowConnect);
+    void disConnectBlockFlows(const ModelFlowConnect &flowConnect);
+
+    void beginMacro(const QString &text);
+    void endMacro();
 
 signals:
     void nodeChanged(ModelNode *node);
@@ -64,9 +76,9 @@ signals:
 
     void blockUpdated(ModelBlock *block);
     void blockAdded(ModelBlock *block);
-    void blockRemoved(ModelBlock *block);
-    void blockConnected(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void blockDisconected(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void blockRemoved(const QString &block_name);
+    void blockConnected(const ModelFlowConnect flowConnect);
+    void blockDisconected(const ModelFlowConnect flowConnect);
 
 private:
     void setPath(const QString &path);
@@ -79,24 +91,31 @@ private:
     bool _modified;
 
     QUndoStack *_undoStack;
+    QWidget *_nodeEditorWindow;
 
 protected:
     // commands from undo stack
     friend class BlockCmdRename;
-    void cmdRenameBlock(ModelBlock *block, const QString &name);
+    void cmdRenameBlock(const QString &block_name, const QString &newName);
 
     friend class BlockCmdMove;
-    void cmdMoveBlockTo(ModelBlock *block, QPoint pos);
+    void cmdMoveBlockTo(const QString &block_name, const QString &part_name, QPoint pos);
 
     friend class BlockCmdAdd;
     friend class BlockCmdRemove;
     void cmdAddBlock(ModelBlock *block);
-    void cmdRemoveBlock(ModelBlock *block);
+    void cmdRemoveBlock(const QString &block_name);
 
     friend class BlockCmdConnectFlow;
     friend class BlockCmdDisconnectFlow;
-    void cmdConnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
-    void cmdDisconnectFlow(ModelFlow *fromFlow, ModelFlow *toFlow);
+    void cmdConnectFlow(const ModelFlowConnect &flowConnect);
+    void cmdDisconnectFlow(const ModelFlowConnect &flowConnect);
+
+    friend class NodeCmdRename;
+    void cmdRenameNode(QString nodeName);
+
+    friend class NodeCmdConfigBoard;
+    void cmdConfigBoard(QString boardName, QStringList iosName);
 };
 
 #endif // GPNODEPROJECT_H

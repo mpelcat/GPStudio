@@ -59,6 +59,8 @@ architecture rtl of gp_fifo is
 
 -- instantiation
     begin
+	reset_s <= not(reset_n);
+	
     scfifo_component : scfifo
         generic map (
             ADD_RAM_OUTPUT_REGISTER => "OFF",

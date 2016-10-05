@@ -28,20 +28,30 @@
 class Camera;
 class Block;
 class Flow;
+class ModelNode;
+class ModelBlock;
+class ModelFlow;
 
 class GPSTUDIO_GUI_EXPORT CameraItem
 {
 public:
     CameraItem();
     CameraItem(const Camera *camera);
+    CameraItem(const ModelNode *node);
     CameraItem(const Block *block);
+    CameraItem(const ModelBlock *block);
     CameraItem(const Flow *flow);
+    CameraItem(const ModelFlow *flow);
     ~CameraItem();
 
     enum Type {
         CameraType,
         BlockType,
         FlowType,
+
+        ModelNodeType,
+        ModelBlockType,
+        ModelFlowType,
 
         NullType
     };
@@ -51,14 +61,21 @@ public:
     const Camera *camera() const;
     const Block *block() const;
     const Flow *flow() const;
+    const ModelNode *modelNode() const;
+    const ModelBlock *modelBlock() const;
+    const ModelFlow *modelFlow() const;
 
     const QList<CameraItem*> &childrens() const;
     const CameraItem *children(int i) const;
     int count() const;
 
     CameraItem *append(const Camera *camera);
+    CameraItem *append(const ModelNode *node);
     CameraItem *append(const Block *block);
+    CameraItem *append(const ModelBlock *block);
     CameraItem *append(const Flow *flow);
+    CameraItem *append(const ModelFlow *flow);
+
     void clear();
 
     int row();

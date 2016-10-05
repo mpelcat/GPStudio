@@ -57,8 +57,6 @@ SOURCES += \
     propertywidgets/propertymatrixwidget.cpp \
     flowviewerwidget/flowviewerwidget.cpp \
     flowviewerwidget/abstractviewer.cpp \
-    viewer/layerwidget.cpp \
-    camexplorerwidget.cpp \
     flowviewerwidget/layerviewer.cpp \
     flowviewerwidget/hexviewer.cpp \
     flowviewerwidget/plotviewer.cpp \
@@ -79,8 +77,11 @@ SOURCES += \
     nodeeditor/confignodedialog.cpp \
     nodeeditor/undostack/nodecommands.cpp \
     nodeeditor/undostack/blockcommands.cpp \
-    viewer/docviewer.cpp \
-    viewer/pdfviewer.cpp
+    viewer/camexplorerwidget.cpp \
+    viewer/viewerwidgets/docviewer.cpp \
+    viewer/viewerwidgets/pdfviewer.cpp \
+    viewer/viewerwidgets/layerwidget.cpp \
+    compilelogwidget.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -103,8 +104,6 @@ HEADERS  += \
     propertywidgets/propertymatrixwidget.h \
     flowviewerwidget/flowviewerwidget.h \
     flowviewerwidget/abstractviewer.h \
-    viewer/layerwidget.h \
-    camexplorerwidget.h \
     flowviewerwidget/layerviewer.h \
     flowviewerwidget/hexviewer.h \
     flowviewerwidget/plotviewer.h \
@@ -125,8 +124,11 @@ HEADERS  += \
     nodeeditor/confignodedialog.h \
     nodeeditor/undostack/nodecommands.h \
     nodeeditor/undostack/blockcommands.h \
-    viewer/docviewer.h \
-    viewer/pdfviewer.h
+    viewer/camexplorerwidget.h \
+    viewer/viewerwidgets/docviewer.h \
+    viewer/viewerwidgets/pdfviewer.h \
+    viewer/viewerwidgets/layerwidget.h \
+    compilelogwidget.h
 
 RESOURCES += \
     icons.qrc \

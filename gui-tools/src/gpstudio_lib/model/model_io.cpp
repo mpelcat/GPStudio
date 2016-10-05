@@ -37,9 +37,9 @@ ModelIO::~ModelIO()
 {
 }
 
-QString ModelIO::type() const
+ModelBlock::Type ModelIO::type() const
 {
-    return "io";
+    return IO;
 }
 
 ModelIO *ModelIO::fromNodeGenerated(const QDomElement &domElement, ModelIO *io)
@@ -70,7 +70,7 @@ ModelIO *ModelIO::fromNodeDef(const QDomElement &domElement, ModelIO *io)
 {
     QString driver = domElement.attribute("driver","");
 
-    IOLib *ioLib = Lib::getLib().io(driver);
+    BlockLib *ioLib = Lib::getLib().io(driver);
     if(ioLib)
         io = new ModelIO(*ioLib->modelIO());
 

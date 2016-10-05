@@ -23,6 +23,8 @@
 #include "camera/camera.h"
 #include "cameracom.h"
 
+#include "model/model_node.h"
+
 #include <QDebug>
 #include <QIcon>
 
@@ -128,6 +130,26 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             }
         }
         return QVariant();
+    case CameraItem::ModelNodeType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (index.column())
+            {
+            case Name:
+                return QVariant(item->modelNode()->name());
+            case Value:
+                return QVariant("");
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(index.column()==0)
+            {
+                return QIcon(":/icons/img/usb.png");
+            }
+        }
+        return QVariant();
     case CameraItem::BlockType:
         switch (role)
         {
@@ -141,6 +163,19 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             }
         }
         return QVariant();
+    case CameraItem::ModelBlockType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (index.column())
+            {
+            case Name:
+                return QVariant(item->modelBlock()->name());
+            default:
+                return QVariant(item->modelBlock()->driver());
+            }
+        }
+        return QVariant();
     case CameraItem::FlowType:
         switch (role)
         {
@@ -150,7 +185,7 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             case Name:
                 return QVariant(item->flow()->name());
             case Value:
-                return QVariant("in");
+                return QVariant(item->flow()->type()==Flow::Input ? "in" : "out");
             default:
                 return QVariant();
             }
@@ -158,6 +193,29 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             if(index.column()==0)
             {
                 if(item->flow()->type()==Flow::Input)
+                    return QIcon(":/icons/img/flow-in.png");
+                else
+                    return QIcon(":/icons/img/flow-out.png");
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelFlowType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (index.column())
+            {
+            case Name:
+                return QVariant(item->modelFlow()->name());
+            case Value:
+                return QVariant(item->modelFlow()->type());
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(index.column()==0)
+            {
+                if(item->modelFlow()->type()=="in")
                     return QIcon(":/icons/img/flow-in.png");
                 else
                     return QIcon(":/icons/img/flow-out.png");
@@ -195,6 +253,13 @@ void CameraItemModelNoSorted::addCamera(const Camera *camera)
 {
     emit layoutAboutToBeChanged();
     _rootItem->append(camera);
+    emit layoutChanged();
+}
+
+void CameraItemModelNoSorted::addNode(const ModelNode *node)
+{
+    emit layoutAboutToBeChanged();
+    _rootItem->append(node);
     emit layoutChanged();
 }
 

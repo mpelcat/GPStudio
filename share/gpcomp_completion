@@ -1,0 +1,264 @@
+# Debian gpproc(8) completion                             -*- shell-script -*-
+
+_gpproc()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    # see if the user selected a command already
+    local COMMANDS=("new"         "showblock"
+                    "generate"    "generatetb"
+					"addfile"     "delfile"     "showfile"
+					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
+					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"
+					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
+					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
+					"sethelp"     "setdraw"     "setinfo"       "info"
+    )
+
+    local command i
+    for (( i=0; i < ${#words[@]}-1; i++ )); do
+        if [[ ${COMMANDS[@]} =~ ${words[i]} ]]; then
+            command=${words[i]}
+            break
+        fi
+    done
+    
+    local count=${#words[@]};
+
+    # supported options per command
+    if [[ "$cur" == * ]]; then
+        case $count in
+            3)
+                case $command in
+                    generate|generatetb)
+                        COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addfile|delfile)
+                        COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
+                        return 0
+                        ;;
+                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|setinfo|info)
+                        COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
+                        return 0
+                        ;;
+                    sethelp)
+                        COMPREPLY=( $( compgen -W '-n -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setdraw)
+                        COMPREPLY=( $( compgen -W '-v -f' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            4)
+                case $command in
+                    addfile)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        return 0
+                        ;;
+                    delfile)
+                        COMPREPLY=( $( compgen -W '$( gpproc listfile )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    delflow|renameflow|setflow)
+                        COMPREPLY=( $( compgen -W '$( gpproc listflow )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    delparam|renameparam|setparam)
+                        COMPREPLY=( $( compgen -W '$( gpproc listparam )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    delreset|renamereset|setreset)
+                        COMPREPLY=( $( compgen -W '$( gpproc listreset )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    delclock|renameclock|setclock)
+                        COMPREPLY=( $( compgen -W '$( gpproc listclock )' -- "$cur" ) )
+                        return 0
+                        ;;
+                    generate|generatetb)
+                        COMPREPLY=( $( compgen -o plusdirs -- "$cur" ) )
+                        return 0
+                        ;;
+                    setdraw)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        return 0
+                        ;;
+                    setinfo|info)
+                        COMPREPLY=( $( compgen -W '$( gpproc listinfo )' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            5) 
+                case $command in
+                    addfile)
+                        COMPREPLY=( $( compgen -W '-t' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addflow|addreset|addclock)
+                        COMPREPLY=( $( compgen -W '-d' -- "$cur" ) )
+                        return 0
+                        ;;
+                    renameflow|renameparam|renamereset|renameclock|sethelp)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setflow)
+                        COMPREPLY=( $( compgen -W '-d -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setreset)
+                        COMPREPLY=( $( compgen -W '-d -g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setclock)
+                        COMPREPLY=( $( compgen -W '-d -g -m -f -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            6)
+                case $command in
+                    addclock|setclock|addreset|setreset|addflow|setflow)
+						if [ "$prev" = "-d" ]; then
+							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                esac
+                ;;
+            7)
+                case $command in
+                    addfile)
+                        COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addflow)
+                        COMPREPLY=( $( compgen -W '-s' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addreset|addclock)
+                        COMPREPLY=( $( compgen -W '-g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addbitfield)
+                        COMPREPLY=( $( compgen -W '-m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addenum)
+                        COMPREPLY=( $( compgen -W '-l' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setflow)
+                        COMPREPLY=( $( compgen -W '-d -v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setreset)
+                        COMPREPLY=( $( compgen -W '-d -g' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setclock)
+                        COMPREPLY=( $( compgen -W '-d -g -m -f -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            8)
+                case $command in
+                    addproperty|setproperty)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                    addclock|setclock|addreset|setreset|addflow|setflow)
+						if [ "$prev" = "-d" ]; then
+							COMPREPLY=( $( compgen -W 'in out' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                esac
+                ;;
+            9)
+                case $command in
+                    setparam)
+                        COMPREPLY=( $( compgen -W '-t -v -r' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setproperty)
+                        COMPREPLY=( $( compgen -W '-l -t -v -r -s' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+            10)
+                case $command in
+                    addproperty|setproperty)
+						if [ "$prev" = "-t" ]; then
+							COMPREPLY=( $( compgen -W 'int sint bool group matrix enum' -- "$cur" ) )
+						fi
+						return 0
+						;;
+                esac
+                ;;
+            11)
+                case $command in
+                    addproperty)
+                        COMPREPLY=( $( compgen -W '-v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                    addparam)
+                        COMPREPLY=( $( compgen -W '-t -r -v -m' -- "$cur" ) )
+                        return 0
+                        ;;
+                esac
+                ;;
+        esac
+    fi
+
+    # no command yet, show what commands we have
+    if [ "$command" = "" ]; then
+        COMPREPLY=( $( compgen -W '${COMMANDS[@]}' -- "$cur" ) )
+    fi
+
+    return 0
+} &&
+complete -F _gpproc gpproc
+
+# ex: ts=4 sw=4 et filetype=sh

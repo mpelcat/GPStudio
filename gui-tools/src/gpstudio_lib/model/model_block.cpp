@@ -33,7 +33,6 @@
 
 ModelBlock::ModelBlock()
 {
-    _pos = QPoint(0, 0);
     _node = NULL;
 }
 
@@ -46,7 +45,6 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
     _addrAbs = modelBlock._addrAbs;
     _sizeAddrRel = modelBlock._sizeAddrRel;
     _masterCount = modelBlock._masterCount;
-    _pos = modelBlock._pos;
     _description = modelBlock._description;
     _node = NULL;
 
@@ -66,6 +64,8 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
         addPin(new ModelPin(*modelBlock._pins[i]));
     for(int i=0; i<modelBlock._resets.size(); i++)
         addReset(new ModelReset(*modelBlock._resets[i]));
+    for(int i=0; i<modelBlock._parts.size(); i++)
+        addPart(new ModelComponentPart(*modelBlock._parts[i]));
 }
 
 ModelBlock::~ModelBlock()
@@ -86,6 +86,8 @@ ModelBlock::~ModelBlock()
         delete _pins[i];
     for(int i=0; i<_resets.size(); i++)
         delete _resets[i];
+    for(int i=0; i<_parts.size(); i++)
+        delete _parts[i];
 }
 
 const QString &ModelBlock::name() const
@@ -116,6 +118,16 @@ const QString &ModelBlock::driver() const
 void ModelBlock::setDriver(const QString &driver)
 {
     _driver = driver;
+}
+
+QString ModelBlock::path() const
+{
+    return _path;
+}
+
+void ModelBlock::setPath(const QString &path)
+{
+    _path = path;
 }
 
 const QString &ModelBlock::categ() const
@@ -158,16 +170,6 @@ void ModelBlock::setMasterCount(const quint8 &value)
     _masterCount = value;
 }
 
-const QPoint &ModelBlock::pos() const
-{
-    return _pos;
-}
-
-void ModelBlock::setPos(const QPoint &pos)
-{
-    _pos = pos;
-}
-
 const QString &ModelBlock::description() const
 {
     return _description;
@@ -178,9 +180,16 @@ void ModelBlock::setDescription(const QString &description)
     _description = description;
 }
 
-QString ModelBlock::type() const
+ModelBlock::Type ModelBlock::type() const
 {
-    return "block";
+    return Block;
+}
+
+bool ModelBlock::isIO() const
+{
+    if(type()==IO || type()==IOCom)
+        return true;
+    return false;
 }
 
 ModelNode *ModelBlock::node() const
@@ -223,6 +232,17 @@ ModelFile *ModelBlock::getFile(const QString &name) const
     {
         ModelFile *file = this->files().at(i);
         if(file->name()==name)
+            return file;
+    }
+    return NULL;
+}
+
+ModelFile *ModelBlock::getDefFile() const
+{
+    for(int i=0; i<this->files().size(); i++)
+    {
+        ModelFile *file = this->files().at(i);
+        if(file->group()=="blockdef")
             return file;
     }
     return NULL;
@@ -473,6 +493,41 @@ ModelReset *ModelBlock::getReset(const QString &name) const
     return NULL;
 }
 
+QList<ModelComponentPart *> &ModelBlock::parts()
+{
+    return _parts;
+}
+
+const QList<ModelComponentPart *> &ModelBlock::parts() const
+{
+    return _parts;
+}
+
+void ModelBlock::addPart(ModelComponentPart *part)
+{
+    part->setParent(this);
+    _parts.append(part);
+}
+
+void ModelBlock::addParts(const QList<ModelComponentPart *> &parts)
+{
+    foreach (ModelComponentPart *part, parts)
+    {
+        addPart(part);
+    }
+}
+
+ModelComponentPart *ModelBlock::getPart(const QString &name) const
+{
+    for(int i=0; i<this->parts().size(); i++)
+    {
+        ModelComponentPart *part = this->parts().at(i);
+        if(part->name()==name)
+            return part;
+    }
+    return NULL;
+}
+
 ModelBlock *ModelBlock::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
@@ -507,21 +562,8 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
     block->setInLib((domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true"));
 
     block->setDriver(domElement.attribute("driver",""));
+    block->setPath(domElement.attribute("path",""));
     block->setCateg(domElement.attribute("categ",""));
-
-    QPoint pos;
-    int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
-    if(ok)
-        pos.setX(xPos);
-    else
-        pos.setX(-1);
-
-    int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
-    if(ok)
-        pos.setY(yPos);
-    else
-        pos.setY(-1);
-    block->setPos(pos);
 
     int addrAbs = domElement.attribute("addr_abs","-1").toInt(&ok);
     if(ok)
@@ -561,6 +603,8 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
                 block->addClocks(ModelClock::listFromNodeGenerated(e));
             if(e.tagName()=="resets")
                 block->addResets(ModelReset::listFromNodeGenerated(e));
+            if(e.tagName()=="parts")
+                block->addParts(ModelComponentPart::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -570,27 +614,66 @@ ModelBlock *ModelBlock::fromNodeGenerated(const QDomElement &domElement, ModelBl
 
 ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *block)
 {
-    bool ok;
-
     if(block==NULL)
         block = new ModelBlock();
 
+    QDomNode n = domElement.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(!e.isNull())
+        {
+            if(e.tagName()=="parts")
+            {
+                foreach(ModelComponentPart *nodePart, ModelComponentPart::listFromNodeGenerated(e))
+                {
+                    ModelComponentPart *part = block->getPart(nodePart->name());
+                    if(!part)
+                    {
+                        part = nodePart;
+                        block->addPart(part);
+                    }
+                    part->setPos(nodePart->pos());
+                }
+            }
+            /*if(e.tagName()=="properties")
+            {
+                foreach(ModelProperty *nodePart, ModelComponentPart::listFromNodeGenerated(e))
+                {
+                    ModelComponentPart *part = block->getPart(nodePart->name());
+                    if(!part)
+                    {
+                        part = nodePart;
+                        block->addPart(part);
+                    }
+                    part->setPos(nodePart->pos());
+                }
+            }*/
+        }
+        n = n.nextSibling();
+    }
+
     block->setName(domElement.attribute("name","no_name"));
     block->setDriver(domElement.attribute("driver",""));
+    block->setPath(domElement.attribute("path",""));
 
-    QPoint pos;
-    int xPos = domElement.attribute("x_pos","-1").toInt(&ok);
-    if(ok)
-        pos.setX(xPos);
-    else
-        pos.setX(-1);
+    // compatibility mode
+    if(domElement.hasAttribute("x_pos") || domElement.hasAttribute("y_pos"))
+    {
+        QPoint pos;
+        pos.setX(domElement.attribute("x_pos","0").toInt());
+        pos.setX(domElement.attribute("y_pos","0").toInt());
 
-    int yPos = domElement.attribute("y_pos","-1").toInt(&ok);
-    if(ok)
-        pos.setY(yPos);
-    else
-        pos.setY(-1);
-    block->setPos(pos);
+        if(block->parts().empty())
+        {
+            ModelComponentPart *part = new ModelComponentPart();
+            part->setName("main");
+            block->addPart(part);
+        }
+
+        foreach (ModelComponentPart *part, block->parts())
+            part->setPos(pos);
+    }
 
     return block;
 }
@@ -661,15 +744,40 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
 {
     QDomElement element;
     if(other.isNull())
-        element = doc.createElement("process");
+    {
+        if(type()==IO || type()==IOCom)
+            element = doc.createElement("io");
+        else
+            element = doc.createElement("process");
+    }
     else
         element = other;
 
     element.setAttribute("name", _name);
     element.setAttribute("driver", _driver);
-    element.setAttribute("inlib", _inLib ? "true" : "false");
-    element.setAttribute("x_pos", _pos.x());
-    element.setAttribute("y_pos", _pos.y());
+
+    if(!_inLib)
+        element.setAttribute("path", _path);
+
+    if(!isIO())
+        element.setAttribute("inlib", _inLib ? "true" : "false");
+
+    QDomElement paramList = doc.createElement("params");
+    foreach (ModelParam *param, _params)
+    {
+        if(param->isHard())
+            paramList.appendChild(param->toXMLElement(doc));
+    }
+    if(!paramList.childNodes().isEmpty())
+        element.appendChild(paramList);
+
+    QDomElement partList = doc.createElement("parts");
+    foreach (ModelComponentPart *part, _parts)
+    {
+        partList.appendChild(part->toXMLElement(doc));
+    }
+    if(!partList.childNodes().isEmpty())
+        element.appendChild(partList);
 
     return element;
 }

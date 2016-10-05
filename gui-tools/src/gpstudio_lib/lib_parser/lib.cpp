@@ -49,27 +49,30 @@ void Lib::reloadProcess()
         QDir dirIP(pathLib.absoluteFilePath());
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.proc")))
         {
-            ProcessLib *process = ProcessLib::readFromFile(ipInfo.absoluteFilePath());
+            BlockLib *process = BlockLib::readFromFile(ipInfo.absoluteFilePath());
             if(process)
                 addProcess(process);
         }
     }
 }
 
-void Lib::addProcess(ProcessLib *process)
+void Lib::addProcess(BlockLib *process)
 {
     _process.append(process);
     _processMap.insert(process->name(), process);
 }
 
-const QList<ProcessLib *> &Lib::processes() const
+const QList<BlockLib *> &Lib::processes() const
 {
     return _process;
 }
 
-ProcessLib *Lib::process(const QString &name)
+BlockLib *Lib::process(const QString &name)
 {
-    QMap<QString, ProcessLib* >::const_iterator it = _processMap.find(name);
+    QMap<QString, BlockLib* >::const_iterator it = _processMap.find(name);
+    if(it != _processMap.end())
+        return it.value();
+    it = _processMap.find(QString(name).replace(".proc",""));
     if(it != _processMap.end())
         return it.value();
     return NULL;
@@ -86,27 +89,27 @@ void Lib::reloadIos()
         QDir dirIP(pathLib.absoluteFilePath());
         foreach (QFileInfo ipInfo, dirIP.entryInfoList(QStringList("*.io")))
         {
-            IOLib *io = IOLib::readFromFile(ipInfo.absoluteFilePath());
+            BlockLib *io = BlockLib::readFromFile(ipInfo.absoluteFilePath());
             if(io)
                 addIo(io);
         }
     }
 }
 
-void Lib::addIo(IOLib *io)
+void Lib::addIo(BlockLib *io)
 {
     _ios.append(io);
     _iosMap.insert(io->name(), io);
 }
 
-const QList<IOLib *> &Lib::ios() const
+const QList<BlockLib *> &Lib::ios() const
 {
     return _ios;
 }
 
-IOLib *Lib::io(const QString &name)
+BlockLib *Lib::io(const QString &name)
 {
-    QMap<QString, IOLib* >::const_iterator it = _iosMap.find(name);
+    QMap<QString, BlockLib* >::const_iterator it = _iosMap.find(name);
     if(it != _iosMap.end())
         return it.value();
     return NULL;
@@ -129,6 +132,31 @@ BoardLib *Lib::board(const QString &name)
     if(it != _boardsMap.end())
         return it.value();
     return NULL;
+}
+
+bool Lib::addIp(const QString &fileName)
+{
+    if(fileName.endsWith(".proc"))
+    {
+        BlockLib *process = BlockLib::readFromFile(fileName);
+        if(!process)
+            return false;
+        if(Lib::process(process->name())!=NULL)
+            return false;
+        addProcess(process);
+        return true;
+    }
+    if(fileName.endsWith(".io"))
+    {
+        BlockLib *io = BlockLib::readFromFile(fileName);
+        if(!io)
+            return false;
+        if(Lib::io(io->name())!=NULL)
+            return false;
+        addIo(io);
+        return true;
+    }
+    return false;
 }
 
 void Lib::reloadBoards()

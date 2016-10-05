@@ -18,16 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once("file.php");
-require_once("param.php");
+require_once("component.php");
 require_once("property.php");
-require_once("flow.php");
-require_once("clock.php");
-require_once("reset.php");
-require_once("pin.php");
-require_once("port.php");
-require_once("interfacebus.php");
-require_once("attribute.php");
 
 /**
  * It needs to be specialised, it only contains the list of :
@@ -46,20 +38,8 @@ require_once("attribute.php");
  * @see IO Process
  * @ingroup base
  */
-class Block
+class Block extends Component
 {
-    /**
-     * @brief Name of the block
-     * @var string $name
-     */
-    public $name;
-
-    /**
-     * @brief Path where the root of files and define of the block is putted
-     * @var string $path
-     */
-    public $path;
-
     /**
      * @brief Specify if the block is defined in the library or not
      * @var bool $in_lib
@@ -71,13 +51,6 @@ class Block
      * @var string $driver
      */
     public $driver;
-
-    /**
-     * @brief Specify the categorie of the block eg : communication, imagesensor,
-     * descriptor...
-     * @var string $categ
-     */
-    public $categ;
 
     /**
      * @brief The absolute adress of the block on BI
@@ -98,18 +71,6 @@ class Block
     public $master_count;
 
     /**
-     * @brief X position on schematic (optional)
-     * @var int $x_pos
-     */
-    public $x_pos;
-
-    /**
-     * @brief Y position on schematic (optional)
-     * @var int $y_pos
-     */
-    public $y_pos;
-
-    /**
      * @brief Specify the external file script to configure the block (optional)
      * @var string $configscriptfile
      */
@@ -128,60 +89,16 @@ class Block
     public $desc;
 
     /**
-     * @brief Array of parameters class (can be Generic or dynamics parameter on BI)
-     * @var array|Param $params
-     */
-    public $params;
-
-    /**
      * @brief Array of property class specify the high level properties
      * @var array|Property $properties
      */
     public $properties;
 
     /**
-     * @brief Array of files whith define the implementation of the block
-     * @var array|File $files
-     */
-    public $files;
-
-    /**
-     * @brief Array of flows in the block can be input flow or output
-     * @var array|Flow $flows
-     */
-    public $flows;
-
-    /**
-     * @brief Array of clocks to drive the block
-     * @var array|Clock $clocks
-     */
-    public $clocks;
-
-    /**
-     * @brief Array of resets, can be different type of resets
-     * @var array|Reset $resets
-     */
-    public $resets;
-
-    /**
-     * @brief Array of interfaces of the block
-     * @var array|InterfaceBus $interfaces
-     */
-    public $interfaces;
-
-    /**
-     * @brief Array of attributes of the block (optional)
-     * @var array|Attribute $attributes
-     */
-    public $attributes;
-
-    /**
      * @brief Reference to the associated parent node
      * @var Node $parentNode
      */
     public $parentNode;
-
-    protected $xml;
 
     /**
      * @brief Constructor of the class
@@ -190,19 +107,12 @@ class Block
      */
     function __construct()
     {
-        $this->params = array();
+        parent::__construct();
+        
         $this->properties = array();
-        $this->files = array();
-        $this->flows = array();
-        $this->clocks = array();
-        $this->resets = array();
-        $this->interfaces = array();
-        $this->attributes = array();
 
         $this->addr_abs = -1;
         $this->master_count = 0;
-        $this->x_pos = -1;
-        $this->y_pos = -1;
         $this->configscriptfile = '';
         $this->generatescriptfile = '';
 
@@ -346,60 +256,6 @@ class Block
                 }
             }
         }
-    }
-
-    /** @brief Add a parameter to the block 
-     *  @param Param $param parameter to add to the block
-     */
-    function addParam($param)
-    {
-        $param->parentBlock = $this;
-        array_push($this->params, $param);
-    }
-
-    /** @brief return a reference to the parameter with the name $name, if not
-     * found, return null
-     *  @param string $name name of the parameter to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Param found parameter 
-     */
-    function getParam($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->params as $param)
-            {
-                if ($param->name == $name)
-                    return $param;
-            }
-        }
-        else
-        {
-            foreach ($this->params as $param)
-            {
-                if (strcasecmp($param->name, $name) == 0)
-                    return $param;
-            }
-        }
-        return null;
-    }
-
-    /** @brief delete a param from his name
-     *  @param string $name name of the param to delete
-     */
-    function delParam($name)
-    {
-        $i = 0;
-        foreach ($this->params as $param)
-        {
-            if ($param->name == $name)
-            {
-                unset($this->params[$i]);
-                return;
-            }
-            $i++;
-        }
-        return null;
     }
 
     /** @brief return a reference to the bitfield with the path $path, if not
@@ -594,359 +450,21 @@ class Block
         $property->delPropertyEnum($name);
     }
 
-    /** @brief Add a file to the block 
-     *  @param File $file file to add to the block
-     */
-    function addFile($file)
-    {
-        $file->parentBlock = $this;
-        array_push($this->files, $file);
-    }
-
-    /** @brief return a reference to the file with the name $name, if not found,
-     * return null
-     *  @param string $name name of the file to search
-     *  @return File found file
-     */
-    function getFile($name)
-    {
-        foreach ($this->files as $file)
-        {
-            if ($file->name == $name)
-                return $file;
-        }
-        return null;
-    }
-
-    /** @brief return a reference to the file with the path $path, if not found,
-     * return null
-     *  @param string $path path of the file to search
-     *  @return File found file
-     */
-    function getFileByPath($path)
-    {
-        foreach ($this->files as $file)
-        {
-            if ($file->path == $path)
-                return $file;
-        }
-        return null;
-    }
-
-    /** @brief delete a file from his path
-     *  @param string $path path of the file to delete
-     */
-    function delFileByPath($path)
-    {
-        $i = 0;
-        foreach ($this->files as $file)
-        {
-            if ($file->path == $path)
-            {
-                unset($this->files[$i]);
-                return;
-            }
-            $i++;
-        }
-        return null;
-    }
-
-    /** @brief Add a flow to the block 
-     *  @param Flow $flow flow to add to the block
-     */
-    function addFlow($flow)
-    {
-        $flow->parentBlock = $this;
-        array_push($this->flows, $flow);
-    }
-
-    /** @brief return a reference to the flow with the name $name, if not found,
-     * return null
-     *  @param string $name name of the flow to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Flow found flow
-     */
-    function getFlow($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->flows as $flow)
-            {
-                if ($flow->name == $name)
-                    return $flow;
-            }
-        }
-        else
-        {
-            foreach ($this->flows as $flow)
-            {
-                if (strcasecmp($flow->name, $name) == 0)
-                    return $flow;
-            }
-        }
-        return null;
-    }
-
-    /** @brief delete a flow from his name
-     *  @param string $name name of the flow to delete
-     */
-    function delFlow($name)
-    {
-        $i = 0;
-        foreach ($this->flows as $flow)
-        {
-            if ($flow->name == $name)
-            {
-                unset($this->flows[$i]);
-                return;
-            }
-            $i++;
-        }
-        return null;
-    }
-
-    /** @brief Add a clock to the block 
-     *  @param Clock $clock clock to add to the block
-     */
-    function addClock($clock)
-    {
-        $clock->parentBlock = $this;
-        array_push($this->clocks, $clock);
-    }
-
-    /** @brief return a reference to the clock with the name $name, if not found,
-     * return null
-     *  @param string $name name of the clock to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Clock found clock
-     */
-    function getClock($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->clocks as $clock)
-            {
-                if ($clock->name == $name)
-                    return $clock;
-            }
-        }
-        else
-        {
-            foreach ($this->clocks as $clock)
-            {
-                if (strcasecmp($clock->name, $name) == 0)
-                    return $clock;
-            }
-        }
-        return null;
-    }
-
-    /** @brief delete a clock from his name
-     *  @param string $name name of the clock to delete
-     */
-    function delClock($name)
-    {
-        $i = 0;
-        foreach ($this->clocks as $clock)
-        {
-            if ($clock->name == $name)
-            {
-                unset($this->clocks[$i]);
-                return;
-            }
-            $i++;
-        }
-        return null;
-    }
-
-    /** @brief Add a reset to the block 
-     *  @param Reset $reset reset to add to the block
-     */
-    function addReset($reset)
-    {
-        $reset->parentBlock = $this;
-        array_push($this->resets, $reset);
-    }
-
-    /** @brief return a reference to the reset with the name $name, if not found,
-     * return null
-     *  @param string $name name of the reset to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Reset found reset
-     */
-    function getReset($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->resets as $reset)
-            {
-                if ($reset->name == $name)
-                    return $reset;
-            }
-        }
-        else
-        {
-            foreach ($this->resets as $reset)
-            {
-                if (strcasecmp($reset->name, $name) == 0)
-                    return $reset;
-            }
-        }
-        return null;
-    }
-
-    /** @brief delete a reset from his name
-     *  @param string $name name of the reset to delete
-     */
-    function delReset($name)
-    {
-        $i = 0;
-        foreach ($this->resets as $reset)
-        {
-            if ($reset->name == $name)
-            {
-                unset($this->resets[$i]);
-                return;
-            }
-            $i++;
-        }
-        return null;
-    }
-
-    /** @brief Add an InterfaceBus to the block 
-     *  @param InterfaceBus $interface interface to add to the block
-     */
-    function addInterface($interface)
-    {
-        $interface->parentBlock = $this;
-        array_push($this->interfaces, $interface);
-    }
-
-    /** @brief return a reference to the interface with the name $name, if not
-     * found, return null
-     *  @param string $name name of the interface to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return InterfaceBus found interface
-     */
-    function getInterface($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->interfaces as $interface)
-            {
-                if ($interface->name == $name)
-                    return $interface;
-            }
-        }
-        else
-        {
-            foreach ($this->interfaces as $interface)
-            {
-                if (strcasecmp($interface->name, $name) == 0)
-                    return $interface;
-            }
-        }
-        return null;
-    }
-
-    /** @brief Add a attribute to the toolchain 
-     *  @param Attribute $attribute attribute to add to the block
-     */
-    function addAttribute($attribute)
-    {
-        array_push($this->attributes, $attribute);
-    }
-
-    /** @brief return a reference to the attribute with the name $name, if not
-     * found, return null
-     *  @param string $name name of the attribute enum to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return Attribute found attribute * */
-    function getAttribute($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->attributes as $attribute)
-            {
-                if ($attribute->name == $name)
-                    return $attribute;
-            }
-        }
-        else
-        {
-            foreach ($this->attributes as $attribute)
-            {
-                if (strcasecmp($attribute->name, $name) == 0)
-                    return $attribute;
-            }
-        }
-        return null;
-    }
-
-    /** @brief return a reference to the instance with the name $name, if not
-     * found, return null
-     *  @param string $name name of the instance to search
-     *  @param bool $casesens take care or not of the case of the name
-     *  @return mixed found instance
-     */
-    function getInstance($name, $casesens = true)
-    {
-        $instance = $this->getAttribute($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getClock($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getFileByPath($name);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getFlow($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getParam($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getPropertyPath($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-        $instance = $this->getReset($name, $casesens);
-        if ($instance != NULL)
-            return $instance;
-
-        if ($this->type() == "io" or $this->type() == "iocom")
-        {
-            $instance = $this->getExtPort($name, $casesens);
-            if ($instance != NULL)
-                return $instance;
-        }
-
-        return null;
-    }
-
     /**
      * @brief internal function to fill this instance from input xml structure
      * 
      * SimpleXMLElement $xml xml element to parse need to be specified in
      * members before to call this function
      */
-    protected function parse_xml()
+    protected function parse_xml($dummy=NULL, $dummy2=NULL)
     {
+        parent::parse_xml();
+
         if (isset($this->xml['size_addr_rel']))
-            warning("Please update your process or io with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'", 12, "Block");
+            warning("Please update your process or device with the new conventionnal name 'pi_size_addr_rel' instead of 'size_addr_rel'", 12, "Block");
         $this->pi_size_addr_rel = (int) $this->xml['pi_size_addr_rel'];
-        $this->categ = (string) $this->xml['categ'];
         $this->configscriptfile = (string) $this->xml['configscriptfile'];
         $this->generatescriptfile = (string) $this->xml['generatescriptfile'];
-        $this->desc = (string) $this->xml['desc'];
-
-        // files
-        if (isset($this->xml->files))
-        {
-            foreach ($this->xml->files->file as $fileXml)
-            {
-                $this->addFile(new File($fileXml));
-            }
-        }
 
         // properties
         if (isset($this->xml->properties))
@@ -954,51 +472,6 @@ class Block
             foreach ($this->xml->properties->property as $propertyXml)
             {
                 $this->addProperty(new Property($propertyXml));
-            }
-        }
-
-        // params
-        if (isset($this->xml->params))
-        {
-            foreach ($this->xml->params->param as $paramXml)
-            {
-                $this->addParam(new Param($paramXml));
-            }
-        }
-
-        // flows
-        if (isset($this->xml->flows))
-        {
-            foreach ($this->xml->flows->flow as $flowXml)
-            {
-                $this->addFlow(new Flow($flowXml));
-            }
-        }
-
-        // clocks
-        if (isset($this->xml->clocks))
-        {
-            foreach ($this->xml->clocks->clock as $clockXml)
-            {
-                $this->addClock(new Clock($clockXml));
-            }
-        }
-
-        // resets
-        if (isset($this->xml->resets))
-        {
-            foreach ($this->xml->resets->reset as $resetXml)
-            {
-                $this->addReset(new Reset($resetXml));
-            }
-        }
-
-        // attributes
-        if (isset($this->xml->attributes))
-        {
-            foreach ($this->xml->attributes->attribute as $attribute)
-            {
-                $this->addAttribute(new Attribute($attribute));
             }
         }
     }
@@ -1097,15 +570,15 @@ class Block
             $att = $xml->createAttribute('addr_abs');
             $att->value = $this->addr_abs;
             $xml_element->appendChild($att);
-
-            // master_count
-            $att = $xml->createAttribute('master_count');
-            $att->value = $this->master_count;
-            $xml_element->appendChild($att);
         }
 
         if ($format == "complete" or $format == "blockdef")
         {
+            // master_count
+            $att = $xml->createAttribute('master_count');
+            $att->value = $this->master_count;
+            $xml_element->appendChild($att);
+
             // pi_size_addr_rel
             $att = $xml->createAttribute('pi_size_addr_rel');
             $att->value = $this->pi_size_addr_rel;
@@ -1115,30 +588,46 @@ class Block
             $att = $xml->createAttribute('desc');
             $att->value = $this->desc;
             $xml_element->appendChild($att);
+            
+            // configscriptfile
+            if (!empty($this->configscriptfile))
+            {
+                $att = $xml->createAttribute('configscriptfile');
+                $att->value = $this->configscriptfile;
+                $xml_element->appendChild($att);
+            }
+            
+            // generatescriptfile
+            if (!empty($this->generatescriptfile))
+            {
+                $att = $xml->createAttribute('generatescriptfile');
+                $att->value = $this->generatescriptfile;
+                $xml_element->appendChild($att);
+            }
         }
-
-        // x_pos
-        if (isset($this->x_pos) and $this->x_pos != -1)
+        
+        // parts
+        if (!empty($this->parts))
         {
-            $att = $xml->createAttribute('x_pos');
-            $att->value = $this->x_pos;
-            $xml_element->appendChild($att);
-        }
-
-        // y_pos
-        if (isset($this->y_pos) and $this->y_pos != -1)
-        {
-            $att = $xml->createAttribute('y_pos');
-            $att->value = $this->y_pos;
-            $xml_element->appendChild($att);
+            $xml_parts = $xml->createElement("parts");
+            foreach ($this->parts as $part)
+            {
+                $xml_parts->appendChild($part->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_parts);
         }
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // SVG draw
-            if (isset($this->xml->svg))
+            // infos
+            if (!empty($this->infos))
             {
-                $xml_element->appendChild($xml->importNode(dom_import_simplexml($this->xml->svg), true));
+                $xml_infos = $xml->createElement("infos");
+                foreach ($this->infos as $info)
+                {
+                    $xml_infos->appendChild($info->getXmlElement($xml, $format));
+                }
+                $xml_element->appendChild($xml_infos);
             }
 
             // files

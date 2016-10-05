@@ -200,10 +200,13 @@ class Param
         $att->value = $this->name;
         $xml_element->appendChild($att);
 
-        // value
-        $att = $xml->createAttribute('value');
-        $att->value = $this->value;
-        $xml_element->appendChild($att);
+        if ($format == "project")
+        {
+            // value
+            $att = $xml->createAttribute('value');
+            $att->value = $this->value;
+            $xml_element->appendChild($att);
+        }
 
         if ($format == "complete" or $format == "blockdef")
         {
@@ -227,30 +230,53 @@ class Param
                 $xml_element->appendChild($att);
 
                 // propertymap
-                $att = $xml->createAttribute('propertymap');
-                $att->value = $this->propertymap;
+                if (!empty($this->propertymap))
+                {
+                    $att = $xml->createAttribute('propertymap');
+                    $att->value = $this->propertymap;
+                    $xml_element->appendChild($att);
+                }
+            }
+
+            // value
+            if (!empty($this->value) or $this->value=="0")
+            {
+                $att = $xml->createAttribute('value');
+                $att->value = $this->value;
                 $xml_element->appendChild($att);
             }
 
             // default
-            $att = $xml->createAttribute('default');
-            $att->value = $this->default;
-            $xml_element->appendChild($att);
+            if (!empty($this->default) or $this->default=="0")
+            {
+                $att = $xml->createAttribute('default');
+                $att->value = $this->default;
+                $xml_element->appendChild($att);
+            }
 
             // min
-            $att = $xml->createAttribute('min');
-            $att->value = $this->min;
-            $xml_element->appendChild($att);
+            if (!empty($this->min) or $this->min=="0")
+            {
+                $att = $xml->createAttribute('min');
+                $att->value = $this->min;
+                $xml_element->appendChild($att);
+            }
 
             // max
-            $att = $xml->createAttribute('max');
-            $att->value = $this->max;
-            $xml_element->appendChild($att);
+            if (!empty($this->max) or $this->max=="0")
+            {
+                $att = $xml->createAttribute('max');
+                $att->value = $this->max;
+                $xml_element->appendChild($att);
+            }
 
             // desc
-            $att = $xml->createAttribute('desc');
-            $att->value = $this->desc;
-            $xml_element->appendChild($att);
+            if (!empty($this->desc))
+            {
+                $att = $xml->createAttribute('desc');
+                $att->value = $this->desc;
+                $xml_element->appendChild($att);
+            }
 
             // parambitfields
             if (!empty($this->parambitfields))

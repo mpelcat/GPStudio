@@ -39,10 +39,9 @@ QMAKE_CFLAGS_RELEASE = -O2
 INCLUDEPATH += $$PWD
 
 HEADERS += gpstudio_lib_common.h \
-    lib_parser/processlib.h \
     lib_parser/lib.h \
+    lib_parser/blocklib.h \
     lib_parser/boardlib.h \
-    lib_parser/iolib.h \
     lib_parser/ioboardlib.h \
     lib_parser/ioboardlibgroup.h \
     scriptengine/propertyclass.h \
@@ -84,13 +83,14 @@ HEADERS += gpstudio_lib_common.h \
     camera/flowviewerinterface.h \
     camera/registermanager.h \
     camera/registerbitfield.h \
-    camera/register.h
+    camera/register.h \
+    model/model_componentpart.h \
+    model/model_componentpartflow.h
 
 SOURCES += \
-    lib_parser/processlib.cpp \
     lib_parser/lib.cpp \
+    lib_parser/blocklib.cpp \
     lib_parser/boardlib.cpp \
-    lib_parser/iolib.cpp \
     lib_parser/ioboardlib.cpp \
     lib_parser/ioboardlibgroup.cpp \
     scriptengine/propertyclass.cpp \
@@ -132,7 +132,9 @@ SOURCES += \
     camera/flowviewerinterface.cpp \
     camera/registermanager.cpp \
     camera/registerbitfield.cpp \
-    camera/register.cpp
+    camera/register.cpp \
+    model/model_componentpart.cpp \
+    model/model_componentpartflow.cpp
 
 # gpstudio_com lib
 INCLUDEPATH += $$PWD/../gpstudio_com

@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+DIR=$(dirname "$0")
+if [ "$(uname -o)" == "Cygwin" ]; then
+    DIR=$(cygpath -aw "${DIR}")
+fi
 
 args=""
 for arg in "$@"
@@ -12,7 +17,6 @@ do
 	fi
 done
 
-DIR=$(dirname "$0")
 CMD="php \"$DIR/../scripts/tools/gpdevice.php\" -a "
 CMD+=$args
 eval $CMD

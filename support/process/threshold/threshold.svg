@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg width="100" height="80">
+    <rect width="100" height="80" x="0" y="0" fill="lightgray"/>
+    <path d="M30 20 L60 40 L30 60" fill="transparent" stroke="black" stroke-width="10"/>
+</svg>

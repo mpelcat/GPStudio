@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<process name="normhw" categ="normhw" description="Histogram Normalisation" pi_size_addr_rel="1">
-	<svg width="160" height="110">
-		<rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-		<text x="50" y="50">normhw</text>
-	</svg>
-	<flows>
-		<flow name="out" type="out" desc="Stream out"/>
-		<flow name="in" type="in" desc="Stream in"/>
-	</flows>	
-	<params>		
-	</params>
-	<files>
-		<file name="normhw.v" path="hdl/normhw.v" type="verilog" group="hdl" desc=""/>
-	</files>
-	<resets>
-		<reset name="reset_n" group="reset_n" direction="in" desc=""/>
-	</resets>
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="normhw" categ="normhw" pi_size_addr_rel="1" desc="Histogram Normalisation">
+  <parts>
+    <part name="main">
+      <svg width="160" height="110">
+        <rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+        <text x="50" y="50">normhw</text>
+      </svg>
+    </part>
+  </parts>
+  <files>
+    <file name="normhw.v" type="verilog" group="hdl" path="hdl/normhw.v"/>
+    <file name="normhw.proc" type="proc" group="blockdef" path="normhw.proc"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="out" size="16" type="out" desc="Stream out"/>
+    <flow name="in" size="16" type="in" desc="Stream in"/>
+  </flows>
 </process>

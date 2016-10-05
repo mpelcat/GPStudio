@@ -24,6 +24,7 @@
 #include <QMouseEvent>
 #include <QMimeData>
 #include <qmath.h>
+#include <QMenu>
 
 #include "blockitem.h"
 #include "blockconnectoritem.h"
@@ -39,6 +40,7 @@ BlockView::BlockView(QWidget *parent)
 
     _startConnectItem = NULL;
     _lineConector = NULL;
+    _rectSelect = NULL;
 
     setScene(_scene);
 
@@ -49,7 +51,7 @@ BlockView::BlockView(QWidget *parent)
     setRenderHint(QPainter::SmoothPixmapTransform, true);
     setRenderHint(QPainter::TextAntialiasing, true);
 
-    setDragMode(QGraphicsView::ScrollHandDrag);
+    setDragMode(QGraphicsView::RubberBandDrag);
 
     connect(_scene, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
 }
@@ -65,21 +67,46 @@ void BlockView::attachProject(GPNodeProject *project)
 
     _project = project;
 
-    connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(changeNode(ModelNode*)));
-    connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(updateBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockAdded(ModelBlock*)), this, SLOT(addBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockRemoved(ModelBlock*)), this, SLOT(removeBlock(ModelBlock*)));
-    connect(_project, SIGNAL(blockConnected(ModelFlow*,ModelFlow*)), this, SLOT(connectBlock(ModelFlow*,ModelFlow*)));
-    connect(_project, SIGNAL(blockDisconected(ModelFlow*,ModelFlow*)), this, SLOT(disconnectBlock(ModelFlow*,ModelFlow*)));
+    connect(_project, SIGNAL(nodeChanged(ModelNode*)),
+            this, SLOT(changeNode(ModelNode*)));
+    connect(_project, SIGNAL(blockUpdated(ModelBlock*)),
+            this, SLOT(updateBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockAdded(ModelBlock*)),
+            this, SLOT(addBlock(ModelBlock*)));
+    connect(_project, SIGNAL(blockRemoved(QString)),
+            this, SLOT(removeBlock(QString)));
+    connect(_project, SIGNAL(blockConnected(ModelFlowConnect)),
+            this, SLOT(connectBlock(ModelFlowConnect)));
+    connect(_project, SIGNAL(blockDisconected(ModelFlowConnect)),
+            this, SLOT(disconnectBlock(ModelFlowConnect)));
 
-    connect(this, SIGNAL(blockMoved(ModelBlock*,QPoint)), project, SLOT(moveBlock(ModelBlock*,QPoint)));
-    connect(this, SIGNAL(blockDeleted(ModelBlock*)), project, SLOT(removeBlock(ModelBlock*)));
-    connect(this, SIGNAL(blockPortConnected(ModelFlow*,ModelFlow*)), project, SLOT(connectBlockFlows(ModelFlow*,ModelFlow*)));
-    connect(this, SIGNAL(blockPortDisconnected(ModelFlow*,ModelFlow*)), project, SLOT(disConnectBlockFlows(ModelFlow*,ModelFlow*)));
+    connect(this, SIGNAL(blockAdded(QString,QPoint)),
+            _project, SLOT(addBlock(QString,QPoint)));
+    connect(this, SIGNAL(blockRenamed(QString,QString)),
+            _project, SLOT(renameBlock(QString,QString)));
+    connect(this, SIGNAL(blockMoved(QString,QString,QPoint,QPoint)),
+            _project, SLOT(moveBlock(QString,QString,QPoint,QPoint)));
+    connect(this, SIGNAL(blockDeleted(ModelBlock*)),
+            _project, SLOT(removeBlock(ModelBlock*)));
+    connect(this, SIGNAL(blockPortConnected(ModelFlowConnect)),
+            _project, SLOT(connectBlockFlows(ModelFlowConnect)));
+    connect(this, SIGNAL(blockPortDisconnected(ModelFlowConnect)),
+            _project, SLOT(disConnectBlockFlows(ModelFlowConnect)));
+
+    connect(this, SIGNAL(beginMacroAsked(QString)),
+            _project, SLOT(beginMacro(QString)));
+    connect(this, SIGNAL(endMacroAsked()),
+            _project, SLOT(endMacro()));
+
+    if(project->node())
+    {
+        changeNode(project->node());
+    }
 }
 
 void BlockView::dragEnterEvent(QDragEnterEvent *event)
 {
+    QGraphicsView::dragEnterEvent(event);
     if(_editMode)
     {
         if(event->mimeData()->hasText())
@@ -89,6 +116,7 @@ void BlockView::dragEnterEvent(QDragEnterEvent *event)
 
 void BlockView::dragMoveEvent(QDragMoveEvent *event)
 {
+    QGraphicsView::dragMoveEvent(event);
     if(_editMode)
     {
         if(event->mimeData()->hasText())
@@ -98,61 +126,94 @@ void BlockView::dragMoveEvent(QDragMoveEvent *event)
 
 void BlockView::dropEvent(QDropEvent *event)
 {
+    QGraphicsView::dropEvent(event);
     if(_editMode)
     {
         QString driver = event->mimeData()->text();
-        ProcessLib *processLib = Lib::getLib().process(driver);
-        if(processLib)
-        {
-            ModelProcess *modelProcess = new ModelProcess(*processLib->modelProcess());
-            modelProcess->setPos(mapToScene(event->pos()).toPoint());
-            _project->addBlock(modelProcess);
-        }
+        QPoint pos = mapToScene(event->pos()).toPoint();
+
+        emit blockAdded(driver, pos);
     }
 }
 
 void BlockView::mousePressEvent(QMouseEvent *event)
 {
-    QGraphicsView::mousePressEvent(event);
-
     if(event->button() == Qt::LeftButton)
     {
-        if(_editMode)
+        BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
+        if(_editMode && processItem)
         {
-            BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
-            if(processItem)
-            {
-                _startConnectItem = processItem;
-                _lineConector = new BlockConnectorItem(_startConnectItem);
-                blockScene()->addItem(_lineConector);
-                _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
-            }
+            _startConnectItem = processItem;
+            _lineConector = new BlockConnectorItem(_startConnectItem);
+            blockScene()->addItem(_lineConector);
+            _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
         }
+        setDragMode(QGraphicsView::RubberBandDrag);
     }
+    if(event->button() == Qt::MidButton)
+    {
+        setDragMode(QGraphicsView::NoDrag);
+        setCursor(Qt::ClosedHandCursor);
+
+        _refDrag = mapToScene(event->pos());
+        _centerDrag = mapToScene(this->viewport()->rect()).boundingRect().center();
+
+    }
+    QGraphicsView::mousePressEvent(event);
 }
 
 void BlockView::mouseMoveEvent(QMouseEvent *event)
 {
-    QGraphicsView::mouseMoveEvent(event);
-
     if(_startConnectItem)
         _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
+
+    if ((event->buttons() & Qt::MidButton) == Qt::MidButton)
+    {
+        QPointF move = _refDrag - mapToScene(event->pos());
+        centerOn(_centerDrag + move);
+        _centerDrag = mapToScene(viewport()->rect()).boundingRect().center();
+    }
+
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void BlockView::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
 
-    BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(itemAt(event->pos()));
-    if(blockItem)
-        if(blockItem->pos() != blockItem->modelBlock()->pos())
-            emit blockMoved(blockItem->modelBlock(), blockItem->pos().toPoint());
+    if(event->button() == Qt::MidButton)
+    {
+        setCursor(Qt::ArrowCursor);
+    }
 
+    // move blocks
+    QList<QPair<BlockItem*,QPoint> > movedBlocks;
+    foreach (QGraphicsItem *item, _scene->selectedItems())
+    {
+        BlockItem *blockItem = qgraphicsitem_cast<BlockItem*>(item);
+        if(blockItem)
+            if(blockItem->pos() != blockItem->modelPart()->pos())
+                movedBlocks.append(qMakePair(blockItem, blockItem->pos().toPoint()));
+    }
+    if(movedBlocks.size()>1)
+        emit beginMacroAsked("multiple blocks moved");
+    for (int i=0; i<movedBlocks.size(); i++)
+    {
+        QPair<BlockItem*,QPoint> pairMove = movedBlocks.at(i);
+        BlockItem *blockItem = pairMove.first;
+        emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), pairMove.second);
+    }
+    if(movedBlocks.size()>1)
+        emit endMacroAsked();
+
+    // draw connexions
     if(_startConnectItem)
     {
         BlockPortItem *processItem = qgraphicsitem_cast<BlockPortItem*>(itemAt(event->pos()));
-        if(processItem && processItem!=_startConnectItem)
-            emit blockPortConnected(_startConnectItem->modelFlow(), processItem->modelFlow());
+        if(processItem && processItem!=_startConnectItem &&
+                _startConnectItem->modelFlow()->type() != processItem->modelFlow()->type())
+            emit blockPortConnected(ModelFlowConnect(_startConnectItem->blockName(), _startConnectItem->name(),
+                                                     processItem->blockName(),       processItem->name()));
 
         _lineConector->disconnectPorts();
         scene()->removeItem(_lineConector);
@@ -169,30 +230,29 @@ void BlockView::mouseDoubleClickEvent(QMouseEvent *event)
     QGraphicsItem *item = _scene->itemAt(mapToScene(event->pos()), QTransform());
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
     if(blockItem)
-        emit blockDetailsRequest(blockItem->block());
+        emit blockDetailsRequest(blockItem->name());
 }
 
 void BlockView::updateSelection()
 {
     if(_scene->selectedItems().count()==0)
     {
-        emit blockSelected(NULL);
+        emit blockSelected("");
         return;
     }
 
     QGraphicsItem *item = _scene->selectedItems().at(0);
     BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
     if(blockItem)
-        emit blockSelected(blockItem->block());
+        emit blockSelected(blockItem->name());
 }
 
-void BlockView::selectBlock(const Block *block)
+void BlockView::selectBlock(QString blockName)
 {
     _scene->blockSignals(true);
     _scene->clearSelection();
 
-    BlockItem *blockItem = _scene->block(block->name());
-    if(blockItem)
+    foreach(BlockItem *blockItem, _scene->block(blockName))
     {
         blockItem->setSelected(true);
         blockItem->ensureVisible();
@@ -203,10 +263,11 @@ void BlockView::selectBlock(const Block *block)
 
 void BlockView::updateBlock(ModelBlock *block)
 {
-    BlockItem *blockItem = _scene->block(block);
-    if(blockItem)
+    foreach(BlockItem *blockItem, _scene->block(block->name()))
     {
         blockItem->updatePos();
+        if(blockItem->name() != block->name())
+            blockItem->setName(block->name());
     }
 }
 
@@ -215,19 +276,19 @@ void BlockView::addBlock(ModelBlock *block)
     _scene->addBlock(block);
 }
 
-void BlockView::removeBlock(ModelBlock *block)
+void BlockView::removeBlock(const QString &block_name)
 {
-    _scene->removeBlock(block);
+    _scene->removeBlock(block_name);
 }
 
-void BlockView::connectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+void BlockView::connectBlock(const ModelFlowConnect &flowConnect)
 {
-    _scene->connectBlockPort(fromFlow, toFlow);
+    _scene->connectBlockPort(flowConnect);
 }
 
-void BlockView::disconnectBlock(ModelFlow *fromFlow, ModelFlow *toFlow)
+void BlockView::disconnectBlock(const ModelFlowConnect &flowConnect)
 {
-    _scene->disconnectBlockPort(fromFlow, toFlow);
+    _scene->disconnectBlockPort(flowConnect);
 }
 
 void BlockView::changeNode(ModelNode *node)
@@ -303,24 +364,90 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         zoomOut();
     if(event->key()==Qt::Key_Asterisk)
         zoomFit();
-    if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
+    if(event->key()==Qt::Key_F2)
     {
-        if(_scene->selectedItems().count()>0)
+        if(_scene->selectedItems().count()==1)
         {
             QGraphicsItem *item = _scene->selectedItems().at(0);
-            BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
-            if(connectorItem)
+            BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+            if(blockItem)
+                emit blockRenamed(blockItem->name(), "");
+        }
+    }
+    if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
+    {
+        QList<ModelBlock*> block2delete;
+        QList<ModelFlowConnect> link2delete;
+        foreach (QGraphicsItem *item, _scene->selectedItems())
+        {
+            BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+            if(blockItem)
             {
-                emit blockPortDisconnected(connectorItem->portItem1()->modelFlow(),
-                                           connectorItem->portItem2()->modelFlow());
+                if(!blockItem->modelBlock()->isIO())
+                    block2delete.append(blockItem->modelBlock());
             }
             else
             {
-                BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
-                if(blockItem)
-                    emit blockDeleted(blockItem->modelBlock());
+                BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
+                if(connectorItem)
+                    link2delete.append(ModelFlowConnect(connectorItem->portItem1()->blockName(),
+                                                                                connectorItem->portItem1()->name(),
+                                                                                connectorItem->portItem2()->blockName(),
+                                                                                connectorItem->portItem2()->name()));
             }
+
         }
+        if(block2delete.count()>1)
+            emit beginMacroAsked("multiple blocks suppression");
+        else if(link2delete.count()>1)
+            emit beginMacroAsked("multiple links suppression");
+        foreach (ModelBlock *block, block2delete)
+            emit blockDeleted(block);
+        foreach (ModelFlowConnect connect, link2delete)
+            emit blockPortDisconnected(connect);
+
+        if(block2delete.count()>1 || link2delete.count()>1)
+            emit endMacroAsked();
     }
     QGraphicsView::keyPressEvent(event);
 }
+
+#ifndef QT_NO_CONTEXTMENU
+void BlockView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QGraphicsItem *item;
+    item = _scene->itemAt(mapToScene(event->pos()), QTransform());
+    if(item)
+    {
+        scene()->clearSelection();
+        item->setSelected(true);
+
+        BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+        if(blockItem)
+        {
+            QMenu menu;
+            QAction *renameAction=NULL, *deleteAction=NULL;
+            if(_editMode)
+            {
+                renameAction = menu.addAction("Rename");
+                renameAction->setShortcut(Qt::Key_F2);
+                deleteAction = menu.addAction("Delete");
+                deleteAction->setShortcut(Qt::Key_Delete);
+                if(blockItem->modelBlock()->isIO())
+                {
+                    renameAction->setEnabled(false);
+                    deleteAction->setEnabled(false);
+                }
+            }
+            QAction *infosIPAction = menu.addAction("View implementation files");
+            QAction *trigered = menu.exec(event->globalPos());
+            if(trigered == deleteAction)
+                emit blockDeleted(blockItem->modelBlock());
+            else if(trigered == renameAction)
+                emit blockRenamed(blockItem->name(), "");
+            else if(trigered == infosIPAction)
+                emit blockDetailsRequest(blockItem->name());
+        }
+    }
+}
+#endif // QT_NO_CONTEXTMENU

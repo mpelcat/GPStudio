@@ -114,7 +114,23 @@ class Node
                             }
                             else
                             {
-                                warning('parameter ' . $param['name'] . " does'nt exists", 16, $processBlock->name);
+                                warning('parameter ' . $param['name'] . " does not exist", 16, $processBlock->name);
+                            }
+                        }
+                    }
+                }
+
+                // redef part position
+                if (isset($process->parts))
+                {
+                    foreach ($process->parts->part as $part)
+                    {
+                        if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
+                        {
+                            if ($concerned_part = $processBlock->getPart((string) $part['name']))
+                            {
+                                $concerned_part->x_pos = $part['x_pos'];
+                                $concerned_part->y_pos = $part['y_pos'];
                             }
                         }
                     }
@@ -133,7 +149,7 @@ class Node
                             }
                             else
                             {
-                                warning('property ' . $property['name'] . " does'nt exists", 16, $processBlock->name);
+                                warning('property ' . $property['name'] . " does not exist", 16, $processBlock->name);
                             }
                         }
                         if (isset($property->properties))
@@ -148,7 +164,7 @@ class Node
                                     }
                                     else
                                     {
-                                        warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does'nt exists", 16, $processBlock->name);
+                                        warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does not exist", 16, $processBlock->name);
                                     }
                                 }
                             }
@@ -169,7 +185,7 @@ class Node
                             }
                             else
                             {
-                                warning('flow ' . $flow['name'] . " does'nt exists", 16, $processBlock->name);
+                                warning('flow ' . $flow['name'] . " does not exist", 16, $processBlock->name);
                             }
                         }
                     }
@@ -188,7 +204,7 @@ class Node
                             }
                             else
                             {
-                                warning('clock ' . $clock['name'] . " does'nt exists", 16, $processBlock->name);
+                                warning('clock ' . $clock['name'] . " does not exist", 16, $processBlock->name);
                             }
                         }
                     }

@@ -46,7 +46,7 @@ void PropertyMatrixWidget::createWidget()
     QGroupBox *groupBox = new QGroupBox(_linkedProperty->caption());
 
     QGridLayout *layoutMatrix = new QGridLayout();
-    layoutMatrix->setContentsMargins(0,0,0,0);
+    layoutMatrix->setContentsMargins(0,10,0,0);
 
     for(int x=0; x<9; x++)
     {

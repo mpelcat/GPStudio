@@ -1,2 +1,6 @@
 gradienthw
 conv
+sconv
+lbp
+roi
+threshold

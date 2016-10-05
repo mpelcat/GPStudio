@@ -28,28 +28,28 @@
 #include "nodeeditor/gpnodeproject.h"
 #include "model/model_block.h"
 
+#include <model/model_flowconnect.h>
+
 class GPSTUDIO_GUI_EXPORT BlockCommand : public QUndoCommand
 {
 public:
-    BlockCommand(GPNodeProject *project, ModelBlock *block=NULL);
+    BlockCommand(GPNodeProject *project, const QString &block_name=QString());
 
 protected:
     GPNodeProject *_project;
-    ModelBlock *_block;
+    QString _block_name;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdRename : public BlockCommand
 {
 public:
     enum { Id = 0x0101 };
-    BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName);
+    BlockCmdRename(GPNodeProject *project, const QString &oldName, const QString &newName);
     void undo();
     void redo();
-    bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
 protected:
-    QString _oldName;
     QString _newName;
 };
 
@@ -57,13 +57,13 @@ class GPSTUDIO_GUI_EXPORT BlockCmdMove : public BlockCommand
 {
 public:
     enum { Id = 0x0102 };
-    BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos);
+    BlockCmdMove(GPNodeProject *project, const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos);
     void undo();
     void redo();
-    bool mergeWith(const QUndoCommand *command);
     int id() const { return Id; }
 
 protected:
+    QString _part_name;
     QPoint _oldPos;
     QPoint _newPos;
 };
@@ -77,6 +77,10 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+
+protected:
+    ModelBlock *_block;
+    ModelBlock *_backupBlock;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdRemove : public BlockCommand
@@ -88,34 +92,37 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+
+protected:
+    ModelBlock *_block;
+    ModelBlock *_backupBlock;
+    QList<ModelFlowConnect> _flowConnects;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdConnectFlow : public BlockCommand
 {
 public:
     enum { Id = 0x0105 };
-    BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    BlockCmdConnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect);
     void undo();
     void redo();
     int id() const { return Id; }
 
 protected:
-    ModelFlow *_flow1;
-    ModelFlow *_flow2;
+    ModelFlowConnect _flowConnect;
 };
 
 class GPSTUDIO_GUI_EXPORT BlockCmdDisconnectFlow : public BlockCommand
 {
 public:
     enum { Id = 0x0106 };
-    BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2);
+    BlockCmdDisconnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect);
     void undo();
     void redo();
     int id() const { return Id; }
 
 protected:
-    ModelFlow *_flow1;
-    ModelFlow *_flow2;
+    ModelFlowConnect _flowConnect;
 };
 
 #endif // BLOCKCOMMANDS_H

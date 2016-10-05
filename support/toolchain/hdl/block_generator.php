@@ -143,6 +143,70 @@ class Block_generator
         }
     }
 
+    public function generateTb($path)
+    {
+        if ($this->block == NULL)
+            return;
+
+        $this->block_generator = new VHDL_generator($this->block->name . '_tb');
+        array_push($this->block_generator->libs, "use std.textio.all;");
+
+        // clocks generation
+        $codeClks = '';
+        foreach ($this->block->clocks as $clock)
+        {
+            $clock->net = $clock->name;
+            $period_name = $clock->name . "_period";
+
+            $this->block_generator->addConstantComment(str_pad(' ' . $clock->name . ' clock constant ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addConstant($clock->name . "_FREQ", "INTEGER", "1000000");  // TODO give real freq
+            $this->block_generator->addConstant($period_name, "TIME", "1 ns");                  // TODO give real freq
+            $this->block_generator->addSignalComment(str_pad(' ' . $clock->name . ' clock signal ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addSignal($clock->name, 1, "std_logic");
+
+            $codeClks.="	" . $clock->name . "_gen_process : process" . "\r\n";
+            $codeClks.="	begin" . "\r\n";
+            $codeClks.="		" . $clock->name . " <= '0';" . "\r\n";
+            $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
+            $codeClks.="		" . $clock->name . " <= '1';" . "\r\n";
+            $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
+            $codeClks.="	end process;" . "\r\n";
+            $codeClks.="" . "\r\n";
+        }
+        $this->block_generator->addCode($codeClks);
+        
+        // flow signals
+        foreach ($this->block->flows as $flow)
+        {
+            $this->block_generator->addConstantComment(str_pad(' ' . $flow->name . ' flow constant ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addConstant(strtoupper($flow->name) . "_SIZE", "INTEGER", $flow->size);
+            $this->block_generator->addSignalComment(str_pad(' ' . $flow->name . ' flow signals ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addSignal($flow->name . "_dv", 1, "std_logic");
+            $this->block_generator->addSignal($flow->name . "_fv", 1, "std_logic");
+            $this->block_generator->addSignal($flow->name . "_data", strtoupper($flow->name) . "_SIZE", "std_logic_vector");
+            
+            if($flow->type == "out")
+                $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is out \"" . $flow->name . ".pgm\";" . "\r\n";
+            else
+                $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is in \"" . $flow->name . ".img\";" . "\r\n";
+        }
+        
+        // resets signals
+        foreach ($this->block->resets as $reset)
+        {
+            $this->block_generator->addSignalComment(str_pad(' ' . $reset->name . ' reset signal ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addSignal($reset->name, 1, "std_logic");
+        }
+        
+        // tb_specific
+        $this->block_generator->addSignalComment(str_pad(' test bench specific ', 55, '-', STR_PAD_BOTH));
+        $this->block_generator->addSignal("endtb", 1, "std_logic", "0");
+
+        // block top level generation
+        $this->block_generator->addblock($this->block, TRUE);
+        $this->block_generator->save_as_ifdiff($path . DIRECTORY_SEPARATOR . $this->block_generator->name . '.vhd');
+    }
+
     public function generateTopBlock($path)
     {
         if ($this->block == NULL)
@@ -369,16 +433,23 @@ class Block_generator
 
                         $bf_name = $param->name . "_" . $parambitfield->name . "_reg";
 
-                        $count = $size;
-                        foreach ($parambitfield->bitfieldlist as $bit)
+                        if($size==1)
                         {
-                            $bits[$bit] = $bf_name . "(" . ($count - 1) . ")";
-                            $count--;
+                            $bits[$parambitfield->bitfieldlist[0]] = $bf_name;
+                        }
+                        else
+                        {
+                            $count = $size;
+                            foreach ($parambitfield->bitfieldlist as $bit)
+                            {
+                                $bits[$bit] = $bf_name . "(" . ($count - 1) . ")";
+                                $count--;
+                            }
                         }
                     }
 
                     $code_rd.="						datard_o <= ";
-                    $prev = 31;
+                    $prev = 32;
                     $count = 0;
                     ksort($bits);
                     $bits = array_reverse($bits, true);

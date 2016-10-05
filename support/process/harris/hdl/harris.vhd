@@ -6,10 +6,10 @@ use IEEE.NUMERIC_STD.all;
 
 entity harris is
 	generic (
-		LINE_WIDTH_MAX 	: integer	:=	320;
+		LINE_WIDTH_MAX 	: integer	     :=	320;
 		IN_SIZE 		: integer	:=	8;
 		OUT_SIZE 		: integer	:=	8;
-		CLK_PROC_FREQ 	: integer 	:=  48000000
+		CLK_PROC_FREQ 	: integer 	     :=  48000000
 	);
 	port (
 		clk_proc 	: in std_logic;

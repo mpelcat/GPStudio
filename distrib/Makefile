@@ -12,6 +12,7 @@ distrib-win64-qt5: FORCE
 	rm -rf gpstudio_win64-qt5
 	php distrib.php -s win -a 64 -q 5 -o gpstudio_win64-qt5
 	zip -r gpstudio_win64-qt5-`cat ../version.txt`.zip gpstudio_win64-qt5/ > /dev/null
+	wine ISCC inno-setup-win.iss
 
 distrib-linux32-qt4: FORCE
 	@echo "${GREEN}GPStudio linux32-qt4${NC}"

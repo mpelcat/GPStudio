@@ -41,6 +41,9 @@ public:
     GPNodeProject *project() const;
     void setProject(GPNodeProject *project);
 
+    QString boardName();
+    QStringList iosName();
+
 private slots:
     void selectBoard(const QString &boardName);
 
@@ -50,6 +53,8 @@ private:
 
     QComboBox *_boardComboBox;
     QScrollArea *_iosWidget;
+
+    QLayout *_iosLayout;
 };
 
 #endif // CONFIGNODEDIALOG_H

@@ -165,7 +165,12 @@ class Property
         $this->name = (string) $xml['name'];
         if (strpos($this->name, '.') !== false)
             error("Property name cannot contains . (dot) in \"$this->name\"", 5, "Property");
-        $this->caption = (string) $xml['caption'];
+
+        if (isset($xml['caption']))
+            $this->caption = (string) $xml['caption'];
+        else
+            $this->caption = $this->name;
+
         $this->type = (string) $xml['type'];
         $this->value = (string) $xml['value'];
         $this->min = (string) $xml['min'];
@@ -213,57 +218,92 @@ class Property
         $att->value = $this->name;
         $xml_element->appendChild($att);
 
-        // value
-        $att = $xml->createAttribute('value');
-        $att->value = $this->value;
-        $xml_element->appendChild($att);
+        if ($format == "project")
+        {
+            // value
+            $att = $xml->createAttribute('value');
+            $att->value = $this->value;
+            $xml_element->appendChild($att);
+        }
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // caption
-            $att = $xml->createAttribute('caption');
-            $att->value = $this->caption;
-            $xml_element->appendChild($att);
+            if ($this->caption != $this->name)
+            {
+                // caption
+                $att = $xml->createAttribute('caption');
+                $att->value = $this->caption;
+                $xml_element->appendChild($att);
+            }
 
             // type
             $att = $xml->createAttribute('type');
             $att->value = $this->type;
             $xml_element->appendChild($att);
 
+            // value
+            if (!empty($this->value) or $this->value=="0")
+            {
+                $att = $xml->createAttribute('value');
+                $att->value = $this->value;
+                $xml_element->appendChild($att);
+            }
+
             // min
-            $att = $xml->createAttribute('min');
-            $att->value = $this->min;
-            $xml_element->appendChild($att);
+            if (!empty($this->min) or $this->min=="0")
+            {
+                $att = $xml->createAttribute('min');
+                $att->value = $this->min;
+                $xml_element->appendChild($att);
+            }
 
             // max
-            $att = $xml->createAttribute('max');
-            $att->value = $this->max;
-            $xml_element->appendChild($att);
+            if (!empty($this->max) or $this->max=="0")
+            {
+                $att = $xml->createAttribute('max');
+                $att->value = $this->max;
+                $xml_element->appendChild($att);
+            }
 
             // step
-            $att = $xml->createAttribute('step');
-            $att->value = $this->step;
-            $xml_element->appendChild($att);
+            if (!empty($this->step) or $this->step=="0")
+            {
+                $att = $xml->createAttribute('step');
+                $att->value = $this->step;
+                $xml_element->appendChild($att);
+            }
 
             // assert
-            $att = $xml->createAttribute('assert');
-            $att->value = $this->assert;
-            $xml_element->appendChild($att);
+            if (!empty($this->assert))
+            {
+                $att = $xml->createAttribute('assert');
+                $att->value = $this->assert;
+                $xml_element->appendChild($att);
+            }
 
             // propertymap
-            $att = $xml->createAttribute('propertymap');
-            $att->value = $this->propertymap;
-            $xml_element->appendChild($att);
+            if (!empty($this->propertymap))
+            {
+                $att = $xml->createAttribute('propertymap');
+                $att->value = $this->propertymap;
+                $xml_element->appendChild($att);
+            }
 
             // onchange
-            $att = $xml->createAttribute('onchange');
-            $att->value = $this->onchange;
-            $xml_element->appendChild($att);
+            if (!empty($this->onchange))
+            {
+                $att = $xml->createAttribute('onchange');
+                $att->value = htmlentities($this->onchange);
+                $xml_element->appendChild($att);
+            }
 
             // desc
-            $att = $xml->createAttribute('desc');
-            $att->value = $this->desc;
-            $xml_element->appendChild($att);
+            if (!empty($this->desc))
+            {
+                $att = $xml->createAttribute('desc');
+                $att->value = $this->desc;
+                $xml_element->appendChild($att);
+            }
 
             // propertyenums
             if (!empty($this->propertyenums))

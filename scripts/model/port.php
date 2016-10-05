@@ -121,9 +121,12 @@ class Port
         $xml_element->appendChild($att);
 
         // desc
-        $att = $xml->createAttribute('desc');
-        $att->value = $this->desc;
-        $xml_element->appendChild($att);
+        if (!empty($this->desc))
+        {
+            $att = $xml->createAttribute('desc');
+            $att->value = $this->desc;
+            $xml_element->appendChild($att);
+        }
 
         return $xml_element;
     }

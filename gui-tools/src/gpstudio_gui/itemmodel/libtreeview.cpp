@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QDrag>
 #include <QMimeData>
+
 LibTreeView::LibTreeView(QWidget *parent) :
     QTreeView(parent)
 {
@@ -34,6 +35,17 @@ LibTreeView::LibTreeView(QWidget *parent) :
     setDragDropMode(QAbstractItemView::DragOnly);
 
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClickProcess(QModelIndex)));
+}
+
+void LibTreeView::attachProject(GPNodeProject *project)
+{
+    if(_project)
+        disconnect(_project);
+
+    _project = project;
+
+    connect(this, SIGNAL(blockAdded(QString,QPoint)),
+            _project, SLOT(addBlock(QString,QPoint)));
 }
 
 void LibTreeView::setLib(const Lib *lib)
@@ -51,7 +63,7 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     QDrag *drag = new QDrag(this);
     QMimeData *mimeData = new QMimeData;
 
-    const ProcessLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+    const BlockLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
 
     mimeData->setText(proc->name());
     drag->setMimeData(mimeData);
@@ -65,8 +77,8 @@ void LibTreeView::doubleClickProcess(QModelIndex index)
     if(!index.isValid())
         return;
 
-    const ProcessLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+    const BlockLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
 
     if(proc)
-        emit processAdded(proc->name());
+        emit blockAdded(proc->name(), QPoint());
 }

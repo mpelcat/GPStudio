@@ -34,12 +34,15 @@ Property::Property(QString name)
     _type = Group;
     _row = 0;
     _bits = 0;
+    _modelProperty = NULL;
 }
 
 Property::~Property()
 {
-    foreach (Property *property, _subProperties) delete property;
-    foreach (PropertyEnum *propertyEnum, _enumsMap) delete propertyEnum;
+    foreach (Property *property, _subProperties)
+        delete property;
+    foreach (PropertyEnum *propertyEnum, _enumsMap)
+        delete propertyEnum;
 }
 
 const QString &Property::name() const
@@ -234,6 +237,11 @@ Property *Property::parent() const
     return _parent;
 }
 
+const ModelProperty *Property::modelProperty() const
+{
+    return _modelProperty;
+}
+
 void Property::setParent(Property *parent)
 {
     _parent = parent;
@@ -251,14 +259,17 @@ void Property::setRow(int row)
 
 Property *Property::path(const QString &path) const
 {
-    if(path.isEmpty() || path==_name || path=="value" || path=="bits") return (Property *)this;
+    if(path.isEmpty() || path=="value" || path=="bits")
+        return (Property *)this;
     int index = path.indexOf(".");
     if(index==-1)
     {
-        if(_subPropertiesMap.contains(path)) return _subPropertiesMap[path];
+        if(_subPropertiesMap.contains(path))
+            return _subPropertiesMap[path];
         else return NULL;
     }
-    if(_subPropertiesMap.contains(path.left(index))) return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
+    if(_subPropertiesMap.contains(path.left(index)))
+        return _subPropertiesMap[path.left(index)]->path(path.mid(index+1));
     return NULL;
 }
 
@@ -301,6 +312,7 @@ Property *Property::fromModelProperty(const ModelProperty *modelProperty)
     paramprop->setCaption(modelProperty->caption());
     paramprop->setOnchange(modelProperty->onchange());
     paramprop->setPropertymap(modelProperty->propertymap());
+    paramprop->_modelProperty = modelProperty;
     if(!modelProperty->propertyEnums().empty())
     {
         foreach (ModelPropertyEnum *blockPropertyEnum, modelProperty->propertyEnums())

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="roi" categ="" pi_size_addr_rel="2" desc="Region of interest extractor">
+  <parts>
+    <part name="main">
+      <svg width="150" height="100">
+        <rect width="150" height="100" x="0" y="0" fill="gray"/>
+        <rect width="45" height="30" x="35" y="30" fill="lightgray" stroke="red" stroke-width="2"/>
+      </svg>
+    </part>
+  </parts>
+  <infos>
+    <info name="author" value="Sebastien CAUX"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-08-25"/>
+  </infos>
+  <files>
+    <file name="roi.vhd" type="vhdl" group="hdl" path="hdl/roi.vhd"/>
+    <file name="roi_process.vhd" type="vhdl" group="hdl" path="hdl/roi_process.vhd"/>
+    <file name="roi_slave.vhd" type="vhdl" group="hdl" path="hdl/roi_slave.vhd"/>
+    <file name="roi.proc" type="proc" group="blockdef" path="roi.proc"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="bypass.value ? in.width.value : ((x.value + w.value &gt; in.width.value) ? ((x.value &gt; in.width.value) ? 0 : in.width.value - x.value) : w.value)"/>
+        <property name="height" type="int" propertymap="bypass.value ? in.height.value : ((y.value + h.value &gt; in.height.value) ? ((y.value &gt; in.height.value) ? 0 : in.height.value - y.value) : h.value)"/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="status_reg" regaddr="0">
+      <bitfields>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
+        <bitfield name="bypass_bit" bitfield="1" propertymap="bypass.value"/>
+      </bitfields>
+    </param>
+    <param name="in_size_reg" regaddr="1">
+      <bitfields>
+        <bitfield name="in_w_reg" bitfield="11-0" propertymap="in.width.value"/>
+        <bitfield name="in_h_reg" bitfield="27-16" propertymap="in.height.value"/>
+      </bitfields>
+    </param>
+    <param name="out_size_reg" regaddr="2">
+      <bitfields>
+        <bitfield name="out_w_reg" bitfield="11-0" propertymap="w.value"/>
+        <bitfield name="out_h_reg" bitfield="27-16" propertymap="h.value"/>
+      </bitfields>
+    </param>
+    <param name="out_offset_reg" regaddr="3">
+      <bitfields>
+        <bitfield name="out_x_reg" bitfield="11-0" propertymap="x.value"/>
+        <bitfield name="out_y_reg" bitfield="27-16" propertymap="y.value"/>
+      </bitfields>
+    </param>
+  </params>
+  <properties>
+    <property name="enable" type="bool" value="1"/>
+    <property name="bypass" type="bool" value="0"/>
+    <property name="x" type="int" value="0" min="0" max="4095"/>
+    <property name="y" type="int" value="0" min="0" max="4095"/>
+    <property name="w" type="int" value="32" min="1" max="4095"/>
+    <property name="h" type="int" value="24" min="1" max="4095"/>
+  </properties>
+</process>

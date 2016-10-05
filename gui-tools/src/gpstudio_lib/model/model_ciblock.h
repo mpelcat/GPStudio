@@ -34,7 +34,7 @@ public:
     ModelCIBlock(const ModelCIBlock &modelCIBlock);
     virtual ~ModelCIBlock();
 
-    QString type() const;
+    Type type() const;
 
 public:
     static ModelCIBlock *fromNodeGenerated(const QDomElement &domElement, ModelCIBlock *ciBlock=NULL);

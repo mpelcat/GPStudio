@@ -41,6 +41,8 @@ bool BlockScene::loadFromNode(const ModelNode *node)
     if(!node)
         return false;
 
+    _blocksName.clear();
+    _blocksModel.clear();
     clear();
 
     foreach (ModelBlock *modelBlock, node->blocks())
@@ -49,14 +51,20 @@ bool BlockScene::loadFromNode(const ModelNode *node)
             addBlock(modelBlock);
     }
 
-    if(node->getFIBlock())
-        connectBlockPorts(node->getFIBlock()->flowConnects());
+    ModelFIBlock *fiBlock = node->getFIBlock();
+    if(fiBlock)
+        connectBlockPorts(fiBlock->flowConnects());
 
     return true;
 }
 
 bool BlockScene::loadFromCamera(const Camera *camera)
 {
+    if(!camera)
+        return false;
+
+    _blocksName.clear();
+    _blocksModel.clear();
     clear();
 
     foreach (Block *block, camera->blocks())
@@ -71,22 +79,26 @@ bool BlockScene::loadFromCamera(const Camera *camera)
     return true;
 }
 
-BlockItem *BlockScene::addBlock(ModelBlock *blockModel)
+void BlockScene::addBlock(ModelBlock *blockModel)
 {
-    BlockItem *blockItem = BlockItem::fromModelBlock(blockModel);
-    _blocksName.insert(blockModel->name(), blockItem);
-    _blocksModel.insert(blockModel, blockItem);
-    addItem(blockItem);
-    return blockItem;
+    QList<BlockItem *> blockItems = BlockItem::fromModelBlock(blockModel);
+    foreach (BlockItem *blockItem, blockItems)
+    {
+        _blocksName.insertMulti(blockModel->name(), blockItem);
+        _blocksModel.insertMulti(blockModel, blockItem);
+        addItem(blockItem);
+    }
 }
 
-BlockItem *BlockScene::addBlock(Block *block)
+void BlockScene::addBlock(Block *block)
 {
-    BlockItem *blockItem = BlockItem::fromBlock(block);
-    _blocksName.insert(block->modelBlock()->name(), blockItem);
-    _blocksModel.insert(block->modelBlock(), blockItem);
-    addItem(blockItem);
-    return blockItem;
+    QList<BlockItem *> blockItems = BlockItem::fromBlock(block);
+    foreach (BlockItem *blockItem, blockItems)
+    {
+        _blocksName.insertMulti(block->modelBlock()->name(), blockItem);
+        _blocksModel.insertMulti(block->modelBlock(), blockItem);
+        addItem(blockItem);
+    }
 }
 
 void BlockScene::removeBlock(ModelBlock *blockModel)
@@ -100,11 +112,29 @@ void BlockScene::removeBlock(ModelBlock *blockModel)
     }
 }
 
-BlockItem *BlockScene::block(const QString &name) const
+void BlockScene::removeBlock(const QString &block_name)
 {
-    QMap<QString, BlockItem* >::const_iterator it = _blocksName.find(name);
-    if(it != _blocksName.end())
-        return it.value();
+    foreach(BlockItem *blockItem, block(block_name))
+    {
+        removeItem(blockItem);
+        _blocksName.remove(block_name);
+        _blocksModel.remove(blockItem->modelBlock());
+    }
+}
+
+QList<BlockItem *>BlockScene::block(const QString &name) const
+{
+    return _blocksName.values(name);
+}
+
+BlockPortItem *BlockScene::port(const QString &blockName, const QString &portName) const
+{
+    foreach(BlockItem *blockItem, block(blockName))
+    {
+        BlockPortItem *fromflowItem = blockItem->port(portName);
+        if(fromflowItem)
+            return fromflowItem;
+    }
     return NULL;
 }
 
@@ -116,6 +146,11 @@ BlockItem *BlockScene::block(ModelBlock *modelBlock) const
     return NULL;
 }
 
+void BlockScene::connectBlockPort(const ModelFlowConnect &flowConnect)
+{
+    connectBlockPort(flowConnect.fromblock(), flowConnect.fromflow(), flowConnect.toblock(), flowConnect.toflow());
+}
+
 void BlockScene::connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
 {
     connectBlockPort(fromflow->parent()->name(), fromflow->name(), toflow->parent()->name(), toflow->name());
@@ -123,39 +158,39 @@ void BlockScene::connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
 
 void BlockScene::connectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow)
 {
-    BlockItem *fromblockItem = block(fromblock);
-    if(!fromblockItem) return;
+    BlockPortItem *fromflowItem = port(fromblock, fromflow);
+    if(!fromflowItem)
+        return;
 
-    BlockPortItem *fromflowItem = fromblockItem->port(fromflow);
-    if(!fromflowItem) return;
-
-    BlockItem *toblockItem = block(toblock);
-    if(!toblockItem) return;
-
-    BlockPortItem *toflowItem = toblockItem->port(toflow);
-    if(!toflowItem) return;
+    BlockPortItem *toflowItem = port(toblock, toflow);
+    if(!toflowItem)
+        return;
 
     connectBlockPort(fromflowItem, toflowItem);
 }
 
-void BlockScene::disconnectBlockPort(ModelFlow *fromflow, ModelFlow *toflow)
+void BlockScene::disconnectBlockPort(const ModelFlowConnect &flowConnect)
 {
-    disconnectBlockPort(fromflow->parent()->name(), fromflow->name(), toflow->parent()->name(), toflow->name());
+    disconnectBlockPort(flowConnect.fromblock(), flowConnect.fromflow(), flowConnect.toblock(), flowConnect.toflow());
+}
+
+void BlockScene::disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow)
+{
+    if(fromFlow==NULL || toFlow==NULL)
+        return;
+
+    disconnectBlockPort(fromFlow->parent()->name(), fromFlow->name(), toFlow->parent()->name(), toFlow->name());
 }
 
 void BlockScene::disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow)
 {
-    BlockItem *fromblockItem = block(fromblock);
-    if(!fromblockItem) return;
+    BlockPortItem *fromflowItem = port(fromblock, fromflow);
+    if(!fromflowItem)
+        return;
 
-    BlockPortItem *fromflowItem = fromblockItem->port(fromflow);
-    if(!fromflowItem) return;
-
-    BlockItem *toblockItem = block(toblock);
-    if(!toblockItem) return;
-
-    BlockPortItem *toflowItem = toblockItem->port(toflow);
-    if(!toflowItem) return;
+    BlockPortItem *toflowItem = port(toblock, toflow);
+    if(!toflowItem)
+        return;
 
     foreach (BlockConnectorItem *connectorItem, fromflowItem->connects())
     {
@@ -179,17 +214,13 @@ void BlockScene::connectBlockPorts(const QList<ModelFlowConnect *> &connections)
 {
     foreach (ModelFlowConnect *flowConnect, connections)
     {
-        BlockItem *fromblockItem = block(flowConnect->fromblock());
-        if(!fromblockItem) continue;
+        BlockPortItem *fromflowItem = port(flowConnect->fromblock(), flowConnect->fromflow());
+        if(!fromflowItem)
+            continue;
 
-        BlockPortItem *fromflowItem = fromblockItem->port(flowConnect->fromflow());
-        if(!fromflowItem) continue;
-
-        BlockItem *toblockItem = block(flowConnect->toblock());
-        if(!toblockItem) continue;
-
-        BlockPortItem *toflowItem = toblockItem->port(flowConnect->toflow());
-        if(!toflowItem) continue;
+        BlockPortItem *toflowItem = port(flowConnect->toblock(), flowConnect->toflow());
+        if(!toflowItem)
+            continue;
 
         BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
         addItem(connectorItem);

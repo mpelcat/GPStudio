@@ -50,6 +50,8 @@ public:
     Camera(const QString &fileCameraConfig=QString());
     ~Camera();
 
+    bool loadFromFile(const QString &fileCameraConfig);
+
     const ModelNode *node() const;
 
     const Property &rootProperty() const;
@@ -71,6 +73,8 @@ public:
     // special blocks access
     Block *comBlock() const;
     Block *fiBlock() const;
+
+    RegisterManager &registermanager();
 
 signals:
     void registerDataChanged();

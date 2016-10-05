@@ -34,9 +34,9 @@ ModelPIBlock::~ModelPIBlock()
 {
 }
 
-QString ModelPIBlock::type() const
+ModelBlock::Type ModelPIBlock::type() const
 {
-    return "pi";
+    return PI;
 }
 
 ModelPIBlock *ModelPIBlock::fromNodeGenerated(const QDomElement &domElement, ModelPIBlock *piBlock)

@@ -64,24 +64,13 @@ class IO extends Block
         $this->ext_ports = array();
 
         parent::__construct();
+        $io_file = "";
 
         if (is_object($io_device_element) and get_class($io_device_element) === 'SimpleXMLElement')
         {
             $io_name = (string) $io_device_element['name'];
             $this->name = $io_name;
             $io_driver = (string) $io_device_element['driver'];
-
-            if (isset($io_node_element['x_pos']))
-                $this->x_pos = (int) $io_node_element['x_pos'];
-            if (isset($io_node_element['y_pos']))
-                $this->y_pos = (int) $io_node_element['y_pos'];
-
-            // add io file to the list of files
-            $file_config = new File();
-            $file_config->name = $io_driver . ".io";
-            $file_config->path = $io_driver . ".io";
-            $file_config->parentBlock = $this;
-            $this->addFile($file_config);
 
             $this->path = SUPPORT_PATH . "io" . DIRECTORY_SEPARATOR . $io_driver . DIRECTORY_SEPARATOR;
             $this->in_lib = true;
@@ -121,6 +110,30 @@ class IO extends Block
                 error("Error when parsing $io_file", 5, "IO");
 
             $this->parse_xml($io_device_element, $io_node_element);
+
+            if (isset($io_node_element['x_pos']) or isset($io_node_element['y_pos']))
+            {
+                if (count($this->parts)>0)
+                    $part = $this->parts[0];
+                else
+                {
+                    $part = new ComponentPart();
+                    $part->name = "main";
+                    $this->addPart($part);
+                }
+                $part->x_pos = (int) $io_node_element['x_pos'];
+                $part->y_pos = (int) $io_node_element['y_pos'];
+            }
+        }
+
+        if ($io_file != "" and $this->getFile(basename($io_file)) == NULL)
+        {
+            $file_config = new File();
+            $file_config->name = basename($io_file);
+            $file_config->path = getRelativePath($io_file, $this->path);
+            $file_config->type = "io";
+            $file_config->group = "blockdef";
+            $this->addFile($file_config);
         }
     }
 
@@ -129,7 +142,7 @@ class IO extends Block
      * @param SimpleXMLElement $io_device_element element from io in lib
      * @param SimpleXMLElement $io_node_element element from the node
      */
-    protected function parse_xml($io_device_element, $io_node_element)
+    protected function parse_xml($io_device_element=NULL, $io_node_element=NULL)
     {
         parent::parse_xml();
         $this->driver = (string) $this->xml['driver'];

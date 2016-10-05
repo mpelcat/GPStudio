@@ -32,7 +32,7 @@ public:
     ModelIO(const ModelIO &modelIO);
     virtual ~ModelIO();
 
-    QString type() const;
+    Type type() const;
 
 public:
     static ModelIO *fromNodeGenerated(const QDomElement &domElement, ModelIO *io=NULL);

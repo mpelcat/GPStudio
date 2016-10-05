@@ -274,3 +274,13 @@ QList<ModelParam *> ModelParam::listFromNodeGenerated(const QDomElement &domElem
     }
     return list;
 }
+
+QDomElement ModelParam::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("param");
+
+    element.setAttribute("name", _name);
+    element.setAttribute("value", _value.toString());
+
+    return element;
+}

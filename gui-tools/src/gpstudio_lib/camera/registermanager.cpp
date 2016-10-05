@@ -43,15 +43,39 @@ RegisterManager::~RegisterManager()
     }
 }
 
+void RegisterManager::setNode(ModelNode *node)
+{
+    foreach (ModelBlock *modelBlock, node->blocks())
+    {
+        // registers and const values
+        foreach (ModelParam *param, modelBlock->params())
+        {
+            // register
+            if(param->isDynamicParam())
+            {
+                Register *cameraRegister = Register::fromParam(param);
+                addRegister(cameraRegister);
+            }
+            // const values
+            else
+            {
+                // TODO add const value as RO property
+            }
+        }
+    }
+}
+
 Register *RegisterManager::operator[](const uint addr)
 {
-    if(!_registersMap.contains(addr)) return NULL;
+    if(!_registersMap.contains(addr))
+        return NULL;
     return _registersMap[addr];
 }
 
 void RegisterManager::addRegister(Register *cameraRegister)
 {
-    if(!cameraRegister) return;
+    if(!cameraRegister)
+        return;
     cameraRegister->setCamera(_camera);
     _registersMap.insert(cameraRegister->addr(), cameraRegister);
 }
@@ -68,6 +92,7 @@ QByteArray RegisterManager::registerData() const
 
 void RegisterManager::evalAll()
 {
+    //qDebug()<<"eval";
     QMapIterator<uint, Register *> it(_registersMap);
     while (it.hasNext())
     {
@@ -75,13 +100,13 @@ void RegisterManager::evalAll()
         Register *cameraRegister = it.value();
 
         if(cameraRegister->bitFields().empty())
-        {
             cameraRegister->eval();
-        }
         else
         {
+            //qDebug()<<cameraRegister->name();
             foreach (RegisterBitField *bitField, cameraRegister->bitFields())
             {
+                //qDebug()<<"+ "<<bitField->bits();
                 bitField->eval();
             }
         }
@@ -90,7 +115,8 @@ void RegisterManager::evalAll()
 
 void RegisterManager::start()
 {
-    if(!_camera) return;
+    if(!_camera)
+        return;
 
     uint maxAddr=0;
     QMapIterator<uint, Register *> it(_registersMap);
@@ -99,7 +125,8 @@ void RegisterManager::start()
         it.next();
         Register *cameraRegister = it.value();
 
-        if(cameraRegister->addr()>maxAddr) maxAddr=cameraRegister->addr();
+        if(cameraRegister->addr()>maxAddr)
+            maxAddr=cameraRegister->addr();
 
         //if(cameraRegister->bitFields().count())
         {
@@ -107,7 +134,8 @@ void RegisterManager::start()
             foreach (QString propName, deps)
             {
                 const Property *prop = _camera->rootProperty().path(propName);
-                if(prop) QObject::connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
+                if(prop)
+                    QObject::connect(prop, SIGNAL(bitsChanged(uint)), cameraRegister, SLOT(eval()));
             }
         }
         //else
@@ -118,7 +146,8 @@ void RegisterManager::start()
                 foreach (QString propName, deps)
                 {
                     const Property *prop = _camera->rootProperty().path(propName);
-                    if(prop) QObject::connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
+                    if(prop)
+                        QObject::connect(prop, SIGNAL(bitsChanged(uint)), bitField, SLOT(eval()));
                 }
             }
         }
@@ -130,8 +159,10 @@ void RegisterManager::start()
 
 void RegisterManager::setRegister(uint addr, uint value)
 {
-    if(!_camera) return;
-    if(addr>=(uint)_registerData.size()) return;
+    if(!_camera)
+        return;
+    if(addr>=(uint)_registerData.size())
+        return;
 
     _registerData.data()[addr*4+0]=value>>24;
     _registerData.data()[addr*4+1]=value>>16;
@@ -141,8 +172,10 @@ void RegisterManager::setRegister(uint addr, uint value)
     // TODO [LOG] log this
     qDebug()<<"setReg"<<addr<<value;
 
-    if(!_camera->com()) return;
-    if(!_camera->com()->isConnected()) return;
+    if(!_camera->com())
+        return;
+    if(!_camera->com()->isConnected())
+        return;
 
     // TODO process _regToSend
     _camera->com()->writeParam(addr, value);

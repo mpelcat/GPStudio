@@ -1,7 +1,7 @@
 # Change Log
 
-## Future 1.1 (2016-08-30)
-[Full changelog](https://github.com/DreamIP/GPStudio/compare/v1.00...master)
+## Release [v1.10](https://github.com/DreamIP/GPStudio/tree/1.10) (2016-09-09)
+[Full changelog](https://github.com/DreamIP/GPStudio/compare/v1.00...v1.10)
 
 ### New Feature
 * Backend component introduction

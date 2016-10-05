@@ -38,6 +38,13 @@ public:
     explicit BlockEditorWindow(QWidget *parent = 0, ModelBlock *block = 0);
     ~BlockEditorWindow();
 
+public slots:
+    void about();
+    void aboutQt();
+
+protected:
+    void closeEvent(QCloseEvent *event);
+
 signals:
 
 protected slots:
@@ -55,6 +62,8 @@ protected:
     void setBlock(ModelBlock *block);
     QStandardItemModel *_filesModel;
     ModelBlock *_block;
+
+    QString _path;
 };
 
 #endif // BLOCKEDITORWINDOW_H

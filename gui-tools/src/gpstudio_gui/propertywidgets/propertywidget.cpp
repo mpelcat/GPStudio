@@ -23,6 +23,7 @@
 #include <QDebug>
 
 #include "propertywidgets.h"
+#include "model/model_property.h"
 
 PropertyWidget::PropertyWidget()
 {
@@ -89,6 +90,11 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
         qDebug()<<"unknow prop type"<<(int)property->type();
         break;
     }
-    if(widget) widget->setLinkedProperty(property);
+    if(widget)
+    {
+        widget->setLinkedProperty(property);
+        if(property->modelProperty())
+            widget->setToolTip(property->modelProperty()->description());
+    }
     return widget;
 }

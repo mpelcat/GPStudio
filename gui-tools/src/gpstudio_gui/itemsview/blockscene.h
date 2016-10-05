@@ -44,16 +44,21 @@ public:
     bool loadFromNode(const ModelNode *node);
     bool loadFromCamera(const Camera *camera);
 
-    BlockItem *addBlock(ModelBlock *blockModel);
-    BlockItem *addBlock(Block *block);
+    void addBlock(ModelBlock *blockModel);
+    void addBlock(Block *block);
     void removeBlock(ModelBlock *blockModel);
-    BlockItem *block(const QString &name) const;
+    void removeBlock(const QString &block_name);
+
+    QList<BlockItem *> block(const QString &name) const;
+    BlockPortItem *port(const QString &blockName, const QString &portName) const;
     BlockItem *block(ModelBlock *modelBlock) const;
 
+    void connectBlockPort(const ModelFlowConnect &flowConnect);
     void connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
     void connectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 
-    void disconnectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
+    void disconnectBlockPort(const ModelFlowConnect &flowConnect);
+    void disconnectBlockPort(ModelFlow *fromFlow, ModelFlow *toFlow);
     void disconnectBlockPort(const QString &fromblock, const QString &fromflow, const QString &toblock, const QString &toflow);
 
     void connectBlockPorts(const QList<ModelFlowConnect *> &connections);

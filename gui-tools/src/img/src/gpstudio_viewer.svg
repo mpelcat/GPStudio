@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="155" height="155" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+    <path d="M10 45 L60 75 L60 25 L125 25 L125 125 L60 125 L60 80 L10 110 Z" fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" transform="translate(10,15) scale(1,0.8)"/>
+    <path d="M70 40 L120 75 L70 110 Z" fill="green" stroke="green" transform="translate(10,15) scale(1,0.8)" stroke-width="5" stroke-linejoin="round"/>
+</svg>

@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -19,4 +19,5 @@
  */
 
 define("TOOL", "gpproc");
-require("gpblock.php");
+define("KIND", "process");
+require("gpcompblock.php");

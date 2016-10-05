@@ -52,8 +52,8 @@ public:
     void setDescription(const QString &description);
 
 public:
-    static IOBoardLib *fromNodeGenerated(const QDomElement &domElement);
-    static QList<IOBoardLib *> listFromNodeGenerated(const QDomElement &domElement);
+    static IOBoardLib *fromDomElement(const QDomElement &domElement);
+    static QList<IOBoardLib *> listFromDomElement(const QDomElement &domElement);
 
 protected:
     QString _name;

@@ -24,6 +24,7 @@
 #include <QGroupBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QDebug>
 
 PropertyGroupWidget::PropertyGroupWidget()
 {
@@ -41,14 +42,14 @@ PropertyWidget::Type PropertyGroupWidget::type() const
 void PropertyGroupWidget::createWidget()
 {
     QLayout *layout = new QVBoxLayout();
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(0,10,0,0);
     QGroupBox *groupBox = new QGroupBox(_linkedProperty->caption());
 
     QFormLayout *layoutPanel = new QFormLayout();
     layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layoutPanel->setSpacing(6);
 
-    foreach (Property *property, _linkedProperty->subPropertiesMap())
+    foreach (Property *property, _linkedProperty->subProperties())
     {
         PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
         if(propertyWidget)

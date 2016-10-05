@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2016 Dream IP
- * 
+ *
  * This file is part of GPStudio.
  *
  * GPStudio is a free software: you can redistribute it and/or modify
@@ -20,17 +20,20 @@
 
 /**
  * @mainpage
- * 
+ *
  * This document is the complete documentation of GPStudio backend. It composed of two parts :
  * 	- the model and backend develloper documentation
  * 	- the user guide documentation
- * 
+ *
  * @section modelbckend model and backend
- * 
+ *
  * @section usrguide user guide
- * 
+ *
  * @defgroup base Base script model
  * */
+
+define("VERSION", "v1.10");
+
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 {
     $txtred = ""; # Red
@@ -171,6 +174,23 @@ function findio()
     }
     if (count($io) == 1)
         return $io[0];
+    else
+        return '';
+}
+
+function findcomp()
+{
+    $comp = array();
+    $files = scandir(getcwd());
+    foreach ($files as $file)
+    {
+        if (substr($file, -5) === ".comp")
+        {
+            $comp[] = $file;
+        }
+    }
+    if (count($comp) == 1)
+        return $comp[0];
     else
         return '';
 }
@@ -330,4 +350,26 @@ function saveIfDifferent($fileName, $content)
             error("$fileName cannot be written", 5, "GPStudio");
         fclose($handle);
     }
+}
+
+function cloneSvg($src, $xml, $dest)
+{
+    $svgNode = $xml->createElement($src->nodeName);
+    foreach ($src->attributes as $name => $attrNode)
+    {
+        $att = $xml->createAttribute($name);
+        $att->value = $attrNode->value;
+        $svgNode->appendChild($att);
+    }
+    foreach ($src->childNodes as $node)
+    {
+        if ($node->nodeType == XML_TEXT_NODE)
+        {
+            if(!empty($node->nodeValue) and $src->childNodes->length==1)
+                $svgNode->nodeValue = $node->nodeValue;
+        }
+        if ($node->nodeType == XML_ELEMENT_NODE)
+            cloneSvg($node, $xml, $svgNode);
+    }
+    $dest->appendChild($svgNode);
 }

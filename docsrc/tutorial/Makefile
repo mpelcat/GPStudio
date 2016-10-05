@@ -1,17 +1,21 @@
+GREEN := $(shell tput setaf 2)
+RESET := $(shell tput sgr0)
 
-all: install_linux quick_start_cmd
-	
-clean: install_linux-clean quick_start_cmd-clean
+TUTORIALS_PATH = $(sort $(dir $(wildcard */Makefile)))
+TUTORIALS = $(patsubst %/,%,$(TUTORIALS_PATH))
 
-install_linux: FORCE
-	cd install_linux/ && make -f Makefile
-install_linux-clean: FORCE
-	cd install_linux/ && make clean -f Makefile
+all: $(addsuffix -build, $(TUTORIALS))
 
-quick_start_cmd: FORCE
-	cd quick_start_cmd/ && make -f Makefile
-quick_start_cmd-clean: FORCE
-	cd quick_start_cmd/ && make clean -f Makefile
+clean: $(addsuffix -clean, $(TUTORIALS))
+
+%-clean: FORCE
+	@echo
+	@echo "$(GREEN)cleaning tutorial $* ...$(RESET)"
+	cd $*/ && make clean -f Makefile
+
+%-build: FORCE
+	@echo
+	@echo "$(GREEN)building tutorial $* ...$(RESET)"
+	cd $*/ && make -f Makefile
 
 FORCE:
-

@@ -22,151 +22,166 @@
 
 #include <QDebug>
 
-BlockCommand::BlockCommand(GPNodeProject *project, ModelBlock *block)
-    : _project(project), _block(block)
+#include "model/model_fiblock.h"
+#include "model/model_process.h"
+#include "model/model_iocom.h"
+
+BlockCommand::BlockCommand(GPNodeProject *project, const QString &block_name)
+    : _project(project), _block_name(block_name)
 {
 }
 
 // Rename block
-BlockCmdRename::BlockCmdRename(GPNodeProject *project, ModelBlock *block, const QString &oldName, const QString &newName)
-    : BlockCommand(project, block), _oldName(oldName), _newName(newName)
+BlockCmdRename::BlockCmdRename(GPNodeProject *project, const QString &oldName, const QString &newName)
+    : BlockCommand(project, oldName), _newName(newName)
 {
     setText(QString("renamed block '%1'").arg(newName));
 }
 
 void BlockCmdRename::undo()
 {
-    _project->cmdRenameBlock(_block, _oldName);
+    _project->cmdRenameBlock(_newName, _block_name);
 }
 
 void BlockCmdRename::redo()
 {
-    _project->cmdRenameBlock(_block, _newName);
-}
-
-bool BlockCmdRename::mergeWith(const QUndoCommand *command)
-{
-    const BlockCmdRename *blockCmdRename = static_cast<const BlockCmdRename *>(command);
-
-    if (_block != blockCmdRename->_block)
-        return false;
-
-    _newName = blockCmdRename->_newName;
-
-    return true;
+    _project->cmdRenameBlock(_block_name, _newName);
 }
 
 // Move block
-BlockCmdMove::BlockCmdMove(GPNodeProject *project, ModelBlock *block, const QPoint &oldPos, const QPoint &newPos)
-    : BlockCommand(project, block), _oldPos(oldPos), _newPos(newPos)
+BlockCmdMove::BlockCmdMove(GPNodeProject *project, const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos)
+    : BlockCommand(project, block_name), _part_name(part_name), _oldPos(oldPos), _newPos(newPos)
 {
-    setText(QString("moved block '%1'").arg(block->name()));
+    setText(QString("moved block '%1'").arg(block_name));
 }
 
 void BlockCmdMove::undo()
 {
-    _project->cmdMoveBlockTo(_block, _oldPos);
+    _project->cmdMoveBlockTo(_block_name, _part_name, _oldPos);
 }
 
 void BlockCmdMove::redo()
 {
-    _project->cmdMoveBlockTo(_block, _newPos);
-}
-
-bool BlockCmdMove::mergeWith(const QUndoCommand *command)
-{
-    const BlockCmdMove *blockCmdMove = static_cast<const BlockCmdMove *>(command);
-
-    if (_block != blockCmdMove->_block)
-        return false;
-
-    _newPos = blockCmdMove->_newPos;
-
-    return true;
+    _project->cmdMoveBlockTo(_block_name, _part_name, _newPos);
 }
 
 // Add block
 BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
-    : BlockCommand(project, block)
+    : BlockCommand(project, block->name()), _block(block)
 {
+    _backupBlock = block;
     setText(QString("added block '%1'").arg(block->name()));
 }
 
 BlockCmdAdd::~BlockCmdAdd()
 {
-    // delete the block if it's not inside the node
-    if(!_project->node()->blocks().contains(_block))
-        delete _block;
+    delete _backupBlock;
 }
 
 void BlockCmdAdd::undo()
 {
-    _project->cmdRemoveBlock(_block);
+    ModelBlock *block = _project->node()->getBlock(_block_name);
+    if(block)
+    {
+        // backup block
+        if(block->type()==ModelBlock::Process)
+            _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
+        else if(block->type()==ModelBlock::IO)
+            _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
+        else if(block->type()==ModelBlock::IOCom)
+            _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
+    }
+
+    _project->cmdRemoveBlock(_block_name);
 }
 
 void BlockCmdAdd::redo()
 {
+    _block = _backupBlock;
+    _backupBlock = NULL;
     _project->cmdAddBlock(_block);
 }
 
 // Remove block
 BlockCmdRemove::BlockCmdRemove(GPNodeProject *project, ModelBlock *block)
-    : BlockCommand(project, block)
+    : BlockCommand(project, block->name()), _block(block)
 {
     setText(QString("remove block '%1'").arg(block->name()));
 }
 
 BlockCmdRemove::~BlockCmdRemove()
 {
-    // delete the block if it's not inside the node
-    if(!_project->node()->blocks().contains(_block))
-        delete _block;
+    delete _backupBlock;
 }
 
 void BlockCmdRemove::undo()
 {
+    _block = _backupBlock;
     _project->cmdAddBlock(_block);
+    _backupBlock = NULL;
+
+    foreach (ModelFlowConnect flowConnect, _flowConnects)
+        _project->cmdConnectFlow(flowConnect);
 }
 
 void BlockCmdRemove::redo()
 {
-    _project->cmdRemoveBlock(_block);
+    ModelBlock *block = _project->node()->getBlock(_block_name);
+    if(block)
+    {
+        // backup block
+        if(block->type()==ModelBlock::Process)
+            _backupBlock = new ModelProcess(*static_cast<ModelProcess*>(block));
+        else if(block->type()==ModelBlock::IO)
+            _backupBlock = new ModelIO(*static_cast<ModelIO*>(block));
+        else if(block->type()==ModelBlock::IOCom)
+            _backupBlock = new ModelIOCom(*static_cast<ModelIOCom*>(block));
+    }
+
+    // backup connection to/from block
+    _flowConnects.clear();
+    QList<ModelFlowConnect *> _flowConnectsPtr;
+    _flowConnectsPtr = _project->node()->getFIBlock()->flowConnects(_block_name);
+    foreach (ModelFlowConnect *flowConnect, _flowConnectsPtr)
+        _flowConnects.append(*flowConnect);
+
+    _project->cmdRemoveBlock(_block_name);
 }
 
 // Flow connection
-BlockCmdConnectFlow::BlockCmdConnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
-    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+BlockCmdConnectFlow::BlockCmdConnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect)
+    : BlockCommand(project), _flowConnect(flowConnect)
 {
     setText(QString("connect flow '%1.%2' to '%3.%4'")
-            .arg(flow1->parent()->name()).arg(flow1->name())
-            .arg(flow2->parent()->name()).arg(flow2->name()));
+            .arg(flowConnect.fromblock()).arg(flowConnect.fromflow())
+            .arg(flowConnect.toblock()).arg(flowConnect.toflow()));
 }
 
 void BlockCmdConnectFlow::undo()
 {
-    _project->cmdDisconnectFlow(_flow1, _flow2);
+    _project->cmdDisconnectFlow(_flowConnect);
 }
 
 void BlockCmdConnectFlow::redo()
 {
-    _project->cmdConnectFlow(_flow1, _flow2);
+    _project->cmdConnectFlow(_flowConnect);
 }
 
 // Flow disconnection
-BlockCmdDisconnectFlow::BlockCmdDisconnectFlow(GPNodeProject *project, ModelFlow *flow1, ModelFlow *flow2)
-    : BlockCommand(project), _flow1(flow1), _flow2(flow2)
+BlockCmdDisconnectFlow::BlockCmdDisconnectFlow(GPNodeProject *project, const ModelFlowConnect &flowConnect)
+    : BlockCommand(project), _flowConnect(flowConnect)
 {
     setText(QString("disconnect flow '%1.%2' to '%3.%4'")
-            .arg(flow1->parent()->name()).arg(flow1->name())
-            .arg(flow2->parent()->name()).arg(flow2->name()));
+            .arg(flowConnect.fromblock()).arg(flowConnect.fromflow())
+            .arg(flowConnect.toblock()).arg(flowConnect.toflow()));
 }
 
 void BlockCmdDisconnectFlow::undo()
 {
-    _project->cmdConnectFlow(_flow1, _flow2);
+    _project->cmdConnectFlow(_flowConnect);
 }
 
 void BlockCmdDisconnectFlow::redo()
 {
-    _project->cmdDisconnectFlow(_flow1, _flow2);
+    _project->cmdDisconnectFlow(_flowConnect);
 }

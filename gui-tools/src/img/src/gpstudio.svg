@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="250" height="135" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+    <!--<rect width="250" height="135" x="0" y="0" fill="lightgray"/>-->
+    <path d="M10 40 L60 65 L60 25 L200 25 L200 125 L60 125 L60 90 L10 115 Z" fill="black" stroke="black" stroke-width="20" stroke-linejoin="round" transform="translate(20,0) scale(1,0.9)"/>
+    <text x="65" y="80" fill="orange" font-size="40">GPStudio</text>
+    <text x="130" y="110" fill="gray" font-size="30" font-weight="bold">FPGA</text>
+</svg>

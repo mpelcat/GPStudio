@@ -184,6 +184,9 @@ class Clock
         else
             $this->direction = "in";
 
+        if (isset($xml['domain']))
+            $this->domain = (string) $xml['domain'];
+
         if (isset($xml['typical']))
         {
             $this->typical = Clock::convert($xml['typical']);
@@ -195,7 +198,6 @@ class Clock
         }
         elseif (isset($xml['domain']))
         {
-            $this->domain = (string) $xml['domain'];
             if (isset($xml['ratio']))
                 $this->ratio = (float) $xml['ratio'];
             else
@@ -243,10 +245,13 @@ class Clock
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // domain
-            $att = $xml->createAttribute('domain');
-            $att->value = $this->domain;
-            $xml_element->appendChild($att);
+            if (!empty($this->domain))
+            {
+                // domain
+                $att = $xml->createAttribute('domain');
+                $att->value = $this->domain;
+                $xml_element->appendChild($att);
+            }
 
             // direction
             $att = $xml->createAttribute('direction');
@@ -254,29 +259,44 @@ class Clock
             $xml_element->appendChild($att);
 
             // shift
-            $att = $xml->createAttribute('shift');
-            $att->value = $this->shift;
-            $xml_element->appendChild($att);
+            if (!empty($this->shift))
+            {
+                $att = $xml->createAttribute('shift');
+                $att->value = $this->shift;
+                $xml_element->appendChild($att);
+            }
 
             // min
-            $att = $xml->createAttribute('min');
-            $att->value = $this->min;
-            $xml_element->appendChild($att);
+            if (!empty($this->min))
+            {
+                $att = $xml->createAttribute('min');
+                $att->value = $this->min;
+                $xml_element->appendChild($att);
+            }
 
             // max
-            $att = $xml->createAttribute('max');
-            $att->value = $this->max;
-            $xml_element->appendChild($att);
+            if (!empty($this->max))
+            {
+                $att = $xml->createAttribute('max');
+                $att->value = $this->max;
+                $xml_element->appendChild($att);
+            }
 
             // ratio
-            $att = $xml->createAttribute('ratio');
-            $att->value = $this->ratio;
-            $xml_element->appendChild($att);
+            if (!empty($this->ratio) and $this->ratio != 1)
+            {
+                $att = $xml->createAttribute('ratio');
+                $att->value = $this->ratio;
+                $xml_element->appendChild($att);
+            }
 
             // desc
-            $att = $xml->createAttribute('desc');
-            $att->value = $this->desc;
-            $xml_element->appendChild($att);
+            if (!empty($this->desc))
+            {
+                $att = $xml->createAttribute('desc');
+                $att->value = $this->desc;
+                $xml_element->appendChild($att);
+            }
         }
 
         if ($format == "complete")

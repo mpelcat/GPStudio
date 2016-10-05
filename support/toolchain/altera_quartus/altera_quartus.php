@@ -68,16 +68,10 @@ class Altera_quartus_toolchain extends HDL_toolchain
                 }
                 else
                 {
-                    if ($block->in_lib)
-                    {
-                        $filepath = $block->path . $file->path;
-                        $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver . DIRECTORY_SEPARATOR . dirname($file->path);
-                    }
-                    else
-                    {
-                        $filepath = $block->path . $file->path;
-                        $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver . DIRECTORY_SEPARATOR . dirname($file->path);
-                    }
+                    $filepath = $block->path . $file->path;
+                    $subpath = 'IP' . DIRECTORY_SEPARATOR . $block->driver;
+                    if (dirname($file->path) != ".")
+                        $subpath .= DIRECTORY_SEPARATOR . dirname($file->path);
                 }
 
                 // check if file ever added
@@ -183,6 +177,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
         if ($this->nopartitions == 0)
         {
             $content.="\n# -------- partitions --------\n";
+            $content.="set_global_assignment -name INCREMENTAL_COMPILATION OFF\n";      // disabled for web edition
             $content.='set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top' . "\n";
         }
 
@@ -240,8 +235,9 @@ class Altera_quartus_toolchain extends HDL_toolchain
                     }
 
                     $file_path = str_replace("\\", '/', $file->path);
+                    $file_path = str_replace("/./", '/', $file_path);
 
-                    if (!in_array($file_path, $fileList))
+                    if (!in_array($file_path, $fileList) and $type != "")
                     {
                         $fileList[] = $file_path;
 
@@ -382,8 +378,8 @@ class Altera_quartus_toolchain extends HDL_toolchain
         saveIfDifferent($path . DIRECTORY_SEPARATOR . $filename, $content);
 
         // makefile local
-        $content = "GPS_LIB=" . LIB_PATH . "\r\n";
-        $content .= "GPS_VIEWER=" . LIB_PATH . "bin/\r\n";
+        $content = "GPS_LIB=" . str_replace("\\", '/', LIB_PATH) . "\r\n";
+        $content .= "GPS_VIEWER=" . str_replace("\\", '/', LIB_PATH) . "bin/\r\n";
         $content .= "QUARTUS_TOOLS_PATH=" . "\r\n";
         $content .= "" . "\r\n";
 
@@ -444,8 +440,14 @@ class Altera_quartus_toolchain extends HDL_toolchain
 
         switch ($family)
         {
+            case 'MAX 10': // 10M50SAE144C8GES
+                preg_match_all("|(10M[0-9]{2})([SD][CFA])([VEMUF])([0-9]+)([CIA])([6-8]).*|", $device, $out, PREG_SET_ORDER);
+                $deviceMember = $out[0][1];
+                $speedgrade = $out[0][6];
+                $package = $out[0][3];
+                break;
             case 'Cyclone III':
-                preg_match_all("|(EP[0-9])([A-Z]{1,3}[0-9]+)([A-Z]{1,3}[0-9]+)([A-Z][0-9]+[A-Z]*).*|", $device, $out, PREG_SET_ORDER);
+                preg_match_all("|(EP3)([A-Z]{1,3}[0-9]+)([A-Z]{1,3}[0-9]+)([A-Z][0-9]+[A-Z]*).*|", $device, $out, PREG_SET_ORDER);
                 $deviceMember = $out[0][2];
                 $speedgrade = $out[0][4];
                 break;
@@ -455,7 +457,7 @@ class Altera_quartus_toolchain extends HDL_toolchain
                 $speedgrade = $out[0][4];
                 break;
             case 'Stratix IV': // EP4SE820F43C3
-                preg_match_all("|(EP[0-9])(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
+                preg_match_all("|(EP4)(SE{0,1})([0-9]+)([F]{0,1})([0-9]+)([A-Z][0-9]).*|", $device, $out, PREG_SET_ORDER);
                 $deviceMember = $out[0][4];
                 $speedgrade = $out[0][5];
                 echo $deviceMember . '   ' . $speedgrade . "\n";
@@ -469,6 +471,15 @@ class Altera_quartus_toolchain extends HDL_toolchain
             case 'pll':
                 switch ($family)
                 {
+                    case 'MAX 10':
+                        $attr['maxPLL'] = 1;
+                        $attr['clkByPLL'] = 5;
+                        $attr['vcomin'] = 600000000;
+                        $attr['vcomax'] = 1300000000;
+                        $attr['mulmax'] = 512;
+                        $attr['divmax'] = array(512, 512, 512, 512, 512);
+                        $attr['pllclkcanbechain'] = true;
+                        break;
                     case 'Cyclone III':
                         if ($deviceMember == 'C5' or $deviceMember == 'C10')
                             $attr['maxPLL'] = 2;

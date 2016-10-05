@@ -24,6 +24,7 @@
 #include "gpstudio_lib_common.h"
 
 #include <QString>
+#include <QStringList>
 
 #include "model_block.h"
 
@@ -34,7 +35,7 @@ public:
     ModelProcess(const ModelProcess &modelProcess);
     virtual ~ModelProcess();
 
-    QString type() const;
+    Type type() const;
 
 public:
     static ModelProcess *fromNodeGenerated(const QDomElement &domElement, ModelProcess *process=NULL);

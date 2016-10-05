@@ -20,7 +20,7 @@
 \input{../gpstudio_doc.tex}
 
 \author{Sebastien CAUX}
-\title{\tool{} reference documentation \version \\ (since 0.95)}
+\title{\tool{} reference documentation \version \\ \gpprocdevice{(since v0.95)} \gpcomp{since v1.02}}
 
 \begin{document}
 \maketitle
@@ -28,7 +28,7 @@
 \tool{} is a command line tool that allows to create new \kind{} block.
 
 \section{Use}
-\tool{} always takes the \kind{} file in the current directory, so you only can have one \kind{} definition per directory. A \kind{} file have the `.proc' extension.
+\tool{} always takes the \kind{} file in the current directory, so you only can have one \kind{} definition per directory. A \kind{} file have the `\ext{}' extension.
 
 At the beginning, you need to create a \kind{} with the \emph{new} command. After that, you can use all the commands set on this \kind{}.
 
@@ -41,6 +41,27 @@ Under linux, you have a completion script to help you writing commands.
 \subsection{brief}
 The commands of this tools are used to define inputs and outputs of the block, flows, Parameter Interconnect interface with internal registers, \gpdevice{external ports, }clocks and resets. Finally, high level properties for the controller of the block can be specified.
 
+\gpcomp{
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {\textbf{Component}};
+
+\path[connect,<-] ([yshift=0.2cm]bloc.west) -- node{/} node[above]{Flow In 0} ++(-2cm,0);
+\path[connect,<-] ([yshift=-0.2cm]bloc.west) -- node{/} node[below]{Flow In ...} ++(-2cm,0);
+
+\path[connect,->] ([yshift=0.2cm]bloc.east) -- node{/} node[above]{Flow Out 0} ++(2cm,0);
+\path[connect,->] ([yshift=-0.2cm]bloc.east) -- node{/} node[below]{Flow Out ...} ++(2cm,0);
+
+\path[connect,<-] ([xshift=-1cm]bloc.south) -- node[sloped,below]{clk0} ++(0,-1.2cm);
+\path[connect,<-] ([xshift=-0.8cm]bloc.south) -- node[sloped,above]{clk...} ++(0,-1.2cm);
+
+\path[connect,<-] ([xshift=1cm]bloc.south) -- node[sloped,above]{reset0} ++(0,-1.2cm);
+\path[connect,<-] ([xshift=0.8cm]bloc.south) -- node[sloped,below]{reset...} ++(0,-1.2cm);
+\end{tikzpicture}
+\caption{Component block}
+\end{figure}
+}
 \gpproc{
 \begin{figure}[h!]
 \centering
@@ -114,12 +135,14 @@ Commands of \tool{} always have the same naming convention. This table is a brie
 \hline 
 \textbf{param} & \hyperref[subsec:addparam]{addparam} & \hyperref[subsec:delparam]{delparam} & \hyperref[subsec:showparam]{showparam} & \hyperref[subsec:renameparam]{renameparam} & \hyperref[subsec:setparam]{setparam}  \\ 
 \hline 
+\gpprocdevice{
 \textbf{bitfield} & \hyperref[subsec:addbitfield]{addbitfield} & \hyperref[subsec:delbitfield]{delbitfield} & \hyperref[subsec:showbitfield]{showbitfield} & \hyperref[subsec:renamebitfield]{renamebitfield} & \hyperref[subsec:setbitfield]{setbitfield}  \\ 
 \hline 
 \textbf{property} & \hyperref[subsec:addproperty]{addproperty} & \hyperref[subsec:delproperty]{delproperty} & \hyperref[subsec:showproperty]{showproperty} & \hyperref[subsec:renameproperty]{renameproperty} & \hyperref[subsec:setproperty]{setproperty}  \\ 
 \hline 
 \textbf{enum} & \hyperref[subsec:addenum]{addenum} & \hyperref[subsec:delenum]{delenum} & \hyperref[subsec:showenum]{showenum} &  &  \\ 
 \hline 
+}
 \textbf{reset} & \hyperref[subsec:addreset]{addreset} & \hyperref[subsec:delreset]{delreset} & \hyperref[subsec:showreset]{showreset} & \hyperref[subsec:renamereset]{renamereset} & \hyperref[subsec:setreset]{setreset}  \\ 
 \hline 
 \textbf{clock} & \hyperref[subsec:addclock]{addclock} & \hyperref[subsec:delclock]{delclock} & \hyperref[subsec:showclock]{showclock} & \hyperref[subsec:renameclock]{renameclock} & \hyperref[subsec:setclock]{setclock}  \\ 
@@ -130,7 +153,11 @@ Commands of \tool{} always have the same naming convention. This table is a brie
 }
 \end{tabular}\\
 
-Few over commands can be used to create the block and generate the skeleton defined in project section. The command \textbf{sethelp} is useful to document the block. \textbf{setpropertymap} defines link of properties.
+Few over commands can be used to create the block and generate the skeleton defined in project section. The command \hyperref[subsec:sethelp]{sethelp} is useful to document the block. In addition, \hyperref[subsec:setinfo]{setinfo} saves the informations about the block.
+
+\hyperref[subsec:setpropertymap]{setpropertymap} defines link between properties.
+
+For Parameters Interconnect configuration, you should use \hyperref[subsec:setpisizeaddr]{setpisizeaddr} and \hyperref[subsec:setpimastercount]{setpimastercount}.
 
 \subsection{project}
 % ==============================================
@@ -485,6 +512,39 @@ Transforms a param to a fixed parameter  if -v is true or a dynamic parameter el
 \end{sampletitle}
 \samplecomment{Sets the parameter `mode' to a fixed parameter, eg generic value for a VHDL backend}
 
+% ==============================================
+\subsubsection{setpisizeaddr}
+\label{subsec:setpisizeaddr}
+\command{\textbf{\tool{} setpisizeaddr} -v <pisizeaddr>}
+
+Sets the width of PI address bus in bits. For example, with the highest address 9 you should use 4 as the pisizeaddr to have a range of 16 addresses.\\
+
+\paramcommand{
+-v & width of PI slave address port in bits & 3 \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setpisizeaddr} -v 5 \\
+\end{sampletitle}
+\samplecomment{Sets the parameter pisizeaddr to 5 bits to have 32 possible registers}
+
+% ==============================================
+\subsubsection{setpimastercount}
+\label{subsec:setpimastercount}
+\command{\textbf{\tool{} setpimastercount} -v <pimastercount>}
+
+Sets the number of PI master port.\\
+
+\paramcommand{
+-v & number of master port & 1 \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setpimastercount} -v 1 \\
+\end{sampletitle}
+\samplecomment{Adds a PI master port to the current \kind{}}
+
+\gpprocdevice{
 \subsection{bitfields}
 % ==============================================
 \subsubsection{addbitfield}
@@ -496,7 +556,7 @@ Adds a bit field named \texttt{<bitfield-name>} to the param \texttt{<param-name
 \paramcommand{
 -n & name of the bit field composed by the param name, a dot and the bits field name & param.b0 \\
 \hline
--b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
+-b & bits field & 1\newline 8-4 \newline 2,5,10-9 \\
 \hline
 -m & javascript property map expression  & enable.value \newline mode.bits \newline Math.ceil(\newline in.width.value/4)+4 \\
 }
@@ -568,11 +628,11 @@ Allows to modify bit field bits selection.\\
 \paramcommand{
 -n & name of the bit field & param0.bf0 \\
 \hline
--b & bits field & 1\newline 4-8 \newline 2:5:9-10 \\
+-b & bits field & 1\newline 8-4 \newline 2,5,10-9 \\
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} setparam} -n param0.bf0 -b 0-2
+> \textbf{\tool{} setparam} -n param0.bf0 -b 2-0
 \end{sampletitle}
 \samplecomment{Sets the bit selection of `param0.bf0' to bits 2 downto 0.}
 
@@ -679,6 +739,7 @@ Allows to modify one or more property parameters like the label, the type or the
 
 % ==============================================
 \subsubsection{setpropertymap}
+\label{subsec:setpropertymap}
 \command{\textbf{\tool{} setpropertymap} -n <param/property/bitfield-name> -v <property-map>}
 
 Allows to set the property map of a dynamic parameter, a property or a bit field. It's the mathematical expression to dynamically link a property value to another value. High level interface or API only have access to property, so if you need to modify a register from the external, creates a property and link his value to the register. When the property value change, the property map expression is re evaluated to set the new computed value to the register.\\
@@ -757,6 +818,7 @@ Removes the enum with the name \texttt{<enum-name>}.\\
 \command{\textbf{\tool{} showenum} [-n <property-name>]}
 
 Prints the list of enumeration item in the property \texttt{<property-name>} of the current block project if no name is specified. If a name is given, list the enums of the given property.
+}
 
 \subsection{resets}
 % ==============================================
@@ -1020,6 +1082,7 @@ Prints the list of external ports in the current block project.
 \subsection{global}
 % ==============================================
 \subsubsection{sethelp}
+\label{subsec:sethelp}
 \command{\textbf{\tool{} sethelp} [-n <instance-name>] -v <help-text>}
 
 Sets the help text for an instance of the block if a name is specified, or the block itself is name is omitted. This is useful for the automatic documentation generation. \\
@@ -1036,5 +1099,60 @@ Sets the help text for an instance of the block if a name is specified, or the b
 > \textbf{\tool{} sethelp} -n out -v "output image flow"
 \end{sampletitle}
 \samplecomment{Few documentation for the block.}
+
+\subsubsection{setdraw}
+\command{\textbf{\tool{} setdraw} -v <svg-draw-content>\\\textbf{\tool{} setdraw} -f <svg-file>}
+
+Sets the picture of the block from svg commands or a svg file. \\
+
+\paramcommand{
+-v & svg commands & <ellipse fill='red' cx='283.5' cy='487.5' rx='259' ry='80'/> \\
+\hline
+-f & svg file & "hog.svg" \\
+}
+
+\begin{sampletitle}[1]
+> \textbf{\tool{} setdraw} -v "<ellipse fill='red' cx='283.5' cy='487.5' rx='259' ry='80'/>"
+\end{sampletitle}
+\samplecomment{Put an ellipse as draw of the block}
+
+\begin{sampletitle}[2]
+> \textbf{\tool{} setdraw} -f doc/hog.svg
+\end{sampletitle}
+\samplecomment{Put the content of `doc/hog.svg' file as draw of the block}
+
+\subsubsection{setinfo}
+\command{\textbf{\tool{} setinfo} -n <info-name> -v <info-value/content>}
+
+Sets infos of the block. When you develop IPs, it is very important to set some information like author, licence, contact, email and version. \\
+
+\paramcommand{
+-n & name of the info & "author"\newline "email"\newline "company" \\
+\hline
+-v & value to set & "John Doe"\newline "john.doe@company.tld"\newline "The famous company (R)" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setinfo} -n "author"  -v "John Doe"\\
+> \textbf{\tool{} setinfo} -n "email"  -v "john.doe@company.tld"\\
+> \textbf{\tool{} setinfo} -n "company"  -v "The famous company (R)"
+\end{sampletitle}
+
+\subsubsection{info}
+\command{\textbf{\tool{} info} [-n <info-name>]}
+
+Returns infos of the block. \\
+
+\paramcommand{
+-n & name of the info & "author"\newline "email"\newline "company" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} info} -n "company"\\The famous company (R)\\
+> \textbf{\tool{} info}\\
+author: John Doe\\
+email: john.doe@company.tld\\
+company: The famous company (R)
+\end{sampletitle}
 
 \end{document}

@@ -27,9 +27,10 @@
 #include <QSvgRenderer>
 #include <QMap>
 
-class ProcessLib;
+class BlockLib;
 class IOLib;
 class ModelBlock;
+class ModelComponentPart;
 class Block;
 
 class BlockPortItem;
@@ -46,14 +47,12 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QString processName() const;
-    void setProcessName(const QString &processName);
-
     QString name() const;
     void setName(const QString &name);
 
     Block *block() const;
     ModelBlock *modelBlock() const;
+    ModelComponentPart *modelPart() const;
 
     void updateBlock();
     void updatePos();
@@ -63,21 +62,18 @@ public:
     const QMap<QString, BlockPortItem *> &ports() const;
 
 public:
-    // lib
-    static BlockItem *fromIoLib(const IOLib *ioLib, BlockItem *item = NULL);
-    static BlockItem *fromProcessLib(const ProcessLib *processLib, BlockItem *item = NULL);
-
     // model
-    static BlockItem *fromModelBlock(ModelBlock *modelBlock, BlockItem *item = NULL);
+    static QList<BlockItem *> fromModelBlock(ModelBlock *modelBlock);
+    static BlockItem *fromModelComponentPart(ModelComponentPart *modelPart);
 
     // camera model
-    static BlockItem *fromBlock(Block *block, BlockItem *item = NULL);
+    static QList<BlockItem *> fromBlock(Block *block);
+
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    QString _processName;
     QString _name;
 
     QRectF _boundingRect;
@@ -87,6 +83,7 @@ private:
 
     Block *_block;
     ModelBlock *_modelBlock;
+    ModelComponentPart *_modelPart;
 };
 
 #endif // BLOCKITEM_H

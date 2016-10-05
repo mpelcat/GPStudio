@@ -14,5 +14,17 @@
         <file>../img/edit-cut.png</file>
         <file>../img/edit-copy.png</file>
         <file>../img/edit-paste.png</file>
+        <file>../img/exit.png</file>
+        <file>../img/run.png</file>
+        <file>../img/make-clean.png</file>
+        <file>../img/make-compile.png</file>
+        <file>../img/make-generate.png</file>
+        <file>../img/make-send.png</file>
+        <file>../img/stop.png</file>
+    </qresource>
+    <qresource prefix="/img">
+        <file>../img/gpstudio_node.ico</file>
+        <file>../img/gpstudio_viewer.ico</file>
+        <file>../img/gpstudio_block.ico</file>
     </qresource>
 </RCC>

@@ -78,3 +78,5 @@ use_open_cv {
 
 win32: LIBS += -L$$PWD/../../thirdparts/libusb-1.0/
 LIBS += -lusb-1.0
+
+win32 : RC_FILE = gpviewer.rc

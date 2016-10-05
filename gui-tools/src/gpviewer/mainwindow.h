@@ -28,7 +28,7 @@
 
 #include "camera/camera.h"
 #include "flowviewerwidget/flowviewerwidget.h"
-#include "camexplorerwidget.h"
+#include "viewer/camexplorerwidget.h"
 #include "lib_parser/lib.h"
 
 #include "../../thirdparts/hexedit/qhexedit.h"
@@ -50,6 +50,10 @@ public:
 
     void openNodeGeneratedFile(const QString fileName);
 
+public slots:
+    void about();
+    void aboutQt();
+
 protected:
     bool event(QEvent *event);
 
@@ -57,11 +61,12 @@ private slots:
     void openNode();
 
     void connectCam();
+    void disconnectCam();
 
     void setBiSpace();
 
     void updateWindowsMenu();
-    void showBlockDetails(const Block *block);
+    void showBlockDetails(QString blockName);
 
 private:
     Ui::MainWindow *ui;

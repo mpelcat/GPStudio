@@ -137,7 +137,7 @@ class ParamBitfield
     {
         $bitfieldlist = array();
         // bitfield support with exp like 3,0 => [3 0] or 3-0 => [3 2 1 0] or 6-4,0 => [6 5 4 0]
-        preg_match_all("|([-,]?)([0-9])|", $string, $out, PREG_SET_ORDER);
+        preg_match_all("|([-,]?)([0-9]+)|", $string, $out, PREG_SET_ORDER);
 
         $prev = -1;
         $lastsymbole = '';
@@ -195,14 +195,20 @@ class ParamBitfield
         $xml_element->appendChild($att);
 
         // type
-        $att = $xml->createAttribute('type');
-        $att->value = $this->type;
-        $xml_element->appendChild($att);
+        if (!empty($this->type))
+        {
+            $att = $xml->createAttribute('type');
+            $att->value = $this->type;
+            $xml_element->appendChild($att);
+        }
 
         // value
-        $att = $xml->createAttribute('value');
-        $att->value = $this->value;
-        $xml_element->appendChild($att);
+        if (!empty($this->value))
+        {
+            $att = $xml->createAttribute('value');
+            $att->value = $this->value;
+            $xml_element->appendChild($att);
+        }
 
         // bitfield
         $att = $xml->createAttribute('bitfield');
@@ -210,14 +216,20 @@ class ParamBitfield
         $xml_element->appendChild($att);
 
         // propertymap
-        $att = $xml->createAttribute('propertymap');
-        $att->value = $this->propertymap;
-        $xml_element->appendChild($att);
+        if (!empty($this->propertymap))
+        {
+            $att = $xml->createAttribute('propertymap');
+            $att->value = $this->propertymap;
+            $xml_element->appendChild($att);
+        }
 
         // desc
-        $att = $xml->createAttribute('desc');
-        $att->value = $this->desc;
-        $xml_element->appendChild($att);
+        if (!empty($this->desc))
+        {
+            $att = $xml->createAttribute('desc');
+            $att->value = $this->desc;
+            $xml_element->appendChild($att);
+        }
 
         return $xml_element;
     }

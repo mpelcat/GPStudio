@@ -34,7 +34,8 @@ class ModelFlow;
 class GPSTUDIO_LIB_EXPORT ModelFlowConnect
 {
 public:
-    ModelFlowConnect();
+    ModelFlowConnect(QString fromblock=QString(), QString fromflow=QString(), QString toblock=QString(), QString toflow=QString(), QString order=QString());
+    ModelFlowConnect(const ModelFlowConnect &other);
     virtual ~ModelFlowConnect();
 
     ModelBlock *fromModelBlock() const;
@@ -58,6 +59,8 @@ public:
 
     ModelFIBlock *parent() const;
     void setParent(ModelFIBlock *parent);
+
+    bool operator ==(const ModelFlowConnect &other) const;
 
 public:
     static ModelFlowConnect *fromNodeGenerated(const QDomElement &domElement);

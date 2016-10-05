@@ -27,9 +27,10 @@
 #include <QDomElement>
 #include <QList>
 
+class ModelNode;
 class ModelBlock;
 
-class ModelBoard
+class GPSTUDIO_LIB_EXPORT ModelBoard
 {
 public:
     ModelBoard();
@@ -38,13 +39,19 @@ public:
     const QString &name() const;
     void setName(const QString &name);
 
+    ModelNode *parent() const;
+    void setParent(ModelNode *parent);
+
 public:
     static ModelBoard *fromNodeGenerated(const QDomElement &domElement);
     static ModelBoard *fromNodeDef(const QDomElement &domElement);
     static QList<ModelBlock *> listIosFromNodeDef(const QDomElement &domElement);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;
+
+    ModelNode *_parent;
 };
 
 #endif // MODEL_BOARD_H

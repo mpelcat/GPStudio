@@ -25,8 +25,7 @@
 #include <QDebug>
 #include <QCursor>
 
-#include "lib_parser/processlib.h"
-#include "lib_parser/iolib.h"
+#include "lib_parser/blocklib.h"
 
 #include "model/model_flow.h"
 
@@ -100,7 +99,8 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->drawPath(path);
 
         painter->setPen(QPen());
-        painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
+        if(_name != "in")
+            painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
     }
     else
     {
@@ -111,7 +111,8 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->drawPath(path);
 
         painter->setPen(QPen());
-        painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
+        if(_name != "out")
+            painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
     }
 }
 
@@ -124,6 +125,16 @@ void BlockPortItem::setName(const QString &name)
 {
     _name = name;
     update();
+}
+
+QString BlockPortItem::blockName() const
+{
+    return _blockName;
+}
+
+void BlockPortItem::setBlockName(const QString &blockName)
+{
+    _blockName = blockName;
 }
 
 BlockPortItem::Direction BlockPortItem::direction() const

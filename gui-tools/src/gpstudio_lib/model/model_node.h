@@ -38,13 +38,14 @@ class ModelIOCom;
 class GPSTUDIO_LIB_EXPORT ModelNode
 {
 public:
-    ModelNode();
+    ModelNode(const QString &name=QString());
     ~ModelNode();
 
     const QString &name() const;
     void setName(const QString &name);
 
-    ModelBoard *getBoard() const;
+    ModelBoard *board() const;
+    void setBoard(ModelBoard *board);
 
     bool isValid() const;
 
@@ -52,7 +53,10 @@ public:
     QList<ModelBlock *> &blocks();
     const QList<ModelBlock *> &blocks() const;
     void addBlock(ModelBlock *block);
+    void addBlock(QList<ModelBlock *> blocks);
     void removeBlock(ModelBlock *block);
+    void removeBlock(const QString &block_name);
+    QStringList iosList();
 
     ModelFIBlock *getFIBlock() const;
     ModelCIBlock *getCIBlock() const;

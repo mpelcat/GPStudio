@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<device name="de1_soc" description="TerasIC DE1-SoC dev board">
+	<svg width="200" height="100">
+		<rect width="150" height="100" x="0" y="0" fill="green"/>
+		<text x="35" y="53">DE1-SoC</text>
+		<path d="M150,40 L200,10 L200,90 L150,60" fill="black"/>
+	</svg>
+	<toolchain name="altera_quartus" type="5CSEMA5F31C6" family="Cyclone V">
+		<attributes>
+			<attribute name="FAMILY" value="MAX 10" type="global"/>
+			<attribute name="DEVICE" value="10M50SAE144C8GES" type="global"/>
+			<attribute name="TOP_LEVEL_ENTITY" value="top" type="global"/>
+			<attribute name="ORIGINAL_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="LAST_QUARTUS_VERSION" value="13.1" type="global"/>
+			<attribute name="PROJECT_OUTPUT_DIRECTORY" value="output_files" type="global"/>
+			<attribute name="MIN_CORE_JUNCTION_TEMP" value="0" type="global"/>
+			<attribute name="MAX_CORE_JUNCTION_TEMP" value="85" type="global"/>
+			<attribute name="DEVICE_FILTER_PACKAGE" value="EQFP" type="global"/>
+			<attribute name="PARTITION_NETLIST_TYPE" value="SOURCE -section_id Top" type="global"/>
+			<attribute name="PARTITION_FITTER_PRESERVATION_LEVEL" value="PLACEMENT_AND_ROUTING -section_id Top" type="global"/>
+			<attribute name="PARTITION_COLOR" value="16764057 -section_id Top" type="global"/>
+			<attribute name="STRATIX_DEVICE_IO_STANDARD" value="2.5 V" type="global"/>
+		</attributes>
+	</toolchain>
+	<global>
+		<pins>
+			<pin name="PIN_AF14" mapto="clock_50_i">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_AA16" mapto="clock2_50_i">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_Y26" mapto="clock3_50_i">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+				</attributes>
+			</pin>
+			<pin name="PIN_K14" mapto="clock4_50_i">
+				<attributes>
+					<attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+				</attributes>
+			</pin>
+		</pins>
+		<clocks>
+			<clock name="clock_50_i" typical="50M" desc=""/>
+			<clock name="clock2_50_i" typical="50M" desc=""/>
+			<clock name="clock3_50_i" typical="50M" desc=""/>
+			<clock name="clock4_50_i" typical="50M" desc=""/>
+		</clocks>
+	</global>
+	<ios>
+		<io name="led" type="him_output" driver="leds" optional="true" description="Top red led">
+			<params>
+				<param name="LEDCOUNT" value="10"/>
+			</params>
+			<pins>
+                <pin name="o[0]" mapto="PIN_V16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[1]" mapto="PIN_W16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[2]" mapto="PIN_V17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[3]" mapto="PIN_V18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[4]" mapto="PIN_W17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[5]" mapto="PIN_W19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[6]" mapto="PIN_Y19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[7]" mapto="PIN_W20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[8]" mapto="PIN_W21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="o[9]" mapto="PIN_Y21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+		<io name="key" type="him_input" driver="keys" optional="true" description="4 push buttons">
+			<params>
+				<param name="KEYCOUNT" value="4"/>
+			</params>
+			<pins>
+                <pin name="key[0]" mapto="PIN_AA14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="key[1]" mapto="PIN_AA15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="key[2]" mapto="PIN_W15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="key[3]" mapto="PIN_Y16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+		<io name="ps2" type="him_input" driver="ps2" optional="true" description="">
+			<pins>
+				<pin name="ps2_clk" mapto="PIN_AD7">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="ps2_clk2" mapto="PIN_AD9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="ps2_dat" mapto="PIN_AE7">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="ps2_dat2" mapto="PIN_AE9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+		<io name="vga" type="image_output" driver="vga_out" optional="true" description="VGA output">
+			<pins>
+				<pin name="vga_blank_n" mapto="PIN_F10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[0]" mapto="PIN_B13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[1]" mapto="PIN_G13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[2]" mapto="PIN_H13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[3]" mapto="PIN_F14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[4]" mapto="PIN_H14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[5]" mapto="PIN_F15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[6]" mapto="PIN_G15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_b[7]" mapto="PIN_J14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_clk" mapto="PIN_A11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[0]" mapto="PIN_J9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[1]" mapto="PIN_J10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[2]" mapto="PIN_H12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[3]" mapto="PIN_G10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[4]" mapto="PIN_G11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[5]" mapto="PIN_G12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[6]" mapto="PIN_F11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_g[7]" mapto="PIN_E11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_hs" mapto="PIN_B11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[0]" mapto="PIN_A13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[1]" mapto="PIN_C13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[2]" mapto="PIN_E13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[3]" mapto="PIN_B12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[4]" mapto="PIN_C12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[5]" mapto="PIN_D12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[6]" mapto="PIN_E12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_r[7]" mapto="PIN_F13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_sync_n" mapto="PIN_C10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="vga_vs" mapto="PIN_D11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+		<io name="dram" type="memory" driver="dram" optional="true" description="External SRAM">
+			<pins>
+				<pin name="dram_addr[0]" mapto="PIN_AK14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[1]" mapto="PIN_AH14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[2]" mapto="PIN_AG15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[3]" mapto="PIN_AE14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[4]" mapto="PIN_AB15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[5]" mapto="PIN_AC14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[6]" mapto="PIN_AD14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[7]" mapto="PIN_AF15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[8]" mapto="PIN_AH15">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[9]" mapto="PIN_AG13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[10]" mapto="PIN_AG12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[11]" mapto="PIN_AH13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_addr[12]" mapto="PIN_AJ14">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_ba[0]" mapto="PIN_AF13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_ba[1]" mapto="PIN_AJ12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_cas_n" mapto="PIN_AF11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_cke" mapto="PIN_AK13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_clk" mapto="PIN_AH12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_cs_n" mapto="PIN_AG11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[0]" mapto="PIN_AK6">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[1]" mapto="PIN_AJ7">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[2]" mapto="PIN_AK7">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[3]" mapto="PIN_AK8">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[4]" mapto="PIN_AK9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[5]" mapto="PIN_AG10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[6]" mapto="PIN_AK11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[7]" mapto="PIN_AJ11">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[8]" mapto="PIN_AH10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[9]" mapto="PIN_AJ10">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[10]" mapto="PIN_AJ9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[11]" mapto="PIN_AH9">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[12]" mapto="PIN_AH8">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[13]" mapto="PIN_AH7">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[14]" mapto="PIN_AJ6">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_dq[15]" mapto="PIN_AJ5">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_ldqm" mapto="PIN_AB13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_ras_n" mapto="PIN_AE13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_udqm" mapto="PIN_AK12">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="dram_we_n" mapto="PIN_AA13">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+		<io name="gpio0" type="gpio" driver="gpio" optional="true" description="GPIO port 0">
+			<params>
+				<param name="GPIOCOUNT" value="36"/>
+			</params>
+			<pins>
+                <pin name="gpio0_io[0]" mapto="PIN_AC18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[1]" mapto="PIN_Y17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[2]" mapto="PIN_AD17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[3]" mapto="PIN_Y18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[4]" mapto="PIN_AK16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[5]" mapto="PIN_AK18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[6]" mapto="PIN_AK19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[7]" mapto="PIN_AJ19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[8]" mapto="PIN_AJ17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[9]" mapto="PIN_AJ16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[10]" mapto="PIN_AH18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[11]" mapto="PIN_AH17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[12]" mapto="PIN_AG16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[13]" mapto="PIN_AE16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[14]" mapto="PIN_AF16">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[15]" mapto="PIN_AG17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[16]" mapto="PIN_AA18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[17]" mapto="PIN_AA19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[18]" mapto="PIN_AE17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[19]" mapto="PIN_AC20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[20]" mapto="PIN_AH19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[21]" mapto="PIN_AJ20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[22]" mapto="PIN_AH20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[23]" mapto="PIN_AK21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[24]" mapto="PIN_AD19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[25]" mapto="PIN_AD20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[26]" mapto="PIN_AE18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[27]" mapto="PIN_AE19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[28]" mapto="PIN_AF20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[29]" mapto="PIN_AF21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[30]" mapto="PIN_AF19">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[31]" mapto="PIN_AG21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[32]" mapto="PIN_AF18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[33]" mapto="PIN_AG20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[34]" mapto="PIN_AG18">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio0_io[35]" mapto="PIN_AJ21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+        <io name="gpio1" type="gpio" driver="gpio" optional="true" description="GPIO port 1">
+			<params>
+				<param name="GPIOCOUNT" value="36"/>
+			</params>
+			<pins>
+                <pin name="gpio1_io[0]" mapto="PIN_AB17">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[1]" mapto="PIN_AA21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[2]" mapto="PIN_AB21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[3]" mapto="PIN_AC23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[4]" mapto="PIN_AD24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[5]" mapto="PIN_AE23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[6]" mapto="PIN_AE24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[7]" mapto="PIN_AF25">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[8]" mapto="PIN_AF26">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[9]" mapto="PIN_AG25">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[10]" mapto="PIN_AG26">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[11]" mapto="PIN_AH24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[12]" mapto="PIN_AH27">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[13]" mapto="PIN_AJ27">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[14]" mapto="PIN_AK29">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[15]" mapto="PIN_AK28">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[16]" mapto="PIN_AK27">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[17]" mapto="PIN_AJ26">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[18]" mapto="PIN_AK26">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[19]" mapto="PIN_AH25">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[20]" mapto="PIN_AJ25">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[21]" mapto="PIN_AJ24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[22]" mapto="PIN_AK24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[23]" mapto="PIN_AG23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[24]" mapto="PIN_AK23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[25]" mapto="PIN_AH23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[26]" mapto="PIN_AK22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[27]" mapto="PIN_AJ22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[28]" mapto="PIN_AH22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[29]" mapto="PIN_AG22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[30]" mapto="PIN_AF24">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[31]" mapto="PIN_AF23">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[32]" mapto="PIN_AE22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[33]" mapto="PIN_AD21">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[34]" mapto="PIN_AA20">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+                <pin name="gpio1_io[35]" mapto="PIN_AC22">
+                    <attributes>
+                        <attribute name="IO_STANDARD" value="3.3-V LVTTL" type="instance"/>
+                    </attributes>
+                </pin>
+			</pins>
+		</io>
+	</ios>
+</device>

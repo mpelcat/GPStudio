@@ -14,11 +14,13 @@ docsrc/gpnode/gpnode.pdf
 docsrc/gplib/gplib.pdf
 docsrc/gpdevice/gpdevice.pdf
 docsrc/gpproc/gpproc.pdf
+docsrc/gpcomp/gpcomp.pdf
 docsrc/manual/manual.pdf
 docsrc/tutorial/install_linux/install_linux.pdf
 docsrc/tutorial/quick_start_cmd/quick_start_cmd.pdf
 
 distrib/gpstudio_*
+distrib/setup-gpstudio_*
 
 bin/*.so*
 bin/*.a

@@ -25,20 +25,46 @@
 
 #include <QUndoCommand>
 
-#include "model/model_node.h"
+#include "nodeeditor/gpnodeproject.h"
 
 class GPSTUDIO_GUI_EXPORT NodeCommand : public QUndoCommand
 {
 public:
-    NodeCommand();
+    NodeCommand(GPNodeProject *project);
 protected:
-    ModelNode _node;
+    GPNodeProject *_project;
 };
 
-class GPSTUDIO_GUI_EXPORT NodeRename : public NodeCommand
+class GPSTUDIO_GUI_EXPORT NodeCmdRename : public NodeCommand
 {
 public:
-    NodeRename();
+    enum { Id = 0x0201 };
+    NodeCmdRename(GPNodeProject *project, const QString &oldName, const QString &newName);
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    QString _oldName;
+    QString _newName;
+};
+
+class GPSTUDIO_GUI_EXPORT NodeCmdConfigBoard : public NodeCommand
+{
+public:
+    enum { Id = 0x0202 };
+    NodeCmdConfigBoard(GPNodeProject *project,
+                       const QString &oldBoard, const QStringList &oldIos,
+                       const QString &newBoard, const QStringList &newIos);
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    QString _oldBoard;
+    QString _newBoard;
+    QStringList _oldIos;
+    QStringList _newIos;
 };
 
 #endif // NODECOMMANDS_H

@@ -103,7 +103,7 @@ class File
         $this->name = (string) $xml['name'];
         $this->type = (string) $xml['type'];
         $this->group = (string) $xml['group'];
-        $this->path = (string) $xml['path'];
+        $this->path = str_replace("\\", "/", (string) $xml['path']);
         $this->desc = (string) $xml['desc'];
     }
 
@@ -141,9 +141,12 @@ class File
         $xml_element->appendChild($att);
 
         // desc
-        $att = $xml->createAttribute('desc');
-        $att->value = $this->desc;
-        $xml_element->appendChild($att);
+        if (!empty($this->desc))
+        {
+            $att = $xml->createAttribute('desc');
+            $att->value = $this->desc;
+            $xml_element->appendChild($att);
+        }
 
         return $xml_element;
     }

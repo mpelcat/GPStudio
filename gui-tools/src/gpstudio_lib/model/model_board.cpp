@@ -21,9 +21,11 @@
 #include "model_board.h"
 
 #include "model_block.h"
+#include "model_node.h"
 
 ModelBoard::ModelBoard()
 {
+    _parent = NULL;
 }
 
 ModelBoard::~ModelBoard()
@@ -38,6 +40,16 @@ const QString &ModelBoard::name() const
 void ModelBoard::setName(const QString &name)
 {
     _name = name;
+}
+
+ModelNode *ModelBoard::parent() const
+{
+    return _parent;
+}
+
+void ModelBoard::setParent(ModelNode *parent)
+{
+    _parent = parent;
 }
 
 ModelBoard *ModelBoard::fromNodeGenerated(const QDomElement &domElement)
@@ -71,4 +83,26 @@ QList<ModelBlock *> ModelBoard::listIosFromNodeDef(const QDomElement &domElement
         }
     }
     return QList<ModelBlock *>();
+}
+
+QDomElement ModelBoard::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("board");
+
+    element.setAttribute("name", _name);
+
+    if(_parent)
+    {
+        QDomElement iosList = doc.createElement("ios");
+        foreach (ModelBlock *io, _parent->blocks())
+        {
+            if(io->isIO())
+            {
+                iosList.appendChild(io->toXMLElement(doc));
+            }
+        }
+        element.appendChild(iosList);
+    }
+
+    return element;
 }

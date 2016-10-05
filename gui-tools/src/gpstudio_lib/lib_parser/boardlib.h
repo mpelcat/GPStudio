@@ -31,6 +31,8 @@
 #include "ioboardlib.h"
 #include "ioboardlibgroup.h"
 
+class ModelBoard;
+
 class GPSTUDIO_LIB_EXPORT BoardLib
 {
 public:
@@ -47,12 +49,16 @@ public:
     IOBoardLib *io(const QString &name) const;
     const QMap<QString, IOBoardLibGroup> &iosGroups() const;
 
+    ModelBoard *modelBoard() const;
+
 public:
     static BoardLib *readFromFile(const QString &fileName);
-    static BoardLib *fromNodeGenerated(const QDomElement &domElement);
+    static BoardLib *fromDomElement(const QDomElement &domElement);
 
 protected:
     QString _name;
+
+    ModelBoard *_modelBoard;
 
     QList<IOBoardLib *> _ios;
     QMap<QString, IOBoardLib *> _iosMap;

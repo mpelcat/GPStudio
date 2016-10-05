@@ -37,6 +37,7 @@
 #include "model_port.h"
 #include "model_pin.h"
 #include "model_reset.h"
+#include "model_componentpart.h"
 
 class ModelNode;
 
@@ -56,6 +57,9 @@ public:
     const QString &driver() const;
     void setDriver(const QString &driver);
 
+    QString path() const;
+    void setPath(const QString &path);
+
     const QString &categ() const;
     void setCateg(const QString &categ);
 
@@ -68,13 +72,21 @@ public:
     quint8 masterCount() const;
     void setMasterCount(const quint8 &value);
 
-    const QPoint &pos() const;
-    void setPos(const QPoint &pos);
-
     const QString &description() const;
     void setDescription(const QString &description);
 
-    virtual QString type() const;
+    enum Type
+    {
+        Block,
+        Process,
+        IO,
+        IOCom,
+        PI,
+        FI,
+        CI
+    };
+    virtual Type type() const;
+    bool isIO() const;
 
     ModelNode *node() const;
     void setNode(ModelNode *node);
@@ -84,6 +96,7 @@ public:
     void addFile(ModelFile *file);
     void addFiles(const QList<ModelFile *> &files);
     ModelFile *getFile(const QString &name) const;
+    ModelFile *getDefFile() const;
 
     QList<ModelParam *> &params();
     const QList<ModelParam *> &params() const;
@@ -127,6 +140,12 @@ public:
     void addResets(const QList<ModelReset *> &resets);
     ModelReset *getReset(const QString &name) const;
 
+    QList<ModelComponentPart *> &parts();
+    const QList<ModelComponentPart *> &parts() const;
+    void addPart(ModelComponentPart *part);
+    void addParts(const QList<ModelComponentPart *> &parts);
+    ModelComponentPart *getPart(const QString &name) const;
+
 public:
     static ModelBlock *readFromFile(const QString &fileName);
 
@@ -140,11 +159,11 @@ protected:
     QString _name;
     bool _inLib;
     QString _driver;
+    QString _path;
     QString _categ;
     qint32 _addrAbs;
     quint8 _sizeAddrRel;
     quint8 _masterCount;
-    QPoint _pos;
     QString _description;
 
     QList<ModelFile *> _files;
@@ -155,6 +174,7 @@ protected:
     QList<ModelPort *> _ports;
     QList<ModelPin *> _pins;
     QList<ModelReset *> _resets;
+    QList<ModelComponentPart *> _parts;
 
     ModelNode *_node;
 };

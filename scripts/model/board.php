@@ -245,7 +245,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('parameter ' . $paramXml['name'] . " does'nt exists", 16, $io->name);
+                                    warning('parameter ' . $paramXml['name'] . " does not exist", 16, $io->name);
                                 }
                             }
                         }
@@ -264,7 +264,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('property ' . $propertyXml['name'] . " does'nt exists", 16, $io->name);
+                                    //warning('property ' . $propertyXml['name'] . " does not exist", 16, $io->name);
                                 }
                             }
                         }
@@ -284,7 +284,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('clock ' . $clockXml['name'] . " does'nt exists", 16, $processBlock->name);
+                                    warning('clock ' . $clockXml['name'] . " does not exist", 16, $processBlock->name);
                                 }
                             }
                         }
@@ -303,7 +303,7 @@ class Board
         // warning for io does'nt exist
         foreach ($used_ios as $key => $io)
         {
-            warning('io \'' . $io['name'] . "' does'nt exists in board " . $this->name, 16, 'Board');
+            warning('io \'' . $io['name'] . "' does not exist in board " . $this->name, 16, 'Board');
         }
 
         // replace default param value directly in .node file
@@ -326,7 +326,23 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('parameter ' . $param['name'] . " does'nt exists", 16, $concerned_block->name);
+                                    warning('parameter ' . $param['name'] . " does not exist", 16, $concerned_block->name);
+                                }
+                            }
+                        }
+                    }
+
+                    // redef part position
+                    if (isset($io->parts))
+                    {
+                        foreach ($io->parts->part as $part)
+                        {
+                            if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
+                            {
+                                if ($concerned_part = $concerned_block->getPart((string) $part['name']))
+                                {
+                                    $concerned_part->x_pos = $part['x_pos'];
+                                    $concerned_part->y_pos = $part['y_pos'];
                                 }
                             }
                         }
@@ -345,7 +361,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('property ' . $property['name'] . " does'nt exists", 16, $concerned_block->name);
+                                    //warning('property ' . $property['name'] . " does not exist", 16, $concerned_block->name);
                                 }
                             }
                             if (isset($property->properties))
@@ -360,7 +376,7 @@ class Board
                                         }
                                         else
                                         {
-                                            warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does'nt exists", 16, $io->name);
+                                            //warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does not exist", 16, $io->name);
                                         }
                                     }
                                 }
@@ -381,7 +397,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('flow ' . $flow['name'] . " does'nt exists", 16, $concerned_block->name);
+                                    warning('flow ' . $flow['name'] . " does not exist", 16, $concerned_block->name);
                                 }
                             }
                         }
@@ -400,7 +416,7 @@ class Board
                                 }
                                 else
                                 {
-                                    warning('clock ' . $clock['name'] . " does'nt exists", 16, $concerned_block->name);
+                                    warning('clock ' . $clock['name'] . " does not exist", 16, $concerned_block->name);
                                 }
                             }
                         }
