@@ -43,8 +43,8 @@ void CompileLogWidget::appendLog(const QString &log)
 void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
 {
     _process = new QProcess(this);
-    connect(_process, SIGNAL(readyReadStandardError()), this, SLOT(readProcess()));
-    connect(_process, SIGNAL(readyReadStandardOutput()), this, SLOT(readProcess()));
+    connect(_process, SIGNAL(readyRead()), this, SLOT(readProcess()));
+    connect(_process, SIGNAL(readyRead()), this, SLOT(readProcess()));
     connect(_process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(exitProcess()));
     connect(_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(errorProcess()));
 
@@ -61,7 +61,7 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
     _process->setWorkingDirectory(QFileInfo(_project->path()).path());
     _process->start(cmd, args);
 
-    appendLog(QString("process '%1' start at %2...")
+    appendLog(QString("<p><span style=\"color: blue;\">process '%1' start at %2...</span></p>")
               .arg(_program + " " + _arguments.join(" "))
               .arg(QDateTime::currentDateTime().toString()));
 }
@@ -104,40 +104,47 @@ void CompileLogWidget::checkAction()
 
 void CompileLogWidget::readProcess()
 {
-#if defined(Q_OS_WIN)
+/*#if defined(Q_OS_WIN)
     QRegExp colorReg("([^\r\n]*)");
     int capint = 0;
 #else
     QRegExp colorReg("\\x001b\\[([0-9]+)m([^\r\n\\x001b]*)");
     int capint = 2;
-#endif
+#endif*/
 
     QString html;
-    QByteArray dataRead = _process->readAllStandardOutput();
-    QString stringRead = QString::fromLocal8Bit(dataRead);
-
-    int pos = 0;
-    while ((pos = colorReg.indexIn(stringRead, pos)) != -1)
+    while(_process->canReadLine())
     {
-        QString colorCode = colorReg.cap(1);
-        QString colorHTML = "black";
+        QByteArray dataRead = _process->readLine();
+        QString stringRead = QString::fromLocal8Bit(dataRead);
 
-        if(colorCode == "33")
-            colorHTML = "orange";
-        if(colorCode == "31")
-            colorHTML = "red";
-        if(colorCode == "32")
-            colorHTML = "green";
+        /*int pos = 0;
+        while ((pos = colorReg.indexIn(stringRead, pos)) != -1)
+        {
+            QString colorCode = colorReg.cap(1);
+            QString colorHTML = "black";
 
-        html.append("<p><span style=\"color: "+colorHTML+"\">"+colorReg.cap(capint)+"</span></p>");
+            if(colorCode == "33")
+                colorHTML = "orange";
+            if(colorCode == "31")
+                colorHTML = "red";
+            if(colorCode == "32")
+                colorHTML = "green";
 
-        pos += colorReg.matchedLength()+1;
+            html.append("<p><span style=\"color: "+colorHTML+"\">"+colorReg.cap(capint)+"</span></p>");
+
+            pos += colorReg.matchedLength()+1;
+        }*/
+
+        stringRead.replace(QRegExp("\\x001b\\[([0-9]+)m"),"");
+        html.append("<p>"+stringRead+"</p>");
+
+        dataRead = _process->readAllStandardError();
+        if(!dataRead.isEmpty())
+            html.append("<p><span style=\"color: red\">"+QString::fromLocal8Bit(dataRead)+"</span></p>");
+
+        appendLog(html);
     }
-
-    dataRead = _process->readAllStandardError();
-    html.append("<p><span style=\"color: red\">"+QString::fromLocal8Bit(dataRead)+"</span></p>");
-
-    appendLog(html);
 }
 
 void CompileLogWidget::launchClean()
@@ -209,7 +216,7 @@ void CompileLogWidget::clear()
 
 void CompileLogWidget::exitProcess()
 {
-    appendLog(QString("process '%1' exit with code %2 at %3, elapsed time: %4s")
+    appendLog(QString("<p><span style=\"color: blue;\">process '%1' exit with code %2 at %3, elapsed time: %4s</span></p>")
               .arg(_program + " " + _arguments.join(" "))
               .arg(_process->exitCode())
               .arg(QDateTime::currentDateTime().toString())
@@ -225,7 +232,7 @@ void CompileLogWidget::errorProcess()
 {
     if(_process)
     {
-        appendLog(QString("failed exit code:%1 %2").arg(_process->exitCode()).arg(_process->errorString()));
+        appendLog(QString("<p><span style=\"color: red;\">failed exit code:%1 %2</span></p>").arg(_process->exitCode()).arg(_process->errorString()));
         _process->deleteLater();
         _process = NULL;
     }
