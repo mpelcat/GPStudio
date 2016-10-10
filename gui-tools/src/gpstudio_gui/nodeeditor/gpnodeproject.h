@@ -116,6 +116,9 @@ protected:
 
     friend class NodeCmdConfigBoard;
     void cmdConfigBoard(QString boardName, QStringList iosName);
+
+    friend class BlockCmdParamSet;
+    void cmdSetParam(const QString &blockName, const QString &paramName, const QVariant &value);
 };
 
 #endif // GPNODEPROJECT_H

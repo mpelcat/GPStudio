@@ -360,6 +360,23 @@ void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
     }
 }
 
+void GPNodeProject::cmdSetParam(const QString &blockName, const QString &paramName, const QVariant &value)
+{
+    ModelBlock *block = _node->getBlock(blockName);
+    if(!block)
+        return;
+
+    ModelParam *param = block->getParam(paramName);
+    if(!param)
+        return;
+
+    // set value of param
+    param->setValue(value);
+
+    //emit blockUpdated(block);
+    setModified(true);
+}
+
 QUndoStack *GPNodeProject::undoStack() const
 {
     return _undoStack;

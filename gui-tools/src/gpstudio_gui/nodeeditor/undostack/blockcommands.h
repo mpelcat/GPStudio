@@ -125,4 +125,19 @@ protected:
     ModelFlowConnect _flowConnect;
 };
 
+class GPSTUDIO_GUI_EXPORT BlockCmdParamSet : public BlockCommand
+{
+public:
+    enum { Id = 0x0107 };
+    BlockCmdParamSet(GPNodeProject *project, const QString &blockName, const QString &paramName, const QVariant &oldValue, const QVariant &newValue);
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    QString _paramName;
+    QVariant _oldValue;
+    QVariant _newValue;
+};
+
 #endif // BLOCKCOMMANDS_H

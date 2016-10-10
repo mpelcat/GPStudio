@@ -185,3 +185,20 @@ void BlockCmdDisconnectFlow::redo()
 {
     _project->cmdDisconnectFlow(_flowConnect);
 }
+
+// Set param
+BlockCmdParamSet::BlockCmdParamSet(GPNodeProject *project, const QString &blockName, const QString &paramName, const QVariant &oldValue, const QVariant &newValue)
+    : BlockCommand(project, blockName), _paramName(paramName), _oldValue(oldValue), _newValue(newValue)
+{
+    setText(QString("change param '%1.%2'").arg(blockName).arg(paramName));
+}
+
+void BlockCmdParamSet::undo()
+{
+    _project->cmdSetParam(_block_name, _paramName, _oldValue);
+}
+
+void BlockCmdParamSet::redo()
+{
+    _project->cmdSetParam(_block_name, _paramName, _newValue);
+}
