@@ -5,7 +5,7 @@ rm gaussian.proc
 
 # block and flows
 gpproc new -n gaussian
-gpproc sethelp -v "Dynamic image convolution block"
+gpproc sethelp -v "Blurry"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
