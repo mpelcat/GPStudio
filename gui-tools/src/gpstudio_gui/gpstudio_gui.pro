@@ -50,6 +50,7 @@ SOURCES += \
     scriptlineedit.cpp \
     itemmodel/camtreeview.cpp \
     itemmodel/caminfoitemmodel.cpp \
+    itemmodel/libitem.cpp \
     itemmodel/libitemmodel.cpp \
     itemmodel/libtreeview.cpp \
     itemmodel/cameraitemmodel.cpp \
@@ -99,6 +100,7 @@ HEADERS  += \
     itemmodel/camtreeview.h \
     itemmodel/caminfoitemmodel.h \
     itemmodel/libitemmodel.h \
+    itemmodel/libitem.h \
     itemmodel/libtreeview.h \
     itemmodel/cameraitemmodel.h \
     itemmodel/cameraitem.h \

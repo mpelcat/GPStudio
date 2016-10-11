@@ -52,6 +52,7 @@ void LibTreeView::setLib(const Lib *lib)
 {
     _model->setLib(lib);
 
+    expandAll();
     resizeColumnToContents(0);
     resizeColumnToContents(1);
 }
@@ -63,7 +64,9 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     QDrag *drag = new QDrag(this);
     QMimeData *mimeData = new QMimeData;
 
-    const BlockLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+    const BlockLib *proc = _model->blockLib(currentIndex());
+    if(!proc)
+        return;
 
     mimeData->setText(proc->name());
     drag->setMimeData(mimeData);
@@ -77,7 +80,9 @@ void LibTreeView::doubleClickProcess(QModelIndex index)
     if(!index.isValid())
         return;
 
-    const BlockLib *proc = _model->processList()[currentIndex().data(Qt::UserRole).toInt()];
+    const BlockLib *proc = _model->blockLib(currentIndex());
+    if(!proc)
+        return;
 
     if(proc)
         emit blockAdded(proc->name(), QPoint());

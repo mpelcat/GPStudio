@@ -26,6 +26,7 @@
 #include <QAbstractItemModel>
 #include <QList>
 
+#include "libitem.h"
 #include "lib_parser/lib.h"
 
 class GPSTUDIO_GUI_EXPORT LibItemModel : public QAbstractItemModel
@@ -49,15 +50,10 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
     void setLib(const Lib *lib);
-    const QList<BlockLib*> &processList() const;
-
-signals:
-
-public slots:
+    const BlockLib *blockLib(const QModelIndex &index);
 
 private:
-    QList<BlockLib*> _processList;
-
+    LibItem *_rootItem;
 };
 
 #endif // LIBITEMMODEL_H

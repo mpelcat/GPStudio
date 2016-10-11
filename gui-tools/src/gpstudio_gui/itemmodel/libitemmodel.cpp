@@ -23,6 +23,7 @@
 LibItemModel::LibItemModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
+    _rootItem = new LibItem("lib");
 }
 
 int LibItemModel::columnCount(const QModelIndex &parent) const
@@ -53,9 +54,11 @@ QVariant LibItemModel::headerData(int section, Qt::Orientation orientation, int 
 
 QVariant LibItemModel::data(const QModelIndex &index, int role) const
 {
-    if(index.row()>=_processList.count()) return QVariant();
+    if(_rootItem->count()==0)
+        return QVariant();
 
-    BlockLib *processLib = _processList[index.row()];
+    LibItem *libItem = static_cast<LibItem*>(index.internalPointer());
+    const BlockLib *processLib = libItem->blocklib();
 
     switch (role)
     {
@@ -63,18 +66,27 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
         switch (index.column())
         {
         case Name:
-            return QVariant(processLib->name());
+            return QVariant(libItem->label());
         case Description:
-            return QVariant(processLib->description());
+            if(libItem->isCateg())
+                return QVariant();
+            else
+                return QVariant(processLib->description());
         default:
             return QVariant();
         }
     case Qt::DecorationRole:
         if(index.column()==Name)
-            return QVariant(processLib->icon());
+            if(libItem->isCateg())
+                return QVariant();
+            else
+                return QVariant(processLib->icon());
         break;
     case Qt::ToolTipRole:
-        return QVariant(processLib->description());
+        if(libItem->isCateg())
+            return QVariant();
+        else
+            return QVariant(processLib->description());
     case Qt::UserRole:
         return index.row();
     }
@@ -83,19 +95,52 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
 
 QModelIndex LibItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return createIndex(row, column);
+    if (!hasIndex(row, column, parent))
+            return QModelIndex();
+
+    LibItem *parentItem;
+
+    if (!parent.isValid())
+        parentItem = _rootItem;
+    else
+        parentItem = static_cast<LibItem*>(parent.internalPointer());
+
+    const LibItem *childItem = parentItem->children(row);
+    if (childItem)
+        return createIndex(row, column, (void*)childItem);
+    else
+        return QModelIndex();
 }
 
 QModelIndex LibItemModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child);
-    return QModelIndex();
+    if (!child.isValid() || child.internalPointer()==NULL)
+        return QModelIndex();
+
+    LibItem *childItem = static_cast<LibItem*>(child.internalPointer());
+    LibItem *parentItem = childItem->parent();
+
+    if (parentItem == _rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->row(), 0, parentItem);
 }
 
 int LibItemModel::rowCount(const QModelIndex &parent) const
 {
-    if(!parent.isValid()) return _processList.count();
+    if (parent.column() > 0)
+            return 0;
+
+    if(!parent.isValid()) // root item
+    {
+        return _rootItem->count();
+    }
+    else
+    {
+        LibItem *item = static_cast<LibItem*>(parent.internalPointer());
+        if(item)
+            return item->count();
+    }
     return 0;
 }
 
@@ -113,16 +158,31 @@ void LibItemModel::setLib(const Lib *lib)
 {
     emit layoutAboutToBeChanged();
 
-    _processList.clear();
+    _rootItem->clear();
     foreach(BlockLib *processLib, lib->processes())
     {
-        _processList.append(processLib);
+        LibItem *libItem;
+        QString categ = processLib->categ();
+        if(categ.isEmpty())
+            categ = "various";
+        libItem = _rootItem->children(categ);
+        if(!libItem)
+            libItem = _rootItem->append(categ);
+        libItem->append(processLib);
     }
 
     emit layoutChanged();
 }
 
-const QList<BlockLib*> &LibItemModel::processList() const
+const BlockLib *LibItemModel::blockLib(const QModelIndex &index)
 {
-    return _processList;
+    if(!index.isValid())
+        return NULL;
+
+    LibItem *libItem = static_cast<LibItem*>(index.internalPointer());
+    if(libItem->isCateg())
+        return NULL;
+
+    const BlockLib *processLib = libItem->blocklib();
+    return processLib;
 }
