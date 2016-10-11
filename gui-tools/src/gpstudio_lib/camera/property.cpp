@@ -299,90 +299,108 @@ void Property::addSubProperty(Property *property)
     _subProperties.append(property);
 }
 
+void Property::removeSubProperty(Property *property)
+{
+    _subPropertiesMap.remove(property->name());
+    _subProperties.removeOne(property);
+    delete property;
+}
+
 void Property::removeAllSubProperties()
 {
-    foreach (Property *property, _subProperties) delete property;
+    foreach (Property *property, _subProperties)
+        delete property;
     _subPropertiesMap.clear();
     _subProperties.clear();
 }
 
 Property *Property::fromModelProperty(const ModelProperty *modelProperty)
 {
-    Property *paramprop = new Property(modelProperty->name());
-    paramprop->setCaption(modelProperty->caption());
-    paramprop->setOnchange(modelProperty->onchange());
-    paramprop->setPropertymap(modelProperty->propertymap());
-    paramprop->_modelProperty = modelProperty;
+    Property *propertyParam = new Property(modelProperty->name());
+    propertyParam->setCaption(modelProperty->caption());
+    propertyParam->setOnchange(modelProperty->onchange());
+    propertyParam->setPropertymap(modelProperty->propertymap());
+    propertyParam->_modelProperty = modelProperty;
     if(!modelProperty->propertyEnums().empty())
     {
         foreach (ModelPropertyEnum *blockPropertyEnum, modelProperty->propertyEnums())
         {
             PropertyEnum *propertyEnum = new PropertyEnum(blockPropertyEnum->name(), blockPropertyEnum->caption(), blockPropertyEnum->value());
-            paramprop->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
+            propertyParam->_enumsMap.insert(blockPropertyEnum->name(), propertyEnum);
         }
-        paramprop->setType(Property::Enum);
-        paramprop->setValue(modelProperty->value());
+        propertyParam->setType(Property::Enum);
+        propertyParam->setValue(modelProperty->value());
     }
     if(modelProperty->type()=="int" || modelProperty->type()=="sint")
     {
-        if(modelProperty->type()=="int") paramprop->setType(Int);
-        if(modelProperty->type()=="sint") paramprop->setType(SInt);
-        paramprop->setValue(modelProperty->value().toInt());
-        paramprop->setMin(modelProperty->min());
-        paramprop->setMax(modelProperty->max());
-        paramprop->setStep(modelProperty->step().toInt());
+        if(modelProperty->type()=="int") propertyParam->setType(Int);
+        if(modelProperty->type()=="sint") propertyParam->setType(SInt);
+        propertyParam->setValue(modelProperty->value().toInt());
+        propertyParam->setMin(modelProperty->min());
+        propertyParam->setMax(modelProperty->max());
+        propertyParam->setStep(modelProperty->step().toInt());
     }
     if(modelProperty->type()=="matrix")
     {
-        paramprop->setType(Matrix);
-        paramprop->setValue(QVariant(modelProperty->value()).toInt());
+        propertyParam->setType(Matrix);
+        propertyParam->setValue(QVariant(modelProperty->value()).toInt());
     }
     if(modelProperty->type()=="bool")
     {
-        paramprop->setType(Bool);
-        paramprop->setValue(QVariant(modelProperty->value()).toBool());
+        propertyParam->setType(Bool);
+        propertyParam->setValue(QVariant(modelProperty->value()).toBool());
     }
-    if(modelProperty->type()=="group") paramprop->setType(Group);
+    if(modelProperty->type()=="group") propertyParam->setType(Group);
     if(modelProperty->type()=="string")
     {
-        paramprop->setType(String);
-        paramprop->setValue(modelProperty->value());
+        propertyParam->setType(String);
+        propertyParam->setValue(modelProperty->value());
     }
     if(modelProperty->type()=="flowtype")
     {
-        paramprop->setType(FlowDataType);
-        paramprop->setValue(modelProperty->value());
+        propertyParam->setType(FlowDataType);
+        propertyParam->setValue(modelProperty->value());
     }
 
     // sub properties
     foreach (ModelProperty *subBlockProperty, modelProperty->properties())
     {
-        paramprop->addSubProperty(Property::fromModelProperty(subBlockProperty));
+        propertyParam->addSubProperty(Property::fromModelProperty(subBlockProperty));
     }
 
-    return paramprop;
+    return propertyParam;
 }
 
 Property *Property::fromModelFlow(const ModelFlow *modelFlow)
 {
-    Property *flowprop = new Property(modelFlow->name());
-    flowprop->setCaption(modelFlow->name());
-    flowprop->setType(FlowType);
+    Property *propertyFlow = new Property(modelFlow->name());
+    propertyFlow->setCaption(modelFlow->name());
+    propertyFlow->setType(FlowType);
 
     // sub properties
     foreach (ModelProperty *subBlockProperty, modelFlow->properties())
     {
-        flowprop->addSubProperty(Property::fromModelProperty(subBlockProperty));
+        propertyFlow->addSubProperty(Property::fromModelProperty(subBlockProperty));
     }
 
-    return flowprop;
+    return propertyFlow;
 }
 
 Property *Property::fromModelBlock(const ModelBlock *modelBlock)
 {
-    Property *propBlock = new Property(modelBlock->name());
-    propBlock->setCaption(modelBlock->name() + " (" + modelBlock->driver() + ")");
-    propBlock->setType(BlockType);
+    Property *propertyBlock = new Property(modelBlock->name());
+    propertyBlock->setCaption(modelBlock->name() + " (" + modelBlock->driver() + ")");
+    propertyBlock->setType(BlockType);
 
-    return propBlock;
+    return propertyBlock;
+}
+
+Property *Property::fromModelParam(const ModelParam *modelParam)
+{
+    Property *propertyParam = new Property(modelParam->name());
+    propertyParam->setCaption(modelParam->name());
+    propertyParam->setType(StringType);
+    propertyParam->setValue(modelParam->value().toString());
+
+    return propertyParam;
 }

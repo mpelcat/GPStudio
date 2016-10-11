@@ -39,6 +39,7 @@ GPNodeProject::GPNodeProject(QObject *parent)
 {
     _nodeEditorWindow = NULL;
     _node = NULL;
+    _camera = NULL;
     _modified = false;
     _undoStack = new QUndoStack();
 }
@@ -47,6 +48,7 @@ GPNodeProject::~GPNodeProject()
 {
     delete _undoStack;
     delete _node;
+    delete _camera;
 }
 
 QString GPNodeProject::name() const
@@ -261,9 +263,11 @@ void GPNodeProject::cmdAddBlock(ModelBlock *block)
     {
         fiBlock = new ModelFIBlock();
         _node->addBlock(fiBlock);
+        _camera->addBlock(fiBlock);
     }
 
     _node->addBlock(block);
+    _camera->addBlock(block);
     emit blockAdded(block);
     setModified(true);
 }
@@ -284,6 +288,7 @@ void GPNodeProject::cmdRemoveBlock(const QString &block_name)
 
     ModelBlock *block = _node->getBlock(block_name);
     _node->removeBlock(block);
+    _camera->removeBlock(block);
     emit blockRemoved(block_name);
     setModified(true);
     if(block)
@@ -385,7 +390,14 @@ QUndoStack *GPNodeProject::undoStack() const
 void GPNodeProject::setNode(ModelNode *node)
 {
     _node = node;
+    _camera = new Camera();
+    _camera->setNode(node);
     emit nodeChanged(_node);
+}
+
+Camera *GPNodeProject::camera() const
+{
+    return _camera;
 }
 
 void GPNodeProject::moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos)

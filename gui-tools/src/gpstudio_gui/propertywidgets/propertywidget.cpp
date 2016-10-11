@@ -77,6 +77,9 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
     case Property::Bool:
         widget = new PropertyBoolWidget();
         break;
+    case Property::StringType:
+        widget = new PropertyStringWidget();
+        break;
     case Property::Enum:
         widget = new PropertyEnumWidget();
         break;

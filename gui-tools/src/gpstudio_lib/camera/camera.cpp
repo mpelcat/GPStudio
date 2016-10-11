@@ -42,7 +42,8 @@ Camera::Camera(const QString &fileCameraConfig)
     _comBlock = NULL;
     _fiBlock = NULL;
 
-    loadFromFile(fileCameraConfig);
+    if(!fileCameraConfig.isEmpty())
+        loadFromFile(fileCameraConfig);
 }
 
 Camera::~Camera()
@@ -88,14 +89,7 @@ void Camera::setNode(ModelNode *node)
     _paramsBlocks.setName(node->name());
 
     foreach (ModelBlock *modelBlock, _modelNode->blocks())
-    {
-        Block *block = Block::fromModelBlock(modelBlock);
-
-        _blocks.append(block);
-        _blocksMap.insert(block->name(), block);
-
-        _paramsBlocks.addSubProperty(block->assocProperty());
-    }
+        addBlock(modelBlock);
 
     ModelIOCom *iOCom = node->getIOCom();
     if(iOCom)
@@ -172,6 +166,34 @@ Block *Camera::block(QString name) const
 QByteArray Camera::registerData() const
 {
     return _registermanager.registerData();
+}
+
+void Camera::addBlock(Block *block)
+{
+    _blocks.append(block);
+    _blocksMap.insert(block->name(), block);
+
+    _paramsBlocks.addSubProperty(block->assocProperty());
+}
+
+void Camera::addBlock(ModelBlock *modelBlock)
+{
+    addBlock(Block::fromModelBlock(modelBlock));
+}
+
+void Camera::removeBlock(Block *block)
+{
+    _blocks.removeOne(block);
+    _blocksMap.remove(block->name());
+
+    _paramsBlocks.removeSubProperty(block->assocProperty());
+}
+
+void Camera::removeBlock(ModelBlock *modelBlock)
+{
+    Block *blockptr = block(modelBlock->name());
+    if(blockptr)
+        removeBlock(blockptr);
 }
 
 CameraCom *Camera::com() const

@@ -46,14 +46,14 @@ Block *Block::fromModelBlock(ModelBlock *modelBlock)
     block->_modelBlock = modelBlock;
     block->setName(modelBlock->name());
 
-    Property *propBlock = Property::fromModelBlock(modelBlock);
-    block->_assocProperty = propBlock;
+    Property *propertyBlock = Property::fromModelBlock(modelBlock);
+    block->_assocProperty = propertyBlock;
 
     // block property
     foreach (ModelProperty *property, modelBlock->properties())
     {
         Property *paramprop = Property::fromModelProperty(property);
-        propBlock->addSubProperty(paramprop);
+        propertyBlock->addSubProperty(paramprop);
     }
 
     // flow property
@@ -62,7 +62,17 @@ Block *Block::fromModelBlock(ModelBlock *modelBlock)
         Flow *flow = Flow::fromModelFlow(modelFlow);
         block->_flows.append(flow);
         block->_flowsMap.insert(flow->name(), flow);
-        propBlock->addSubProperty(flow->assocProperty());
+        propertyBlock->addSubProperty(flow->assocProperty());
+    }
+
+    // param property
+    foreach (ModelParam *modelParam, modelBlock->params())
+    {
+        if(modelParam->isHard())
+        {
+            Property *propertyParam = Property::fromModelParam(modelParam);
+            propertyBlock->addSubProperty(propertyParam);
+        }
     }
 
     return block;

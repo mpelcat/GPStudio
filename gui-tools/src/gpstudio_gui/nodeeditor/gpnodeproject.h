@@ -30,6 +30,8 @@
 
 #include <model/model_flowconnect.h>
 
+#include <camera/camera.h>
+
 class GPSTUDIO_GUI_EXPORT GPNodeProject : public QObject
 {
     Q_OBJECT
@@ -41,6 +43,7 @@ public:
     QString path() const;
     bool isModified() const;
     ModelNode *node() const;
+    Camera *camera() const;
 
     QUndoStack *undoStack() const;
 
@@ -86,6 +89,7 @@ private:
 
     void setNode(ModelNode *node);
     ModelNode *_node;
+    Camera *_camera;
 
     void setModified(bool modified);
     bool _modified;

@@ -18,17 +18,36 @@
 **
 ****************************************************************************/
 
-#ifndef PROPERTYWIDGETS_H
-#define PROPERTYWIDGETS_H
+#ifndef PROPERTYSTRINGWIDGET_H
+#define PROPERTYSTRINGWIDGET_H
+
+#include "gpstudio_gui_common.h"
 
 #include "propertywidget.h"
-#include "propertygroupwidget.h"
-#include "propertyintwidget.h"
-#include "propertysintwidget.h"
-#include "propertystringwidget.h"
-#include "propertyboolwidget.h"
-#include "propertyenumwidget.h"
-#include "propertymatrixwidget.h"
 
-#endif // PROPERTYWIDGETS_H
+class QLineEdit;
 
+class GPSTUDIO_GUI_EXPORT PropertyStringWidget : public PropertyWidget
+{
+    Q_OBJECT
+public:
+    PropertyStringWidget();
+    virtual ~PropertyStringWidget();
+
+    Type type() const;
+
+protected:
+    virtual void createWidget();
+    virtual void destroyWidget();
+
+public slots:
+    virtual void setValue(QVariant value);
+
+protected slots:
+    virtual void wrapValue();
+
+private:
+    QLineEdit *_lineEdit;
+};
+
+#endif // PROPERTYSTRINGWIDGET_H

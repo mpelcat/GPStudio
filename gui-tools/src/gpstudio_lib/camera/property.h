@@ -30,6 +30,8 @@
 
 #include "propertyenum.h"
 
+#include <model/model_param.h>
+
 class Camera;
 
 class ModelProperty;
@@ -64,7 +66,7 @@ public:
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> enums() const;
 
-    enum Type {Group, Int, SInt, Bool, Enum, Matrix, FlowType, BlockType, String, FlowDataType};
+    enum Type {Group, Int, SInt, Bool, StringType, Enum, Matrix, FlowType, BlockType, String, FlowDataType};
     Type type() const;
 
     const QString &propertymap() const;
@@ -74,6 +76,7 @@ public:
     const QList<Property* > &subProperties() const;
     const QMap<QString, Property* > &subPropertiesMap() const;
     void addSubProperty(Property *property);
+    void removeSubProperty(Property *property);
     void removeAllSubProperties();
 
     Property *parent() const;
@@ -105,6 +108,7 @@ public:
     static Property *fromModelProperty(const ModelProperty *modelProperty);
     static Property *fromModelFlow(const ModelFlow *modelFlow);
     static Property *fromModelBlock(const ModelBlock *modelBlock);
+    static Property *fromModelParam(const ModelParam *modelParam);
 
 protected:
     void setMin(const QVariant &min);

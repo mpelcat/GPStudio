@@ -53,6 +53,7 @@ public:
     bool loadFromFile(const QString &fileCameraConfig);
 
     const ModelNode *node() const;
+    void setNode(ModelNode *node);
 
     const Property &rootProperty() const;
     Property &rootProperty();
@@ -66,6 +67,10 @@ public:
     QByteArray registerData() const;
 
     // blocks access
+    void addBlock(Block *block);
+    void addBlock(ModelBlock *modelBlock);
+    void removeBlock(Block *block);
+    void removeBlock(ModelBlock *modelBlock);
     const QList<Block *> &blocks() const;
     Block *block(QString name) const;
     Block *block(int i) const;
@@ -84,7 +89,6 @@ public slots:
     void setRegister(uint addr, uint value);
 
 protected:
-    void setNode(ModelNode *node);
     ModelNode *_modelNode;
 
     Property _paramsBlocks;

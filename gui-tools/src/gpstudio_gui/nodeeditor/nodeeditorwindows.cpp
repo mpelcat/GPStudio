@@ -61,6 +61,9 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
 
 NodeEditorWindows::~NodeEditorWindows()
 {
+    delete _camExplorerWidget;
+    delete _libTreeView;
+    delete _compileLog;
     delete _project;
 }
 
@@ -336,7 +339,8 @@ void NodeEditorWindows::addProcess(QString driver)
 
 void NodeEditorWindows::reloadNode()
 {
-    _camExplorerWidget->setNode(_project->node());
+    //_camExplorerWidget->setNode(_project->node());
+    _camExplorerWidget->setCamera(_project->camera());
     reloadNodePath();
 }
 
