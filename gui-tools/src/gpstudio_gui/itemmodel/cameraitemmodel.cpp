@@ -114,7 +114,10 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
             switch (index.column())
             {
             case Name:
-                return QVariant(item->camera()->node()->name());
+                if(item->camera()->node())
+                    return QVariant(item->camera()->node()->name());
+                else
+                    return QVariant();
             case Value:
                 if(item->camera()->isConnected())
                     return QVariant(item->camera()->com()->info().name());
