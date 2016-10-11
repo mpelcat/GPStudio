@@ -165,9 +165,7 @@ void LibItemModel::setLib(const Lib *lib)
         QString categ = processLib->categ();
         if(categ.isEmpty())
             categ = "various";
-        libItem = _rootItem->children(categ);
-        if(!libItem)
-            libItem = _rootItem->append(categ);
+        libItem = _rootItem->createPath(categ);
         libItem->append(processLib);
     }
 
