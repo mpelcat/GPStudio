@@ -50,9 +50,9 @@ void CompileLogWidget::launch(const QString &cmd, const QStringList &args)
 
     checkAction();
 
-    /*QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("PATH", env.value("PATH")+";C:\\altera\\13.1\\quartus\\bin64");
-    _process->setProcessEnvironment(env);*/
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("PATH", QCoreApplication::applicationDirPath()+":"+env.value("PATH"));
+    _process->setProcessEnvironment(env);
 
     // _textWidget->clear();
     _program = cmd;
@@ -244,6 +244,7 @@ void CompileLogWidget::errorProcess()
 
 void CompileLogWidget::updatePath(QString path)
 {
+    Q_UNUSED(path)
     checkAction();
 }
 
