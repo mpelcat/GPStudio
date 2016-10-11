@@ -155,7 +155,7 @@ begin
                 if (sum(sum'left) = '1') then
                     sum := (others => '0');
                 end if;
-                value_data <= std_logic_vector(shift_right(unsigned(sum), 5))(OUT_SIZE -1 downto 0);
+                value_data <= std_logic_vector(shift_right(unsigned(sum),4))(OUT_SIZE -1 downto 0);
 				value_dv <= '1';
 			end if;
 		end if;
