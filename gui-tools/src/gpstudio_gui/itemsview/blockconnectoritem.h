@@ -66,6 +66,10 @@ private:
     QPainterPath _shape;
 
     DrawStyle _style;
+
+    // QGraphicsItem interface
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 };
 
 #endif // BLOCKCONNECTORITEM_H

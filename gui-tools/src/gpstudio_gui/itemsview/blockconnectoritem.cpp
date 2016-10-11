@@ -30,11 +30,12 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     : _portItem1(portItemOut), _portItem2(portItemIn)
 {
     setFlag(ItemIsSelectable, true);
+
     if(_portItem1)
         _portItem1->addConnect(this);
     if(_portItem2)
         _portItem2->addConnect(this);
-    setZValue(-1);
+    setZValue(-2);
     _style=CubicDraw;
     updateShape();
 }
@@ -61,12 +62,12 @@ void BlockConnectorItem::setStyle(const BlockConnectorItem::DrawStyle &style)
 
 QRectF BlockConnectorItem::boundingRect() const
 {
-    return QRectF(_inPos, _outPos).normalized().adjusted(-10, -10, 10, 10);
+    return QRectF(_inPos, _outPos).normalized().adjusted(-5, -5, 5, 5);
 }
 
 QPainterPath BlockConnectorItem::shape() const
 {
-    QPen pen(Qt::black, 10);
+    QPen pen(Qt::black, 6);
     QPainterPathStroker ps;
     ps.setWidth(pen.width());
     ps.setCapStyle(pen.capStyle());
@@ -82,12 +83,15 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    // start draw
+    // back draw
+    painter->setPen(QPen(Qt::white, 6));
+    painter->drawPath(_shape);
+
+    // front draw
     if(isSelected())
         painter->setPen(QPen(QColor("orange"), 4));
     else
         painter->setPen(QPen(Qt::black, 3));
-
     painter->drawPath(_shape);
 }
 
@@ -185,6 +189,18 @@ BlockPortItem *BlockConnectorItem::portItem1() const
 BlockPortItem *BlockConnectorItem::portItem2() const
 {
     return _portItem2;
+}
+
+QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemSelectedHasChanged && scene())
+    {
+        if(isSelected())
+            setZValue(-1);
+        else
+            setZValue(-2);
+    }
+    return QGraphicsItem::itemChange(change, value);
 }
 
 
