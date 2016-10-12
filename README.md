@@ -1,5 +1,7 @@
 # GPStudio
 
+[![Build Status](https://travis-ci.org/DreamIP/GPStudio.svg?branch=dev)](https://travis-ci.org/DreamIP/GPStudio)
+
 A toolchain for FPGA-based smart camera that helps devellopers to
 create high performance image processing.
 

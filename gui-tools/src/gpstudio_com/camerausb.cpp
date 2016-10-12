@@ -152,7 +152,7 @@ QByteArray CameraUSB::read(const unsigned sizePacket, const int timeOut, bool *s
         }
         else
         {
-            qDebug()<<"Cannot read packet"<<QString(libusb_strerror((enum libusb_error)ret))<<transferredByte;
+            qDebug()<<"Cannot read packet"/*<<QString(libusb_strerror((enum libusb_error)ret))<<transferredByte*/;
 
             if(libusb_reset_device(_devHandle)!= 0)
                 qDebug()<<"Cannot reset device"<<endl;
