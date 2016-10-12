@@ -104,7 +104,8 @@ gui-tools: gpnode gpblock gpviewer
 build/:
 	mkdir build
 build/Makefile: build/ src/gpstudio.pro
-	cd build/ && qmake ../src -spec `qmake -query QMAKE_SPEC`
+	#cd build/ && qmake ../src -spec `qmake -query QMAKE_SPEC`
+	cd build/ && qmake ../src
 gpstudio_com: build/Makefile
 	cd build/ && make -j$(NPROC) -f Makefile sub-gpstudio_com
 gpstudio_lib: build/Makefile gpstudio_com
