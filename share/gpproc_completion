@@ -16,7 +16,7 @@ _gpproc()
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
 					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
 					"addenum"     "delenum"     "showenum"
-					"sethelp"     "setdraw"     "setinfo"       "info"
+					"sethelp"     "setdraw"     "setcateg"      "categ"          "setinfo"     "info"
     )
 
     local command i
@@ -54,7 +54,7 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-v -f' -- "$cur" ) )
                         return 0
                         ;;
-                    setpisizeaddr)
+                    setpisizeaddr|setcateg)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;

@@ -13,7 +13,7 @@ _gpproc()
 					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"
 					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
 					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
-					"sethelp"     "setdraw"     "setinfo"       "info"
+					"sethelp"     "setdraw"     "setcateg"      "categ"          "setinfo"     "info"
     )
 
     local command i
@@ -49,6 +49,10 @@ _gpproc()
                         ;;
                     setdraw)
                         COMPREPLY=( $( compgen -W '-v -f' -- "$cur" ) )
+                        return 0
+                        ;;
+                    setcateg)
+                        COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
                         return 0
                         ;;
                 esac

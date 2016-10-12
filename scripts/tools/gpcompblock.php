@@ -57,6 +57,7 @@ switch ($action)
         echo TOOL . " sethelp [-n <instance-name>] -v <help-text>" . "\n";
         echo TOOL . " setdraw -v <svg-draw-content>" . "\n";
         echo TOOL . " setdraw -f <svg-file>}" . "\n";
+        echo TOOL . " setcateg -v <categ>" . "\n";
         echo TOOL . " setinfo -n <info-name> -v <info-value/content>" . "\n";
         echo TOOL . " info [-n <info-name>]" . "\n";
         echo "" . "\n";
@@ -1499,6 +1500,20 @@ switch ($action)
         }
         else
             error("You should specify a svg file with -f or svg commands with -v", 1);
+        break;
+
+    case "setcateg":
+        $options = getopt("a:v:");
+        if (array_key_exists('v', $options))
+            $categ = $options['v'];
+        else
+            error("You should specify a value for the categ with -v", 1);
+
+        $component->categ = $categ;
+        break;
+
+    case "categ":
+        echo $component->categ . "\n";
         break;
 
     case "setinfo":
