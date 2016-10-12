@@ -1,6 +1,7 @@
 sudo: required
 before_install:
-  - sudo apt-get install libusb-1.0-0-dev qtbase5-dev qtbase5-dev-tools qtscript5-dev libqt5svg5-dev qttools5-dev libpoppler-qt5-dev
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libusb-1.0-0-dev qtbase5-dev qtbase5-dev-tools qtscript5-dev libqt5svg5-dev qttools5-dev libpoppler-qt5-dev
 
 language: cpp
 
