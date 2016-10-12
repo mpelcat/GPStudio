@@ -50,6 +50,5 @@
   </params>
   <properties>
     <property name="enable" type="bool" value="1"/>
-    </property> 
   </properties>
 </process>
