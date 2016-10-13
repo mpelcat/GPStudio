@@ -49,7 +49,7 @@ public:
 
     bool isValid() const;
 
-    ModelBlock *getBlock(const QString &blockName);
+    ModelBlock *getBlock(const QString &blockName) const;
     QList<ModelBlock *> &blocks();
     const QList<ModelBlock *> &blocks() const;
     void addBlock(ModelBlock *block);
@@ -62,6 +62,9 @@ public:
     ModelCIBlock *getCIBlock() const;
     ModelPIBlock *getPIBlock() const;
     ModelIOCom *getIOCom() const;
+
+    ModelParam *getParam(const QString &blockName, const QString &paramName) const;
+    ModelProperty *getProperty(const QString &blockName, const QString &propertyName) const;
 
 public:
     static ModelNode *readFromFile(const QString &fileName);

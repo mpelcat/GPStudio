@@ -69,7 +69,7 @@ bool ModelNode::isValid() const
     return _valid;
 }
 
-ModelBlock *ModelNode::getBlock(const QString &blockName)
+ModelBlock *ModelNode::getBlock(const QString &blockName) const
 {
     for(int i=0; i<_blocks.size(); i++)
         if(_blocks[i]->name()==blockName)
@@ -167,6 +167,30 @@ ModelIOCom *ModelNode::getIOCom() const
             return (ModelIOCom*)block;
     }
     return NULL;
+}
+
+ModelParam *ModelNode::getParam(const QString &blockName, const QString &paramName) const
+{
+    ModelBlock *block = getBlock(blockName);
+    if(!block)
+        return NULL;
+
+    ModelParam *param = block->getParam(paramName);
+    if(!param)
+        return NULL;
+    return param;
+}
+
+ModelProperty *ModelNode::getProperty(const QString &blockName, const QString &propertyName) const
+{
+    ModelBlock *block = getBlock(blockName);
+    if(!block)
+        return NULL;
+
+    ModelProperty *property = block->getBlockProperty(propertyName);
+    if(!property)
+        return NULL;
+    return property;
 }
 
 ModelNode *ModelNode::readFromFile(const QString &fileName)
