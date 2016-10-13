@@ -96,6 +96,7 @@ void CamExplorerWidget::setupWidgets()
 
 void CamExplorerWidget::setRootProperty(const Property *property)
 {
+    disconnect(this, SLOT(changePropertyValue()));
     switch (_modeView)
     {
     case CamExplorerWidget::WidgetsMode:
@@ -122,6 +123,7 @@ void CamExplorerWidget::setRootProperty(const Property *property)
                         {
                             layoutPanel->setWidget(layoutPanel->count(), QFormLayout::SpanningRole, propertyWidget);
                         }
+                        connectProperty(propertyWidget);
                     }
                 }
             }
@@ -138,6 +140,23 @@ void CamExplorerWidget::setRootProperty(const Property *property)
         _propertyItemModel->setRootProperty(property);
         break;
     }
+}
+
+void CamExplorerWidget::connectProperty(const PropertyWidget *propertyWidget)
+{
+    if(!propertyWidget)
+        return;
+
+    connect(propertyWidget, SIGNAL(valueChanged(QVariant)), this, SLOT(changePropertyValue()));
+    foreach (PropertyWidget *propertyWidget, propertyWidget->subPropertyWidgets())
+        connectProperty(propertyWidget);
+}
+
+void CamExplorerWidget::changePropertyValue()
+{
+    PropertyWidget *propertyWidget = static_cast<PropertyWidget *>(QObject::sender());
+    const Property *property = propertyWidget->linkedProperty();
+    emit propertyChanged(property->blockName(), property->name(), property->value().toString());
 }
 
 CamExplorerWidget::Mode CamExplorerWidget::modeView() const

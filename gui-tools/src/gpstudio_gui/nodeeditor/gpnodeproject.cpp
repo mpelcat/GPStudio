@@ -256,7 +256,7 @@ void GPNodeProject::cmdMoveBlockTo(const QString &block_name, const QString &par
     }
 }
 
-void GPNodeProject::cmdAddBlock(ModelBlock *block)
+void GPNodeProject::cmdAddBlock(ModelBlock *modelBlock)
 {
     ModelFIBlock *fiBlock = _node->getFIBlock();
     if(!fiBlock)
@@ -266,9 +266,10 @@ void GPNodeProject::cmdAddBlock(ModelBlock *block)
         _camera->addBlock(fiBlock);
     }
 
-    _node->addBlock(block);
-    _camera->addBlock(block);
-    emit blockAdded(block);
+    _node->addBlock(modelBlock);
+    _camera->addBlock(modelBlock);
+
+    emit blockAdded(modelBlock);
     setModified(true);
 }
 
@@ -367,16 +368,21 @@ void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
 
 void GPNodeProject::cmdSetParam(const QString &blockName, const QString &paramName, const QVariant &value)
 {
-    ModelBlock *block = _node->getBlock(blockName);
-    if(!block)
-        return;
+    ModelParam *param = _node->getParam(blockName, paramName);
+    if(param)
+        param->setValue(value);
+    else
+    {
+        ModelProperty *property = _node->getProperty(blockName, paramName);
+        if(property)
+            property->setValue(value.toString());
+        else
+            return;
+    }
 
-    ModelParam *param = block->getParam(paramName);
-    if(!param)
-        return;
-
-    // set value of param
-    param->setValue(value);
+    Property *assocProperty = _camera->rootProperty().path(blockName + "." + paramName);
+    if(assocProperty)
+        assocProperty->setValue(value);
 
     //emit blockUpdated(block);
     setModified(true);
@@ -475,6 +481,24 @@ void GPNodeProject::connectBlockFlows(const ModelFlowConnect &flowConnect)
 void GPNodeProject::disConnectBlockFlows(const ModelFlowConnect &flowConnect)
 {
     _undoStack->push(new BlockCmdDisconnectFlow(this, flowConnect));
+}
+
+void GPNodeProject::blockSetParam(const QString &blockName, const QString &paramName, const QVariant &value)
+{
+    QString oldValue;
+    ModelParam *param = _node->getParam(blockName, paramName);
+    if(param)
+        oldValue = param->value().toString();
+    else
+    {
+        ModelProperty *property = _node->getProperty(blockName, paramName);
+        if(property)
+            oldValue = property->value();
+        else
+            return;
+    }
+
+    _undoStack->push(new BlockCmdParamSet(this, blockName, paramName, oldValue, value));
 }
 
 void GPNodeProject::beginMacro(const QString &text)

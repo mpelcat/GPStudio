@@ -68,6 +68,7 @@ public slots:
     void removeBlock(ModelBlock *block);
     void connectBlockFlows(const ModelFlowConnect &flowConnect);
     void disConnectBlockFlows(const ModelFlowConnect &flowConnect);
+    void blockSetParam(const QString &blockName, const QString &paramName, const QVariant &value);
 
     void beginMacro(const QString &text);
     void endMacro();

@@ -202,3 +202,16 @@ void BlockCmdParamSet::redo()
 {
     _project->cmdSetParam(_block_name, _paramName, _newValue);
 }
+
+bool BlockCmdParamSet::mergeWith(const QUndoCommand *other)
+{
+    if (other->id() != id())
+        return false;
+    const BlockCmdParamSet *otherSetParam = static_cast<const BlockCmdParamSet*>(other);
+    if(_block_name != otherSetParam->_block_name)
+        return false;
+    if(_paramName != otherSetParam->_paramName)
+        return false;
+    _newValue = otherSetParam->_newValue;
+    return true;
+}

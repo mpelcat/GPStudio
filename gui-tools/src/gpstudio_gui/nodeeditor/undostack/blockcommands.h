@@ -133,6 +133,7 @@ public:
     void undo();
     void redo();
     int id() const { return Id; }
+    bool mergeWith(const QUndoCommand *other);
 
 protected:
     QString _paramName;

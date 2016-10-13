@@ -80,6 +80,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
     connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
+    connect(_camExplorerWidget, SIGNAL(propertyChanged(QString,QString,QVariant)), _project, SLOT(blockSetParam(QString,QString,QVariant)));
     connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
 
     connect(_project, SIGNAL(blockAdded(ModelBlock*)), _camExplorerWidget, SLOT(update()));

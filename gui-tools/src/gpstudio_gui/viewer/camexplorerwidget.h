@@ -34,6 +34,8 @@
 #include <QBoxLayout>
 #include <QScrollArea>
 
+class PropertyWidget;
+
 class GPSTUDIO_GUI_EXPORT CamExplorerWidget : public QWidget
 {
     Q_OBJECT
@@ -65,6 +67,7 @@ public slots:
 
 signals:
     void blockSelected(QString blockName);
+    void propertyChanged(const QString &blockName, const QString &propertyName, const QVariant &value);
 
 private:
     void setupWidgets();
@@ -81,6 +84,10 @@ private:
     ModelNode *_node;
 
     Mode _modeView;
+
+    void connectProperty(const PropertyWidget *propertyWidget);
+protected slots:
+    void changePropertyValue();
 };
 
 #endif // CAMEXPLORERWIDGET_H
