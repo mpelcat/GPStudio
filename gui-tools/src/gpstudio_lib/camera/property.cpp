@@ -242,6 +242,17 @@ const ModelProperty *Property::modelProperty() const
     return _modelProperty;
 }
 
+QString Property::blockName() const
+{
+    if(_type==BlockType)
+        return _name;
+
+    if(!_parent)
+        return QString();
+
+    return _parent->blockName();
+}
+
 void Property::setParent(Property *parent)
 {
     _parent = parent;

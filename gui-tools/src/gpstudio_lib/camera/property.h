@@ -91,6 +91,8 @@ public:
 
     const ModelProperty *modelProperty() const;
 
+    QString blockName() const;
+
 signals:
     void valueChanged(QVariant value);
     void bitsChanged(uint value);
