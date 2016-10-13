@@ -131,7 +131,7 @@ _gpnode()
                         return 0
                         ;;
                     addprocess)
-                        COMPREPLY=( $( compgen -W '$( gplib listprocess ) $(find . -name *.proc)' -- "$cur" ) )
+                        COMPREPLY=( $( compgen -W '$( gplib listprocess ) $(find . -name "*.proc" -type f | grep -v IP/)' -- "$cur" ) )
                         return 0
                         ;;
                     showblock)
