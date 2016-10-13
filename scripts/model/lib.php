@@ -18,6 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("libitem.php");
+
+require_once("process.php");
+require_once("io.php");
+
 /**
  * @brief Lib is a container that store all the IPs available in library path.
  * @ingroup base
@@ -27,31 +32,31 @@ class Lib
 {
     /**
      * @brief Array of IOs name available in library
-     * @var array|string $ios
+     * @var array|LibItem $ios
      */
     public $ios;
 
     /**
      * @brief Array of boards name available in library
-     * @var array|string $boards
+     * @var array|LibItem $boards
      */
     public $boards;
 
     /**
      * @brief Array of processes name available in library
-     * @var array|string $process
+     * @var array|LibItem $process
      */
-    public $process;
+    public $processes;
 
     /**
      * @brief Array of toolchains name available in library
-     * @var array|string $toolchain
+     * @var array|LibItem $toolchain
      */
     public $toolchain;
 
     /**
      * @brief Array of components name available in library
-     * @var array|string $components
+     * @var array|LibItem $components
      */
     public $components;
 
@@ -63,7 +68,7 @@ class Lib
     {
         $this->ios = array();
         $this->boards = array();
-        $this->process = array();
+        $this->processes = array();
         $this->toolchains = array();
         $this->components = array();
 
@@ -89,8 +94,9 @@ class Lib
         {
             if (is_dir($processDir . $dir) and $dir != '.' and $dir != '..')
             {
-                if (file_exists($processDir . $dir . DIRECTORY_SEPARATOR . $dir . ".proc"))
-                    $this->process[] = $dir;
+                $fileName = $processDir . $dir . DIRECTORY_SEPARATOR . $dir . ".proc";
+                if (file_exists($fileName))
+                    $this->processes[] = new LibItem($dir, $fileName);
             }
         }
 
@@ -101,8 +107,9 @@ class Lib
         {
             if (is_dir($ioDir . $dir) and $dir != '.' and $dir != '..')
             {
-                if (file_exists($ioDir . $dir . DIRECTORY_SEPARATOR . $dir . ".io"))
-                    $this->ios[] = $dir;
+                $fileName = $ioDir . $dir . DIRECTORY_SEPARATOR . $dir . ".io";
+                if (file_exists($fileName))
+                    $this->ios[] = new LibItem($dir, $fileName);
             }
         }
 
@@ -113,8 +120,9 @@ class Lib
         {
             if (is_dir($boardDir . $dir) and $dir != '.' and $dir != '..')
             {
-                if (file_exists($boardDir . $dir . DIRECTORY_SEPARATOR . $dir . ".dev"))
-                    $this->boards[] = $dir;
+                $fileName = $boardDir . $dir . DIRECTORY_SEPARATOR . $dir . ".dev";
+                if (file_exists($fileName))
+                    $this->boards[] = new LibItem($dir, $fileName);
             }
         }
 
@@ -125,8 +133,9 @@ class Lib
         {
             if (is_dir($toolchainDir . $dir) and $dir != '.' and $dir != '..')
             {
-                if (file_exists($toolchainDir . $dir . DIRECTORY_SEPARATOR . $dir . ".php"))
-                    $this->toolchains[] = $dir;
+                $fileName = $toolchainDir . $dir . DIRECTORY_SEPARATOR . $dir . ".php";
+                if (file_exists($fileName))
+                    $this->toolchains[] = new LibItem($dir, $fileName);
             }
         }
 
@@ -137,8 +146,63 @@ class Lib
         {
             if (is_dir($componentsDir . $dir) and $dir != '.' and $dir != '..')
             {
-                $this->components[] = $dir;
+                $this->components[] = new LibItem($dir, $componentsDir . DIRECTORY_SEPARATOR . $dir);
             }
+        }
+    }
+
+    /**
+     * @brief Prints the list of process (only the name)
+     */
+    function listprocess()
+    {
+        foreach ($this->processes as $process)
+        {
+            echo $process->name . "\n";
+        }
+    }
+
+    /**
+     * @brief Prints the list of devices (only the name)
+     */
+    function listio()
+    {
+        foreach ($this->ios as $io)
+        {
+            echo $io->name . "\n";
+        }
+    }
+
+    /**
+     * @brief Prints the list of board (only the name)
+     */
+    function listboard()
+    {
+        foreach ($this->boards as $board)
+        {
+            echo $board->name . "\n";
+        }
+    }
+
+    /**
+     * @brief Prints the list of toolchain (only the name)
+     */
+    function listtoolchain()
+    {
+        foreach ($this->toolchain as $toolchain)
+        {
+            echo $toolchain->name . "\n";
+        }
+    }
+
+    /**
+     * @brief Prints the list of component (only the name)
+     */
+    function listcomponent()
+    {
+        foreach ($this->components as $component)
+        {
+            echo $component->name . "\n";
         }
     }
 }
