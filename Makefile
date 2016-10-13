@@ -29,5 +29,8 @@ gui-tools: FORCE
 
 install: gui-tools
 
+checklib:
+	bin/gplib checklib
+
 FORCE:
 
