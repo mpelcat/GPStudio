@@ -45,6 +45,7 @@ void PropertyBoolWidget::createWidget()
 
     _checkBox = new QCheckBox(_linkedProperty->caption());
     connect(_checkBox, SIGNAL(toggled(bool)), _linkedProperty, SLOT(setValue(bool)));
+    connect(_checkBox, SIGNAL(toggled(bool)), this, SLOT(wrapValue(bool)));
     connect(_linkedProperty, SIGNAL(valueChanged(QVariant)), this, SLOT(setValue(QVariant)));
     layout->addWidget(_checkBox);
 
@@ -65,4 +66,9 @@ void PropertyBoolWidget::setValue(QVariant value)
         _checkBox->setChecked(value.toBool());
         _checkBox->blockSignals(false);
     }
+}
+
+void PropertyBoolWidget::wrapValue(bool value)
+{
+    emit(valueChanged(value));
 }

@@ -49,6 +49,7 @@ void PropertyGroupWidget::createWidget()
     layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layoutPanel->setSpacing(6);
 
+    _subPropertyWidgets.clear();
     foreach (Property *property, _linkedProperty->subProperties())
     {
         PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
@@ -62,6 +63,7 @@ void PropertyGroupWidget::createWidget()
             {
                 layoutPanel->setWidget(layoutPanel->count(), QFormLayout::SpanningRole, propertyWidget);
             }
+            _subPropertyWidgets.append(propertyWidget);
         }
     }
 

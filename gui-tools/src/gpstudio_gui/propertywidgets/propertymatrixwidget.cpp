@@ -48,6 +48,7 @@ void PropertyMatrixWidget::createWidget()
     QGridLayout *layoutMatrix = new QGridLayout();
     layoutMatrix->setContentsMargins(0,10,0,0);
 
+    _subPropertyWidgets.clear();
     for(int x=0; x<9; x++)
     {
         int find=0;
@@ -61,6 +62,7 @@ void PropertyMatrixWidget::createWidget()
                 {
                     layoutMatrix->addWidget(propertyWidget,x,y);
                     find++;
+                    _subPropertyWidgets.append(propertyWidget);
                 }
             }
         }

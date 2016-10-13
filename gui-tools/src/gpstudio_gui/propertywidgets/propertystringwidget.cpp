@@ -60,7 +60,7 @@ void PropertyStringWidget::destroyWidget()
 
 void PropertyStringWidget::setValue(QVariant value)
 {
-    if(value.type()==QVariant::String)
+    if(value.canConvert(QVariant::String))
     {
         _lineEdit->blockSignals(true);
         _lineEdit->setText(value.toString());

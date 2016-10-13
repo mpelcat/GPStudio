@@ -40,6 +40,8 @@ public:
     enum Type {Field, SimpleField, Group};
     virtual Type type() const =0;
 
+    QList<PropertyWidget *> subPropertyWidgets() const;
+
 public:
     static PropertyWidget *getWidgetFromProperty(const Property *property);
 
@@ -55,6 +57,7 @@ public slots:
 
 protected:
     const Property *_linkedProperty;
+    QList<PropertyWidget*> _subPropertyWidgets;
 };
 
 #endif // PROPERTYWIDGET_H

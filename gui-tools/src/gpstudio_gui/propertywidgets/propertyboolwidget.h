@@ -43,6 +43,9 @@ protected:
 public slots:
     virtual void setValue(QVariant value);
 
+protected slots:
+    void wrapValue(bool value);
+
 private:
     QCheckBox *_checkBox;
 };

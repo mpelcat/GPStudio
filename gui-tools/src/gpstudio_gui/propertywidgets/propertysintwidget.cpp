@@ -50,6 +50,7 @@ void PropertySIntWidget::createWidget()
     _slider->setOrientation(Qt::Horizontal);
     layout->addWidget(_slider);
 
+    connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(wrapValue()));
     connect(_slider, SIGNAL(valueChanged(int)), _linkedProperty, SLOT(setValue(int)));
     connect(_linkedProperty, SIGNAL(valueChanged(QVariant)), this, SLOT(setValue(QVariant)));
 
@@ -69,11 +70,16 @@ void PropertySIntWidget::destroyWidget()
 
 void PropertySIntWidget::setValue(QVariant value)
 {
-    if(value.type()==QVariant::Int)
+    if(value.canConvert(QVariant::Int))
     {
         _slider->blockSignals(true);
         _slider->setValue(value.toInt());
         _label->setNum(value.toInt());
         _slider->blockSignals(false);
     }
+}
+
+void PropertySIntWidget::wrapValue()
+{
+    emit valueChanged(_slider->value());
 }

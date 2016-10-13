@@ -58,6 +58,11 @@ void PropertyWidget::setLinkedProperty(const Property *linkedProperty)
     }
 }
 
+QList<PropertyWidget *> PropertyWidget::subPropertyWidgets() const
+{
+    return _subPropertyWidgets;
+}
+
 PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
 {
     PropertyWidget *widget = NULL;

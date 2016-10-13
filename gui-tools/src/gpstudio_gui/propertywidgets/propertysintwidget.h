@@ -44,6 +44,9 @@ protected:
 public slots:
     virtual void setValue(QVariant value);
 
+protected slots:
+    virtual void wrapValue();
+
 private:
     QSlider *_slider;
     QLabel *_label;
