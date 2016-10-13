@@ -205,4 +205,25 @@ class Lib
             echo $component->name . "\n";
         }
     }
+
+    /**
+     * @brief Try to open all the process
+     */
+    function checklib()
+    {
+        echo "========== Processes ===========\n";
+        foreach ($this->processes as $process)
+        {
+            echo "Trying to open " . $process->name . "...\n";
+            $proc = new Process($process->filePath);
+            echo $proc->name . " OK \n";
+        }
+        echo "=========== Devices ============\n";
+        foreach ($this->ios as $io)
+        {
+            echo "Trying to open " . $io->name . "...\n";
+            $proc = new IO($io->filePath);
+            echo $io->name . " OK \n";
+        }
+    }
 }

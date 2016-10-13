@@ -81,6 +81,11 @@ switch ($action)
         echo "\n";
         break;
 
+    case "checklib":
+        $lib->checklib();
+        echo "\n";
+        break;
+
     default:
         error("Action $action is unknow.", 1);
 }
