@@ -238,7 +238,8 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     connectCam();
 
     _camExplorerWidget->setCamera(_cam);
-    connect(_cam->com(), SIGNAL(disconnected()), this, SLOT(disconnectCam()));
+    if(_cam->com())
+        connect(_cam->com(), SIGNAL(disconnected()), this, SLOT(disconnectCam()));
 }
 
 void MainWindow::connectCam()
