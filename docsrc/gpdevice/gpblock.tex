@@ -1121,6 +1121,29 @@ Sets the picture of the block from svg commands or a svg file. \\
 \end{sampletitle}
 \samplecomment{Put the content of `doc/hog.svg' file as draw of the block}
 
+\subsubsection{setcateg}
+\command{\textbf{\tool{} setcateg} -v <categ-value>}
+
+Sets the category of the block. IPs block can be sorted by usage and utility and be more easy to find. \\
+
+\paramcommand{
+-v & value to set & "filter/blur"\newline "descriptor/hog" \\
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} setcateg}  -v "filter"\\
+> \textbf{\tool{} setcateg}  -v "filter/blur"
+\end{sampletitle}
+
+\subsubsection{categ}
+\command{\textbf{\tool{} categ}}
+
+Returns the category of the block.
+
+\begin{sampletitle}
+> \textbf{\tool{} categ}\\descriptor/lbp
+\end{sampletitle}
+
 \subsubsection{setinfo}
 \command{\textbf{\tool{} setinfo} -n <info-name> -v <info-value/content>}
 
