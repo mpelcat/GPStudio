@@ -45,6 +45,7 @@ BlockItem::BlockItem()
     _modelPart = NULL;
     _modelBlock = NULL;
 
+    setZValue(0);
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemSendsScenePositionChanges, true);
@@ -199,6 +200,13 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
         {
             portItem->updateShape();
         }
+    }
+    if (change == ItemSelectedHasChanged && scene())
+    {
+        if(isSelected())
+            setZValue(1);
+        else
+            setZValue(0);
     }
     return QGraphicsItem::itemChange(change, value);
 }

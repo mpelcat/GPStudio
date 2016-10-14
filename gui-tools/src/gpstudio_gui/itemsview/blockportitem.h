@@ -61,6 +61,7 @@ public:
     const QList<BlockConnectorItem *> &connects() const;
 
     QPointF connectorPos(BlockConnectorItem *connectorItem) const;
+    int connectorId(BlockConnectorItem *connectorItem) const;
 
     ModelFlow *modelFlow() const;
     void setModelFlow(ModelFlow *modelFlow);

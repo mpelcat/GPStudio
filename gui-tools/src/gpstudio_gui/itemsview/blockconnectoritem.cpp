@@ -36,6 +36,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     if(_portItem2)
         _portItem2->addConnect(this);
     setZValue(-2);
+    //_style=LineDraw;
     _style=CubicDraw;
     updateShape(NULL);
 }
@@ -99,6 +100,7 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
 {
     bool inInit=false, outInit=false;
     BlockPortItem *outUpdate = NULL;
+    int connectorId = 0;;
 
     prepareGeometryChange();
 
@@ -108,6 +110,7 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
         if(_portItem1->direction()==BlockPortItem::Input)
         {
             _inPos = _portItem1->connectorPos(this);
+            connectorId = _portItem1->connectorId(this);
             inInit = true;
         }
         else
@@ -124,6 +127,7 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
         if(_portItem2->direction()==BlockPortItem::Input)
         {
             _inPos = _portItem2->connectorPos(this);
+            connectorId = _portItem2->connectorId(this);
             inInit = true;
         }
         else
@@ -157,13 +161,13 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
     path.moveTo(_outPos);
     if(_style==LineDraw)
     {
-        path.lineTo(QPoint(rect.center().x(), y1));
-        path.lineTo(QPoint(rect.center().x(), y2));
+        path.lineTo(QPoint(rect.center().x() + connectorId * 10, y1));
+        path.lineTo(QPoint(rect.center().x() + connectorId * 10, y2));
         path.lineTo(_inPos);
     }
-    else
+    if(_style==CubicDraw)
     {
-        path.cubicTo(QPoint(rect.center().x(), y1), QPoint(rect.center().x(), y2), _inPos);
+        path.cubicTo(QPoint(rect.center().x() + connectorId * 10, y1), QPoint(rect.center().x() + connectorId * 10, y2), _inPos);
     }
 
     _shape = path;

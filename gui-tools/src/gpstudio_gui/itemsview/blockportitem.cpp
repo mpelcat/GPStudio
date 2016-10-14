@@ -225,6 +225,13 @@ QPointF BlockPortItem::connectorPos(BlockConnectorItem *connectorItem) const
         return scenePos()+QPointF(7,0);
 }
 
+int BlockPortItem::connectorId(BlockConnectorItem *connectorItem) const
+{
+    if(_connects.size() > 1 && _direction==Input)
+        return _connects.indexOf(connectorItem);
+    return 0;
+}
+
 BlockPortItem *BlockPortItem::fromModelFlow(ModelFlow *modelFlow)
 {
     BlockPortItem *item = new BlockPortItem();

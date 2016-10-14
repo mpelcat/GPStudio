@@ -329,7 +329,7 @@ void BlockView::zoomOut()
 
 void BlockView::zoomFit()
 {
-    fitInView(_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    fitInView(_scene->itemsBoundingRect().adjusted(-20, -20, 20, 20), Qt::KeepAspectRatio);
 }
 
 bool BlockView::editMode() const
