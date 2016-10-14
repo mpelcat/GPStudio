@@ -771,6 +771,14 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     if(!paramList.childNodes().isEmpty())
         element.appendChild(paramList);
 
+    QDomElement propertyList = doc.createElement("properties");
+    foreach (ModelProperty *property, _properties)
+    {
+        propertyList.appendChild(property->toXMLElement(doc));
+    }
+    if(!propertyList.childNodes().isEmpty())
+        element.appendChild(propertyList);
+
     QDomElement partList = doc.createElement("parts");
     foreach (ModelComponentPart *part, _parts)
     {

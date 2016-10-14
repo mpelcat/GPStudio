@@ -261,3 +261,21 @@ QList<ModelProperty *> ModelProperty::listFromNodeGenerated(const QDomElement &d
     }
     return list;
 }
+
+QDomElement ModelProperty::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("property");
+
+    element.setAttribute("name", _name);
+    element.setAttribute("value", _value);
+
+    QDomElement propertyList = doc.createElement("properties");
+    foreach (ModelProperty *property, _properties)
+    {
+        propertyList.appendChild(property->toXMLElement(doc));
+    }
+    if(!propertyList.childNodes().isEmpty())
+        element.appendChild(propertyList);
+
+    return element;
+}

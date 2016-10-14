@@ -68,11 +68,11 @@ public:
 
 public:
     static ModelNode *readFromFile(const QString &fileName);
-
     static ModelNode *fromNodeGenerated(const QDomElement &domElement);
     static ModelNode *fromNodeDef(const QDomElement &domElement);
-    QDomElement toXMLElement(QDomDocument &doc);
+
     bool saveToFile(const QString &fileName);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;
