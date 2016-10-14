@@ -52,7 +52,7 @@ QRectF BlockPortItem::boundingRect() const
     if(_direction==Input)
         return QRectF(-15,-15,90,30);
     else
-        return QRectF(-40,-15,90,30);
+        return QRectF(-90,-15,105,30);
 }
 
 QPainterPath BlockPortItem::shape() const
@@ -100,7 +100,7 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
         painter->setPen(QPen());
         if(_name != "in")
-            painter->drawText(QRectF(10,-10,70,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
+            painter->drawText(QRectF(10,-10,80,20), Qt::AlignLeft | Qt::AlignVCenter, _name);
     }
     else
     {
@@ -112,7 +112,7 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
         painter->setPen(QPen());
         if(_name != "out")
-            painter->drawText(QRectF(-80,-10,70,20), Qt::AlignRight | Qt::AlignVCenter, _name);
+            painter->drawText(QRectF(-90,-10,80,20), Qt::AlignRight | Qt::AlignVCenter, _name);
     }
 }
 
