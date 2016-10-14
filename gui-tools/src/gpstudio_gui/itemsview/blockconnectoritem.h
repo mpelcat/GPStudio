@@ -47,7 +47,7 @@ public:
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    void updateShape();
+    void updateShape(BlockPortItem *caller);
 
     QPoint endPos() const;
     void setEndPos(const QPoint &endPos);
@@ -55,6 +55,9 @@ public:
     void disconnectPorts();
     BlockPortItem *portItem1() const;
     BlockPortItem *portItem2() const;
+
+    QPointF inPos() const;
+    QPointF outPos() const;
 
 private:
     BlockPortItem *_portItem1;

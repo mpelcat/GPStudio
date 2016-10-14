@@ -174,11 +174,18 @@ void BlockPortItem::setDirection(const BlockPortItem::Direction &direction)
     update();
 }
 
+bool topConnectorSort(BlockConnectorItem *c1, BlockConnectorItem *c2)
+{
+    return c1->outPos().y() < c2->outPos().y();
+}
+
 void BlockPortItem::updateShape()
 {
+    qSort(_connects.begin(), _connects.end(), topConnectorSort);
+    prepareGeometryChange();
     foreach (BlockConnectorItem *connectItem, _connects)
     {
-        connectItem->updateShape();
+        connectItem->updateShape(this);
     }
 }
 

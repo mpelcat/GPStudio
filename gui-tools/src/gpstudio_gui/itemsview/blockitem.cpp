@@ -197,10 +197,7 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     {
         foreach (BlockPortItem *portItem, _ports)
         {
-            foreach (BlockConnectorItem *connectItem, portItem->connects())
-            {
-                connectItem->updateShape();
-            }
+            portItem->updateShape();
         }
     }
     return QGraphicsItem::itemChange(change, value);

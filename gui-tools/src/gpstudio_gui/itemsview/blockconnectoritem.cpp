@@ -37,7 +37,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
         _portItem2->addConnect(this);
     setZValue(-2);
     _style=CubicDraw;
-    updateShape();
+    updateShape(NULL);
 }
 
 BlockConnectorItem::~BlockConnectorItem()
@@ -95,9 +95,10 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawPath(_shape);
 }
 
-void BlockConnectorItem::updateShape()
+void BlockConnectorItem::updateShape(BlockPortItem *caller)
 {
     bool inInit=false, outInit=false;
+    BlockPortItem *outUpdate = NULL;
 
     prepareGeometryChange();
 
@@ -111,7 +112,10 @@ void BlockConnectorItem::updateShape()
         }
         else
         {
-            _outPos = _portItem1->connectorPos(this);
+            QPointF outPos = _portItem1->connectorPos(this);
+            if(outPos != _outPos && caller == _portItem1)
+                outUpdate = _portItem2;
+            _outPos = outPos;
             outInit = true;
         }
     }
@@ -124,7 +128,10 @@ void BlockConnectorItem::updateShape()
         }
         else
         {
-            _outPos = _portItem2->connectorPos(this);
+            QPointF outPos = _portItem2->connectorPos(this);
+            if(outPos != _outPos && caller == _portItem2)
+                outUpdate = _portItem1;
+            _outPos = outPos;
             outInit = true;
         }
     }
@@ -160,6 +167,13 @@ void BlockConnectorItem::updateShape()
     }
 
     _shape = path;
+
+    if(!_portItem1 && caller==NULL)
+        _portItem2->updateShape();
+    if(!_portItem2 && caller==NULL)
+        _portItem1->updateShape();
+    if(outUpdate)
+        outUpdate->updateShape();
 }
 
 QPoint BlockConnectorItem::endPos() const
@@ -170,7 +184,7 @@ QPoint BlockConnectorItem::endPos() const
 void BlockConnectorItem::setEndPos(const QPoint &endPos)
 {
     _endPos = endPos;
-    updateShape();
+    updateShape(NULL);
 }
 
 void BlockConnectorItem::disconnectPorts()
@@ -189,6 +203,16 @@ BlockPortItem *BlockConnectorItem::portItem1() const
 BlockPortItem *BlockConnectorItem::portItem2() const
 {
     return _portItem2;
+}
+
+QPointF BlockConnectorItem::inPos() const
+{
+    return _inPos;
+}
+
+QPointF BlockConnectorItem::outPos() const
+{
+    return _outPos;
 }
 
 QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
