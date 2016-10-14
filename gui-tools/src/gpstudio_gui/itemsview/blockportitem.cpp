@@ -49,20 +49,41 @@ int BlockPortItem::type() const
 
 QRectF BlockPortItem::boundingRect() const
 {
-    if(_direction==Input)
-        return QRectF(-15,-15,90,30);
+    if(_connects.size()<=1)
+    {
+        if(_direction==Input)
+            return QRectF(-15,-15,90,30);
+        else
+            return QRectF(-90,-15,105,30);
+    }
     else
-        return QRectF(-90,-15,105,30);
+    {
+        if(_direction==Input)
+            return QRectF(-15,-20,90,40);
+        else
+            return QRectF(-90,-20,105,40);
+    }
 }
 
 QPainterPath BlockPortItem::shape() const
 {
     QPainterPath path;
 
-    path.moveTo(-12, -12);
-    path.lineTo(12, 0);
-    path.lineTo(-12, 12);
-    path.closeSubpath();
+    if(_connects.size()<=1)
+    {
+        path.moveTo(-12, -12);
+        path.lineTo(12, 0);
+        path.lineTo(-12, 12);
+        path.closeSubpath();
+    }
+    else
+    {
+        path.moveTo(-12, -17);
+        path.lineTo(12, -5);
+        path.lineTo(12, 5);
+        path.lineTo(-12, 17);
+        path.closeSubpath();
+    }
 
     return path;
 }
@@ -73,18 +94,23 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     QPainterPath path;
 
+    int pwidth = 9;
     if(_hover)
+        pwidth = 11;
+
+    if(_connects.size() > 1 && _direction==Input)
     {
-        path.moveTo(-11, -11);
-        path.lineTo(11, 0);
-        path.lineTo(-11, 11);
+        path.moveTo(-pwidth, -pwidth-5);
+        path.lineTo(pwidth, -5);
+        path.lineTo(pwidth, 5);
+        path.lineTo(-pwidth, pwidth+5);
         path.closeSubpath();
     }
     else
     {
-        path.moveTo(-9, -9);
-        path.lineTo(9, 0);
-        path.lineTo(-9, 9);
+        path.moveTo(-pwidth, -pwidth);
+        path.lineTo(pwidth, 0);
+        path.lineTo(-pwidth, pwidth);
         path.closeSubpath();
     }
 
@@ -150,11 +176,13 @@ void BlockPortItem::setDirection(const BlockPortItem::Direction &direction)
 
 void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
 {
+    prepareGeometryChange();
     _connects.append(connectItem);
 }
 
 void BlockPortItem::removeConnect(BlockConnectorItem *connectItem)
 {
+    prepareGeometryChange();
     _connects.removeOne(connectItem);
 }
 
