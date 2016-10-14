@@ -344,8 +344,13 @@ void BlockView::setEditMode(bool editMode)
 
 void BlockView::setZoomLevel(int step)
 {
-    double zoom = qPow(1.25,step);
-    scale(zoom, zoom);
+    double scaleLvl = qPow(1.2, step);
+    double zoom = transform().m22();
+    if(scaleLvl>1 && zoom>8)
+        return;
+    if(scaleLvl<1 && zoom<0.2)
+        return;
+    scale(scaleLvl, scaleLvl);
 }
 
 void BlockView::wheelEvent(QWheelEvent *event)
