@@ -25,11 +25,13 @@
 ModelProperty::ModelProperty()
 {
     _parent = NULL;
+    _parentProperty = NULL;
 }
 
 ModelProperty::ModelProperty(const ModelProperty &modelProperty)
 {
     _parent = NULL;
+    _parentProperty = NULL;
 
     _name = modelProperty._name;
     _caption = modelProperty._caption;
@@ -87,12 +89,12 @@ void ModelProperty::setType(const QString &type)
     _type = type;
 }
 
-const QString &ModelProperty::value() const
+const QVariant &ModelProperty::value() const
 {
     return _value;
 }
 
-void ModelProperty::setValue(const QString &value)
+void ModelProperty::setValue(const QVariant &value)
 {
     _value = value;
 }
@@ -193,7 +195,44 @@ const QList<ModelProperty *> &ModelProperty::properties() const
 
 void ModelProperty::addProperty(ModelProperty *property)
 {
+    property->_parentProperty = this;
     _properties.append(property);
+    _propertiesMap.insert(property->name(), property);
+}
+
+ModelProperty *ModelProperty::getProperty(const QString &name) const
+{
+    QMap<QString, ModelProperty*>::const_iterator localConstFind = _propertiesMap.constFind(name);
+    if(localConstFind!=_propertiesMap.constEnd())
+        return *localConstFind;
+    return NULL;
+}
+
+ModelProperty *ModelProperty::getPropertyPath(const QString &path) const
+{
+    if(path.isEmpty())
+        return (ModelProperty *)this;
+    int index = path.indexOf(".");
+    if(index==-1)
+    {
+        if(_propertiesMap.contains(path))
+            return _propertiesMap[path];
+        else return NULL;
+    }
+    if(_propertiesMap.contains(path.left(index)))
+        return _propertiesMap[path.left(index)]->getPropertyPath(path.mid(index+1));
+    return NULL;
+}
+
+QString ModelProperty::getPath() const
+{
+    if(_parent)
+        return QString();
+
+    if(_parentProperty)
+        return _parentProperty->getPath()+"."+_name;
+
+    return _name;
 }
 
 QList<ModelPropertyEnum *> &ModelProperty::propertyEnums()
@@ -267,7 +306,7 @@ QDomElement ModelProperty::toXMLElement(QDomDocument &doc)
     QDomElement element = doc.createElement("property");
 
     element.setAttribute("name", _name);
-    element.setAttribute("value", _value);
+    element.setAttribute("value", _value.toString());
 
     QDomElement propertyList = doc.createElement("properties");
     foreach (ModelProperty *property, _properties)

@@ -27,6 +27,7 @@
 #include <QDomElement>
 #include <QString>
 #include <QList>
+#include <QMap>
 #include <QPoint>
 
 #include "model_file.h"
@@ -108,7 +109,8 @@ public:
     const QList<ModelProperty *> &properties() const;
     void addProperty(ModelProperty *property);
     void addProperties(const QList<ModelProperty *> &properties);
-    ModelProperty *getBlockProperty(const QString &name) const;
+    ModelProperty *getProperty(const QString &name) const;
+    ModelProperty *getPropertyPath(const QString &path) const;
 
     QList<ModelFlow *> &flows();
     const QList<ModelFlow *> &flows() const;
@@ -167,14 +169,31 @@ protected:
     QString _description;
 
     QList<ModelFile *> _files;
+    QMap<QString, ModelFile*> _filesMap;
+
     QList<ModelParam *> _params;
+    QMap<QString, ModelParam*> _paramsMap;
+
     QList<ModelProperty *> _properties;
+    QMap<QString, ModelProperty*> _propertiesMap;
+
     QList<ModelFlow *> _flows;
+    QMap<QString, ModelFlow*> _flowsMap;
+
     QList<ModelClock *> _clocks;
+    QMap<QString, ModelClock*> _clocksMap;
+
     QList<ModelPort *> _ports;
+    QMap<QString, ModelPort*> _portsMap;
+
     QList<ModelPin *> _pins;
+    QMap<QString, ModelPin*> _pinsMap;
+
     QList<ModelReset *> _resets;
+    QMap<QString, ModelReset*> _resetsMap;
+
     QList<ModelComponentPart *> _parts;
+    QMap<QString, ModelComponentPart*> _partsMap;
 
     ModelNode *_node;
 };

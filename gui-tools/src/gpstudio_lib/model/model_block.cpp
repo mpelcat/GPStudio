@@ -216,6 +216,7 @@ void ModelBlock::addFile(ModelFile *file)
 {
     file->setParent(this);
     _files.append(file);
+    _filesMap.insert(file->name(), file);
 }
 
 void ModelBlock::addFiles(const QList<ModelFile *> &files)
@@ -228,12 +229,9 @@ void ModelBlock::addFiles(const QList<ModelFile *> &files)
 
 ModelFile *ModelBlock::getFile(const QString &name) const
 {
-    for(int i=0; i<this->files().size(); i++)
-    {
-        ModelFile *file = this->files().at(i);
-        if(file->name()==name)
-            return file;
-    }
+    QMap<QString, ModelFile*>::const_iterator localConstFind = _filesMap.constFind(name);
+    if(localConstFind!=_filesMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -262,6 +260,7 @@ void ModelBlock::addParam(ModelParam *param)
 {
     param->setParent(this);
     _params.append(param);
+    _paramsMap.insert(param->name(), param);
 }
 
 void ModelBlock::addParams(const QList<ModelParam *> &params)
@@ -274,12 +273,9 @@ void ModelBlock::addParams(const QList<ModelParam *> &params)
 
 ModelParam *ModelBlock::getParam(const QString &name) const
 {
-    for(int i=0; i<this->params().size(); i++)
-    {
-        ModelParam *param = this->params().at(i);
-        if(param->name()==name)
-            return param;
-    }
+    QMap<QString, ModelParam*>::const_iterator localConstFind = _paramsMap.constFind(name);
+    if(localConstFind!=_paramsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -297,6 +293,7 @@ void ModelBlock::addProperty(ModelProperty *property)
 {
     property->setParent(this);
     _properties.append(property);
+    _propertiesMap.insert(property->name(), property);
 }
 
 void ModelBlock::addProperties(const QList<ModelProperty *> &properties)
@@ -307,14 +304,27 @@ void ModelBlock::addProperties(const QList<ModelProperty *> &properties)
     }
 }
 
-ModelProperty *ModelBlock::getBlockProperty(const QString &name) const
+ModelProperty *ModelBlock::getProperty(const QString &name) const
 {
-    for(int i=0; i<this->properties().size(); i++)
+    QMap<QString, ModelProperty*>::const_iterator localConstFind = _propertiesMap.constFind(name);
+    if(localConstFind!=_propertiesMap.constEnd())
+        return *localConstFind;
+    return NULL;
+}
+
+ModelProperty *ModelBlock::getPropertyPath(const QString &path) const
+{
+    if(path.isEmpty())
+        return NULL;
+    int index = path.indexOf(".");
+    if(index==-1)
     {
-        ModelProperty *blockProperty = this->properties().at(i);
-        if(blockProperty->name()==name)
-            return blockProperty;
+        if(_propertiesMap.contains(path))
+            return _propertiesMap[path];
+        else return NULL;
     }
+    if(_propertiesMap.contains(path.left(index)))
+        return _propertiesMap[path.left(index)]->getPropertyPath(path.mid(index+1));
     return NULL;
 }
 
@@ -332,6 +342,7 @@ void ModelBlock::addFlow(ModelFlow *flow)
 {
     flow->setParent(this);
     _flows.append(flow);
+    _flowsMap.insert(flow->name(), flow);
 }
 
 void ModelBlock::addFlows(const QList<ModelFlow *> &flows)
@@ -344,12 +355,9 @@ void ModelBlock::addFlows(const QList<ModelFlow *> &flows)
 
 ModelFlow *ModelBlock::getFlow(const QString &name) const
 {
-    for(int i=0; i<this->flows().size(); i++)
-    {
-        ModelFlow *flow = this->flows().at(i);
-        if(flow->name()==name)
-            return flow;
-    }
+    QMap<QString, ModelFlow*>::const_iterator localConstFind = _flowsMap.constFind(name);
+    if(localConstFind!=_flowsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -367,6 +375,7 @@ void ModelBlock::addClock(ModelClock *clock)
 {
     clock->setParent(this);
     _clocks.append(clock);
+    _clocksMap.insert(clock->name(), clock);
 }
 
 void ModelBlock::addClocks(const QList<ModelClock *> &clocks)
@@ -379,12 +388,9 @@ void ModelBlock::addClocks(const QList<ModelClock *> &clocks)
 
 ModelClock *ModelBlock::getClock(const QString &name) const
 {
-    for(int i=0; i<this->clocks().size(); i++)
-    {
-        ModelClock *clock = this->clocks().at(i);
-        if(clock->name()==name)
-            return clock;
-    }
+    QMap<QString, ModelClock*>::const_iterator localConstFind = _clocksMap.constFind(name);
+    if(localConstFind!=_clocksMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -402,6 +408,7 @@ void ModelBlock::addPort(ModelPort *port)
 {
     port->setParent(this);
     _ports.append(port);
+    _portsMap.insert(port->name(), port);
 }
 
 void ModelBlock::addPorts(const QList<ModelPort *> &ports)
@@ -414,12 +421,9 @@ void ModelBlock::addPorts(const QList<ModelPort *> &ports)
 
 ModelPort *ModelBlock::getPort(const QString &name) const
 {
-    for(int i=0; i<this->ports().size(); i++)
-    {
-        ModelPort *port = this->ports().at(i);
-        if(port->name()==name)
-            return port;
-    }
+    QMap<QString, ModelPort*>::const_iterator localConstFind = _portsMap.constFind(name);
+    if(localConstFind!=_portsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -437,6 +441,7 @@ void ModelBlock::addPin(ModelPin *pin)
 {
     pin->setParent(this);
     _pins.append(pin);
+    _pinsMap.insert(pin->name(), pin);
 }
 
 void ModelBlock::addPins(const QList<ModelPin *> &pins)
@@ -449,12 +454,9 @@ void ModelBlock::addPins(const QList<ModelPin *> &pins)
 
 ModelPin *ModelBlock::getPin(const QString &name) const
 {
-    for(int i=0; i<this->pins().size(); i++)
-    {
-        ModelPin *pin = this->pins().at(i);
-        if(pin->name()==name)
-            return pin;
-    }
+    QMap<QString, ModelPin*>::const_iterator localConstFind = _pinsMap.constFind(name);
+    if(localConstFind!=_pinsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -472,6 +474,7 @@ void ModelBlock::addReset(ModelReset *reset)
 {
     reset->setParent(this);
     _resets.append(reset);
+    _resetsMap.insert(reset->name(), reset);
 }
 
 void ModelBlock::addResets(const QList<ModelReset *> &resets)
@@ -484,12 +487,9 @@ void ModelBlock::addResets(const QList<ModelReset *> &resets)
 
 ModelReset *ModelBlock::getReset(const QString &name) const
 {
-    for(int i=0; i<this->resets().size(); i++)
-    {
-        ModelReset *reset = this->resets().at(i);
-        if(reset->name()==name)
-            return reset;
-    }
+    QMap<QString, ModelReset*>::const_iterator localConstFind = _resetsMap.constFind(name);
+    if(localConstFind!=_resetsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -507,6 +507,7 @@ void ModelBlock::addPart(ModelComponentPart *part)
 {
     part->setParent(this);
     _parts.append(part);
+    _partsMap.insert(part->name(), part);
 }
 
 void ModelBlock::addParts(const QList<ModelComponentPart *> &parts)
@@ -519,12 +520,9 @@ void ModelBlock::addParts(const QList<ModelComponentPart *> &parts)
 
 ModelComponentPart *ModelBlock::getPart(const QString &name) const
 {
-    for(int i=0; i<this->parts().size(); i++)
-    {
-        ModelComponentPart *part = this->parts().at(i);
-        if(part->name()==name)
-            return part;
-    }
+    QMap<QString, ModelComponentPart*>::const_iterator localConstFind = _partsMap.constFind(name);
+    if(localConstFind!=_partsMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 

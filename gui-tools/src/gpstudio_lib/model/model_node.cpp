@@ -187,7 +187,19 @@ ModelProperty *ModelNode::getProperty(const QString &blockName, const QString &p
     if(!block)
         return NULL;
 
-    ModelProperty *property = block->getBlockProperty(propertyName);
+    ModelProperty *property = block->getProperty(propertyName);
+    if(!property)
+        return NULL;
+    return property;
+}
+
+ModelProperty *ModelNode::getPropertyPath(const QString &blockName, const QString &path) const
+{
+    ModelBlock *block = getBlock(blockName);
+    if(!block)
+        return NULL;
+
+    ModelProperty *property = block->getPropertyPath(path);
     if(!property)
         return NULL;
     return property;

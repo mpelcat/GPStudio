@@ -25,6 +25,8 @@
 
 #include <QString>
 #include <QVariant>
+#include <QList>
+#include <QMap>
 #include <QDomElement>
 
 class ModelBlock;
@@ -47,8 +49,8 @@ public:
     const QString &type() const;
     void setType(const QString &type);
 
-    const QString &value() const;
-    void setValue(const QString &value);
+    const QVariant &value() const;
+    void setValue(const QVariant &value);
 
     const QString &min() const;
     void setMin(const QString &min);
@@ -77,6 +79,9 @@ public:
     QList<ModelProperty *> &properties();
     const QList<ModelProperty *> &properties() const;
     void addProperty(ModelProperty *property);
+    ModelProperty *getProperty(const QString &name) const;
+    ModelProperty *getPropertyPath(const QString &path) const;
+    QString getPath() const;
 
     QList<ModelPropertyEnum *> &propertyEnums();
     const QList<ModelPropertyEnum *> &propertyEnums() const;
@@ -91,7 +96,7 @@ protected:
     QString _name;
     QString _caption;
     QString _type;
-    QString _value;
+    QVariant _value;
     QString _min;
     QString _max;
     QString _step;
@@ -101,8 +106,11 @@ protected:
     QString _description;
 
     ModelBlock *_parent;
+    ModelProperty *_parentProperty;
 
     QList<ModelProperty *> _properties;
+    QMap<QString, ModelProperty*> _propertiesMap;
+
     QList<ModelPropertyEnum *> _propertyEnums;
 };
 
