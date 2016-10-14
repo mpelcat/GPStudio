@@ -174,16 +174,26 @@ void BlockPortItem::setDirection(const BlockPortItem::Direction &direction)
     update();
 }
 
+void BlockPortItem::updateShape()
+{
+    foreach (BlockConnectorItem *connectItem, _connects)
+    {
+        connectItem->updateShape();
+    }
+}
+
 void BlockPortItem::addConnect(BlockConnectorItem *connectItem)
 {
     prepareGeometryChange();
     _connects.append(connectItem);
+    updateShape();
 }
 
 void BlockPortItem::removeConnect(BlockConnectorItem *connectItem)
 {
     prepareGeometryChange();
     _connects.removeOne(connectItem);
+    updateShape();
 }
 
 const QList<BlockConnectorItem *> &BlockPortItem::connects() const
@@ -191,8 +201,17 @@ const QList<BlockConnectorItem *> &BlockPortItem::connects() const
     return _connects;
 }
 
-QPointF BlockPortItem::connectorPos() const
+QPointF BlockPortItem::connectorPos(BlockConnectorItem *connectorItem) const
 {
+    if(_connects.size() > 1 && _direction==Input)
+    {
+        int h = 15;
+        if(_connects.size()>2)
+            h = 20;
+        int id = _connects.indexOf(connectorItem);
+        int t = (-h / 2) + (h / (_connects.size() - 1)) * id;
+        return scenePos()+QPointF(-7,t);
+    }
     if(_direction==Input)
         return scenePos()+QPointF(-7,0);
     else

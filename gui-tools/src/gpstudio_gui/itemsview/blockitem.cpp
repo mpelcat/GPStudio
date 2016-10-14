@@ -167,10 +167,7 @@ void BlockItem::updatePos()
         setPos(_modelPart->pos());
     foreach (BlockPortItem *portItem, _ports)
     {
-        foreach (BlockConnectorItem *connectItem, portItem->connects())
-        {
-            connectItem->updateShape();
-        }
+        portItem->updateShape();
     }
 }
 

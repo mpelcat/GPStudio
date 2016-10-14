@@ -54,12 +54,13 @@ public:
     Direction direction() const;
     void setDirection(const Direction &direction);
 
+    void updateShape();
     void addConnect(BlockConnectorItem *connectItem);
     void removeConnect(BlockConnectorItem *connectItem);
 
     const QList<BlockConnectorItem *> &connects() const;
 
-    QPointF connectorPos() const;
+    QPointF connectorPos(BlockConnectorItem *connectorItem) const;
 
     ModelFlow *modelFlow() const;
     void setModelFlow(ModelFlow *modelFlow);

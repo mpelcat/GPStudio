@@ -106,12 +106,12 @@ void BlockConnectorItem::updateShape()
     {
         if(_portItem1->direction()==BlockPortItem::Input)
         {
-            _inPos = _portItem1->connectorPos();
+            _inPos = _portItem1->connectorPos(this);
             inInit = true;
         }
         else
         {
-            _outPos = _portItem1->connectorPos();
+            _outPos = _portItem1->connectorPos(this);
             outInit = true;
         }
     }
@@ -119,12 +119,12 @@ void BlockConnectorItem::updateShape()
     {
         if(_portItem2->direction()==BlockPortItem::Input)
         {
-            _inPos = _portItem2->connectorPos();
+            _inPos = _portItem2->connectorPos(this);
             inInit = true;
         }
         else
         {
-            _outPos = _portItem2->connectorPos();
+            _outPos = _portItem2->connectorPos(this);
             outInit = true;
         }
     }
