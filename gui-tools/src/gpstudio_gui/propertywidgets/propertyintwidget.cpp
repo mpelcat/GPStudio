@@ -22,6 +22,7 @@
 
 #include <QVBoxLayout>
 #include <QSpinBox>
+#include <QDebug>
 
 PropertyIntWidget::PropertyIntWidget()
 {
@@ -63,7 +64,7 @@ void PropertyIntWidget::destroyWidget()
 
 void PropertyIntWidget::setValue(QVariant value)
 {
-    if(value.type()==QVariant::Int)
+    if(value.canConvert(QVariant::Int))
     {
         _spinBox->blockSignals(true);
         _spinBox->setValue(value.toInt());

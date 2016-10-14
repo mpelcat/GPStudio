@@ -68,6 +68,7 @@ public:
 
     enum Type {Group, Int, SInt, Bool, StringType, Enum, Matrix, FlowType, BlockType, String, FlowDataType};
     Type type() const;
+    QVariant::Type variantType() const;
 
     const QString &propertymap() const;
     const QString &onchange() const;
@@ -92,6 +93,7 @@ public:
     const ModelProperty *modelProperty() const;
 
     QString blockName() const;
+    QString getPath() const;
 
 signals:
     void valueChanged(QVariant value);

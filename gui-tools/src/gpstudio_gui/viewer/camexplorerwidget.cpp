@@ -156,7 +156,7 @@ void CamExplorerWidget::changePropertyValue()
 {
     PropertyWidget *propertyWidget = static_cast<PropertyWidget *>(QObject::sender());
     const Property *property = propertyWidget->linkedProperty();
-    emit propertyChanged(property->blockName(), property->name(), property->value().toString());
+    emit propertyChanged(property->blockName(), property->getPath(), property->value().toString());
 }
 
 CamExplorerWidget::Mode CamExplorerWidget::modeView() const

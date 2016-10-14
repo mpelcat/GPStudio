@@ -83,7 +83,8 @@ void Property::setValue(int value)
 void Property::setValue(const QVariant &value)
 {
     bool valueChangedb = false;
-    if(value != _value && _value.isValid()) valueChangedb=true;
+    if(value != _value && _value.isValid())
+        valueChangedb=true;
     _value=value;
 
     if(_type==Matrix)
@@ -122,7 +123,8 @@ void Property::setValue(const QVariant &value)
         }
     }
 
-    if(valueChangedb) emit valueChanged(QVariant(value));
+    if(valueChangedb)
+        emit valueChanged(QVariant(value));
 
     ScriptEngine::getEngine().evalPropertyMap(_onchange);
 }
@@ -197,6 +199,27 @@ Property::Type Property::type() const
     return _type;
 }
 
+QVariant::Type Property::variantType() const
+{
+    switch (_type)
+    {
+    case Property::String:
+    case Property::StringType:
+        return QVariant::String;
+    case Property::Int:
+    case Property::SInt:
+        return QVariant::Int;
+    case Property::Bool:
+        return QVariant::Bool;
+    case Property::Enum:
+        return QVariant::StringList;
+    case Property::Matrix:
+        return QVariant::StringList;
+    default:
+        return QVariant::Invalid;
+    }
+}
+
 void Property::setType(const Property::Type &type)
 {
     _type = type;
@@ -251,6 +274,19 @@ QString Property::blockName() const
         return QString();
 
     return _parent->blockName();
+}
+
+QString Property::getPath() const
+{
+    if(_type==BlockType)
+        return QString();
+
+    if(!_parent)
+        return QString();
+
+    if(_parent->type()!=BlockType)
+        return _parent->getPath()+"."+_name;
+    return _name;
 }
 
 void Property::setParent(Property *parent)

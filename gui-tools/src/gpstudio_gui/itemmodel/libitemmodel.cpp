@@ -77,10 +77,12 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
         }
     case Qt::DecorationRole:
         if(index.column()==Name)
+        {
             if(libItem->isCateg())
                 return QVariant();
             else
                 return QVariant(processLib->icon());
+        }
         break;
     case Qt::ToolTipRole:
         if(libItem->isCateg())

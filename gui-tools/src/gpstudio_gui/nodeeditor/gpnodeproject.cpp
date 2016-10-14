@@ -373,16 +373,18 @@ void GPNodeProject::cmdSetParam(const QString &blockName, const QString &paramNa
         param->setValue(value);
     else
     {
-        ModelProperty *property = _node->getProperty(blockName, paramName);
+        ModelProperty *property = _node->getPropertyPath(blockName, paramName);
         if(property)
-            property->setValue(value.toString());
+            property->setValue(value);
         else
             return;
     }
 
     Property *assocProperty = _camera->rootProperty().path(blockName + "." + paramName);
     if(assocProperty)
+    {
         assocProperty->setValue(value);
+    }
 
     //emit blockUpdated(block);
     setModified(true);
@@ -485,13 +487,13 @@ void GPNodeProject::disConnectBlockFlows(const ModelFlowConnect &flowConnect)
 
 void GPNodeProject::blockSetParam(const QString &blockName, const QString &paramName, const QVariant &value)
 {
-    QString oldValue;
+    QVariant oldValue;
     ModelParam *param = _node->getParam(blockName, paramName);
     if(param)
-        oldValue = param->value().toString();
+        oldValue = param->value();
     else
     {
-        ModelProperty *property = _node->getProperty(blockName, paramName);
+        ModelProperty *property = _node->getPropertyPath(blockName, paramName);
         if(property)
             oldValue = property->value();
         else
