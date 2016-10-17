@@ -51,6 +51,27 @@ CamExplorerWidget::CamExplorerWidget(Camera *camera, CamExplorerWidget::Mode mod
     setModeView(modeView);
 }
 
+void CamExplorerWidget::attachProject(GPNodeProject *project)
+{
+    _project = project;
+
+    connect(_project, SIGNAL(nodeChanged(ModelNode*)), this, SLOT(update()));
+
+    connect(_project, SIGNAL(blockAdded(ModelBlock*)), this, SLOT(update()));
+    connect(_project, SIGNAL(blockRemoved(QString)), this, SLOT(update()));
+    connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(update()));
+
+    connect(this, SIGNAL(propertyChanged(QString,QString,QVariant)), _project, SLOT(blockSetParam(QString,QString,QVariant)));
+
+    if(_project->camera())
+        setCamera(_project->camera());
+}
+
+GPNodeProject *CamExplorerWidget::project() const
+{
+    return _project;
+}
+
 void CamExplorerWidget::setupWidgets()
 {
     if(layout())
@@ -170,11 +191,6 @@ void CamExplorerWidget::setModeView(const Mode &modeView)
     setupWidgets();
 }
 
-Camera *CamExplorerWidget::camera() const
-{
-    return _camera;
-}
-
 void CamExplorerWidget::setCamera(Camera *camera)
 {
     _node = NULL;
@@ -188,11 +204,6 @@ void CamExplorerWidget::setCamera(Camera *camera)
 
         //setRootProperty(NULL);
     }
-}
-
-ModelNode *CamExplorerWidget::node() const
-{
-    return _node;
 }
 
 void CamExplorerWidget::setNode(ModelNode *node)
@@ -284,6 +295,11 @@ void CamExplorerWidget::selectBlock(QString blockName)
 
 void CamExplorerWidget::update()
 {
+    if(_project->camera())
+    {
+        setCamera(_project->camera());
+        return;
+    }
     if(_camera)
         setCamera(_camera);
     if(_node)

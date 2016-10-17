@@ -34,6 +34,8 @@
 #include <QBoxLayout>
 #include <QScrollArea>
 
+#include <nodeeditor/gpnodeproject.h>
+
 class PropertyWidget;
 
 class GPSTUDIO_GUI_EXPORT CamExplorerWidget : public QWidget
@@ -49,11 +51,10 @@ public:
     CamExplorerWidget(Camera *camera, QWidget *parent=0);
     CamExplorerWidget(Camera *camera, Mode modeView, QWidget *parent=0);
 
-    Camera *camera() const;
-    void setCamera(Camera *camera);
+    void attachProject(GPNodeProject *project);
+    GPNodeProject *project() const;
 
-    ModelNode *node() const;
-    void setNode(ModelNode *node);
+    void setCamera(Camera *camera); // remove this method
 
     Mode modeView() const;
     void setModeView(const Mode &modeView);
@@ -73,6 +74,8 @@ private:
     void setupWidgets();
     void setRootProperty(const Property *property);
 
+    void setNode(ModelNode *node);
+
     QTreeView *_camTreeView;
     CameraItemModelNoSorted *_camItemModel;
 
@@ -82,6 +85,7 @@ private:
 
     Camera *_camera;
     ModelNode *_node;
+    GPNodeProject *_project;
 
     Mode _modeView;
 

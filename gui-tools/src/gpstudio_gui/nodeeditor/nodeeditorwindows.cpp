@@ -80,23 +80,20 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
     connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
-    connect(_camExplorerWidget, SIGNAL(propertyChanged(QString,QString,QVariant)), _project, SLOT(blockSetParam(QString,QString,QVariant)));
+
     connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
 
-    connect(_project, SIGNAL(blockAdded(ModelBlock*)), _camExplorerWidget, SLOT(update()));
-    connect(_project, SIGNAL(blockRemoved(QString)), _camExplorerWidget, SLOT(update()));
-    connect(_project, SIGNAL(blockUpdated(ModelBlock*)), _camExplorerWidget, SLOT(update()));
+    // attach project to editors and viewers
+    _camExplorerWidget->attachProject(_project);
+    _blocksView->attachProject(_project);
+    _compileLog->setProject(_project);
+    _libTreeView->attachProject(_project);
 
     if(project->node())
     {
         reloadNode();
         reloadNodePath();
     }
-
-    // attach project to editors and viewers
-    _blocksView->attachProject(_project);
-    _compileLog->setProject(_project);
-    _libTreeView->attachProject(_project);
 }
 
 void NodeEditorWindows::closeEvent(QCloseEvent *event)
@@ -340,8 +337,6 @@ void NodeEditorWindows::addProcess(QString driver)
 
 void NodeEditorWindows::reloadNode()
 {
-    //_camExplorerWidget->setNode(_project->node());
-    _camExplorerWidget->setCamera(_project->camera());
     reloadNodePath();
 }
 
