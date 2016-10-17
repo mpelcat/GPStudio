@@ -140,6 +140,14 @@ void BlockPortItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         if(_name != "out")
             painter->drawText(QRectF(-90,-10,80,20), Qt::AlignRight | Qt::AlignVCenter, _name);
     }
+
+    painter->setPen(QPen(Qt::white));
+    QFont font = painter->font();
+    if(_hover)
+        font.setBold(true);
+    painter->setFont(font);
+    if(_connects.size() > 1 && _direction==Input)
+        painter->drawText(QRect(-9,-9,18,18),"M", Qt::AlignCenter | Qt::AlignVCenter);
 }
 
 QString BlockPortItem::name() const
