@@ -45,6 +45,7 @@ public:
     };
 
     void addCamera(const Camera *camera);
+    void addBlock(const Block *block);
     void addNode(const ModelNode *node);
     void clearAll();
 

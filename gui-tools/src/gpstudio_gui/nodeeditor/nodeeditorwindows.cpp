@@ -57,6 +57,9 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
         _project->newProject();
 
     _blockEditor = NULL;
+
+    _camExplorerDock->show();
+    _camExplorerDock->raise();
 }
 
 NodeEditorWindows::~NodeEditorWindows()
@@ -85,6 +88,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     // attach project to editors and viewers
     _camExplorerWidget->attachProject(_project);
+    _viewerExplorerWidget->attachProject(_project);
     _blocksView->attachProject(_project);
     _compileLog->setProject(_project);
     _libTreeView->attachProject(_project);
@@ -140,6 +144,16 @@ void NodeEditorWindows::createDocks()
     camExplorerContent->setLayout(camExplorerLayout);
     _camExplorerDock->setWidget(camExplorerContent);
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
+
+    // viewer explorer dock
+    _viewerExplorerDock = new QDockWidget("Viewers", this);
+    QWidget *viewerExplorerContent = new QWidget(_viewerExplorerDock);
+    QLayout *viewerExplorerLayout = new QVBoxLayout();
+    _viewerExplorerWidget = new ViewerExplorerWidget();
+    viewerExplorerLayout->addWidget(_viewerExplorerWidget);
+    viewerExplorerContent->setLayout(viewerExplorerLayout);
+    _viewerExplorerDock->setWidget(viewerExplorerContent);
+    tabifyDockWidget(_camExplorerDock, _viewerExplorerDock);
 
     // lib treeview dock
     _libTreeViewDock = new QDockWidget("IP library explorer", this);

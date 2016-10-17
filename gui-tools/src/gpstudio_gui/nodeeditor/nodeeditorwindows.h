@@ -31,6 +31,7 @@
 #include "itemmodel/libtreeview.h"
 #include "compilelogwidget.h"
 #include "viewer/camexplorerwidget.h"
+#include "viewer/viewerexplorerwidget.h"
 
 #include "blockeditor/blockeditorwindow.h"
 
@@ -70,6 +71,9 @@ private:
 
     QDockWidget *_camExplorerDock;
     CamExplorerWidget *_camExplorerWidget;
+
+    QDockWidget *_viewerExplorerDock;
+    ViewerExplorerWidget *_viewerExplorerWidget;
 
     QDockWidget *_libTreeViewDock;
     LibTreeView *_libTreeView;

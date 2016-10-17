@@ -259,6 +259,13 @@ void CameraItemModelNoSorted::addCamera(const Camera *camera)
     emit layoutChanged();
 }
 
+void CameraItemModelNoSorted::addBlock(const Block *block)
+{
+    emit layoutAboutToBeChanged();
+    _rootItem->append(block);
+    emit layoutChanged();
+}
+
 void CameraItemModelNoSorted::addNode(const ModelNode *node)
 {
     emit layoutAboutToBeChanged();

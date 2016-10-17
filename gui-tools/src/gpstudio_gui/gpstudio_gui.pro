@@ -83,7 +83,8 @@ SOURCES += \
     viewer/viewerwidgets/docviewer.cpp \
     viewer/viewerwidgets/pdfviewer.cpp \
     viewer/viewerwidgets/layerwidget.cpp \
-    compilelogwidget.cpp
+    compilelogwidget.cpp \
+    viewer/viewerexplorerwidget.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -132,7 +133,8 @@ HEADERS  += \
     viewer/viewerwidgets/docviewer.h \
     viewer/viewerwidgets/pdfviewer.h \
     viewer/viewerwidgets/layerwidget.h \
-    compilelogwidget.h
+    compilelogwidget.h \
+    viewer/viewerexplorerwidget.h
 
 RESOURCES += \
     icons.qrc \
