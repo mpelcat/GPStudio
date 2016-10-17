@@ -23,6 +23,8 @@
 #include "model_block.h"
 #include "model_node.h"
 
+#include <QDebug>
+
 ModelBoard::ModelBoard()
 {
     _parent = NULL;
@@ -72,6 +74,7 @@ ModelBoard *ModelBoard::fromNodeDef(const QDomElement &domElement)
 
 QList<ModelBlock *> ModelBoard::listIosFromNodeDef(const QDomElement &domElement)
 {
+    QList<ModelBlock *> ios;
     QDomNode n = domElement.firstChild();
     while(!n.isNull())
     {
@@ -79,10 +82,11 @@ QList<ModelBlock *> ModelBoard::listIosFromNodeDef(const QDomElement &domElement
         if(!e.isNull())
         {
             if(e.tagName()=="ios")
-                return ModelBlock::listFromNodeDef(e);
+                ios.append(ModelBlock::listFromNodeDef(e));
         }
+        n = n.nextSibling();
     }
-    return QList<ModelBlock *>();
+    return ios;
 }
 
 QDomElement ModelBoard::toXMLElement(QDomDocument &doc)

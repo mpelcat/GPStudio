@@ -30,6 +30,7 @@
 
 #include "model/model_process.h"
 #include "model/model_io.h"
+#include "model/model_iocom.h"
 
 class GPSTUDIO_LIB_EXPORT BlockLib
 {
@@ -58,6 +59,7 @@ public:
     ModelBlock *modelBlock() const;
     ModelProcess *modelProcess() const;
     ModelIO *modelIO() const;
+    ModelIOCom *modelIOCom() const;
 
 public:
     static BlockLib *readFromFile(const QString &fileName);

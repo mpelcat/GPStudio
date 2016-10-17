@@ -151,7 +151,9 @@ BlockLib *BlockLib::fromDomElement(const QDomElement &domElement)
     // get process model for creating instance of ModelProcess
     if(domElement.tagName()=="process")
         blockLib->_modelBlock = ModelProcess::fromNodeGenerated(domElement);
-    else
+    else if(domElement.tagName()=="iocom" || domElement.attribute("categ") == "communication")
+        blockLib->_modelBlock = ModelIOCom::fromNodeGenerated(domElement);
+    else if(domElement.tagName()=="io")
         blockLib->_modelBlock = ModelIO::fromNodeGenerated(domElement);
 
     blockLib->_modelBlock->setInLib(true);
@@ -173,4 +175,9 @@ ModelProcess *BlockLib::modelProcess() const
 ModelIO *BlockLib::modelIO() const
 {
     return static_cast<ModelIO*>(_modelBlock);
+}
+
+ModelIOCom *BlockLib::modelIOCom() const
+{
+    return static_cast<ModelIOCom*>(_modelBlock);
 }

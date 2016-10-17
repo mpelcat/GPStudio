@@ -20,6 +20,8 @@
 
 #include "model_iocom.h"
 
+#include "lib_parser/lib.h"
+
 #include "model_comconnect.h"
 
 ModelIOCom::ModelIOCom()
@@ -101,5 +103,21 @@ ModelIO *ModelIOCom::fromNodeGenerated(const QDomElement &domElement, ModelIOCom
     }
 
     return ioCom;
+}
+
+ModelIO *ModelIOCom::fromNodeDef(const QDomElement &domElement, ModelIO *io)
+{
+    QString driver = domElement.attribute("driver","");
+
+    BlockLib *ioLib = Lib::getLib().io(driver);
+    if(ioLib)
+        io = new ModelIOCom(*ioLib->modelIOCom());
+
+    if(io==NULL)
+        io = new ModelIOCom();
+
+    ModelBlock::fromNodeDef(domElement, io);
+
+    return io;
 }
 

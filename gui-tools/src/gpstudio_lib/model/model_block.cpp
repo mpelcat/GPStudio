@@ -743,8 +743,10 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     QDomElement element;
     if(other.isNull())
     {
-        if(type()==IO || type()==IOCom)
+        if(type()==IO)
             element = doc.createElement("io");
+        else if(type()==IOCom)
+            element = doc.createElement("iocom");
         else
             element = doc.createElement("process");
     }

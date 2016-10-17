@@ -46,6 +46,7 @@ public:
 
 public:
     static ModelIO *fromNodeGenerated(const QDomElement &domElement, ModelIOCom *ioCom=NULL);
+    static ModelIO *fromNodeDef(const QDomElement &domElement, ModelIO *io=NULL);
 
 protected:
     QString _driverIO;
