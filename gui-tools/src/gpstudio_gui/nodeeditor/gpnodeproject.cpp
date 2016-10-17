@@ -110,7 +110,10 @@ bool GPNodeProject::openProject(const QString &nodeFileName)
 
     node = ModelNode::readFromFile(fileName);
     if(!node)
+    {
+        _camera = NULL;
         return false;
+    }
 
     // load library with project IPs
     foreach (ModelBlock *block, node->blocks())
