@@ -43,6 +43,8 @@ void PropertyEnumWidget::createWidget()
     layout->setContentsMargins(0,0,0,0);
 
     _comboBox = new QComboBox();
+    if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
+        _comboBox->setEnabled(false);
 
     foreach (PropertyEnum *propertyEnum, _linkedProperty->enums())
     {

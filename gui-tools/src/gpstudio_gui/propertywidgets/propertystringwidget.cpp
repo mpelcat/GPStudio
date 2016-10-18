@@ -42,6 +42,8 @@ void PropertyStringWidget::createWidget()
     layout->setContentsMargins(0,0,0,0);
 
     _lineEdit = new QLineEdit();
+    if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
+        _lineEdit->setEnabled(false);
 
     connect(_lineEdit, SIGNAL(editingFinished()), this, SLOT(wrapValue()));
     connect(this, SIGNAL(valueChanged(QVariant)), _linkedProperty, SLOT(setValue(QVariant)));

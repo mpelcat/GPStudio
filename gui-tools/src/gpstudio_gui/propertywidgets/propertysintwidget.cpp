@@ -44,6 +44,8 @@ void PropertySIntWidget::createWidget()
     layout->setContentsMargins(0,0,0,0);
 
     _slider = new QSlider();
+    if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
+        _slider->setEnabled(false);
     _slider->setMinimum(_linkedProperty->min().toInt());
     _slider->setMaximum(_linkedProperty->max().toInt());
     _slider->setSingleStep(_linkedProperty->step().toInt());

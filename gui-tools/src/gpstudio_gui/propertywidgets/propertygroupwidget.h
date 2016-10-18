@@ -29,7 +29,7 @@ class GPSTUDIO_GUI_EXPORT PropertyGroupWidget : public PropertyWidget
 {
     Q_OBJECT
 public:
-    PropertyGroupWidget();
+    PropertyGroupWidget(bool framed=true);
     virtual ~PropertyGroupWidget();
 
     Type type() const;
@@ -40,6 +40,9 @@ protected:
 
 public slots:
     virtual void setValue(QVariant value);
+
+private:
+    bool _framed;
 };
 
 #endif // PROPERTYGROUPWIDGET_H

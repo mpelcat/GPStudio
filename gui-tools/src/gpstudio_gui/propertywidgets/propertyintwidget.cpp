@@ -43,6 +43,8 @@ void PropertyIntWidget::createWidget()
     layout->setContentsMargins(0,0,0,0);
 
     _spinBox = new QSpinBox();
+    if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
+        _spinBox->setEnabled(false);
     _spinBox->setMinimum(_linkedProperty->min().toInt());
     _spinBox->setMaximum(_linkedProperty->max().toInt());
     _spinBox->setSingleStep(_linkedProperty->step().toInt());

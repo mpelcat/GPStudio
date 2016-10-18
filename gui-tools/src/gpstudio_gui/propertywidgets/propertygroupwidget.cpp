@@ -26,7 +26,8 @@
 #include <QLabel>
 #include <QDebug>
 
-PropertyGroupWidget::PropertyGroupWidget()
+PropertyGroupWidget::PropertyGroupWidget(bool framed)
+    : _framed(framed)
 {
 }
 
@@ -41,10 +42,6 @@ PropertyWidget::Type PropertyGroupWidget::type() const
 
 void PropertyGroupWidget::createWidget()
 {
-    QLayout *layout = new QVBoxLayout();
-    layout->setContentsMargins(0,10,0,0);
-    QGroupBox *groupBox = new QGroupBox(_linkedProperty->caption());
-
     QFormLayout *layoutPanel = new QFormLayout();
     layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
     layoutPanel->setSpacing(6);
@@ -57,7 +54,14 @@ void PropertyGroupWidget::createWidget()
         {
             if(propertyWidget->type()==Field)
             {
-                layoutPanel->addRow(property->caption(), propertyWidget);
+                QLabel *label = new QLabel(property->caption());
+                if(property->isConst())
+                {
+                    QFont font = label->font();
+                    font.setBold(true);
+                    label->setFont(font);
+                }
+                layoutPanel->addRow(label, propertyWidget);
             }
             else
             {
@@ -67,9 +71,17 @@ void PropertyGroupWidget::createWidget()
         }
     }
 
-    groupBox->setLayout(layoutPanel);
-    layout->addWidget(groupBox);
-    setLayout(layout);
+    if(_framed)
+    {
+        QLayout *layout = new QVBoxLayout();
+        layout->setContentsMargins(0,10,0,0);
+        QGroupBox *groupBox = new QGroupBox(_linkedProperty->caption());
+        groupBox->setLayout(layoutPanel);
+        layout->addWidget(groupBox);
+        setLayout(layout);
+    }
+    else
+        setLayout(layoutPanel);
 }
 
 void PropertyGroupWidget::destroyWidget()
