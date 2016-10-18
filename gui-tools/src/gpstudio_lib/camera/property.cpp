@@ -35,6 +35,8 @@ Property::Property(QString name)
     _row = 0;
     _bits = 0;
     _modelProperty = NULL;
+    _fixed = false;
+    _const = false;
 }
 
 Property::~Property()
@@ -294,6 +296,28 @@ void Property::setParent(Property *parent)
     _parent = parent;
 }
 
+bool Property::isFixed() const
+{
+    return _fixed;
+}
+
+bool Property::isConst() const
+{
+    return _const;
+}
+
+Property::Mode Property::mode() const
+{
+    return _mode;
+}
+
+void Property::setMode(Property::Mode mode)
+{
+    _mode = mode;
+    foreach (Property *property, _subProperties)
+        property->setMode(mode);
+}
+
 int Property::row() const
 {
     return _row;
@@ -448,6 +472,8 @@ Property *Property::fromModelParam(const ModelParam *modelParam)
     propertyParam->setCaption(modelParam->name());
     propertyParam->setType(StringType);
     propertyParam->setValue(modelParam->value().toString());
+    propertyParam->_fixed = true;
+    propertyParam->_const = true;
 
     return propertyParam;
 }

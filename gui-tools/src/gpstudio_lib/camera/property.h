@@ -70,6 +70,12 @@ public:
     Type type() const;
     QVariant::Type variantType() const;
 
+    enum Mode {Edit, Run};
+    Mode mode() const;
+    void setMode(Mode mode);
+    bool isFixed() const;
+    bool isConst() const;
+
     const QString &propertymap() const;
     const QString &onchange() const;
 
@@ -139,6 +145,10 @@ protected:
 
     QString _propertyMap;
     QString _onchange;
+
+    Mode _mode;
+    bool _fixed;
+    bool _const;
 
     int _row;
     Property *_parent;
