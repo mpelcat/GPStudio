@@ -74,8 +74,6 @@ private:
     void setupWidgets();
     void setRootProperty(const Property *property);
 
-    void setNode(ModelNode *node);
-
     QTreeView *_camTreeView;
     CameraItemModelNoSorted *_camItemModel;
 
@@ -84,7 +82,6 @@ private:
     QScrollArea *_propertyWidget;
 
     Camera *_camera;
-    ModelNode *_node;
     GPNodeProject *_project;
 
     Mode _modeView;

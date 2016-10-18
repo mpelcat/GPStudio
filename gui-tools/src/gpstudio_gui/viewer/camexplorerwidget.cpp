@@ -28,7 +28,7 @@
 #include <QModelIndexList>
 #include <QSplitter>
 
-#include <propertywidgets/propertywidget.h>
+#include <propertywidgets/propertywidgets.h>
 
 CamExplorerWidget::CamExplorerWidget(QWidget *parent)
     : QWidget(parent)
@@ -125,33 +125,20 @@ void CamExplorerWidget::setRootProperty(const Property *property)
             QWidget *widget = new QWidget();
             widget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-            QFormLayout *layoutPanel = new QFormLayout();
-            layoutPanel->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
-            layoutPanel->setSpacing(6);
+            QBoxLayout *layout = new QVBoxLayout();
+            layout->setContentsMargins(0,0,0,0);
 
             if(property)
             {
-                foreach (Property *subProperty, property->subProperties())
-                {
-                    PropertyWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(subProperty);
-                    if(propertyWidget)
-                    {
-                        if(propertyWidget->type()==PropertyWidget::Field)
-                        {
-                            layoutPanel->addRow(subProperty->caption(), propertyWidget);
-                        }
-                        else
-                        {
-                            layoutPanel->setWidget(layoutPanel->count(), QFormLayout::SpanningRole, propertyWidget);
-                        }
-                        connectProperty(propertyWidget);
-                    }
-                }
+                PropertyWidget *propertyWidget = new PropertyGroupWidget(false);
+                propertyWidget->setLinkedProperty(property);
+                connectProperty(propertyWidget);
+                layout->addWidget(propertyWidget);
             }
 
             // TODO get internal size
             widget->setMinimumWidth(_propertyWidget->viewport()->width()-30);
-            widget->setLayout(layoutPanel);
+            widget->setLayout(layout);
 
             _propertyWidget->setWidget(widget);
 
@@ -193,27 +180,11 @@ void CamExplorerWidget::setModeView(const Mode &modeView)
 
 void CamExplorerWidget::setCamera(Camera *camera)
 {
-    _node = NULL;
     _camera = camera;
     if(_camera)
     {
         _camItemModel->clearAll();
         _camItemModel->addCamera(camera);
-        _camTreeView->expandToDepth(0);
-        _camTreeView->resizeColumnToContents(0);
-
-        //setRootProperty(NULL);
-    }
-}
-
-void CamExplorerWidget::setNode(ModelNode *node)
-{
-    _camera = NULL;
-    _node = node;
-    if(_node)
-    {
-        _camItemModel->clearAll();
-        _camItemModel->addNode(_node);
         _camTreeView->expandToDepth(0);
         _camTreeView->resizeColumnToContents(0);
 
@@ -302,6 +273,4 @@ void CamExplorerWidget::update()
     }
     if(_camera)
         setCamera(_camera);
-    if(_node)
-        setNode(_node);
 }
