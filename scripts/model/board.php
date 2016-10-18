@@ -215,6 +215,11 @@ class Board
                 $io_name = (string) $ioXml['name'];
                 $used_ios[$io_name] = $ioXml;
             }
+            foreach ($board_element->ios->iocom as $ioXml)
+            {
+                $io_name = (string) $ioXml['name'];
+                $used_ios[$io_name] = $ioXml;
+            }
         }
         if (isset($this->xml->ios->io))
         {
