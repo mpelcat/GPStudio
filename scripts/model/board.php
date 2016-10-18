@@ -314,115 +314,124 @@ class Board
         // replace default param value directly in .node file
         if (isset($board_element->ios->io))
         {
-            foreach ($board_element->ios->io as $io)
+            $this->redefParam($board_element->ios->io, $node);
+        }
+        if (isset($board_element->ios->iocom))
+        {
+            $this->redefParam($board_element->ios->iocom, $node);
+        }
+    }
+    
+    public function redefParam($ios, $node)
+    {
+        foreach ($ios as $io)
+        {
+            if ($concerned_block = $node->getBlock($io['name']))
             {
-                if ($concerned_block = $node->getBlock($io['name']))
+                // params
+                if (isset($io->params))
                 {
-                    // params
-                    if (isset($io->params))
+                    foreach ($io->params->param as $param)
                     {
-                        foreach ($io->params->param as $param)
+                        if (isset($param['name']) and isset($param['value']))
                         {
-                            if (isset($param['name']) and isset($param['value']))
+                            if ($concerned_param = $concerned_block->getParam((string) $param['name']))
                             {
-                                if ($concerned_param = $concerned_block->getParam((string) $param['name']))
-                                {
-                                    $concerned_param->value = $param['value'];
-                                }
-                                else
-                                {
-                                    warning('parameter ' . $param['name'] . " does not exist", 16, $concerned_block->name);
-                                }
+                                $concerned_param->value = $param['value'];
+                            }
+                            else
+                            {
+                                warning('parameter ' . $param['name'] . " does not exist", 16, $concerned_block->name);
                             }
                         }
                     }
+                }
 
-                    // redef part position
-                    if (isset($io->parts))
+                // redef part position
+                if (isset($io->parts))
+                {
+                    foreach ($io->parts->part as $part)
                     {
-                        foreach ($io->parts->part as $part)
+                        if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
                         {
-                            if (isset($part['name']) and (isset($part['x_pos']) or isset($part['y_pos'])))
+                            if ($concerned_part = $concerned_block->getPart((string) $part['name']))
                             {
-                                if ($concerned_part = $concerned_block->getPart((string) $part['name']))
-                                {
-                                    $concerned_part->x_pos = $part['x_pos'];
-                                    $concerned_part->y_pos = $part['y_pos'];
-                                }
+                                $concerned_part->x_pos = $part['x_pos'];
+                                $concerned_part->y_pos = $part['y_pos'];
                             }
                         }
                     }
+                }
 
-                    // redef properties
-                    if (isset($io->properties))
+                // redef properties
+                if (isset($io->properties))
+                {
+                    foreach ($io->properties->property as $property)
                     {
-                        foreach ($io->properties->property as $property)
+                        if (isset($property['name']) and isset($property['value']))
                         {
-                            if (isset($property['name']) and isset($property['value']))
+                            if ($concerned_property = $concerned_block->getPropertyPath((string) $property['name']))
                             {
-                                if ($concerned_property = $concerned_block->getPropertyPath((string) $property['name']))
-                                {
-                                    $concerned_property->value = $property['value'];
-                                }
-                                else
-                                {
-                                    //warning('property ' . $property['name'] . " does not exist", 16, $concerned_block->name);
-                                }
+                                $concerned_property->value = $property['value'];
                             }
-                            if (isset($property->properties))
+                            else
                             {
-                                foreach ($property->properties->property as $childPropertyXml)
+                                //warning('property ' . $property['name'] . " does not exist", 16, $concerned_block->name);
+                            }
+                        }
+                        if (isset($property->properties))
+                        {
+                            foreach ($property->properties->property as $childPropertyXml)
+                            {
+                                if (isset($childPropertyXml['name']) and isset($childPropertyXml['value']))
                                 {
-                                    if (isset($childPropertyXml['name']) and isset($childPropertyXml['value']))
+                                    if ($concerned_property = $concerned_block->getPropertyPath($property['name'] . '.' . (string) $childPropertyXml['name']))
                                     {
-                                        if ($concerned_property = $concerned_block->getPropertyPath($property['name'] . '.' . (string) $childPropertyXml['name']))
-                                        {
-                                            $concerned_property->value = $childPropertyXml['value'];
-                                        }
-                                        else
-                                        {
-                                            //warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does not exist", 16, $io->name);
-                                        }
+                                        $concerned_property->value = $childPropertyXml['value'];
+                                    }
+                                    else
+                                    {
+                                        //warning('property ' . $property['name'] . '.' . $childPropertyXml['name'] . " does not exist", 16, $io->name);
                                     }
                                 }
                             }
                         }
                     }
+                }
 
-                    // flow size
-                    if (isset($io->flows))
+                // flow size
+                if (isset($io->flows))
+                {
+                    foreach ($io->flows->flow as $flow)
                     {
-                        foreach ($io->flows->flow as $flow)
+                        if (isset($flow['name']) and isset($flow['size']))
                         {
-                            if (isset($flow['name']) and isset($flow['size']))
+                            if ($concerned_flow = $concerned_block->getFlow((string) $flow['name']))
                             {
-                                if ($concerned_flow = $concerned_block->getFlow((string) $flow['name']))
-                                {
-                                    $concerned_flow->size = (int) $flow['size'];
-                                }
-                                else
-                                {
-                                    warning('flow ' . $flow['name'] . " does not exist", 16, $concerned_block->name);
-                                }
+                                $concerned_flow->size = (int) $flow['size'];
+                            }
+                            else
+                            {
+                                warning('flow ' . $flow['name'] . " does not exist", 16, $concerned_block->name);
                             }
                         }
                     }
+                }
 
-                    // clocks
-                    if (isset($io->clocks))
+                // clocks
+                if (isset($io->clocks))
+                {
+                    foreach ($io->clocks->clock as $clock)
                     {
-                        foreach ($io->clocks->clock as $clock)
+                        if (isset($clock['name']) and isset($clock['typical']))
                         {
-                            if (isset($clock['name']) and isset($clock['typical']))
+                            if ($concerned_clock = $concerned_block->getClock((string) $clock['name']))
                             {
-                                if ($concerned_clock = $concerned_block->getClock((string) $clock['name']))
-                                {
-                                    $concerned_clock->typical = Clock::convert($clock['typical']);
-                                }
-                                else
-                                {
-                                    warning('clock ' . $clock['name'] . " does not exist", 16, $concerned_block->name);
-                                }
+                                $concerned_clock->typical = Clock::convert($clock['typical']);
+                            }
+                            else
+                            {
+                                warning('clock ' . $clock['name'] . " does not exist", 16, $concerned_block->name);
                             }
                         }
                     }
