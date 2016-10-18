@@ -48,6 +48,7 @@ public:
     void setBoard(ModelBoard *board);
 
     bool isValid() const;
+    bool isGeneratedFile() const;
 
     ModelBlock *getBlock(const QString &blockName) const;
     QList<ModelBlock *> &blocks();
@@ -78,6 +79,7 @@ public:
 protected:
     QString _name;
     bool _valid;
+    bool _generatedFile;
 
     ModelBoard *_board;
 

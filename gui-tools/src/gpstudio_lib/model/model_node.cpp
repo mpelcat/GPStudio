@@ -33,6 +33,7 @@ ModelNode::ModelNode(const QString &name)
 {
     _valid = false;
     _board = NULL;
+    _generatedFile = false;
 }
 
 ModelNode::~ModelNode()
@@ -258,6 +259,11 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
     return element;
 }
 
+bool ModelNode::isGeneratedFile() const
+{
+    return _generatedFile;
+}
+
 bool ModelNode::saveToFile(const QString &fileName)
 {
     QDomDocument doc;
@@ -281,6 +287,7 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
 {
     ModelNode *node = new ModelNode();
     node->setName(domElement.attribute("name","no_name"));
+    node->_generatedFile = true;
 
     QDomNode n = domElement.firstChild();
     while(!n.isNull())
@@ -307,6 +314,7 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
 {
     ModelNode *node = new ModelNode();
     node->setName(domElement.attribute("name","no_name"));
+    node->_generatedFile = false;
 
     QDomNode n = domElement.firstChild();
     while(!n.isNull())

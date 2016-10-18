@@ -90,6 +90,8 @@ void Camera::setNode(ModelNode *node)
 
     foreach (ModelBlock *modelBlock, _modelNode->blocks())
         addBlock(modelBlock);
+    if(node->isGeneratedFile())
+        _paramsBlocks.setMode(Property::Run);
 
     ModelIOCom *iOCom = node->getIOCom();
     if(iOCom)
