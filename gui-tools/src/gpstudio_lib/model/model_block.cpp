@@ -42,6 +42,7 @@ ModelBlock::ModelBlock(const ModelBlock &modelBlock)
     _inLib = modelBlock._inLib;
     _driver = modelBlock._driver;
     _categ = modelBlock._categ;
+    _path = modelBlock._path;
     _addrAbs = modelBlock._addrAbs;
     _sizeAddrRel = modelBlock._sizeAddrRel;
     _masterCount = modelBlock._masterCount;
@@ -534,10 +535,7 @@ QStringList ModelBlock::getPdfDoc() const
     {
         ModelFile *file = this->files().at(i);
         if(file->group()=="doc" && file->name().endsWith(".pdf"))
-        {
-            docFile.append(file->path());
-            qDebug()<<file->path();
-        }
+            docFile.append(_path + "/" + file->path());
     }
 
     return docFile;

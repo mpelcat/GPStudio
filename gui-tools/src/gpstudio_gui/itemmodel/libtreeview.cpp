@@ -88,7 +88,7 @@ void LibTreeView::keyPressEvent(QKeyEvent *event)
         if(docFile.isEmpty())
             return;
 
-        PdfViewer *pdfViewer = new PdfViewer(this, docFile.first());
+        PdfViewer *pdfViewer = new PdfViewer(NULL, docFile.first());
         pdfViewer->show();
     }
 }

@@ -74,6 +74,8 @@ const QString &BlockLib::path() const
 void BlockLib::setPath(const QString &path)
 {
     _path = path;
+    if(_modelBlock)
+        _modelBlock->setPath(path);
 }
 
 const QString &BlockLib::configFile() const
@@ -112,7 +114,9 @@ BlockLib *BlockLib::readFromFile(const QString &fileName)
         {
             blockLib = BlockLib::fromDomElement(doc.documentElement());
             if(blockLib)
+            {
                 blockLib->setPath(QFileInfo(file).absolutePath());
+            }
         }
         file.close();
     }
