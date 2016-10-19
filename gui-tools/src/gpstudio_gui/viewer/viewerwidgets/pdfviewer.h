@@ -21,17 +21,26 @@
 #ifndef PDFVIEWER_H
 #define PDFVIEWER_H
 
-#include <QWidget>
+#include "gpstudio_gui_common.h"
 
-class PdfViewer : public QWidget
+#include <QLabel>
+
+namespace Poppler {
+    class Document;
+}
+
+class GPSTUDIO_GUI_EXPORT PdfViewer : public QLabel
 {
     Q_OBJECT
 public:
-    explicit PdfViewer(QWidget *parent = 0);
-
-signals:
+    explicit PdfViewer(QWidget *parent = 0, QString file = QString());
 
 public slots:
+    void showPage(int page);
+
+private:
+    int _currentPage;
+    Poppler::Document *_doc;
 };
 
 #endif // PDFVIEWER_H

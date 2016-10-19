@@ -148,6 +148,8 @@ public:
     void addParts(const QList<ModelComponentPart *> &parts);
     ModelComponentPart *getPart(const QString &name) const;
 
+    QStringList getPdfDoc() const;
+
 public:
     static ModelBlock *readFromFile(const QString &fileName);
 

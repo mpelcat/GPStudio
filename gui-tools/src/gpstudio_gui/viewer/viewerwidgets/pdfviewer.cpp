@@ -21,14 +21,27 @@
 #include "pdfviewer.h"
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
- //#include <poppler/qt5/poppler-qt5.h>
+ #include <poppler/qt5/poppler-qt5.h>
 #else
- //#include <poppler/qt4/poppler-qt4.h>
+ #include <poppler/qt4/poppler-qt4.h>
 #endif
 
-PdfViewer::PdfViewer(QWidget *parent)
-    : QWidget(parent)
+PdfViewer::PdfViewer(QWidget *parent, QString file)
+    : QLabel(parent)
 {
-    /*Poppler::Document *doc = Poppler::Document::load(path);
-    doc->page(0)->renderToPainter();*/
+    _currentPage = 0;
+
+    _doc = Poppler::Document::load(file);
+    showPage(0);
+}
+
+void PdfViewer::showPage(int page)
+{
+    if(_doc->page(page))
+    {
+        QImage image = _doc->page(_currentPage)->renderToImage(
+                /*scaleFactor **/ physicalDpiX(),
+                /*scaleFactor **/ physicalDpiY());
+        setPixmap(QPixmap::fromImage(image));
+    }
 }

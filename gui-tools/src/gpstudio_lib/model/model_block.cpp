@@ -526,6 +526,23 @@ ModelComponentPart *ModelBlock::getPart(const QString &name) const
     return NULL;
 }
 
+QStringList ModelBlock::getPdfDoc() const
+{
+    QStringList docFile;
+
+    for(int i=0; i<this->files().size(); i++)
+    {
+        ModelFile *file = this->files().at(i);
+        if(file->group()=="doc" && file->name().endsWith(".pdf"))
+        {
+            docFile.append(file->path());
+            qDebug()<<file->path();
+        }
+    }
+
+    return docFile;
+}
+
 ModelBlock *ModelBlock::readFromFile(const QString &fileName)
 {
     QDomDocument doc;
