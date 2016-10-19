@@ -1,8 +1,11 @@
 
 all: doc gui-tools
 
-doc: FORCE
+doc: docip FORCE
 	cd docsrc/ && make -f Makefile
+
+docip: FORCE
+	cd support/ && make -f Makefile
 
 distrib: doc FORCE
 	cd distrib/ && make -f Makefile
