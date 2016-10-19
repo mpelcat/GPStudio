@@ -18,18 +18,36 @@
 **
 ****************************************************************************/
 
-#ifndef PROPERTYWIDGETS_H
-#define PROPERTYWIDGETS_H
+#ifndef PROPERTYCLOCKWIDGET_H
+#define PROPERTYCLOCKWIDGET_H
+
+#include "gpstudio_gui_common.h"
 
 #include "propertywidget.h"
-#include "propertygroupwidget.h"
-#include "propertyintwidget.h"
-#include "propertysintwidget.h"
-#include "propertyclockwidget.h"
-#include "propertystringwidget.h"
-#include "propertyboolwidget.h"
-#include "propertyenumwidget.h"
-#include "propertymatrixwidget.h"
 
-#endif // PROPERTYWIDGETS_H
+class QLineEdit;
 
+class GPSTUDIO_GUI_EXPORT PropertyClockWidget : public PropertyWidget
+{
+    Q_OBJECT
+public:
+    PropertyClockWidget();
+    virtual ~PropertyClockWidget();
+
+    Type type() const;
+
+protected:
+    virtual void createWidget();
+    virtual void destroyWidget();
+
+public slots:
+    virtual void setValue(QVariant value);
+
+protected slots:
+    virtual void wrapValue();
+
+private:
+    QLineEdit *_lineEdit;
+};
+
+#endif // PROPERTYCLOCKWIDGET_H

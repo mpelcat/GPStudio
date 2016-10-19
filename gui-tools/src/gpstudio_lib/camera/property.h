@@ -37,6 +37,7 @@ class Camera;
 class ModelProperty;
 class ModelFlow;
 class ModelBlock;
+class ModelClock;
 
 class GPSTUDIO_LIB_EXPORT Property : public QObject
 {
@@ -66,7 +67,7 @@ public:
     const QMap<QString, PropertyEnum *> &enumsMap() const;
     const QList<PropertyEnum *> enums() const;
 
-    enum Type {Group, Int, SInt, Bool, StringType, Enum, Matrix, FlowType, BlockType, String, FlowDataType};
+    enum Type {Group, Int, SInt, Bool, StringType, Enum, Matrix, FlowType, BlockType, String, FlowDataType, Clock};
     Type type() const;
     QVariant::Type variantType() const;
 
@@ -119,6 +120,7 @@ public:
     static Property *fromModelFlow(const ModelFlow *modelFlow);
     static Property *fromModelBlock(const ModelBlock *modelBlock);
     static Property *fromModelParam(const ModelParam *modelParam);
+    static Property *fromModelClock(const ModelClock *modelClock);
 
 protected:
     void setMin(const QVariant &min);

@@ -43,6 +43,7 @@ SOURCES += \
     propertywidgets/propertygroupwidget.cpp \
     propertywidgets/propertyintwidget.cpp \
     propertywidgets/propertysintwidget.cpp \
+    propertywidgets/propertyclockwidget.cpp \
     propertywidgets/propertystringwidget.cpp \
     propertywidgets/propertyboolwidget.cpp \
     propertywidgets/propertyenumwidget.cpp \
@@ -93,6 +94,7 @@ HEADERS  += \
     propertywidgets/propertygroupwidget.h \
     propertywidgets/propertyintwidget.h \
     propertywidgets/propertysintwidget.h \
+    propertywidgets/propertyclockwidget.h \
     propertywidgets/propertystringwidget.h \
     propertywidgets/propertyboolwidget.h \
     propertywidgets/propertyenumwidget.h \

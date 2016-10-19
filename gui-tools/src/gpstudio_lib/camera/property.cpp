@@ -477,3 +477,15 @@ Property *Property::fromModelParam(const ModelParam *modelParam)
 
     return propertyParam;
 }
+
+Property *Property::fromModelClock(const ModelClock *modelClock)
+{
+    Property *propertyParam = new Property(modelClock->name());
+    propertyParam->setCaption(modelClock->name());
+    propertyParam->setType(Clock);
+    propertyParam->setValue(modelClock->typical());
+    propertyParam->_fixed = true;
+    propertyParam->_const = true;
+
+    return propertyParam;
+}

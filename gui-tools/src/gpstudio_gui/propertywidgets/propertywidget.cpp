@@ -79,6 +79,9 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
     case Property::SInt:
         widget = new PropertySIntWidget();
         break;
+    case Property::Clock:
+        widget = new PropertyClockWidget();
+        break;
     case Property::Bool:
         widget = new PropertyBoolWidget();
         break;
