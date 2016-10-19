@@ -634,19 +634,17 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
                     part->setPos(nodePart->pos());
                 }
             }
-            /*if(e.tagName()=="properties")
+            if(e.tagName()=="properties")
             {
-                foreach(ModelProperty *nodePart, ModelComponentPart::listFromNodeGenerated(e))
+                foreach(ModelProperty *nodeProperty, ModelProperty::listFromNodeGenerated(e))
                 {
-                    ModelComponentPart *part = block->getPart(nodePart->name());
-                    if(!part)
+                    ModelProperty *property = block->getProperty(nodeProperty->name());
+                    if(property)
                     {
-                        part = nodePart;
-                        block->addPart(part);
+                        property->setValue(nodeProperty->value());
                     }
-                    part->setPos(nodePart->pos());
                 }
-            }*/
+            }
         }
         n = n.nextSibling();
     }
