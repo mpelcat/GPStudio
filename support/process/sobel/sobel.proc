@@ -8,7 +8,6 @@
 		</svg>
     </part>
   </parts>
-  
   <infos>
     <info name="author" value="Edouard Hendrickx"/>
     <info name="email" value="edouard.hendrickx@univ-bpclermont.fr"/>
@@ -16,19 +15,18 @@
     <info name="revision" value="1.0"/>
     <info name="releasedate" value="2016-09-25"/>
   </infos>
-  
   <files>
     <file name="sobel.proc" type="proc" group="blockdef" path="sobel.proc"/>
     <file name="sobel.vhd" type="vhdl" group="hdl" path="hdl/sobel.vhd"/>
+    <file name="sobel.pdf" type="pdf" group="doc" path="doc/sobel.tex"/>
+    <file name="sobel.pdf" type="pdf" group="doc" path="doc/sobel.pdf"/>
     <file name="sobel_process.vhd" type="vhdl" group="hdl" path="hdl/sobel_process.vhd"/>
     <file name="sobel_slave.vhd" type="vhdl" group="hdl" path="hdl/sobel_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
   </files>
-  
   <resets>
     <reset name="reset_n" group="reset_n" direction="in"/>
   </resets>
-  
   <flows>
     <flow name="in" size="8" type="in"/>
     <flow name="out" size="8" type="out">
@@ -39,23 +37,19 @@
       </properties>
     </flow>
   </flows>
-  
   <params>
     <param name="LINE_WIDTH_MAX" type="int" hard="1" value="1280" desc="maximum line width"/>
-	
     <param name="status_reg" regaddr="0">
       <bitfields>
         <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
       </bitfields>
     </param>
-	
     <param name="widthimg_reg" regaddr="1">
       <bitfields>
         <bitfield name="width" bitfield="15-0" propertymap="in.width.value"/>
       </bitfields>
     </param>
   </params>
-  
   <properties>
     <property name="enable" type="bool" value="1"/>
   </properties>
