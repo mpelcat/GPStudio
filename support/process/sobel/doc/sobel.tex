@@ -2,71 +2,37 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
-\usepackage[frenchb]{babel}
-\usepackage{libertine}
 \usepackage[pdftex]{graphicx}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[FIGTOPCAP]{subfigure} 
-\usepackage{color} 
-\usepackage{listings}
-\usepackage{pdflscape}
-\usepackage{rotating}
-\usepackage[toc,page]{appendix}
-\usepackage{xcolor} 
-\usepackage{enumitem}
-\usepackage{wrapfig}
-\usepackage{epstopdf}
-\usepackage{colortbl}
-\usepackage{lscape}
-\usepackage{framed}
-\usepackage{caption}
-\usepackage[ruled]{algorithm2e}
+\usepackage[FIGTOPCAP]{subfigure}
+\usepackage{color}
 \usepackage[hidelinks]{hyperref}
 
-
-\newcommand{\poubelle}[1]{}
-
-\lstset{
-frame=single,
-rulecolor=\color{black!50},
-backgroundcolor=\color{gray!7},
-}
-
-\definecolor{mygreen}{RGB}{28,172,0}
-\definecolor{mylilas}{RGB}{170,55,241}
-
-%------------------------ En-tête ------------------------
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\usepackage{lastpage}
-\renewcommand\headrulewidth{1pt}
-\fancyhead[C]{}
-\fancyhead[L]{}
-\fancyhead[R]{}
-\renewcommand\footrulewidth{1pt}
-\fancyfoot[C]{Page \thepage/\pageref{LastPage}}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-
+\input{../../../../docsrc/gpstudio_doc.tex}
 
 \begin{document}
-
-\poubelle{
-\tableofcontents
-\newpage
-
-\listoffigures
-\newpage
-}
 
 \begin{center}
 \textbf{\huge  \underline{Sobel operator}}
 \end{center}
+\vspace{0.5cm}
 
-\vspace{0.75cm}
+Sobel operator 3 * 3 use ..... brief
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {\textbf{Sobel}};
+
+\path[connect,<-] ([yshift=0.0cm]bloc.west) -- node{/} node[above]{in} ++(-2cm,0);
+
+\path[connect,->] ([yshift=0.0cm]bloc.east) -- node{/} node[above]{out} ++(2cm,0);
+ ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+
+\end{tikzpicture}
+\end{figure}
 
 \begin{figure}[!h]
 \centering
@@ -77,29 +43,17 @@ backgroundcolor=\color{gray!7},
 \includegraphics[width=5cm]{sobel2.png}}
 \end{figure}
 
-\vspace{0.5cm}
+\section*{Properties}
+\properties{
+enable & bool & Enable the processing \\ 
+}
+
+\section*{Constants}
 
 \section*{Equivalence}
-
 \subsection*{Matlab}
 
-\lstset { %
-    language=Matlab,%
-    %basicstyle=\color{red},
-    breaklines=true,%
-    morekeywords={matlab2tikz},
-    keywordstyle=\color{blue},%
-    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
-    identifierstyle=\color{black},%
-    stringstyle=\color{mylilas},
-    commentstyle=\color{mygreen},%
-    showstringspaces=false,%without this there will be a symbol in the places where there is a space
-    numbers=none,%
-    numberstyle={\tiny \color{black}},% size of the numbers
-    numbersep=9pt, % this defines how far the numbers are from the text
-    emph=[1]{for,end,break, while},emphstyle=[1]\color{blue}, %some words to emphasise
-    %emph=[2]{word1,word2}, emphstyle=[2]{style}, 
-}
+\lstset{language=Matlab}
 \begin{lstlisting}
 %% Matlab - Sobel edge detection
 
@@ -113,23 +67,7 @@ figure, imshow(SOBEL)
 
 \subsection*{OpenCV}
 
-\lstset { %
-    language=Matlab,%
-    %basicstyle=\color{red},
-    breaklines=true,%
-    morekeywords={matlab2tikz},
-    keywordstyle=\color{blue},%
-    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
-    identifierstyle=\color{black},%
-    stringstyle=\color{mylilas},
-    commentstyle=\color{mygreen},%
-    showstringspaces=false,%without this there will be a symbol in the places where there is a space
-    numbers=none,%
-    numberstyle={\tiny \color{black}},% size of the numbers
-    numbersep=9pt, % this defines how far the numbers are from the text
-    emph=[1]{for,end,break, while},emphstyle=[1]\color{blue}, %some words to emphasise
-    %emph=[2]{word1,word2}, emphstyle=[2]{style}, 
-}
+\lstset{language=C++}
 \begin{lstlisting}
 /// OpenCV - Sobel edge detection
 
@@ -145,8 +83,6 @@ figure, imshow(SOBEL)
   addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad );
 
 \end{lstlisting}
-
-\newpage
 
 \section*{Mathematical formalism}
 

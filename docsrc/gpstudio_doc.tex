@@ -65,13 +65,54 @@
 \end{tabular}
 }
 
+% properties table
+\newcommand{\properties}[1]{
+\begin{tabular}{|p{2cm}|p{2cm}|p{9cm}|}
+%\hline 
+\textbf{\textcolor{orange}{Name}} & \textbf{\textcolor{orange}{Type}} & \textbf{\textcolor{orange}{Description}} \\ 
+\hline
+#1
+\hline 
+\end{tabular}
+}
+
 % itemize label style
 \renewcommand\labelitemi{\textcolor{orange}{$\blacktriangleright$}}
 
 % tikz
+\usepackage{tikz}
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows}
 \usetikzlibrary{shadows}
 
 \tikzset{block/.style={draw, text centered, text=orange2, color=orange2, line width=1 pt, fill=orange!10,drop shadow={fill=orange!40}}}
 \tikzset{connect/.style={draw, line width=2 pt}}
+
+% MatLab define
+\usepackage{listings}
+\lstset { %
+    language=Matlab,%
+    %basicstyle=\color{red},
+    breaklines=true,%
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=none,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break, while},emphstyle=[1]\color{blue}, %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style}, 
+}
+
+\lstset{
+frame=single,
+rulecolor=\color{orange2},
+backgroundcolor=\color{orange!3},
+}
+
+\definecolor{mygreen}{RGB}{28,172,0}
+\definecolor{mylilas}{RGB}{170,55,241}

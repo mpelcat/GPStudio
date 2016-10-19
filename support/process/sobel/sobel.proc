@@ -18,7 +18,7 @@
   <files>
     <file name="sobel.proc" type="proc" group="blockdef" path="sobel.proc"/>
     <file name="sobel.vhd" type="vhdl" group="hdl" path="hdl/sobel.vhd"/>
-    <file name="sobel.pdf" type="pdf" group="doc" path="doc/sobel.tex"/>
+    <file name="sobel.tex" type="pdf" group="doc" path="doc/sobel.tex"/>
     <file name="sobel.pdf" type="pdf" group="doc" path="doc/sobel.pdf"/>
     <file name="sobel_process.vhd" type="vhdl" group="hdl" path="hdl/sobel_process.vhd"/>
     <file name="sobel_slave.vhd" type="vhdl" group="hdl" path="hdl/sobel_slave.vhd"/>
