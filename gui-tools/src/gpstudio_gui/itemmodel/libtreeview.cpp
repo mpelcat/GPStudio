@@ -24,6 +24,8 @@
 #include <QDrag>
 #include <QMimeData>
 
+#include "viewer/viewerwidgets/pdfviewer.h"
+
 LibTreeView::LibTreeView(QWidget *parent) :
     QTreeView(parent)
 {
@@ -73,6 +75,22 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     drag->setPixmap(proc->icon().pixmap(32,32));
 
     drag->exec();
+}
+
+void LibTreeView::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_F1)
+    {
+        const BlockLib *proc = _model->blockLib(currentIndex());
+        if(!proc)
+            return;
+        QStringList docFile = proc->modelBlock()->getPdfDoc();
+        if(docFile.isEmpty())
+            return;
+
+        PdfViewer *pdfViewer = new PdfViewer(this, docFile.first());
+        pdfViewer->show();
+    }
 }
 
 void LibTreeView::doubleClickProcess(QModelIndex index)

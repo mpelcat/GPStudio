@@ -37,6 +37,8 @@ PdfViewer::PdfViewer(QWidget *parent, QString file)
 
 void PdfViewer::showPage(int page)
 {
+    if(!_doc)
+        return;
     if(_doc->page(page))
     {
         QImage image = _doc->page(_currentPage)->renderToImage(

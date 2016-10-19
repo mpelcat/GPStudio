@@ -47,6 +47,7 @@ protected slots:
 
 protected:
     void startDrag(Qt::DropActions supportedActions);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     GPNodeProject *_project;

@@ -163,7 +163,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     LIBS += -lpoppler-qt4
 }
 win32: LIBS += -L$$PWD/../../thirdparts/poppler/
-win32: INCLUDEPATH += $$PWD/../../thirdparts/poppler/
+win32: INCLUDEPATH += $$PWD/../../thirdparts/
 
 use_open_cv {
     DEFINES += __USE_OPEN_CV__
