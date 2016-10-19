@@ -185,3 +185,13 @@ QList<ModelFlow *> ModelFlow::listFromNodeGenerated(const QDomElement &domElemen
     }
     return list;
 }
+
+QDomElement ModelFlow::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("flow");
+
+    element.setAttribute("name", _name);
+    element.setAttribute("size", _size);
+
+    return element;
+}

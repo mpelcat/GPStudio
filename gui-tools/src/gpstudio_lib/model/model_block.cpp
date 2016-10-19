@@ -635,16 +635,13 @@ ModelBlock *ModelBlock::fromNodeDef(const QDomElement &domElement, ModelBlock *b
                 }
             }
             if(e.tagName()=="properties")
-            {
-                foreach(ModelProperty *nodeProperty, ModelProperty::listFromNodeGenerated(e))
-                {
-                    ModelProperty *property = block->getProperty(nodeProperty->name());
-                    if(property)
-                    {
-                        property->setValue(nodeProperty->value());
-                    }
-                }
-            }
+                block->redefProperties(ModelProperty::listFromNodeGenerated(e));
+            if(e.tagName()=="clocks")
+                block->redefClocks(ModelClock::listFromNodeGenerated(e));
+            if(e.tagName()=="params")
+                block->redefParams(ModelParam::listFromNodeGenerated(e));
+            if(e.tagName()=="flows")
+                block->redefFlows(ModelFlow::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
@@ -769,6 +766,15 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     if(!paramList.childNodes().isEmpty())
         element.appendChild(paramList);
 
+    QDomElement clockList = doc.createElement("clocks");
+    foreach (ModelClock *clock, _clocks)
+    {
+        if(clock->group().isEmpty() && clock->direction()==ModelClock::In)
+            clockList.appendChild(clock->toXMLElement(doc));
+    }
+    if(!clockList.childNodes().isEmpty())
+        element.appendChild(clockList);
+
     QDomElement propertyList = doc.createElement("properties");
     foreach (ModelProperty *property, _properties)
     {
@@ -776,6 +782,14 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
     }
     if(!propertyList.childNodes().isEmpty())
         element.appendChild(propertyList);
+
+    QDomElement flowList = doc.createElement("flows");
+    foreach (ModelFlow *flow, _flows)
+    {
+        flowList.appendChild(flow->toXMLElement(doc));
+    }
+    if(!flowList.childNodes().isEmpty())
+        element.appendChild(flowList);
 
     QDomElement partList = doc.createElement("parts");
     foreach (ModelComponentPart *part, _parts)
@@ -786,4 +800,45 @@ QDomElement ModelBlock::toXMLElement(QDomDocument &doc, const QDomElement &other
         element.appendChild(partList);
 
     return element;
+}
+
+void ModelBlock::redefParams(QList<ModelParam *> params)
+{
+    foreach(ModelParam *nodeParam, params)
+    {
+        ModelParam *param = getParam(nodeParam->name());
+        if(param)
+            param->setValue(nodeParam->value());
+    }
+}
+
+void ModelBlock::redefProperties(QList<ModelProperty *> properties)
+{
+    foreach(ModelProperty *nodeProperty, properties)
+    {
+        ModelProperty *property = getPropertyPath(nodeProperty->getPath());
+        if(property)
+            property->setValue(nodeProperty->value());
+        redefProperties(nodeProperty->properties());
+    }
+}
+
+void ModelBlock::redefFlows(QList<ModelFlow *> flows)
+{
+    foreach(ModelFlow *nodeFlow, flows)
+    {
+        ModelFlow *flow = getFlow(nodeFlow->name());
+        if(flow)
+            flow->setSize(nodeFlow->size());
+    }
+}
+
+void ModelBlock::redefClocks(QList<ModelClock *> clocks)
+{
+    foreach(ModelClock *nodeClock, clocks)
+    {
+        ModelClock *clock = getClock(nodeClock->name());
+        if(clock)
+            clock->setTypical(nodeClock->typical());
+    }
 }

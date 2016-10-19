@@ -79,6 +79,7 @@ public:
     QList<ModelProperty *> &properties();
     const QList<ModelProperty *> &properties() const;
     void addProperty(ModelProperty *property);
+    void addProperty(QList<ModelProperty *> properties);
     ModelProperty *getProperty(const QString &name) const;
     ModelProperty *getPropertyPath(const QString &path) const;
     QString getPath() const;
@@ -86,6 +87,7 @@ public:
     QList<ModelPropertyEnum *> &propertyEnums();
     const QList<ModelPropertyEnum *> &propertyEnums() const;
     void addPropertyEnum(ModelPropertyEnum *propertyEnum);
+    void addPropertyEnum(QList<ModelPropertyEnum *> propertyEnums);
 
 public:
     static ModelProperty *fromNodeGenerated(const QDomElement &domElement);

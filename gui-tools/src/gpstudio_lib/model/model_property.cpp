@@ -200,6 +200,12 @@ void ModelProperty::addProperty(ModelProperty *property)
     _propertiesMap.insert(property->name(), property);
 }
 
+void ModelProperty::addProperty(QList<ModelProperty *> properties)
+{
+    foreach (ModelProperty *property, properties)
+        addProperty(property);
+}
+
 ModelProperty *ModelProperty::getProperty(const QString &name) const
 {
     QMap<QString, ModelProperty*>::const_iterator localConstFind = _propertiesMap.constFind(name);
@@ -250,6 +256,12 @@ void ModelProperty::addPropertyEnum(ModelPropertyEnum *propertyEnum)
     _propertyEnums.append(propertyEnum);
 }
 
+void ModelProperty::addPropertyEnum(QList<ModelPropertyEnum *> propertyEnums)
+{
+    foreach (ModelPropertyEnum *propertyEnum, propertyEnums)
+        addPropertyEnum(propertyEnum);
+}
+
 ModelProperty *ModelProperty::fromNodeGenerated(const QDomElement &domElement)
 {
     ModelProperty *blockProperty = new ModelProperty();
@@ -274,9 +286,9 @@ ModelProperty *ModelProperty::fromNodeGenerated(const QDomElement &domElement)
         if(!e.isNull())
         {
             if(e.tagName()=="properties")
-                blockProperty->_properties.append(ModelProperty::listFromNodeGenerated(e));
+                blockProperty->addProperty(ModelProperty::listFromNodeGenerated(e));
             if(e.tagName()=="enums")
-                blockProperty->_propertyEnums.append(ModelPropertyEnum::listFromNodeGenerated(e));
+                blockProperty->addPropertyEnum(ModelPropertyEnum::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }

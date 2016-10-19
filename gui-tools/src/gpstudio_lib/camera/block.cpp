@@ -75,6 +75,13 @@ Block *Block::fromModelBlock(ModelBlock *modelBlock)
         }
     }
 
+    // clock
+    foreach (ModelClock *modelClock, modelBlock->clocks())
+    {
+        Property *propertyClock = Property::fromModelClock(modelClock);
+        propertyBlock->addSubProperty(propertyClock);
+    }
+
     return block;
 }
 

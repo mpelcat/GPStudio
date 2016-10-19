@@ -52,6 +52,10 @@ public:
     qint32 typical() const;
     void setTypical(const qint32 &typical);
 
+    enum Direction {In, Out};
+    Direction direction() const;
+    void setDirection(const Direction &direction);
+
     const QString &description() const;
     void setDescription(const QString &description);
 
@@ -61,6 +65,7 @@ public:
 public:
     static ModelClock *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelClock *> listFromNodeGenerated(const QDomElement &domElement);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;
@@ -69,6 +74,7 @@ protected:
     qint32 _min;
     qint32 _max;
     qint32 _typical;
+    Direction _direction;
     QString _description;
 
     ModelBlock *_parent;

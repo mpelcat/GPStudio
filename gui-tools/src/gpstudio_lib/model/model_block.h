@@ -171,15 +171,19 @@ protected:
     QList<ModelFile *> _files;
     QMap<QString, ModelFile*> _filesMap;
 
+    void redefParams(QList<ModelParam *> params);
     QList<ModelParam *> _params;
     QMap<QString, ModelParam*> _paramsMap;
 
+    void redefProperties(QList<ModelProperty *> properties);
     QList<ModelProperty *> _properties;
     QMap<QString, ModelProperty*> _propertiesMap;
 
+    void redefFlows(QList<ModelFlow *> flows);
     QList<ModelFlow *> _flows;
     QMap<QString, ModelFlow*> _flowsMap;
 
+    void redefClocks(QList<ModelClock *> clocks);
     QList<ModelClock *> _clocks;
     QMap<QString, ModelClock*> _clocksMap;
 

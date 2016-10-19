@@ -61,6 +61,7 @@ public:
 public:
     static ModelFlow *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelFlow *> listFromNodeGenerated(const QDomElement &domElement);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;

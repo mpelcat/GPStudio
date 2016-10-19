@@ -22,6 +22,8 @@
 
 #include "model_block.h"
 
+#include <QDebug>
+
 ModelClock::ModelClock(ModelBlock *parent)
     : _parent(parent)
 {
@@ -92,6 +94,16 @@ void ModelClock::setTypical(const qint32 &typical)
     _typical = typical;
 }
 
+ModelClock::Direction ModelClock::direction() const
+{
+    return _direction;
+}
+
+void ModelClock::setDirection(const ModelClock::Direction &direction)
+{
+    _direction = direction;
+}
+
 const QString &ModelClock::description() const
 {
     return _description;
@@ -132,15 +144,30 @@ ModelClock *ModelClock::fromNodeGenerated(const QDomElement &domElement)
     else
         clock->setMin(0);
 
+    QString direction = domElement.attribute("direction","in");
+    if(direction == "in")
+        clock->setDirection(In);
+    else
+        clock->setDirection(Out);
+
     int max = domElement.attribute("max","0").toInt(&ok);
     if(ok)
         clock->setMax(max);
     else
         clock->setMax(0);
 
-    int typical = domElement.attribute("typical","0").toInt(&ok);
+    int mult = 1;
+    QString typicalStr = domElement.attribute("typical","0");
+    if(typicalStr.contains("G", Qt::CaseInsensitive))
+        mult = 1000000000;
+    if(typicalStr.contains("M", Qt::CaseInsensitive))
+        mult = 1000000;
+    if(typicalStr.contains("k", Qt::CaseInsensitive))
+        mult = 1000;
+    typicalStr.replace("GgMmKk","");
+    int typical = typicalStr.toInt(&ok);
     if(ok)
-        clock->setTypical(typical);
+        clock->setTypical(typical * mult);
     else
         clock->setTypical(0);
 
@@ -164,4 +191,14 @@ QList<ModelClock *> ModelClock::listFromNodeGenerated(const QDomElement &domElem
         n = n.nextSibling();
     }
     return list;
+}
+
+QDomElement ModelClock::toXMLElement(QDomDocument &doc)
+{
+    QDomElement element = doc.createElement("clock");
+
+    element.setAttribute("name", _name);
+    element.setAttribute("typical", _typical);
+
+    return element;
 }
