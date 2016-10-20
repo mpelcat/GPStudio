@@ -75,7 +75,7 @@ private:
     void setRootProperty(const Property *property);
 
     QTreeView *_camTreeView;
-    CameraItemModelNoSorted *_camItemModel;
+    CameraItemModel *_camItemModel;
 
     QTreeView *_propertyTreeView;
     PropertyItemModelNoSorted *_propertyItemModel;

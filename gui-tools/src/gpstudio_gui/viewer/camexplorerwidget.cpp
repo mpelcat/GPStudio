@@ -84,8 +84,8 @@ void CamExplorerWidget::setupWidgets()
     splitter->setOrientation(Qt::Vertical);
     layout->addWidget(splitter);
 
-    _camItemModel = new CameraItemModelNoSorted();
-    _camTreeView = new QTreeView();
+    _camTreeView = new QTreeView(this);
+    _camItemModel = new CameraItemModel(this);
     _camTreeView->setModel(_camItemModel);
     _camTreeView->setSortingEnabled(true);
     splitter->addWidget(_camTreeView);
@@ -207,12 +207,12 @@ void CamExplorerWidget::updateRootProperty()
         return;
     }
 
-    QModelIndex localMapToSource = index;/*_camItemModel->mapToSource(index);
+    QModelIndex localMapToSource = _camItemModel->mapToSource(index);
     if(!localMapToSource.isValid())
     {
         setRootProperty(NULL);
         return;
-    }*/
+    }
 
     CameraItem *item = static_cast<CameraItem*>(localMapToSource.internalPointer());
     if(!item)

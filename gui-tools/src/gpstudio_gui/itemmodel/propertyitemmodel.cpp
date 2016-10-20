@@ -23,6 +23,7 @@
 #include <camera/property.h>
 
 #include <QDebug>
+#include <QIcon>
 #include <QStringList>
 
 PropertyItemModelNoSorted::PropertyItemModelNoSorted(QObject *parent)
@@ -173,6 +174,25 @@ QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) con
         default:
             return QVariant();
         }
+    case Qt::DecorationRole:
+        switch (property->type())
+        {
+        case Property::Group:
+        case Property::FlowType:
+        case Property::FlowDataType:
+        case Property::BlockType:
+            return QIcon(":/icons/img/usb.png");
+        case Property::Int:
+        case Property::SInt:
+        case Property::Bool:
+        case Property::String:
+            return property->value();
+        case Property::Enum:
+            foreach (PropertyEnum *penum, property->enums()) enumsList << penum->name();
+            return QVariant(enumsList);
+        case Property::Matrix:
+            return QVariant();
+        }
     }
     return QVariant();
 }
@@ -215,25 +235,27 @@ const Property *PropertyItemModelNoSorted::rootProperty() const
 
 void PropertyItemModelNoSorted::setRootProperty(const Property *rootProperty)
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
     _rootProperty = rootProperty;
     if(_rootProperty)
         connect(_rootProperty, SIGNAL(subPropertyChange()), this, SLOT(updateRoot()));
-    emit layoutChanged();
+    endResetModel();
 }
 
 
 // =============== sorted model ====================
 
 PropertyItemModel::PropertyItemModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-    _modelProperty = new PropertyItemModelNoSorted(parent);
+    _modelProperty = new PropertyItemModelNoSorted(this);
     setSourceModel(_modelProperty);
 }
 
 PropertyItemModel::PropertyItemModel(const Property *property, QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-    _modelProperty = new PropertyItemModelNoSorted(property, parent);
+    _modelProperty = new PropertyItemModelNoSorted(property, this);
     setSourceModel(_modelProperty);
 }
 
@@ -244,7 +266,5 @@ const Property *PropertyItemModel::rootProperty() const
 
 void PropertyItemModel::setRootProperty(const Property *rootProperty)
 {
-    //emit layoutAboutToBeChanged();
     _modelProperty->setRootProperty(rootProperty);
-    //emit layoutChanged();
 }

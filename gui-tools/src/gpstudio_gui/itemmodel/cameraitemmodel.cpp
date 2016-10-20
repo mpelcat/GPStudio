@@ -254,37 +254,42 @@ QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orient
 
 void CameraItemModelNoSorted::addCamera(const Camera *camera)
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
+    resetInternalData();
     _rootItem->append(camera);
-    emit layoutChanged();
+    endResetModel();
 }
 
 void CameraItemModelNoSorted::addBlock(const Block *block)
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
+    resetInternalData();
     _rootItem->append(block);
-    emit layoutChanged();
+    endResetModel();
 }
 
 void CameraItemModelNoSorted::addNode(const ModelNode *node)
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
+    resetInternalData();
     _rootItem->append(node);
-    emit layoutChanged();
+    endResetModel();
 }
 
 void CameraItemModelNoSorted::clearAll()
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
+    resetInternalData();
     _rootItem->clear();
-    emit layoutChanged();
+    endResetModel();
 }
 
 
 // =============== sorted model ====================
 CameraItemModel::CameraItemModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-    _modelCam = new CameraItemModelNoSorted(parent);
+    _modelCam = new CameraItemModelNoSorted(this);
     setSourceModel(_modelCam);
 }
 
@@ -297,14 +302,10 @@ CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
 
 void CameraItemModel::addCamera(const Camera *camera)
 {
-    //emit layoutAboutToBeChanged();
     _modelCam->addCamera(camera);
-    //emit layoutChanged();
 }
 
 void CameraItemModel::clearAll()
 {
-    //emit layoutAboutToBeChanged();
     _modelCam->clearAll();
-    //emit layoutChanged();
 }

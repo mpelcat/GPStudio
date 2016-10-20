@@ -31,6 +31,7 @@ LibTreeView::LibTreeView(QWidget *parent) :
 {
     _model = new LibItemModel(this);
     setModel(_model);
+    setSortingEnabled(true);
 
     setSelectionMode(QAbstractItemView::SingleSelection);
     setDragEnabled(true);
@@ -54,9 +55,10 @@ void LibTreeView::setLib(const Lib *lib)
 {
     _model->setLib(lib);
 
+    sortByColumn(0);
     expandAll();
     resizeColumnToContents(0);
-    resizeColumnToContents(1);
+    setColumnWidth(1, 100);
 }
 
 void LibTreeView::startDrag(Qt::DropActions supportedActions)

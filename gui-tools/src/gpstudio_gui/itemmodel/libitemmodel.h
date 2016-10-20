@@ -24,16 +24,18 @@
 #include "gpstudio_gui_common.h"
 
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 #include <QList>
 
 #include "libitem.h"
 #include "lib_parser/lib.h"
 
-class GPSTUDIO_GUI_EXPORT LibItemModel : public QAbstractItemModel
+class GPSTUDIO_GUI_EXPORT LibItemModelNoSorted : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit LibItemModel(QObject *parent = 0);
+    LibItemModelNoSorted(QObject *parent = 0);
+    explicit LibItemModelNoSorted(const Lib *lib, QObject *parent = 0);
 
     enum Column {
         Name,
@@ -54,6 +56,20 @@ public:
 
 private:
     LibItem *_rootItem;
+};
+
+class GPSTUDIO_GUI_EXPORT LibItemModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    LibItemModel(QObject *parent = 0);
+    explicit LibItemModel(const Lib *lib, QObject *parent = 0);
+
+    void setLib(const Lib *lib);
+    const BlockLib *blockLib(const QModelIndex &index);
+
+private:
+    LibItemModelNoSorted *_modelLibItem;
 };
 
 #endif // LIBITEMMODEL_H

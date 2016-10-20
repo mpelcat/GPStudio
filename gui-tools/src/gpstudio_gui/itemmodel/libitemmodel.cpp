@@ -20,19 +20,26 @@
 
 #include "libitemmodel.h"
 
-LibItemModel::LibItemModel(QObject *parent) :
+LibItemModelNoSorted::LibItemModelNoSorted(QObject *parent) :
     QAbstractItemModel(parent)
 {
     _rootItem = new LibItem("lib");
 }
 
-int LibItemModel::columnCount(const QModelIndex &parent) const
+LibItemModelNoSorted::LibItemModelNoSorted(const Lib *lib, QObject *parent) :
+    QAbstractItemModel(parent)
+{
+    _rootItem = new LibItem("lib");
+    setLib(lib);
+}
+
+int LibItemModelNoSorted::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return ColumnCount;
 }
 
-QVariant LibItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant LibItemModelNoSorted::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(orientation==Qt::Vertical) return QVariant();
     switch (role)
@@ -52,7 +59,7 @@ QVariant LibItemModel::headerData(int section, Qt::Orientation orientation, int 
     return QVariant();
 }
 
-QVariant LibItemModel::data(const QModelIndex &index, int role) const
+QVariant LibItemModelNoSorted::data(const QModelIndex &index, int role) const
 {
     if(_rootItem->count()==0)
         return QVariant();
@@ -95,7 +102,7 @@ QVariant LibItemModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QModelIndex LibItemModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex LibItemModelNoSorted::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
             return QModelIndex();
@@ -114,7 +121,7 @@ QModelIndex LibItemModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
 }
 
-QModelIndex LibItemModel::parent(const QModelIndex &child) const
+QModelIndex LibItemModelNoSorted::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalPointer()==NULL)
         return QModelIndex();
@@ -128,7 +135,7 @@ QModelIndex LibItemModel::parent(const QModelIndex &child) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
-int LibItemModel::rowCount(const QModelIndex &parent) const
+int LibItemModelNoSorted::rowCount(const QModelIndex &parent) const
 {
     if (parent.column() > 0)
             return 0;
@@ -146,7 +153,7 @@ int LibItemModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-Qt::ItemFlags LibItemModel::flags(const QModelIndex &index) const
+Qt::ItemFlags LibItemModelNoSorted::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
@@ -156,9 +163,9 @@ Qt::ItemFlags LibItemModel::flags(const QModelIndex &index) const
         return defaultFlags;
 }
 
-void LibItemModel::setLib(const Lib *lib)
+void LibItemModelNoSorted::setLib(const Lib *lib)
 {
-    emit layoutAboutToBeChanged();
+    beginResetModel();
 
     _rootItem->clear();
     foreach(BlockLib *processLib, lib->processes())
@@ -171,10 +178,10 @@ void LibItemModel::setLib(const Lib *lib)
         libItem->append(processLib);
     }
 
-    emit layoutChanged();
+    endResetModel();
 }
 
-const BlockLib *LibItemModel::blockLib(const QModelIndex &index)
+const BlockLib *LibItemModelNoSorted::blockLib(const QModelIndex &index)
 {
     if(!index.isValid())
         return NULL;
@@ -185,4 +192,31 @@ const BlockLib *LibItemModel::blockLib(const QModelIndex &index)
 
     const BlockLib *processLib = libItem->blocklib();
     return processLib;
+}
+
+
+// =============== sorted model ====================
+
+LibItemModel::LibItemModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
+{
+    _modelLibItem = new LibItemModelNoSorted(this);
+    setSourceModel(_modelLibItem);
+}
+
+LibItemModel::LibItemModel(const Lib *lib, QObject *parent)
+    : QSortFilterProxyModel(parent)
+{
+    _modelLibItem = new LibItemModelNoSorted(lib, this);
+    setSourceModel(_modelLibItem);
+}
+
+void LibItemModel::setLib(const Lib *lib)
+{
+    _modelLibItem->setLib(lib);
+}
+
+const BlockLib *LibItemModel::blockLib(const QModelIndex &index)
+{
+    return _modelLibItem->blockLib(mapToSource(index));
 }
