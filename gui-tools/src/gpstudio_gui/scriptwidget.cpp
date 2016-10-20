@@ -58,6 +58,11 @@ ScriptWidget::~ScriptWidget()
 {
 }
 
+void ScriptWidget::setRootProperty(const Property *property)
+{
+    _lineEdit->setRootProperty(property);
+}
+
 void ScriptWidget::exec()
 {
     _textEdit->appendPlainText("> "+_lineEdit->text());

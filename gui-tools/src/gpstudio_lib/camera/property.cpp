@@ -368,6 +368,7 @@ void Property::addSubProperty(Property *property)
     property->setRow(_subProperties.count());
     _subPropertiesMap.insert(property->name(), property);
     _subProperties.append(property);
+    emit subPropertyChange();
 }
 
 void Property::removeSubProperty(Property *property)
@@ -375,6 +376,7 @@ void Property::removeSubProperty(Property *property)
     _subPropertiesMap.remove(property->name());
     _subProperties.removeOne(property);
     delete property;
+    emit subPropertyChange();
 }
 
 void Property::removeAllSubProperties()

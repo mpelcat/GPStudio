@@ -26,6 +26,8 @@
 #include <QLineEdit>
 #include <QCompleter>
 
+class Property;
+
 class GPSTUDIO_GUI_EXPORT ScriptLineEdit : public QLineEdit
 {
     Q_OBJECT
@@ -33,12 +35,16 @@ public:
     explicit ScriptLineEdit(QWidget *parent = 0);
     virtual ~ScriptLineEdit();
 
+    void setRootProperty(const Property *property);
+
 signals:
     void up();
     void down();
 
+    // QWidget interface
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void focusInEvent(QFocusEvent *e);
 
 public slots:
 

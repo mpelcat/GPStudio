@@ -34,7 +34,7 @@ class GPSTUDIO_GUI_EXPORT PropertyItemModelNoSorted : public QAbstractItemModel
 
 public:
     PropertyItemModelNoSorted(QObject *parent = 0);
-    explicit PropertyItemModelNoSorted(Property *property, QObject *parent = 0);
+    explicit PropertyItemModelNoSorted(const Property *property, QObject *parent = 0);
 
     enum Column {
         Name,
@@ -66,6 +66,9 @@ public:
 
 private:
     const Property *_rootProperty;
+
+protected slots:
+    void updateRoot();
 };
 
 class GPSTUDIO_GUI_EXPORT PropertyItemModel : public QSortFilterProxyModel
@@ -73,7 +76,7 @@ class GPSTUDIO_GUI_EXPORT PropertyItemModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     PropertyItemModel(QObject *parent = 0);
-    explicit PropertyItemModel(Property *property, QObject *parent = 0);
+    explicit PropertyItemModel(const Property *property, QObject *parent = 0);
 
     const Property *rootProperty() const;
     void setRootProperty(const Property *rootProperty);

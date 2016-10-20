@@ -39,6 +39,8 @@ public:
     explicit ScriptWidget(QWidget *parent = 0);
     virtual ~ScriptWidget();
 
+    void setRootProperty(const Property *property);
+
 signals:
 
 public slots:

@@ -258,6 +258,7 @@ void MainWindow::connectCam()
             }
         }
         _cam->registermanager().evalAll();
+        _scriptWidget->setRootProperty(&_cam->rootProperty());
     }
 }
 

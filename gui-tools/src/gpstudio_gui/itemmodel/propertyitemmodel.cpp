@@ -31,7 +31,7 @@ PropertyItemModelNoSorted::PropertyItemModelNoSorted(QObject *parent)
     _rootProperty = NULL;
 }
 
-PropertyItemModelNoSorted::PropertyItemModelNoSorted(Property *property, QObject *parent)
+PropertyItemModelNoSorted::PropertyItemModelNoSorted(const Property *property, QObject *parent)
     : QAbstractItemModel(parent)
 {
     _rootProperty = NULL;
@@ -121,10 +121,14 @@ int PropertyItemModelNoSorted::columnCount(const QModelIndex &parent) const
 
 QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) const
 {
+    if(!index.isValid())
+        return QVariant();
+
     if (!_rootProperty)
         return QVariant();
 
-    if(_rootProperty->subProperties().count()==0) return QVariant();
+    if(_rootProperty->subProperties().count()==0)
+        return QVariant();
 
     Property *property = static_cast<Property*>(index.internalPointer());
 
@@ -145,6 +149,8 @@ QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) con
     case Qt::EditRole:
         switch (index.column())
         {
+        case Name:
+            return QVariant(property->name());
         case Value:
             switch (property->type())
             {
@@ -196,6 +202,12 @@ Qt::ItemFlags PropertyItemModelNoSorted::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
+void PropertyItemModelNoSorted::updateRoot()
+{
+    emit layoutAboutToBeChanged();
+    emit layoutChanged();
+}
+
 const Property *PropertyItemModelNoSorted::rootProperty() const
 {
     return _rootProperty;
@@ -205,6 +217,8 @@ void PropertyItemModelNoSorted::setRootProperty(const Property *rootProperty)
 {
     emit layoutAboutToBeChanged();
     _rootProperty = rootProperty;
+    if(_rootProperty)
+        connect(_rootProperty, SIGNAL(subPropertyChange()), this, SLOT(updateRoot()));
     emit layoutChanged();
 }
 
@@ -217,7 +231,7 @@ PropertyItemModel::PropertyItemModel(QObject *parent)
     setSourceModel(_modelProperty);
 }
 
-PropertyItemModel::PropertyItemModel(Property *property, QObject *parent)
+PropertyItemModel::PropertyItemModel(const Property *property, QObject *parent)
 {
     _modelProperty = new PropertyItemModelNoSorted(property, parent);
     setSourceModel(_modelProperty);

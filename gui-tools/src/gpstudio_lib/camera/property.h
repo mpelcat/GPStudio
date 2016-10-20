@@ -105,6 +105,7 @@ public:
 signals:
     void valueChanged(QVariant value);
     void bitsChanged(uint value);
+    void subPropertyChange();
 
 public slots:
     void setValue(bool value);

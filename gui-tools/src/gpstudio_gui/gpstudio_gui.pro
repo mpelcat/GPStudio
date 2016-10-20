@@ -85,7 +85,8 @@ SOURCES += \
     viewer/viewerwidgets/pdfviewer.cpp \
     viewer/viewerwidgets/layerwidget.cpp \
     compilelogwidget.cpp \
-    viewer/viewerexplorerwidget.cpp
+    viewer/viewerexplorerwidget.cpp \
+    itemmodel/propertycompleter.cpp
 
 HEADERS  += \
     gpstudio_gui_common.h \
@@ -136,7 +137,8 @@ HEADERS  += \
     viewer/viewerwidgets/pdfviewer.h \
     viewer/viewerwidgets/layerwidget.h \
     compilelogwidget.h \
-    viewer/viewerexplorerwidget.h
+    viewer/viewerexplorerwidget.h \
+    itemmodel/propertycompleter.h
 
 RESOURCES += \
     icons.qrc \

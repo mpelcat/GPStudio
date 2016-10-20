@@ -21,34 +21,59 @@
 #include "scriptlineedit.h"
 
 #include <QKeyEvent>
+#include <QAbstractItemView>
+#include <QDebug>
 
 #include "scriptengine/scriptengine.h"
 
 #include <camera/camera.h>
+#include "itemmodel/propertycompleter.h"
 
 ScriptLineEdit::ScriptLineEdit(QWidget *parent) :
     QLineEdit(parent)
 {
+    _completer = NULL;
 }
 
 ScriptLineEdit::~ScriptLineEdit()
 {
 }
 
+void ScriptLineEdit::setRootProperty(const Property *property)
+{
+    _completer = new PropertyCompleter(this, property);
+    _completer->setCompletionMode(QCompleter::PopupCompletion);
+    setCompleter(_completer);
+    _completer->setWidget(this);
+}
+
 void ScriptLineEdit::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() == Qt::Key_Up) emit up();
-    if(event->key() == Qt::Key_Down) emit down();
-
-    QStringList list;
-
-    foreach (Property *property, ScriptEngine::getEngine().rootProperty()->subProperties())
+    if (_completer && _completer->popup()->isVisible())
     {
-        list << property->name();
+        switch (event->key())
+        {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Escape:
+        case Qt::Key_Tab:
+        case Qt::Key_Backtab:
+            event->ignore();
+            return; // let the completer do default behavior
+        default:
+           break;
+       }
     }
 
-    _completer = new QCompleter(list);
-    setCompleter(_completer);
+    if(event->key() == Qt::Key_Up)
+        emit up();
+    if(event->key() == Qt::Key_Down)
+        emit down();
 
     QLineEdit::keyPressEvent(event);
+}
+
+void ScriptLineEdit::focusInEvent(QFocusEvent *e)
+{
+    QLineEdit::focusInEvent(e);
 }
