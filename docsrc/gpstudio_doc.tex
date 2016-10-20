@@ -76,6 +76,18 @@
 \end{tabular}
 }
 
+% constants table
+\newcommand{\constants}[1]{
+\begin{tabular}{|p{5cm}|p{9cm}|}
+%\hline 
+\textbf{\textcolor{orange}{Name}} & \textbf{\textcolor{orange}{Description}} \\ 
+\hline
+#1
+\hline 
+\end{tabular}
+}
+
+
 % itemize label style
 \renewcommand\labelitemi{\textcolor{orange}{$\blacktriangleright$}}
 
@@ -116,3 +128,5 @@ backgroundcolor=\color{orange!3},
 
 \definecolor{mygreen}{RGB}{28,172,0}
 \definecolor{mylilas}{RGB}{170,55,241}
+
+\usepackage{hyperref}
