@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="roberts" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection">
+<process name="roberts" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection with Roberts operator">
   <parts>
     <part name="main">
       <svg width="100" height="115">
@@ -18,6 +18,8 @@
   <files>
     <file name="roberts.proc" type="proc" group="blockdef" path="roberts.proc"/>
     <file name="roberts.vhd" type="vhdl" group="hdl" path="hdl/roberts.vhd"/>
+	<file name="roberts.tex" type="pdf" group="doc" path="hdl/roberts.tex"/>
+	<file name="roberts.pdf" type="pdf" group="doc" path="hdl/roberts.pdf"/>
     <file name="roberts_process.vhd" type="vhdl" group="hdl" path="hdl/roberts_process.vhd"/>
     <file name="roberts_slave.vhd" type="vhdl" group="hdl" path="hdl/roberts_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
