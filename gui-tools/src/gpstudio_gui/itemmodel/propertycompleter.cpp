@@ -1,6 +1,7 @@
 #include "propertycompleter.h"
 
 #include <QDebug>
+#include <QStringList>
 
 PropertyCompleter::PropertyCompleter(QObject *parent, const Property *rootProperty)
     : QCompleter(new PropertyItemModelNoSorted(rootProperty), parent)
