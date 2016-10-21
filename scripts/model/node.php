@@ -21,6 +21,7 @@
 require_once("board.php");
 require_once("block.php");
 require_once("process.php");
+require_once("gpviewer.php");
 
 /**
  * A node in GPStudio is typically a smart camera or a server. It store the list
@@ -213,6 +214,11 @@ class Node
                 $this->addBlock($processBlock);
             }
         }
+
+        if (isset($this->xml->gpviewer))
+        {
+            $this->gpviewer = new GPViewer($this->xml->gpviewer);
+        }
     }
 
     /**
@@ -268,6 +274,12 @@ class Node
                     $xml_element->appendChild($block->getXmlElement($xml, $format));
                 }
             }
+        }
+
+        // gpviewer
+        if (isset($this->gpviewer))
+        {
+            $xml_element->appendChild($this->gpviewer->getXmlElement($xml));
         }
 
         return $xml_element;
