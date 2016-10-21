@@ -23,13 +23,13 @@
 
 #include "gpstudio_gui_common.h"
 
-#include <QLabel>
+#include <QGraphicsView>
 
 namespace Poppler {
     class Document;
 }
 
-class GPSTUDIO_GUI_EXPORT PdfViewer : public QLabel
+class GPSTUDIO_GUI_EXPORT PdfViewer : public QGraphicsView
 {
     Q_OBJECT
 public:
@@ -37,6 +37,16 @@ public:
 
 public slots:
     void showPage(int page);
+    void nextPage();
+    void previousPage();
+    void zoomIn();
+    void zoomOut();
+    void zoomFit();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void wheelEvent(QWheelEvent *event);
+    void setZoomLevel(int step);
 
 private:
     int _currentPage;
