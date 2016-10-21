@@ -27,12 +27,14 @@
 #include "model_ciblock.h"
 #include "model_fiblock.h"
 #include "model_piblock.h"
+#include "model_gpviewer.h"
 
 ModelNode::ModelNode(const QString &name)
     : _name(name)
 {
     _valid = false;
     _board = NULL;
+    _gpViewer = NULL;
     _generatedFile = false;
 }
 
@@ -40,6 +42,10 @@ ModelNode::~ModelNode()
 {
     for(int i=0; i<_blocks.size(); i++)
         delete _blocks[i];
+    if(_board)
+        delete _board;
+    if(_gpViewer)
+        delete _gpViewer;
 }
 
 const QString &ModelNode::name() const
@@ -63,6 +69,18 @@ void ModelNode::setBoard(ModelBoard *board)
         delete _board;
     board->setParent(this);
     _board = board;
+}
+
+ModelGPViewer *ModelNode::gpViewer() const
+{
+    return _gpViewer;
+}
+
+void ModelNode::setGpViewer(ModelGPViewer *gpViewer)
+{
+    if(_gpViewer)
+        delete _gpViewer;
+    _gpViewer = gpViewer;
 }
 
 bool ModelNode::isValid() const
@@ -237,10 +255,8 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
 
     element.setAttribute("name", _name);
 
-    if(_board!=NULL)
-    {
-        element.appendChild(_board->toXMLElement(doc));
-    }
+    if(board()!=NULL)
+        element.appendChild(board()->toXMLElement(doc));
 
     QDomElement processList = doc.createElement("process");
     foreach (ModelBlock *process, blocks())
@@ -255,6 +271,9 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
     ModelFIBlock *fi = getFIBlock();
     if(fi)
         element.appendChild(fi->toXMLElement(doc));
+
+    if(gpViewer()!=NULL)
+        element.appendChild(gpViewer()->toXMLElement(doc));
 
     return element;
 }
@@ -300,6 +319,11 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
                 if(node->board()==NULL)
                     node->setBoard(ModelBoard::fromNodeGenerated(e));
             }
+            if(e.tagName()=="gpviewer")
+            {
+                if(node->gpViewer()==NULL)
+                    node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
+            }
             if(e.tagName()=="blocks")
                 node->addBlock(ModelBlock::listFromNodeGenerated(e));
         }
@@ -330,6 +354,11 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
                     node->addBlock(ModelBoard::listIosFromNodeDef(e));
                 }
             }
+            if(e.tagName()=="gpviewer")
+            {
+                if(node->gpViewer()==NULL)
+                    node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
+            }
             if(e.tagName()=="process")
                 node->addBlock(ModelBlock::listFromNodeDef(e));
             if(e.tagName()=="flow_interconnect")
@@ -341,6 +370,9 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
         }
         n = n.nextSibling();
     }
+
+    if(node->gpViewer()==NULL)
+        node->setGpViewer(new ModelGPViewer());
 
     node->_valid=true;
     return node;

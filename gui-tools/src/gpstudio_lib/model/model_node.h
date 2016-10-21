@@ -34,6 +34,7 @@ class ModelFIBlock;
 class ModelCIBlock;
 class ModelPIBlock;
 class ModelIOCom;
+class ModelGPViewer;
 
 class GPSTUDIO_LIB_EXPORT ModelNode
 {
@@ -46,6 +47,9 @@ public:
 
     ModelBoard *board() const;
     void setBoard(ModelBoard *board);
+
+    ModelGPViewer *gpViewer() const;
+    void setGpViewer(ModelGPViewer *gpViewer);
 
     bool isValid() const;
     bool isGeneratedFile() const;
@@ -82,6 +86,7 @@ protected:
     bool _generatedFile;
 
     ModelBoard *_board;
+    ModelGPViewer *_gpViewer;
 
     QList<ModelBlock *> _blocks;
 };

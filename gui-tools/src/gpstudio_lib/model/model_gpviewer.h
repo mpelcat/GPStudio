@@ -24,7 +24,7 @@ public:
 
 public:
     static ModelGPViewer *fromNodeGenerated(const QDomElement &domElement);
-    virtual QDomElement toXMLElement(QDomDocument &doc);
+    QDomElement toXMLElement(QDomDocument &doc);
 
 protected:
     QString _name;
