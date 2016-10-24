@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="laplacien" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection">
+<process name="laplacian" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection with Laplacian operator">
   <parts>
     <part name="main">
       <svg width="100" height="115">
@@ -18,6 +18,8 @@
   <files>
     <file name="laplacien.proc" type="proc" group="blockdef" path="laplacien.proc"/>
     <file name="laplacien.vhd" type="vhdl" group="hdl" path="hdl/laplacien.vhd"/>
+	<file name="laplacian.tex" type="tex" group="doc" path="doc/laplacian.tex"/>
+	<file name="laplacian.pdf" type="pdf" group="doc" path="doc/laplacian.pdf"/>
     <file name="laplacien_process.vhd" type="vhdl" group="hdl" path="hdl/laplacien_process.vhd"/>
     <file name="laplacien_slave.vhd" type="vhdl" group="hdl" path="hdl/laplacien_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
