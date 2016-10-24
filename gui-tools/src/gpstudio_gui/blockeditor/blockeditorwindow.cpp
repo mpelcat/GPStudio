@@ -24,16 +24,6 @@ BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     setMinimumHeight(600);
 
     setBlock(block);
-
-    BlockLib *process = Lib::getLib().process(_block->driver());
-    if(process)
-        _path = process->path();
-    else
-    {
-        BlockLib *io = Lib::getLib().io(_block->driver());
-        if(io)
-            _path = io->path();
-    }
 }
 
 BlockEditorWindow::~BlockEditorWindow()
@@ -176,6 +166,16 @@ void BlockEditorWindow::setBlock(ModelBlock *block)
     connect(_filesTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(openFile(QModelIndex)));
 
     _filesTreeView->expandAll();
+
+    BlockLib *process = Lib::getLib().process(_block->driver());
+    if(process)
+        _path = process->path();
+    else
+    {
+        BlockLib *io = Lib::getLib().io(_block->driver());
+        if(io)
+            _path = io->path();
+    }
 }
 
 void BlockEditorWindow::about()
