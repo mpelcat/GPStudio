@@ -30,6 +30,7 @@
 
 class Camera;
 class ModelNode;
+class ModelGPViewer;
 
 class GPSTUDIO_GUI_EXPORT CameraItemModelNoSorted : public QAbstractItemModel
 {
@@ -44,9 +45,10 @@ public:
         ColumnCount
     };
 
-    void addCamera(const Camera *camera);
-    void addBlock(const Block *block);
-    void addNode(const ModelNode *node);
+    void setCamera(const Camera *camera);
+    void setBlock(const Block *block);
+    void setNode(const ModelNode *node);
+    void setViewer(const ModelGPViewer *gpViewer);
     void clearAll();
 
     // QAbstractItemModel interface
@@ -74,7 +76,10 @@ public:
     explicit CameraItemModel(QObject *parent = 0);
     CameraItemModel(Camera *camera, QObject *parent = 0);
 
-    void addCamera(const Camera *camera);
+    void setCamera(const Camera *camera);
+    void setBlock(const Block *block);
+    void setNode(const ModelNode *node);
+    void setViewer(const ModelGPViewer *gpViewer);
     void clearAll();
 
 private:

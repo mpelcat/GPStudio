@@ -24,6 +24,7 @@
 #include "gpstudio_gui_common.h"
 
 #include <QList>
+#include <QVariant>
 
 class Camera;
 class Block;
@@ -31,17 +32,23 @@ class Flow;
 class ModelNode;
 class ModelBlock;
 class ModelFlow;
+class ModelGPViewer;
+class ModelViewer;
+class ModelViewerFlow;
 
 class GPSTUDIO_GUI_EXPORT CameraItem
 {
 public:
     CameraItem();
     CameraItem(const Camera *camera);
-    CameraItem(const ModelNode *node);
     CameraItem(const Block *block);
-    CameraItem(const ModelBlock *block);
     CameraItem(const Flow *flow);
+    CameraItem(const ModelNode *node);
+    CameraItem(const ModelBlock *block);
     CameraItem(const ModelFlow *flow);
+    CameraItem(const ModelGPViewer *gpViewer);
+    CameraItem(const ModelViewer *viewer);
+    CameraItem(const ModelViewerFlow *viewerFlow);
     ~CameraItem();
 
     enum Type {
@@ -53,6 +60,10 @@ public:
         ModelBlockType,
         ModelFlowType,
 
+        ModelGPViewerType,
+        ModelViewerType,
+        ModelViewerFlowType,
+
         NullType
     };
 
@@ -61,26 +72,38 @@ public:
     const Camera *camera() const;
     const Block *block() const;
     const Flow *flow() const;
+
     const ModelNode *modelNode() const;
     const ModelBlock *modelBlock() const;
     const ModelFlow *modelFlow() const;
 
+    const ModelGPViewer *modelGPViewer() const;
+    const ModelViewer *modelViewer() const;
+    const ModelViewerFlow *modelViewerFlow() const;
+
     const QList<CameraItem*> &childrens() const;
     const CameraItem *children(int i) const;
     int count() const;
+    void clear();
 
     CameraItem *append(const Camera *camera);
-    CameraItem *append(const ModelNode *node);
     CameraItem *append(const Block *block);
-    CameraItem *append(const ModelBlock *block);
     CameraItem *append(const Flow *flow);
+
+    CameraItem *append(const ModelNode *node);
+    CameraItem *append(const ModelBlock *block);
     CameraItem *append(const ModelFlow *flow);
 
-    void clear();
+    CameraItem *append(const ModelGPViewer *gpViewer);
+    CameraItem *append(const ModelViewer *viewer);
+    CameraItem *append(const ModelViewerFlow *viewerFlow);
 
     int row();
     void *ptr() const;
     CameraItem *parent() const;
+
+    // std interface
+    QVariant value(int column, int role) const;
 
 protected:
     Type _type;

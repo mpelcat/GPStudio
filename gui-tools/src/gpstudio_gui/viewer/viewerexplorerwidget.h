@@ -47,7 +47,10 @@ private:
     void setupWidgets();
 
     QTreeView *_flowTreeView;
-    CameraItemModelNoSorted *_flowItemModel;
+    CameraItemModel *_flowItemModel;
+
+    QTreeView *_viewerTreeView;
+    CameraItemModel *_viewerItemModel;
 
     GPNodeProject *_project;
 };

@@ -21,6 +21,15 @@
 #include "cameraitem.h"
 
 #include "camera/camera.h"
+#include "cameracom.h"
+
+#include "cameraitemmodel.h"
+
+#include "model/model_gpviewer.h"
+#include "model/model_viewer.h"
+#include "model/model_viewerflow.h"
+
+#include <QIcon>
 
 CameraItem::CameraItem()
 {
@@ -62,6 +71,24 @@ CameraItem::CameraItem(const ModelFlow *flow)
 {
     _type = ModelFlowType;
     _ptr = flow;
+}
+
+CameraItem::CameraItem(const ModelGPViewer *gpViewer)
+{
+    _type = ModelGPViewerType;
+    _ptr = gpViewer;
+}
+
+CameraItem::CameraItem(const ModelViewer *viewer)
+{
+    _type = ModelViewerType;
+    _ptr = viewer;
+}
+
+CameraItem::CameraItem(const ModelViewerFlow *viewerFlow)
+{
+    _type = ModelViewerFlowType;
+    _ptr = viewerFlow;
 }
 
 CameraItem::~CameraItem()
@@ -113,6 +140,27 @@ const ModelFlow *CameraItem::modelFlow() const
 {
     if(_type==ModelFlowType)
         return static_cast<const ModelFlow*>(_ptr);
+    return NULL;
+}
+
+const ModelGPViewer *CameraItem::modelGPViewer() const
+{
+    if(_type==ModelGPViewerType)
+        return static_cast<const ModelGPViewer*>(_ptr);
+    return NULL;
+}
+
+const ModelViewer *CameraItem::modelViewer() const
+{
+    if(_type==ModelViewerType)
+        return static_cast<const ModelViewer*>(_ptr);
+    return NULL;
+}
+
+const ModelViewerFlow *CameraItem::modelViewerFlow() const
+{
+    if(_type==ModelViewerFlowType)
+        return static_cast<const ModelViewerFlow*>(_ptr);
     return NULL;
 }
 
@@ -215,6 +263,39 @@ CameraItem *CameraItem::append(const ModelFlow *flow)
     return item;
 }
 
+CameraItem *CameraItem::append(const ModelGPViewer *gpViewer)
+{
+    foreach (ModelViewer *viewer, gpViewer->viewers())
+    {
+        append(viewer);
+    }
+    return this;
+}
+
+CameraItem *CameraItem::append(const ModelViewer *viewer)
+{
+    CameraItem *item = new CameraItem(viewer);
+    item->_parent = this;
+    item->_row = _childrens.count();
+
+    foreach (ModelViewerFlow *viewer, viewer->viewerFlows())
+    {
+        item->append(viewer);
+    }
+
+    _childrens.append(item);
+    return item;
+}
+
+CameraItem *CameraItem::append(const ModelViewerFlow *viewerFlow)
+{
+    CameraItem *item = new CameraItem(viewerFlow);
+    item->_parent = this;
+    item->_row = _childrens.count();
+    _childrens.append(item);
+    return item;
+}
+
 void CameraItem::clear()
 {
     _childrens.clear();
@@ -233,4 +314,170 @@ void *CameraItem::ptr() const
 CameraItem *CameraItem::parent() const
 {
     return _parent;
+}
+
+QVariant CameraItem::value(int column, int role) const
+{
+    switch (type())
+    {
+    case CameraItem::CameraType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                if(camera()->node())
+                    return QVariant(camera()->node()->name());
+                else
+                    return QVariant();
+            case CameraItemModelNoSorted::Value:
+                if(camera()->isConnected())
+                    return QVariant(camera()->com()->info().name());
+                else
+                    return QVariant("Not connected");
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(column==0)
+            {
+                return QIcon(":/icons/img/usb.png");
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelNodeType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelNode()->name());
+            case CameraItemModelNoSorted::Value:
+                return QVariant("");
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(column==0)
+            {
+                return QIcon(":/icons/img/usb.png");
+            }
+        }
+        return QVariant();
+    case CameraItem::BlockType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(block()->name());
+            default:
+                return QVariant(block()->modelBlock()->driver());
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelBlockType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelBlock()->name());
+            default:
+                return QVariant(modelBlock()->driver());
+            }
+        }
+        return QVariant();
+    case CameraItem::FlowType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(flow()->name());
+            case CameraItemModelNoSorted::Value:
+                return QVariant(flow()->type()==Flow::Input ? "in" : "out");
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(column==0)
+            {
+                if(flow()->type()==Flow::Input)
+                    return QIcon(":/icons/img/flow-in.png");
+                else
+                    return QIcon(":/icons/img/flow-out.png");
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelFlowType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelFlow()->name());
+            case CameraItemModelNoSorted::Value:
+                return QVariant(modelFlow()->type());
+            default:
+                return QVariant();
+            }
+        case Qt::DecorationRole:
+            if(column==0)
+            {
+                if(modelFlow()->type()=="in")
+                    return QIcon(":/icons/img/flow-in.png");
+                else
+                    return QIcon(":/icons/img/flow-out.png");
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelGPViewerType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelGPViewer()->name());
+            default:
+                return QVariant();
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelViewerType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelViewer()->name());
+            default:
+                return QVariant();
+            }
+        }
+        return QVariant();
+    case CameraItem::ModelViewerFlowType:
+        switch (role)
+        {
+        case Qt::DisplayRole:
+            switch (column)
+            {
+            case CameraItemModelNoSorted::Name:
+                return QVariant(modelGPViewer()->name());
+            default:
+                return QVariant();
+            }
+        }
+        return QVariant();
+    default:
+        return QVariant();
+    }
 }

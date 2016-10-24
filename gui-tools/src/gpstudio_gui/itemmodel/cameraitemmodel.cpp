@@ -38,7 +38,7 @@ CameraItemModelNoSorted::CameraItemModelNoSorted(Camera *camera, QObject *parent
     : QAbstractItemModel(parent)
 {
     _rootItem = new CameraItem();
-    addCamera(camera);
+    setCamera(camera);
 }
 
 QModelIndex CameraItemModelNoSorted::index(int row, int column, const QModelIndex &parent) const
@@ -100,136 +100,15 @@ int CameraItemModelNoSorted::columnCount(const QModelIndex &parent) const
 
 QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
 {
+    if(!index.isValid())
+        return QVariant();
+
     if(_rootItem->count()==0)
         return QVariant();
 
     CameraItem *item = static_cast<CameraItem*>(index.internalPointer());
-    // ============== cam mode ==============
-    switch (item->type())
-    {
-    case CameraItem::CameraType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                if(item->camera()->node())
-                    return QVariant(item->camera()->node()->name());
-                else
-                    return QVariant();
-            case Value:
-                if(item->camera()->isConnected())
-                    return QVariant(item->camera()->com()->info().name());
-                else
-                    return QVariant("Not connected");
-            default:
-                return QVariant();
-            }
-        case Qt::DecorationRole:
-            if(index.column()==0)
-            {
-                return QIcon(":/icons/img/usb.png");
-            }
-        }
-        return QVariant();
-    case CameraItem::ModelNodeType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                return QVariant(item->modelNode()->name());
-            case Value:
-                return QVariant("");
-            default:
-                return QVariant();
-            }
-        case Qt::DecorationRole:
-            if(index.column()==0)
-            {
-                return QIcon(":/icons/img/usb.png");
-            }
-        }
-        return QVariant();
-    case CameraItem::BlockType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                return QVariant(item->block()->name());
-            default:
-                return QVariant(item->block()->modelBlock()->driver());
-            }
-        }
-        return QVariant();
-    case CameraItem::ModelBlockType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                return QVariant(item->modelBlock()->name());
-            default:
-                return QVariant(item->modelBlock()->driver());
-            }
-        }
-        return QVariant();
-    case CameraItem::FlowType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                return QVariant(item->flow()->name());
-            case Value:
-                return QVariant(item->flow()->type()==Flow::Input ? "in" : "out");
-            default:
-                return QVariant();
-            }
-        case Qt::DecorationRole:
-            if(index.column()==0)
-            {
-                if(item->flow()->type()==Flow::Input)
-                    return QIcon(":/icons/img/flow-in.png");
-                else
-                    return QIcon(":/icons/img/flow-out.png");
-            }
-        }
-        return QVariant();
-    case CameraItem::ModelFlowType:
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            switch (index.column())
-            {
-            case Name:
-                return QVariant(item->modelFlow()->name());
-            case Value:
-                return QVariant(item->modelFlow()->type());
-            default:
-                return QVariant();
-            }
-        case Qt::DecorationRole:
-            if(index.column()==0)
-            {
-                if(item->modelFlow()->type()=="in")
-                    return QIcon(":/icons/img/flow-in.png");
-                else
-                    return QIcon(":/icons/img/flow-out.png");
-            }
-        }
-        return QVariant();
-    default:
-        return QVariant();
-    }
 
-    return QVariant();
+    return item->value(index.column(), role);
 }
 
 QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orientation, int role) const
@@ -252,7 +131,7 @@ QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-void CameraItemModelNoSorted::addCamera(const Camera *camera)
+void CameraItemModelNoSorted::setCamera(const Camera *camera)
 {
     beginResetModel();
     resetInternalData();
@@ -260,19 +139,30 @@ void CameraItemModelNoSorted::addCamera(const Camera *camera)
     endResetModel();
 }
 
-void CameraItemModelNoSorted::addBlock(const Block *block)
+void CameraItemModelNoSorted::setBlock(const Block *block)
 {
     beginResetModel();
     resetInternalData();
+    _rootItem->clear();
     _rootItem->append(block);
     endResetModel();
 }
 
-void CameraItemModelNoSorted::addNode(const ModelNode *node)
+void CameraItemModelNoSorted::setNode(const ModelNode *node)
 {
     beginResetModel();
     resetInternalData();
+    _rootItem->clear();
     _rootItem->append(node);
+    endResetModel();
+}
+
+void CameraItemModelNoSorted::setViewer(const ModelGPViewer *gpViewer)
+{
+    beginResetModel();
+    resetInternalData();
+    _rootItem->clear();
+    _rootItem->append(gpViewer);
     endResetModel();
 }
 
@@ -300,9 +190,24 @@ CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
     //setFilterWildcard("pro*");
 }
 
-void CameraItemModel::addCamera(const Camera *camera)
+void CameraItemModel::setCamera(const Camera *camera)
 {
-    _modelCam->addCamera(camera);
+    _modelCam->setCamera(camera);
+}
+
+void CameraItemModel::setBlock(const Block *block)
+{
+    _modelCam->setBlock(block);
+}
+
+void CameraItemModel::setNode(const ModelNode *node)
+{
+    _modelCam->setNode(node);
+}
+
+void CameraItemModel::setViewer(const ModelGPViewer *gpViewer)
+{
+    _modelCam->setViewer(gpViewer);
 }
 
 void CameraItemModel::clearAll()

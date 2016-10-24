@@ -184,7 +184,7 @@ void CamExplorerWidget::setCamera(Camera *camera)
     if(_camera)
     {
         _camItemModel->clearAll();
-        _camItemModel->addCamera(camera);
+        _camItemModel->setCamera(camera);
         _camTreeView->expandToDepth(0);
         _camTreeView->resizeColumnToContents(0);
 
