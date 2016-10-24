@@ -18,8 +18,8 @@
   <files>
     <file name="roberts.proc" type="proc" group="blockdef" path="roberts.proc"/>
     <file name="roberts.vhd" type="vhdl" group="hdl" path="hdl/roberts.vhd"/>
-	<file name="roberts.tex" type="pdf" group="doc" path="hdl/roberts.tex"/>
-	<file name="roberts.pdf" type="pdf" group="doc" path="hdl/roberts.pdf"/>
+	<file name="roberts.tex" type="pdf" group="doc" path="doc/roberts.tex"/>
+	<file name="roberts.pdf" type="pdf" group="doc" path="doc/roberts.pdf"/>
     <file name="roberts_process.vhd" type="vhdl" group="hdl" path="hdl/roberts_process.vhd"/>
     <file name="roberts_slave.vhd" type="vhdl" group="hdl" path="hdl/roberts_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
