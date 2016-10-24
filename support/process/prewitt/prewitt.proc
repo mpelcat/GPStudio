@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="prewitt" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection">
+<process name="prewitt" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection with Prewitt operator">
   <parts>
     <part name="main">
       <svg width="100" height="115">
@@ -18,6 +18,8 @@
   <files>
     <file name="prewitt.proc" type="proc" group="blockdef" path="prewitt.proc"/>
     <file name="prewitt.vhd" type="vhdl" group="hdl" path="hdl/prewitt.vhd"/>
+	<file name="prewitt.tex" type="pdf" group="doc" path="doc/prewitt.tex"/>
+	<file name="prewitt.pdf" type="pdf" group="doc" path="doc/prewitt.pdf"/>
     <file name="prewitt_process.vhd" type="vhdl" group="hdl" path="hdl/prewitt_process.vhd"/>
     <file name="prewitt_slave.vhd" type="vhdl" group="hdl" path="hdl/prewitt_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>

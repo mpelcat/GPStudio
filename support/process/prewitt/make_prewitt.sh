@@ -5,7 +5,7 @@ rm prewitt.proc
 
 # block and flows
 gpproc new -n prewitt
-gpproc sethelp -v "Edge detection"
+gpproc sethelp -v "Edge detection with Prewitt operator"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
