@@ -5,7 +5,7 @@ rm sobel.proc
 
 # block and flows
 gpproc new -n sobel
-gpproc sethelp -v "Edge detection"
+gpproc sethelp -v "Edge detection with Sobel operator"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
