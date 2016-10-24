@@ -90,11 +90,15 @@ void CompileLogWidget::checkAction()
     }
     else
     {
-        bool okMakefile = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/Makefile");
+        bool okMakefile = false;
+        if(!_project->path().isEmpty())
+            okMakefile = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/Makefile");
         emit cleanAvailable(okMakefile);
         emit compileAvailable(okMakefile);
 
-        bool okSof = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/build/output_files/"+_project->name()+".sof");
+        bool okSof = false;
+        if(!_project->path().isEmpty())
+            okSof = QFile::exists(QFileInfo(_project->path()).absolutePath()+"/build/output_files/"+_project->name()+".sof");
         emit sendAvailable(okSof);
         emit runAvailable(okSof);
         emit generateAvailable(true);
