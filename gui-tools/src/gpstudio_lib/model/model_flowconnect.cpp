@@ -29,6 +29,8 @@ ModelFlowConnect::ModelFlowConnect(QString fromblock, QString fromflow, QString 
       _order(order)
 {
     _parent = NULL;
+    if(_order.isEmpty())
+        _order = "msb";
 }
 
 ModelFlowConnect::ModelFlowConnect(const ModelFlowConnect &other)
@@ -150,7 +152,11 @@ ModelFlowConnect *ModelFlowConnect::fromNodeGenerated(const QDomElement &domElem
     flowConnect->setFromflow(domElement.attribute("fromflow",""));
     flowConnect->setToblock(domElement.attribute("toblock",""));
     flowConnect->setToflow(domElement.attribute("toflow",""));
-    flowConnect->setOrder(domElement.attribute("order","msb"));
+
+    QString order = domElement.attribute("order","msb");
+    if(order.isEmpty())
+        order = "msb";
+    flowConnect->setOrder(order);
 
     return flowConnect;
 }
