@@ -1,0 +1,198 @@
+%------------------------ Packages ------------------------
+\documentclass[12pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[FIGTOPCAP]{subfigure}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+
+\input{../../../../docsrc/gpstudio_doc.tex}
+
+\begin{document}
+
+\begin{center}
+\textbf{\huge  \underline{Scharr operator}}
+\end{center}
+\vspace{0.5cm}
+
+
+The Scharr operator is used for edge detection algorithms. It is a discrete differentiation operator who computes, at each point in the image, an approximation of the horizontal and vertical gradient of the image intensity function.\\
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {\textbf{Scharr}};
+
+\path[connect,<-] ([yshift=0.0cm]bloc.west) -- node{/} node[above]{in} ++(-2cm,0);
+
+\path[connect,->] ([yshift=0.0cm]bloc.east) -- node{/} node[above]{out} ++(2cm,0);
+ ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+
+\end{tikzpicture}
+\end{figure}
+
+\vspace{0.5cm}
+
+\begin{figure}[!h]
+\centering
+\subfigure[Initial image]{
+\includegraphics[width=5cm]{scharr1.png}}
+\hspace{2cm}
+\subfigure[Image with Scharr operator]{
+\includegraphics[width=5cm]{scharr2.png}}
+\end{figure}
+
+\section*{Properties}
+\properties{
+enable & bool & Enable the processing \\ 
+}
+
+\vspace{0.5cm}
+
+\section*{Constants}
+
+\constants{
+LINE\_WIDTH\_MAX & Maximum line size of the image : 1280 pixels  \\ 
+CLK\_PROC\_FREQ & Frequency clock of the process \\
+IN\_SIZE & Size of the input flow : 1 byte \\
+OUT\_SIZE & Size of the output flow : 1 byte  \\
+WEIGHT\_SIZE & Size of the Kernel : 1 byte  \\
+}
+
+\newpage
+
+\section*{Equivalence}
+\subsection*{Matlab}
+
+\lstset{language=Matlab}
+\begin{lstlisting}
+No available with Matlab
+\end{lstlisting}
+
+\url{https://nl.mathworks.com/help/images/ref/edge.html}
+
+
+\subsection*{OpenCV}
+
+\lstset{language=C++}
+\begin{lstlisting}
+void cv::Scharr 	
+	(
+	InputArray  	src,
+	OutputArray  	dst,
+	int  		ddepth,
+	int  		dx,
+	int  		dy,
+	double  	scale = 1,
+	double  	delta = 0,
+	int  		borderType = BORDER_DEFAULT 
+	) 		
+
+\end{lstlisting}
+
+\url{http://docs.opencv.org/}
+
+\section*{Mathematical formalism}
+
+The operator uses two $3X3$ kernels which are convolved with the original image to compute approximations of the horizontal and vertical derivatives. \\
+
+If we define $I$ as the source image, $\bigtriangledown_x$ and $\bigtriangledown_y$ as the horizontal and vertical derivative approximation respectively. $\bigtriangledown_x$ and $\bigtriangledown_y$ are written as follows :\\
+
+\begin{equation}\label{eq1}
+\bigtriangledown_x = \begin{pmatrix}
+-3 & 0 & 3 \\ 
+-10 & 0 & 10 \\ 
+-3 & 0 & 3
+\end{pmatrix}*I
+\end{equation}
+
+\vspace{0.5cm}
+
+\begin{equation}\label{eq2}
+\bigtriangledown_y = \begin{pmatrix}
+-3 & -10 & -3 \\ 
+0 & 0 & 0 \\ 
+3 & 10 & 3
+\end{pmatrix}*I
+\end{equation}
+
+\vspace{0.5cm}
+\newpage
+We can develop (\ref{eq1}) and (\ref{eq2}) as follows :\\
+
+\begin{equation}\label{eq3}
+\begin{matrix}
+\bigtriangledown_x = \begin{pmatrix}
+-3 & 0 & 3 \\ 
+-10 & 0 & 10 \\ 
+-3 & 0 & 3
+\end{pmatrix}*I  = \begin{pmatrix}
+-3 & 0 & 3 \\ 
+-10 & 0 & 10 \\ 
+-3 & 0 & 3
+\end{pmatrix}* \begin{pmatrix}
+i_{00} & i_{01} & i_{02} \\ 
+i_{10} & i_{11} & i_{12}\\ 
+i_{20} & i_{21} & i_{22}
+\end{pmatrix}  \\ 
+& & \\
+ =  -3i_{00}-10i_{10}-3i_{20}+3i_{02}+10i_{12}+3i_{22} \\ 
+\end{matrix}
+\end{equation}
+
+\vspace{1cm}
+
+\begin{equation}\label{eq4}
+\begin{matrix}
+\bigtriangledown_y = \begin{pmatrix}
+-3 & -10 & -3 \\ 
+0 & 0 & 0 \\ 
+3 & 10 & 3
+\end{pmatrix}*I  = \begin{pmatrix}
+-3 & -10 & -3 \\ 
+0 & 0 & 0 \\ 
+3 & 10 & 3
+\end{pmatrix}* \begin{pmatrix}
+i_{00} & i_{01} & i_{02} \\ 
+i_{10} & i_{11} & i_{12}\\ 
+i_{20} & i_{21} & i_{22}
+\end{pmatrix}  \\ 
+& & \\
+ =  -3i_{00}-10i_{01}-3i_{02}+3i_{20}+10i_{21}+3i_{22} \\ 
+\end{matrix}
+\end{equation}
+ 
+\vspace{0.5cm}
+
+In each point, we give an approximation of the gradient norm by the equation (\ref{eq5})
+
+\begin{equation}\label{eq5}
+\bigtriangledown = \sqrt{\bigtriangledown_x^2 + \bigtriangledown_y^2 } \simeq \bigtriangledown_x + \bigtriangledown_y
+\end{equation}
+
+\vspace{0.5cm}
+
+Thus, we obtain :
+
+\begin{equation}\label{eq6}
+\bigtriangledown \simeq -6i_{00}-10i_{01}-10i_{10}+10i_{21}+10i_{12}+6i_{22}
+\end{equation}
+ 
+\vspace{0.25cm}
+ 
+And finally in matrix form : 
+
+\begin{equation}\label{eq7}
+\kappa_S  \simeq \begin{pmatrix}
+-6 & -10 & 0\\ 
+-10 & 0 & 10\\ 
+ 0 & 10 & 6
+\end{pmatrix}
+\end{equation}
+
+\end{document}
