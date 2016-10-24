@@ -7,6 +7,8 @@
 #include <QString>
 #include <QDomElement>
 
+class ModelViewerFlow;
+
 class GPSTUDIO_LIB_EXPORT ModelViewer
 {
 public:
@@ -16,6 +18,10 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    const QList<ModelViewerFlow *> &viewerFlows() const;
+    void addViewerFlow(ModelViewerFlow *viewerFlow);
+    void addViewerFlow(QList<ModelViewerFlow *> viewerFlows);
+
 public:
     static ModelViewer *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelViewer *> listFromNodeGenerated(const QDomElement &domElement);
@@ -23,6 +29,8 @@ public:
 
 protected:
     QString _name;
+
+    QList<ModelViewerFlow *> _viewerFlows;
 };
 
 #endif // MODEL_VIEWER_H

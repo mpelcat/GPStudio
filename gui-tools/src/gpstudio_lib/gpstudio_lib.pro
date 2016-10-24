@@ -77,6 +77,7 @@ HEADERS += gpstudio_lib_common.h \
     model/model_componentpartflow.h \
     model/model_gpviewer.h \
     model/model_viewer.h \
+    model/model_viewerflow.h \
     camera/camera.h \
     camera/block.h \
     camera/property.h \
@@ -128,6 +129,7 @@ SOURCES += \
     model/model_componentpartflow.cpp \
     model/model_gpviewer.cpp \
     model/model_viewer.cpp \
+    model/model_viewerflow.cpp \
     camera/camera.cpp \
     camera/block.cpp \
     camera/property.cpp \
