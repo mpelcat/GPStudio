@@ -72,7 +72,9 @@ void LibTreeView::startDrag(Qt::DropActions supportedActions)
     if(!proc)
         return;
 
-    mimeData->setText(proc->name());
+    QByteArray encodedData;
+    encodedData.append(proc->name());
+    mimeData->setData("ip/process", encodedData);
     drag->setMimeData(mimeData);
     drag->setPixmap(proc->icon().pixmap(32,32));
 

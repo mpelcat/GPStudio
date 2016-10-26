@@ -109,7 +109,7 @@ void BlockView::dragEnterEvent(QDragEnterEvent *event)
     QGraphicsView::dragEnterEvent(event);
     if(_editMode)
     {
-        if(event->mimeData()->hasText())
+        if(event->mimeData()->hasFormat("ip/process"))
             event->accept();
     }
 }
@@ -119,7 +119,7 @@ void BlockView::dragMoveEvent(QDragMoveEvent *event)
     QGraphicsView::dragMoveEvent(event);
     if(_editMode)
     {
-        if(event->mimeData()->hasText())
+        if(event->mimeData()->hasFormat("ip/process"))
             event->accept();
     }
 }
@@ -129,7 +129,7 @@ void BlockView::dropEvent(QDropEvent *event)
     QGraphicsView::dropEvent(event);
     if(_editMode)
     {
-        QString driver = event->mimeData()->text();
+        QString driver = event->mimeData()->data("ip/process");
         QPoint pos = mapToScene(event->pos()).toPoint();
 
         emit blockAdded(driver, pos);
