@@ -59,6 +59,7 @@ private slots:
     void aboutQt();
 
     void showBlockDetails(QString blockName);
+    void showCamExplorer();
 
 private:
     GPNodeProject *_project;

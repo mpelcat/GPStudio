@@ -57,9 +57,7 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
         _project->newProject();
 
     _blockEditor = NULL;
-
-    _camExplorerDock->show();
-    _camExplorerDock->raise();
+    showCamExplorer();
 }
 
 NodeEditorWindows::~NodeEditorWindows()
@@ -83,6 +81,7 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
     connect(_blocksView, SIGNAL(blockSelected(QString)), _camExplorerWidget, SLOT(selectBlock(QString)));
     connect(_camExplorerWidget, SIGNAL(blockSelected(QString)), _blocksView, SLOT(selectBlock(QString)));
+    connect(_blocksView, SIGNAL(blockSelected(QString)), this, SLOT(showCamExplorer()));
 
     connect(_blocksView, SIGNAL(blockDetailsRequest(QString)), this, SLOT(showBlockDetails(QString)));
 
@@ -268,6 +267,10 @@ void NodeEditorWindows::createToolBarAndMenu()
     viewCamexAction->setStatusTip("Shows or hide the camera explorer");
     viewMenu->addAction(viewCamexAction);
 
+    QAction *viewExplorerDock = _viewerExplorerDock->toggleViewAction();
+    viewExplorerDock->setStatusTip("Shows or hide the camera explorer");
+    viewMenu->addAction(viewExplorerDock);
+
     QAction *viewLogAction = _compileLogDock->toggleViewAction();
     viewLogAction->setStatusTip("Shows or hide the compilation log");
     viewMenu->addAction(viewLogAction);
@@ -397,4 +400,10 @@ void NodeEditorWindows::showBlockDetails(QString blockName)
         _blockEditor = new BlockEditorWindow (this, block);
         _blockEditor->show();
     }
+}
+
+void NodeEditorWindows::showCamExplorer()
+{
+    _camExplorerDock->show();
+    _camExplorerDock->raise();
 }

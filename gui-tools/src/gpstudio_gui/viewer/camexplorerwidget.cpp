@@ -90,6 +90,8 @@ void CamExplorerWidget::setupWidgets()
     _camTreeView->setSortingEnabled(true);
     splitter->addWidget(_camTreeView);
 
+    setMinimumWidth(300);
+
     connect(_camTreeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(updateRootProperty()));
 
     switch (_modeView)
