@@ -45,6 +45,7 @@ public slots:
 
 protected slots:
     virtual void wrapValue();
+    void reviewSelection();
 
 private:
     QLineEdit *_lineEdit;

@@ -45,13 +45,14 @@ void PropertyClockWidget::createWidget()
     layout->setContentsMargins(0,0,0,0);
 
     _lineEdit = new QLineEdit();
-    _lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]+[kMG]{0,1}[Hz]{0,2}")));
+    _lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*[kMG]{0,1}[Hz]{0,2}")));
     if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
         _lineEdit->setEnabled(false);
 
     connect(_lineEdit, SIGNAL(editingFinished()), this, SLOT(wrapValue()));
     connect(this, SIGNAL(valueChanged(QVariant)), _linkedProperty, SLOT(setValue(QVariant)));
     connect(_linkedProperty, SIGNAL(valueChanged(QVariant)), this, SLOT(setValue(QVariant)));
+    connect(_lineEdit, SIGNAL(selectionChanged()), this, SLOT(reviewSelection()));
 
     layout->addWidget(_lineEdit);
 
@@ -70,8 +71,6 @@ void PropertyClockWidget::setValue(QVariant value)
     {
         QString textFreq;
         int freq = value.toInt();
-        if(_oldFreq == freq)
-            return;
         _oldFreq = freq;
 
         if(freq > 1000000000)
@@ -106,9 +105,23 @@ void PropertyClockWidget::wrapValue()
     typicalStr.replace(QRegExp("[GgMmKk]"),"").replace("Hz","");
     int typical = typicalStr.toInt(&ok);
     int freq = typical * mult;
-    if(ok && freq != _oldFreq)
+    if(ok && freq!=0)
     {
-        emit valueChanged(freq);
+        if(freq != _oldFreq)
+            emit valueChanged(freq);
         setValue(freq);
+    }
+    else
+        setValue(_oldFreq);
+}
+
+void PropertyClockWidget::reviewSelection()
+{
+    if(_lineEdit->selectedText().contains("Hz"))
+    {
+        _lineEdit->blockSignals(true);
+        _lineEdit->setSelection(_lineEdit->selectionStart(),
+                                _lineEdit->selectionStart() + _lineEdit->selectedText().length() - 2);
+        _lineEdit->blockSignals(false);
     }
 }
