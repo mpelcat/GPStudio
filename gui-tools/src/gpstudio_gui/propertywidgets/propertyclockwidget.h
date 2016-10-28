@@ -48,6 +48,7 @@ protected slots:
 
 private:
     QLineEdit *_lineEdit;
+    int _oldFreq;
 };
 
 #endif // PROPERTYCLOCKWIDGET_H

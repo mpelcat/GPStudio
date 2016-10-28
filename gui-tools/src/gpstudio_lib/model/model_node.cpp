@@ -224,6 +224,18 @@ ModelProperty *ModelNode::getPropertyPath(const QString &blockName, const QStrin
     return property;
 }
 
+ModelClock *ModelNode::getClock(const QString &blockName, const QString &clockName) const
+{
+    ModelBlock *block = getBlock(blockName);
+    if(!block)
+        return NULL;
+
+    ModelClock *clock = block->getClock(clockName);
+    if(!clock)
+        return NULL;
+    return clock;
+}
+
 ModelNode *ModelNode::readFromFile(const QString &fileName)
 {
     QDomDocument doc;

@@ -27,6 +27,7 @@
 
 PropertyClockWidget::PropertyClockWidget()
 {
+    _oldFreq = -1;
 }
 
 PropertyClockWidget::~PropertyClockWidget()
@@ -67,15 +68,27 @@ void PropertyClockWidget::setValue(QVariant value)
 {
     if(value.canConvert(QVariant::Int))
     {
-        _lineEdit->blockSignals(true);
+        QString textFreq;
         int freq = value.toInt();
+        if(_oldFreq == freq)
+            return;
+        _oldFreq = freq;
+
         if(freq > 1000000000)
-            _lineEdit->setText(QString("%1GHz").arg(freq/1000000000));
+            textFreq = QString("%1GHz").arg(freq/1000000000);
         else if(freq > 1000000)
-            _lineEdit->setText(QString("%1MHz").arg(freq/1000000));
+            textFreq = QString("%1MHz").arg(freq/1000000);
         else if(freq > 1000)
-            _lineEdit->setText(QString("%1kHz").arg(freq/1000));
-        _lineEdit->blockSignals(false);
+            textFreq = QString("%1kHz").arg(freq/1000);
+        else
+            textFreq = QString("%1Hz").arg(freq);
+
+        if(textFreq != _lineEdit->text())
+        {
+            _lineEdit->blockSignals(true);
+            _lineEdit->setText(textFreq);
+            _lineEdit->blockSignals(false);
+        }
     }
 }
 
@@ -84,14 +97,18 @@ void PropertyClockWidget::wrapValue()
     bool ok;
     int mult = 1;
     QString typicalStr = _lineEdit->text();
-    if(typicalStr.contains("G", Qt::CaseInsensitive))
-        mult = 1000000000;
-    if(typicalStr.contains("M", Qt::CaseInsensitive))
-        mult = 1000000;
     if(typicalStr.contains("k", Qt::CaseInsensitive))
         mult = 1000;
-    typicalStr.replace("GgMmKk","");
+    if(typicalStr.contains("M", Qt::CaseInsensitive))
+        mult = 1000000;
+    if(typicalStr.contains("G", Qt::CaseInsensitive))
+        mult = 1000000000;
+    typicalStr.replace(QRegExp("[GgMmKk]"),"").replace("Hz","");
     int typical = typicalStr.toInt(&ok);
-    if(ok)
-        emit valueChanged(typical * mult);
+    int freq = typical * mult;
+    if(ok && freq != _oldFreq)
+    {
+        emit valueChanged(freq);
+        setValue(freq);
+    }
 }
