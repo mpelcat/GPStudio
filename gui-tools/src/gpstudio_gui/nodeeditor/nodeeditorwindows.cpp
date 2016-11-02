@@ -101,8 +101,10 @@ void NodeEditorWindows::attachProject(GPNodeProject *project)
 
 void NodeEditorWindows::closeEvent(QCloseEvent *event)
 {
-    _project->closeProject();
-    event->accept();
+    if(_project->closeProject())
+        event->accept();
+    else
+        event->ignore();
 }
 
 void NodeEditorWindows::setupWidgets()

@@ -164,18 +164,23 @@ bool GPNodeProject::saveProjectAs(const QString &nodeFileName)
     return true;
 }
 
-void GPNodeProject::closeProject()
+bool GPNodeProject::closeProject()
 {
     if(_modified)
     {
-        if(QMessageBox::question(_nodeEditorWindow, "Project modified", "Would you like to save the project before close it ?", QMessageBox::Save | QMessageBox::Cancel)==QMessageBox::Save)
+        QMessageBox::StandardButton res;
+        res = QMessageBox::question(_nodeEditorWindow, "Project modified", "Would you like to save the project before close it ?", QMessageBox::Save | QMessageBox::Cancel | QMessageBox::Discard);
+        if(res==QMessageBox::Save)
             saveProject();
+        if(res==QMessageBox::Cancel)
+            return false;
     }
 
     _modified = false;
     _undoStack->clear();
     setNode(NULL);
     delete _node;
+    return true;
 }
 
 void GPNodeProject::configBoard()

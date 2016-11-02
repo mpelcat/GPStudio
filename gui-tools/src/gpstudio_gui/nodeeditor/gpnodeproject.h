@@ -56,7 +56,7 @@ public slots:
     bool openProject(const QString &nodeFileName=QString());
     bool saveProject();
     bool saveProjectAs(const QString &nodeFileName=QString());
-    void closeProject();
+    bool closeProject();
 
     void configBoard();
 
