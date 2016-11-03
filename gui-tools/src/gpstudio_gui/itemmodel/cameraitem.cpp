@@ -179,37 +179,43 @@ int CameraItem::count() const
     return _childrens.count();
 }
 
-CameraItem *CameraItem::append(const Camera *camera)
+CameraItem *CameraItem::append(const Camera *camera, uint filter)
 {
     CameraItem *item = new CameraItem(camera);
     item->_parent = this;
     item->_row = _childrens.count();
 
-    foreach (Block *block, camera->blocks())
+    if(filter & CameraItem::FBlock)
     {
-        item->append(block);
+        foreach (Block *block, camera->blocks())
+        {
+            item->append(block);
+        }
     }
 
     _childrens.append(item);
     return item;
 }
 
-CameraItem *CameraItem::append(const ModelNode *node)
+CameraItem *CameraItem::append(const ModelNode *node, uint filter)
 {
     CameraItem *item = new CameraItem(node);
     item->_parent = this;
     item->_row = _childrens.count();
 
-    foreach (ModelBlock *block, node->blocks())
+    if(filter & CameraItem::FBlock)
     {
-        item->append(block);
+        foreach (ModelBlock *block, node->blocks())
+        {
+            item->append(block);
+        }
     }
 
     _childrens.append(item);
     return item;
 }
 
-CameraItem *CameraItem::append(const Block *block)
+CameraItem *CameraItem::append(const Block *block, uint filter)
 {
     CameraItem *item = new CameraItem(block);
     item->_parent = this;
@@ -219,7 +225,8 @@ CameraItem *CameraItem::append(const Block *block)
     {
         foreach (Flow *flow, block->flows())
         {
-            item->append(flow);
+            if((filter & CameraItem::FFlowIn && flow->type()==Flow::Input) || (filter & CameraItem::FFlowOut && flow->type()==Flow::Output))
+                item->append(flow);
         }
     }
 
@@ -227,7 +234,7 @@ CameraItem *CameraItem::append(const Block *block)
     return item;
 }
 
-CameraItem *CameraItem::append(const ModelBlock *block)
+CameraItem *CameraItem::append(const ModelBlock *block, uint filter)
 {
     CameraItem *item = new CameraItem(block);
     item->_parent = this;
@@ -237,7 +244,8 @@ CameraItem *CameraItem::append(const ModelBlock *block)
     {
         foreach (ModelFlow *flow, block->flows())
         {
-            item->append(flow);
+            if((filter & CameraItem::FFlowIn && flow->type()=="in") || (filter & CameraItem::FFlowOut && flow->type()=="out"))
+                item->append(flow);
         }
     }
 
@@ -245,7 +253,7 @@ CameraItem *CameraItem::append(const ModelBlock *block)
     return item;
 }
 
-CameraItem *CameraItem::append(const Flow *flow)
+CameraItem *CameraItem::append(const Flow *flow, uint filter)
 {
     CameraItem *item = new CameraItem(flow);
     item->_parent = this;
@@ -254,7 +262,7 @@ CameraItem *CameraItem::append(const Flow *flow)
     return item;
 }
 
-CameraItem *CameraItem::append(const ModelFlow *flow)
+CameraItem *CameraItem::append(const ModelFlow *flow, uint filter)
 {
     CameraItem *item = new CameraItem(flow);
     item->_parent = this;
@@ -263,7 +271,7 @@ CameraItem *CameraItem::append(const ModelFlow *flow)
     return item;
 }
 
-CameraItem *CameraItem::append(const ModelGPViewer *gpViewer)
+CameraItem *CameraItem::append(const ModelGPViewer *gpViewer, uint filter)
 {
     foreach (ModelViewer *viewer, gpViewer->viewers())
     {
@@ -272,7 +280,7 @@ CameraItem *CameraItem::append(const ModelGPViewer *gpViewer)
     return this;
 }
 
-CameraItem *CameraItem::append(const ModelViewer *viewer)
+CameraItem *CameraItem::append(const ModelViewer *viewer, uint filter)
 {
     CameraItem *item = new CameraItem(viewer);
     item->_parent = this;
@@ -287,7 +295,7 @@ CameraItem *CameraItem::append(const ModelViewer *viewer)
     return item;
 }
 
-CameraItem *CameraItem::append(const ModelViewerFlow *viewerFlow)
+CameraItem *CameraItem::append(const ModelViewerFlow *viewerFlow, uint filter)
 {
     CameraItem *item = new CameraItem(viewerFlow);
     item->_parent = this;

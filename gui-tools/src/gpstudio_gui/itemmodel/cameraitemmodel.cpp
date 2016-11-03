@@ -24,9 +24,12 @@
 #include "cameracom.h"
 
 #include "model/model_node.h"
+#include "model/model_gpviewer.h"
+#include "model/model_viewer.h"
 
 #include <QDebug>
 #include <QIcon>
+#include <QMimeData>
 
 CameraItemModelNoSorted::CameraItemModelNoSorted(QObject *parent)
     : QAbstractItemModel(parent)
@@ -131,38 +134,38 @@ QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-void CameraItemModelNoSorted::setCamera(const Camera *camera)
+void CameraItemModelNoSorted::setCamera(const Camera *camera, uint filter)
 {
     beginResetModel();
     resetInternalData();
-    _rootItem->append(camera);
+    _rootItem->append(camera, filter);
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setBlock(const Block *block)
+void CameraItemModelNoSorted::setBlock(const Block *block, uint filter)
 {
     beginResetModel();
     resetInternalData();
     _rootItem->clear();
-    _rootItem->append(block);
+    _rootItem->append(block, filter);
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setNode(const ModelNode *node)
+void CameraItemModelNoSorted::setNode(const ModelNode *node, uint filter)
 {
     beginResetModel();
     resetInternalData();
     _rootItem->clear();
-    _rootItem->append(node);
+    _rootItem->append(node, filter);
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setViewer(const ModelGPViewer *gpViewer)
+void CameraItemModelNoSorted::setViewer(const ModelGPViewer *gpViewer, uint filter)
 {
     beginResetModel();
     resetInternalData();
     _rootItem->clear();
-    _rootItem->append(gpViewer);
+    _rootItem->append(gpViewer, filter);
     endResetModel();
 }
 
@@ -190,27 +193,112 @@ CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
     //setFilterWildcard("pro*");
 }
 
-void CameraItemModel::setCamera(const Camera *camera)
+void CameraItemModel::setCamera(const Camera *camera, uint filter)
 {
-    _modelCam->setCamera(camera);
+    _modelCam->setCamera(camera, filter);
 }
 
-void CameraItemModel::setBlock(const Block *block)
+void CameraItemModel::setBlock(const Block *block, uint filter)
 {
-    _modelCam->setBlock(block);
+    _modelCam->setBlock(block, filter);
 }
 
-void CameraItemModel::setNode(const ModelNode *node)
+void CameraItemModel::setNode(const ModelNode *node, uint filter)
 {
-    _modelCam->setNode(node);
+    _modelCam->setNode(node, filter);
 }
 
-void CameraItemModel::setViewer(const ModelGPViewer *gpViewer)
+void CameraItemModel::setViewer(const ModelGPViewer *gpViewer, uint filter)
 {
-    _modelCam->setViewer(gpViewer);
+    _modelCam->setViewer(gpViewer, filter);
 }
 
 void CameraItemModel::clearAll()
 {
     _modelCam->clearAll();
+}
+
+
+Qt::DropActions CameraItemModelNoSorted::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
+Qt::DropActions CameraItemModelNoSorted::supportedDragActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
+Qt::ItemFlags CameraItemModelNoSorted::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+
+    if (index.isValid())
+    {
+        if(index.column() == 0)
+            return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+        else
+            return defaultFlags;
+    }
+    else
+        return Qt::ItemIsDropEnabled | defaultFlags;
+}
+
+QStringList CameraItemModelNoSorted::mimeTypes() const
+{
+    QStringList types;
+    types << "flow/flowid";
+    return types;
+}
+
+QMimeData *CameraItemModelNoSorted::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData;
+
+    foreach (QModelIndex index, indexes)
+    {
+        if (index.isValid())
+        {
+            QString text = data(index, Qt::DisplayRole).toString();
+            encodedData.append(text);
+        }
+    }
+
+    mimeData->setData("flow/flowid", encodedData);
+    return mimeData;
+}
+
+
+bool CameraItemModelNoSorted::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+{
+    Q_UNUSED(action)
+    if(!data->hasFormat("flow/flowid"))
+        return false;
+    if(column>0)
+        return false;
+
+    return true;
+}
+
+bool CameraItemModelNoSorted::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    if(action == Qt::IgnoreAction)
+        return true;
+
+    if(!data->hasFormat("flow/flowid"))
+        return false;
+
+    qDebug()<<"dropMimeData"<<data->data("flow/flowid")<<action<<row<<column<<parent;
+
+    int beginRow;
+
+    if (row != -1)
+        beginRow = row;
+    else if (parent.isValid())
+        beginRow = parent.row();
+    else
+        beginRow = rowCount(QModelIndex());
+
+    return true;
 }

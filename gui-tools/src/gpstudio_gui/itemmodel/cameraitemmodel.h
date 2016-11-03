@@ -45,10 +45,10 @@ public:
         ColumnCount
     };
 
-    void setCamera(const Camera *camera);
-    void setBlock(const Block *block);
-    void setNode(const ModelNode *node);
-    void setViewer(const ModelGPViewer *gpViewer);
+    void setCamera(const Camera *camera, uint filter=CameraItem::FAll);
+    void setBlock(const Block *block, uint filter=CameraItem::FAll);
+    void setNode(const ModelNode *node, uint filter=CameraItem::FAll);
+    void setViewer(const ModelGPViewer *gpViewer, uint filter=CameraItem::FAll);
     void clearAll();
 
     // QAbstractItemModel interface
@@ -65,6 +65,15 @@ public:
 
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
+    // drag and drop funtionnality
+    Qt::DropActions supportedDropActions() const;
+    Qt::DropActions supportedDragActions() const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QStringList mimeTypes() const;
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
 private:
     CameraItem *_rootItem;
 };
@@ -76,10 +85,10 @@ public:
     explicit CameraItemModel(QObject *parent = 0);
     CameraItemModel(Camera *camera, QObject *parent = 0);
 
-    void setCamera(const Camera *camera);
-    void setBlock(const Block *block);
-    void setNode(const ModelNode *node);
-    void setViewer(const ModelGPViewer *gpViewer);
+    void setCamera(const Camera *camera, uint filter=CameraItem::FAll);
+    void setBlock(const Block *block, uint filter=CameraItem::FAll);
+    void setNode(const ModelNode *node, uint filter=CameraItem::FAll);
+    void setViewer(const ModelGPViewer *gpViewer, uint filter=CameraItem::FAll);
     void clearAll();
 
 private:

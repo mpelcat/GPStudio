@@ -86,17 +86,25 @@ public:
     int count() const;
     void clear();
 
-    CameraItem *append(const Camera *camera);
-    CameraItem *append(const Block *block);
-    CameraItem *append(const Flow *flow);
+    enum Filter {
+        FBlock = 0x01,
+        FFlowIn = 0x02,
+        FFlowOut = 0x04,
+        FFlow = FFlowIn | FFlowOut,
+        FAll = FBlock | FFlow
+    };
 
-    CameraItem *append(const ModelNode *node);
-    CameraItem *append(const ModelBlock *block);
-    CameraItem *append(const ModelFlow *flow);
+    CameraItem *append(const Camera *camera, uint filter=FAll);
+    CameraItem *append(const Block *block, uint filter=FAll);
+    CameraItem *append(const Flow *flow, uint filter=FAll);
 
-    CameraItem *append(const ModelGPViewer *gpViewer);
-    CameraItem *append(const ModelViewer *viewer);
-    CameraItem *append(const ModelViewerFlow *viewerFlow);
+    CameraItem *append(const ModelNode *node, uint filter=FAll);
+    CameraItem *append(const ModelBlock *block, uint filter=FAll);
+    CameraItem *append(const ModelFlow *flow, uint filter=FAll);
+
+    CameraItem *append(const ModelGPViewer *gpViewer, uint filter=FAll);
+    CameraItem *append(const ModelViewer *viewer, uint filter=FAll);
+    CameraItem *append(const ModelViewerFlow *viewerFlow, uint filter=FAll);
 
     int row();
     void *ptr() const;
