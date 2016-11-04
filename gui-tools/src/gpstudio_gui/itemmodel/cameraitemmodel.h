@@ -71,11 +71,15 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
     QStringList mimeTypes() const;
     QMimeData *mimeData(const QModelIndexList &indexes) const;
-    bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const;
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    bool canDropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) const;
+    bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
 private:
     CameraItem *_rootItem;
+
+signals:
+    void viewerAdded(const QString &name);
+    void viewerFlowAdded(const QString &viewerName, const QString &name);
 };
 
 class GPSTUDIO_GUI_EXPORT CameraItemModel : public QSortFilterProxyModel
@@ -90,6 +94,8 @@ public:
     void setNode(const ModelNode *node, uint filter=CameraItem::FAll);
     void setViewer(const ModelGPViewer *gpViewer, uint filter=CameraItem::FAll);
     void clearAll();
+
+    CameraItemModelNoSorted *modelCam() const;
 
 private:
     CameraItemModelNoSorted *_modelCam;

@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -18,24 +18,36 @@
 **
 ****************************************************************************/
 
-#include "nodeeditor/nodeeditorwindows.h"
-#include <QApplication>
-#include <QDebug>
+#ifndef VIEWERTREEVIEW_H
+#define VIEWERTREEVIEW_H
 
-int main(int argc, char *argv[])
+#include "gpstudio_gui_common.h"
+
+#include <QTreeView>
+#include <QMouseEvent>
+
+#include "cameraitemmodel.h"
+#include "nodeeditor/gpnodeproject.h"
+
+class GPSTUDIO_GUI_EXPORT ViewerTreeView : public QTreeView
 {
-    QApplication a(argc, argv);
-    GPNodeProject *nodeProject = new GPNodeProject();
+    Q_OBJECT
+public:
+    ViewerTreeView();
 
-    if(a.arguments().size()>1)
-    {
-        QString nodeFileName = a.arguments()[1];
-        if(!nodeProject->openProject(nodeFileName))
-            qDebug()<<"Cannot open file"<<nodeFileName;
-    }
+    void attachProject(GPNodeProject *project);
 
-    NodeEditorWindows nodeEditorWindows(NULL, nodeProject);
-    nodeEditorWindows.showMaximized();
+signals:
+    void viewerAdded(const QString viewerName);
+    void viewerFlowAdded(const QString viewerName);
 
-    return a.exec();
-}
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
+
+private:
+    CameraItemModel *_model;
+};
+
+#endif // VIEWERTREEVIEW_H

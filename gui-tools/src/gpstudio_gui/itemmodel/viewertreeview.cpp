@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -18,24 +18,47 @@
 **
 ****************************************************************************/
 
-#include "nodeeditor/nodeeditorwindows.h"
-#include <QApplication>
+#include "viewertreeview.h"
+
 #include <QDebug>
+#include <QMimeData>
 
-int main(int argc, char *argv[])
+ViewerTreeView::ViewerTreeView()
 {
-    QApplication a(argc, argv);
-    GPNodeProject *nodeProject = new GPNodeProject();
 
-    if(a.arguments().size()>1)
-    {
-        QString nodeFileName = a.arguments()[1];
-        if(!nodeProject->openProject(nodeFileName))
-            qDebug()<<"Cannot open file"<<nodeFileName;
-    }
+}
 
-    NodeEditorWindows nodeEditorWindows(NULL, nodeProject);
-    nodeEditorWindows.showMaximized();
+void ViewerTreeView::attachProject(GPNodeProject *project)
+{
 
-    return a.exec();
+}
+
+void ViewerTreeView::dragEnterEvent(QDragEnterEvent *event)
+{
+    QTreeView::dragEnterEvent(event);
+
+    if(event->mimeData()->hasFormat("flow/flowid"))
+        event->accept();
+}
+
+void ViewerTreeView::dragMoveEvent(QDragMoveEvent *event)
+{
+    QTreeView::dragMoveEvent(event);
+
+    if(event->mimeData()->hasFormat("flow/flowid"))
+        event->accept();
+}
+
+void ViewerTreeView::dropEvent(QDropEvent *event)
+{
+    QTreeView::dropEvent(event);
+
+    QString flow = event->mimeData()->data("flow/flowid");
+    //QPoint pos = mapToScene(event->pos()).toPoint();
+
+    //emit blockAdded(driver, pos);
+    qDebug()<<Q_FUNC_INFO<<flow<<selectedIndexes();
+
+    // viewerAdded
+    // viewerFlowAdded
 }

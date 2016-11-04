@@ -38,7 +38,7 @@ void ViewerExplorerWidget::attachProject(GPNodeProject *project)
     if(_project->camera())
     {
         if(_project->camera()->comBlock())
-            _flowItemModel->setBlock(_project->camera()->comBlock());
+            _flowItemModel->setBlock(_project->camera()->comBlock(), CameraItem::FFlowIn);
         _flowTreeView->expandAll();
 
         if(_project->node()->gpViewer())
@@ -66,8 +66,11 @@ void ViewerExplorerWidget::setupWidgets()
     layoutBox->setContentsMargins(0,10,0,0);
     _flowItemModel = new CameraItemModel();
     _flowTreeView = new QTreeView();
+    _flowTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    _flowTreeView->setDragEnabled(true);
     _flowTreeView->setModel(_flowItemModel);
     _flowTreeView->setSortingEnabled(true);
+    _flowTreeView->sortByColumn(0, Qt::AscendingOrder);
     layoutBox->addWidget(_flowTreeView);
     groupBox->setLayout(layoutBox);
     layout->addWidget(groupBox);
@@ -77,9 +80,14 @@ void ViewerExplorerWidget::setupWidgets()
     QLayout *layoutBox2 = new QVBoxLayout();
     layoutBox2->setContentsMargins(0,10,0,0);
     _viewerItemModel = new CameraItemModel();
-    _viewerTreeView = new QTreeView();
+    _viewerTreeView = new ViewerTreeView();
+    _viewerTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    _viewerTreeView->setAcceptDrops(true);
+    _viewerTreeView->viewport()->setAcceptDrops(true);
+    _viewerTreeView->setDropIndicatorShown(true);
     _viewerTreeView->setModel(_viewerItemModel);
     _viewerTreeView->setSortingEnabled(true);
+    _viewerTreeView->sortByColumn(0, Qt::DescendingOrder);
     layoutBox2->addWidget(_viewerTreeView);
     groupBox2->setLayout(layoutBox2);
     layout->addWidget(groupBox2);

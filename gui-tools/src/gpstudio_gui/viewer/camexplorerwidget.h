@@ -42,22 +42,22 @@ class GPSTUDIO_GUI_EXPORT CamExplorerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    enum Mode {
+    enum ModeView {
         TreeViewMode,
         WidgetsMode
     };
 
     CamExplorerWidget(QWidget *parent=0);
     CamExplorerWidget(Camera *camera, QWidget *parent=0);
-    CamExplorerWidget(Camera *camera, Mode modeView, QWidget *parent=0);
+    CamExplorerWidget(Camera *camera, ModeView modeView, QWidget *parent=0);
 
     void attachProject(GPNodeProject *project);
     GPNodeProject *project() const;
 
     void setCamera(Camera *camera); // remove this method
 
-    Mode modeView() const;
-    void setModeView(const Mode &modeView);
+    ModeView modeView() const;
+    void setModeView(const ModeView &modeView);
 
 protected slots:
     void updateRootProperty();
@@ -84,7 +84,7 @@ private:
     Camera *_camera;
     GPNodeProject *_project;
 
-    Mode _modeView;
+    ModeView _modeView;
 
     void connectProperty(const PropertyWidget *propertyWidget);
 protected slots:

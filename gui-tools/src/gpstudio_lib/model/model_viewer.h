@@ -12,7 +12,7 @@ class ModelViewerFlow;
 class GPSTUDIO_LIB_EXPORT ModelViewer
 {
 public:
-    ModelViewer();
+    ModelViewer(const QString &name=QString());
     ~ModelViewer();
 
     QString name() const;

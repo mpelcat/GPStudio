@@ -255,6 +255,7 @@ CameraItem *CameraItem::append(const ModelBlock *block, uint filter)
 
 CameraItem *CameraItem::append(const Flow *flow, uint filter)
 {
+    Q_UNUSED(filter)
     CameraItem *item = new CameraItem(flow);
     item->_parent = this;
     item->_row = _childrens.count();
@@ -264,6 +265,7 @@ CameraItem *CameraItem::append(const Flow *flow, uint filter)
 
 CameraItem *CameraItem::append(const ModelFlow *flow, uint filter)
 {
+    Q_UNUSED(filter)
     CameraItem *item = new CameraItem(flow);
     item->_parent = this;
     item->_row = _childrens.count();
@@ -273,6 +275,7 @@ CameraItem *CameraItem::append(const ModelFlow *flow, uint filter)
 
 CameraItem *CameraItem::append(const ModelGPViewer *gpViewer, uint filter)
 {
+    Q_UNUSED(filter)
     foreach (ModelViewer *viewer, gpViewer->viewers())
     {
         append(viewer);
@@ -282,6 +285,7 @@ CameraItem *CameraItem::append(const ModelGPViewer *gpViewer, uint filter)
 
 CameraItem *CameraItem::append(const ModelViewer *viewer, uint filter)
 {
+    Q_UNUSED(filter)
     CameraItem *item = new CameraItem(viewer);
     item->_parent = this;
     item->_row = _childrens.count();
@@ -297,6 +301,7 @@ CameraItem *CameraItem::append(const ModelViewer *viewer, uint filter)
 
 CameraItem *CameraItem::append(const ModelViewerFlow *viewerFlow, uint filter)
 {
+    Q_UNUSED(filter)
     CameraItem *item = new CameraItem(viewerFlow);
     item->_parent = this;
     item->_row = _childrens.count();

@@ -218,6 +218,11 @@ void CameraItemModel::clearAll()
     _modelCam->clearAll();
 }
 
+CameraItemModelNoSorted *CameraItemModel::modelCam() const
+{
+    return _modelCam;
+}
+
 
 Qt::DropActions CameraItemModelNoSorted::supportedDropActions() const
 {
@@ -261,7 +266,7 @@ QMimeData *CameraItemModelNoSorted::mimeData(const QModelIndexList &indexes) con
         if (index.isValid())
         {
             QString text = data(index, Qt::DisplayRole).toString();
-            encodedData.append(text);
+            encodedData.append(text+":");
         }
     }
 
@@ -269,36 +274,49 @@ QMimeData *CameraItemModelNoSorted::mimeData(const QModelIndexList &indexes) con
     return mimeData;
 }
 
-
-bool CameraItemModelNoSorted::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+bool CameraItemModelNoSorted::canDropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(action)
-    if(!data->hasFormat("flow/flowid"))
-        return false;
-    if(column>0)
-        return false;
+    Q_UNUSED(row)
+    Q_UNUSED(parent)
+    if(mimeData->hasFormat("flow/flowid"))
+    {
+        if(column>0)
+            return false;
+        return true;
+    }
 
     return true;
 }
 
-bool CameraItemModelNoSorted::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+bool CameraItemModelNoSorted::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
+    Q_UNUSED(row)
+    Q_UNUSED(column)
+    QString viewerName;
     if(action == Qt::IgnoreAction)
         return true;
-
-    if(!data->hasFormat("flow/flowid"))
+    if(!mimeData->hasFormat("flow/flowid"))
         return false;
 
-    qDebug()<<"dropMimeData"<<data->data("flow/flowid")<<action<<row<<column<<parent;
-
-    int beginRow;
-
-    if (row != -1)
-        beginRow = row;
-    else if (parent.isValid())
-        beginRow = parent.row();
+    if(!parent.isValid())
+    {
+        viewerName = "newViewer";
+        emit viewerAdded(viewerName);
+        qDebug()<<"Added viewer";
+    }
     else
-        beginRow = rowCount(QModelIndex());
+        viewerName = data(parent).toString();
+
+    QStringList flowsName = QString(mimeData->data("flow/flowid")).split(':');
+    foreach (QString flowName, flowsName)
+    {
+        if(!flowName.isEmpty())
+        {
+            qDebug()<<"Added viewer"<<flowName<<"flow to"<<viewerName;
+            emit viewerFlowAdded(viewerName, flowName);
+        }
+    }
 
     return true;
 }

@@ -2,7 +2,8 @@
 
 #include "model_viewerflow.h"
 
-ModelViewer::ModelViewer()
+ModelViewer::ModelViewer(const QString &name)
+    : _name(name)
 {
 }
 

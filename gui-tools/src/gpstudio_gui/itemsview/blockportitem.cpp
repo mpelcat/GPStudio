@@ -276,5 +276,6 @@ ModelFlow *BlockPortItem::modelFlow() const
 
 void BlockPortItem::setModelFlow(ModelFlow *modelFlow)
 {
+    prepareGeometryChange();
     _modelFlow = modelFlow;
 }

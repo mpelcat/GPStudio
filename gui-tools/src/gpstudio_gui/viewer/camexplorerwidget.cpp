@@ -44,7 +44,7 @@ CamExplorerWidget::CamExplorerWidget(Camera *camera, QWidget *parent)
     setModeView(WidgetsMode);
 }
 
-CamExplorerWidget::CamExplorerWidget(Camera *camera, CamExplorerWidget::Mode modeView, QWidget *parent)
+CamExplorerWidget::CamExplorerWidget(Camera *camera, CamExplorerWidget::ModeView modeView, QWidget *parent)
     : QWidget(parent)
 {
     setCamera(camera);
@@ -169,12 +169,12 @@ void CamExplorerWidget::changePropertyValue()
     emit propertyChanged(property->blockName(), property->getPath(), property->value().toString());
 }
 
-CamExplorerWidget::Mode CamExplorerWidget::modeView() const
+CamExplorerWidget::ModeView CamExplorerWidget::modeView() const
 {
     return _modeView;
 }
 
-void CamExplorerWidget::setModeView(const Mode &modeView)
+void CamExplorerWidget::setModeView(const ModeView &modeView)
 {
     _modeView = modeView;
     setupWidgets();

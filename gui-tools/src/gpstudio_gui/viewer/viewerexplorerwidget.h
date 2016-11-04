@@ -27,6 +27,7 @@
 #include <QTreeView>
 
 #include "itemmodel/cameraitemmodel.h"
+#include "itemmodel/viewertreeview.h"
 
 #include <nodeeditor/gpnodeproject.h>
 
@@ -49,7 +50,7 @@ private:
     QTreeView *_flowTreeView;
     CameraItemModel *_flowItemModel;
 
-    QTreeView *_viewerTreeView;
+    ViewerTreeView *_viewerTreeView;
     CameraItemModel *_viewerItemModel;
 
     GPNodeProject *_project;
