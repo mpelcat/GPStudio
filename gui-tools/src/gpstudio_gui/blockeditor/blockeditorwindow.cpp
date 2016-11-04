@@ -32,9 +32,21 @@ BlockEditorWindow::~BlockEditorWindow()
     //delete layout();
 }
 
+void BlockEditorWindow::showImplementationsFiles(const QString &driver)
+{
+    BlockLib *block = Lib::getLib().process(driver);
+    if(block)
+    {
+        BlockEditorWindow *blockEditor = new BlockEditorWindow(NULL, block->modelBlock());
+        blockEditor->show();
+    }
+}
+
 void BlockEditorWindow::closeEvent(QCloseEvent *event)
 {
     //_project->closeProject();
+    if(!parent())
+        deleteLater();
     event->accept();
 }
 

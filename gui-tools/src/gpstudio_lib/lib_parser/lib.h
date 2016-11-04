@@ -51,6 +51,8 @@ public:
     const QList<BlockLib *> &ios() const;
     BlockLib *io(const QString &name);
 
+    BlockLib *blockLib(const QString &name);
+
     void reloadBoards();
     void addBoard(BoardLib *board);
     const QList<BoardLib *> &boards()const;

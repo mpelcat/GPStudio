@@ -22,9 +22,11 @@
 
 #include <QDebug>
 #include <QDrag>
+#include <QMenu>
 #include <QMimeData>
 
 #include "viewer/viewerwidgets/pdfviewer.h"
+#include "blockeditor/blockeditorwindow.h"
 
 LibTreeView::LibTreeView(QWidget *parent) :
     QTreeView(parent)
@@ -92,10 +94,34 @@ void LibTreeView::keyPressEvent(QKeyEvent *event)
         if(docFile.isEmpty())
             return;
 
-        PdfViewer *pdfViewer = new PdfViewer(NULL, docFile.first());
-        pdfViewer->show();
+        PdfViewer::showDocument(docFile.first());
     }
 }
+
+#ifndef QT_NO_CONTEXTMENU
+void LibTreeView::contextMenuEvent(QContextMenuEvent *event)
+{
+    QModelIndex index = indexAt(event->pos());
+    if(!index.isValid())
+        return;
+    const BlockLib *proc = _model->blockLib(index);
+    if(!proc)
+        return;
+
+    QStringList docFile = proc->modelBlock()->getPdfDoc();
+
+    QMenu menu;
+    QAction *infosIPAction = menu.addAction("View implementation files");
+    QAction *docIPAction = menu.addAction("View pdf documentation");
+    if(docFile.isEmpty())
+        docIPAction->setEnabled(false);
+    QAction *trigered = menu.exec(event->globalPos());
+    if(trigered == docIPAction)
+        PdfViewer::showDocument(docFile.first());
+    if(trigered == infosIPAction)
+        BlockEditorWindow::showImplementationsFiles(proc->name());
+}
+#endif // QT_NO_CONTEXTMENU
 
 void LibTreeView::doubleClickProcess(QModelIndex index)
 {

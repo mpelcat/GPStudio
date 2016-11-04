@@ -115,6 +115,15 @@ BlockLib *Lib::io(const QString &name)
     return NULL;
 }
 
+BlockLib *Lib::blockLib(const QString &name)
+{
+    BlockLib *block = NULL;
+    block = process(name);
+    if(block)
+        return block;
+    return io(name);
+}
+
 void Lib::addBoard(BoardLib *board)
 {
     _boards.append(board);

@@ -35,6 +35,8 @@ class GPSTUDIO_GUI_EXPORT PdfViewer : public QGraphicsView
 public:
     explicit PdfViewer(QWidget *parent = 0, QString file = QString());
 
+    static void showDocument(const QString &file);
+
 public slots:
     void showPage(int page);
     void nextPage();
@@ -47,6 +49,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void wheelEvent(QWheelEvent *event);
     void setZoomLevel(int step);
+    void closeEvent(QCloseEvent *event);
 
 private:
     int _currentPage;

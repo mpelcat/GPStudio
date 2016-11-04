@@ -38,6 +38,8 @@ public:
     explicit BlockEditorWindow(QWidget *parent = 0, ModelBlock *block = 0);
     ~BlockEditorWindow();
 
+    static void showImplementationsFiles(const QString &driver);
+
 public slots:
     void about();
     void aboutQt();

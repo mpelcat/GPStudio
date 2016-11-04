@@ -29,6 +29,7 @@
 #include <QKeyEvent>
 #include <QGraphicsPixmapItem>
 #include <qmath.h>
+#include <QDebug>
 
 PdfViewer::PdfViewer(QWidget *parent, QString file)
     : QGraphicsView(parent)
@@ -48,6 +49,12 @@ PdfViewer::PdfViewer(QWidget *parent, QString file)
 
     _doc = Poppler::Document::load(file);
     showPage(0);
+}
+
+void PdfViewer::showDocument(const QString &file)
+{
+    PdfViewer *pdfViewer = new PdfViewer(NULL, file);
+    pdfViewer->show();
 }
 
 void PdfViewer::showPage(int page)
@@ -120,4 +127,11 @@ void PdfViewer::setZoomLevel(int step)
     if(scaleLvl<1 && zoom<0.02)
         return;
     scale(scaleLvl, scaleLvl);
+}
+
+void PdfViewer::closeEvent(QCloseEvent *event)
+{
+    Q_UNUSED(event)
+    if(!parent())
+        deleteLater();
 }
