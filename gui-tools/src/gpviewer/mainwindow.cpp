@@ -43,6 +43,10 @@
 
 #include <QMessageBox>
 
+#include "model/model_gpviewer.h"
+#include "model/model_viewer.h"
+#include "model/model_viewerflow.h"
+
 MainWindow::MainWindow(QStringList args) :
     QMainWindow(0),
     ui(new Ui::MainWindow)
@@ -317,15 +321,36 @@ void MainWindow::setupViewers()
     _viewers.clear();
 
     int i=0;
-    foreach (FlowConnection *connection, _cam->flowManager()->flowConnections())
+    if(_cam->node()->gpViewer()->viewers().isEmpty())
     {
-        if(connection->flow()->type()==Flow::Input)
+        foreach (FlowConnection *connection, _cam->flowManager()->flowConnections())
         {
-            FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(connection));
-            ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));
-            viewer->setWindowTitle(QString("Flow %1").arg(connection->flow()->name()));
-            _viewers.insert(i, viewer);
-            i++;
+            if(connection->flow()->type()==Flow::Input)
+            {
+                FlowViewerWidget *viewer = new FlowViewerWidget(new FlowViewerInterface(connection));
+                //ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewer));
+                viewer->setWindowTitle(QString("Flow %1").arg(connection->flow()->name()));
+                _viewers.insert(i, viewer);
+                i++;
+            }
+        }
+    }
+    else
+    {
+        foreach(ModelViewer *viewer, _cam->node()->gpViewer()->viewers())
+        {
+            QList<FlowConnection *> flowConnections;
+            foreach(ModelViewerFlow *viewerflow, viewer->viewerFlows())
+            {
+                FlowConnection *connection = _cam->flowManager()->flowConnection(viewerflow->flowName());
+                if(connection)
+                    flowConnections.append(connection);
+            }
+            FlowViewerInterface *viewerInterface = new FlowViewerInterface(flowConnections);
+            FlowViewerWidget *viewerWidget = new FlowViewerWidget(viewerInterface);
+            //ScriptEngine::getEngine().engine()->globalObject().setProperty(connection->flow()->name(), ScriptEngine::getEngine().engine()->newQObject(viewerWidget));
+            viewerWidget->setWindowTitle(viewer->name());
+            _viewers.insert(i++, viewerWidget);
         }
     }
 

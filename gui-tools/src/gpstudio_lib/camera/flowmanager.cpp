@@ -79,18 +79,35 @@ void FlowManager::setCamera(Camera *camera)
 
 void FlowManager::addFlowConnection(FlowConnection *flowConnection)
 {
-    _flowConnectionsMap.insert(flowConnection->flowId(), flowConnection);
+    _flowConnectionsMapName.insert(flowConnection->flow()->name(), flowConnection);
+    _flowConnectionsMapId.insert(flowConnection->flowId(), flowConnection);
     _flowConnections.append(flowConnection);
 }
 
 const QMap<int, FlowConnection *> FlowManager::flowConnectionsMap() const
 {
-    return _flowConnectionsMap;
+    return _flowConnectionsMapId;
 }
 
 const QList<FlowConnection *> FlowManager::flowConnections() const
 {
     return _flowConnections;
+}
+
+FlowConnection *FlowManager::flowConnection(int id) const
+{
+    QMap<int, FlowConnection*>::const_iterator localConstFind = _flowConnectionsMapId.constFind(id);
+    if(localConstFind!=_flowConnectionsMapId.constEnd())
+        return *localConstFind;
+    return NULL;
+}
+
+FlowConnection *FlowManager::flowConnection(const QString &name) const
+{
+    QMap<QString, FlowConnection*>::const_iterator localConstFind = _flowConnectionsMapName.constFind(name);
+    if(localConstFind!=_flowConnectionsMapName.constEnd())
+        return *localConstFind;
+    return NULL;
 }
 
 void FlowManager::processFlow(int idFlow)
@@ -100,7 +117,7 @@ void FlowManager::processFlow(int idFlow)
 
     int id = _camera->com()->inputFlow()[idFlow]->idFlow();
     FlowPackage data = _camera->com()->inputFlow()[idFlow]->getData();
-    FlowConnection *flowConnection = _flowConnectionsMap[id];
+    FlowConnection *flowConnection = _flowConnectionsMapId[id];
     flowConnection->recImg(data);
     //qDebug()<<Q_FUNC_INFO<<id<<flowConnection->flow()->name();
 }

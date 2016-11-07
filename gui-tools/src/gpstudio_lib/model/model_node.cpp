@@ -33,8 +33,8 @@ ModelNode::ModelNode(const QString &name)
     : _name(name)
 {
     _valid = false;
-    _board = NULL;
-    _gpViewer = NULL;
+    _board = new ModelBoard();
+    _gpViewer = new ModelGPViewer();
     _generatedFile = false;
 }
 
@@ -328,13 +328,11 @@ ModelNode *ModelNode::fromNodeGenerated(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->board()==NULL)
-                    node->setBoard(ModelBoard::fromNodeGenerated(e));
+                node->setBoard(ModelBoard::fromNodeGenerated(e));
             }
             if(e.tagName()=="gpviewer")
             {
-                if(node->gpViewer()==NULL)
-                    node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
+                node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
             }
             if(e.tagName()=="blocks")
                 node->addBlock(ModelBlock::listFromNodeGenerated(e));
@@ -360,16 +358,12 @@ ModelNode *ModelNode::fromNodeDef(const QDomElement &domElement)
         {
             if(e.tagName()=="board")
             {
-                if(node->board()==NULL)
-                {
-                    node->setBoard(ModelBoard::fromNodeDef(e));
-                    node->addBlock(ModelBoard::listIosFromNodeDef(e));
-                }
+                node->setBoard(ModelBoard::fromNodeDef(e));
+                node->addBlock(ModelBoard::listIosFromNodeDef(e));
             }
             if(e.tagName()=="gpviewer")
             {
-                if(node->gpViewer()==NULL)
-                    node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
+                node->setGpViewer(ModelGPViewer::fromNodeGenerated(e));
             }
             if(e.tagName()=="process")
                 node->addBlock(ModelBlock::listFromNodeDef(e));

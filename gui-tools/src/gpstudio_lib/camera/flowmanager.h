@@ -41,6 +41,8 @@ public:
 
     const QMap<int, FlowConnection* > flowConnectionsMap() const;
     const QList<FlowConnection *> flowConnections() const;
+    FlowConnection *flowConnection(int id) const;
+    FlowConnection *flowConnection(const QString &name) const;
 
 private:
     void addFlowConnection(FlowConnection *flowConnection);
@@ -49,7 +51,8 @@ protected slots:
     void processFlow(int idFlow);
 
 private:
-    QMap<int, FlowConnection* > _flowConnectionsMap;
+    QMap<int, FlowConnection* > _flowConnectionsMapId;
+    QMap<QString, FlowConnection* > _flowConnectionsMapName;
     QList<FlowConnection* > _flowConnections;
 
     Block *_blockCom;
