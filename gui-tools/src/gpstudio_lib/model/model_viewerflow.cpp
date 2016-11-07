@@ -1,5 +1,7 @@
 #include "model_viewerflow.h"
 
+#include <QDebug>
+
 ModelViewerFlow::ModelViewerFlow()
 {
 }
@@ -36,7 +38,7 @@ QList<ModelViewerFlow *> ModelViewerFlow::listFromNodeGenerated(const QDomElemen
         QDomElement e = n.toElement();
         if(!e.isNull())
         {
-            if(e.tagName()=="viewer")
+            if(e.tagName()=="flow")
                 list.append(ModelViewerFlow::fromNodeGenerated(e));
         }
         n = n.nextSibling();
@@ -46,7 +48,7 @@ QList<ModelViewerFlow *> ModelViewerFlow::listFromNodeGenerated(const QDomElemen
 
 QDomElement ModelViewerFlow::toXMLElement(QDomDocument &doc)
 {
-    QDomElement element = doc.createElement("viewer");
+    QDomElement element = doc.createElement("flow");
 
     element.setAttribute("flowname", _flowname);
 

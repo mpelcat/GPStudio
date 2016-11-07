@@ -484,7 +484,7 @@ QVariant CameraItem::value(int column, int role) const
             switch (column)
             {
             case CameraItemModelNoSorted::Name:
-                return QVariant(modelGPViewer()->name());
+                return QVariant(modelViewerFlow()->flowName());
             default:
                 return QVariant();
             }
