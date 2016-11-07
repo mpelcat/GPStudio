@@ -57,6 +57,14 @@ class Viewer
             $this->parse_xml($xml);
     }
 
+    /** @brief Add a flow to the viewer 
+     *  @param ViewerFlow $flow property to add to the block
+     */
+    function addViewerFlow($flow)
+    {
+        array_push($this->viewerFlows, $flow);
+    }
+
     /**
      * @brief internal function to fill this instance from input xml structure
      * 
@@ -66,6 +74,15 @@ class Viewer
     protected function parse_xml($xml)
     {
         $this->name = (string) $xml['name'];
+        
+        // viewers
+        if (isset($xml->flows))
+        {
+            foreach ($xml->flows->flow as $flow)
+            {
+                $this->addViewerFlow(new ViewerFlow($flow));
+            }
+        }
     }
 
     /**
@@ -86,10 +103,10 @@ class Viewer
         $xml_element->appendChild($att);
 
         // parambitfields
-        if (!empty($this->parambitfields))
+        if (!empty($this->viewerFlows))
         {
             $xml_flows = $xml->createElement("flows");
-            foreach ($this->viewerflows as $viewerflow)
+            foreach ($this->viewerFlows as $viewerflow)
             {
                 $xml_flows->appendChild($viewerflow->getXmlElement($xml));
             }

@@ -24,7 +24,7 @@ ModelViewerFlow *ModelViewerFlow::fromNodeGenerated(const QDomElement &domElemen
 {
     ModelViewerFlow *viewerFlow = new ModelViewerFlow();
 
-    viewerFlow->setFlowName(domElement.attribute("flowname","no_name"));
+    viewerFlow->setFlowName(domElement.attribute("flowName","no_name"));
 
     return viewerFlow;
 }
