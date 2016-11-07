@@ -97,7 +97,7 @@ class GPViewer
      */
     function addViewer($viewer)
     {
-        array_push($this->comConnects, $viewer);
+        array_push($this->viewers, $viewer);
     }
 
     /**
@@ -108,7 +108,7 @@ class GPViewer
      */
     function getViewer($name)
     {
-        foreach ($this->comConnects as $viewer)
+        foreach ($this->viewers as $viewer)
         {
             if ($viewer->name == $name)
                 return $viewer;
