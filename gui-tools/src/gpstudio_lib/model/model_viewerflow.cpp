@@ -50,7 +50,7 @@ QDomElement ModelViewerFlow::toXMLElement(QDomDocument &doc)
 {
     QDomElement element = doc.createElement("flow");
 
-    element.setAttribute("flowname", _flowname);
+    element.setAttribute("flowName", _flowname);
 
     return element;
 }

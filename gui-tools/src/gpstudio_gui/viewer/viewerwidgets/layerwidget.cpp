@@ -25,6 +25,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QImage>
+#include <QBitmap>
 #include <QDebug>
 #include <QMouseEvent>
 
@@ -43,6 +44,8 @@ LayerWidget::LayerWidget(QWidget *parent) :
 
     _propertyView = All;
     _pixmapItem = _scene->addPixmap(QPixmap());
+    _maskItem = _scene->addPixmap(QPixmap());
+    _maskItem->setZValue(1);
     _titleItem = _scene->addSimpleText(QString());
 }
 
@@ -116,6 +119,13 @@ void LayerWidget::showImage(const QPixmap &image, const QString &title)
     // add title to image
     _titleItem->setText(title);
     _titleItem->setPos((_pixmapItem->pixmap().width()-_titleItem->boundingRect().width())/2, -_titleItem->boundingRect().height()-10);
+}
+
+void LayerWidget::setMask(const QImage &mask)
+{
+    QPixmap masked = QPixmap::fromImage(mask);
+    masked.setMask(masked.createMaskFromColor(QColor(Qt::white)));
+    _maskItem->setPixmap(masked);
 }
 
 void LayerWidget::wheelEvent(QWheelEvent *event)

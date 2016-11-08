@@ -26,6 +26,8 @@
 #include <QGraphicsView>
 #include <vector>
 
+#include "featureitem.h"
+
 #ifdef __USE_OPEN_CV__
 #include <opencv2/core/core.hpp>
 #endif
@@ -48,6 +50,9 @@ public:
 #endif
     void showImage(const QImage &image, const QString &title=QString());
     void showImage(const QPixmap &image, const QString &title=QString());
+
+    void setMask(const QImage &mask);
+    void setFeatures(uint layer, QList<Feature> features);
 
     unsigned int propertyView() const;
     void setPropertyView(unsigned int propertyView);
@@ -83,6 +88,7 @@ private:
     unsigned int _propertyView;
 
     QGraphicsPixmapItem *_pixmapItem;
+    QGraphicsPixmapItem *_maskItem;
     QGraphicsSimpleTextItem *_titleItem;
 
     int _flowNumber;

@@ -55,12 +55,24 @@ void LayerViewer::showFlowConnection(int flowId)
     int width = flowProp->property("width").toInt();
     int height = flowProp->property("height").toInt();
 
+    // check for masked mode
+    if(_flowViewerInterface->flowConnections()[flowId]->flow()->assocProperty()->property("colormode").toString()=="bin"
+            && _flowViewerInterface->flowConnections().count()>1)
+    {
+        QImage *image = flowPackage.toImage(width, height, 8);
+        _widget->setMask(*image);
+        delete image;
+        return;
+    }
+
+    // image mode
     if(width!=0 && height!=0)
     {
         QImage *image = flowPackage.toImage(width, height, 8);
         _widget->showImage(*image);
         delete image;
     }
+
 
     if(!_recordPath.isEmpty() && _recordButton->isChecked())
     {

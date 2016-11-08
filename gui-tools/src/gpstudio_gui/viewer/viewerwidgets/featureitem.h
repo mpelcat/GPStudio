@@ -18,23 +18,27 @@
 **
 ****************************************************************************/
 
-#ifndef DOCVIEWER_H
-#define DOCVIEWER_H
+#ifndef FEATUREITEM_H
+#define FEATUREITEM_H
 
 #include "gpstudio_gui_common.h"
 
-#include <QWidget>
+#include <QGraphicsItem>
 
-class GPSTUDIO_GUI_EXPORT DocViewer : public QWidget
+#include "feature.h"
+
+class GPSTUDIO_GUI_EXPORT FeatureItem : public QGraphicsItem
 {
-    Q_OBJECT
 public:
-    explicit DocViewer(QWidget *parent = 0);
+    FeatureItem(Feature *feature=NULL);
 
-signals:
+    // QGraphicsItem interface
+public:
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-public slots:
-    void loadFileCode(QString file);
+protected:
+    Feature *_feature;
 };
 
-#endif // DOCVIEWER_H
+#endif // FEATUREITEM_H

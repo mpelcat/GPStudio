@@ -18,23 +18,44 @@
 **
 ****************************************************************************/
 
-#ifndef DOCVIEWER_H
-#define DOCVIEWER_H
+#ifndef FEATURE_H
+#define FEATURE_H
 
 #include "gpstudio_gui_common.h"
 
-#include <QWidget>
-
-class GPSTUDIO_GUI_EXPORT DocViewer : public QWidget
+class GPSTUDIO_GUI_EXPORT Feature
 {
-    Q_OBJECT
 public:
-    explicit DocViewer(QWidget *parent = 0);
+    enum Type {
+        Points,
+        PointsValue,
+        Rects,
+        RectsValue
+    };
 
-signals:
+    Feature();
 
-public slots:
-    void loadFileCode(QString file);
+    int x() const;
+    void setX(int x);
+
+    int y() const;
+    void setY(int y);
+
+    int w() const;
+    void setW(int w);
+
+    int h() const;
+    void setH(int h);
+
+    int val() const;
+    void setVal(int val);
+
+protected:
+    int _x;
+    int _y;
+    int _w;
+    int _h;
+    int _val;
 };
 
-#endif // DOCVIEWER_H
+#endif // FEATURE_H

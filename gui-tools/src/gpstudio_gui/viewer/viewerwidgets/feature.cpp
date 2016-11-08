@@ -18,23 +18,59 @@
 **
 ****************************************************************************/
 
-#ifndef DOCVIEWER_H
-#define DOCVIEWER_H
+#include "feature.h"
 
-#include "gpstudio_gui_common.h"
-
-#include <QWidget>
-
-class GPSTUDIO_GUI_EXPORT DocViewer : public QWidget
+Feature::Feature()
 {
-    Q_OBJECT
-public:
-    explicit DocViewer(QWidget *parent = 0);
 
-signals:
+}
 
-public slots:
-    void loadFileCode(QString file);
-};
+int Feature::x() const
+{
+    return _x;
+}
 
-#endif // DOCVIEWER_H
+void Feature::setX(int x)
+{
+    _x = x;
+}
+
+int Feature::y() const
+{
+    return _y;
+}
+
+void Feature::setY(int y)
+{
+    _y = y;
+}
+
+int Feature::w() const
+{
+    return _w;
+}
+
+void Feature::setW(int w)
+{
+    _w = w;
+}
+
+int Feature::h() const
+{
+    return _h;
+}
+
+void Feature::setH(int h)
+{
+    _h = h;
+}
+
+int Feature::val() const
+{
+    return _val;
+}
+
+void Feature::setVal(int val)
+{
+    _val = val;
+}
