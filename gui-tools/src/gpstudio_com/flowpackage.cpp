@@ -51,7 +51,7 @@ FlowPackage::FlowPackage(const QImage &image, const int bitCount, const FlowPack
         {
             for(int x=0; x<image.width(); x++)
             {
-                _data.append((char)0);
+                //_data.append((char)0);
                 _data.append((unsigned char)qGray(image.pixel(x,y)));
                 //_data.append((char)0);
             }

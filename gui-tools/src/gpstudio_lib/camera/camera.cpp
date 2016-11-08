@@ -57,6 +57,9 @@ bool Camera::loadFromFile(const QString &fileCameraConfig)
     ModelNode *node = ModelNode::readFromFile(fileCameraConfig);
     setNode(node);
 
+    if(!node)
+        return false;
+
     // load library with project IPs
     foreach (ModelBlock *block, node->blocks())
     {
@@ -68,7 +71,7 @@ bool Camera::loadFromFile(const QString &fileCameraConfig)
         }
     }
 
-    return (node != NULL);
+    return true;
 }
 
 const ModelNode *Camera::node() const

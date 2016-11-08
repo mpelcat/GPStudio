@@ -5,7 +5,8 @@ SUBDIRS += gpstudio_com \
            gpstudio_gui \
            gpviewer \
            gpnode \
-    gpblock
+           gpblock \
+           gphwloop
 
 # doxygen rules
 dox.target = doc

@@ -119,5 +119,5 @@ void FlowManager::processFlow(int idFlow)
     FlowPackage data = _camera->com()->inputFlow()[idFlow]->getData();
     FlowConnection *flowConnection = _flowConnectionsMapId[id];
     flowConnection->recImg(data);
-    //qDebug()<<Q_FUNC_INFO<<id<<flowConnection->flow()->name();
+    qDebug()<<Q_FUNC_INFO<<id<<flowConnection->flow()->name();
 }
