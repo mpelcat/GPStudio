@@ -29,6 +29,7 @@
 #include <QPoint>
 
 #include "model_componentpartflow.h"
+#include "model_componentpartproperty.h"
 
 class ModelBlock;
 
@@ -57,6 +58,12 @@ public:
     void addFlows(const QList<ModelComponentPartFlow *> &flows);
     ModelComponentPartFlow *getFlow(const QString &name) const;
 
+    QList<ModelComponentPartProperty *> &properties();
+    const QList<ModelComponentPartProperty *> &properties() const;
+    void addProperty(ModelComponentPartProperty *property);
+    void addProperties(const QList<ModelComponentPartProperty *> &properties);
+    ModelComponentPartProperty *getProperty(const QString &name) const;
+
 public:
     static ModelComponentPart *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelComponentPart *> listFromNodeGenerated(const QDomElement &domElement);
@@ -69,6 +76,7 @@ protected:
     QString _draw;
 
     QList<ModelComponentPartFlow *> _flows;
+    QList<ModelComponentPartProperty *> _properties;
 
     ModelBlock *_parent;
 };

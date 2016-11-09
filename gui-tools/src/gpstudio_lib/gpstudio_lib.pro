@@ -75,6 +75,7 @@ HEADERS += gpstudio_lib_common.h \
     model/model_propertyenum.h \
     model/model_componentpart.h \
     model/model_componentpartflow.h \
+    model/model_componentpartproperty.h \
     model/model_gpviewer.h \
     model/model_viewer.h \
     model/model_viewerflow.h \
@@ -127,6 +128,7 @@ SOURCES += \
     model/model_propertyenum.cpp \
     model/model_componentpart.cpp \
     model/model_componentpartflow.cpp \
+    model/model_componentpartproperty.cpp \
     model/model_gpviewer.cpp \
     model/model_viewer.cpp \
     model/model_viewerflow.cpp \

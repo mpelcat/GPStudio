@@ -4,11 +4,11 @@
     <part name="main">
       <svg width="100" height="80">
         <rect width="100" height="80" x="0" y="0" fill="lightgray"/>
-        <path d="M30 20 L60 40 L30 60" fill="transparent" stroke="black" stroke-width="10"/>
+        <path d="M30 10 L60 30 L30 50" fill="transparent" stroke="black" stroke-width="10"/>
       </svg>
       <properties>
-          <property name="threshold"/>
-      </properties>          
+          <property name="threshold" x_pos="5" y_pos="40" width="90" height="50"/>
+      </properties>
     </part>
   </parts>
   <files>

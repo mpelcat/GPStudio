@@ -280,6 +280,19 @@ QList<BlockItem *> BlockItem::fromBlock(Block *block)
             proxy->setWidget(propertyEnableWidget);
         }
 
+        foreach (ModelComponentPartProperty *partProperty, item->modelPart()->properties())
+        {
+            Property *property = block->assocProperty()->path(partProperty->name());
+            if(property)
+            {
+                QWidget *propertyWidget = PropertyWidget::getWidgetFromProperty(property);
+                QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget(item);
+                propertyWidget->setGeometry(QRect(partProperty->pos(), partProperty->size()));
+                propertyWidget->setAttribute(Qt::WA_NoSystemBackground);
+                proxy->setWidget(propertyWidget);
+            }
+        }
+
         item->_block = block;
     }
 

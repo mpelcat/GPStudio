@@ -39,12 +39,16 @@ ModelComponentPart::ModelComponentPart(const ModelComponentPart &other)
 
     for(int i=0; i<other._flows.size(); i++)
         addFlow(new ModelComponentPartFlow(*other._flows[i]));
+    for(int i=0; i<other._properties.size(); i++)
+        addProperty(new ModelComponentPartProperty(*other._properties[i]));
 }
 
 ModelComponentPart::~ModelComponentPart()
 {
     for(int i=0; i<_flows.size(); i++)
         delete _flows[i];
+    for(int i=0; i<_properties.size(); i++)
+        delete _properties[i];
 }
 
 QString ModelComponentPart::name() const
@@ -122,6 +126,41 @@ ModelComponentPartFlow *ModelComponentPart::getFlow(const QString &name) const
     return NULL;
 }
 
+QList<ModelComponentPartProperty *> &ModelComponentPart::properties()
+{
+    return _properties;
+}
+
+const QList<ModelComponentPartProperty *> &ModelComponentPart::properties() const
+{
+    return _properties;
+}
+
+void ModelComponentPart::addProperty(ModelComponentPartProperty *property)
+{
+    property->setParent(this);
+    _properties.append(property);
+}
+
+void ModelComponentPart::addProperties(const QList<ModelComponentPartProperty *> &properties)
+{
+    foreach (ModelComponentPartProperty *property, properties)
+    {
+        addProperty(property);
+    }
+}
+
+ModelComponentPartProperty *ModelComponentPart::getProperty(const QString &name) const
+{
+    for(int i=0; i<this->_properties.size(); i++)
+    {
+        ModelComponentPartProperty *property = this->properties().at(i);
+        if(property->name()==name)
+            return property;
+    }
+    return NULL;
+}
+
 ModelComponentPart *ModelComponentPart::fromNodeGenerated(const QDomElement &domElement)
 {
     bool ok;
@@ -164,6 +203,8 @@ ModelComponentPart *ModelComponentPart::fromNodeGenerated(const QDomElement &dom
         {
             if(e.tagName()=="flows")
                 part->addFlows(ModelComponentPartFlow::listFromNodeGenerated(e));
+            if(e.tagName()=="properties")
+                part->addProperties(ModelComponentPartProperty::listFromNodeGenerated(e));
         }
         n = n.nextSibling();
     }
