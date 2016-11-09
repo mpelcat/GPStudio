@@ -19,6 +19,7 @@
  */
 
 require_once("componentpartflow.php");
+require_once("componentpartproperty.php");
 
 /**
  * Multiple parts could be used to define a component
@@ -53,10 +54,16 @@ class ComponentPart
     public $svg;
 
     /**
-     * @brief Array of bitfields if param contain different bitfield (optional)
+     * @brief Array of PartFlow 
      * @var array|ComponentPartFlow $partflows
      */
     public $partflows;
+
+    /**
+     * @brief Array 
+     * @var array|ComponentPartProperty $partproperties
+     */
+    public $partproperties;
 
     /**
      * @brief Constructor of the class
@@ -70,6 +77,7 @@ class ComponentPart
         $this->x_pos = -1;
         $this->y_pos = -1;
         $this->partflows = array();
+        $this->partproperties = array();
 
         if ($xml)
             $this->parse_xml($xml);
@@ -100,6 +108,15 @@ class ComponentPart
             foreach ($xml->flows->flow as $flow)
             {
                 $this->addPartFlow(new ComponentPartFlow($flow));
+            }
+        }
+
+        // partproperties
+        if (isset($xml->properties))
+        {
+            foreach ($xml->properties->property as $property)
+            {
+                $this->addPartProperty(new ComponentPartProperty($property));
             }
         }
     }
@@ -140,6 +157,17 @@ class ComponentPart
                 }
                 $xml_element->appendChild($xml_partflows);
             }
+
+            // partproperties
+            if (!empty($this->partproperties))
+            {
+                $xml_partproperties = $xml->createElement("properties");
+                foreach ($this->partproperties as $property)
+                {
+                    $xml_partproperties->appendChild($property->getXmlElement($xml, $format));
+                }
+                $xml_element->appendChild($xml_partproperties);
+            }
         }
 
         if ($format == "complete" or $format == "project")
@@ -174,7 +202,7 @@ class ComponentPart
     }
 
     /**
-     * @brief return a reference to the bitfield with the name $name, if not
+     * @brief return a reference to the partflow with the name $name, if not
      * found, return null
      * @param string $name name of the partflow to search
      * @param bool $casesens take care or not of the case of the name
@@ -202,8 +230,8 @@ class ComponentPart
     }
 
     /**
-     * @brief delete a bitfield from his name
-     * @param string $name name of the bitfield to delete
+     * @brief delete a partflow from his name
+     * @param string $name name of the partflow to delete
      */
     function delPartFlow($name)
     {
@@ -213,6 +241,62 @@ class ComponentPart
             if ($partflow->name == $name)
             {
                 unset($this->partflows[$i]);
+                return;
+            }
+            $i++;
+        }
+        return null;
+    }
+
+    /**
+     * @brief Add a partproperty to the param
+     * @param PartProperty $partproperty partproperty to add to the param
+     */
+    function addPartProperty($partproperty)
+    {
+        array_push($this->partproperties, $partproperty);
+    }
+
+    /**
+     * @brief return a reference to the partproperty with the name $name, if not
+     * found, return null
+     * @param string $name name of the partproperty to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return PartProperty found bitfield
+     */
+    function getPartProperty($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->partproperties as $partproperty)
+            {
+                if ($partproperty->name == $name)
+                    return $partproperty;
+            }
+        }
+        else
+        {
+            foreach ($this->partproperties as $partproperty)
+            {
+                if (strcasecmp($partproperty->name, $name) == 0)
+                    return $partproperty;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @brief delete a partproperty from his name
+     * @param string $name name of the partproperty to delete
+     */
+    function delPartProperty($name)
+    {
+        $i = 0;
+        foreach ($this->partproperties as $partproperty)
+        {
+            if ($partproperty->name == $name)
+            {
+                unset($this->partproperties[$i]);
                 return;
             }
             $i++;

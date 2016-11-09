@@ -20,14 +20,15 @@
 
 /**
  * Multiple part flow could be used to define a part of a component
- * @brief ComponentPart is the the graphical definition of flow (position, part)
- * @see Block
+ * @brief ComponentPartProperty is the the graphical definition of a property
+ * (position, part)
+ * @see ComponentPart
  * @ingroup base
  */
-class ComponentPartFlow
+class ComponentPartProperty
 {
     /**
-     * @brief Name of the component part
+     * @brief Name of the property to draw
      * @var string $name
      */
     public $name;
@@ -45,6 +46,18 @@ class ComponentPartFlow
     public $y_pos;
 
     /**
+     * @brief width on schematic (optional)
+     * @var int $width
+     */
+    public $width;
+
+    /**
+     * @brief height on schematic (optional)
+     * @var int $height
+     */
+    public $height;
+
+    /**
      * @brief Constructor of the class
      *
      * Build an empty ComponentPart if $xml is empty, fill it with $xml if set
@@ -54,6 +67,8 @@ class ComponentPartFlow
     {
         $this->x_pos = -1;
         $this->y_pos = -1;
+        $this->width = -1;
+        $this->height = -1;
 
         if ($xml)
             $this->parse_xml($xml);
@@ -78,6 +93,16 @@ class ComponentPartFlow
             $this->y_pos = (int) $xml['y_pos'];
         else
             $this->y_pos = -1;
+
+        if (isset($xml['width']))
+            $this->width = (int) $xml['width'];
+        else
+            $this->width = -1;
+
+        if (isset($xml['height']))
+            $this->height = (int) $xml['height'];
+        else
+            $this->height = -1;
     }
 
     /**
@@ -91,30 +116,43 @@ class ComponentPartFlow
      */
     public function getXmlElement($xml, $format)
     {
-        $xml_element = $xml->createElement("flow");
+        $xml_element = $xml->createElement("property");
 
         // name
         $att = $xml->createAttribute('name');
         $att->value = $this->name;
         $xml_element->appendChild($att);
 
-        if ($format == "blockdef")
+        // x_pos
+        if (isset($this->x_pos) and $this->x_pos != -1)
         {
-            // x_pos
-            if (isset($this->x_pos) and $this->x_pos != -1)
-            {
-                $att = $xml->createAttribute('x_pos');
-                $att->value = $this->x_pos;
-                $xml_element->appendChild($att);
-            }
+            $att = $xml->createAttribute('x_pos');
+            $att->value = $this->x_pos;
+            $xml_element->appendChild($att);
+        }
 
-            // y_pos
-            if (isset($this->y_pos) and $this->y_pos != -1)
-            {
-                $att = $xml->createAttribute('y_pos');
-                $att->value = $this->y_pos;
-                $xml_element->appendChild($att);
-            }
+        // y_pos
+        if (isset($this->y_pos) and $this->y_pos != -1)
+        {
+            $att = $xml->createAttribute('y_pos');
+            $att->value = $this->y_pos;
+            $xml_element->appendChild($att);
+        }
+        
+        // width
+        if (isset($this->width) and $this->width != -1)
+        {
+            $att = $xml->createAttribute('width');
+            $att->value = $this->width;
+            $xml_element->appendChild($att);
+        }
+        
+        // height
+        if (isset($this->height) and $this->height != -1)
+        {
+            $att = $xml->createAttribute('height');
+            $att->value = $this->height;
+            $xml_element->appendChild($att);
         }
 
         return $xml_element;
