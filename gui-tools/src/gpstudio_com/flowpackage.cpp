@@ -92,9 +92,9 @@ void FlowPackage::appendData(const QByteArray &data)
     _data.append(data);
 }
 
-QImage *FlowPackage::toImage(const int width, const int height, const int dataSize) const
+QImage FlowPackage::toImage(const int width, const int height, const int dataSize) const
 {
-    QImage *img = new QImage(width, height, QImage::Format_RGB32);
+    QImage img(width, height, QImage::Format_RGB32);
 
     if(dataSize==8)
     {
@@ -109,7 +109,7 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
 
         for(y=0; y<rheight; y++)
         {
-            QRgb *line = (QRgb*)img->scanLine(y);
+            QRgb *line = (QRgb*)img.scanLine(y);
             for(x=0; x<width; x++)
             {
                 line[x]=qRgb(*ptr,*ptr,*ptr);
@@ -118,7 +118,7 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
         }
         for(y=rheight; y<height; y++)
         {
-            QRgb *line = (QRgb*)img->scanLine(y);
+            QRgb *line = (QRgb*)img.scanLine(y);
             for(x=0; x<width; x++)
                 line[x]=qRgb(10,0,100);
         }
@@ -127,7 +127,7 @@ QImage *FlowPackage::toImage(const int width, const int height, const int dataSi
     return img;
 }
 
-QImage *FlowPackage::toImage(const QSize size, const int dataSize) const
+QImage FlowPackage::toImage(const QSize size, const int dataSize) const
 {
     return toImage(size.width(), size.height(), dataSize);
 }

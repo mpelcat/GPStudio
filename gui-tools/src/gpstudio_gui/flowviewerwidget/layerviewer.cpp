@@ -59,18 +59,16 @@ void LayerViewer::showFlowConnection(int flowId)
     if(_flowViewerInterface->flowConnections()[flowId]->flow()->assocProperty()->property("colormode").toString()=="bin"
             && _flowViewerInterface->flowConnections().count()>1)
     {
-        QImage *image = flowPackage.toImage(width, height, 8);
-        _widget->setMask(*image);
-        delete image;
+        QImage image = flowPackage.toImage(width, height, 8);
+        _widget->setMask(image);
         return;
     }
 
     // image mode
     if(width!=0 && height!=0)
     {
-        QImage *image = flowPackage.toImage(width, height, 8);
-        _widget->showImage(*image);
-        delete image;
+        QImage image = flowPackage.toImage(width, height, 8);
+        _widget->showImage(image);
     }
 
 

@@ -36,7 +36,7 @@ GradiantWrapper::~GradiantWrapper()
 QImage *GradiantWrapper::transform(const FlowPackage &data)
 {
     QImage *visu = new QImage(_wimg, _himg, QImage::Format_RGB16);
-    QImage *input = data.toImage(_wimg/_cellSize*_nbBins, _himg/_cellSize, 16);
+    QImage input = data.toImage(_wimg/_cellSize*_nbBins, _himg/_cellSize, 16);
 
     /*QVector<QRgb> colors;
     for(int i=0; i<256; i++) colors.append(qRgb(i,i,i));
@@ -86,7 +86,7 @@ QImage *GradiantWrapper::transform(const FlowPackage &data)
             for (int bin=0; bin<_nbBins; bin++)
             {
                 currentGradStrength = qGray(
-                    input->pixel(cellx*_nbBins + bin , celly));
+                    input.pixel(cellx*_nbBins + bin , celly));
 
                 // no line to draw?
                 if (currentGradStrength == 0)
@@ -112,7 +112,6 @@ QImage *GradiantWrapper::transform(const FlowPackage &data)
         } // for (cellx)
     } // for (celly)
 
-    delete input;
     p.end();
 
     return visu;

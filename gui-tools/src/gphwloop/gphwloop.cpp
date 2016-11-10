@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     qDebug()<<spy.wait(5000);
 
     // save result
-    cam.flowManager()->flowConnection(128)->lastData().toImage(image.size(), 8)->save("/home/seb/catcat.jpg");
+    cam.flowManager()->flowConnection(128)->lastData().toImage(image.size(), 8).save("/home/seb/catcat.jpg");
 
     return a.exec();
 }
