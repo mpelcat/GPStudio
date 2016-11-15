@@ -321,6 +321,14 @@ void NodeEditorWindows::createToolBarAndMenu()
     _mainToolBar->addAction(makerunAction);
     projectMenu->addAction(makerunAction);
 
+    QAction *makeallAction = new QAction("&All previous action", this);
+    makeallAction->setStatusTip("Generate, compile and lauch your projects");
+    makeallAction->setIcon(QIcon(":/icons/img/make-all.png"));
+    connect(makeallAction, SIGNAL(triggered(bool)), _compileLog, SLOT(launchAll()));
+    connect(_compileLog, SIGNAL(generateAvailable(bool)), makeallAction, SLOT(setEnabled(bool)));
+    _mainToolBar->addAction(makeallAction);
+    projectMenu->addAction(makeallAction);
+
     QAction *stopAction = new QAction("&Abort command", this);
     stopAction->setStatusTip("Aborts current launched command");
     stopAction->setIcon(QIcon(":/icons/img/stop.png"));
