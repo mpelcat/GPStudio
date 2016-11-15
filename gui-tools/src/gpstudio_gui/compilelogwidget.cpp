@@ -31,6 +31,8 @@ CompileLogWidget::CompileLogWidget(QWidget *parent) : QWidget(parent)
     setupWidgets();
     _process = NULL;
     _project = NULL;
+    _allRequest = false;
+    _currentAction = ActionNone;
 
     checkAction();
 }
@@ -157,6 +159,7 @@ void CompileLogWidget::launchClean()
     QStringList arguments;
     arguments << "clean";
 
+    _currentAction = ActionClean;
     launch(program, arguments);
 }
 
@@ -173,10 +176,11 @@ void CompileLogWidget::launchGenerate()
     QString program = "cmd";
     arguments << "/c" << "gpnode.bat";
 #else
-    QString program = "gpnode";
+    QString program = QCoreApplication::applicationDirPath()+"/gpnode";
 #endif
     arguments << "generate" << "-o" << "build";
 
+    _currentAction = ActionGenerate;
     launch(program, arguments);
 }
 
@@ -186,6 +190,7 @@ void CompileLogWidget::launchCompile()
     QStringList arguments;
     arguments << "compile";
 
+    _currentAction = ActionCompile;
     launch(program, arguments);
 }
 
@@ -195,6 +200,7 @@ void CompileLogWidget::launchSend()
     QStringList arguments;
     arguments << "send";
 
+    _currentAction = ActionSend;
     launch(program, arguments);
 }
 
@@ -204,7 +210,14 @@ void CompileLogWidget::launchView()
     QStringList arguments;
     arguments << "view";
 
+    _currentAction = ActionView;
     launch(program, arguments);
+}
+
+void CompileLogWidget::launchAll()
+{
+    _allRequest = true;
+    launchGenerate();
 }
 
 void CompileLogWidget::stopAll()
@@ -229,7 +242,29 @@ void CompileLogWidget::exitProcess()
     _process->deleteLater();
     _process = NULL;
 
-    checkAction();
+    if(_allRequest)
+    {
+        switch(_currentAction)
+        {
+        case CompileLogWidget::ActionNone:
+        case CompileLogWidget::ActionClean:
+        case CompileLogWidget::ActionView:
+            _allRequest = false;
+            break;
+        case CompileLogWidget::ActionGenerate:
+            launchCompile();
+            break;
+        case CompileLogWidget::ActionCompile:
+            launchSend();
+            break;
+        case CompileLogWidget::ActionSend:
+            launchView();
+            break;
+        }
+    }
+
+    if(!_allRequest)
+        checkAction();
 }
 
 void CompileLogWidget::errorProcess()

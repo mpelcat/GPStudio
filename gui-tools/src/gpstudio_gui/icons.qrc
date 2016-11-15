@@ -20,6 +20,7 @@
         <file>../img/make-compile.png</file>
         <file>../img/make-generate.png</file>
         <file>../img/make-send.png</file>
+        <file>../img/make-all.png</file>
         <file>../img/stop.png</file>
     </qresource>
     <qresource prefix="/img">
