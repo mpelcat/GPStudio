@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="erode" categ="morpho" master_count="0" pi_size_addr_rel="4" desc="Erosion process from image flow">
+  <parts>
+    <part name="main">
+      <svg width="142px" height="142px" version="1.1" content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0&quot; version=&quot;6.0.1.0&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;&gt;&lt;diagram name=&quot;Page-1&quot;&gt;3VfLbqMwFP0athXYCZBlk74WM1KkSjPLysEOWDUYmZtH5+vHDoYAJk2malppEimyj9/nnOtce3iR7x8VKbOfkjLhIZ/uPXznIYSDSP8a4K0GgjiogVRxaqEj8Mz/MAv6Ft1wyqpeR5BSAC/7YCKLgiXQw4hSctfvtpaiv2pJUuYAzwkRLvqbU8hqNEbhEX9iPM2alYNwVresSPKaKrkp7HoewuvDp27OSTOXPWiVESp3HQjfe3ihpIS6lO8XTBhqG9rqcQ8nWtt9K1bAJQNQPWBLxIY1Oz7sC94aLnYZB/ZcksTUd1puD88zyIWuBbpYgZKvLUsGoaTKGO1UlgSAqeKAIH/SDlpIIZVGC1nouedrLsQAco9jT7hlCti+A9njPTKZM1BvuottRbGl2loRh7a+OwobNHJkXVEbkFgzpe3cR0J1wXI6zm98nl9zFK6t94OsmFjKigOXhquVBJC5JqHpcCt4ahpAnpVA26o00+f71MTnzYpUPLmZvJSSF/BSAVEDvrVP8Z35/g+kz86Tzgp6a+4JXUsEqTQ7A0otgaTuNORKBzRKEsfIuoWGq3Aavscio727x+Www9F0hKIGU0wQ4Nv+jTVGm11habTvShT1JJpEuD9FJTcqYXZU9woZTITRYCI8mEi7LWXgTHRQsT32RcIGwRWUFbx80nVfl5UEYqMviH3b+MsO/EoLNNRO0YBa5ITRexa53A3OShH6oBtmJ7Z8BTdc8Of1ETd8o+DDoMRhdCXBnfD3o88J/3bLVxAcX1lwexV8W7TjLxJ/uNLHxZ+d2PIVxJ864t876uv0BMZyo/OZJrHJVaLVY2ok68o5pWaZ+Vg+vJYFdDzxsDBfjQuT083bN8FwG3qUffsYqayDnCxrxFSnPYT8cWU7HpqMeOgz0q4gPB+eZx4T7/M1qmU/+UXj6g6ZPqXXJyiAorgfEtPYUSBAE1eCFvwHDXT1+Fasg+r4Hsf3fwE=&lt;/diagram&gt;&lt;/mxfile&gt;">
+        <defs/>
+        <g transform="translate(0.5,0.5)">
+          <path d="M 69 9 L 82.04 55.96 L 129 69 L 82.04 82.04 L 69 129 L 55.96 82.04 L 9 69 L 55.96 55.96 Z" fill="#3d3d3d" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
+          <path d="M 19.54 125.54 L 12.46 118.46 L 31.25 99.68 L 24.18 92.61 L 56 82 L 45.39 113.82 L 38.32 106.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" pointer-events="none"/>
+          <path d="M 84.54 124.54 L 77.46 117.46 L 96.25 98.68 L 89.18 91.61 L 121 81 L 110.39 112.82 L 103.32 105.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(0,101.12)scale(1,-1)translate(0,-101.12)rotate(-180,101.12,101.12)" pointer-events="none"/>
+          <path d="M 19.54 59.54 L 12.46 52.46 L 31.25 33.68 L 24.18 26.61 L 56 16 L 45.39 47.82 L 38.32 40.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(0,36.12)scale(1,-1)translate(0,-36.12)" pointer-events="none"/>
+          <path d="M 85.54 59.54 L 78.46 52.46 L 97.25 33.68 L 90.18 26.61 L 122 16 L 111.39 47.82 L 104.32 40.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="rotate(180,102.12,36.12)" pointer-events="none"/>
+          <g transform="translate(61.5,53.5)">
+            <switch>
+              <foreignObject style="overflow:visible;" pointer-events="all" width="15" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                <div style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                  <div style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</div>
+                </div>
+              </foreignObject>
+              <text x="8" y="23" fill="#FCFCFC" text-anchor="middle" font-size="22px" font-family="Helvetica">E</text>
+            </switch>
+          </g>
+        </g>
+      </svg>
+    </part>
+  </parts>
+  <infos>
+    <info name="author" value="Raphael BOUTERIGE"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.1"/>
+    <info name="releasedate" value="2016-10-25"/>
+  </infos>
+  <files>
+    <file name="erode.proc" type="proc" group="blockdef" path="erode.proc"/>
+    <file name="erode.vhd" type="vhdl" group="hdl" path="hdl/erode.vhd"/>
+    <file name="erode_process.vhd" type="vhdl" group="hdl" path="hdl/erode_process.vhd"/>
+    <file name="erode_slave.vhd" type="vhdl" group="hdl" path="hdl/erode_slave.vhd"/>
+    <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value-2"/>
+        <property name="height" type="int" propertymap="in.height.value-2"/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="status_reg" regaddr="0">
+      <bitfields>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
+      </bitfields>
+    </param>
+    <param name="widthimg_reg" regaddr="1">
+      <bitfields>
+        <bitfield name="value" bitfield="15-0" propertymap="in.width.value"/>
+      </bitfields>
+    </param>
+    <param name="heigtimg_reg" regaddr="2">
+      <bitfields>
+        <bitfield name="value" bitfield="15-0" propertymap="in.height.value"/>
+      </bitfields>
+    </param>
+    <param name="LINE_WIDTH_MAX" type="INTEGER" hard="1" value="1280" default="1280"/>
+    <param name="er00_reg" regaddr="3" desc="erosion matrix register for er[0][0]">
+      <bitfields>
+        <bitfield name="m00" bitfield="7-0" propertymap="erosion_matrix.m00.value"/>
+      </bitfields>
+    </param>
+    <param name="er01_reg" regaddr="4" desc="erosion matrix register for er[0][1]">
+      <bitfields>
+        <bitfield name="m01" bitfield="7-0" propertymap="erosion_matrix.m01.value"/>
+      </bitfields>
+    </param>
+    <param name="er02_reg" regaddr="5" desc="erosion matrix register for er[0][2]">
+      <bitfields>
+        <bitfield name="m02" bitfield="7-0" propertymap="erosion_matrix.m02.value"/>
+      </bitfields>
+    </param>
+    <param name="er10_reg" regaddr="6" desc="erosion matrix register for er[1][0]">
+      <bitfields>
+        <bitfield name="m10" bitfield="7-0" propertymap="erosion_matrix.m10.value"/>
+      </bitfields>
+    </param>
+    <param name="er11_reg" regaddr="7" desc="erosion matrix register for er[1][1]">
+      <bitfields>
+        <bitfield name="m11" bitfield="7-0" propertymap="erosion_matrix.m11.value"/>
+      </bitfields>
+    </param>
+    <param name="er12_reg" regaddr="8" desc="erosion matrix register for er[1][2]">
+      <bitfields>
+        <bitfield name="m12" bitfield="7-0" propertymap="erosion_matrix.m12.value"/>
+      </bitfields>
+    </param>
+    <param name="er20_reg" regaddr="9" desc="erosion matrix register for er[2][0]">
+      <bitfields>
+        <bitfield name="m20" bitfield="7-0" propertymap="erosion_matrix.m20.value"/>
+      </bitfields>
+    </param>
+    <param name="er21_reg" regaddr="10" desc="erosion matrix register for er[2][1]">
+      <bitfields>
+        <bitfield name="m21" bitfield="7-0" propertymap="erosion_matrix.m21.value"/>
+      </bitfields>
+    </param>
+    <param name="er22_reg" regaddr="11" desc="erosion matrix register for er[2][2]">
+      <bitfields>
+        <bitfield name="m22" bitfield="7-0" propertymap="erosion_matrix.m22.value"/>
+      </bitfields>
+    </param>
+  </params>
+  <properties>
+    <property name="enable" type="bool" value="1"/>
+    <property name="erosion_matrix" type="matrix" value="3">
+      <properties>
+        <property name="m00" type="int" value="0" min="0" max="1" desc="erosion matrix value for er[0][0]"/>
+        <property name="m01" type="int" value="1" min="0" max="1" desc="erosion matrix value for er[0][1]"/>
+        <property name="m02" type="int" value="0" min="0" max="1" desc="erosion matrix value for er[0][2]"/>
+        <property name="m10" type="int" value="1" min="0" max="1" desc="erosion matrix value for er[1][0]"/>
+        <property name="m11" type="int" value="1" min="0" max="1" desc="erosion matrix value for er[1][1]"/>
+        <property name="m12" type="int" value="1" min="0" max="1" desc="erosion matrix value for er[1][2]"/>
+        <property name="m20" type="int" value="0" min="0" max="1" desc="erosion matrix value for er[2][0]"/>
+        <property name="m21" type="int" value="1" min="0" max="1" desc="erosion matrix value for er[2][1]"/>
+        <property name="m22" type="int" value="0" min="0" max="1" desc="erosion matrix value for er[2][2]"/>
+      </properties>
+    </property>
+  </properties>
+</process>

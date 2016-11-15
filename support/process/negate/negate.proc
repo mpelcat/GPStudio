@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="negate" categ="" master_count="0" pi_size_addr_rel="2" desc="Negation process from image flow">
+  <parts>
+    <part name="main">
+      <svg width="128px" height="128px" version="1.1" content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0&quot; version=&quot;6.0.1.0&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;&gt;&lt;diagram name=&quot;Page-1&quot;&gt;xZbLbqMwFIafhj3YkJDlNNN2NiNVymLWHnwCVg2OjBOSefqxsR1wIFGqNiqRIvz7+Padi4nwuj6+SrKrfgsKPEIxPUb4Z4RQmmX63wgnK6BFbIVSMmqlZBA27B840ZvtGYU2MFRCcMV2oViIpoFCBRqRUnSh2VbwcNUdKWEibArCp+ofRlVl1RwtBv0XsLLyKyeLle35S4r3Uop949aLEN72j+2uiZ/LHbStCBXdSMLPEV5LIZR9q49r4Aatx2bHvVzpPe9bQqPuGYDsgAPhe/A77velTp5FVzEFmx0pTLvT7o7wU6VqrluJfqWkrYCOGm9EKZBNr6A41WqrpHg/gzR2W8b5WnAh+yU8Im/pexrR6DWfpmdyxzyAVHAcSe6MryBqUPKkTVwvyh1vH4+pa3eDdxPvk2rsWS8SF1Hlee6Bqn5xYOchLz8N+Tu5LB6FJf80loswijPzeyAunH4jLl8bb/HirD9qmHDIJCaTuk4yYdKyFXuj3wNSCkXcqFX8RQyTC4bLbJqKMwyzr0B4R7mDhv4wN4huFZy0LSvmUnHMNow2je+lf27hAhrcP1NYIxjZDRgSuPbPIby15gi5Fd4E0zu5Gs84voCsQ0UW4EaNr5HLiVb49kSKyBLUZKLeYedj3+fD9DHVdOrXcVIENWQS7DM+vl5yl3kY/zifuYrSuSKSfjgDdHP4lrCwh+81/Pwf&lt;/diagram&gt;&lt;/mxfile&gt;">
+        <defs/>
+        <g transform="translate(0.5,0.5)">
+          <rect x="3" y="3" width="120" height="120" fill="#ffffff" stroke="none" pointer-events="none"/>
+          <rect x="3" y="3" width="60" height="120" fill="#ffffff" stroke="none" pointer-events="none"/>
+          <rect x="63" y="3" width="60" height="120" fill="#050505" stroke="none" pointer-events="none"/>
+          <path d="M 13 63 L 63 63" fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" transform="rotate(180,38,63)" pointer-events="none"/>
+          <path d="M 63 63 L 107.76 63" fill="none" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" pointer-events="none"/>
+          <path d="M 113.76 63 L 105.76 67 L 107.76 63 L 105.76 59 Z" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" pointer-events="none"/>
+        </g>
+      </svg>
+    </part>
+  </parts>
+  <infos>
+    <info name="author" value="Raphael BOUTERIGE"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-11-02"/>
+  </infos>
+  <files>
+    <file name="negate.proc" type="proc" group="blockdef" path="negate.proc"/>
+    <file name="negate.vhd" type="vhdl" group="hdl" path="hdl/negate.vhd"/>
+    <file name="negate_process.vhd" type="vhdl" group="hdl" path="hdl/negate_process.vhd"/>
+    <file name="negate_slave.vhd" type="vhdl" group="hdl" path="hdl/negate_slave.vhd"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value"/>
+        <property name="height" type="int" propertymap="in.height.value"/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="status_reg" regaddr="0">
+      <bitfields>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
+      </bitfields>
+    </param>
+  </params>
+  <properties>
+    <property name="enable" type="bool" value="1"/>
+  </properties>
+</process>

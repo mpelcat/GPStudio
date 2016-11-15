@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="dilate" categ="morpho" master_count="0" pi_size_addr_rel="4" desc="Dilation process from image flow">
+  <parts>
+    <part name="main">
+      <svg width="167px" height="167px" version="1.1" content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0&quot; version=&quot;6.0.1.0&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;&gt;&lt;diagram name=&quot;Page-1&quot;&gt;1VjRcqIwFP0a3yEJqI/V2u3LzuyMM7vPESJkGogTYtH9+r2RIBLQWivdUR8MJzf3hnNOLqUjPM92PxTdpD9lzMQIefFuhJ9HCPk4DODHIPsKGU+8CkgUj21QAyz5X2bBOmzLY1a0ArWUQvNNG4xknrNItzCqlCzbYWsp2lU3NGEdYBlR0UX/8FinFTpBYYO/Mp6kdWU/nFYzKxq9JUpuc1tvhPD68KmmM1rnsjdapDSW5QmEFyM8V1LqapTt5kwYbmvaqnUvZ2aP+1Ys11ctsEK9U7G1976wO9P7mg3NdpBslupMAODDsNBKvrG5FFIBksscImdrLoQDUcGTHC4j2A4DfPbOlObA85OdyHgcmzKzMuWaLTc0MjVLcJVJKHNdJwQiX+bmC7igKyZmR6bdbcAq6yjD58zeIBRmu7Ms+UfuwdNMZkyrPYTYBbiWy9qZeOPqumzMQWxIeuKLehm1dkyOmRtJYGBVOaNQ2FGoI1AfeSdqXearV8sKrL2P+tV1mT6n1x0UgA7SUgAHk44CPiJdCY7glzQYf6wBnOSNGRYl11F6xtE3igJk4hBPcdxRxneUMZHP5vvN8kzaBwSHXo88PSfEv8cRqXNckofl8ZN5MJhmJGhR8MjpaFY+WgW5pEIHR1HUJ0wcrsIghBklNdVcmq7m4wAAKGnpDw8LqdIn19UOWdx5EF3flMiHRyLooTy4wLgt9kty2ENTKXAqhZN2ikJuVcTsqtOnjZvI3fLUSQQcJUx3Eh0McGTgOk/4D+iJteCbV1v8y/5AE6dlTslQ/vDblYhHbvOHu2WCyWD+QA/uDzP+fS+vYBQ4xKPBeolTiaBbe4mTaIwG8wp+YK94d/dKiJy+EgzllWm7EvGCG73ibJngYDCvkI5Xnjtm+V8vVJ97cRrw78VvfKGCy+Z1uhK0+Z8FXvwD&lt;/diagram&gt;&lt;/mxfile&gt;">
+        <defs/>
+        <g transform="translate(0.5,0.5)">
+          <g transform="translate(74.5,66.5)">
+            <switch>
+              <foreignObject style="overflow:visible;" pointer-events="all" width="15" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                <div style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                  <div style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</div>
+                </div>
+              </foreignObject>
+              <text x="8" y="23" fill="#FCFCFC" text-anchor="middle" font-size="22px" font-family="Helvetica">E</text>
+            </switch>
+          </g>
+          <path d="M 22 22 Q 82 82 142 22 Q 82 82 142 142 Q 82 82 22 142 Q 82 82 22 22" fill="#3d3d3d" stroke="#36393d" stroke-miterlimit="10" pointer-events="none"/>
+          <path d="M 92.46 26.46 L 99.54 33.54 L 90.75 42.32 L 97.82 49.39 L 66 60 L 76.61 28.18 L 83.68 35.25 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="rotate(135,81.5,45.5)" pointer-events="none"/>
+          <path d="M 56.46 62.46 L 63.54 69.54 L 54.75 78.32 L 61.82 85.39 L 30 96 L 40.61 64.18 L 47.68 71.25 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(45.5,0)scale(-1,1)translate(-45.5,0)rotate(-135,45.5,81.5)" pointer-events="none"/>
+          <path d="M 93.46 100.46 L 100.54 107.54 L 91.75 116.32 L 98.82 123.39 L 67 134 L 77.61 102.18 L 84.68 109.25 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="rotate(315,82.5,119.5)" pointer-events="none"/>
+          <path d="M 130.46 63.46 L 137.54 70.54 L 128.75 79.32 L 135.82 86.39 L 104 97 L 114.61 65.18 L 121.68 72.25 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(0,82.5)scale(1,-1)translate(0,-82.5)rotate(-135,119.5,82.5)" pointer-events="none"/>
+          <g transform="translate(73.5,66.5)">
+            <switch>
+              <foreignObject style="overflow:visible;" pointer-events="all" width="16" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                <div style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 17px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                  <div style="display:inline-block;text-align:inherit;text-decoration:inherit;">D</div>
+                </div>
+              </foreignObject>
+              <text x="8" y="23" fill="#FCFCFC" text-anchor="middle" font-size="22px" font-family="Helvetica">D</text>
+            </switch>
+          </g>
+        </g>
+      </svg>
+    </part>
+  </parts>
+  <infos>
+    <info name="author" value="Raphael BOUTERIGE"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-11-04"/>
+  </infos>
+  <files>
+    <file name="dilate.proc" type="proc" group="blockdef" path="dilate.proc"/>
+    <file name="dilate.vhd" type="vhdl" group="hdl" path="hdl/dilate.vhd"/>
+    <file name="dilate_process.vhd" type="vhdl" group="hdl" path="hdl/dilate_process.vhd"/>
+    <file name="dilate_slave.vhd" type="vhdl" group="hdl" path="hdl/dilate_slave.vhd"/>
+    <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value-2"/>
+        <property name="height" type="int" propertymap="in.height.value-2"/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="status_reg" regaddr="0">
+      <bitfields>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
+      </bitfields>
+    </param>
+    <param name="widthimg_reg" regaddr="1">
+      <bitfields>
+        <bitfield name="value" bitfield="15-0" propertymap="in.width.value"/>
+      </bitfields>
+    </param>
+    <param name="LINE_WIDTH_MAX" type="INTEGER" hard="1" value="1280" default="1280"/>
+    <param name="di00_reg" regaddr="3" desc="dilation matrix register for er[0][0]">
+      <bitfields>
+        <bitfield name="m00" bitfield="7-0" propertymap="dilation_matrix.m00.value"/>
+      </bitfields>
+    </param>
+    <param name="di01_reg" regaddr="4" desc="dilation matrix register for er[0][1]">
+      <bitfields>
+        <bitfield name="m01" bitfield="7-0" propertymap="dilation_matrix.m01.value"/>
+      </bitfields>
+    </param>
+    <param name="di02_reg" regaddr="5" desc="dilation matrix register for er[0][2]">
+      <bitfields>
+        <bitfield name="m02" bitfield="7-0" propertymap="dilation_matrix.m02.value"/>
+      </bitfields>
+    </param>
+    <param name="di10_reg" regaddr="6" desc="dilation matrix register for er[1][0]">
+      <bitfields>
+        <bitfield name="m10" bitfield="7-0" propertymap="dilation_matrix.m10.value"/>
+      </bitfields>
+    </param>
+    <param name="di11_reg" regaddr="7" desc="dilation matrix register for er[1][1]">
+      <bitfields>
+        <bitfield name="m11" bitfield="7-0" propertymap="dilation_matrix.m11.value"/>
+      </bitfields>
+    </param>
+    <param name="di12_reg" regaddr="8" desc="dilation matrix register for er[1][2]">
+      <bitfields>
+        <bitfield name="m12" bitfield="7-0" propertymap="dilation_matrix.m12.value"/>
+      </bitfields>
+    </param>
+    <param name="di20_reg" regaddr="9" desc="dilation matrix register for er[2][0]">
+      <bitfields>
+        <bitfield name="m20" bitfield="7-0" propertymap="dilation_matrix.m20.value"/>
+      </bitfields>
+    </param>
+    <param name="di21_reg" regaddr="10" desc="dilation matrix register for er[2][1]">
+      <bitfields>
+        <bitfield name="m21" bitfield="7-0" propertymap="dilation_matrix.m21.value"/>
+      </bitfields>
+    </param>
+    <param name="di22_reg" regaddr="11" desc="dilation matrix register for er[2][2]">
+      <bitfields>
+        <bitfield name="m22" bitfield="7-0" propertymap="dilation_matrix.m22.value"/>
+      </bitfields>
+    </param>
+  </params>
+  <properties>
+    <property name="enable" type="bool" value="1"/>
+    <property name="dilation_matrix" type="matrix" value="3">
+      <properties>
+        <property name="m00" type="int" value="0" min="0" max="1" desc="dilation matrix value for di[0][0]"/>
+        <property name="m01" type="int" value="1" min="0" max="1" desc="dilation matrix value for di[0][1]"/>
+        <property name="m02" type="int" value="0" min="0" max="1" desc="dilation matrix value for di[0][2]"/>
+        <property name="m10" type="int" value="1" min="0" max="1" desc="dilation matrix value for di[1][0]"/>
+        <property name="m11" type="int" value="1" min="0" max="1" desc="dilation matrix value for di[1][1]"/>
+        <property name="m12" type="int" value="1" min="0" max="1" desc="dilation matrix value for di[1][2]"/>
+        <property name="m20" type="int" value="0" min="0" max="1" desc="dilation matrix value for di[2][0]"/>
+        <property name="m21" type="int" value="1" min="0" max="1" desc="dilation matrix value for di[2][1]"/>
+        <property name="m22" type="int" value="0" min="0" max="1" desc="dilation matrix value for di[2][2]"/>
+      </properties>
+    </property>
+  </properties>
+</process>
