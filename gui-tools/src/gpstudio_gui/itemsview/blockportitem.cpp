@@ -250,22 +250,24 @@ BlockPortItem *BlockPortItem::fromModelFlow(ModelFlow *modelFlow)
     else
         item->_direction = Output;
 
-    item->_modelFlow = modelFlow;
+    item->setModelFlow(modelFlow);
 
     return item;
 }
 
 void BlockPortItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    _hover = true;
     prepareGeometryChange();
+    _hover = true;
+    update();
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void BlockPortItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    _hover = false;
     prepareGeometryChange();
+    _hover = false;
+    update();
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
@@ -278,4 +280,5 @@ void BlockPortItem::setModelFlow(ModelFlow *modelFlow)
 {
     prepareGeometryChange();
     _modelFlow = modelFlow;
+    update();
 }

@@ -36,10 +36,12 @@
 
 #include <model/model_block.h>
 #include <camera/block.h>
+#include <camera/camera.h>
 
 #include "propertywidgets/propertywidgets.h"
 
 BlockItem::BlockItem()
+    : QGraphicsItem()
 {
     _block = NULL;
     _modelPart = NULL;
@@ -51,7 +53,7 @@ BlockItem::BlockItem()
     setFlag(ItemSendsScenePositionChanges, true);
     setCacheMode(QGraphicsItem::NoCache);
 
-    update();
+    updateBlock();
 }
 
 BlockItem::~BlockItem()
@@ -124,7 +126,9 @@ Block *BlockItem::block() const
 
 void BlockItem::updateBlock()
 {
-    _svgRenderer.load(_modelPart->draw().toUtf8());
+    prepareGeometryChange();
+    if(_modelPart)
+        _svgRenderer.load(_modelPart->draw().toUtf8());
 
     if(_svgRenderer.isValid())
         _boundingRect = _svgRenderer.viewBoxF();
@@ -160,6 +164,7 @@ void BlockItem::updateBlock()
         else
             portItem->setPos(0, (_boundingRect.height()/(inCount+1))*(++inId));
     }
+    update();
 }
 
 void BlockItem::updatePos()
@@ -278,6 +283,7 @@ QList<BlockItem *> BlockItem::fromBlock(Block *block)
             propertyEnableWidget->setGeometry(5,5,50,20);
             propertyEnableWidget->setAttribute(Qt::WA_NoSystemBackground);
             proxy->setWidget(propertyEnableWidget);
+            proxy->setOpacity(0.999);
         }
 
         foreach (ModelComponentPartProperty *partProperty, item->modelPart()->properties())
@@ -290,6 +296,7 @@ QList<BlockItem *> BlockItem::fromBlock(Block *block)
                 propertyWidget->setGeometry(QRect(partProperty->pos(), partProperty->size()));
                 propertyWidget->setAttribute(Qt::WA_NoSystemBackground);
                 proxy->setWidget(propertyWidget);
+                proxy->setOpacity(0.999);
             }
         }
 
