@@ -42,6 +42,7 @@ public:
     ~Lib();
 
     void reloadProcess();
+    void addCustomProcess(const QString filePath);
     void addProcess(BlockLib *process);
     const QList<BlockLib *> &processes() const;
     BlockLib *process(const QString &name);
@@ -71,6 +72,7 @@ protected:
 
 protected:
     QList<BlockLib*> _process;
+    QList<QString> _customProcess;
     QMap<QString, BlockLib*> _processMap;
 
     QList<BlockLib*> _ios;

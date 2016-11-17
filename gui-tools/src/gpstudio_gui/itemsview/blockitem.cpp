@@ -97,7 +97,7 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     else
     {
         painter->setBrush(Qt::white);
-        painter->drawRect(QRect(0,0,125,50));
+        painter->drawRect(_boundingRect);
     }
 
     // block name
@@ -130,10 +130,22 @@ void BlockItem::updateBlock()
     if(_modelPart)
         _svgRenderer.load(_modelPart->draw().toUtf8());
 
+    int inCount=0, outCount=0;
+    foreach (BlockPortItem *portItem, _ports)
+    {
+        if(portItem->direction()==BlockPortItem::Output)
+            outCount++;
+        else
+            inCount++;
+    }
+
     if(_svgRenderer.isValid())
         _boundingRect = _svgRenderer.viewBoxF();
     else
-        _boundingRect = QRectF(0,0,125,50);
+    {
+        qreal height = qMax(inCount, outCount) * 20 + 30;
+        _boundingRect = QRectF(0,0,125,height);
+    }
     _boundingRect.setX(0);
     _boundingRect.setY(0);
 
@@ -148,14 +160,6 @@ void BlockItem::updateBlock()
     _boundingRect.setHeight(_boundingRect.height()*ratio);
 
     // port placement
-    int inCount=0, outCount=0;
-    foreach (BlockPortItem *portItem, _ports)
-    {
-        if(portItem->direction()==BlockPortItem::Output)
-            outCount++;
-        else
-            inCount++;
-    }
     int inId=0, outId=0;
     foreach (BlockPortItem *portItem, _ports)
     {

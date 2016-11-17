@@ -27,17 +27,14 @@
 
 Block::Block()
 {
-
+    _assocProperty = NULL;
+    _modelBlock = NULL;
+    _parentCamera = NULL;
 }
 
 QString Block::name() const
 {
     return _name;
-}
-
-Property *Block::assocProperty() const
-{
-    return _assocProperty;
 }
 
 Block *Block::fromModelBlock(ModelBlock *modelBlock)
@@ -85,11 +82,6 @@ Block *Block::fromModelBlock(ModelBlock *modelBlock)
     return block;
 }
 
-ModelBlock *Block::modelBlock() const
-{
-    return _modelBlock;
-}
-
 void Block::setName(const QString &name)
 {
     _name = name;
@@ -111,4 +103,24 @@ Flow *Block::flow(QString name) const
     QMap<QString, Flow*>::const_iterator localConstFind = _flowsMap.constFind(name);
     if(localConstFind!=_flowsMap.constEnd()) return *localConstFind;
     return NULL;
+}
+
+Property *Block::assocProperty() const
+{
+    return _assocProperty;
+}
+
+ModelBlock *Block::modelBlock() const
+{
+    return _modelBlock;
+}
+
+Camera *Block::parentCamera() const
+{
+    return _parentCamera;
+}
+
+void Block::setParentCamera(Camera *parentCamera)
+{
+    _parentCamera = parentCamera;
 }

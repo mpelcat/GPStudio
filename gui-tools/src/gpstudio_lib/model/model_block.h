@@ -114,6 +114,8 @@ public:
 
     QList<ModelFlow *> &flows();
     const QList<ModelFlow *> &flows() const;
+    QList<ModelFlow *> flowsIn() const;
+    QList<ModelFlow *> flowsOut() const;
     void addFlow(ModelFlow *flow);
     void addFlows(const QList<ModelFlow *> &flows);
     ModelFlow *getFlow(const QString &name) const;

@@ -164,6 +164,8 @@ QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) con
             case Property::SInt:
             case Property::Bool:
             case Property::String:
+            case Property::StringType:
+            case Property::Clock:
                 return property->value();
             case Property::Enum:
                 foreach (PropertyEnum *penum, property->enums()) enumsList << penum->name();
@@ -186,6 +188,8 @@ QVariant PropertyItemModelNoSorted::data(const QModelIndex &index, int role) con
         case Property::SInt:
         case Property::Bool:
         case Property::String:
+        case Property::StringType:
+        case Property::Clock:
             return property->value();
         case Property::Enum:
             foreach (PropertyEnum *penum, property->enums()) enumsList << penum->name();

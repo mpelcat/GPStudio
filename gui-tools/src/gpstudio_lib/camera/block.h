@@ -29,6 +29,7 @@
 
 class Flow;
 
+class Camera;
 class ModelBlock;
 
 /**
@@ -49,6 +50,9 @@ public:
 
     ModelBlock *modelBlock() const;
 
+    Camera *parentCamera() const;
+    void setParentCamera(Camera *parentCamera);
+
 protected:
     void setName(const QString &name);
 
@@ -64,6 +68,7 @@ protected:
     Property *_assocProperty;
 
     ModelBlock *_modelBlock;
+    Camera *_parentCamera;
 };
 
 #endif // BLOCK_H

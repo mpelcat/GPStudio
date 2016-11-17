@@ -339,6 +339,28 @@ const QList<ModelFlow *> &ModelBlock::flows() const
     return _flows;
 }
 
+QList<ModelFlow *> ModelBlock::flowsIn() const
+{
+    QList<ModelFlow *> lflowsIn;
+    foreach (ModelFlow *flow, _flows)
+    {
+        if(flow->type()=="in")
+            lflowsIn.append(flow);
+    }
+    return lflowsIn;
+}
+
+QList<ModelFlow *> ModelBlock::flowsOut() const
+{
+    QList<ModelFlow *> lflowsOut;
+    foreach (ModelFlow *flow, _flows)
+    {
+        if(flow->type()=="out")
+            lflowsOut.append(flow);
+    }
+    return lflowsOut;
+}
+
 void ModelBlock::addFlow(ModelFlow *flow)
 {
     flow->setParent(this);
@@ -740,6 +762,11 @@ QList<ModelBlock *> ModelBlock::listFromNodeDef(const QDomElement &domElement)
                 block = ModelIOCom::fromNodeDef(e);
             if(block==NULL)
                 block = ModelBlock::fromNodeGenerated(e);
+
+            if(block->parts().isEmpty())
+            {
+                block->addPart(new ModelComponentPart());
+            }
 
             list.append(block);
         }
