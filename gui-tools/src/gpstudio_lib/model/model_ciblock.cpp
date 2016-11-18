@@ -56,7 +56,7 @@ ModelCIBlock *ModelCIBlock::fromNodeDef(const QDomElement &domElement, ModelCIBl
     if(ciBlock==NULL)
         ciBlock = new ModelCIBlock();
 
-    ciBlock->setName("pi");
+    ciBlock->setName("ci");
 
     return ciBlock;
 }
