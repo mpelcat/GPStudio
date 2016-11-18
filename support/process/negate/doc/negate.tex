@@ -39,20 +39,20 @@ At each point in the image, the new value is the pixel complement on IN\_SIZE bi
 
 \vspace{0.5cm}
 
-%\begin{figure}[!h]
-%\centering
-%\subfigure[Initial greyscale image]{
-%\includegraphics[width=5cm]{greyscale.png}}
-%\hspace{2cm}
-%\subfigure[Negated image]{
-%\includegraphics[width=5cm]{negate1.png}}
-%\vspace{2cm}
-%\subfigure[Initial binary image]{
-%\includegraphics[width=5cm]{binary.png}}
-%\hspace{2cm}
-%\subfigure[Negated binary image]{
-%\includegraphics[width=5cm]{negate2.png}}
-%\end{figure}
+\begin{figure}[!h]
+\centering
+\subfigure[Initial greyscale image]{
+\includegraphics[width=5cm]{greyscale.png}}
+\hspace{2cm}
+\subfigure[Negated image]{
+\includegraphics[width=5cm]{negated2.png}}
+\vspace{2cm}
+\subfigure[Initial binary image]{
+\includegraphics[width=5cm]{binary.png}}
+\hspace{2cm}
+\subfigure[Negated binary image]{
+\includegraphics[width=5cm]{negated1.png}}
+\end{figure}
 
 \section*{Properties}
 \properties{
@@ -88,12 +88,12 @@ I_negated = imcomplement(I);
 
 \section*{Mathematical formalism}
 
-For each pixel $nPx$ of the original image, the following operation is applied:
+For each pixel $Px$ of the original image, the following operation is applied to obtain the new value of $Px$, $newPx$:
 
 
 \centering
 
-$\displaystyle nPx $ 	$\textstyle =$ 	$\displaystyle \bar{Px}$
+$\displaystyle newPx $ 	$\textstyle =$ 	$\displaystyle \bar{Px}$
 
 \vspace{0.5cm}
 

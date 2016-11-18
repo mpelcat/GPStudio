@@ -43,14 +43,14 @@ At each point in the image, the minimal value of the selected neighbours is the 
 \subfigure[Initial greyscale image]{
 \includegraphics[width=5cm]{greyscale.png}}
 \hspace{2cm}
-\subfigure[Erode image]{
-\includegraphics[width=5cm]{erode1.png}}
+\subfigure[Eroded image]{
+\includegraphics[width=5cm]{eroded2.png}}
 \vspace{2cm}
 \subfigure[Initial binary image]{
 \includegraphics[width=5cm]{binary.png}}
 \hspace{2cm}
 \subfigure[Eroded binary image]{
-\includegraphics[width=5cm]{erode2.png}}
+\includegraphics[width=5cm]{eroded1.png}}
 \end{figure}
 
 \section*{Properties}
@@ -98,13 +98,13 @@ void erode(InputArray src, OutputArray dst,
 	)
 
 /*Parameters:	
-    src – input image; the number of channels can be arbitrary, but the depth should be one of CV_8U, CV_16U, CV_16S, CV_32F` or ``CV_64F.
-    dst – output image of the same size and type as src.
-    element – structuring element used for erosion; if element=Mat() , a 3 x 3 rectangular structuring element is used.
-    anchor – position of the anchor within the element; default value (-1, -1) means that the anchor is at the element center.
-    iterations – number of times erosion is applied.
-    borderType – pixel extrapolation method (see borderInterpolate() for details).
-    borderValue – border value in case of a constant border (see createMorphologyFilter() for details).
+    src - input image; the number of channels can be arbitrary, but the depth should be one of CV_8U, CV_16U, CV_16S, CV_32F` or ``CV_64F.
+    dst - output image of the same size and type as src.
+    element - structuring element used for erosion; if element=Mat() , a 3 x 3 rectangular structuring element is used.
+    anchor - position of the anchor within the element; default value (-1, -1) means that the anchor is at the element center.
+    iterations - number of times erosion is applied.
+    borderType - pixel extrapolation method (see borderInterpolate() for details).
+    borderValue - border value in case of a constant border (see createMorphologyFilter() for details).
 
 */
 \end{lstlisting}
