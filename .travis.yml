@@ -11,7 +11,10 @@ compiler:
 
 install: true
 
+env:
+  - TEST=gui-tools
+  - TEST=checklib
+
 # Build steps
 script:
-  - make gui-tools
-  - make checklib
+  - make $TEST
