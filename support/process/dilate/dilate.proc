@@ -3,28 +3,10 @@
   <parts>
     <part name="main">
       <svg style="background-color: rgb(255, 255, 255);" width="127px" height="127px" id="svg3061" version="0.48.4 r9939" docname="dilate.svg">
-        <metadata id="metadata3097">
-          <rdf:RDF>
-            <cc:Work about="">
-              <dc:format>image/svg+xml</dc:format>
-              <dc:type resource="http://purl.org/dc/dcmitype/StillImage"/>
-              <dc:title/>
-            </cc:Work>
-          </rdf:RDF>
-        </metadata>
-        <sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" pageopacity="0" pageshadow="2" window-width="1855" window-height="1056" id="namedview3095" showgrid="false" zoom="4.8940698" cx="32.154943" cy="45.868967" window-x="65" window-y="24" window-maximized="1" current-layer="svg3061"/>
-        <defs id="defs3063"/>
         <g transform="matrix(1.354354,0,0,1.354354,-20.640355,-21.640354)" id="g3065">
           <rect x="15.24" y="15.24" width="94.510002" height="94.510002" pointer-events="none" id="rect3067" style="fill:#ffffff;stroke:none"/>
           <g transform="matrix(0.76219512,0,0,0.76219512,56.5,50.5)" id="g3069">
-            <switch id="switch3071">
-              <foreignObject pointer-events="all" width="15" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" id="foreignObject3073">
-                <xhtml:div style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
-                  <xhtml:div style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</xhtml:div>
-                </xhtml:div>
-              </foreignObject>
-              <text x="8" y="23" font-size="22px" id="text3075" style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">E</text>
-            </switch>
+            <text x="8" y="23" font-size="22px" id="text3075" style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">E</text>
           </g>
           <path d="m 16.77,16.77 q 45.73,45.73 91.46,0 -45.73,45.73 0,91.46 -45.73,-45.73 -91.46,0 45.73,-45.73 0,-91.46" stroke-miterlimit="10" pointer-events="none" id="path3077" connector-curvature="0" style="fill:#3d3d3d;stroke:#36393d;stroke-miterlimit:10"/>
           <path d="m 70.48,20.17 5.39,5.39 -6.7,6.7 5.39,5.39 -24.26,8.08 8.09,-24.25 5.39,5.39 z" stroke-miterlimit="10" transform="matrix(-0.70710678,0.70710678,-0.70710678,-0.70710678,129.94731,15.034061)" pointer-events="none" id="path3079" connector-curvature="0" style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10"/>
@@ -32,14 +14,7 @@
           <path d="m 71.24,76.57 5.39,5.39 -6.7,6.7 5.39,5.39 -24.25,8.08 8.08,-24.25 5.39,5.39 z" stroke-miterlimit="10" transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,-45.882607,70.889589)" pointer-events="none" id="path3083" connector-curvature="0" style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10"/>
           <path d="m 99.44,48.37 5.39,5.39 -6.7,6.7 5.39,5.39 -24.25,8.08 8.08,-24.25 5.39,5.39 z" stroke-miterlimit="10" transform="matrix(-0.70710678,0.70710678,0.70710678,0.70710678,110.77041,-45.882607)" pointer-events="none" id="path3085" connector-curvature="0" style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10"/>
           <g transform="matrix(0.76219512,0,0,0.76219512,55.5,50.5)" id="g3087">
-            <switch id="switch3089">
-              <foreignObject pointer-events="all" width="16" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" id="foreignObject3091">
-                <xhtml:div style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 17px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
-                  <xhtml:div style="display:inline-block;text-align:inherit;text-decoration:inherit;">D</xhtml:div>
-                </xhtml:div>
-              </foreignObject>
-              <text x="8" y="23" font-size="22px" id="text3093" style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">D</text>
-            </switch>
+            <text x="8" y="23" font-size="22px" id="text3093" style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">D</text>
           </g>
         </g>
       </svg>

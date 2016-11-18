@@ -1,53 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:xhtml="http://www.w3.org/1999/xhtml"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    style="background-color: rgb(255, 255, 255);"
    width="127px"
    height="127px"
    version="1.1"
    id="svg3186"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="erode.svg">
-  <metadata
-     id="metadata3214">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1855"
-     inkscape:window-height="1056"
-     id="namedview3212"
-     showgrid="false"
-     inkscape:zoom="3.7165354"
-     inkscape:cx="40.629567"
-     inkscape:cy="28.870216"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg3186" />
-  <defs
-     id="defs3188" />
+   inkscape:version="0.48.4 r9939">
   <g
      transform="matrix(1.1561738,0,0,1.1561738,-7.2260862,-8.2260866)"
      id="g3190">
@@ -100,27 +58,12 @@
     <g
        transform="matrix(0.89285714,0,0,0.89285714,54.5,47.5)"
        id="g3204">
-      <switch
-         id="switch3206">
-        <foreignObject
-           pointer-events="all"
-           width="15"
-           height="24"
-           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-           id="foreignObject3208">
-          <xhtml:div
-             style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
-            <xhtml:div
-               style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</xhtml:div>
-          </xhtml:div>
-        </foreignObject>
         <text
            x="8"
            y="23"
            font-size="22px"
            id="text3210"
            style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">E</text>
-      </switch>
     </g>
   </g>
 </svg>
