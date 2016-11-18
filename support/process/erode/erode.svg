@@ -1,2 +1,126 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="142px" height="142px" version="1.1" content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0&quot; version=&quot;6.0.1.0&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;&gt;&lt;diagram name=&quot;Page-1&quot;&gt;3VfLbqMwFP0athXYCZBlk74WM1KkSjPLysEOWDUYmZtH5+vHDoYAJk2malppEimyj9/nnOtce3iR7x8VKbOfkjLhIZ/uPXznIYSDSP8a4K0GgjiogVRxaqEj8Mz/MAv6Ft1wyqpeR5BSAC/7YCKLgiXQw4hSctfvtpaiv2pJUuYAzwkRLvqbU8hqNEbhEX9iPM2alYNwVresSPKaKrkp7HoewuvDp27OSTOXPWiVESp3HQjfe3ihpIS6lO8XTBhqG9rqcQ8nWtt9K1bAJQNQPWBLxIY1Oz7sC94aLnYZB/ZcksTUd1puD88zyIWuBbpYgZKvLUsGoaTKGO1UlgSAqeKAIH/SDlpIIZVGC1nouedrLsQAco9jT7hlCti+A9njPTKZM1BvuottRbGl2loRh7a+OwobNHJkXVEbkFgzpe3cR0J1wXI6zm98nl9zFK6t94OsmFjKigOXhquVBJC5JqHpcCt4ahpAnpVA26o00+f71MTnzYpUPLmZvJSSF/BSAVEDvrVP8Z35/g+kz86Tzgp6a+4JXUsEqTQ7A0otgaTuNORKBzRKEsfIuoWGq3Aavscio727x+Www9F0hKIGU0wQ4Nv+jTVGm11habTvShT1JJpEuD9FJTcqYXZU9woZTITRYCI8mEi7LWXgTHRQsT32RcIGwRWUFbx80nVfl5UEYqMviH3b+MsO/EoLNNRO0YBa5ITRexa53A3OShH6oBtmJ7Z8BTdc8Of1ETd8o+DDoMRhdCXBnfD3o88J/3bLVxAcX1lwexV8W7TjLxJ/uNLHxZ+d2PIVxJ864t876uv0BMZyo/OZJrHJVaLVY2ok68o5pWaZ+Vg+vJYFdDzxsDBfjQuT083bN8FwG3qUffsYqayDnCxrxFSnPYT8cWU7HpqMeOgz0q4gPB+eZx4T7/M1qmU/+UXj6g6ZPqXXJyiAorgfEtPYUSBAE1eCFvwHDXT1+Fasg+r4Hsf3fwE=&lt;/diagram&gt;&lt;/mxfile&gt;"><defs/><g transform="translate(0.5,0.5)"><path d="M 69 9 L 82.04 55.96 L 129 69 L 82.04 82.04 L 69 129 L 55.96 82.04 L 9 69 L 55.96 55.96 Z" fill="#3d3d3d" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 19.54 125.54 L 12.46 118.46 L 31.25 99.68 L 24.18 92.61 L 56 82 L 45.39 113.82 L 38.32 106.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" pointer-events="none"/><path d="M 84.54 124.54 L 77.46 117.46 L 96.25 98.68 L 89.18 91.61 L 121 81 L 110.39 112.82 L 103.32 105.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(0,101.12)scale(1,-1)translate(0,-101.12)rotate(-180,101.12,101.12)" pointer-events="none"/><path d="M 19.54 59.54 L 12.46 52.46 L 31.25 33.68 L 24.18 26.61 L 56 16 L 45.39 47.82 L 38.32 40.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="translate(0,36.12)scale(1,-1)translate(0,-36.12)" pointer-events="none"/><path d="M 85.54 59.54 L 78.46 52.46 L 97.25 33.68 L 90.18 26.61 L 122 16 L 111.39 47.82 L 104.32 40.75 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" transform="rotate(180,102.12,36.12)" pointer-events="none"/><g transform="translate(61.5,53.5)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="15" height="24" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</div></div></foreignObject><text x="8" y="23" fill="#FCFCFC" text-anchor="middle" font-size="22px" font-family="Helvetica">E</text></switch></g></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:xhtml="http://www.w3.org/1999/xhtml"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   style="background-color: rgb(255, 255, 255);"
+   width="127px"
+   height="127px"
+   version="1.1"
+   id="svg3186"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="erode.svg">
+  <metadata
+     id="metadata3214">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     id="namedview3212"
+     showgrid="false"
+     inkscape:zoom="3.7165354"
+     inkscape:cx="40.629567"
+     inkscape:cy="28.870216"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3186" />
+  <defs
+     id="defs3188" />
+  <g
+     transform="matrix(1.1561738,0,0,1.1561738,-7.2260862,-8.2260866)"
+     id="g3190">
+    <rect
+       x="6.25"
+       y="6.25"
+       width="110.71"
+       height="110.71"
+       pointer-events="none"
+       id="rect3192"
+       style="fill:#ffffff;stroke:none" />
+    <path
+       d="M 61.61,8.04 73.25,49.96 115.18,61.61 73.25,73.25 61.61,115.18 49.96,73.25 8.04,61.61 49.96,49.96 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path3194"
+       inkscape:connector-curvature="0"
+       style="fill:#3d3d3d;stroke:#000000;stroke-miterlimit:10" />
+    <path
+       d="M 17.44,112.09 11.13,105.77 27.9,89 21.59,82.68 50,73.21 40.53,101.62 34.22,95.31 z"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path3196"
+       inkscape:connector-curvature="0"
+       style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10" />
+    <path
+       d="m 75.48,111.19 -6.32,-6.31 16.78,-16.77 -6.31,-6.32 28.41,-9.47 -9.47,28.41 -6.32,-6.31 z"
+       stroke-miterlimit="10"
+       transform="matrix(-1,0,0,1,180.72,0)"
+       pointer-events="none"
+       id="path3198"
+       inkscape:connector-curvature="0"
+       style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10" />
+    <path
+       d="M 17.44,53.16 11.13,46.84 27.9,30.07 21.59,23.76 50,14.29 40.53,42.7 34.22,36.38 z"
+       stroke-miterlimit="10"
+       transform="matrix(1,0,0,-1,0,64.64)"
+       pointer-events="none"
+       id="path3200"
+       inkscape:connector-curvature="0"
+       style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10" />
+    <path
+       d="M 76.37,53.16 70.06,46.84 86.83,30.07 80.52,23.76 108.93,14.29 99.46,42.7 93.14,36.38 z"
+       stroke-miterlimit="10"
+       transform="matrix(-1,0,0,-1,182.5,64.64)"
+       pointer-events="none"
+       id="path3202"
+       inkscape:connector-curvature="0"
+       style="fill:#fff2cc;stroke:#d6b656;stroke-miterlimit:10" />
+    <g
+       transform="matrix(0.89285714,0,0,0.89285714,54.5,47.5)"
+       id="g3204">
+      <switch
+         id="switch3206">
+        <foreignObject
+           pointer-events="all"
+           width="15"
+           height="24"
+           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
+           id="foreignObject3208">
+          <xhtml:div
+             style="display: inline-block; font-size: 22px; font-family: Helvetica; color: rgb(252, 252, 252); line-height: 1.2; vertical-align: top; width: 16px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+            <xhtml:div
+               style="display:inline-block;text-align:inherit;text-decoration:inherit;">E</xhtml:div>
+          </xhtml:div>
+        </foreignObject>
+        <text
+           x="8"
+           y="23"
+           font-size="22px"
+           id="text3210"
+           style="font-size:22px;text-anchor:middle;fill:#fcfcfc;font-family:Helvetica">E</text>
+      </switch>
+    </g>
+  </g>
+</svg>

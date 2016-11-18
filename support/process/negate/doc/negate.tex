@@ -1,0 +1,102 @@
+%------------------------ Packages ------------------------
+\documentclass[12pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[FIGTOPCAP]{subfigure}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+
+\input{../../../../docsrc/gpstudio_doc.tex}
+
+\begin{document}
+
+\begin{center}
+\textbf{\huge  \underline{Negation operator}}
+\end{center}
+\vspace{0.5cm}
+
+The negation operator is a basic operation used to replace a greyscale or a binary image by its negative image. 
+At each point in the image, the new value is the pixel complement on IN\_SIZE bits.
+\\
+
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\node[block,rectangle,minimum height=2cm,minimum width=3cm] (bloc) {\textbf{Negate}};
+
+\path[connect,<-] ([yshift=0.0cm]bloc.west) -- node{/} node[above]{in} ++(-2cm,0);
+
+\path[connect,->] ([yshift=0.0cm]bloc.east) -- node{/} node[above]{out} ++(2cm,0);
+ ([xshift=0.5cm,yshift=-0.6cm]bloc.north);
+
+\end{tikzpicture}
+\end{figure}
+
+\vspace{0.5cm}
+
+%\begin{figure}[!h]
+%\centering
+%\subfigure[Initial greyscale image]{
+%\includegraphics[width=5cm]{greyscale.png}}
+%\hspace{2cm}
+%\subfigure[Negated image]{
+%\includegraphics[width=5cm]{negate1.png}}
+%\vspace{2cm}
+%\subfigure[Initial binary image]{
+%\includegraphics[width=5cm]{binary.png}}
+%\hspace{2cm}
+%\subfigure[Negated binary image]{
+%\includegraphics[width=5cm]{negate2.png}}
+%\end{figure}
+
+\section*{Properties}
+\properties{
+enable           & bool & Enable the processing \\ 
+}
+
+\vspace{0.5cm}
+
+\section*{Constants}
+
+\constants{
+CLK\_PROC\_FREQ & Frequency clock of the process \\
+IN\_SIZE & Size of the input flow : 1 byte (greyscale image) or 1 bit (binary image)\\
+OUT\_SIZE & Size of the output flow : 1 byte (greyscale image) or 1 bit (binary image)\\
+}
+
+
+
+\section*{Equivalence}
+\subsection*{Matlab}
+
+\lstset{language=Matlab}
+\begin{lstlisting}
+I; % image matrix
+I_negated = imcomplement(I);
+% This functions takes a grayscale or a binary image
+
+\end{lstlisting}
+
+\url{https://fr.mathworks.com/help/images/ref/imcomplement.html}
+
+
+
+\section*{Mathematical formalism}
+
+For each pixel $nPx$ of the original image, the following operation is applied:
+
+
+\centering
+
+$\displaystyle nPx $ 	$\textstyle =$ 	$\displaystyle \bar{Px}$
+
+\vspace{0.5cm}
+
+
+
+\end{document}

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm dilate.proc
-rm -rf hdl
+#rm -rf hdl
 
 # block and flows
 gpproc new -n dilate
@@ -14,7 +14,7 @@ gpproc showblock
 # IP infos
 gpproc setinfo -n "author" -v "Raphael BOUTERIGE"
 gpproc setinfo -n "company" -v "Institut Pascal"
-gpproc setinfo -n "revision" -v "1.0"
+gpproc setinfo -n "revision" -v "1.1"
 gpproc setinfo -n "releasedate" -v "2016-11-04"
 
 # properties on flow out
@@ -68,7 +68,7 @@ gpproc setproperty -n "dilation_matrix.m22" -v 0
 gpproc setdraw -f dilate.svg
 
 # generate patterns files
-gpproc generate -o hdl
+#gpproc generate -o hdl
 gpproc addfile -p hdl/dilate.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dilate_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dilate_slave.vhd -t vhdl -g hdl
