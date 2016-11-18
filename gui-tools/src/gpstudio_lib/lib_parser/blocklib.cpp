@@ -145,10 +145,12 @@ BlockLib *BlockLib::fromDomElement(const QDomElement &domElement)
 
     // render an 32px icon from svg
     QSvgRenderer render;
-    QPixmap pixIcon(32,32);
+    QPixmap pixIcon(32, 32);
     QPainter painter(&pixIcon);
+    painter.setBrush(Qt::white);
+    painter.drawRect(pixIcon.rect());
     render.load(svg.toUtf8());
-    render.render(&painter, QRectF(0,0,32,32));
+    render.render(&painter, pixIcon.rect());
     painter.end();
     blockLib->_icon.addPixmap(pixIcon);
 

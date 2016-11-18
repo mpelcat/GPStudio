@@ -61,6 +61,7 @@ public slots:
     void launchCompile();
     void launchSend();
     void launchView();
+    void launchAll();
 
     void stopAll();
     void clear();
@@ -72,6 +73,17 @@ protected slots:
 
 private:
     void setupWidgets();
+
+    bool _allRequest;
+    enum Action {
+        ActionNone,
+        ActionClean,
+        ActionGenerate,
+        ActionCompile,
+        ActionSend,
+        ActionView
+    };
+    Action _currentAction;
 
     QTextEdit *_textWidget;
 

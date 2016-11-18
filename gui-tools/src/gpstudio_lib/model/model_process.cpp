@@ -54,14 +54,22 @@ ModelProcess *ModelProcess::fromNodeGenerated(const QDomElement &domElement, Mod
 
 ModelProcess *ModelProcess::fromNodeDef(const QDomElement &domElement, ModelProcess *process)
 {
-    bool inLib = (domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true");
+    //bool inLib = (domElement.attribute("inlib","")=="1" || domElement.attribute("inlib","")=="true");
     QString driver = domElement.attribute("driver","");
+    QString path = domElement.attribute("path","");
 
-    if(inLib)
+    BlockLib *processLib = Lib::getLib().process(driver);
+    if(processLib)
+        process = new ModelProcess(*processLib->modelProcess());
+    else
     {
-        BlockLib *processLib = Lib::getLib().process(driver);
-        if(processLib)
-            process = new ModelProcess(*processLib->modelProcess());
+        if(driver.endsWith(".proc"))
+        {
+            Lib::getLib().addCustomProcess(path+"/"+driver);
+            processLib = Lib::getLib().process(driver);
+            if(processLib)
+                process = new ModelProcess(*processLib->modelProcess());
+        }
     }
 
     if(process==NULL)

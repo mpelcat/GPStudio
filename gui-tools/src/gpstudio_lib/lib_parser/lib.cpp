@@ -56,6 +56,14 @@ void Lib::reloadProcess()
     }
 }
 
+void Lib::addCustomProcess(const QString filePath)
+{
+    _customProcess.append(filePath);
+    BlockLib *process = BlockLib::readFromFile(filePath);
+    if(process)
+        addProcess(process);
+}
+
 void Lib::addProcess(BlockLib *process)
 {
     _process.append(process);
