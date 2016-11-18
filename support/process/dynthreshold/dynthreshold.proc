@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="dynthreshold" categ="" master_count="0" pi_size_addr_rel="2" desc="Dynamic threshold based on a desired ratio of white">
+  <parts>
+    <part name="main">
+      <svg style="background-color: rgb(255, 255, 255);" width="131px" height="130px" content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0&quot; version=&quot;6.0.1.4&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;&gt;&lt;diagram&gt;tVZdb6MwEPw1vAMGkjw2pLm+VKqU6u7ZgQ1YdTByTJPcrz87tvlMCtxdg1TZ4/V6mR1PcVB8vPzguMxfWQrU8d304qCN4/totZB/FXDVgB+6Gsg4STXkNcCO/AYD2rCKpHDqBArGqCBlF0xYUUAiOhjmnJ27YQdGu6eWOIMBsEswHaK/SCpyjS79qMFfgGS5PdmLVnplj5OPjLOqMOc5Pjrcfnr5iG0u86KnHKfs3ILQs4NizpjQo+MlBqqotbTpfdsHq3XdHAoxZYOvN3xiWoGt+FaXuFouzjkRsCtxouZn2W4HrXNxpHLmySHFe6Dr+rVjRhmXSwUrZPz6JDj7AAtKNrZP6qlXLLsq04FQ2oo0vEmcFcJIRBF0m7czxuqRuHkV4AIuD+nwapKldoEdQfCrDLHCXZi+WN3a+blRgecbcedtBVgQG+Vlde6GfTkwDbjfDDTejKTin5AawqBIn5TYG7pbfRkw74bqGTDvz2BYHrglqvyNW/MNae8qCcwzEB15zWjAsteA5bAB1kva/FvsHv3msDdGZA0PT6rnNsWJVTwBs6t9hXqJgijqJlr1EmlCBolk6/C1FVaqgNOMgoPo67q86C6Vk98j6MTLga64kXLdvknqDsbVTUnLNNoCbem6BE7kqaC0qdx2L5X/1mBrQ6PMF66dcCMRVgmVOK7/V7ijtvWvVpRxnBJo1h664daVv+/xLuQNr87iztXxvrg6U50r/HvnYiUU7zkpRtyrZmq+e9mdB0rKF9N+Nf5pxpwJLAiTFWxWU01ueluCoO9o0Tc5Wv8kZA1gtqOteoncXqL/5GhBeJ+ah3X14pE/Eh/NzB/NzN//WhjL37+hbid+rsPKafOhqMObj3H0/Ac=&lt;/diagram&gt;&lt;/mxfile&gt;" id="svg2" version="0.48.4 r9939" docname="dynthreshold.svg">
+        <metadata id="metadata20">
+          <rdf:RDF>
+            <cc:Work about="">
+              <dc:format>image/svg+xml</dc:format>
+              <dc:type resource="http://purl.org/dc/dcmitype/StillImage"/>
+            </cc:Work>
+          </rdf:RDF>
+        </metadata>
+        <sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" pageopacity="0" pageshadow="2" window-width="1855" window-height="1056" id="namedview18" showgrid="false" zoom="5.6568542" cx="83.557382" cy="60.247168" window-x="65" window-y="24" window-maximized="1" current-layer="svg2"/>
+        <defs id="defs4"/>
+        <g transform="matrix(0.99218809,0,0,1.0000306,0.0038682,2.4980434)" id="g6">
+          <rect x="1" y="0" width="127" height="127" pointer-events="none" id="rect8" style="fill:#ffffff;stroke:#fafafa"/>
+          <path d="M 11,110 Q 11,76 29,43 47,10 72,40 97,70 128,76.2" stroke-miterlimit="10" pointer-events="none" id="path10" connector-curvature="0" style="fill:none;stroke:#050505;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 1,45 70,0" stroke-miterlimit="10" pointer-events="none" id="path12" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 71,46 q 10,-30 10,-10 0,20 5,0 5,-20 5,0 0,20 5,0 5,-20 5,-10 0,10 15.53,10" stroke-miterlimit="10" pointer-events="none" id="path14" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 110.76,38.67 8,-2.67 -8,-2.67" stroke-miterlimit="10" pointer-events="none" id="path16" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+        </g>
+      </svg>
+    </part>
+  </parts>
+  <files>
+    <file name="dynthreshold.proc" type="proc" group="blockdef" path="dynthreshold.proc"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="in" size="8" type="in"/>
+    <flow name="out" size="8" type="out">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width" type="int" propertymap="in.width.value"/>
+        <property name="height" type="int" propertymap="in.height.value"/>
+      </properties>
+    </flow>
+  </flows>
+  <params>
+    <param name="desired_ratio_reg" regaddr="3" propertymap="DesiredRatio.value"/>
+  </params>
+  <properties>
+    <property name="DesiredRatio" type="sint" value="5" min="0" max="100"/>
+  </properties>
+</process>
