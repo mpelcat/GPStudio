@@ -39,6 +39,8 @@ public:
 
 protected:
     Feature *_feature;
+    void setFeature(Feature *feature);
+    QRectF _boudingRect;
 };
 
 #endif // FEATUREITEM_H

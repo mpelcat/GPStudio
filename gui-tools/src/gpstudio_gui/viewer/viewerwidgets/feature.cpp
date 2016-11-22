@@ -45,6 +45,11 @@ void Feature::setY(int y)
     _y = y;
 }
 
+QPoint Feature::pos() const
+{
+    return QPoint(_x, _y);
+}
+
 int Feature::w() const
 {
     return _w;
@@ -65,6 +70,11 @@ void Feature::setH(int h)
     _h = h;
 }
 
+QRect Feature::rect() const
+{
+    return QRect(_x, _y, _w, _h);
+}
+
 int Feature::val() const
 {
     return _val;
@@ -73,4 +83,14 @@ int Feature::val() const
 void Feature::setVal(int val)
 {
     _val = val;
+}
+
+Feature::Type Feature::type() const
+{
+    return _type;
+}
+
+void Feature::setType(const Feature::Type &type)
+{
+    _type = type;
 }

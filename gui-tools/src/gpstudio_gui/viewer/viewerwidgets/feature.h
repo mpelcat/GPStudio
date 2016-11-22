@@ -23,14 +23,20 @@
 
 #include "gpstudio_gui_common.h"
 
+#include <QPoint>
+#include <QRect>
+
+class FlowPackage;
+class Property;
+
 class GPSTUDIO_GUI_EXPORT Feature
 {
 public:
     enum Type {
-        Points,
-        PointsValue,
-        Rects,
-        RectsValue
+        Point,
+        PointValue,
+        Rect,
+        RectValue
     };
 
     Feature();
@@ -41,14 +47,21 @@ public:
     int y() const;
     void setY(int y);
 
+    QPoint pos() const;
+
     int w() const;
     void setW(int w);
 
     int h() const;
     void setH(int h);
 
+    QRect rect() const;
+
     int val() const;
     void setVal(int val);
+
+    Type type() const;
+    void setType(const Type &type);
 
 protected:
     int _x;
@@ -56,6 +69,10 @@ protected:
     int _w;
     int _h;
     int _val;
+    Type _type;
+
+public:
+    static QList<Feature*> fromData(const FlowPackage package, Property flow);
 };
 
 #endif // FEATURE_H
