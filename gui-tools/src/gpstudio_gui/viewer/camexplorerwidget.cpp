@@ -88,6 +88,7 @@ void CamExplorerWidget::setupWidgets()
     _camItemModel = new CameraItemModel(this);
     _camTreeView->setModel(_camItemModel);
     _camTreeView->setSortingEnabled(true);
+    _camTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     splitter->addWidget(_camTreeView);
 
     setMinimumWidth(300);
@@ -244,17 +245,19 @@ void CamExplorerWidget::updateRootProperty()
     }
 }
 
-void CamExplorerWidget::selectBlock(QString blockName)
+void CamExplorerWidget::selectBlock(QString blocksName)
 {
     //_camTreeView->selectionModel()->blockSignals(true);
     blockSignals(true);
 
-    if(!blockName.isEmpty())
+    if(!blocksName.isEmpty())
     {
-        QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(blockName), -1, Qt::MatchRecursive);
-        if(items.count()>0)
+        _camTreeView->selectionModel()->clearSelection();
+        foreach (QString blockName, blocksName.split(";"))
         {
-            _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+            QModelIndexList items = _camTreeView->model()->match(_camTreeView->model()->index(0, 0), Qt::DisplayRole, QVariant(blockName), -1, Qt::MatchRecursive);
+            if(items.count()>0)
+                _camTreeView->selectionModel()->select(items.at(0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
         }
     }
     else

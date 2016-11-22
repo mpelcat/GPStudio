@@ -63,7 +63,7 @@ protected slots:
     void updateRootProperty();
 
 public slots:
-    void selectBlock(QString blockName);
+    void selectBlock(QString blocksName);
     void update();
 
 signals:

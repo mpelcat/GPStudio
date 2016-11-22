@@ -148,6 +148,10 @@ void BlockView::mousePressEvent(QMouseEvent *event)
             blockScene()->addItem(_lineConector);
             _lineConector->setEndPos(mapToScene(event->pos()).toPoint());
         }
+        if(!_editMode && processItem)
+        {
+            emit blockSelected("fi");
+        }
         setDragMode(QGraphicsView::RubberBandDrag);
     }
     if(event->button() == Qt::MidButton)
@@ -157,7 +161,7 @@ void BlockView::mousePressEvent(QMouseEvent *event)
 
         _refDrag = mapToScene(event->pos());
         _centerDrag = mapToScene(this->viewport()->rect()).boundingRect().center();
-
+        return;
     }
     QGraphicsView::mousePressEvent(event);
 }
@@ -241,10 +245,15 @@ void BlockView::updateSelection()
         return;
     }
 
-    QGraphicsItem *item = _scene->selectedItems().at(0);
-    BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
-    if(blockItem)
-        emit blockSelected(blockItem->name());
+    QString selectedBlocksName;
+    foreach (QGraphicsItem *item, _scene->selectedItems())
+    {
+        BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+        if(blockItem)
+            selectedBlocksName.append(blockItem->name()+";");
+    }
+    if(!selectedBlocksName.isEmpty())
+        emit blockSelected(selectedBlocksName);
 }
 
 void BlockView::selectBlock(QString blockName)
