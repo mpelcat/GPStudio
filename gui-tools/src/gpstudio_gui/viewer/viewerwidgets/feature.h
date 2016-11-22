@@ -25,6 +25,7 @@
 
 #include <QPoint>
 #include <QRect>
+#include <QList>
 
 class FlowPackage;
 class Property;
