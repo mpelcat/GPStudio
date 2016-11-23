@@ -28,7 +28,6 @@
 #include <QStandardItemModel>
 #include <QTabWidget>
 
-#include "codeeditor.h"
 #include "model/model_block.h"
 
 class GPSTUDIO_GUI_EXPORT BlockEditorWindow : public QMainWindow

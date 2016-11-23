@@ -11,6 +11,9 @@
 
 #include "lib_parser/lib.h"
 
+#include "codeeditor.h"
+#include "viewer/viewerwidgets/pdfviewer.h"
+
 BlockEditorWindow::BlockEditorWindow(QWidget *parent, ModelBlock *block)
     : QMainWindow(parent)
 {
@@ -68,10 +71,19 @@ void BlockEditorWindow::openFile(const QModelIndex &indexFile)
             }
         }
 
-        CodeEditor *codeEditor = new CodeEditor(this);
-        _tabFiles->addTab(codeEditor, file->name());
-        _tabFiles->setCurrentIndex(_tabFiles->count()-1);
-        codeEditor->loadFileCode(_path + "/" + file->path());
+        if(file->path().endsWith(".pdf"))
+        {
+            PdfViewer *docWidget = new PdfViewer(this, _path + "/" + file->path());
+            _tabFiles->addTab(docWidget, file->name());
+            _tabFiles->setCurrentIndex(_tabFiles->count()-1);
+        }
+        else
+        {
+            CodeEditor *codeEditor = new CodeEditor(this);
+            _tabFiles->addTab(codeEditor, file->name());
+            _tabFiles->setCurrentIndex(_tabFiles->count()-1);
+            codeEditor->loadFileCode(_path + "/" + file->path());
+        }
     }
 }
 

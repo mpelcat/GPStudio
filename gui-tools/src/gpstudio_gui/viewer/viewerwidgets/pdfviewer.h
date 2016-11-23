@@ -34,6 +34,7 @@ class GPSTUDIO_GUI_EXPORT PdfViewer : public QGraphicsView
     Q_OBJECT
 public:
     explicit PdfViewer(QWidget *parent = 0, QString file = QString());
+    virtual ~PdfViewer();
 
     static void showDocument(const QString &file);
 

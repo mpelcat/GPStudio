@@ -51,6 +51,11 @@ PdfViewer::PdfViewer(QWidget *parent, QString file)
     showPage(0);
 }
 
+PdfViewer::~PdfViewer()
+{
+    delete _doc;
+}
+
 void PdfViewer::showDocument(const QString &file)
 {
     PdfViewer *pdfViewer = new PdfViewer(NULL, file);
