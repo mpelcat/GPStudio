@@ -100,6 +100,8 @@ void Camera::setNode(ModelNode *node)
     if(iOCom)
         _comBlock = block(iOCom->name());
 
+    _fiBlock = block("fi");
+
     _registermanager.setNode(node);
     ScriptEngine::getEngine().setRootProperty(&_paramsBlocks);
     _registermanager.start();
@@ -177,6 +179,7 @@ void Camera::addBlock(Block *block)
 {
     _blocks.append(block);
     _blocksMap.insert(block->name(), block);
+    block->setParentCamera(this);
 
     _paramsBlocks.addSubProperty(block->assocProperty());
 }

@@ -170,7 +170,7 @@ void RegisterManager::setRegister(uint addr, uint value)
     _registerData.data()[addr*4+3]=value;
 
     // TODO [LOG] log this
-    qDebug()<<"setReg"<<addr<<value;
+    //qDebug()<<"setReg"<<addr<<value;
 
     if(!_camera->com())
         return;
