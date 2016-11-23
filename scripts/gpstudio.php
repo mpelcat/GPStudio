@@ -140,6 +140,8 @@ function findproject()
     }
     if (count($projects) == 1)
         return $projects[0];
+    elseif (count($projects) > 1)
+        error ("Your project contains more than one node file, node files must be put in separated directory.", 1);
     else
         return '';
 }
@@ -157,6 +159,8 @@ function findprocess()
     }
     if (count($process) == 1)
         return $process[0];
+    elseif (count($process) > 1)
+        error ("Your project contains more than one process file, proc files must be put in separated directory.", 1);
     else
         return '';
 }
@@ -174,6 +178,8 @@ function findio()
     }
     if (count($io) == 1)
         return $io[0];
+    elseif (count($io) > 1)
+        error ("Your project contains more than one io file, io files must be put in separated directory.", 1);
     else
         return '';
 }
@@ -191,6 +197,8 @@ function findcomp()
     }
     if (count($comp) == 1)
         return $comp[0];
+    elseif (count($comp) > 1)
+        error ("Your project contains more than one component file, comp files must be put in separated directory.", 1);
     else
         return '';
 }
