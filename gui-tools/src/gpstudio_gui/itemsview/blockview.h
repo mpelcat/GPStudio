@@ -74,7 +74,7 @@ protected slots:
     void updateSelection();
 
 public slots:
-    void selectBlock(QString blockName);
+    void selectBlock(QString blocksName);
     void changeNode(ModelNode *node);
 
     void updateBlock(ModelBlock *block);

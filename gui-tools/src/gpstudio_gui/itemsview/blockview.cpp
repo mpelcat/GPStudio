@@ -256,15 +256,18 @@ void BlockView::updateSelection()
         emit blockSelected(selectedBlocksName);
 }
 
-void BlockView::selectBlock(QString blockName)
+void BlockView::selectBlock(QString blocksName)
 {
     _scene->blockSignals(true);
     _scene->clearSelection();
 
-    foreach(BlockItem *blockItem, _scene->block(blockName))
+    foreach (QString blockName, blocksName.split(";"))
     {
-        blockItem->setSelected(true);
-        blockItem->ensureVisible();
+        foreach(BlockItem *blockItem, _scene->block(blockName))
+        {
+            blockItem->setSelected(true);
+            blockItem->ensureVisible();
+        }
     }
 
     _scene->blockSignals(false);
@@ -378,6 +381,19 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         zoomOut();
     if(event->key()==Qt::Key_Asterisk)
         zoomFit();
+    if(event->key()==Qt::Key_A && event->modifiers() & Qt::ControlModifier && event->modifiers() & Qt::ShiftModifier) // select all
+    {
+        scene()->clearSelection();
+        return;
+    }
+    if(event->key()==Qt::Key_A && event->modifiers() & Qt::ControlModifier) // select all
+    {
+        blockSignals(true);
+        foreach(QGraphicsItem *item, scene()->items())
+            item->setSelected(true);
+        blockSignals(false);
+        updateSelection();
+    }
     if(event->key()==Qt::Key_F2)
     {
         if(_scene->selectedItems().count()==1)

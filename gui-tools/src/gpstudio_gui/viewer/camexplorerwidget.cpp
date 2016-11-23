@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QModelIndexList>
 #include <QSplitter>
+#include <QStringList>
 
 #include <propertywidgets/propertywidgets.h>
 
@@ -200,49 +201,47 @@ void CamExplorerWidget::updateRootProperty()
     if(!_camTreeView->selectionModel()->hasSelection())
     {
         setRootProperty(NULL);
+        emit blockSelected("");
         return;
     }
 
-    QModelIndex index = _camTreeView->selectionModel()->selection().indexes().at(0);
-    if(!index.isValid() || index.model()!=_camItemModel)
+    const Property *rootProp = NULL;
+    QStringList selectedBlocksName;
+    foreach( QModelIndex index, _camTreeView->selectionModel()->selection().indexes())
     {
-        setRootProperty(NULL);
-        return;
+        if(!index.isValid() || index.model()!=_camItemModel)
+            continue;
+
+        QModelIndex localMapToSource = _camItemModel->mapToSource(index);
+        if(!localMapToSource.isValid())
+            continue;
+
+        CameraItem *item = static_cast<CameraItem*>(localMapToSource.internalPointer());
+        if(!item)
+            continue;
+
+        switch (item->type())
+        {
+        case CameraItem::CameraType:
+            rootProp = &item->camera()->rootProperty();
+            break;
+        case CameraItem::BlockType:
+            rootProp = item->block()->assocProperty();
+            selectedBlocksName.append(item->block()->name());
+            break;
+        case CameraItem::ModelBlockType:
+            selectedBlocksName.append(item->modelBlock()->name());
+            break;
+        case CameraItem::FlowType:
+            rootProp = item->flow()->assocProperty();
+            break;
+        default:
+            break;
+        }
     }
 
-    QModelIndex localMapToSource = _camItemModel->mapToSource(index);
-    if(!localMapToSource.isValid())
-    {
-        setRootProperty(NULL);
-        return;
-    }
-
-    CameraItem *item = static_cast<CameraItem*>(localMapToSource.internalPointer());
-    if(!item)
-    {
-        setRootProperty(NULL);
-        return;
-    }
-
-    switch (item->type())
-    {
-    case CameraItem::CameraType:
-        setRootProperty(&item->camera()->rootProperty());
-        break;
-    case CameraItem::BlockType:
-        setRootProperty(item->block()->assocProperty());
-        emit blockSelected(item->block()->name());
-        break;
-    case CameraItem::ModelBlockType:
-        emit blockSelected(item->modelBlock()->name());
-        break;
-    case CameraItem::FlowType:
-        setRootProperty(item->flow()->assocProperty());
-        break;
-    default:
-        setRootProperty(NULL);
-        break;
-    }
+    setRootProperty(rootProp);
+    emit blockSelected(selectedBlocksName.join(";"));
 }
 
 void CamExplorerWidget::selectBlock(QString blocksName)
