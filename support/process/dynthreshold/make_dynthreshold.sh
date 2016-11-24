@@ -22,7 +22,7 @@ gpproc addproperty -n out.width -t int -m in.width.value
 gpproc addproperty -n out.height -t int -m in.height.value
 
 # PI parameters
-gpproc setpisizeaddr -v 3 
+gpproc setpisizeaddr -v 2 
 
 # register status_reg for enable propertY
 gpproc addparam -n status_reg -r 0
@@ -30,18 +30,18 @@ gpproc addproperty -n enable -t bool -v 1
 gpproc addbitfield -n status_reg.enable_bit -b 0 -m enable.value
 
 # input image width register
-gpproc addparam -n widthimg_reg -r 1
-gpproc addbitfield -n widthimg_reg.value -b 15-0 -m in.width.value
+#gpproc addparam -n widthimg_reg -r 1
+#gpproc addbitfield -n widthimg_reg.value -b 15-0 -m in.width.value
 
 ## check usage
 # input image height register
-gpproc addparam -n heigtimg_reg -r 2
-gpproc addbitfield -n heigtimg_reg.value -b 15-0 -m in.height.value
+#gpproc addparam -n heigtimg_reg -r 2
+#gpproc addbitfield -n heigtimg_reg.value -b 15-0 -m in.height.value
 
 # register threshold
 gpproc addproperty -n "DesiredRatio" -t sint -v 5
 gpproc setproperty -n "DesiredRatio" -r 0:100
-gpproc addparam -n desired_ratio_reg -m "DesiredRatio".value -r 3
+gpproc addparam -n desired_ratio_reg -m "DesiredRatio".value -r 1
 
 # visual settings
 gpproc setdraw -f dynthreshold.svg

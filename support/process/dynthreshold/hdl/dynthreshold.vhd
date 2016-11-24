@@ -26,7 +26,7 @@ entity dynthreshold is
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i : in std_logic_vector(2 downto 0);
+		addr_rel_i : in std_logic_vector(1 downto 0);
 		wr_i       : in std_logic;
 		rd_i       : in std_logic;
 		datawr_i   : in std_logic_vector(31 downto 0);
@@ -47,8 +47,6 @@ component dynthreshold_process
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : in std_logic;
-		widthimg_reg_value    : in std_logic_vector(15 downto 0);
-		heigtimg_reg_value    : in std_logic_vector(15 downto 0);
 		desired_ratio_reg     : in std_logic_vector(31 downto 0);
 
 		------------------------- in flow -----------------------
@@ -73,14 +71,12 @@ component dynthreshold_slave
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : out std_logic;
-		widthimg_reg_value    : out std_logic_vector(15 downto 0);
-		heigtimg_reg_value    : out std_logic_vector(15 downto 0);
 		desired_ratio_reg     : out std_logic_vector(31 downto 0);
 
 		--======================= Slaves ========================
 
 		------------------------- bus_sl ------------------------
-		addr_rel_i            : in std_logic_vector(2 downto 0);
+		addr_rel_i            : in std_logic_vector(1 downto 0);
 		wr_i                  : in std_logic;
 		rd_i                  : in std_logic;
 		datawr_i              : in std_logic_vector(31 downto 0);
@@ -89,8 +85,6 @@ component dynthreshold_slave
 end component;
 
 	signal status_reg_enable_bit : std_logic;
-	signal widthimg_reg_value    : std_logic_vector (15 downto 0);
-	signal heigtimg_reg_value    : std_logic_vector (15 downto 0);
 	signal desired_ratio_reg     : std_logic_vector (31 downto 0);
 
 begin
@@ -104,8 +98,6 @@ begin
 		clk_proc              => clk_proc,
 		reset_n               => reset_n,
 		status_reg_enable_bit => status_reg_enable_bit,
-		widthimg_reg_value    => widthimg_reg_value,
-		heigtimg_reg_value    => heigtimg_reg_value,
 		desired_ratio_reg     => desired_ratio_reg,
 		in_data               => in_data,
 		in_fv                 => in_fv,
@@ -123,8 +115,6 @@ begin
 		clk_proc              => clk_proc,
 		reset_n               => reset_n,
 		status_reg_enable_bit => status_reg_enable_bit,
-		widthimg_reg_value    => widthimg_reg_value,
-		heigtimg_reg_value    => heigtimg_reg_value,
 		desired_ratio_reg     => desired_ratio_reg,
 		addr_rel_i            => addr_rel_i,
 		wr_i                  => wr_i,

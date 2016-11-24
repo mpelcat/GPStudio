@@ -15,8 +15,6 @@ entity dynthreshold_process is
 
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit : in std_logic;
-		widthimg_reg_value    : in std_logic_vector(15 downto 0);
-		heigtimg_reg_value    : in std_logic_vector(15 downto 0);
 		desired_ratio_reg     : in std_logic_vector(31 downto 0);
 
 		------------------------- in flow -----------------------
@@ -36,8 +34,7 @@ architecture rtl of dynthreshold_process is
 signal enabled : std_logic;
 -- Desired ratio of white pixels in percent
 signal current_desired_ratio : unsigned(31 downto 0);
--- 32 bits as max width*height is still under 32 bits (1280*960) 
---signal current_resolution    : unsigned(31 downto 0);
+--Threshold borders
 signal lower_border_threshold : unsigned(IN_SIZE-1 downto 0):=(others=>'0');
 signal upper_border_threshold : unsigned(IN_SIZE-1 downto 0):=(others=>'1');
 
@@ -68,29 +65,30 @@ begin
 
 				-- Updating threshold
 				if(img_px_counter /= 0 and enabled = '1') then
-					----current_ratio :=unsigned(integer(current_white_px*100/current_resolution),32); 
-					-- WIP : multiply desired_ratio by img_px_counter instead of dividing
 					current_ratio :=to_unsigned(white_px_counter*100/img_px_counter,32); 
-					-- Updating threshold only if the new ratio is closer to desired ratio
-					--if(abs(signed(current_desired_ratio)-signed(current_ratio)) < abs(signed(current_desired_ratio)-signed(old_ratio)))then
+					-- Updating threshold with dichotomic search
+					if(abs(signed(current_desired_ratio)-signed(current_ratio)) > 10)then
 						if(current_ratio > current_desired_ratio) then
-							-- Too many white pixels spotted, increasing threshold value
-							--if(current_threshold < upper_border_threshold) then
-							--	current_threshold := current_threshold + 2;
-							--end if;
 							current_threshold := current_threshold+(upper_border_threshold-current_threshold)/2;
 						elsif current_ratio < current_desired_ratio   then
+							current_threshold := lower_border_threshold + current_threshold/2;
+						end if;	
+					else
+					-- To avoid a bouncing effect near the target, final updates are iteratives
+						if(current_ratio > current_desired_ratio) then
+							-- Too many white pixels spotted, increasing threshold value
+							if(current_threshold < upper_border_threshold) then
+								current_threshold := current_threshold + 1;
+							end if;
+						elsif current_ratio < current_desired_ratio   then
 							-- Not enough white pixels, lowering threshold value
-							--if(current_threshold > lower_border_threshold) then
-							--	current_threshold := current_threshold - 2;					
-							--end if;
-							current_threshold := current_threshold/2;
-						--else    -- Reached targeted ratio
-						end if;
-					--end if;
-					
-					old_ratio     := current_ratio;
-					old_threshold := current_threshold;
+							if(current_threshold > lower_border_threshold+1) then
+								current_threshold := current_threshold - 1;					
+							end if;
+						end if;	
+					end if;
+						old_ratio     := current_ratio;
+						old_threshold := current_threshold;	
 				end if;
 
 				-- Updating image resolution
@@ -102,7 +100,7 @@ begin
 				white_px_counter := 0;
 
 				enabled <= status_reg_enable_bit;
-            		end if;
+            end if;
 
 			if(enabled = '1') then
 				if(in_dv='1' and in_fv='1') then
