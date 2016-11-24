@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="dynthreshold" categ="" master_count="0" pi_size_addr_rel="2" desc="Dynamic threshold based on a desired ratio of white">
+<process name="dynthreshold" categ="" master_count="0" pi_size_addr_rel="3" desc="Dynamic threshold based on a desired ratio of white">
   <parts>
     <part name="main">
       <svg style="background-color: rgb(255, 255, 255);" width="131px" height="130px">
         <g transform="matrix(0.99218809,0,0,1.0000306,0.0038682,2.4980434)" id="g6">
           <rect x="1" y="0" width="127" height="127" pointer-events="none" id="rect8" style="fill:#ffffff;stroke:#fafafa"/>
-          <path d="M 11,110 Q 11,76 29,43 47,10 72,40 97,70 128,76.2" stroke-miterlimit="10" pointer-events="none" id="path10" connector-curvature="0" style="fill:none;stroke:#050505;stroke-width:2;stroke-miterlimit:10"/>
-          <path d="m 1,45 70,0" stroke-miterlimit="10" pointer-events="none" id="path12" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
-          <path d="m 71,46 q 10,-30 10,-10 0,20 5,0 5,-20 5,0 0,20 5,0 5,-20 5,-10 0,10 15.53,10" stroke-miterlimit="10" pointer-events="none" id="path14" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
-          <path d="m 110.76,38.67 8,-2.67 -8,-2.67" stroke-miterlimit="10" pointer-events="none" id="path16" connector-curvature="0" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="M 11,110 Q 11,76 29,43 47,10 72,40 97,70 128,76.2" stroke-miterlimit="10" pointer-events="none" id="path10" style="fill:none;stroke:#050505;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 1,45 70,0" stroke-miterlimit="10" pointer-events="none" id="path12" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 71,46 q 10,-30 10,-10 0,20 5,0 5,-20 5,0 0,20 5,0 5,-20 5,-10 0,10 15.53,10" stroke-miterlimit="10" pointer-events="none" id="path14" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
+          <path d="m 110.76,38.67 8,-2.67 -8,-2.67" stroke-miterlimit="10" pointer-events="none" id="path16" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:10"/>
         </g>
       </svg>
     </part>
   </parts>
+  <infos>
+    <info name="author" value="Raphael BOUTERIGE"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-11-23"/>
+  </infos>
   <files>
     <file name="dynthreshold.proc" type="proc" group="blockdef" path="dynthreshold.proc"/>
+    <file name="dynthreshold.vhd" type="vhdl" group="hdl" path="hdl/dynthreshold.vhd"/>
+    <file name="dynthreshold_process.vhd" type="vhdl" group="hdl" path="hdl/dynthreshold_process.vhd"/>
+    <file name="dynthreshold_slave.vhd" type="vhdl" group="hdl" path="hdl/dynthreshold_slave.vhd"/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in"/>
@@ -30,9 +39,25 @@
     </flow>
   </flows>
   <params>
+    <param name="status_reg" regaddr="0">
+      <bitfields>
+        <bitfield name="enable_bit" bitfield="0" propertymap="enable.value"/>
+      </bitfields>
+    </param>
+    <param name="widthimg_reg" regaddr="1">
+      <bitfields>
+        <bitfield name="value" bitfield="15-0" propertymap="in.width.value"/>
+      </bitfields>
+    </param>
+    <param name="heigtimg_reg" regaddr="2">
+      <bitfields>
+        <bitfield name="value" bitfield="15-0" propertymap="in.height.value"/>
+      </bitfields>
+    </param>
     <param name="desired_ratio_reg" regaddr="3" propertymap="DesiredRatio.value"/>
   </params>
   <properties>
+    <property name="enable" type="bool" value="1"/>
     <property name="DesiredRatio" type="sint" value="5" min="0" max="100"/>
   </properties>
 </process>
