@@ -1,11 +1,17 @@
+include gpstudio.mk
 
 all: doc gui-tools
 
-doc: docip FORCE
-	cd docsrc/ && make -f Makefile
+doc: docgps docip docbackend
+
+docgps: FORCE
+	@cd docsrc/ && make -f Makefile
+
+docbackend: FORCE
+	@cd scripts/ && make -f Makefile
 
 docip: FORCE
-	cd support/ && make -f Makefile
+	@cd support/ && make -f Makefile
 
 distrib: doc FORCE
 	cd distrib/ && make -f Makefile
@@ -25,7 +31,9 @@ clean:
 	cd gui-tools/ && make -f Makefile clean
 
 lines: FORCE
-	wc -l scripts/*.php scripts/*/*.php support/toolchain/*/*.php distrib/*.php gui-tools/src/*/*.h gui-tools/src/*/*.cpp gui-tools/src/*/*/*.h gui-tools/src/*/*/*.cpp gui-tools/src/*/*/*/*.h gui-tools/src/*/*/*/*.cpp *_completion| sort -n -k1
+	@wc -l $(shell find scripts/ support/toolchain/ distrib/ -name '*.php') \
+	$(shell find gui-tools/src/ \( -name '*.h' -o -name '*.cpp' \)) \
+	$(shell find share/ -name '*_completion' ) | sort -n -k1
 
 gui-tools: FORCE
 	cd gui-tools/ && make -f Makefile
