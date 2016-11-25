@@ -13,7 +13,7 @@ gpproc showblock
 # IP infos
 gpproc setinfo -n "author" -v "Raphael BOUTERIGE"
 gpproc setinfo -n "company" -v "Institut Pascal"
-gpproc setinfo -n "revision" -v "1.0"
+gpproc setinfo -n "revision" -v "1.1"
 gpproc setinfo -n "releasedate" -v "2016-11-23"
 
 # properties on flow out

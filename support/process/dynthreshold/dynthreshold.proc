@@ -16,7 +16,7 @@
   <infos>
     <info name="author" value="Raphael BOUTERIGE"/>
     <info name="company" value="Institut Pascal"/>
-    <info name="revision" value="1.0"/>
+    <info name="revision" value="1.1"/>
     <info name="releasedate" value="2016-11-23"/>
   </infos>
   <files>

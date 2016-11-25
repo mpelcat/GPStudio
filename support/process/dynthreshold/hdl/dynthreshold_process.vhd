@@ -67,7 +67,7 @@ begin
 				if(img_px_counter /= 0 and enabled = '1') then
 					current_ratio :=to_unsigned(white_px_counter*100/img_px_counter,32); 
 					-- Updating threshold with dichotomic search
-					if(abs(signed(current_desired_ratio)-signed(current_ratio)) > 10)then
+					if(abs(signed(current_desired_ratio)-signed(current_ratio)) > 8)then
 						if(current_ratio > current_desired_ratio) then
 							current_threshold := current_threshold+(upper_border_threshold-current_threshold)/2;
 						elsif current_ratio < current_desired_ratio   then
@@ -82,7 +82,7 @@ begin
 							end if;
 						elsif current_ratio < current_desired_ratio   then
 							-- Not enough white pixels, lowering threshold value
-							if(current_threshold > lower_border_threshold+1) then
+							if(current_threshold > lower_border_threshold) then
 								current_threshold := current_threshold - 1;					
 							end if;
 						end if;	
@@ -90,9 +90,6 @@ begin
 						old_ratio     := current_ratio;
 						old_threshold := current_threshold;	
 				end if;
-
-				-- Updating image resolution
-				--current_resolution <= unsigned(widthimg_reg_value)*unsigned(heigtimg_reg_value);
 				-- Updating commanded ratio
 				current_desired_ratio <= unsigned(desired_ratio_reg);
 				-- Reset pixel counter
@@ -105,7 +102,7 @@ begin
 			if(enabled = '1') then
 				if(in_dv='1' and in_fv='1') then
 					-- Binarisation process
-					if(unsigned(in_data) < current_threshold) then
+					if(unsigned(in_data) <= current_threshold) then
 						out_data <= (others => '0');
 					else
 						out_data <= (others => '1');
