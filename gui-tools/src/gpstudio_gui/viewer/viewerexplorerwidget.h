@@ -40,6 +40,9 @@ public:
     void attachProject(GPNodeProject *project);
     GPNodeProject *project() const;
 
+    void setCamera(Camera *camera);
+    Camera *camera() const;
+
 signals:
 
 public slots:
@@ -54,6 +57,7 @@ private:
     CameraItemModel *_viewerItemModel;
 
     GPNodeProject *_project;
+    Camera *_camera;
 };
 
 #endif // VIEWEREXPLORERWIDGET_H

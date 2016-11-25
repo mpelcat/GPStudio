@@ -29,6 +29,7 @@
 #include "camera/camera.h"
 #include "flowviewerwidget/flowviewerwidget.h"
 #include "viewer/camexplorerwidget.h"
+#include "viewer/viewerexplorerwidget.h"
 #include "lib_parser/lib.h"
 
 #include "../../thirdparts/hexedit/qhexedit.h"
@@ -88,6 +89,9 @@ private:
 
     QDockWidget *_camExplorerDock;
     CamExplorerWidget *_camExplorerWidget;
+
+    QDockWidget *_viewerExplorerDock;
+    ViewerExplorerWidget *_viewerExplorerWidget;
 
     QDockWidget *_scriptDock;
     ScriptWidget *_scriptWidget;

@@ -37,19 +37,31 @@ void ViewerExplorerWidget::attachProject(GPNodeProject *project)
 
     if(_project->camera())
     {
-        if(_project->camera()->comBlock())
-            _flowItemModel->setBlock(_project->camera()->comBlock(), CameraItem::FFlowIn);
-        _flowTreeView->expandAll();
-
-        if(_project->node()->gpViewer())
-            _viewerItemModel->setViewer(_project->node()->gpViewer());
-        _viewerTreeView->expandAll();
+        setCamera(_project->camera());
     }
 }
 
 GPNodeProject *ViewerExplorerWidget::project() const
 {
     return _project;
+}
+
+void ViewerExplorerWidget::setCamera(Camera *camera)
+{
+    _camera = camera;
+
+    if(_camera->comBlock())
+        _flowItemModel->setBlock(_camera->comBlock(), CameraItem::FFlowIn);
+    _flowTreeView->expandAll();
+
+    if(_camera->node()->gpViewer())
+        _viewerItemModel->setViewer(_camera->node()->gpViewer());
+    _viewerTreeView->expandAll();
+}
+
+Camera *ViewerExplorerWidget::camera() const
+{
+    return _camera;
 }
 
 void ViewerExplorerWidget::setupWidgets()

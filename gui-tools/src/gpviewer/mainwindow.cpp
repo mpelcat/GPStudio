@@ -208,6 +208,16 @@ void MainWindow::createDocks()
     _camExplorerDock->setWidget(camExplorerContent);
     addDockWidget(Qt::LeftDockWidgetArea, _camExplorerDock);
 
+    // viewer explorer dock
+    _viewerExplorerDock = new QDockWidget("Viewers", this);
+    QWidget *viewerExplorerContent = new QWidget(_viewerExplorerDock);
+    QLayout *viewerExplorerLayout = new QVBoxLayout();
+    _viewerExplorerWidget = new ViewerExplorerWidget();
+    viewerExplorerLayout->addWidget(_viewerExplorerWidget);
+    viewerExplorerContent->setLayout(viewerExplorerLayout);
+    _viewerExplorerDock->setWidget(viewerExplorerContent);
+    tabifyDockWidget(_camExplorerDock, _viewerExplorerDock);
+
     // script dock
     _scriptDock = new QDockWidget("Scripts", this);
     QWidget *scriptContent = new QWidget(_scriptDock);
@@ -242,6 +252,8 @@ void MainWindow::openNodeGeneratedFile(const QString fileName)
     connectCam();
 
     _camExplorerWidget->setCamera(_cam);
+    _viewerExplorerWidget->setCamera(_cam);
+
     if(_cam->com())
         connect(_cam->com(), SIGNAL(disconnected()), this, SLOT(disconnectCam()));
 }
