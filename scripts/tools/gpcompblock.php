@@ -31,6 +31,7 @@ require_once("io.php");
 require_once("iocom.php");
 require_once("gpstudio.php");
 require_once('toolchain' . DIRECTORY_SEPARATOR . 'hdl' . DIRECTORY_SEPARATOR . "block_generator.php");
+require_once('toolchain' . DIRECTORY_SEPARATOR . 'hdl' . DIRECTORY_SEPARATOR . "vhdl_extractor.php");
 
 $options = getopt("a:");
 if (array_key_exists('a', $options))
@@ -137,7 +138,7 @@ switch ($action)
 }
 
 // new block creation
-if ($action == "new" and TOOL == "gpproc")
+if (($action == "new" or $action == "extract") and TOOL == "gpproc")
 {
     $options = getopt("a:n:");
     if (array_key_exists('n', $options))
@@ -148,13 +149,8 @@ if ($action == "new" and TOOL == "gpproc")
     $component = new Process();
     $component->name = $componentName;
     $componentName.=".proc";
-
-    $reset = new Reset();
-    $reset->name = 'reset_n';
-    $reset->group = 'reset_n';
-    $component->addReset($reset);
 }
-elseif ($action == "new" and TOOL == "gpdevice")
+elseif (($action == "new" or $action == "extract") and TOOL == "gpdevice")
 {
     $options = getopt("a:n:");
     if (array_key_exists('n', $options))
@@ -166,13 +162,8 @@ elseif ($action == "new" and TOOL == "gpdevice")
     $component->name = $componentName;
     $component->driver = $componentName;
     $componentName.=".io";
-
-    $reset = new Reset();
-    $reset->name = 'reset_n';
-    $reset->group = 'reset_n';
-    $component->addReset($reset);
 }
-elseif ($action == "new" and TOOL == "gpcomp")
+elseif (($action == "new" or $action == "extract") and TOOL == "gpcomp")
 {
     $options = getopt("a:n:");
     if (array_key_exists('n', $options))
@@ -184,11 +175,6 @@ elseif ($action == "new" and TOOL == "gpcomp")
     $component->name = $componentName;
     $component->driver = $componentName;
     $componentName.=".comp";
-
-    $reset = new Reset();
-    $reset->name = 'reset_n';
-    $reset->group = 'reset_n';
-    $component->addReset($reset);
 }
 else
 {
@@ -246,6 +232,12 @@ else
         error("Cannot call this script without a valid tool.", 1);
     }
 }
+
+// Added reset on block
+$reset = new Reset();
+$reset->name = 'reset_n';
+$reset->group = 'reset_n';
+$component->addReset($reset);
 
 $save = true;
 
@@ -347,6 +339,18 @@ switch ($action)
 
     case "showblock":
         $component->print_flow();
+        break;
+
+    // =========================== files commands ======================
+    case "extract":
+        $extractor = new VHDL_extractor(str_replace(".comp", "", $componentName));
+        $component = $extractor->toComponent();
+        //$component->name = basename(basename($componentName), ".vhd.comp");
+        //print_r($extractor);
+        
+        //echo $componentName;
+        //$save = false;
+        
         break;
 
     // =========================== files commands ======================
