@@ -120,6 +120,12 @@ class Component
     public $parts;
 
     /**
+     * @brief Array of port abble to comunicate with the output
+     * @var array|Port $ext_ports
+     */
+    public $ext_ports;
+
+    /**
      * @brief Parent components, null if the component does not have a parent
      * @var Component $parentComponent
      */
@@ -144,6 +150,7 @@ class Component
         $this->attributes = array();
         $this->components = array();
         $this->parts = array();
+        $this->ext_ports = array();
         
         $this->parentComponent = NULL;
         
@@ -634,6 +641,63 @@ class Component
         return null;
     }
 
+    /**
+     * @brief Add an external port to the block 
+     * @param Port $extPort port to add to the block
+     */
+    function addExtPort($extPort)
+    {
+        $extPort->parentBlock = $this;
+        array_push($this->ext_ports, $extPort);
+    }
+
+    /**
+     * @brief return a reference to the external port with the name $name, if not
+     * found, return null
+     * @param string $name name of the external port to search
+     * @param bool $casesens take care or not of the case of the name
+     * @return Port found external port
+     */
+    function getExtPort($name, $casesens = true)
+    {
+        if ($casesens)
+        {
+            foreach ($this->ext_ports as $extPort)
+            {
+                if ($extPort->name == $name)
+                    return $extPort;
+            }
+        }
+        else
+        {
+            foreach ($this->ext_ports as $extPort)
+            {
+                if (strcasecmp($extPort->name, $name) == 0)
+                    return $extPort;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @brief delete an external port from his name
+     * @param string $name name of the external port to delete
+     */
+    function delExtPort($name)
+    {
+        $i = 0;
+        foreach ($this->ext_ports as $ext_port)
+        {
+            if ($ext_port->name == $name)
+            {
+                unset($this->ext_ports[$i]);
+                return;
+            }
+            $i++;
+        }
+        return null;
+    }
+
     /** @brief return a reference to the instance with the name $name, if not
      * found, return null
      *  @param string $name name of the instance to search
@@ -667,12 +731,9 @@ class Component
         if ($instance != NULL)
             return $instance;
 
-        if ($this->type() == "io" or $this->type() == "iocom")
-        {
-            $instance = $this->getExtPort($name, $casesens);
-            if ($instance != NULL)
-                return $instance;
-        }
+        $instance = $this->getExtPort($name, $casesens);
+        if ($instance != NULL)
+            return $instance;
 
         return null;
     }
@@ -757,6 +818,15 @@ class Component
             foreach ($this->xml->components->component as $componentXml)
             {
                 $this->addComponent(new Component($componentXml));
+            }
+        }
+
+        // ports
+        if (isset($this->xml->ports))
+        {
+            foreach ($this->xml->ports->port as $port)
+            {
+                $this->addExtPort(new Port($port));
             }
         }
 
@@ -909,6 +979,18 @@ class Component
                 $xml_components->appendChild($component->getXmlElement($xml, $format));
             }
             $xml_element->appendChild($xml_components);
+        }
+        
+        
+        // ports
+        if (!empty($this->ext_ports))
+        {
+            $xml_ports = $xml->createElement("ports");
+            foreach ($this->ext_ports as $port)
+            {
+                $xml_ports->appendChild($port->getXmlElement($xml, $format));
+            }
+            $xml_element->appendChild($xml_ports);
         }
 
         return $xml_element;

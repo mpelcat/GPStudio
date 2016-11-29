@@ -40,12 +40,6 @@ class IO extends Block
     public $pins;
 
     /**
-     * @brief Array of port abble to comunicate with the output
-     * @var array|Port $ext_ports
-     */
-    public $ext_ports;
-
-    /**
      * @brief constructor of IO
      * 
      * Initialise all the internal members and call parse_xml if
@@ -61,7 +55,6 @@ class IO extends Block
     function __construct($io_device_element = null, $io_node_element = null)
     {
         $this->pins = array();
-        $this->ext_ports = array();
 
         parent::__construct();
         $io_file = "";
@@ -148,15 +141,6 @@ class IO extends Block
         $this->driver = (string) $this->xml['driver'];
         $this->master_count = (int) $this->xml['master_count'];
 
-        // ports
-        if (isset($this->xml->ports))
-        {
-            foreach ($this->xml->ports->port as $port)
-            {
-                $this->addExtPort(new Port($port));
-            }
-        }
-
         // pins assignement
         if (isset($io_device_element->pins))
         {
@@ -191,14 +175,6 @@ class IO extends Block
 
         if ($format == "complete" or $format == "blockdef")
         {
-            // ports
-            $xml_ports = $xml->createElement("ports");
-            foreach ($this->ext_ports as $port)
-            {
-                $xml_ports->appendChild($port->getXmlElement($xml, $format));
-            }
-            $xml_element->appendChild($xml_ports);
-
             // pins
             $xml_pins = $xml->createElement("pins");
             foreach ($this->pins as $pin)
@@ -245,63 +221,6 @@ class IO extends Block
                 if (strcasecmp($pin->name, $name) == 0)
                     return $pin;
             }
-        }
-        return null;
-    }
-
-    /**
-     * @brief Add an external port to the block 
-     * @param Port $extPort port to add to the block
-     */
-    function addExtPort($extPort)
-    {
-        $extPort->parentBlock = $this;
-        array_push($this->ext_ports, $extPort);
-    }
-
-    /**
-     * @brief return a reference to the external port with the name $name, if not
-     * found, return null
-     * @param string $name name of the external port to search
-     * @param bool $casesens take care or not of the case of the name
-     * @return Port found external port
-     */
-    function getExtPort($name, $casesens = true)
-    {
-        if ($casesens)
-        {
-            foreach ($this->ext_ports as $extPort)
-            {
-                if ($extPort->name == $name)
-                    return $extPort;
-            }
-        }
-        else
-        {
-            foreach ($this->ext_ports as $extPort)
-            {
-                if (strcasecmp($extPort->name, $name) == 0)
-                    return $extPort;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @brief delete an external port from his name
-     * @param string $name name of the external port to delete
-     */
-    function delExtPort($name)
-    {
-        $i = 0;
-        foreach ($this->ext_ports as $ext_port)
-        {
-            if ($ext_port->name == $name)
-            {
-                unset($this->ext_ports[$i]);
-                return;
-            }
-            $i++;
         }
         return null;
     }
