@@ -244,7 +244,7 @@ class VHDL_extractor
             if(empty($matches))
                 continue;
             unset($portPart[$k]);
-            $clock = new Reset();
+            $clock = new Clock();
             $clock->name = $part->name;
             $clock->group = "clk_proc";
             $clock->direction = $matches[3][0];

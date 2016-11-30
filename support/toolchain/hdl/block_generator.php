@@ -69,15 +69,18 @@ class Block_generator
             return;
 
         // slave block creation
-        if ($this->block->pi_size_addr_rel > 0)
+        if(isset($this->block->pi_size_addr_rel))
         {
-            array_push($this->block->interfaces, new InterfaceBus("bus_sl", $this->block->name, "pi_slave", $this->block->pi_size_addr_rel));
+            if ($this->block->pi_size_addr_rel > 0)
+            {
+                array_push($this->block->interfaces, new InterfaceBus("bus_sl", $this->block->name, "pi_slave", $this->block->pi_size_addr_rel));
 
-            $this->slave_block = new IO();
-            $this->slave_block->name = $this->block->name . '_slave';
-            $this->slave_block->driver = $this->block->name . '_slave';
-            $this->slave_block->clocks = array();
-            $this->slave_block->interfaces = $this->block->interfaces;
+                $this->slave_block = new IO();
+                $this->slave_block->name = $this->block->name . '_slave';
+                $this->slave_block->driver = $this->block->name . '_slave';
+                $this->slave_block->clocks = array();
+                $this->slave_block->interfaces = $this->block->interfaces;
+            }
         }
 
         // slave block creation
