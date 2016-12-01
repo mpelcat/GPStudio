@@ -30,6 +30,7 @@ bin/*.exe
 bin/gpnode_gui
 bin/gpviewer
 bin/gpblock_gui
+bin/gphwloop
 
 gui-tools/build*/
 gui-tools/bin*/
