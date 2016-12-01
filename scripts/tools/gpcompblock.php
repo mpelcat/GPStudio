@@ -233,11 +233,14 @@ else
     }
 }
 
-// Added reset on block
-$reset = new Reset();
-$reset->name = 'reset_n';
-$reset->group = 'reset_n';
-$component->addReset($reset);
+if($component->getReset('reset_n')==NULL and $action == "new")
+{
+    // Added reset on block
+    $reset = new Reset();
+    $reset->name = 'reset_n';
+    $reset->group = 'reset_n';
+    $component->addReset($reset);
+}
 
 $save = true;
 
@@ -337,20 +340,36 @@ switch ($action)
         $save = false;
         break;
 
-    case "showblock":
-        $component->print_flow();
+    case "convert":
+        $options = getopt("a:i:o:");
+        if (array_key_exists('i', $options))
+            $input = $options['i'];
+        else
+            error("You should specify an input file to convert with -i", 1);
+        if (array_key_exists('o', $options))
+            $output = $options['o'];
+        else   
+        {
+            $infos = pathinfo($input);
+            $extension = strtolower($infos['extension']);
+            if(in_array($extension, array("jpg","jpeg","bmp","gif","png")))
+                $output = $input . ".stim";
+            elseif ($extension == "data")
+                $output = $infos['filename'] . ".png";
+            else
+                error("You should specify an output file to convert with -o", 1);
+        }
+        Block_generator::convert($input, $output);
         break;
 
-    // =========================== files commands ======================
     case "extract":
         $extractor = new VHDL_extractor(str_replace(".comp", "", $componentName));
         $component = $extractor->toComponent();
-        //$component->name = basename(basename($componentName), ".vhd.comp");
-        //print_r($extractor);
-        
-        //echo $componentName;
-        //$save = false;
-        
+        $componentName = str_replace(".vhd", "", str_replace(".comp", "", $componentName));
+        break;
+
+    case "showblock":
+        $component->print_flow();
         break;
 
     // =========================== files commands ======================
