@@ -105,7 +105,7 @@ class Block_generator
         // resets copy
         foreach ($this->block->resets as $reset)
         {
-            $nreset = new Clock();
+            $nreset = new Reset();
             $nreset->name = $reset->name;
             $nreset->group = $reset->name;
             $this->process_block->addReset($nreset);
@@ -210,7 +210,7 @@ class Block_generator
             if($flow->type == "out")
                 $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is out \"" . $flow->name . ".pgm\";" . "\r\n";
             else
-                $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is in \"" . $flow->name . ".img\";" . "\r\n";
+                $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is in \"" . $flow->name . ".stim\";" . "\r\n";
         }
         
         // resets signals
@@ -223,6 +223,101 @@ class Block_generator
         // tb_specific
         $this->block_generator->addSignalComment(str_pad(' test bench specific ', 55, '-', STR_PAD_BOTH));
         $this->block_generator->addSignal("endtb", 1, "std_logic", "0");
+
+        // stim input
+        $codeStimIn = '';
+        foreach ($this->block->flows as $flow)
+        {
+            if ($flow->type == "in")
+            {
+                $codeStimIn .= "    -- Stimuli for " . $flow->name . " flow" . "\r\n";
+                $codeStimIn .= "    stim_proc: process" . "\r\n";
+                $codeStimIn .= "		variable " . $flow->name . "_line : line;" . "\r\n";
+                $codeStimIn .= "		variable " . $flow->name . "_pixelFromFile : INTEGER;" . "\r\n";
+                $codeStimIn .= "		variable " . $flow->name . "_pixel_ok : BOOLEAN;" . "\r\n";
+                $codeStimIn .= "	" . "\r\n";
+                $codeStimIn .= "	begin" . "\r\n";
+                $codeStimIn .= "		endtb <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_data <= (others=>'0');" . "\r\n";
+                $codeStimIn .= "		reset_n <= '1';" . "\r\n";
+                $codeStimIn .= "		wait for clk_proc_period;" . "\r\n";
+                $codeStimIn .= "		reset_n <= '0';" . "\r\n";
+                $codeStimIn .= "		wait for clk_proc_period * 2;" . "\r\n";
+                $codeStimIn .= "		reset_n <= '1';" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_dv <= '1';" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_fv <= '1';" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		while not endfile(" . $flow->name . "_data_file) loop" . "\r\n";
+                $codeStimIn .= "			readline(in_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeStimIn .= "			" . "\r\n";
+                $codeStimIn .= "			read(" . $flow->name . "_line, in_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
+                $codeStimIn .= "			while " . $flow->name . "_pixel_ok loop" . "\r\n";
+                $codeStimIn .= "				" . $flow->name . "_data <= std_logic_vector(to_unsigned(" . $flow->name . "_pixelFromFile, IN_SIZE));" . "\r\n";
+                $codeStimIn .= "				wait for clk_proc_period;" . "\r\n";
+                $codeStimIn .= "				read(" . $flow->name . "_line, " . $flow->name . "_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
+                $codeStimIn .= "			end loop;" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		end loop;" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		wait for clk_proc_period * 2;" . "\r\n";
+                $codeStimIn .= "		assert false report \"end of test\" severity note;" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		endtb <= '1';" . "\r\n";
+                $codeStimIn .= "		wait;" . "\r\n";
+                $codeStimIn .= "	end process;" . "\r\n" . "\r\n";
+            }
+        }
+        $this->block_generator->addCode($codeStimIn);
+
+        // stim input
+        $codeDataOut = '';
+        foreach ($this->block->flows as $flow)
+        {
+            if ($flow->type == "out")
+            {
+                $codeDataOut .= "    -- Data save for " . $flow->name . " flow" . "\r\n";
+                $codeDataOut .= "    " . $flow->name . "_process: process" . "\r\n";
+                $codeDataOut .= "		variable " . $flow->name . "_line : line;" . "\r\n";
+                $codeDataOut .= "		variable x : integer := 0;" . "\r\n";
+                $codeDataOut .= "	" . "\r\n";
+                $codeDataOut .= "	begin" . "\r\n";
+                $codeDataOut .= "		" . "\r\n";
+                $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"P2\"));" . "\r\n";
+                $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeDataOut .= "		" . "\r\n";
+                $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"128 128\"));" . "\r\n";
+                $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeDataOut .= "		" . "\r\n";
+                $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"255\"));" . "\r\n";
+                $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeDataOut .= "		" . "\r\n";
+                $codeDataOut .= "		wait for clk_proc_period * 2;" . "\r\n";
+                $codeDataOut .= "		while endtb='0' loop" . "\r\n";
+                $codeDataOut .= "			if(clk_proc = '1') then" . "\r\n";
+                $codeDataOut .= "				if(" . $flow->name . "_dv='1' and " . $flow->name . "_fv='1') then" . "\r\n";
+                $codeDataOut .= "					write(" . $flow->name . "_line, to_integer(unsigned(" . $flow->name . "_data)));" . "\r\n";
+                $codeDataOut .= "					write(" . $flow->name . "_line, string'(\" \"));" . "\r\n";
+                $codeDataOut .= "					x := x + 1;" . "\r\n";
+                $codeDataOut .= "					if(x>128) then" . "\r\n";
+                $codeDataOut .= "						writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeDataOut .= "						x := 0;" . "\r\n";
+                $codeDataOut .= "					end if;" . "\r\n";
+                $codeDataOut .= "				end if;" . "\r\n";
+                $codeDataOut .= "			end if;" . "\r\n";
+                $codeDataOut .= "			wait for clk_proc_period;" . "\r\n";
+                $codeDataOut .= "		end loop;" . "\r\n";
+                $codeDataOut .= "		assert false report \"end of out\" severity note;" . "\r\n";
+                $codeDataOut .= "		wait;" . "\r\n";
+                $codeDataOut .= "	end process;" . "\r\n";
+            }
+        }
+        $this->block_generator->addCode($codeDataOut);
 
         // block top level generation
         $this->block_generator->addblock($this->block, TRUE);
@@ -534,5 +629,59 @@ class Block_generator
         // slave generation
         $this->slave_generator->fromBlock($this->slave_block, TRUE);
         $this->slave_generator->save_as_ifdiff($path . DIRECTORY_SEPARATOR . $this->slave_generator->name . '.vhd');
+    }
+
+    static function convertImg2stim($input_image, $output_file)
+    {
+        $path_parts = pathinfo($input_image);
+        $ext = strtolower($path_parts['extension']);
+        switch ($ext)
+        {
+            case "png":
+                $img = imagecreatefrompng($input_image);
+                break;
+            case "jpg":
+            case "jpeg":
+                $img = imagecreatefromjpeg($input_image);
+                break;
+            case "gif":
+                $img = imagecreatefromgif($input_image);
+                break;
+            case "bmp":
+                $img = imagecreatefromwbmp($input_image);
+                break;
+            default:
+                $img = NULL;
+                break;
+        }
+        if ($img == NULL)
+            error("Cannot open image file '" . $input_image . "'", 1);
+
+        // imagefilter($img, IMG_FILTER_GRAYSCALE);
+
+        $handle = fopen($output_file, "wb");
+
+        for ($y = 0; $y < imagesy($img); $y++)
+        {
+            for ($x = 0; $x < imagesx($img); $x++)
+            {
+                $rgb = imagecolorat($img, $x, $y);
+                $r = ($rgb >> 16) & 0xFF;
+                $g = ($rgb >> 8) & 0xFF;
+                $b = $rgb & 0xFF;
+                $gray = 0.30 * $r + 0.59 * $g + 0.11 * $b;
+
+                fwrite($handle, (int) $gray . " ");
+            }
+            fwrite($handle, "\n");
+        }
+
+        fclose($handle);
+        imagedestroy($img);
+    }
+
+    static function convertData2Img($in, $out)
+    {
+        
     }
 }

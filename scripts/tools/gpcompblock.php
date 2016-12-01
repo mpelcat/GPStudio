@@ -346,20 +346,27 @@ switch ($action)
             $input = $options['i'];
         else
             error("You should specify an input file to convert with -i", 1);
+        $infos = pathinfo($input);
+        $extension = strtolower($infos['extension']);
+
         if (array_key_exists('o', $options))
             $output = $options['o'];
         else   
         {
-            $infos = pathinfo($input);
-            $extension = strtolower($infos['extension']);
-            if(in_array($extension, array("jpg","jpeg","bmp","gif","png")))
+            if (in_array($extension, array("jpg", "jpeg", "bmp", "gif", "png")))
                 $output = $input . ".stim";
             elseif ($extension == "data")
                 $output = $infos['filename'] . ".png";
             else
                 error("You should specify an output file to convert with -o", 1);
         }
-        Block_generator::convert($input, $output);
+        if (in_array($extension, array("jpg", "jpeg", "bmp", "gif", "png")))
+            Block_generator::convertImg2stim($input, $output);
+        elseif ($extension == "data")
+            Block_generator::convertData2Img($input, $output);
+        else
+            error("Bad input format", 2);
+        message($output . ' generated');
         break;
 
     case "extract":
