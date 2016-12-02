@@ -10,22 +10,23 @@ entity dynthreshold_process is
 		OUT_SIZE      : integer
 	);
 	port (
-		clk_proc              : in std_logic;
-		reset_n               : in std_logic;
+		clk_proc                 : in std_logic;
+		reset_n                  : in std_logic;
 
 		---------------- dynamic parameters ports ---------------
-		status_reg_enable_bit : in std_logic;
-		desired_ratio_reg     : in std_logic_vector(31 downto 0);
+		status_reg_enable_bit    : in std_logic;
+		desired_ratio_reg        : in std_logic_vector(31 downto 0);
+		border_research_type_reg : in std_logic_vector(31 downto 0);
 
 		------------------------- in flow -----------------------
-		in_data               : in std_logic_vector(IN_SIZE-1 downto 0);
-		in_fv                 : in std_logic;
-		in_dv                 : in std_logic;
+		in_data                  : in std_logic_vector(IN_SIZE-1 downto 0);
+		in_fv                    : in std_logic;
+		in_dv                    : in std_logic;
 
 		------------------------ out flow -----------------------
-		out_data              : out std_logic_vector(OUT_SIZE-1 downto 0);
-		out_fv                : out std_logic;
-		out_dv                : out std_logic
+		out_data                 : out std_logic_vector(OUT_SIZE-1 downto 0);
+		out_fv                   : out std_logic;
+		out_dv                   : out std_logic
 	);
 end dynthreshold_process;
 
@@ -34,6 +35,8 @@ architecture rtl of dynthreshold_process is
 signal enabled : std_logic;
 -- Desired ratio of white pixels in percent
 signal current_desired_ratio : unsigned(31 downto 0);
+-- Ratio triggering the switch between a dichotomic research and an iterative one
+signal current_border_research_type : unsigned(31 downto 0);
 --Threshold borders
 signal lower_border_threshold : unsigned(IN_SIZE-1 downto 0):=(others=>'0');
 signal upper_border_threshold : unsigned(IN_SIZE-1 downto 0):=(others=>'1');
@@ -67,7 +70,7 @@ begin
 				if(img_px_counter /= 0 and enabled = '1') then
 					current_ratio :=to_unsigned(white_px_counter*100/img_px_counter,32); 
 					-- Updating threshold with dichotomic search
-					if(abs(signed(current_desired_ratio)-signed(current_ratio)) > 8)then
+					if(unsigned(abs(signed(current_desired_ratio)-signed(current_ratio))) > current_border_research_type)then
 						if(current_ratio > current_desired_ratio) then
 							current_threshold := current_threshold+(upper_border_threshold-current_threshold)/2;
 						elsif current_ratio < current_desired_ratio   then
@@ -92,6 +95,8 @@ begin
 				end if;
 				-- Updating commanded ratio
 				current_desired_ratio <= unsigned(desired_ratio_reg);
+				-- Updating research type border
+				current_border_research_type <= unsigned(border_research_type_reg);
 				-- Reset pixel counter
 				img_px_counter := 0;
 				white_px_counter := 0;

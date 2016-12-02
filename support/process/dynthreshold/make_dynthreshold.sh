@@ -42,6 +42,10 @@ gpproc addbitfield -n status_reg.enable_bit -b 0 -m enable.value
 gpproc addproperty -n "DesiredRatio" -t sint -v 5
 gpproc setproperty -n "DesiredRatio" -r 0:100
 gpproc addparam -n desired_ratio_reg -m "DesiredRatio".value -r 1
+# register border dicho / iterative search
+gpproc addproperty -n "BorderResearchType" -t sint -v 8
+gpproc setproperty -n "BorderResearchType" -r 0:100
+gpproc addparam -n border_research_type_reg -m "BorderResearchType".value -r 2
 
 # visual settings
 gpproc setdraw -f dynthreshold.svg

@@ -45,9 +45,11 @@
       </bitfields>
     </param>
     <param name="desired_ratio_reg" regaddr="1" propertymap="DesiredRatio.value"/>
+    <param name="border_research_type_reg" regaddr="2" propertymap="BorderResearchType.value"/>
   </params>
   <properties>
     <property name="enable" type="bool" value="1"/>
     <property name="DesiredRatio" type="sint" value="5" min="0" max="100"/>
+    <property name="BorderResearchType" type="sint" value="8" min="0" max="100"/>
   </properties>
 </process>
