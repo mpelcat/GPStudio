@@ -157,7 +157,7 @@ Few over commands can be used to create the block and generate the skeleton defi
 
 \hyperref[subsec:setpropertymap]{setpropertymap} defines link between properties.
 
-For Parameters Interconnect configuration, you should use \hyperref[subsec:setpisizeaddr]{setpisizeaddr} and \hyperref[subsec:setpimastercount]{setpimastercount}.
+For Parameters Interconnect interface configuration, you should use \hyperref[subsec:setpisizeaddr]{setpisizeaddr} and \hyperref[subsec:setpimastercount]{setpimastercount}.
 
 \subsection{project}
 % ==============================================
@@ -248,17 +248,55 @@ Generates an empty skeleton to implement your custom \kind{}. The generated file
 \subsubsection{generate}
 \command{\textbf{\tool{} generate} [-o <dir>]}
 
-This command is an alias for the three previous command. Generates all the tree files.\\
+This command is an alias for the three previous command. Generates all the three files.\\
 
 \paramcommand{
 -o & output directory & build \\ 
 }
 
 \begin{sampletitle}
-> \textbf{\tool{} generatetop} -o build/
+> \textbf{\tool{} generate} -o build/
 \end{sampletitle}
 \samplecomment{Generates \texttt{myproc.vhd}, \texttt{myproc\_process.vhd} and \texttt{myproc\_slave.vhd} in the subdirectory \texttt{build/}.}
 
+% ==============================================
+\subsubsection{generatetb}
+\command{\textbf{\tool{} generatetb} [-o <dir>]}
+
+Generates a testbench that implement your \kind{}. This generated test bench simulates clocks and resets and sends stimuli file named `<flow-name>.stim` for each input flows and saves output data to `<flow-name>.data`. To obtain stim file and retrieve data from data file you should use \textbf{convert}.\\
+
+\paramcommand{
+-o & output directory & build \\ 
+}
+
+\begin{sampletitle}
+> \textbf{\tool{} generatetb} -o build/
+\end{sampletitle}
+\samplecomment{Generates \texttt{myproc\_tb.vhd} in the subdirectory \texttt{build/}.}
+
+\seealso{\textbf{\tool{} convert}}
+
+% ==============================================
+\subsubsection{convert}
+\command{\textbf{\tool{} convert} -i <input-file> [-o <output-file>]}
+
+Converts file for test bench purpose. Can convert picture files to stim file or data files to picture files.\\
+
+\paramcommand{
+-i & input file & img1.png \newline out.data \\ 
+\hline
+-o & output file & in.stim \newline out.jpg \\ 
+}
+
+\begin{sampletitle}[1]
+> \textbf{\tool{} convert} -i imgage.gif -o in.stim
+\end{sampletitle}
+\samplecomment{Transforms this gif picture into stimuli file to send to in flow}
+
+\begin{sampletitle}[2]
+> \textbf{\tool{} convert} -i out.data -o out.png
+\end{sampletitle}
+\samplecomment{Transforms the output of the flow `out` to a png image}
 
 \subsection{files}
 % ==============================================
