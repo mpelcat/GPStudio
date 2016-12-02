@@ -137,109 +137,112 @@ switch ($action)
         break;
 }
 
-// new block creation
-if (($action == "new" or $action == "extract") and TOOL == "gpproc")
+if (!in_array($action, array("convert")))
 {
-    $options = getopt("a:n:");
-    if (array_key_exists('n', $options))
-        $componentName = $options['n'];
-    else
-        error("You should specify a process name with -n", 1);
-
-    $component = new Process();
-    $component->name = $componentName;
-    $componentName.=".proc";
-}
-elseif (($action == "new" or $action == "extract") and TOOL == "gpdevice")
-{
-    $options = getopt("a:n:");
-    if (array_key_exists('n', $options))
-        $componentName = $options['n'];
-    else
-        error("You should specify a device name with -n", 1);
-
-    $component = new IO();
-    $component->name = $componentName;
-    $component->driver = $componentName;
-    $componentName.=".io";
-}
-elseif (($action == "new" or $action == "extract") and TOOL == "gpcomp")
-{
-    $options = getopt("a:n:");
-    if (array_key_exists('n', $options))
-        $componentName = $options['n'];
-    else
-        error("You should specify a component name with -n", 1);
-
-    $component = new Component();
-    $component->name = $componentName;
-    $component->driver = $componentName;
-    $componentName.=".comp";
-}
-else
-{
-    // find io or process and open it
-    if (!defined("TOOL"))
-        error("Cannot call this script directly", 1);
-    if (TOOL == "gpproc")
+    // new block creation
+    if (($action == "new" or $action == "extract") and TOOL == "gpproc")
     {
-        $componentName = findprocess();
-        if (!file_exists($componentName))
+        $options = getopt("a:n:");
+        if (array_key_exists('n', $options))
+            $componentName = $options['n'];
+        else
+            error("You should specify a process name with -n", 1);
+
+        $component = new Process();
+        $component->name = $componentName;
+        $componentName.=".proc";
+    }
+    elseif (($action == "new" or $action == "extract") and TOOL == "gpdevice")
+    {
+        $options = getopt("a:n:");
+        if (array_key_exists('n', $options))
+            $componentName = $options['n'];
+        else
+            error("You should specify a device name with -n", 1);
+
+        $component = new IO();
+        $component->name = $componentName;
+        $component->driver = $componentName;
+        $componentName.=".io";
+    }
+    elseif (($action == "new" or $action == "extract") and TOOL == "gpcomp")
+    {
+        $options = getopt("a:n:");
+        if (array_key_exists('n', $options))
+            $componentName = $options['n'];
+        else
+            error("You should specify a component name with -n", 1);
+
+        $component = new Component();
+        $component->name = $componentName;
+        $component->driver = $componentName;
+        $componentName.=".comp";
+    }
+    else
+    {
+        // find io or process and open it
+        if (!defined("TOOL"))
+            error("Cannot call this script directly", 1);
+        if (TOOL == "gpproc")
         {
-            if (strpos($action, "list") === false)
-                error("Cannot find a valid block process in the current directory.", 1);
+            $componentName = findprocess();
+            if (!file_exists($componentName))
+            {
+                if (strpos($action, "list") === false)
+                    error("Cannot find a valid block process in the current directory.", 1);
+                else
+                    exit(1);
+            }
             else
-                exit(1);
+                $component = new Process($componentName);
+        }
+        elseif (TOOL == "gpdevice")
+        {
+            $componentName = findio();
+            if (!file_exists($componentName))
+            {
+                if (strpos($action, "list") === false)
+                    error("Cannot find a valid block device in the current directory.", 1);
+                else
+                    exit(1);
+            }
+            else
+            {
+                $xml = simplexml_load_file($componentName);
+                if (isset($xml->com_connects))
+                    $component = new IOCom($componentName);
+                else
+                    $component = new IO($componentName);
+                unset($xml);
+            }
+        }
+        elseif (TOOL == "gpcomp")
+        {
+            $componentName = findcomp();
+            if (!file_exists($componentName))
+            {
+                if (strpos($action, "list") === false)
+                    error("Cannot find a valid component in the current directory.", 1);
+                else
+                    exit(1);
+            }
+            else
+                $component = new Component($componentName);
         }
         else
-            $component = new Process($componentName);
-    }
-    elseif (TOOL == "gpdevice")
-    {
-        $componentName = findio();
-        if (!file_exists($componentName))
         {
-            if (strpos($action, "list") === false)
-                error("Cannot find a valid block device in the current directory.", 1);
-            else
-                exit(1);
-        }
-        else
-        {
-            $xml = simplexml_load_file($componentName);
-            if (isset($xml->com_connects))
-                $component = new IOCom($componentName);
-            else
-                $component = new IO($componentName);
-            unset($xml);
+            error("Cannot call this script without a valid tool.", 1);
         }
     }
-    elseif (TOOL == "gpcomp")
-    {
-        $componentName = findcomp();
-        if (!file_exists($componentName))
-        {
-            if (strpos($action, "list") === false)
-                error("Cannot find a valid component in the current directory.", 1);
-            else
-                exit(1);
-        }
-        else
-            $component = new Component($componentName);
-    }
-    else
-    {
-        error("Cannot call this script without a valid tool.", 1);
-    }
-}
 
-if($component->getReset('reset_n')==NULL and $action == "new")
-{
-    // Added reset on block
-    $reset = new Reset();
-    $reset->name = 'reset_n';
-    $reset->group = 'reset_n';
-    $component->addReset($reset);
+    if ($component->getReset('reset_n') == NULL and $action == "new")
+    {
+        // Added reset on block
+        $reset = new Reset();
+        $reset->name = 'reset_n';
+        $reset->group = 'reset_n';
+        $component->addReset($reset);
+    }
 }
 
 $save = true;
@@ -367,6 +370,7 @@ switch ($action)
         else
             error("Bad input format", 2);
         message($output . ' generated');
+        $save = false;
         break;
 
     case "extract":
