@@ -8,15 +8,16 @@ _gpproc()
     # see if the user selected a command already
     local COMMANDS=("new"         "showblock"
                     "generate"    "generatetop" "generateslave" "generateprocess" "generatetb"
-					"addfile"     "delfile"     "showfile"
-					"addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
-					"addparam"    "delparam"    "showparam"     "renameparam"    "setparam"    "fixparam"  "setpisizeaddr"
-					"addbitfield" "delbitfield" "showbitfield"  "renamebitfield" "setbitfield"
-					"addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
-					"addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
-					"addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
-					"addenum"     "delenum"     "showenum"
-					"sethelp"     "setdraw"     "setcateg"      "categ"          "setinfo"     "info"
+                    "addfile"     "delfile"     "showfile"
+                    "addflow"     "delflow"     "showflow"      "renameflow"     "setflow"
+                    "addparam"    "delparam"    "showparam"     "renameparam"    "setparam"    "fixparam"  "setpisizeaddr"
+                    "addbitfield" "delbitfield" "showbitfield"  "renamebitfield" "setbitfield"
+                    "addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
+                    "addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
+                    "addproperty" "delproperty" "showproperty"  "renameproperty" "setproperty" "setpropertymap"
+                    "addenum"     "delenum"     "showenum"
+                    "sethelp"     "setdraw"     "setcateg"      "categ"          "setinfo"     "info"
+                    "convert"     "extract"
     )
 
     local command i
@@ -42,7 +43,7 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-p' -- "$cur" ) )
                         return 0
                         ;;
-                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum|setinfo|info)
+                    new|addflow|delflow|renameflow|setflow|addparam|delparam|renameparam|setparam|fixparam|addbitfield|delbitfield|showbitfield|renamebitfield|setbitfield|addreset|delreset|renamereset|setreset|addclock|delclock|renameclock|setclock|addproperty|delproperty|showproperty|renameproperty|setproperty|setpropertymap|addenum|delenum|showenum|setinfo|info|extract)
                         COMPREPLY=( $( compgen -W '-n' -- "$cur" ) )
                         return 0
                         ;;
@@ -56,6 +57,10 @@ _gpproc()
                         ;;
                     setpisizeaddr|setcateg)
                         COMPREPLY=( $( compgen -W '-v' -- "$cur" ) )
+                        return 0
+                        ;;
+                    convert)
+                        COMPREPLY=( $( compgen -W '-i' -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -114,6 +119,10 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '$( gpproc listinfo )' -- "$cur" ) )
                         return 0
                         ;;
+                    convert)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
             5) 
@@ -162,6 +171,10 @@ _gpproc()
                         COMPREPLY=( $( compgen -W '-l -t -v -r -s -c' -- "$cur" ) )
                         return 0
                         ;;
+                    convert)
+                        COMPREPLY=( $( compgen -W '-o' -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
             6)
@@ -178,6 +191,10 @@ _gpproc()
 						fi
 						return 0
 						;;
+                    convert)
+                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        return 0
+                        ;;
                 esac
                 ;;
             7)
