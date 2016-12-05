@@ -185,6 +185,7 @@ class Block_generator
             $this->block_generator->addConstant($period_name, "TIME", "1 ns");                  // TODO give real freq
             $this->block_generator->addSignalComment(str_pad(' ' . $clock->name . ' clock signal ', 55, '-', STR_PAD_BOTH));
             $this->block_generator->addSignal($clock->name, 1, "std_logic");
+            $this->block_generator->addSignal('endtb', 1, "std_logic");
 
             $codeClks.="	" . $clock->name . "_gen_process : process" . "\r\n";
             $codeClks.="	begin" . "\r\n";
@@ -192,6 +193,9 @@ class Block_generator
             $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
             $codeClks.="		" . $clock->name . " <= '1';" . "\r\n";
             $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
+            $codeClks.="		if(endtb='1') then" . "\r\n";
+            $codeClks.="                    wait;" . "\r\n";
+            $codeClks.="		end if;" . "\r\n";
             $codeClks.="	end process;" . "\r\n";
             $codeClks.="" . "\r\n";
         }
@@ -222,7 +226,15 @@ class Block_generator
         
         // tb_specific
         $this->block_generator->addSignalComment(str_pad(' test bench specific ', 55, '-', STR_PAD_BOTH));
-        $this->block_generator->addSignal("endtb", 1, "std_logic", "0");
+        
+        // reset generation
+        $rstCode = '';
+        $rstCode .= "    rst_proc: process" . "\r\n";
+        $rstCode .= "		reset_n <= '0';" . "\r\n";
+        $rstCode .= "		wait for clk_proc_period * 2;" . "\r\n";
+        $rstCode .= "		reset_n <= '1';" . "\r\n";
+        $rstCode .= "		wait;" . "\r\n";
+        $rstCode .= "	end process;" . "\r\n" . "\r\n";
 
         // stim input
         $codeStimIn = '';
@@ -237,15 +249,9 @@ class Block_generator
                 $codeStimIn .= "		variable " . $flow->name . "_pixel_ok : BOOLEAN;" . "\r\n";
                 $codeStimIn .= "	" . "\r\n";
                 $codeStimIn .= "	begin" . "\r\n";
-                $codeStimIn .= "		endtb <= '0';" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_data <= (others=>'0');" . "\r\n";
-                $codeStimIn .= "		reset_n <= '1';" . "\r\n";
-                $codeStimIn .= "		wait for clk_proc_period;" . "\r\n";
-                $codeStimIn .= "		reset_n <= '0';" . "\r\n";
-                $codeStimIn .= "		wait for clk_proc_period * 2;" . "\r\n";
-                $codeStimIn .= "		reset_n <= '1';" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_dv <= '1';" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_fv <= '1';" . "\r\n";
@@ -265,10 +271,6 @@ class Block_generator
                 $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
                 $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
-                $codeStimIn .= "		wait for clk_proc_period * 2;" . "\r\n";
-                $codeStimIn .= "		assert false report \"end of test\" severity note;" . "\r\n";
-                $codeStimIn .= "		" . "\r\n";
-                $codeStimIn .= "		endtb <= '1';" . "\r\n";
                 $codeStimIn .= "		wait;" . "\r\n";
                 $codeStimIn .= "	end process;" . "\r\n" . "\r\n";
             }
@@ -287,7 +289,7 @@ class Block_generator
                 $codeDataOut .= "		variable x : integer := 0;" . "\r\n";
                 $codeDataOut .= "	" . "\r\n";
                 $codeDataOut .= "	begin" . "\r\n";
-                $codeDataOut .= "		" . "\r\n";
+                $codeDataOut .= "		endtb <= '0';" . "\r\n";
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"P2\"));" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
@@ -297,21 +299,20 @@ class Block_generator
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"255\"));" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
-                $codeDataOut .= "		wait for clk_proc_period * 2;" . "\r\n";
-                $codeDataOut .= "		while endtb='0' loop" . "\r\n";
-                $codeDataOut .= "			if(clk_proc = '1') then" . "\r\n";
-                $codeDataOut .= "				if(" . $flow->name . "_dv='1' and " . $flow->name . "_fv='1') then" . "\r\n";
-                $codeDataOut .= "					write(" . $flow->name . "_line, to_integer(unsigned(" . $flow->name . "_data)));" . "\r\n";
-                $codeDataOut .= "					write(" . $flow->name . "_line, string'(\" \"));" . "\r\n";
-                $codeDataOut .= "					x := x + 1;" . "\r\n";
-                $codeDataOut .= "					if(x>128) then" . "\r\n";
-                $codeDataOut .= "						writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
-                $codeDataOut .= "						x := 0;" . "\r\n";
-                $codeDataOut .= "					end if;" . "\r\n";
+                $codeDataOut .= "		wait until out_fv = '1';" . "\r\n";
+                $codeDataOut .= "		while out_fv='1' loop" . "\r\n";
+                $codeDataOut .= "			wait until clk_proc='1';" . "\r\n";
+                $codeDataOut .= "			if(" . $flow->name . "_dv='1') then" . "\r\n";
+                $codeDataOut .= "				write(" . $flow->name . "_line, to_integer(unsigned(" . $flow->name . "_data)));" . "\r\n";
+                $codeDataOut .= "				write(" . $flow->name . "_line, string'(\" \"));" . "\r\n";
+                $codeDataOut .= "				x := x + 1;" . "\r\n";
+                $codeDataOut .= "				if(x>=128) then" . "\r\n";
+                $codeDataOut .= "					writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
+                $codeDataOut .= "					x := 0;" . "\r\n";
                 $codeDataOut .= "				end if;" . "\r\n";
                 $codeDataOut .= "			end if;" . "\r\n";
-                $codeDataOut .= "			wait for clk_proc_period;" . "\r\n";
                 $codeDataOut .= "		end loop;" . "\r\n";
+                $codeDataOut .= "		endtb <= '1';" . "\r\n";
                 $codeDataOut .= "		assert false report \"end of out\" severity note;" . "\r\n";
                 $codeDataOut .= "		wait;" . "\r\n";
                 $codeDataOut .= "	end process;" . "\r\n";
