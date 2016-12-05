@@ -1,6 +1,6 @@
-# Debian gpproc(8) completion                             -*- shell-script -*-
+# Debian gpcomp(8) completion                             -*- shell-script -*-
 
-_gpproc()
+_gpcomp()
 {
     local cur prev words cword
     _init_completion || return
@@ -14,7 +14,7 @@ _gpproc()
                     "addreset"    "delreset"    "showreset"     "renamereset"    "setreset"
                     "addclock"    "delclock"    "showclock"     "renameclock"    "setclock"
                     "sethelp"     "setdraw"     "setcateg"      "categ"          "setinfo"     "info"
-                    "convert"     "extract"
+                    "convert"     "extract"     "help"
     )
 
     local command i
@@ -65,7 +65,7 @@ _gpproc()
             4)
                 case $command in
                     addfile)
-                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        COMPREPLY=( $( compgen -A file -- "$cur" ) )
                         return 0
                         ;;
                     delfile)
@@ -93,7 +93,7 @@ _gpproc()
                         return 0
                         ;;
                     setdraw)
-                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        COMPREPLY=( $( compgen -A file -- "$cur" ) )
                         return 0
                         ;;
                     setinfo|info)
@@ -101,7 +101,7 @@ _gpproc()
                         return 0
                         ;;
                     convert)
-                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        COMPREPLY=( $( compgen -A file -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -155,7 +155,7 @@ _gpproc()
 						return 0
 						;;
                     convert)
-                        COMPREPLY=( $( compgen -o filenames -- "$cur" ) )
+                        COMPREPLY=( $( compgen -A file -- "$cur" ) )
                         return 0
                         ;;
                 esac
@@ -280,6 +280,6 @@ _gpproc()
 
     return 0
 } &&
-complete -F _gpproc gpproc
+complete -F _gpcomp gpcomp
 
 # ex: ts=4 sw=4 et filetype=sh

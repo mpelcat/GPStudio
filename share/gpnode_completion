@@ -6,7 +6,7 @@ _gpnode()
     _init_completion || return
 
     # see if the user selected a command already
-    local COMMANDS=("newproject"     "setboard"    "generate"    "showboard"
+    local COMMANDS=("newproject"     "setboard"    "generate"    "showboard"       "help"
                     "adddevice"      "deldevice"   "showdevice"  "listavailabledevice"
                     "addprocess"     "delprocess"  "showprocess" "showblock"
                     "renameblock"    "setproperty" "setparam"    "setclock"        "setflowsize"
