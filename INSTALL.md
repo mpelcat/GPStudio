@@ -26,6 +26,10 @@ Optionnal :
 
 > sudo apt-get install make php5-cli 
 
+If you use php7, add the folowing package :
+
+> sudo apt-get install php7.0-gd
+
 ## GUI tools compilation
 
 ### Command line mode

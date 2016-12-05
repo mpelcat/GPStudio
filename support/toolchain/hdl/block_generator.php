@@ -635,24 +635,31 @@ class Block_generator
     {
         $path_parts = pathinfo($input_image);
         $ext = strtolower($path_parts['extension']);
-        switch ($ext)
+        try
         {
-            case "png":
-                $img = imagecreatefrompng($input_image);
-                break;
-            case "jpg":
-            case "jpeg":
-                $img = imagecreatefromjpeg($input_image);
-                break;
-            case "gif":
-                $img = imagecreatefromgif($input_image);
-                break;
-            case "bmp":
-                $img = imagecreatefromwbmp($input_image);
-                break;
-            default:
-                $img = NULL;
-                break;
+            switch ($ext)
+            {
+                case "png":
+                    $img = imagecreatefrompng($input_image);
+                    break;
+                case "jpg":
+                case "jpeg":
+                    $img = imagecreatefromjpeg($input_image);
+                    break;
+                case "gif":
+                    $img = imagecreatefromgif($input_image);
+                    break;
+                case "bmp":
+                    $img = imagecreatefromwbmp($input_image);
+                    break;
+                default:
+                    $img = NULL;
+                    break;
+            }
+        }
+        catch (Exception $e)
+        {
+            error("GD extension is not installed with your PHP distribution, please install it and retry.");
         }
         if ($img == NULL)
             error("Cannot open image file '" . $input_image . "'", 1);
