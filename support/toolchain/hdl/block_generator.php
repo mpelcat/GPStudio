@@ -299,8 +299,8 @@ class Block_generator
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"255\"));" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
-                $codeDataOut .= "		wait until out_fv = '1';" . "\r\n";
-                $codeDataOut .= "		while out_fv='1' loop" . "\r\n";
+                $codeDataOut .= "		wait until " . $flow->name . "_fv = '1';" . "\r\n";
+                $codeDataOut .= "		while " . $flow->name . "_fv='1' loop" . "\r\n";
                 $codeDataOut .= "			wait until clk_proc='1';" . "\r\n";
                 $codeDataOut .= "			if(" . $flow->name . "_dv='1') then" . "\r\n";
                 $codeDataOut .= "				write(" . $flow->name . "_line, to_integer(unsigned(" . $flow->name . "_data)));" . "\r\n";
@@ -313,7 +313,7 @@ class Block_generator
                 $codeDataOut .= "			end if;" . "\r\n";
                 $codeDataOut .= "		end loop;" . "\r\n";
                 $codeDataOut .= "		endtb <= '1';" . "\r\n";
-                $codeDataOut .= "		assert false report \"end of out\" severity note;" . "\r\n";
+                $codeDataOut .= "		assert false report \"end of " . $flow->name . "\" severity note;" . "\r\n";
                 $codeDataOut .= "		wait;" . "\r\n";
                 $codeDataOut .= "	end process;" . "\r\n";
             }
@@ -674,10 +674,17 @@ class Block_generator
             for ($x = 0; $x < imagesx($img); $x++)
             {
                 $rgb = imagecolorat($img, $x, $y);
-                $r = ($rgb >> 16) & 0xFF;
-                $g = ($rgb >> 8) & 0xFF;
-                $b = $rgb & 0xFF;
-                $gray = 0.30 * $r + 0.59 * $g + 0.11 * $b;
+                if($rgb<255)
+                {
+                    $gray = $rgb;
+                }
+                else
+                {
+                    $r = ($rgb >> 16) & 0xFF;
+                    $g = ($rgb >> 8) & 0xFF;
+                    $b = $rgb & 0xFF;
+                    $gray = 0.30 * $r + 0.59 * $g + 0.11 * $b;
+                }
 
                 fwrite($handle, (int) $gray . " ");
             }
