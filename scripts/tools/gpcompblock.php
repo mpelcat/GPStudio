@@ -339,6 +339,7 @@ switch ($action)
         $component_generator = new Block_generator($component);
         $component_generator->generateTb($outDir);
         message($component_generator->block_generator->name . '.vhd' . ' generated');
+        message('Makefile' . ' generated');
 
         $save = false;
         break;

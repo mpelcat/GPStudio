@@ -320,9 +320,68 @@ class Block_generator
         }
         $this->block_generator->addCode($codeDataOut);
 
-        // block top level generation
+        // test bench top level generation
         $this->block_generator->addblock($this->block, TRUE);
         $this->block_generator->save_as_ifdiff($path . DIRECTORY_SEPARATOR . $this->block_generator->name . '.vhd');
+
+        // === makefile generation ===
+        $mfContent = "";
+        $mfContent .= "-include Makefile.local" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "GHDL=ghdl" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        // source list
+        $pathList = array();
+        foreach ($this->block->files as $file)
+        {
+            if($file->group == "hdl")
+            {
+                $path = str_replace("hwlib:", SUPPORT_PATH . "component" . DIRECTORY_SEPARATOR, $file->path);
+                $mfContent .= "SRC += " . $path . "\r\n";
+                if(!in_array(dirname($path), $pathList))
+                    array_push($pathList, dirname($path));
+            }
+        }
+        $mfContent .= "SRC += " . $this->block->name . "_tb.vhd" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        foreach ($pathList as $path)
+        {
+            $mfContent .= "vpath %.vhd " . $path . "\r\n";
+        }
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "OBJECTS := $(notdir $(SRC:.vhd=.o))" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "all: run" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "Makefile: " . $this->block->name . ".proc" . "\r\n";
+        $mfContent .= "\tgpproc generatetb" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "%.stim: %.png" . "\r\n";
+        $mfContent .= "\tgpproc convert -i $< -o $@" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "%.o: %.vhd" . "\r\n";
+        $mfContent .= "\t$(GHDL) -a $(GHDLFLAGS) $<" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= $this->block->name . "_tb: $(OBJECTS)" . "\r\n";
+        $mfContent .= "\t$(GHDL) -c $(GHDLFLAGS) -e " . $this->block->name . "_tb" . "\r\n";
+        $mfContent .= "" . "\r\n";
+
+        // input flow list
+        $inputStim = "";
+        foreach ($this->block->flows as $flow)
+        {
+            if ($flow->type == "in")
+                $inputStim .= $flow->name . ".stim ";
+        }
+        $mfContent .= "run : " . $this->block->name . "_tb " . $inputStim . "\r\n";
+        $mfContent .= "\t$(GHDL) -r " . $this->block->name . "_tb $(GHDLRUNFLAGS)" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= ".PHONY: clean" . "\r\n";
+        $mfContent .= "clean:" . "\r\n";
+        $mfContent .= "\trm -f *.o *.stim *.pgm *.wave *.cf" . "\r\n";
+        $mfContent .= "" . "\r\n";
+
+        saveIfDifferent("Makefile", $mfContent);
     }
 
     public function generateTopBlock($path)
