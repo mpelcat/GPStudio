@@ -185,7 +185,6 @@ class Block_generator
             $this->block_generator->addConstant($period_name, "TIME", "1 ns");                  // TODO give real freq
             $this->block_generator->addSignalComment(str_pad(' ' . $clock->name . ' clock signal ', 55, '-', STR_PAD_BOTH));
             $this->block_generator->addSignal($clock->name, 1, "std_logic");
-            $this->block_generator->addSignal('endtb', 1, "std_logic");
 
             $codeClks.="	" . $clock->name . "_gen_process : process" . "\r\n";
             $codeClks.="	begin" . "\r\n";
@@ -207,9 +206,9 @@ class Block_generator
             $this->block_generator->addConstantComment(str_pad(' ' . $flow->name . ' flow constant ', 55, '-', STR_PAD_BOTH));
             $this->block_generator->addConstant(strtoupper($flow->name) . "_SIZE", "INTEGER", $flow->size);
             $this->block_generator->addSignalComment(str_pad(' ' . $flow->name . ' flow signals ', 55, '-', STR_PAD_BOTH));
-            $this->block_generator->addSignal($flow->name . "_dv", 1, "std_logic");
-            $this->block_generator->addSignal($flow->name . "_fv", 1, "std_logic");
-            $this->block_generator->addSignal($flow->name . "_data", strtoupper($flow->name) . "_SIZE", "std_logic_vector");
+            $this->block_generator->addSignal($this->block->name ."_". $flow->name . "_dv_s", 1, "std_logic");
+            $this->block_generator->addSignal($this->block->name ."_". $flow->name . "_fv_s", 1, "std_logic");
+            $this->block_generator->addSignal($this->block->name ."_". $flow->name . "_data_s", strtoupper($flow->name) . "_SIZE", "std_logic_vector");
             
             if($flow->type == "out")
                 $this->block_generator->declare .= "    file " . $flow->name . "_data_file : text is out \"" . $flow->name . ".pgm\";" . "\r\n";
@@ -224,8 +223,21 @@ class Block_generator
             $this->block_generator->addSignal($reset->name, 1, "std_logic");
         }
         
+        // slave connection
+        if($this->block->pi_size_addr_rel>0)
+        {
+            $this->block_generator->addSignalComment(str_pad(' pi signals ', 55, '-', STR_PAD_BOTH));
+            $this->block_generator->addSignal($this->block->name ."_addr_rel_s", $this->block->pi_size_addr_rel, "std_logic_vector");
+            $this->block_generator->addSignal($this->block->name ."_wr_s", 1, "std_logic");
+            $this->block_generator->addSignal($this->block->name ."_rd_s", 1, "std_logic");
+            $this->block_generator->addSignal($this->block->name ."_datawr_s", 32, "std_logic_vector");
+            $this->block_generator->addSignal($this->block->name ."_datard_s", 32, "std_logic_vector");
+            
+        }
+        
         // tb_specific
         $this->block_generator->addSignalComment(str_pad(' test bench specific ', 55, '-', STR_PAD_BOTH));
+        $this->block_generator->addSignal('endtb', 1, "std_logic");
         
         // reset generation
         $rstCode = '';
@@ -249,27 +261,29 @@ class Block_generator
                 $codeStimIn .= "		variable " . $flow->name . "_pixel_ok : BOOLEAN;" . "\r\n";
                 $codeStimIn .= "	" . "\r\n";
                 $codeStimIn .= "	begin" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_data <= (others=>'0');" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_dv_s <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_fv_s <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_data_s <= (others=>'0');" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_dv <= '1';" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_fv <= '1';" . "\r\n";
+                $codeStimIn .= "		wait for clk_proc_period;" . "\r\n";
+                $codeStimIn .= "		" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_dv_s <= '1';" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_fv_s <= '1';" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		while not endfile(" . $flow->name . "_data_file) loop" . "\r\n";
                 $codeStimIn .= "			readline(in_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeStimIn .= "			" . "\r\n";
                 $codeStimIn .= "			read(" . $flow->name . "_line, in_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
                 $codeStimIn .= "			while " . $flow->name . "_pixel_ok loop" . "\r\n";
-                $codeStimIn .= "				" . $flow->name . "_data <= std_logic_vector(to_unsigned(" . $flow->name . "_pixelFromFile, IN_SIZE));" . "\r\n";
+                $codeStimIn .= "				" . $this->block->name ."_". $flow->name . "_data_s <= std_logic_vector(to_unsigned(" . $flow->name . "_pixelFromFile, IN_SIZE));" . "\r\n";
                 $codeStimIn .= "				wait for clk_proc_period;" . "\r\n";
                 $codeStimIn .= "				read(" . $flow->name . "_line, " . $flow->name . "_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
                 $codeStimIn .= "			end loop;" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		end loop;" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_dv <= '0';" . "\r\n";
-                $codeStimIn .= "		" . $flow->name . "_fv <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_dv_s <= '0';" . "\r\n";
+                $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_fv_s <= '0';" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		wait;" . "\r\n";
                 $codeStimIn .= "	end process;" . "\r\n" . "\r\n";
@@ -299,11 +313,11 @@ class Block_generator
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"255\"));" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
-                $codeDataOut .= "		wait until " . $flow->name . "_fv = '1';" . "\r\n";
-                $codeDataOut .= "		while " . $flow->name . "_fv='1' loop" . "\r\n";
+                $codeDataOut .= "		wait until " . $this->block->name ."_". $flow->name . "_fv_s = '1';" . "\r\n";
+                $codeDataOut .= "		while " . $this->block->name ."_". $flow->name . "_fv_s='1' loop" . "\r\n";
                 $codeDataOut .= "			wait until clk_proc='1';" . "\r\n";
-                $codeDataOut .= "			if(" . $flow->name . "_dv='1') then" . "\r\n";
-                $codeDataOut .= "				write(" . $flow->name . "_line, to_integer(unsigned(" . $flow->name . "_data)));" . "\r\n";
+                $codeDataOut .= "			if(" . $this->block->name ."_". $flow->name . "_dv_s='1') then" . "\r\n";
+                $codeDataOut .= "				write(" . $flow->name . "_line, to_integer(unsigned(" . $this->block->name ."_". $flow->name . "_data_s)));" . "\r\n";
                 $codeDataOut .= "				write(" . $flow->name . "_line, string'(\" \"));" . "\r\n";
                 $codeDataOut .= "				x := x + 1;" . "\r\n";
                 $codeDataOut .= "				if(x>=128) then" . "\r\n";
@@ -321,7 +335,7 @@ class Block_generator
         $this->block_generator->addCode($codeDataOut);
 
         // test bench top level generation
-        $this->block_generator->addblock($this->block, TRUE);
+        $this->block_generator->addblock($this->block);
         $this->block_generator->save_as_ifdiff($path . DIRECTORY_SEPARATOR . $this->block_generator->name . '.vhd');
 
         // === makefile generation ===

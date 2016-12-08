@@ -466,7 +466,12 @@ class VHDL_generator
                     if ($clock->direction == "in")
                     {
                         if (!$subblock)
-                            array_push($genericmap, array(strtoupper($clock->name) . '_FREQ', $clock->typical));
+                        {
+                            if($clock->typical != 0 and $clock->typical != "")
+                                array_push($genericmap, array(strtoupper($clock->name) . '_FREQ', $clock->typical));
+                            else
+                                array_push($genericmap, array(strtoupper($clock->name) . '_FREQ', 10000000)); // 10MHz default
+                        }
                         else
                             array_push($genericmap, array(strtoupper($clock->name) . '_FREQ', strtoupper($clock->name) . '_FREQ'));
                     }
