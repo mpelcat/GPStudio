@@ -1,17 +1,15 @@
 #!/bin/bash
 
 rm dynroi.proc
-rm -rf hdl
+#rm -rf hdl
 
 # block and flows
 gpproc new -n dynroi
 gpproc sethelp -v "Dynamic region of interest extractor"
+gpproc setcateg -v "segmentation"
 gpproc addflow -n in -d in -s 8
 
-gpproc addflow -n in_x -d in -s 16
-gpproc addflow -n in_y -d in -s 16
-gpproc addflow -n in_w -d in -s 16
-gpproc addflow -n in_h -d in -s 16
+gpproc addflow -n frame -d in -s 8
 
 gpproc addflow -n out -d out -s 8
 gpproc showblock
@@ -62,13 +60,15 @@ gpproc setproperty -n y -r 0:4095
 # properties on flow out
 # to export proper resolution for cropped image
 gpproc addproperty -n out.datatype -t flowtype -v image
-gpproc addproperty -n out.width -t int  -m "enable.value? (bypass.value? (x.value+w.value>in.width.value? (x.value>in.width.value? 0 : in.width.value-x.value ) : (w.value) ) : (in_x+in_w>in.width.value? (in_x>in.width.value? 0 : in.width.value-in_x) : (in_w) )) : in.width.value"
-gpproc addproperty -n out.height -t int -m "enable.value? (bypass.value? (y.value+h.value>in.height.value? (y.value>in.height.value? 0 : in.height.value-y.value ) : (h.value) ) : (in_y+in_h>in.height.value? (in_y>in.height.value? 0 : in.height.value-in_y) : (in_h) )) : in.height.value"
+gpproc addproperty -n out.width -t int -m "bypass.value ? in.width.value : ((x.value + w.value > in.width.value) ? ((x.value > in.width.value) ? 0 : in.width.value - x.value) : w.value)"
+gpproc addproperty -n out.height -t int -m "bypass.value ? in.height.value : ((y.value + h.value > in.height.value) ? ((y.value > in.height.value) ? 0 : in.height.value - y.value) : h.value)"
+#gpproc addproperty -n out.width -t int  -m "enable.value? (bypass.value? (x.value+w.value>in.width.value? (x.value>in.width.value? 0 : in.width.value-x.value ) : (w.value) ) : (in_x+in_w>in.width.value? (in_x>in.width.value? 0 : in.width.value-in_x) : (in_w) )) : in.width.value"
+#gpproc addproperty -n out.height -t int -m "enable.value? (bypass.value? (y.value+h.value>in.height.value? (y.value>in.height.value? 0 : in.height.value-y.value ) : (h.value) ) : (in_y+in_h>in.height.value? (in_y>in.height.value? 0 : in.height.value-in_y) : (in_h) )) : in.height.value"
 
 # visual settings
 gpproc setdraw -f dynroi.svg
 
-gpproc generate -o hdl
+#gpproc generate -o hdl
 gpproc addfile -p hdl/dynroi.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dynroi_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dynroi_slave.vhd -t vhdl -g hdl

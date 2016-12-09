@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="roi" categ="" pi_size_addr_rel="2" desc="Region of interest extractor">
+<process name="roi" categ="segmentation" master_count="0" pi_size_addr_rel="2" desc="Region of interest extractor">
   <parts>
     <part name="main">
       <svg width="150" height="100">

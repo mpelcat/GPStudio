@@ -7,10 +7,7 @@ entity dynroi is
 	generic (
 		CLK_PROC_FREQ : integer;
 		IN_SIZE       : integer;
-		IN_X_SIZE     : integer;
-		IN_Y_SIZE     : integer;
-		IN_W_SIZE     : integer;
-		IN_H_SIZE     : integer;
+		FRAME_SIZE    : integer;
 		OUT_SIZE      : integer
 	);
 	port (
@@ -22,25 +19,10 @@ entity dynroi is
 		in_fv      : in std_logic;
 		in_dv      : in std_logic;
 
-		------------------------ in_x flow ----------------------
-		in_x_data  : in std_logic_vector(IN_X_SIZE-1 downto 0);
-		in_x_fv    : in std_logic;
-		in_x_dv    : in std_logic;
-
-		------------------------ in_y flow ----------------------
-		in_y_data  : in std_logic_vector(IN_Y_SIZE-1 downto 0);
-		in_y_fv    : in std_logic;
-		in_y_dv    : in std_logic;
-
-		------------------------ in_w flow ----------------------
-		in_w_data  : in std_logic_vector(IN_W_SIZE-1 downto 0);
-		in_w_fv    : in std_logic;
-		in_w_dv    : in std_logic;
-
-		------------------------ in_h flow ----------------------
-		in_h_data  : in std_logic_vector(IN_H_SIZE-1 downto 0);
-		in_h_fv    : in std_logic;
-		in_h_dv    : in std_logic;
+		----------------------- frame flow ----------------------
+		frame_data : in std_logic_vector(FRAME_SIZE-1 downto 0);
+		frame_fv   : in std_logic;
+		frame_dv   : in std_logic;
 
 		------------------------ out flow -----------------------
 		out_data   : out std_logic_vector(OUT_SIZE-1 downto 0);
@@ -63,10 +45,7 @@ component dynroi_process
 	generic (
 		CLK_PROC_FREQ : integer;
 		IN_SIZE       : integer;
-		IN_X_SIZE     : integer;
-		IN_Y_SIZE     : integer;
-		IN_W_SIZE     : integer;
-		IN_H_SIZE     : integer;
+		FRAME_SIZE    : integer;
 		OUT_SIZE      : integer
 	);
 	port (
@@ -88,25 +67,10 @@ component dynroi_process
 		in_fv                    : in std_logic;
 		in_dv                    : in std_logic;
 
-		------------------------ in_x flow ----------------------
-		in_x_data                : in std_logic_vector(IN_X_SIZE-1 downto 0);
-		in_x_fv                  : in std_logic;
-		in_x_dv                  : in std_logic;
-
-		------------------------ in_y flow ----------------------
-		in_y_data                : in std_logic_vector(IN_Y_SIZE-1 downto 0);
-		in_y_fv                  : in std_logic;
-		in_y_dv                  : in std_logic;
-
-		------------------------ in_w flow ----------------------
-		in_w_data                : in std_logic_vector(IN_W_SIZE-1 downto 0);
-		in_w_fv                  : in std_logic;
-		in_w_dv                  : in std_logic;
-
-		------------------------ in_h flow ----------------------
-		in_h_data                : in std_logic_vector(IN_H_SIZE-1 downto 0);
-		in_h_fv                  : in std_logic;
-		in_h_dv                  : in std_logic;
+		----------------------- frame flow ----------------------
+		frame_data               : in std_logic_vector(FRAME_SIZE-1 downto 0);
+		frame_fv                 : in std_logic;
+		frame_dv                 : in std_logic;
 
 		------------------------ out flow -----------------------
 		out_data                 : out std_logic_vector(OUT_SIZE-1 downto 0);
@@ -158,10 +122,7 @@ begin
     generic map (
 		CLK_PROC_FREQ => CLK_PROC_FREQ,
 		IN_SIZE       => IN_SIZE,
-		IN_X_SIZE     => IN_X_SIZE,
-		IN_Y_SIZE     => IN_Y_SIZE,
-		IN_W_SIZE     => IN_W_SIZE,
-		IN_H_SIZE     => IN_H_SIZE,
+		FRAME_SIZE    => FRAME_SIZE,
 		OUT_SIZE      => OUT_SIZE
 	)
     port map (
@@ -178,18 +139,9 @@ begin
 		in_data                  => in_data,
 		in_fv                    => in_fv,
 		in_dv                    => in_dv,
-		in_x_data                => in_x_data,
-		in_x_fv                  => in_x_fv,
-		in_x_dv                  => in_x_dv,
-		in_y_data                => in_y_data,
-		in_y_fv                  => in_y_fv,
-		in_y_dv                  => in_y_dv,
-		in_w_data                => in_w_data,
-		in_w_fv                  => in_w_fv,
-		in_w_dv                  => in_w_dv,
-		in_h_data                => in_h_data,
-		in_h_fv                  => in_h_fv,
-		in_h_dv                  => in_h_dv,
+		frame_data               => frame_data,
+		frame_fv                 => frame_fv,
+		frame_dv                 => frame_dv,
 		out_data                 => out_data,
 		out_fv                   => out_fv,
 		out_dv                   => out_dv

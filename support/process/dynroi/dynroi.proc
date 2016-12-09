@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="dynroi" categ="" master_count="0" pi_size_addr_rel="2" desc="Dynamic region of interest extractor">
+<process name="dynroi" categ="segmentation" master_count="0" pi_size_addr_rel="2" desc="Dynamic region of interest extractor">
   <parts>
     <part name="main">
       <svg style="background-color: rgb(255, 255, 255);" width="130px" height="130px">
@@ -35,15 +35,12 @@
   </resets>
   <flows>
     <flow name="in" size="8" type="in"/>
-    <flow name="in_x" size="16" type="in"/>
-    <flow name="in_y" size="16" type="in"/>
-    <flow name="in_w" size="16" type="in"/>
-    <flow name="in_h" size="16" type="in"/>
+    <flow name="frame" size="8" type="in"/>
     <flow name="out" size="8" type="out">
       <properties>
         <property name="datatype" type="flowtype" value="image"/>
-        <property name="width" type="int" propertymap="enable.value? (bypass.value? (x.value+w.value&gt;in.width.value? (x.value&gt;in.width.value? 0 : in.width.value-x.value ) : (w.value) ) : (in_x+in_w&gt;in.width.value? (in_x&gt;in.width.value? 0 : in.width.value-in_x) : (in_w) )) : in.width.value"/>
-        <property name="height" type="int" propertymap="enable.value? (bypass.value? (y.value+h.value&gt;in.height.value? (y.value&gt;in.height.value? 0 : in.height.value-y.value ) : (h.value) ) : (in_y+in_h&gt;in.height.value? (in_y&gt;in.height.value? 0 : in.height.value-in_y) : (in_h) )) : in.height.value"/>
+        <property name="width" type="int" propertymap="bypass.value ? in.width.value : ((x.value + w.value &gt; in.width.value) ? ((x.value &gt; in.width.value) ? 0 : in.width.value - x.value) : w.value)"/>
+        <property name="height" type="int" propertymap="bypass.value ? in.height.value : ((y.value + h.value &gt; in.height.value) ? ((y.value &gt; in.height.value) ? 0 : in.height.value - y.value) : h.value)"/>
       </properties>
     </flow>
   </flows>

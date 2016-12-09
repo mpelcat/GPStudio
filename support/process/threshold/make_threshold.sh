@@ -6,6 +6,7 @@ rm threshold.proc
 # block and flows
 gpproc new -n threshold
 gpproc sethelp -v "Simple process to create binary image from grayscale"
+gpproc setcateg -v "segmentation"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock

@@ -6,6 +6,7 @@ rm roi.proc
 # block and flows
 gpproc new -n roi
 gpproc sethelp -v "Region of interest extractor"
+gpproc setcateg -v "segmentation"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
