@@ -173,7 +173,6 @@ begin
 				prod_dv <= '1';
 			end if;
             
-			
 			if(prod_dv='1' and enable_s = '1') then
                 sum := prod00 + prod01 + prod02 +
                        prod10 + prod11 + prod12 +
@@ -182,8 +181,7 @@ begin
                 if (sum(sum'left) = '1') then
                     sum := (others => '0');
                 end if;
-                value_data <= std_logic_vector(shift_right(unsigned(sum), to_integer(unsigned(norm))))(OUT_SIZE -1 downto 0);
-
+                value_data <= std_logic_vector(shift_right(unsigned(sum), to_integer(unsigned(norm)))(OUT_SIZE -1 downto 0));
 				value_dv <= '1';
 			else
 				value_dv <= '0';

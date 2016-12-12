@@ -55,14 +55,13 @@ component scfifo
 		LPM_NUMWORDS: POSITIVE;
 		LPM_SHOWAHEAD: STRING := "OFF";
 		ALLOW_RWCYCLE_WHEN_FULL: STRING := "OFF";
-		MAXIMIZE_SPEED: POSITIVE:= 5;
 		OVERFLOW_CHECKING: STRING:= "ON";
 		UNDERFLOW_CHECKING: STRING:= "ON"
 	);
 	port
 	(
 		data: in std_logic_vector(LPM_WIDTH-1 downto 0);
-		clock, wrreq, rdreq, aclr: in std_logic;
+		clock, wrreq, rdreq, aclr, sclr: in std_logic;
 		full, empty, almost_full, almost_empty: out std_logic;
 		q: out std_logic_vector(LPM_WIDTH-1 downto 0);
 		usedw: out std_logic_vector(LPM_WIDTHU-1 downto 0)
@@ -111,6 +110,7 @@ begin
 		q => p02_s,
 		rdreq => line0_read,
 		aclr => (line_reset),
+		sclr => '0',
 		empty => line0_empty
     );
 
@@ -127,6 +127,7 @@ begin
 		q => p12_s,
 		rdreq => line1_read,
 		aclr => (line_reset),
+		sclr => '0',
 		empty => line1_empty
     );
 
