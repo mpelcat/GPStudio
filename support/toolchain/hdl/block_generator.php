@@ -188,9 +188,9 @@ class Block_generator
 
             $codeClks.="	" . $clock->name . "_gen_process : process" . "\r\n";
             $codeClks.="	begin" . "\r\n";
-            $codeClks.="		" . $clock->name . " <= '0';" . "\r\n";
-            $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
             $codeClks.="		" . $clock->name . " <= '1';" . "\r\n";
+            $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
+            $codeClks.="		" . $clock->name . " <= '0';" . "\r\n";
             $codeClks.="		wait for " . $period_name . " / 2;" . "\r\n";
             $codeClks.="		if(endtb='1') then" . "\r\n";
             $codeClks.="                    wait;" . "\r\n";
@@ -237,16 +237,40 @@ class Block_generator
         
         // tb_specific
         $this->block_generator->addSignalComment(str_pad(' test bench specific ', 55, '-', STR_PAD_BOTH));
+        $this->block_generator->addSignal('starttb', 1, "std_logic");
         $this->block_generator->addSignal('endtb', 1, "std_logic");
         
         // reset generation
         $rstCode = '';
-        $rstCode .= "    rst_proc: process" . "\r\n";
+        $rstCode .= "	rst_proc: process" . "\r\n";
+        if($this->block->pi_size_addr_rel>0)
+        {
+            $rstCode .= "       procedure write_param (addr,val : in integer) is" . "\r\n";
+            $rstCode .= "       begin" . "\r\n";
+            $rstCode .= "           " . $this->block->name . "_addr_rel_s <= std_logic_vector(to_unsigned(addr,4));" . "\r\n";
+            $rstCode .= "           " . $this->block->name . "_datawr_s <= std_logic_vector(to_unsigned(val,32));" . "\r\n";
+            $rstCode .= "           wait for clk_proc_period;" . "\r\n";
+            $rstCode .= "           " . $this->block->name . "_wr_s <= '1';" . "\r\n";
+            $rstCode .= "           wait for clk_proc_period;" . "\r\n";
+            $rstCode .= "           " . $this->block->name . "_wr_s <= '0';" . "\r\n";
+            $rstCode .= "       end procedure;" . "\r\n";
+        }
+        $rstCode .= "	begin" . "\r\n";
         $rstCode .= "		reset_n <= '0';" . "\r\n";
-        $rstCode .= "		wait for clk_proc_period * 2;" . "\r\n";
+        $rstCode .= "		starttb <= '0';" . "\r\n";
+        $rstCode .= "		wait for clk_proc_period;" . "\r\n";
         $rstCode .= "		reset_n <= '1';" . "\r\n";
+        $rstCode .= "		wait for clk_proc_period;" . "\r\n";
+        if($this->block->pi_size_addr_rel>0)
+        {
+            $rstCode .= "" . "\r\n";
+            $rstCode .= "		-- write_param(0, 1); -- write parameters to initialise component" . "\r\n";
+            $rstCode .= "" . "\r\n";
+        }
+        $rstCode .= "		starttb <= '1';" . "\r\n";
         $rstCode .= "		wait;" . "\r\n";
         $rstCode .= "	end process;" . "\r\n" . "\r\n";
+        $this->block_generator->addCode($rstCode);
 
         // stim input
         $codeStimIn = '';
@@ -265,21 +289,21 @@ class Block_generator
                 $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_fv_s <= '0';" . "\r\n";
                 $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_data_s <= (others=>'0');" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
-                $codeStimIn .= "		wait for clk_proc_period;" . "\r\n";
+                $codeStimIn .= "		wait until starttb = '1';" . "\r\n";
+                $codeStimIn .= "		wait until rising_edge(clk_proc);" . "\r\n";
+                $codeStimIn .= "		wait until rising_edge(clk_proc);" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_dv_s <= '1';" . "\r\n";
                 $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_fv_s <= '1';" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		while not endfile(" . $flow->name . "_data_file) loop" . "\r\n";
                 $codeStimIn .= "			readline(in_data_file, " . $flow->name . "_line);" . "\r\n";
-                $codeStimIn .= "			" . "\r\n";
                 $codeStimIn .= "			read(" . $flow->name . "_line, in_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
                 $codeStimIn .= "			while " . $flow->name . "_pixel_ok loop" . "\r\n";
                 $codeStimIn .= "				" . $this->block->name ."_". $flow->name . "_data_s <= std_logic_vector(to_unsigned(" . $flow->name . "_pixelFromFile, IN_SIZE));" . "\r\n";
-                $codeStimIn .= "				wait for clk_proc_period;" . "\r\n";
+                $codeStimIn .= "				wait until rising_edge(clk_proc);" . "\r\n";
                 $codeStimIn .= "				read(" . $flow->name . "_line, " . $flow->name . "_pixelFromFile, " . $flow->name . "_pixel_ok);" . "\r\n";
                 $codeStimIn .= "			end loop;" . "\r\n";
-                $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		end loop;" . "\r\n";
                 $codeStimIn .= "		" . "\r\n";
                 $codeStimIn .= "		" . $this->block->name ."_". $flow->name . "_dv_s <= '0';" . "\r\n";
@@ -307,7 +331,7 @@ class Block_generator
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"P2\"));" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
-                $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"128 128\"));" . "\r\n";
+                $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"128 128\"));  -- change this to modify size of output picture" . "\r\n";
                 $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		" . "\r\n";
                 $codeDataOut .= "		write(" . $flow->name . "_line, string'(\"255\"));" . "\r\n";
@@ -315,7 +339,7 @@ class Block_generator
                 $codeDataOut .= "		" . "\r\n";
                 $codeDataOut .= "		wait until " . $this->block->name ."_". $flow->name . "_fv_s = '1';" . "\r\n";
                 $codeDataOut .= "		while " . $this->block->name ."_". $flow->name . "_fv_s='1' loop" . "\r\n";
-                $codeDataOut .= "			wait until clk_proc='1';" . "\r\n";
+                $codeDataOut .= "			wait until rising_edge(clk_proc);" . "\r\n";
                 $codeDataOut .= "			if(" . $this->block->name ."_". $flow->name . "_dv_s='1') then" . "\r\n";
                 $codeDataOut .= "				write(" . $flow->name . "_line, to_integer(unsigned(" . $this->block->name ."_". $flow->name . "_data_s)));" . "\r\n";
                 $codeDataOut .= "				write(" . $flow->name . "_line, string'(\" \"));" . "\r\n";
@@ -326,6 +350,7 @@ class Block_generator
                 $codeDataOut .= "				end if;" . "\r\n";
                 $codeDataOut .= "			end if;" . "\r\n";
                 $codeDataOut .= "		end loop;" . "\r\n";
+                $codeDataOut .= "		writeline(" . $flow->name . "_data_file, " . $flow->name . "_line);" . "\r\n";
                 $codeDataOut .= "		endtb <= '1';" . "\r\n";
                 $codeDataOut .= "		assert false report \"end of " . $flow->name . "\" severity note;" . "\r\n";
                 $codeDataOut .= "		wait;" . "\r\n";
@@ -342,7 +367,10 @@ class Block_generator
         $mfContent = "";
         $mfContent .= "-include Makefile.local" . "\r\n";
         $mfContent .= "" . "\r\n";
+        $mfContent .= "PROCNAME=" . $this->block->name . "\r\n";
+        $mfContent .= "TBNAME=$(PROCNAME)_tb" . "\r\n";
         $mfContent .= "GHDL=ghdl" . "\r\n";
+        $mfContent .= "GHDLFLAGS=--ieee=synopsys -fexplicit" . "\r\n";
         $mfContent .= "" . "\r\n";
         // source list
         $pathList = array();
@@ -351,7 +379,7 @@ class Block_generator
             if($file->group == "hdl")
             {
                 $path = str_replace("hwlib:", SUPPORT_PATH . "component" . DIRECTORY_SEPARATOR, $file->path);
-                $mfContent .= "SRC += " . $path . "\r\n";
+                $mfContent .= "SRC += " . basename($path) . "\r\n";
                 if(!in_array(dirname($path), $pathList))
                     array_push($pathList, dirname($path));
             }
@@ -376,8 +404,8 @@ class Block_generator
         $mfContent .= "%.o: %.vhd" . "\r\n";
         $mfContent .= "\t$(GHDL) -a $(GHDLFLAGS) $<" . "\r\n";
         $mfContent .= "" . "\r\n";
-        $mfContent .= $this->block->name . "_tb: $(OBJECTS)" . "\r\n";
-        $mfContent .= "\t$(GHDL) -c $(GHDLFLAGS) -e " . $this->block->name . "_tb" . "\r\n";
+        $mfContent .= "$(TBNAME): $(OBJECTS)" . "\r\n";
+        $mfContent .= "\t$(GHDL) -e $(GHDLFLAGS) $(TBNAME)" . "\r\n";
         $mfContent .= "" . "\r\n";
 
         // input flow list
@@ -388,7 +416,10 @@ class Block_generator
                 $inputStim .= $flow->name . ".stim ";
         }
         $mfContent .= "run : " . $this->block->name . "_tb " . $inputStim . "\r\n";
-        $mfContent .= "\t$(GHDL) -r " . $this->block->name . "_tb $(GHDLRUNFLAGS)" . "\r\n";
+        $mfContent .= "\t$(GHDL) -r $(TBNAME) $(GHDLRUNFLAGS) --vcd=$(TBNAME).vcd" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "view: run" . "\r\n";
+	$mfContent .= "\tgtkwave $(TBNAME).vcd" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= ".PHONY: clean" . "\r\n";
         $mfContent .= "clean:" . "\r\n";
