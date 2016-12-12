@@ -544,13 +544,13 @@ class Block_generator
         $code_wr.=$code_rst;
         $code_wr.="		elsif(rising_edge(clk_proc)) then" . "\r\n";
         $code_wr.="			if(wr_i='1') then" . "\r\n";
-        $code_wr.="				case addr_rel_i is" . "\r\n";
+        $code_wr.="				case to_integer(unsigned(addr_rel_i)) is" . "\r\n";
         foreach ($this->block->params as $param)
         {
             if ($param->hard == false)
             {
                 $contant_reg_addr = strtoupper($param->name) . "_REG_ADDR";
-                $code_wr.="					when std_logic_vector(to_unsigned(" . $contant_reg_addr . ", " . $size_master . "))=>" . "\r\n";
+                $code_wr.="					when " . $contant_reg_addr . " =>" . "\r\n";
 
                 if (empty($param->parambitfields))
                 {
@@ -599,13 +599,13 @@ class Block_generator
         $code_rd.="			datard_o <= (others => '0');" . "\r\n";
         $code_rd.="		elsif(rising_edge(clk_proc)) then" . "\r\n";
         $code_rd.="			if(rd_i='1') then" . "\r\n";
-        $code_rd.="				case addr_rel_i is" . "\r\n";
+        $code_rd.="				case to_integer(unsigned(addr_rel_i)) is" . "\r\n";
         foreach ($this->block->params as $param)
         {
             if ($param->hard == false)
             {
                 $contant_reg_addr = strtoupper($param->name) . "_REG_ADDR";
-                $code_rd.="					when std_logic_vector(to_unsigned(" . $contant_reg_addr . ", " . $size_master . "))=>" . "\r\n";
+                $code_rd.="					when " . $contant_reg_addr . " =>" . "\r\n";
 
                 if (empty($param->parambitfields))
                 {
