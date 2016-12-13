@@ -407,6 +407,16 @@ void GPNodeProject::cmdSetParam(const QString &blockName, const QString &paramNa
             ok = true;
         }
     }
+    // flow
+    if(!ok)
+    {
+        ModelFlow *flow = _node->getFlow(blockName, paramName);
+        if(flow)
+        {
+            flow->setSize(value.toInt());
+            ok = true;
+        }
+    }
 
     if(ok)
     {
@@ -538,6 +548,13 @@ void GPNodeProject::blockSetParam(const QString &blockName, const QString &param
         ModelClock *clock = _node->getClock(blockName, paramName);
         if(clock)
             oldValue = clock->typical();
+    }
+    // flow
+    if(!oldValue.isValid())
+    {
+        ModelFlow *flow = _node->getFlow(blockName, paramName);
+        if(flow)
+            oldValue = flow->size();
     }
 
     if(oldValue.isValid())

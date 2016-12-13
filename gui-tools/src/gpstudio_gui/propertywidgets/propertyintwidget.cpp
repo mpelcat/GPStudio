@@ -24,6 +24,8 @@
 #include <QSpinBox>
 #include <QDebug>
 
+#include <limits>
+
 PropertyIntWidget::PropertyIntWidget()
 {
 }
@@ -45,9 +47,16 @@ void PropertyIntWidget::createWidget()
     _spinBox = new QSpinBox();
     if(_linkedProperty->isFixed() && _linkedProperty->mode()==Property::Run)
         _spinBox->setEnabled(false);
-    _spinBox->setMinimum(_linkedProperty->min().toInt());
-    _spinBox->setMaximum(_linkedProperty->max().toInt());
-    _spinBox->setSingleStep(_linkedProperty->step().toInt());
+    if(_linkedProperty->min().isValid())
+        _spinBox->setMinimum(_linkedProperty->min().toInt());
+    else
+        _spinBox->setMinimum(std::numeric_limits<int>::min());
+    if(_linkedProperty->max().isValid())
+        _spinBox->setMaximum(_linkedProperty->max().toInt());
+    else
+        _spinBox->setMaximum(std::numeric_limits<int>::max());
+    if(_linkedProperty->step().isValid())
+        _spinBox->setSingleStep(_linkedProperty->step().toInt());
 
     connect(_spinBox, SIGNAL(editingFinished()), this, SLOT(wrapValue()));
     connect(this, SIGNAL(valueChanged(QVariant)), _linkedProperty, SLOT(setValue(QVariant)));

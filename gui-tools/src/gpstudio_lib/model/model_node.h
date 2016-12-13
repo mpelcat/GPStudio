@@ -72,6 +72,7 @@ public:
     ModelProperty *getProperty(const QString &blockName, const QString &propertyName) const;
     ModelProperty *getPropertyPath(const QString &blockName, const QString &path) const;
     ModelClock *getClock(const QString &blockName, const QString &clockName) const;
+    ModelFlow *getFlow(const QString &blockName, const QString &flowName) const;
 
 public:
     static ModelNode *readFromFile(const QString &fileName);

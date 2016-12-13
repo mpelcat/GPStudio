@@ -449,6 +449,9 @@ Property *Property::fromModelFlow(const ModelFlow *modelFlow)
     Property *propertyFlow = new Property(modelFlow->name());
     propertyFlow->setCaption(modelFlow->name());
     propertyFlow->setType(FlowType);
+    propertyFlow->setValue((int)modelFlow->size());
+    propertyFlow->_fixed = true;
+    propertyFlow->_const = true;
 
     // sub properties
     foreach (ModelProperty *subBlockProperty, modelFlow->properties())

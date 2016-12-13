@@ -236,6 +236,18 @@ ModelClock *ModelNode::getClock(const QString &blockName, const QString &clockNa
     return clock;
 }
 
+ModelFlow *ModelNode::getFlow(const QString &blockName, const QString &flowName) const
+{
+    ModelBlock *block = getBlock(blockName);
+    if(!block)
+        return NULL;
+
+    ModelFlow *flow = block->getFlow(flowName);
+    if(!flow)
+        return NULL;
+    return flow;
+}
+
 ModelNode *ModelNode::readFromFile(const QString &fileName)
 {
     QDomDocument doc;

@@ -95,7 +95,7 @@ PropertyWidget *PropertyWidget::getWidgetFromProperty(const Property *property)
         widget = new PropertyMatrixWidget();
         break;
     case Property::FlowType:
-        widget = NULL;
+        widget = new PropertyIntWidget();
         break;
     default:
         qDebug()<<"unknow prop type"<<(int)property->type();
