@@ -40,3 +40,10 @@ gui-tools/win
 *.user
 
 nbproject/
+
+# simulation files
+*.o
+*.cf
+*.wave
+*.vcd
+
