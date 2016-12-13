@@ -13,6 +13,7 @@
     <file name="lbp_slave.vhd" type="vhdl" group="hdl" path="hdl/lbp_slave.vhd"/>
     <file name="lbp_process.vhd" type="vhdl" group="hdl" path="hdl/lbp_process.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
+    <file name="gp_fifo.vhd" type="vhdl" group="hdl" path="hwlib:gp_fifo/hdl/gp_fifo.vhd"/>
     <file name="lbp.proc" type="proc" group="blockdef" path="lbp.proc"/>
   </files>
   <resets>

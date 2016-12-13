@@ -47,25 +47,21 @@ architecture rtl of matrix_extractor_3_3 is
 constant FIFO_LENGHT : integer := LINE_WIDTH_MAX;
 constant FIFO_LENGHT_WIDTH : integer := integer(ceil(log2(real(FIFO_LENGHT))));
 
-component scfifo
-   generic
-   (
-		LPM_WIDTH: POSITIVE;
-		LPM_WIDTHU: POSITIVE;
-		LPM_NUMWORDS: POSITIVE;
-		LPM_SHOWAHEAD: STRING := "OFF";
-		ALLOW_RWCYCLE_WHEN_FULL: STRING := "OFF";
-		OVERFLOW_CHECKING: STRING:= "ON";
-		UNDERFLOW_CHECKING: STRING:= "ON"
-	);
-	port
-	(
-		data: in std_logic_vector(LPM_WIDTH-1 downto 0);
-		clock, wrreq, rdreq, aclr, sclr: in std_logic;
-		full, empty, almost_full, almost_empty: out std_logic;
-		q: out std_logic_vector(LPM_WIDTH-1 downto 0);
-		usedw: out std_logic_vector(LPM_WIDTHU-1 downto 0)
-	);
+component gp_fifo
+   generic (
+        DATA_WIDTH      : positive;
+        FIFO_DEPTH      : positive
+    );
+    port (
+        clk             : in std_logic;
+        reset_n         : in std_logic;
+        data_wr         : in std_logic;
+        data_in         : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        full            : out std_logic;
+        data_rd         : in std_logic;
+        data_out        : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        empty           : out std_logic
+    );
 end component;
 
 signal enable_reg :		std_logic;
@@ -97,37 +93,33 @@ signal cell : std_logic_vector((LINE_WIDTH_MAX-1) downto 0);
 
 begin
 
-	line0_fifo : scfifo
+	line0_fifo : gp_fifo
     generic map (
-    	LPM_WIDTH	=>	PIX_WIDTH,
-    	LPM_WIDTHU	=> FIFO_LENGHT_WIDTH,
-    	LPM_NUMWORDS => FIFO_LENGHT
+    	DATA_WIDTH => PIX_WIDTH,
+    	FIFO_DEPTH => FIFO_LENGHT
 	)
     port map (
-		data => p10_s,
-		clock => clk_proc,
-		wrreq => line0_write,
-		q => p02_s,
-		rdreq => line0_read,
-		aclr => (line_reset),
-		sclr => '0',
+		data_in => p10_s,
+		clk => clk_proc,
+		data_wr => line0_write,
+		data_out => p02_s,
+		data_rd => line0_read,
+		reset_n => line_reset,
 		empty => line0_empty
     );
 
-	line1_fifo : scfifo
+	line1_fifo : gp_fifo
     generic map (
-    	LPM_WIDTH	=>	PIX_WIDTH,
-    	LPM_WIDTHU	=> FIFO_LENGHT_WIDTH,
-    	LPM_NUMWORDS => FIFO_LENGHT
+    	DATA_WIDTH => PIX_WIDTH,
+    	FIFO_DEPTH => FIFO_LENGHT
 	)
     port map (
-		data => p20_s,
-		clock => clk_proc,
-		wrreq => line1_write,
-		q => p12_s,
-		rdreq => line1_read,
-		aclr => (line_reset),
-		sclr => '0',
+		data_in => p20_s,
+		clk => clk_proc,
+		data_wr => line1_write,
+		data_out => p12_s,
+		data_rd => line1_read,
+		reset_n => line_reset,
 		empty => line1_empty
     );
 
@@ -140,7 +132,7 @@ begin
 			line0_write <= '0';
 			line1_read <= '0';
 			line1_write <= '0';
-			line_reset <= '1';
+			line_reset <= '0';
 			
 		elsif(rising_edge(clk_proc)) then
 			matrix_dv <= '0';
@@ -151,11 +143,11 @@ begin
 				line0_write <= '0';
 				line1_read <= '0';
 				line1_write <= '0';
-                line_reset <= '1';
+                line_reset <= '0';
                 matrix_dv <= '0';
 
 			else
-                line_reset <= '0';
+                line_reset <= '1';
 				if (line0_read='1') then
 					p01_s <= p02_s;
 					p00_s <= p01_s;
