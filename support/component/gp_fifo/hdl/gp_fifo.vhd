@@ -46,14 +46,18 @@ architecture rtl of gp_fifo is
         USE_EAB                 : string
     );
     port (
-        clock       : in std_logic;
-        aclr        : in std_logic;
-        data        : in std_logic_vector (LPM_WIDTH-1 downto 0);
-        wrreq       : in std_logic;
-        full        : out std_logic;
-        rdreq       : in std_logic;
-        empty       : out std_logic;
-        q           : out std_logic_vector (LPM_WIDTH-1 downto 0)
+        clock         : in std_logic;
+        aclr          : in std_logic;
+        sclr          : in std_logic;
+        data          : in std_logic_vector (LPM_WIDTH-1 downto 0);
+        wrreq         : in std_logic;
+        full          : out std_logic;
+        almost_full   : out std_logic;
+        rdreq         : in std_logic;
+        empty         : out std_logic;
+        almost_empty  : out std_logic;
+        q             : out std_logic_vector (LPM_WIDTH-1 downto 0);
+        usedw         : out std_logic_vector (LPM_WIDTHU-1 downto 0)
     );
     end component;
 
@@ -75,13 +79,17 @@ architecture rtl of gp_fifo is
             USE_EAB                 => "ON"
         )
         port map (
-            clock       => clk,
-            aclr        => reset_s,
-            data        => data_in,
-            wrreq       => data_wr,
-            full        => full,
-            rdreq       => data_rd,
-            empty       => empty,
-            q           => data_out
+            clock        => clk,
+            aclr         => reset_s,
+            sclr         => '0',
+            data         => data_in,
+            wrreq        => data_wr,
+            full         => full,
+            almost_full  => open,
+            rdreq        => data_rd,
+            empty        => empty,
+            almost_empty => open,
+            q            => data_out,
+            usedw        => open
         );
 end rtl;
