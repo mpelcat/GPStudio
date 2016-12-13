@@ -4,7 +4,7 @@
     <part name="main">
       <svg width="160" height="110">
         <rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-        <text x="50" y="50">Led</text>
+        <text x="120" y="50">Led</text>
       </svg>
     </part>
   </parts>
