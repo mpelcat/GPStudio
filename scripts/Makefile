@@ -6,7 +6,7 @@ all: dox
 
 dox: $(GPS_PATH)/doc/backend.pdf
 $(GPS_PATH)/doc/backend/latex/refman.pdf: Doxyfile $(SRC_BACKEND)
-	@test -d $(GPS_PATH)/doc/backend || mkdir -p doc/backend
+	@test -d $(GPS_PATH)/doc/backend || mkdir -p $(GPS_PATH)/doc/backend
 	@echo "$(GREEN)building doc-backend ...$(RESET)"
 	doxygen > /dev/null
 	cd $(GPS_PATH)/doc/backend/latex/ && make -f Makefile > /dev/null

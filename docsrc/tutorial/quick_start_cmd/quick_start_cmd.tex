@@ -719,6 +719,9 @@ A new component mythreshold\_slave.vhd is generated because your process block h
 \node[blocstyle,minimum height=1.6cm,text width=3cm,fill=white,label={above:mythreshold\_process.vhd}] at(0,1.2) (process1slave) {generated slave};
 \node[blocstyle,minimum height=1.6cm,text width=3cm,fill=white,label={below:mythreshold\_slave.vhd}] at(0,-1.2) (process1proc) {your process};
 
+\path[connect,<-,double] (process1.north) -- node[right, pos=0.8]{PI Slave} ++(0,1cm);
+\path[draw,dashed] (process1.north) -- (process1slave.north);
+\draw[color=orange] ([xshift=-0.1cm]process1slave.south) rectangle ([xshift=1cm,yshift=0.3cm]process1slave.south);
 \path[connect,->] ([yshift=-1.2cm]process1.east) -- node[above]{out} ++(1,0);
 \path[connect,<-] ([yshift=-1.2cm]process1.west) -- node[above]{in} ++(-1,0);
 \path[draw,dashed] ([yshift=-1.2cm]process1.east) -- (process1proc);
@@ -730,7 +733,8 @@ A new component mythreshold\_slave.vhd is generated because your process block h
 \caption{Details on flow connexion}
 \end{figure}
 
-To enable the threshold value that could change dynamically, get the `threshold\_reg' register value to compare with the pixel value insted of a constant value in \texttt{threshold\_process.vhd}:
+To enable the threshold value that could change dynamically, get the `threshold\_reg' register value to compare with the pixel value insted of a constant value in \texttt{threshold\_process.vhd}:\\
+
 \begin{lstlisting}[frame=single]
 	if(in_dv='1' and in_fv='1') then
 		if(in_data >= threshold_reg(IN_SIZE-1 downto 0)) then
@@ -746,5 +750,36 @@ Test it
 > cd .. \\
 > make generate compile send view
 \end{sample}
+
+To test dynamic parameter of your process, try to change the value of `threshold' property. When the value change, the `threshold\_reg' register property map expression (here `threshold.value') is re-evaluated. Result is written to the camera, you saw the effect on the next picture.
+
+A visual test directly on camera with simple processes like this threshold could be enough but when you need a mathematical verification or performance evaluation, it is mandatory to launch tests on a set of known pictures. To achieve that, GPStudio propose two solutions, automatic test-bench and image sensor simulation.
+
+\subsection{Test-bench generation}
+
+GPStudio integrates an automatic test-bench generation in the same that generate skeleton for process. This test-bench generate clocks, send reset at the beginning and for each flow, generate a VHDL process. For an input, it open a file named `<flow-name>.stim' and send the content of this stimuli file to the flow interface. For an output flow, it will save all data to a file named `<flow-name>.data'. \\
+
+In our case, the generated test-bench will send a picture to the `in' flow and save data from `out' flow.
+\begin{sample}
+> \textbf{gpproc generatetb} -o hdl \\
+mythreshold\_tb.vhd generated \\
+Makefile generated
+\end{sample}\\
+
+To create a stimuli file as input, gpproc provide a command to convert picture files (png, jpg, gif, bmp) to a stim file. Give the name of the input flow to the file.
+\begin{sample}
+> \textbf{gpproc convert} -i picture1.png -o in.stim \\
+in.stim generated
+\end{sample}
+
+Finally, you can launch the test with modelsim or GHDL. The first one could be used in full graphical mode but take a lot of memory and is difficult to automatize. The second one can be easily used in makefile and very small (40MB) but is more difficult to use at the beginning.
+
+The Makefile generated is pre configured for GHDL. If you have already installed GHDL, just launch a simulation by launch Makefile. The output flow and waveform will be appear in the current directory.
+
+\subsection{Automatic test on hardware, hardware in the loop}
+
+Communication blocks in GPStudio can be use to read and write parameters, get flow from the camera but also to send flow \textbf{to} the camera. It very useful to send test image to evaluate your processing block.
+
+A sample code in C++ is provided to code your own test. This code is located inside gui-tools/src/gphwloop.
 
 \end{document}

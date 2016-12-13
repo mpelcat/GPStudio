@@ -1,6 +1,7 @@
 % style
 \usepackage{xcolor}
 \usepackage{sectsty}
+\usepackage{calc}
 \definecolor{orange}{rgb}{1,0.4,0}
 \sectionfont{\color{orange}}
 \definecolor{orange2}{rgb}{1,0.5,0.2}
@@ -32,7 +33,7 @@
 \newsavebox{\FVerbBox}
 \newenvironment{sample}
 {\par \vspace{0.1cm} \begin{lrbox}{\FVerbBox}
-\begin{minipage}{\dimexpr\textwidth-\parindent\relax}}
+\begin{minipage}{\textwidth-\parindent-10pt}}
 {\end{minipage}
 \end{lrbox}
 \setlength{\fboxrule}{0.2mm}
