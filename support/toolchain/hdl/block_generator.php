@@ -434,7 +434,7 @@ class Block_generator
         $mfContent .= "\tcd $(OUTDIR) && $(GHDL) -r $(TBNAME) $(GHDLRUNFLAGS) --vcd=$(PROCNAME).vcd" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= "view: run" . "\r\n";
-	$mfContent .= "\tgtkwave $(TBNAME).vcd" . "\r\n";
+	$mfContent .= "\tgtkwave $(OUTDIR)/$(PROCNAME).vcd" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= ".PHONY: clean" . "\r\n";
         $mfContent .= "clean:" . "\r\n";
