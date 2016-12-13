@@ -16,7 +16,7 @@
     <reset name="reset_n" group="reset_n" direction="in"/>
   </resets>
   <params>
-    <param name="LEDCOUNT" type="" hard="1" value="1"/>
+    <param name="LEDCOUNT" type="integer" hard="1" value="1"/>
     <param name="ENABLE" regaddr="0"/>
   </params>
   <ports>
