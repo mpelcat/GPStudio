@@ -367,11 +367,23 @@ class Block_generator
         $mfContent = "";
         $mfContent .= "-include Makefile.local" . "\r\n";
         $mfContent .= "" . "\r\n";
-        $mfContent .= "PROCNAME=" . $this->block->name . "\r\n";
-        $mfContent .= "TBNAME=$(PROCNAME)_tb" . "\r\n";
-        $mfContent .= "GHDL=ghdl" . "\r\n";
-        $mfContent .= "GHDLFLAGS=--ieee=synopsys -fexplicit" . "\r\n";
+        $mfContent .= "PROCNAME = " . $this->block->name . "\r\n";
+        $mfContent .= "TBNAME = $(PROCNAME)_tb" . "\r\n";
+        $mfContent .= "OUTDIR = simbuild" . "\r\n";
+        $mfContent .= "GHDL = ghdl" . "\r\n";
+        $mfContent .= "GHDLFLAGS = --ieee=synopsys -fexplicit" . "\r\n";
         $mfContent .= "" . "\r\n";
+        $mfContent .= "QUARTUS_LIB = altera/13.1/quartus/eda/sim_lib/" . "\r\n";
+        $mfContent .= "USEALTERA_MF = 0" . "\r\n";
+        $mfContent .= "" . "\r\n";
+        $mfContent .= "ifeq ($(USEALTERA_MF),1)" . "\r\n";
+        $mfContent .= "  SRC += altera_mf_components.vhd" . "\r\n";
+        $mfContent .= "  SRC += altera_mf.vhd" . "\r\n";
+        $mfContent .= "  GHDLFLAGS += --work=altera_mf --ieee=synopsys -fexplicit" . "\r\n";
+        $mfContent .= "  vpath %.vhd \${QUARTUS_LIB}" . "\r\n";
+        $mfContent .= "endif" . "\r\n";
+        $mfContent .= "" . "\r\n";
+
         // source list
         $pathList = array();
         foreach ($this->block->files as $file)
@@ -391,21 +403,23 @@ class Block_generator
             $mfContent .= "vpath %.vhd " . $path . "\r\n";
         }
         $mfContent .= "" . "\r\n";
-        $mfContent .= "OBJECTS := $(notdir $(SRC:.vhd=.o))" . "\r\n";
+        $mfContent .= "OBJECTS := $(addprefix $(OUTDIR)/, $(notdir $(SRC:.vhd=.o)))" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= "all: run" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= "Makefile: " . $this->block->name . ".proc" . "\r\n";
         $mfContent .= "\tgpproc generatetb" . "\r\n";
         $mfContent .= "" . "\r\n";
-        $mfContent .= "%.stim: %.png" . "\r\n";
+        $mfContent .= "$(OUTDIR)/%.stim: %.png" . "\r\n";
+        $mfContent .= "\t@test -d $(OUTDIR) || mkdir -p $(OUTDIR)" . "\r\n";
         $mfContent .= "\tgpproc convert -i $< -o $@" . "\r\n";
         $mfContent .= "" . "\r\n";
-        $mfContent .= "%.o: %.vhd" . "\r\n";
-        $mfContent .= "\t$(GHDL) -a $(GHDLFLAGS) $<" . "\r\n";
+        $mfContent .= "$(OUTDIR)/%.o: %.vhd" . "\r\n";
+        $mfContent .= "\t@test -d $(OUTDIR) || mkdir -p $(OUTDIR)" . "\r\n";
+        $mfContent .= "\t$(GHDL) -a --workdir=$(OUTDIR) $(GHDLFLAGS) $<" . "\r\n";
         $mfContent .= "" . "\r\n";
-        $mfContent .= "$(TBNAME): $(OBJECTS)" . "\r\n";
-        $mfContent .= "\t$(GHDL) -e $(GHDLFLAGS) $(TBNAME)" . "\r\n";
+        $mfContent .= "$(OUTDIR)/$(TBNAME): $(OBJECTS)" . "\r\n";
+        $mfContent .= "\tcd $(OUTDIR) && $(GHDL) -e $(GHDLFLAGS) $(TBNAME)" . "\r\n";
         $mfContent .= "" . "\r\n";
 
         // input flow list
@@ -413,17 +427,18 @@ class Block_generator
         foreach ($this->block->flows as $flow)
         {
             if ($flow->type == "in")
-                $inputStim .= $flow->name . ".stim ";
+                $inputStim .= "$(OUTDIR)/" . $flow->name . ".stim ";
         }
-        $mfContent .= "run : " . $this->block->name . "_tb " . $inputStim . "\r\n";
-        $mfContent .= "\t$(GHDL) -r $(TBNAME) $(GHDLRUNFLAGS) --vcd=$(TBNAME).vcd" . "\r\n";
+        $mfContent .= "# GHDLRUNFLAGS = --stop-time=500ns # uncomment to limit simulation time" . "\r\n";
+        $mfContent .= "run : $(OUTDIR)/$(TBNAME) " . $inputStim . "\r\n";
+        $mfContent .= "\tcd $(OUTDIR) && $(GHDL) -r $(TBNAME) $(GHDLRUNFLAGS) --vcd=$(PROCNAME).vcd" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= "view: run" . "\r\n";
 	$mfContent .= "\tgtkwave $(TBNAME).vcd" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= ".PHONY: clean" . "\r\n";
         $mfContent .= "clean:" . "\r\n";
-        $mfContent .= "\trm -f *.o *.stim *.pgm *.wave *.cf" . "\r\n";
+        $mfContent .= "\trm -rf $(OUTDIR)" . "\r\n";
         $mfContent .= "" . "\r\n";
 
         saveIfDifferent("Makefile", $mfContent);
