@@ -230,7 +230,7 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
             {
                 foreach (BlockConnectorItem *connectorItem, port->connects())
                 {
-                    connectorItem->setHighlight(false);
+                    connectorItem->setHighlight(connectorItem->isSelected());
                 }
             }
         }

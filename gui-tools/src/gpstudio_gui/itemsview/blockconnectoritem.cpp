@@ -90,7 +90,7 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawPath(_shape);
 
     // front draw
-    if(_highlight)
+    if(_highlight || isSelected())
         painter->setPen(QPen(QColor("orange"), 4));
     else
         painter->setPen(QPen(Qt::black, 3));
@@ -227,8 +227,9 @@ bool BlockConnectorItem::isHighlighted() const
 
 void BlockConnectorItem::setHighlight(bool highlight)
 {
+    emit prepareGeometryChange();
     _highlight = highlight;
-    if(_highlight)
+    if(_highlight || isSelected())
     {
         setZValue(-1);
     }
@@ -242,7 +243,14 @@ QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change
 {
     if (change == ItemSelectedHasChanged && scene())
     {
-        setHighlight(isSelected());
+        if(isSelected())
+        {
+            setZValue(-1);
+        }
+        else
+        {
+            setZValue(-2);
+        }
     }
     return QGraphicsItem::itemChange(change, value);
 }
