@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="norm" categ="histogram" pi_size_addr_rel="1" desc="Histogram Normalisation">
+  <parts>
+    <part name="main">
+      <svg width="160" height="110">
+        <rect width="160" height="110" x="0" y="0" fill="lightgray"/>
+        <text x="50" y="50">norm</text>
+      </svg>
+    </part>
+  </parts>
+  <infos>
+    <info name="author" value="Luca Maggiani"/>
+    <info name="email" value="maggiani.luca@gmail.com"/>
+    <info name="company" value="Scuola Superiore Sant'Anna"/>
+    <info name="author2" value="Cedric Bourrasset"/>
+    <info name="company2" value="Institut Pascal"/>
+    <info name="revision" value="0.1"/>
+    <info name="releasedate" value="2015-03-04"/>
+  </infos>
+  <files>
+    <file name="norm.v" type="verilog" group="hdl" path="hdl/norm.v"/>
+    <file name="norm.proc" type="proc" group="blockdef" path="norm.proc"/>
+  </files>
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+  <flows>
+    <flow name="out" size="16" type="out" desc="Stream out"/>
+    <flow name="in" size="16" type="in" desc="Stream in"/>
+  </flows>
+</process>

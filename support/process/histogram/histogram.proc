@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="histogramhw" categ="histogram" pi_size_addr_rel="2" desc="Software reconfigurable histogram core">
+<process name="histogram" categ="histogram" pi_size_addr_rel="2" desc="Software reconfigurable histogram core">
   <parts>
     <part name="main">
       <svg width="160" height="110">
         <rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-        <text x="50" y="50">histogramhw</text>
+        <text x="50" y="50">histogram</text>
       </svg>
     </part>
   </parts>
+  <infos>
+    <info name="author" value="Luca Maggiani"/>
+    <info name="email" value="maggiani.luca@gmail.com"/>
+    <info name="company" value="Scuola Superiore Sant'Anna"/>
+    <info name="revision" value="3.1"/>
+    <info name="releasedate" value="2015-02-18"/>
+  </infos>
   <files>
-    <file name="histogramhw.v" type="verilog" group="hdl" path="hdl/histogramhw.v"/>
+    <file name="histogram.v" type="verilog" group="hdl" path="hdl/histogram.v"/>
     <file name="ram_cell.v" type="verilog" group="hdl" path="hdl/ram_cell.v"/>
     <file name="ram_subcell.v" type="verilog" group="hdl" path="hdl/ram_subcell.v"/>
-    <file name="histogramhw.proc" type="proc" group="blockdef" path="histogramhw.proc"/>
+    <file name="histogram.proc" type="proc" group="blockdef" path="histogram.proc"/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in"/>

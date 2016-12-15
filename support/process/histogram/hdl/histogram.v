@@ -1,5 +1,5 @@
 /*! 
- *  \file      histogramhw.v
+ *  \file      histogram.v
  *  \brief     Software configurable hardware Histogram core
  *  \author    Luca Maggiani
  *
@@ -43,7 +43,7 @@
 	\f$
  */
   
-module histogramhw(
+module histogram(
 
 	clk_proc,
 	reset_n,

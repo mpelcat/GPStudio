@@ -1,6 +1,6 @@
 
 `timescale 1ns/100ps
-module tb_n2();
+module tb_n();
 
 	
 	reg clk;
@@ -11,13 +11,21 @@ module tb_n2();
 	wire out_fv;
 	wire out_dv;
 	wire [15:0] out_data;
+	reg [15:0] out_data_s;
+	integer fp_out;
+	integer fp_in;
+	integer fp_norm;
+	integer dummy;
 		
 	reg [31:0] counter;	
 	reg [31:0] toto;	
 		
 	initial begin
-		$dumpfile("/tmp/tb_n2.vcd");
+		$dumpfile("/tmp/tb_n.vcd");
         $dumpvars;
+        fp_out = $fopen("data_out.txt", "w");
+        fp_norm = $fopen("data_norm.txt", "w");
+        fp_in = $fopen("input.txt", "r");
         
         		   
 		clk = 0;				
@@ -39,34 +47,34 @@ module tb_n2();
 		if (reset_n == 0)
 			in_dv <= 0;
 		else
-			if (counter < 127 || toto > 1)
+			if (counter < 15 || toto > 1)
 				in_dv <= $random;
 			else
 				in_dv <= 0;
 				
 	always@(posedge clk) 
-		in_fv <= reset_n;
-		//~ if (reset_n == 0)
-			//~ in_fv <= 0;
-		//~ else
-			//~ if (counter < 127 || toto > 1)
-				//~ in_fv <= 1;
-			//~ else
-				//~ in_fv <= 0;	
+		if (reset_n == 0)
+			in_fv <= 0;
+		else
+			if (counter < 15 || toto > 1)
+				in_fv <= 1;
+			else
+				in_fv <= 0;	
 				
 	always@(posedge clk) 
 		if (reset_n == 0)
 			toto <= 0;
 		else
-			if(counter >= 127)
+			if(counter >= 15)
 				toto <= toto + 1;
 		
 	always@(posedge clk) 
 		if (reset_n == 0)
 			in_data <= 0;
 		else	
-			if (counter < 127 || toto > 1)
-				in_data <= $random;
+			if (counter < 15 || toto > 1)
+				//in_data <= $random;
+				dummy = $fscanf(fp_in,"%d\n",in_data);
 			else
 				in_data <= 0;
 	
@@ -76,8 +84,19 @@ module tb_n2();
 		else
 			if (in_dv)
 				counter <= counter + 1;
+	
+	always@(posedge clk) 
+		if (in_fv & in_dv)
+			$fwrite(fp_out, "%d\n", in_data);
+	
+	always@(*)
+		out_data_s = out_data;
 		
-normhw normhw_inst(
+	always@(posedge clk) 
+		if (out_fv & out_dv)
+			$fwrite(fp_norm, "%d\n", out_data_s);
+		
+norm norm_inst(
 
 	.clk_proc(clk),
 	.reset_n(reset_n),

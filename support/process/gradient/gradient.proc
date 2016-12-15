@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="gradienthw" categ="gradient" pi_size_addr_rel="1" desc="HoG-Dot Spatial gradient extraction">
+<process name="gradient" categ="histogram" pi_size_addr_rel="1" desc="HoG-Dot Spatial gradient extraction">
   <parts>
     <part name="main">
       <svg width="160" height="110">
         <rect width="160" height="110" x="0" y="0" fill="lightgray"/>
-        <text x="50" y="50">gradienthw</text>
+        <text x="50" y="50">gradient</text>
       </svg>
     </part>
   </parts>
+  <infos>
+    <info name="author" value="Luca Maggiani"/>
+    <info name="company" value="Scuola Superiore Sant'Anna"/>
+    <info name="revision" value="4.0"/>
+    <info name="releasedate" value="2015-02-04"/>
+  </infos>
   <files>
-    <file name="gradienthw.v" type="verilog" group="hdl" path="hdl/gradienthw.v"/>
+    <file name="gradient.v" type="verilog" group="hdl" path="hdl/gradient.v"/>
     <file name="eshift_reg.v" type="verilog" group="hdl" path="hdl/eshift_reg.v"/>
     <file name="matrix_prod.v" type="verilog" group="hdl" path="hdl/matrix_prod.v"/>
-    <file name="gradienthw.proc" type="proc" group="blockdef" path="gradienthw.proc"/>
+    <file name="gradient.proc" type="proc" group="blockdef" path="gradient.proc"/>
   </files>
   <resets>
     <reset name="reset_n" group="reset_n" direction="in"/>

@@ -1,5 +1,5 @@
 /*! 
- *  \file      normhw.v
+ *  \file      norm.v
  *  \brief     Hardware normalization core
  *  \author    Luca Maggiani, Cedric Bourrasset
  *
@@ -10,7 +10,7 @@
  */
  
 
-module normhw(
+module norm(
 
 	clk_proc,
 	reset_n,

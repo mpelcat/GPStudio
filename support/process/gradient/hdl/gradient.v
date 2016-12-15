@@ -38,7 +38,7 @@
  */
 
 /*
- * GradientHW module
+ * gradient module
  * Created by LMag 2013
  *
  * Spatial gradient extraction (on 8-derivatives)
@@ -61,7 +61,7 @@
  *
  */
 
-module gradienthw(
+module gradient(
 	
 	//input
 	clk_proc,
@@ -167,11 +167,11 @@ generate
 always@(*)
 	begin
 		if (MAGNITUDE_SIZE != 16)
-			$error("gradienthw.v: MAGNITUDE_SIZE different from 16 not supported yet!!!");
+			$error("gradient.v: MAGNITUDE_SIZE different from 16 not supported yet!!!");
 		if (ANGLE_SIZE != 16)	
-			$error("gradienthw.v: ANGLE_SIZE different from 16 not supported yet!!!");
+			$error("gradient.v: ANGLE_SIZE different from 16 not supported yet!!!");
 		if (IN_SIZE != 8)	
-			$error("gradienthw.v: IN_SIZE different from 8 not supported yet!!!");	
+			$error("gradient.v: IN_SIZE different from 8 not supported yet!!!");	
 	end	
 endgenerate
 
