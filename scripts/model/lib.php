@@ -216,6 +216,27 @@ class Lib
         {
             echo "Trying to open " . $process->name . "...\n";
             $proc = new Process($process->filePath);
+            // check ip info
+            if (count($proc->infos) < 1)
+                warning("Missing IP informations", 1);
+
+            // check flow out properties
+            foreach ($proc->flows as $flow)
+            {
+                if (empty($flow->properties) and $flow->type == "out")
+                    warning("Missing properties on output flow '" . $flow->name . "'", 2);
+            }
+
+            // check file existance
+            foreach ($proc->files as $file)
+            {
+                if (strpos($file->path, "hwlib:") === 0)
+                    $path = str_replace("hwlib:", SUPPORT_PATH . "component" . DIRECTORY_SEPARATOR, $file->path);
+                else
+                    $path = $proc->path . "/" . $file->path;
+                if (!file_exists($path))
+                    warning("File '" . $file->name . "' does not exist", 3);
+            }
             echo $proc->name . " OK \n";
         }
         echo "=========== Devices ============\n";
