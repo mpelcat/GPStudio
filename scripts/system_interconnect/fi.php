@@ -454,7 +454,7 @@ class FlowInterconnect extends Block
                     }
                     else
                     {
-                        $code.='	' . $in_connect_name . '_data <= ' . $out_connect_name . '_data(' . ($padding_size - 1) . ' downto 0);' . "\n";
+                        $code.='	' . $in_connect_name . '_data <= ' . $out_connect_name . '_data(' . ($out_size - $padding_size - 1) . ' downto 0);' . "\n";
                     }
                     warning("Size of flow " . $out_connect_name . " ($out_size) > size of flow " . $in_connect_name . " ($in_size), " . $out_order . " connection", 10, "FI");
                 }
