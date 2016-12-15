@@ -33,7 +33,7 @@ entity mt9 is
 		sclk_o : out std_logic;
 
 		------------------------ out flow -----------------------
-		out_data : out std_logic_vector(7 downto 0);
+		out_data : out std_logic_vector(OUT_SIZE-1 downto 0);
 		out_fv : out std_logic;
 		out_dv : out std_logic;
 
@@ -149,14 +149,14 @@ component VideoSampler
 		pclk_i				: in	std_logic;
 		href_i				: in	std_logic;
 		vsync_i				: in	std_logic;
-		pixel_i				: in std_logic_vector(7 downto 0);
+		pixel_i				: in std_logic_vector(OUT_SIZE-1 downto 0);
 
 		-- params from slave
 		enable_i			: in std_logic;
 		flowlength_i		: in std_logic_vector(31 downto 0);
 
 		-- Stream interface
-		data_o				: out std_logic_vector(7 downto 0);
+		data_o				: out std_logic_vector(OUT_SIZE-1 downto 0);
 		dv_o				: out std_logic;
 		fv_o				: out std_logic
 	);
@@ -199,25 +199,25 @@ begin
 
 	mt9_config_slave_inst : mt9_config_slave
     port map (
-		clk_proc	=>	clk_proc,
-		reset_n		=>	reset_n,
+		clk_proc	        =>	clk_proc,
+		reset_n		        =>	reset_n,
 
 		-- bus_sl
-		addr_rel_i	=>	addr_rel_i,
-		wr_i		=>	wr_i,
-		rd_i		=>	rd_i,
-		datawr_i	=>	datawr_i,
-		datard_o	=>	datard_o,
+		addr_rel_i	        => addr_rel_i,
+		wr_i		        => wr_i,
+		rd_i		        => rd_i,
+		datawr_i	        => datawr_i,
+		datard_o	        => datard_o,
 
 		-- connections to video sampler
-		enable_o			=>	enable_s,
-		flowlength_o		=>	flowlength_s,
+		enable_o			=> enable_s,
+		flowlength_o		=> flowlength_s,
 
 		-- connections to slave i2c
-		xstart_o			=>	xstart_s,
-		ystart_o			=>	ystart_s,
-		xend_o				=>	xend_s,
-		yend_o				=>	yend_s,
+		xstart_o			=> xstart_s,
+		ystart_o			=> ystart_s,
+		xend_o				=> xend_s,
+		yend_o				=> yend_s,
 		autoexp_o			=> autoexp_s,
 		autoexptarget_o		=> autoexptarget_s,
 		autoexpvmin_o		=> autoexpvmin_s,
@@ -232,31 +232,31 @@ begin
 		binning_o			=> binning_s,
 		integtime_o			=> integtime_s,
 		linelenght_o		=> linelenght_s,
-		need_to_reconf_o	=>	need_to_reconf_s
+		need_to_reconf_o	=> need_to_reconf_s
 	);
 
 	mt9_config_i2c_inst : mt9_config_i2c
     port map (
-		reset_n				=>	reset_n,
-		mt9_extclk			=>	ext_clk_9M_s,
-		mt9_sclk			=>	sclk_50k_s,
-		mt9_sclkdouble		=>	sclk_100k_s,
+		reset_n				=> reset_n,
+		mt9_extclk			=> ext_clk_9M_s,
+		mt9_sclk			=> sclk_50k_s,
+		mt9_sclkdouble		=> sclk_100k_s,
 
-		mt9_extclk_o		=>	extclk_o,
-		mt9_reset_n_o		=>	reset_n_o,
-		mt9_standby_o		=>	standby_o,
-		mt9_oe_n_o			=>	oe_n_o,
-		mt9_trigger_o		=>	trigger_o,
-		mt9_saddr_o			=>	saddr_o,
-		mt9_sdata_io		=>	sdata_io,
-		mt9_sclk_o			=>	sclk_o,
+		mt9_extclk_o		=> extclk_o,
+		mt9_reset_n_o		=> reset_n_o,
+		mt9_standby_o		=> standby_o,
+		mt9_oe_n_o			=> oe_n_o,
+		mt9_trigger_o		=> trigger_o,
+		mt9_saddr_o			=> saddr_o,
+		mt9_sdata_io		=> sdata_io,
+		mt9_sclk_o			=> sclk_o,
 
 		-- connections from mt9_config_slave
-		xstart_i			=>	xstart_s,
-		ystart_i			=>	ystart_s,
-		xend_i				=>	xend_s,
-		yend_i				=>	yend_s,
-		autoexp_i			=>	autoexp_s,
+		xstart_i			=> xstart_s,
+		ystart_i			=> ystart_s,
+		xend_i				=> xend_s,
+		yend_i				=> yend_s,
+		autoexp_i			=> autoexp_s,
 		autoexptarget_i		=> autoexptarget_s,
 		autoexpvmin_i		=> autoexpvmin_s,
 		autoexpvmax_i		=> autoexpvmax_s,
@@ -265,12 +265,12 @@ begin
 		autoexpdampofset_i	=> autoexpdampofset_s,
 		autoexpdampgain_i	=> autoexpdampgain_s,
 		autoexpdampmax_i	=> autoexpdampmax_s,
-		flipvert_i			=>	flipvert_s,
-		mirrorx_i			=>	mirrorx_s,
+		flipvert_i			=> flipvert_s,
+		mirrorx_i			=> mirrorx_s,
 		binning_i			=> binning_s,
 		integtime_i			=> integtime_s,
-		linelenght_i		=>	linelenght_s,
-		send_reconf_i		=>	send_reconf_s,
+		linelenght_i		=> linelenght_s,
+		send_reconf_i		=> send_reconf_s,
 
 		mt9_conf_done_o 	=> mt9_conf_done_s
 	);
@@ -286,21 +286,21 @@ begin
     	VSYNC_POLARITY => "high"
 	)
     port map (
-    	reset_n_i	=>	reset_n,
-    	clk_i	=>	clk_proc,
-    	pclk_i	=>	pixclk_i,
-    	href_i	=>	lval_i,
-    	vsync_i	=>	fval_i,
-    	pixel_i	=>	data_i(11 downto 4),
+    	reset_n_i	 => reset_n,
+    	clk_i	     => clk_proc,
+    	pclk_i	     => pixclk_i,
+    	href_i	     => lval_i,
+    	vsync_i	     => fval_i,
+    	pixel_i	     => data_i(11 downto 12-OUT_SIZE), -- only take msb
 
-    	enable_i	=>	enable_s,
-    	flowlength_i	=>	flowlength_s,
+    	enable_i	 => enable_s,
+    	flowlength_i => flowlength_s,
 
-		data_o	=>	out_data,
-		dv_o	=>	out_dv,
-		fv_o	=>	out_fv
+		data_o	    => out_data,
+		dv_o	    => out_dv,
+		fv_o	    => out_fv
 	);
-	
+
 	ext_clk_9M_s	<= clk_img;
 	sclk_100k_s		<= clk_100k;
 	sclk_50k_s		<= clk_50k;
