@@ -5,7 +5,7 @@ rm scharr.proc
 
 # block and flows
 gpproc new -n scharr
-gpproc sethelp -v "Edge detection with scharr operator"
+gpproc sethelp -v "Scharr operator"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
@@ -43,3 +43,7 @@ gpproc addfile -p hdl/scharr.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/scharr_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/scharr_slave.vhd -t vhdl -g hdl
 gpproc addfile -p "hwlib:matrix_extractor/hdl/matrix_extractor.vhd" -t vhdl -g hdl
+gpproc addfile -p "hwlib:gp_fifo/hdl/gp_fifo.vhd" -t vhdl -g hdl
+
+gpproc addfile -p doc/scharr.tex -t tex -g doc
+gpproc addfile -p doc/scharr.pdf -t pdf -g doc

@@ -6,6 +6,7 @@ rm conv.proc
 # block and flows
 gpproc new -n conv
 gpproc sethelp -v "Dynamic image convolution block"
+gpproc setcateg -v "filter"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
@@ -104,3 +105,4 @@ gpproc addfile -p hdl/conv.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/conv_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/conv_slave.vhd -t vhdl -g hdl
 gpproc addfile -p "hwlib:matrix_extractor/hdl/matrix_extractor.vhd" -t vhdl -g hdl
+gpproc addfile -p "hwlib:gp_fifo/hdl/gp_fifo.vhd" -t vhdl -g hdl

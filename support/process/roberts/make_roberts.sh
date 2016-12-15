@@ -5,7 +5,7 @@ rm roberts.proc
 
 # block and flows
 gpproc new -n roberts
-gpproc sethelp -v "Edge detection with Roberts operator"
+gpproc sethelp -v "Roberts operator"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
@@ -43,3 +43,7 @@ gpproc addfile -p hdl/roberts.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/roberts_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/roberts_slave.vhd -t vhdl -g hdl
 gpproc addfile -p "hwlib:matrix_extractor/hdl/matrix_extractor.vhd" -t vhdl -g hdl
+gpproc addfile -p "hwlib:gp_fifo/hdl/gp_fifo.vhd" -t vhdl -g hdl
+
+gpproc addfile -p doc/roberts.tex -t tex -g doc
+gpproc addfile -p doc/roberts.pdf -t pdf -g doc

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="laplacian" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Edge detection with Laplacian operator">
+<process name="laplacian" categ="Edge detection" master_count="0" pi_size_addr_rel="4" desc="Laplacian operator">
   <parts>
     <part name="main">
       <svg width="100" height="115">

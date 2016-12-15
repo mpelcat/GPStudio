@@ -6,10 +6,16 @@ rm threshold.proc
 # block and flows
 gpproc new -n threshold
 gpproc sethelp -v "Simple process to create binary image from grayscale"
-gpproc setcateg -v "segmentation"
+gpproc setcateg -v "morpho"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
 gpproc showblock
+
+# IP infos
+gpproc setinfo -n "author" -v "Sebastien CAUX"
+gpproc setinfo -n "company" -v "Institut Pascal"
+gpproc setinfo -n "revision" -v "1.0"
+gpproc setinfo -n "releasedate" -v "2016-08-22"
 
 # properties on flow out
 gpproc addproperty -n out.datatype -t flowtype -v image

@@ -8,6 +8,12 @@
       </svg>
     </part>
   </parts>
+  <infos>
+    <info name="author" value="Sebastien CAUX"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2015-04-08"/>
+  </infos>
   <files>
     <file name="lbp.vhd" type="vhdl" group="hdl" path="hdl/lbp.vhd"/>
     <file name="lbp_slave.vhd" type="vhdl" group="hdl" path="hdl/lbp_slave.vhd"/>

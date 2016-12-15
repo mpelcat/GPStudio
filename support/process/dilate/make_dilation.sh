@@ -73,3 +73,7 @@ gpproc addfile -p hdl/dilate.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dilate_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dilate_slave.vhd -t vhdl -g hdl
 gpproc addfile -p "hwlib:matrix_extractor/hdl/matrix_extractor.vhd" -t vhdl -g hdl
+gpproc addfile -p "hwlib:gp_fifo/hdl/gp_fifo.vhd" -t vhdl -g hdl
+
+gpproc addfile -p doc/dilate.tex -t tex -g doc
+gpproc addfile -p doc/dilate.pdf -t pdf -g doc

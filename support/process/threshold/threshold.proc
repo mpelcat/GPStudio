@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process name="threshold" categ="segmentation" master_count="0" pi_size_addr_rel="2" desc="Simple process to create binary image from grayscale">
+<process name="threshold" categ="morpho" master_count="0" pi_size_addr_rel="2" desc="Simple process to create binary image from grayscale">
   <parts>
     <part name="main">
       <svg width="100" height="80">
@@ -11,6 +11,12 @@
       </properties>
     </part>
   </parts>
+  <infos>
+    <info name="author" value="Sebastien CAUX"/>
+    <info name="company" value="Institut Pascal"/>
+    <info name="revision" value="1.0"/>
+    <info name="releasedate" value="2016-08-22"/>
+  </infos>
   <files>
     <file name="threshold.vhd" type="vhdl" group="hdl" path="hdl/threshold.vhd"/>
     <file name="threshold_process.vhd" type="vhdl" group="hdl" path="hdl/threshold_process.vhd"/>
