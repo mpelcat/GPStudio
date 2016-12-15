@@ -59,6 +59,9 @@ public:
     QPointF inPos() const;
     QPointF outPos() const;
 
+    bool isHighlighted() const;
+    void setHighlight(bool highlight);
+
 private:
     BlockPortItem *_portItem1;
     BlockPortItem *_portItem2;
@@ -69,6 +72,7 @@ private:
     QPainterPath _shape;
 
     DrawStyle _style;
+    bool _highlight;
 
     // QGraphicsItem interface
 protected:

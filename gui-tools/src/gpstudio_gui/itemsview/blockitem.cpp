@@ -213,9 +213,27 @@ QVariant BlockItem::itemChange(QGraphicsItem::GraphicsItemChange change, const Q
     if (change == ItemSelectedHasChanged && scene())
     {
         if(isSelected())
+        {
             setZValue(1);
+            foreach (BlockPortItem *port, _ports)
+            {
+                foreach (BlockConnectorItem *connectorItem, port->connects())
+                {
+                    connectorItem->setHighlight(true);
+                }
+            }
+        }
         else
+        {
             setZValue(0);
+            foreach (BlockPortItem *port, _ports)
+            {
+                foreach (BlockConnectorItem *connectorItem, port->connects())
+                {
+                    connectorItem->setHighlight(false);
+                }
+            }
+        }
     }
     return QGraphicsItem::itemChange(change, value);
 }

@@ -38,6 +38,7 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     setZValue(-2);
     //_style=LineDraw;
     _style=CubicDraw;
+    _highlight = false;
     updateShape(NULL);
 }
 
@@ -89,7 +90,7 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawPath(_shape);
 
     // front draw
-    if(isSelected())
+    if(_highlight)
         painter->setPen(QPen(QColor("orange"), 4));
     else
         painter->setPen(QPen(Qt::black, 3));
@@ -219,14 +220,29 @@ QPointF BlockConnectorItem::outPos() const
     return _outPos;
 }
 
+bool BlockConnectorItem::isHighlighted() const
+{
+    return _highlight;
+}
+
+void BlockConnectorItem::setHighlight(bool highlight)
+{
+    _highlight = highlight;
+    if(_highlight)
+    {
+        setZValue(-1);
+    }
+    else
+    {
+        setZValue(-2);
+    }
+}
+
 QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemSelectedHasChanged && scene())
     {
-        if(isSelected())
-            setZValue(-1);
-        else
-            setZValue(-2);
+        setHighlight(isSelected());
     }
     return QGraphicsItem::itemChange(change, value);
 }
