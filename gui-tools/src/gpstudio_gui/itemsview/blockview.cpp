@@ -173,6 +173,7 @@ void BlockView::mouseMoveEvent(QMouseEvent *event)
 
     if ((event->buttons() & Qt::MidButton) == Qt::MidButton)
     {
+        setCursor(Qt::ClosedHandCursor);
         QPointF move = _refDrag - mapToScene(event->pos());
         centerOn(_centerDrag + move);
         _centerDrag = mapToScene(viewport()->rect()).boundingRect().center();
@@ -421,11 +422,20 @@ void BlockView::keyPressEvent(QKeyEvent *event)
                 BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem *>(item);
                 if(connectorItem)
                     link2delete.append(ModelFlowConnect(connectorItem->portItem1()->blockName(),
-                                                                                connectorItem->portItem1()->name(),
-                                                                                connectorItem->portItem2()->blockName(),
-                                                                                connectorItem->portItem2()->name()));
+                                                        connectorItem->portItem1()->name(),
+                                                        connectorItem->portItem2()->blockName(),
+                                                        connectorItem->portItem2()->name()));
             }
-
+        }
+        foreach (const ModelFlowConnect &connect, link2delete)
+        {
+            foreach (ModelBlock *block, block2delete)
+            {
+                if(connect.fromblock()==block->name() || connect.toblock()==block->name())
+                {
+                    link2delete.removeOne(connect);
+                }
+            }
         }
         if(block2delete.count()>1)
             emit beginMacroAsked("multiple blocks suppression");
