@@ -1,10 +1,10 @@
 #!/bin/bash
 
-rm laplacien.proc
+rm laplacian.proc
 #rm -rf hdl
 
 # block and flows
-gpproc new -n laplacien
+gpproc new -n laplacian
 gpproc sethelp -v "Edge detection with Laplacian operator"
 gpproc addflow -n in -d in -s 8
 gpproc addflow -n out -d out -s 8
@@ -80,11 +80,11 @@ gpproc addenum -n filtertype.8_connexe -v 1
 gpproc addenum -n filtertype.Robinson -v 2
 
 # visual settings
-gpproc setdraw -f laplacien.svg
+gpproc setdraw -f laplacian.svg
 
 # generate patterns files
 # gpproc generate -o hdl
-gpproc addfile -p hdl/laplacien.vhd -t vhdl -g hdl
-gpproc addfile -p hdl/laplacien_process.vhd -t vhdl -g hdl
-gpproc addfile -p hdl/laplacien_slave.vhd -t vhdl -g hdl
+gpproc addfile -p hdl/laplacian.vhd -t vhdl -g hdl
+gpproc addfile -p hdl/laplacian_process.vhd -t vhdl -g hdl
+gpproc addfile -p hdl/laplacian_slave.vhd -t vhdl -g hdl
 gpproc addfile -p "hwlib:matrix_extractor/hdl/matrix_extractor.vhd" -t vhdl -g hdl

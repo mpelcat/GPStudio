@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library std;
 
-entity laplacien_slave is
+entity laplacian_slave is
 	generic (
 		CLK_PROC_FREQ : integer
 	);
@@ -33,9 +33,9 @@ entity laplacien_slave is
 		datawr_i              : in std_logic_vector(31 downto 0);
 		datard_o              : out std_logic_vector(31 downto 0)
 	);
-end laplacien_slave;
+end laplacian_slave;
 
-architecture rtl of laplacien_slave is
+architecture rtl of laplacian_slave is
 
 	-- Registers address   
 	constant STATUS_REG_REG_ADDR   : natural := 0;

@@ -3,7 +3,7 @@ dilate
 erode
 gaussian
 gradienthw
-laplacien
+laplacian
 lbp
 negate
 prewitt

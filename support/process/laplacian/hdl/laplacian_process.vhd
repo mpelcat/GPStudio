@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library std;
 
-entity laplacien_process is
+entity laplacian_process is
 	generic (
 		LINE_WIDTH_MAX : integer;
 		CLK_PROC_FREQ  : integer;
@@ -38,9 +38,9 @@ entity laplacien_process is
 		out_fv                 : out std_logic;
 		out_dv                 : out std_logic
 	);
-end laplacien_process;
+end laplacian_process;
 
-architecture rtl of laplacien_process is
+architecture rtl of laplacian_process is
 
 component matrix_extractor_3_3
 	generic (

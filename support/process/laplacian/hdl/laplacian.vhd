@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library std;
 
-entity laplacien is
+entity laplacian is
 	generic (
 		LINE_WIDTH_MAX : integer;
 		CLK_PROC_FREQ  : integer;
@@ -33,10 +33,10 @@ entity laplacien is
 		datawr_i   : in std_logic_vector(31 downto 0);
 		datard_o   : out std_logic_vector(31 downto 0)
 	);
-end laplacien;
+end laplacian;
 
-architecture rtl of laplacien is
-component laplacien_process
+architecture rtl of laplacian is
+component laplacian_process
 	generic (
 		LINE_WIDTH_MAX : integer;
 		CLK_PROC_FREQ  : integer;
@@ -72,7 +72,7 @@ component laplacien_process
 	);
 end component;
 
-component laplacien_slave
+component laplacian_slave
 	generic (
 		CLK_PROC_FREQ : integer
 	);
@@ -117,7 +117,7 @@ end component;
 	signal w22_reg_m22           : std_logic_vector (7 downto 0);
 
 begin
-	laplacien_process_inst : laplacien_process
+	laplacian_process_inst : laplacian_process
     generic map (
 		CLK_PROC_FREQ  => CLK_PROC_FREQ,
 		LINE_WIDTH_MAX => LINE_WIDTH_MAX,
@@ -146,7 +146,7 @@ begin
 		out_dv                => out_dv
 	);
 
-	laplacien_slave_inst : laplacien_slave
+	laplacian_slave_inst : laplacian_slave
     generic map (
 		CLK_PROC_FREQ => CLK_PROC_FREQ
 	)

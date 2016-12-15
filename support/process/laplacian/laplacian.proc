@@ -4,7 +4,7 @@
     <part name="main">
       <svg width="100" height="115">
         <rect width="100" height="115" x="0" y="0" fill="lightgray"/>
-        <text x="10" y="40">LAPLACIEN</text>
+        <text x="10" y="40">laplacian</text>
       </svg>
     </part>
   </parts>
@@ -16,12 +16,12 @@
     <info name="releasedate" value="2016-08-25"/>
   </infos>
   <files>
-    <file name="laplacien.proc" type="proc" group="blockdef" path="laplacien.proc"/>
-    <file name="laplacien.vhd" type="vhdl" group="hdl" path="hdl/laplacien.vhd"/>
+    <file name="laplacian.proc" type="proc" group="blockdef" path="laplacian.proc"/>
+    <file name="laplacian.vhd" type="vhdl" group="hdl" path="hdl/laplacian.vhd"/>
 	<file name="laplacian.tex" type="tex" group="doc" path="doc/laplacian.tex"/>
 	<file name="laplacian.pdf" type="pdf" group="doc" path="doc/laplacian.pdf"/>
-    <file name="laplacien_process.vhd" type="vhdl" group="hdl" path="hdl/laplacien_process.vhd"/>
-    <file name="laplacien_slave.vhd" type="vhdl" group="hdl" path="hdl/laplacien_slave.vhd"/>
+    <file name="laplacian_process.vhd" type="vhdl" group="hdl" path="hdl/laplacian_process.vhd"/>
+    <file name="laplacian_slave.vhd" type="vhdl" group="hdl" path="hdl/laplacian_slave.vhd"/>
     <file name="matrix_extractor.vhd" type="vhdl" group="hdl" path="hwlib:matrix_extractor/hdl/matrix_extractor.vhd"/>
     <file name="gp_fifo.vhd" type="vhdl" group="hdl" path="hwlib:gp_fifo/hdl/gp_fifo.vhd"/>
   </files>
