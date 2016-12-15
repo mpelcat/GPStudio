@@ -1,6 +1,38 @@
 # Change Log
 
-## Release [v1.10](https://github.com/DreamIP/GPStudio/tree/1.10) (2016-09-09)
+## Release [v1.20](https://github.com/DreamIP/GPStudio/tree/v1.20) (2016-12-21)
+[Full changelog](https://github.com/DreamIP/GPStudio/compare/v1.10...v1.20)
+
+### New Feature
+* HWLoop functionnalities (exemple project for test automation on real platform)
+* Auto test bench creation
+* Multi flows viewers (mask, rect, points...)
+* IP documentation integration
+* clocks, parameters and flow size editable in graphical mode
+* enhanced control on blocks view with gpviewer
+
+### New IPs
+* roi
+* gaussian
+* sobel
+* prewitt
+* roberts
+* laplacien
+* dilate
+* erode
+* negate
+* scharr
+* threshold
+
+### Changes
+* Improved blocks view in gpnode_gui
+* Improved tutorial, documentation completed
+
+### Bug fixes
+* PHP7 compatibility
+* gpviewer stabilized on disconnect/connect camera
+
+## Release [v1.10](https://github.com/DreamIP/GPStudio/tree/v1.10) (2016-09-09)
 [Full changelog](https://github.com/DreamIP/GPStudio/compare/v1.00...v1.10)
 
 ### New Feature
@@ -15,7 +47,7 @@
 ### Bug fixes
 * 
 
-## Release [v1.00](https://github.com/DreamIP/GPStudio/tree/1.00) (2016-06-15)
+## Release [v1.00](https://github.com/DreamIP/GPStudio/tree/v1.00) (2016-06-15)
 [Full changelog](https://github.com/DreamIP/GPStudio/compare/v0.95...v1.00)
 
 ### New Feature

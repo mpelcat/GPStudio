@@ -8,7 +8,7 @@ create high performance image processing.
 
 website : <http://gpstudio.univ-bpclermont.fr>
 
-Actual version 1.10
+Actual version 1.20
 
 Find a changelog in [CHANGELOG.md](CHANGELOG.md)
 

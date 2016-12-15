@@ -1,6 +1,15 @@
-gradienthw
 conv
-sconv
+dilate
+erode
+gaussian
+gradienthw
+laplacien
 lbp
+negate
+prewitt
+roberts
 roi
+scharr
+sconv
+sobel
 threshold

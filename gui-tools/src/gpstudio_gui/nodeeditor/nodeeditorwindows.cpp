@@ -374,7 +374,7 @@ void NodeEditorWindows::reloadNodePath()
 
 void NodeEditorWindows::about()
 {
-    QMessageBox::about(this,"GPStudio: GPNode 1.10","Copyright (C) 2016 Dream IP\n\
+    QMessageBox::about(this,"GPStudio: GPNode 1.20","Copyright (C) 2016 Dream IP\n\
 \n\
 This sofware is part of GPStudio.\n\
 \n\

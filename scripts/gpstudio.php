@@ -32,7 +32,7 @@
  * @defgroup base Base script model
  * */
 
-define("VERSION", "v1.10");
+define("VERSION", "v1.20");
 
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 {

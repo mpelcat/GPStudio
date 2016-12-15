@@ -1,5 +1,5 @@
 #define MyAppName "GPStudio"
-#define MyAppVersion "1.10"
+#define MyAppVersion "1.20"
 #define MyAppPublisher "Dream Institut Pascal"
 #define MyAppURL "http://gpstudio.univ-bpclermont.fr/"
 #define MyAppExeName "gpnode_gui.exe"
