@@ -371,7 +371,7 @@ class Block_generator
         $mfContent .= "TBNAME = $(PROCNAME)_tb" . "\r\n";
         $mfContent .= "OUTDIR = simbuild" . "\r\n";
         $mfContent .= "GHDL = ghdl" . "\r\n";
-        $mfContent .= "GHDLFLAGS = --ieee=synopsys -fexplicit" . "\r\n";
+        $mfContent .= "GHDLFLAGS = --ieee=synopsys -fexplicit --mb-comments" . "\r\n";
         $mfContent .= "" . "\r\n";
         $mfContent .= "QUARTUS_LIB = altera/13.1/quartus/eda/sim_lib/" . "\r\n";
         $mfContent .= "USEALTERA_MF = 0" . "\r\n";
@@ -379,7 +379,7 @@ class Block_generator
         $mfContent .= "ifeq ($(USEALTERA_MF),1)" . "\r\n";
         $mfContent .= "  SRC += altera_mf_components.vhd" . "\r\n";
         $mfContent .= "  SRC += altera_mf.vhd" . "\r\n";
-        $mfContent .= "  GHDLFLAGS += --work=altera_mf --ieee=synopsys -fexplicit" . "\r\n";
+        $mfContent .= "  GHDLFLAGS += --work=altera_mf" . "\r\n";
         $mfContent .= "  vpath %.vhd \${QUARTUS_LIB}" . "\r\n";
         $mfContent .= "endif" . "\r\n";
         $mfContent .= "" . "\r\n";
