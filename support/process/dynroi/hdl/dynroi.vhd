@@ -7,7 +7,7 @@ entity dynroi is
 	generic (
 		CLK_PROC_FREQ : integer;
 		IN_SIZE       : integer;
-		FRAME_SIZE    : integer;
+		COORD_SIZE    : integer;
 		OUT_SIZE      : integer
 	);
 	port (
@@ -19,10 +19,10 @@ entity dynroi is
 		in_fv      : in std_logic;
 		in_dv      : in std_logic;
 
-		----------------------- frame flow ----------------------
-		frame_data : in std_logic_vector(FRAME_SIZE-1 downto 0);
-		frame_fv   : in std_logic;
-		frame_dv   : in std_logic;
+		----------------------- coord flow ----------------------
+		coord_data : in std_logic_vector(COORD_SIZE-1 downto 0);
+		coord_fv   : in std_logic;
+		coord_dv   : in std_logic;
 
 		------------------------ out flow -----------------------
 		out_data   : out std_logic_vector(OUT_SIZE-1 downto 0);
@@ -45,7 +45,7 @@ component dynroi_process
 	generic (
 		CLK_PROC_FREQ : integer;
 		IN_SIZE       : integer;
-		FRAME_SIZE    : integer;
+		COORD_SIZE    : integer;
 		OUT_SIZE      : integer
 	);
 	port (
@@ -55,6 +55,7 @@ component dynroi_process
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit    : in std_logic;
 		status_reg_bypass_bit    : in std_logic;
+		status_reg_overload_bit  : in std_logic;
 		in_size_reg_in_w_reg     : in std_logic_vector(11 downto 0);
 		in_size_reg_in_h_reg     : in std_logic_vector(11 downto 0);
 		out_size_reg_out_w_reg   : in std_logic_vector(11 downto 0);
@@ -67,10 +68,10 @@ component dynroi_process
 		in_fv                    : in std_logic;
 		in_dv                    : in std_logic;
 
-		----------------------- frame flow ----------------------
-		frame_data               : in std_logic_vector(FRAME_SIZE-1 downto 0);
-		frame_fv                 : in std_logic;
-		frame_dv                 : in std_logic;
+		----------------------- coord flow ----------------------
+		coord_data               : in std_logic_vector(COORD_SIZE-1 downto 0);
+		coord_fv                 : in std_logic;
+		coord_dv                 : in std_logic;
 
 		------------------------ out flow -----------------------
 		out_data                 : out std_logic_vector(OUT_SIZE-1 downto 0);
@@ -90,6 +91,7 @@ component dynroi_slave
 		---------------- dynamic parameters ports ---------------
 		status_reg_enable_bit    : out std_logic;
 		status_reg_bypass_bit    : out std_logic;
+		status_reg_overload_bit  : out std_logic;
 		in_size_reg_in_w_reg     : out std_logic_vector(11 downto 0);
 		in_size_reg_in_h_reg     : out std_logic_vector(11 downto 0);
 		out_size_reg_out_w_reg   : out std_logic_vector(11 downto 0);
@@ -110,6 +112,7 @@ end component;
 
 	signal status_reg_enable_bit    : std_logic;
 	signal status_reg_bypass_bit    : std_logic;
+	signal status_reg_overload_bit  : std_logic;
 	signal in_size_reg_in_w_reg     : std_logic_vector (11 downto 0);
 	signal in_size_reg_in_h_reg     : std_logic_vector (11 downto 0);
 	signal out_size_reg_out_w_reg   : std_logic_vector (11 downto 0);
@@ -122,7 +125,7 @@ begin
     generic map (
 		CLK_PROC_FREQ => CLK_PROC_FREQ,
 		IN_SIZE       => IN_SIZE,
-		FRAME_SIZE    => FRAME_SIZE,
+		COORD_SIZE    => COORD_SIZE,
 		OUT_SIZE      => OUT_SIZE
 	)
     port map (
@@ -130,6 +133,7 @@ begin
 		reset_n                  => reset_n,
 		status_reg_enable_bit    => status_reg_enable_bit,
 		status_reg_bypass_bit    => status_reg_bypass_bit,
+		status_reg_overload_bit  => status_reg_overload_bit,
 		in_size_reg_in_w_reg     => in_size_reg_in_w_reg,
 		in_size_reg_in_h_reg     => in_size_reg_in_h_reg,
 		out_size_reg_out_w_reg   => out_size_reg_out_w_reg,
@@ -139,9 +143,9 @@ begin
 		in_data                  => in_data,
 		in_fv                    => in_fv,
 		in_dv                    => in_dv,
-		frame_data               => frame_data,
-		frame_fv                 => frame_fv,
-		frame_dv                 => frame_dv,
+		coord_data               => coord_data,
+		coord_fv                 => coord_fv,
+		coord_dv                 => coord_dv,
 		out_data                 => out_data,
 		out_fv                   => out_fv,
 		out_dv                   => out_dv
@@ -156,6 +160,7 @@ begin
 		reset_n                  => reset_n,
 		status_reg_enable_bit    => status_reg_enable_bit,
 		status_reg_bypass_bit    => status_reg_bypass_bit,
+		status_reg_overload_bit  => status_reg_overload_bit,
 		in_size_reg_in_w_reg     => in_size_reg_in_w_reg,
 		in_size_reg_in_h_reg     => in_size_reg_in_h_reg,
 		out_size_reg_out_w_reg   => out_size_reg_out_w_reg,

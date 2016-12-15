@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm dynroi.proc
-#rm -rf hdl
+rm -rf hdl
 
 # block and flows
 gpproc new -n dynroi
@@ -9,7 +9,7 @@ gpproc sethelp -v "Dynamic region of interest extractor"
 gpproc setcateg -v "segmentation"
 gpproc addflow -n in -d in -s 8
 
-gpproc addflow -n frame -d in -s 8
+gpproc addflow -n coord -d in -s 8
 
 gpproc addflow -n out -d out -s 8
 gpproc showblock
@@ -29,6 +29,8 @@ gpproc addproperty -n enable -t bool -v 1
 gpproc addbitfield -n status_reg.enable_bit -b 0 -m enable.value
 gpproc addproperty -n bypass -t bool -v 0
 gpproc addbitfield -n status_reg.bypass_bit -b 1 -m bypass.value
+gpproc addproperty -n overload -t bool -v 0
+gpproc addbitfield -n status_reg.overload_bit -b 2 -m overload.value
 
 # register input flow size
 gpproc addparam -n in_size_reg -r 1
@@ -68,7 +70,7 @@ gpproc addproperty -n out.height -t int -m "bypass.value ? in.height.value : ((y
 # visual settings
 gpproc setdraw -f dynroi.svg
 
-#gpproc generate -o hdl
+gpproc generate -o hdl
 gpproc addfile -p hdl/dynroi.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dynroi_process.vhd -t vhdl -g hdl
 gpproc addfile -p hdl/dynroi_slave.vhd -t vhdl -g hdl
