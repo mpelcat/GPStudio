@@ -138,10 +138,12 @@ begin
 						--The buffer has not a complete set of params, everything is blocked
 							local_x <= to_unsigned(170,local_x'length);--(others=>'0');
 							local_y <= to_unsigned(040,local_y'length);--(others=>'0');
-							local_w <= to_unsigned(100,local_w'length);--(others=>'0');
-							local_h <= to_unsigned(100,local_w'length);--(others=>'0');
+							local_w <= to_unsigned(110,local_w'length);--(others=>'0');
+							local_h <= to_unsigned(110,local_w'length);--(others=>'0');
 					end if;
 				end if;
+				
+				
 				
 				-- width value control
 				if local_x+local_w > unsigned(in_size_reg_in_w_reg(X_COUNTER_SIZE-1 downto 0)) then
@@ -151,6 +153,7 @@ begin
 						local_w <= unsigned(in_size_reg_in_w_reg(X_COUNTER_SIZE-1 downto 0))-local_x;
 					end if;
 				end if;
+				
 				-- height value control
 				if local_y+local_h > unsigned(in_size_reg_in_h_reg(Y_COUNTER_SIZE-1 downto 0)) then
 					if local_y > unsigned(in_size_reg_in_h_reg(Y_COUNTER_SIZE-1 downto 0)) then
@@ -165,6 +168,7 @@ begin
 				if block_enabled = '1' and status_reg_enable_bit = '1' then					
 				
 					if in_dv = '1' then
+					
 							-- Following current line
 							x_pos <= x_pos + 1;
 							-- End of line
@@ -172,23 +176,22 @@ begin
 								y_pos <= y_pos + 1;
 								x_pos <= to_unsigned(0, X_COUNTER_SIZE);
 							end if;
-							if(not(not(y_pos >= local_y
-							and y_pos < local_y + local_h
-							and x_pos >= local_x
-							and x_pos < local_x + local_w) 
-							and not(status_reg_bypass_bit = '1')) ) then
-							-- Checking if current pixel is in ROI
-							--if(y_pos >= local_y
-							--and y_pos < local_y + local_h
-							--and x_pos >= local_x
-							--and x_pos < local_x + local_w 
-							--or status_reg_bypass_bit = '1' ) then
+							
+							if status_reg_bypass_bit = '0' then
+								if (y_pos >= local_y
+								and y_pos < local_y + local_h
+								and x_pos >= local_x
+								and x_pos < local_x + local_w) then
+									out_dv <= '1';
+									out_data <= in_data;
+								end if;
+							else
 								out_dv <= '1';
 								out_data <= in_data;
 							end if;		
 					 end if;
 					 
-				else -- block_enabled = 0: the component is acting as a wire 
+				else -- block_enabled = 0: the component is disabled
 					block_enabled <= '0';
 					out_fv <= '0';
 				end if;
