@@ -45,6 +45,8 @@ public:
     ModelNode *node() const;
     Camera *camera() const;
 
+    QString newBlockName(const QString &driver) const;
+
     QUndoStack *undoStack() const;
 
     QWidget *nodeEditorWindow() const;

@@ -447,6 +447,15 @@ Camera *GPNodeProject::camera() const
     return _camera;
 }
 
+QString GPNodeProject::newBlockName(const QString &driver) const
+{
+    int i = 1;
+    QString name = QString("%1_%2").arg(driver).arg(i);
+    while(_node->getBlock(name)!=NULL)
+        name = QString("%1_%2").arg(driver).arg(++i);
+    return name;
+}
+
 void GPNodeProject::moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos)
 {
     _undoStack->push(new BlockCmdMove(this, block_name, part_name, oldPos, newPos));
@@ -488,11 +497,7 @@ void GPNodeProject::addBlock(ModelBlock *block)
 {
     if(block->name().isEmpty() || block->name()==block->driver())
     {
-        int i = 1;
-        QString name = QString("%1_%2").arg(block->driver()).arg(i);
-        while(_node->getBlock(name)!=NULL)
-            name = QString("%1_%2").arg(block->driver()).arg(++i);
-        block->setName(name);
+        block->setName(newBlockName(block->driver()));
     }
     _undoStack->push(new BlockCmdAdd(this, block));
 }

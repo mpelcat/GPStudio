@@ -132,7 +132,48 @@ void BlockView::dropEvent(QDropEvent *event)
         QString driver = event->mimeData()->data("ip/process");
         QPoint pos = mapToScene(event->pos()).toPoint();
 
-        emit blockAdded(driver, pos);
+        QGraphicsItem *item = scene()->itemAt(pos, QTransform());
+        BlockConnectorItem *connectorItem = qgraphicsitem_cast<BlockConnectorItem*>(item);
+        if(connectorItem)
+        {
+            BlockLib *blockLib = Lib::getLib().process(driver);
+            if(!blockLib)
+                return;
+            if(blockLib->modelProcess()->flowsIn().empty())
+                return;
+            QString flowInName = blockLib->modelProcess()->flowsIn().first()->name();
+            if(blockLib->modelProcess()->flowsOut().empty())
+                return;
+            QString flowOutName = blockLib->modelProcess()->flowsOut().first()->name();
+
+            emit beginMacroAsked("Added block on connect");
+
+            ModelFlowConnect oldConnect = ModelFlowConnect(connectorItem->portItem1()->blockName(),
+                                                           connectorItem->portItem1()->name(),
+                                                           connectorItem->portItem2()->blockName(),
+                                                           connectorItem->portItem2()->name());
+            emit blockPortDisconnected(oldConnect);
+
+            QString newBlockName = _project->newBlockName(driver);
+            emit blockAdded(driver, pos);
+
+            ModelFlowConnect connect1 = ModelFlowConnect(oldConnect.fromblock(),
+                                                         oldConnect.fromflow(),
+                                                         newBlockName,
+                                                         flowInName);
+            emit blockPortConnected(connect1);
+
+            ModelFlowConnect connect2 = ModelFlowConnect(newBlockName,
+                                                         flowOutName,
+                                                         oldConnect.toblock(),
+                                                         oldConnect.toflow());
+            emit blockPortConnected(connect2);
+
+            emit endMacroAsked();
+
+        }
+        else
+            emit blockAdded(driver, pos);
     }
 }
 
