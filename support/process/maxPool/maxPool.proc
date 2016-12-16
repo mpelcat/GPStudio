@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="maxPool" categ="descriptor" master_count="0" pi_size_addr_rel="2" desc="2x2 Subsampling with max">
+  <parts>
+    <part name="main">
+      <svg width="150" height="100">
+        <rect width="150" height="100" x="0" y="0" fill="lightgray"/>
+        <text x="20" y="25">MaxPool</text>
+      </svg>
+    </part>
+  </parts>
+
+  <files>
+
+    <file name="maxPool.vhd"           type="vhdl" group="hdl"      path="hdl/maxPool.vhd"/>
+    <file name="maxPool_process.vhd"   type="vhdl" group="hdl"      path="hdl/maxPool_process.vhd"/>
+    <file name="poolV.vhd"             type="vhdl" group="hdl"      path="hdl/poolV.vhd"/>
+    <file name="poolH.vhd"             type="vhdl" group="hdl"      path="hdl/poolH.vhd"/>
+  </files>
+
+  <resets>
+    <reset name="reset_n" group="reset_n" direction="in"/>
+  </resets>
+
+  <flows>
+    <flow name="in" size="8" type="in" desc="Input image to describe"/>
+
+    <flow name="out" size="8" type="out" desc="Subsampled Image">
+      <properties>
+        <property name="datatype" type="flowtype" value="image"/>
+        <property name="width"    type="int"  value="160"/>
+        <property name="height"   type="int"  value="160"/>
+      </properties>
+  </flow>
+  </flows>
+  <params>
+    <param name="IMAGE_WIDTH" type="int" hard="1" value="320" desc="maximum line width"/>
+    <param name="control" regaddr="0" default="0" desc="Status Control Register">
+      <bitfields>
+        <bitfield name="enable" bitfield="0" propertymap="enable.value" desc="On/Off bit"/>
+      </bitfields>
+    </param>
+  </params>
+
+  <properties>
+    <property name="enable"      type="bool" value="false" desc="Enable or disable process"/>
+  </properties>
+
+</process>
