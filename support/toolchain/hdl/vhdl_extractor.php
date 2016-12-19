@@ -61,6 +61,7 @@ class VHDL_extractor
         $this->signals = array();
         $this->ports = array();
         $this->params = array();
+        $this->parts = array();
 
         if(!empty($file))
             $this->parse($file);
@@ -70,7 +71,8 @@ class VHDL_extractor
     {
         $this->fileContent = str_replace("\r\n", "\n", file_get_contents($file));
 
-        $this->parseEntity();
+        if (!empty($this->fileContent))
+            $this->parseEntity();
     }
 
     function parseEntity()
@@ -150,26 +152,38 @@ class VHDL_extractor
         return NULL;
     }
     
-    function toComponent()
+    function toComponent($tool)
     {
-        $component = new Component();
+        if ($tool == "gpcomp")
+            $component = new Component();
+        elseif ($tool == "gpproc")
+            $component = new Process();
+        elseif ($tool == "gpdevice")
+            $component = new IO();
+
         $component->name = $this->name;
         
         // param extractor
-        foreach ($this->parts['generic']->parts as $k => $part)
+        if (array_key_exists('generic', $this->parts))
         {
-            if(preg_match("/:[[:space:]]*([^\:]+)[[:space:]]*:=[[:space:]]*([^\;]+)[[:space:]]*;*/", $part->content, $matches, PREG_OFFSET_CAPTURE)===FALSE)
-                continue;
-            $type = $matches[1][0];
-            $value = str_replace("\"", "", $matches[2][0]);
-            
-            $param = new Param();
-            $param->hard = true;
-            $param->name = $part->name;
-            $param->type = trim($type);
-            $param->value = trim($value);
-            $component->addParam($param);
+            foreach ($this->parts['generic']->parts as $k => $part)
+            {
+                if (preg_match("/:[[:space:]]*([^\:]+)[[:space:]]*:=[[:space:]]*([^\;]+)[[:space:]]*;*/", $part->content, $matches, PREG_OFFSET_CAPTURE) === FALSE)
+                    continue;
+                $type = $matches[1][0];
+                $value = str_replace("\"", "", $matches[2][0]);
+
+                $param = new Param();
+                $param->hard = true;
+                $param->name = $part->name;
+                $param->type = trim($type);
+                $param->value = trim($value);
+                $component->addParam($param);
+            }
         }
+
+        if (!array_key_exists('port', $this->parts))
+            return $component;
 
         // flow extractor
         $flows = array();
