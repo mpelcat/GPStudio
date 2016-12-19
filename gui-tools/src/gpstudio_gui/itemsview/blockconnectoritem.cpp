@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QGraphicsScene>
+#include <QCursor>
 
 BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn)
     : _portItem1(portItemOut), _portItem2(portItemIn)
@@ -40,6 +41,8 @@ BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem
     _style=CubicDraw;
     _highlight = false;
     updateShape(NULL);
+
+    setCursor(Qt::CrossCursor);
 }
 
 BlockConnectorItem::~BlockConnectorItem()
@@ -69,7 +72,7 @@ QRectF BlockConnectorItem::boundingRect() const
 
 QPainterPath BlockConnectorItem::shape() const
 {
-    QPen pen(Qt::black, 6);
+    QPen pen(Qt::black, 10);
     QPainterPathStroker ps;
     ps.setWidth(pen.width());
     ps.setCapStyle(pen.capStyle());
@@ -86,6 +89,7 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     Q_UNUSED(widget)
 
     // back draw
+    painter->setBrush(QBrush(QColor(255, 0, 0, 100)));
     painter->setPen(QPen(Qt::white, 6));
     painter->drawPath(_shape);
 
@@ -95,6 +99,18 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     else
         painter->setPen(QPen(Qt::black, 3));
     painter->drawPath(_shape);
+
+    /*painter->setPen(QPen(Qt::red, 1));
+    painter->setBrush(QBrush(QColor(255, 0, 0, 100)));
+    QPen pen(Qt::black, 10);
+    QPainterPathStroker ps;
+    ps.setWidth(pen.width());
+    ps.setCapStyle(pen.capStyle());
+    ps.setJoinStyle(pen.joinStyle());
+    ps.setMiterLimit(pen.miterLimit());
+    QPainterPath p = ps.createStroke(_shape);
+    p.addPath(_shape);
+    painter->drawPath(p);*/
 }
 
 void BlockConnectorItem::updateShape(BlockPortItem *caller)
@@ -165,10 +181,14 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
         path.lineTo(QPoint(rect.center().x() + connectorId * 10, y1));
         path.lineTo(QPoint(rect.center().x() + connectorId * 10, y2));
         path.lineTo(_inPos);
+        path.lineTo(QPoint(rect.center().x() + connectorId * 10, y2));
+        path.lineTo(QPoint(rect.center().x() + connectorId * 10, y1));
+        path.lineTo(_outPos);
     }
     if(_style==CubicDraw)
     {
         path.cubicTo(QPoint(rect.center().x() + connectorId * 10, y1), QPoint(rect.center().x() + connectorId * 10, y2), _inPos);
+        path.cubicTo(QPoint(rect.center().x() + connectorId * 10, y2), QPoint(rect.center().x() + connectorId * 10, y1), _outPos);
     }
 
     _shape = path;
