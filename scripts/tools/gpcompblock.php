@@ -375,9 +375,10 @@ switch ($action)
         break;
 
     case "extract":
-        $extractor = new VHDL_extractor(str_replace(".comp", "", $componentName));
-        $component = $extractor->toComponent();
-        $componentName = str_replace(".vhd", "", str_replace(".comp", "", $componentName));
+        $name = str_replace(".comp", "", str_replace(".proc", "", str_replace(".io", "", $componentName)));
+        $extractor = new VHDL_extractor($name);
+        $component = $extractor->toComponent(TOOL);
+        $componentName = str_replace(".vhd", "", $name);
         break;
 
     case "showblock":
