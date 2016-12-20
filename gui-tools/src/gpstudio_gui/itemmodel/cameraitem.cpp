@@ -339,12 +339,12 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 if(camera()->node())
                     return QVariant(camera()->node()->name());
                 else
                     return QVariant();
-            case CameraItemModelNoSorted::Value:
+            case CameraItemModel::Value:
                 if(camera()->isConnected())
                     return QVariant(camera()->com()->info().name());
                 else
@@ -365,9 +365,9 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelNode()->name());
-            case CameraItemModelNoSorted::Value:
+            case CameraItemModel::Value:
                 return QVariant("");
             default:
                 return QVariant();
@@ -385,7 +385,7 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(block()->name());
             default:
                 return QVariant(block()->modelBlock()->driver());
@@ -398,7 +398,7 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelBlock()->name());
             default:
                 return QVariant(modelBlock()->driver());
@@ -411,9 +411,9 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(flow()->name());
-            case CameraItemModelNoSorted::Value:
+            case CameraItemModel::Value:
                 return QVariant(flow()->type()==Flow::Input ? "in" : "out");
             default:
                 return QVariant();
@@ -434,9 +434,9 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelFlow()->name());
-            case CameraItemModelNoSorted::Value:
+            case CameraItemModel::Value:
                 return QVariant(modelFlow()->type());
             default:
                 return QVariant();
@@ -457,7 +457,7 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelGPViewer()->name());
             default:
                 return QVariant();
@@ -470,7 +470,7 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelViewer()->name());
             default:
                 return QVariant();
@@ -483,7 +483,7 @@ QVariant CameraItem::value(int column, int role) const
         case Qt::DisplayRole:
             switch (column)
             {
-            case CameraItemModelNoSorted::Name:
+            case CameraItemModel::Name:
                 return QVariant(modelViewerFlow()->flowName());
             default:
                 return QVariant();

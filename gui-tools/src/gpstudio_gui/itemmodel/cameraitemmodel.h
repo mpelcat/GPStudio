@@ -32,12 +32,12 @@ class Camera;
 class ModelNode;
 class ModelGPViewer;
 
-class GPSTUDIO_GUI_EXPORT CameraItemModelNoSorted : public QAbstractItemModel
+class GPSTUDIO_GUI_EXPORT CameraItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit CameraItemModelNoSorted(QObject *parent = 0);
-    CameraItemModelNoSorted(Camera *camera, QObject *parent = 0);
+    explicit CameraItemModel(QObject *parent = 0);
+    CameraItemModel(Camera *camera, QObject *parent = 0);
 
     enum Column {
         Name,
@@ -80,25 +80,6 @@ private:
 signals:
     void viewerAdded(const QString &name);
     void viewerFlowAdded(const QString &viewerName, const QString &name);
-};
-
-class GPSTUDIO_GUI_EXPORT CameraItemModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-public:
-    explicit CameraItemModel(QObject *parent = 0);
-    CameraItemModel(Camera *camera, QObject *parent = 0);
-
-    void setCamera(const Camera *camera, uint filter=CameraItem::FAll);
-    void setBlock(const Block *block, uint filter=CameraItem::FAll);
-    void setNode(const ModelNode *node, uint filter=CameraItem::FAll);
-    void setViewer(const ModelGPViewer *gpViewer, uint filter=CameraItem::FAll);
-    void clearAll();
-
-    CameraItemModelNoSorted *modelCam() const;
-
-private:
-    CameraItemModelNoSorted *_modelCam;
 };
 
 #endif // CAMERAITEMMODEL_H

@@ -87,7 +87,9 @@ void CamExplorerWidget::setupWidgets()
 
     _camTreeView = new QTreeView(this);
     _camItemModel = new CameraItemModel(this);
-    _camTreeView->setModel(_camItemModel);
+    _camItemModelSorted = new QSortFilterProxyModel(this);
+    _camItemModelSorted->setSourceModel(_camItemModel);
+    _camTreeView->setModel(_camItemModelSorted);
     _camTreeView->setSortingEnabled(true);
     _camTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     splitter->addWidget(_camTreeView);
@@ -209,10 +211,10 @@ void CamExplorerWidget::updateRootProperty()
     QStringList selectedBlocksName;
     foreach( QModelIndex index, _camTreeView->selectionModel()->selection().indexes())
     {
-        if(!index.isValid() || index.model()!=_camItemModel)
+        if(!index.isValid() || index.model()!=_camItemModelSorted)
             continue;
 
-        QModelIndex localMapToSource = _camItemModel->mapToSource(index);
+        QModelIndex localMapToSource = _camItemModelSorted->mapToSource(index);
         if(!localMapToSource.isValid())
             continue;
 

@@ -35,6 +35,7 @@
 #include <QScrollArea>
 
 #include <nodeeditor/gpnodeproject.h>
+#include <QSortFilterProxyModel>
 
 class PropertyWidget;
 
@@ -75,6 +76,7 @@ private:
     void setRootProperty(const Property *property);
 
     QTreeView *_camTreeView;
+    QSortFilterProxyModel *_camItemModelSorted;
     CameraItemModel *_camItemModel;
 
     QTreeView *_propertyTreeView;

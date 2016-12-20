@@ -31,20 +31,20 @@
 #include <QIcon>
 #include <QMimeData>
 
-CameraItemModelNoSorted::CameraItemModelNoSorted(QObject *parent)
+CameraItemModel::CameraItemModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
     _rootItem = new CameraItem();
 }
 
-CameraItemModelNoSorted::CameraItemModelNoSorted(Camera *camera, QObject *parent)
+CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
     : QAbstractItemModel(parent)
 {
     _rootItem = new CameraItem();
     setCamera(camera);
 }
 
-QModelIndex CameraItemModelNoSorted::index(int row, int column, const QModelIndex &parent) const
+QModelIndex CameraItemModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
             return QModelIndex();
@@ -63,7 +63,7 @@ QModelIndex CameraItemModelNoSorted::index(int row, int column, const QModelInde
         return QModelIndex();
 }
 
-QModelIndex CameraItemModelNoSorted::parent(const QModelIndex &child) const
+QModelIndex CameraItemModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalPointer()==NULL)
         return QModelIndex();
@@ -77,7 +77,7 @@ QModelIndex CameraItemModelNoSorted::parent(const QModelIndex &child) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
-int CameraItemModelNoSorted::rowCount(const QModelIndex &parent) const
+int CameraItemModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.column() > 0)
             return 0;
@@ -95,13 +95,13 @@ int CameraItemModelNoSorted::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int CameraItemModelNoSorted::columnCount(const QModelIndex &parent) const
+int CameraItemModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return ColumnCount;
 }
 
-QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
+QVariant CameraItemModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid())
         return QVariant();
@@ -114,7 +114,7 @@ QVariant CameraItemModelNoSorted::data(const QModelIndex &index, int role) const
     return item->value(index.column(), role);
 }
 
-QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CameraItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(orientation==Qt::Vertical) return QVariant();
     switch (role)
@@ -134,7 +134,7 @@ QVariant CameraItemModelNoSorted::headerData(int section, Qt::Orientation orient
     return QVariant();
 }
 
-void CameraItemModelNoSorted::setCamera(const Camera *camera, uint filter)
+void CameraItemModel::setCamera(const Camera *camera, uint filter)
 {
     beginResetModel();
     resetInternalData();
@@ -142,7 +142,7 @@ void CameraItemModelNoSorted::setCamera(const Camera *camera, uint filter)
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setBlock(const Block *block, uint filter)
+void CameraItemModel::setBlock(const Block *block, uint filter)
 {
     beginResetModel();
     resetInternalData();
@@ -151,7 +151,7 @@ void CameraItemModelNoSorted::setBlock(const Block *block, uint filter)
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setNode(const ModelNode *node, uint filter)
+void CameraItemModel::setNode(const ModelNode *node, uint filter)
 {
     beginResetModel();
     resetInternalData();
@@ -160,7 +160,7 @@ void CameraItemModelNoSorted::setNode(const ModelNode *node, uint filter)
     endResetModel();
 }
 
-void CameraItemModelNoSorted::setViewer(const ModelGPViewer *gpViewer, uint filter)
+void CameraItemModel::setViewer(const ModelGPViewer *gpViewer, uint filter)
 {
     beginResetModel();
     resetInternalData();
@@ -169,7 +169,7 @@ void CameraItemModelNoSorted::setViewer(const ModelGPViewer *gpViewer, uint filt
     endResetModel();
 }
 
-void CameraItemModelNoSorted::clearAll()
+void CameraItemModel::clearAll()
 {
     beginResetModel();
     resetInternalData();
@@ -177,64 +177,17 @@ void CameraItemModelNoSorted::clearAll()
     endResetModel();
 }
 
-
-// =============== sorted model ====================
-CameraItemModel::CameraItemModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
-{
-    _modelCam = new CameraItemModelNoSorted(this);
-    setSourceModel(_modelCam);
-}
-
-CameraItemModel::CameraItemModel(Camera *camera, QObject *parent)
-{
-    _modelCam = new CameraItemModelNoSorted(camera, parent);
-    setSourceModel(_modelCam);
-    //setFilterWildcard("pro*");
-}
-
-void CameraItemModel::setCamera(const Camera *camera, uint filter)
-{
-    _modelCam->setCamera(camera, filter);
-}
-
-void CameraItemModel::setBlock(const Block *block, uint filter)
-{
-    _modelCam->setBlock(block, filter);
-}
-
-void CameraItemModel::setNode(const ModelNode *node, uint filter)
-{
-    _modelCam->setNode(node, filter);
-}
-
-void CameraItemModel::setViewer(const ModelGPViewer *gpViewer, uint filter)
-{
-    _modelCam->setViewer(gpViewer, filter);
-}
-
-void CameraItemModel::clearAll()
-{
-    _modelCam->clearAll();
-}
-
-CameraItemModelNoSorted *CameraItemModel::modelCam() const
-{
-    return _modelCam;
-}
-
-
-Qt::DropActions CameraItemModelNoSorted::supportedDropActions() const
+Qt::DropActions CameraItemModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction;
 }
 
-Qt::DropActions CameraItemModelNoSorted::supportedDragActions() const
+Qt::DropActions CameraItemModel::supportedDragActions() const
 {
     return Qt::CopyAction | Qt::MoveAction;
 }
 
-Qt::ItemFlags CameraItemModelNoSorted::flags(const QModelIndex &index) const
+Qt::ItemFlags CameraItemModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
@@ -249,14 +202,14 @@ Qt::ItemFlags CameraItemModelNoSorted::flags(const QModelIndex &index) const
         return Qt::ItemIsDropEnabled | defaultFlags;
 }
 
-QStringList CameraItemModelNoSorted::mimeTypes() const
+QStringList CameraItemModel::mimeTypes() const
 {
     QStringList types;
     types << "flow/flowid";
     return types;
 }
 
-QMimeData *CameraItemModelNoSorted::mimeData(const QModelIndexList &indexes) const
+QMimeData *CameraItemModel::mimeData(const QModelIndexList &indexes) const
 {
     QMimeData *mimeData = new QMimeData();
     QByteArray encodedData;
@@ -274,7 +227,7 @@ QMimeData *CameraItemModelNoSorted::mimeData(const QModelIndexList &indexes) con
     return mimeData;
 }
 
-bool CameraItemModelNoSorted::canDropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+bool CameraItemModel::canDropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(action)
     Q_UNUSED(row)
@@ -289,7 +242,7 @@ bool CameraItemModelNoSorted::canDropMimeData(const QMimeData *mimeData, Qt::Dro
     return true;
 }
 
-bool CameraItemModelNoSorted::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+bool CameraItemModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
     Q_UNUSED(row)
     Q_UNUSED(column)
