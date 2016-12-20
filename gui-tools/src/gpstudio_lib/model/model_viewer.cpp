@@ -7,8 +7,16 @@ ModelViewer::ModelViewer(const QString &name)
 {
 }
 
+ModelViewer::ModelViewer(const ModelViewer &modelViewer)
+{
+    _name = modelViewer._name;
+    addViewerFlow(modelViewer.viewerFlows());
+}
+
 ModelViewer::~ModelViewer()
 {
+    for(int i=0; i<_viewerFlows.size(); i++)
+        delete _viewerFlows[i];
 }
 
 QString ModelViewer::name() const

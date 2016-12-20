@@ -4,6 +4,7 @@
 #include "gpstudio_lib_common.h"
 
 #include <QList>
+#include <QMap>
 #include <QString>
 #include <QDomElement>
 
@@ -18,9 +19,11 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    QList<ModelViewer *> &viewers();
     const QList<ModelViewer *> &viewers() const;
     void addViewer(ModelViewer *viewer);
     void addViewer(QList<ModelViewer *> viewers);
+    ModelViewer *getViewer(const QString &name) const;
 
 public:
     static ModelGPViewer *fromNodeGenerated(const QDomElement &domElement);
@@ -30,6 +33,7 @@ protected:
     QString _name;
 
     QList<ModelViewer *> _viewers;
+    QMap<QString, ModelViewer*> _viewersMap;
 };
 
 #endif // MODEL_GPVIEWER_H
