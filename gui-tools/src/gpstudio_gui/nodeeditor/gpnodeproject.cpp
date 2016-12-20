@@ -29,8 +29,10 @@
 
 #include "undostack/nodecommands.h"
 #include "undostack/blockcommands.h"
+#include "undostack/viewercommands.h"
 
 #include <model/model_fiblock.h>
+#include <model/model_gpviewer.h>
 
 #include "lib_parser/lib.h"
 
@@ -429,6 +431,25 @@ void GPNodeProject::cmdSetParam(const QString &blockName, const QString &paramNa
     }
 }
 
+void GPNodeProject::cmdRenameViewer(const QString &viewer_name, QString newName)
+{
+    ModelViewer *viewer = _node->gpViewer()->getViewer(viewer_name);
+    if(viewer)
+    {
+        viewer->setName(newName);
+    }
+}
+
+void GPNodeProject::cmdAddViewer(ModelViewer *viewer)
+{
+
+}
+
+void GPNodeProject::cmdRemoveViewer(const QString &viewer_name)
+{
+
+}
+
 QUndoStack *GPNodeProject::undoStack() const
 {
     return _undoStack;
@@ -564,6 +585,21 @@ void GPNodeProject::blockSetParam(const QString &blockName, const QString &param
 
     if(oldValue.isValid())
         _undoStack->push(new BlockCmdParamSet(this, blockName, paramName, oldValue, value));
+}
+
+void GPNodeProject::renameViewer(const QString &viewer_name, const QString &newName)
+{
+    _undoStack->push(new ViewerCmdRename(this, viewer_name, newName));
+}
+
+void GPNodeProject::addViewer(ModelViewer *viewer)
+{
+    _undoStack->push(new ViewerCmdAdd(this, viewer));
+}
+
+void GPNodeProject::removeViewer(ModelViewer *viewer)
+{
+    _undoStack->push(new ViewerCmdRemove(this, viewer));
 }
 
 void GPNodeProject::beginMacro(const QString &text)

@@ -31,6 +31,7 @@
 #include <model/model_flowconnect.h>
 
 #include <camera/camera.h>
+#include <model/model_viewer.h>
 
 class GPSTUDIO_GUI_EXPORT GPNodeProject : public QObject
 {
@@ -72,6 +73,12 @@ public slots:
     void disConnectBlockFlows(const ModelFlowConnect &flowConnect);
     void blockSetParam(const QString &blockName, const QString &paramName, const QVariant &value);
 
+    // viewer commands
+    void renameViewer(const QString &viewer_name, const QString &newName);
+    void addViewer(ModelViewer *viewer);
+    void removeViewer(ModelViewer *viewer);
+
+    // macro commands
     void beginMacro(const QString &text);
     void endMacro();
 
@@ -101,7 +108,8 @@ private:
     QWidget *_nodeEditorWindow;
 
 protected:
-    // commands from undo stack
+    // === commands from undo stack ===
+    // block commands
     friend class BlockCmdRename;
     void cmdRenameBlock(const QString &block_name, const QString &newName);
 
@@ -118,6 +126,7 @@ protected:
     void cmdConnectFlow(const ModelFlowConnect &flowConnect);
     void cmdDisconnectFlow(const ModelFlowConnect &flowConnect);
 
+    // node commands
     friend class NodeCmdRename;
     void cmdRenameNode(QString nodeName);
 
@@ -126,6 +135,15 @@ protected:
 
     friend class BlockCmdParamSet;
     void cmdSetParam(const QString &blockName, const QString &paramName, const QVariant &value);
+
+    // viewer commands
+    friend class ViewerCmdRename;
+    void cmdRenameViewer(const QString &viewer_name, QString newName);
+
+    friend class ViewerCmdAdd;
+    friend class ViewerCmdRemove;
+    void cmdAddViewer(ModelViewer *viewer);
+    void cmdRemoveViewer(const QString &viewer_name);
 };
 
 #endif // GPNODEPROJECT_H

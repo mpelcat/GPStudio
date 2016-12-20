@@ -70,7 +70,7 @@ BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
     : BlockCommand(project, block->name()), _block(block)
 {
     _backupBlock = block;
-    setText(QString("added block '%1'").arg(block->name()));
+    setText(QString("add block '%1'").arg(block->name()));
 }
 
 BlockCmdAdd::~BlockCmdAdd()

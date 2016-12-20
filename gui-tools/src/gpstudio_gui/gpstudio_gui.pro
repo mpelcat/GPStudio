@@ -80,6 +80,7 @@ SOURCES += \
     nodeeditor/confignodedialog.cpp \
     nodeeditor/undostack/nodecommands.cpp \
     nodeeditor/undostack/blockcommands.cpp \
+    nodeeditor/undostack/viewercommands.cpp \
     viewer/camexplorerwidget.cpp \
     viewer/viewerwidgets/docviewer.cpp \
     viewer/viewerwidgets/pdfviewer.cpp \
@@ -135,6 +136,7 @@ HEADERS  += \
     nodeeditor/confignodedialog.h \
     nodeeditor/undostack/nodecommands.h \
     nodeeditor/undostack/blockcommands.h \
+    nodeeditor/undostack/viewercommands.h \
     viewer/camexplorerwidget.h \
     viewer/viewerwidgets/docviewer.h \
     viewer/viewerwidgets/pdfviewer.h \
