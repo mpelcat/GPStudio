@@ -91,6 +91,7 @@ protected:
     ModelGPViewer *_gpViewer;
 
     QList<ModelBlock *> _blocks;
+    QMap<QString, ModelBlock*> _blocksMap;
 };
 
 #endif // MODEL_NODE_H

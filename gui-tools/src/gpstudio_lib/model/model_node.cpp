@@ -90,9 +90,9 @@ bool ModelNode::isValid() const
 
 ModelBlock *ModelNode::getBlock(const QString &blockName) const
 {
-    for(int i=0; i<_blocks.size(); i++)
-        if(_blocks[i]->name()==blockName)
-            return _blocks[i];
+    QMap<QString, ModelBlock*>::const_iterator localConstFind = _blocksMap.constFind(blockName);
+    if(localConstFind != _blocksMap.constEnd())
+        return *localConstFind;
     return NULL;
 }
 
@@ -109,6 +109,7 @@ const QList<ModelBlock *> &ModelNode::blocks() const
 void ModelNode::addBlock(ModelBlock *block)
 {
     _blocks.append(block);
+    _blocksMap.insert(block->name(), block);
     block->setNode(this);
 }
 
@@ -123,6 +124,7 @@ void ModelNode::addBlock(QList<ModelBlock *> blocks)
 void ModelNode::removeBlock(ModelBlock *block)
 {
     _blocks.removeOne(block);
+    _blocksMap.remove(block->name());
     //block->setNode(NULL);
 }
 
