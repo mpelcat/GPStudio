@@ -96,6 +96,7 @@ void LibTreeView::keyPressEvent(QKeyEvent *event)
 
         PdfViewer::showDocument(docFile.first());
     }
+    QTreeView::keyPressEvent(event);
 }
 
 #ifndef QT_NO_CONTEXTMENU
