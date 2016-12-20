@@ -65,6 +65,17 @@ void BlockCmdMove::redo()
     _project->cmdMoveBlockTo(_block_name, _part_name, _newPos);
 }
 
+bool BlockCmdMove::mergeWith(const QUndoCommand *other)
+{
+    if(other->id() != id())
+        return false;
+    const BlockCmdMove *otherMove = static_cast<const BlockCmdMove*>(other);
+    if(otherMove->_block_name != _block_name)
+        return false;
+    _newPos = otherMove->_newPos;
+    return true;
+}
+
 // Add block
 BlockCmdAdd::BlockCmdAdd(GPNodeProject *project, ModelBlock *block)
     : BlockCommand(project, block->name()), _block(block)

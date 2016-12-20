@@ -490,6 +490,29 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         if(block2delete.count()>1 || link2delete.count()>1)
             emit endMacroAsked();
     }
+    if(event->key()==Qt::Key_Up || event->key()==Qt::Key_Down || event->key()==Qt::Key_Left || event->key()==Qt::Key_Right)
+    {
+        int dec = 20;
+        QPoint move;
+        if(event->key()==Qt::Key_Up)
+            move.setY(-dec);
+        if(event->key()==Qt::Key_Down)
+            move.setY(dec);
+        if(event->key()==Qt::Key_Left)
+            move.setX(-dec);
+        if(event->key()==Qt::Key_Right)
+            move.setX(dec);
+
+        foreach (QGraphicsItem *item, _scene->selectedItems())
+        {
+            BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
+            if(blockItem)
+            {
+                emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), blockItem->modelPart()->pos()+move);
+            }
+        }
+    }
+
     QGraphicsView::keyPressEvent(event);
 }
 
