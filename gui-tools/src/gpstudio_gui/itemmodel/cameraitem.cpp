@@ -35,70 +35,124 @@ CameraItem::CameraItem()
 {
     _type = NullType;
     _ptr = NULL;
+    _parent = NULL;
 }
 
-CameraItem::CameraItem(const Camera *camera)
+CameraItem::CameraItem(const Camera *camera, uint filter)
 {
     _type = CameraType;
     _ptr = camera;
+
+    if(filter & CameraItem::FBlock)
+    {
+        foreach (Block *block, camera->blocks())
+        {
+            append(block);
+        }
+    }
 }
 
-CameraItem::CameraItem(const ModelNode *node)
+CameraItem::CameraItem(const ModelNode *node, uint filter)
 {
     _type = ModelNodeType;
     _ptr = node;
+
+    if(filter & CameraItem::FBlock)
+    {
+        foreach (ModelBlock *block, node->blocks())
+        {
+            append(block);
+        }
+    }
 }
 
-CameraItem::CameraItem(const Block *block)
+CameraItem::CameraItem(const Block *block, uint filter)
 {
     _type = BlockType;
     _ptr = block;
+
+    if(!block->flows().empty())
+    {
+        foreach (Flow *flow, block->flows())
+        {
+            if((filter & CameraItem::FFlowIn && flow->type()==Flow::Input) || (filter & CameraItem::FFlowOut && flow->type()==Flow::Output))
+                append(flow);
+        }
+    }
 }
 
-CameraItem::CameraItem(const ModelBlock *block)
+CameraItem::CameraItem(const ModelBlock *block, uint filter)
 {
     _type = ModelBlockType;
     _ptr = block;
+
+    if(!block->flows().empty())
+    {
+        foreach (ModelFlow *flow, block->flows())
+        {
+            if((filter & CameraItem::FFlowIn && flow->type()=="in") || (filter & CameraItem::FFlowOut && flow->type()=="out"))
+                append(flow);
+        }
+    }
 }
 
-CameraItem::CameraItem(const Flow *flow)
+CameraItem::CameraItem(const Flow *flow, uint filter)
 {
+    Q_UNUSED(filter)
     _type = FlowType;
     _ptr = flow;
 }
 
-CameraItem::CameraItem(const ModelFlow *flow)
+CameraItem::CameraItem(const ModelFlow *flow, uint filter)
 {
+    Q_UNUSED(filter)
     _type = ModelFlowType;
     _ptr = flow;
 }
 
-CameraItem::CameraItem(const ModelGPViewer *gpViewer)
+CameraItem::CameraItem(const ModelGPViewer *gpViewer, uint filter)
 {
+    Q_UNUSED(filter)
     _type = ModelGPViewerType;
     _ptr = gpViewer;
+    foreach (ModelViewer *viewer, gpViewer->viewers())
+    {
+        append(viewer);
+    }
 }
 
-CameraItem::CameraItem(const ModelViewer *viewer)
+CameraItem::CameraItem(const ModelViewer *viewer, uint filter)
 {
+    Q_UNUSED(filter)
     _type = ModelViewerType;
     _ptr = viewer;
+    foreach (ModelViewerFlow *viewer, viewer->viewerFlows())
+    {
+        append(viewer);
+    }
 }
 
-CameraItem::CameraItem(const ModelViewerFlow *viewerFlow)
+CameraItem::CameraItem(const ModelViewerFlow *viewerFlow, uint filter)
 {
+    Q_UNUSED(filter)
     _type = ModelViewerFlowType;
     _ptr = viewerFlow;
 }
 
 CameraItem::~CameraItem()
 {
-    foreach (CameraItem *item, _childrens) delete item;
+    foreach (CameraItem *item, _childrens)
+        delete item;
 }
 
 CameraItem::Type CameraItem::type() const
 {
     return _type;
+}
+
+void CameraItem::setType(const Type &type)
+{
+    _type = type;
 }
 
 const Camera *CameraItem::camera() const
@@ -181,82 +235,43 @@ int CameraItem::count() const
 
 CameraItem *CameraItem::append(const Camera *camera, uint filter)
 {
-    CameraItem *item = new CameraItem(camera);
+    CameraItem *item = new CameraItem(camera, filter);
     item->_parent = this;
     item->_row = _childrens.count();
-
-    if(filter & CameraItem::FBlock)
-    {
-        foreach (Block *block, camera->blocks())
-        {
-            item->append(block);
-        }
-    }
-
     _childrens.append(item);
     return item;
 }
 
 CameraItem *CameraItem::append(const ModelNode *node, uint filter)
 {
-    CameraItem *item = new CameraItem(node);
+    CameraItem *item = new CameraItem(node, filter);
     item->_parent = this;
     item->_row = _childrens.count();
-
-    if(filter & CameraItem::FBlock)
-    {
-        foreach (ModelBlock *block, node->blocks())
-        {
-            item->append(block);
-        }
-    }
-
     _childrens.append(item);
     return item;
 }
 
 CameraItem *CameraItem::append(const Block *block, uint filter)
 {
-    CameraItem *item = new CameraItem(block);
+    CameraItem *item = new CameraItem(block, filter);
     item->_parent = this;
     item->_row = _childrens.count();
-
-    if(!block->flows().empty())
-    {
-        foreach (Flow *flow, block->flows())
-        {
-            if((filter & CameraItem::FFlowIn && flow->type()==Flow::Input) || (filter & CameraItem::FFlowOut && flow->type()==Flow::Output))
-                item->append(flow);
-        }
-    }
-
     _childrens.append(item);
     return item;
 }
 
 CameraItem *CameraItem::append(const ModelBlock *block, uint filter)
 {
-    CameraItem *item = new CameraItem(block);
+    CameraItem *item = new CameraItem(block, filter);
     item->_parent = this;
     item->_row = _childrens.count();
-
-    if(!block->flows().empty())
-    {
-        foreach (ModelFlow *flow, block->flows())
-        {
-            if((filter & CameraItem::FFlowIn && flow->type()=="in") || (filter & CameraItem::FFlowOut && flow->type()=="out"))
-                item->append(flow);
-        }
-    }
-
     _childrens.append(item);
     return item;
 }
 
 CameraItem *CameraItem::append(const Flow *flow, uint filter)
 {
-    Q_UNUSED(filter)
-    CameraItem *item = new CameraItem(flow);
+    CameraItem *item = new CameraItem(flow, filter);
     item->_parent = this;
     item->_row = _childrens.count();
     _childrens.append(item);
@@ -265,8 +280,7 @@ CameraItem *CameraItem::append(const Flow *flow, uint filter)
 
 CameraItem *CameraItem::append(const ModelFlow *flow, uint filter)
 {
-    Q_UNUSED(filter)
-    CameraItem *item = new CameraItem(flow);
+    CameraItem *item = new CameraItem(flow, filter);
     item->_parent = this;
     item->_row = _childrens.count();
     _childrens.append(item);
@@ -275,26 +289,19 @@ CameraItem *CameraItem::append(const ModelFlow *flow, uint filter)
 
 CameraItem *CameraItem::append(const ModelGPViewer *gpViewer, uint filter)
 {
-    Q_UNUSED(filter)
-    foreach (ModelViewer *viewer, gpViewer->viewers())
-    {
-        append(viewer);
-    }
-    return this;
+    CameraItem *item = new CameraItem(gpViewer, filter);
+    item->_parent = this;
+    item->_row = _childrens.count();
+    _childrens.append(item);
+    return item;
 }
 
 CameraItem *CameraItem::append(const ModelViewer *viewer, uint filter)
 {
     Q_UNUSED(filter)
-    CameraItem *item = new CameraItem(viewer);
+    CameraItem *item = new CameraItem(viewer, filter);
     item->_parent = this;
     item->_row = _childrens.count();
-
-    foreach (ModelViewerFlow *viewer, viewer->viewerFlows())
-    {
-        item->append(viewer);
-    }
-
     _childrens.append(item);
     return item;
 }
@@ -307,6 +314,43 @@ CameraItem *CameraItem::append(const ModelViewerFlow *viewerFlow, uint filter)
     item->_row = _childrens.count();
     _childrens.append(item);
     return item;
+}
+
+bool CameraItem::insertRow(int row, CameraItem *item)
+{
+    QList<CameraItem *> items;
+    items.append(item);
+    return insertRow(row, items);
+}
+
+bool CameraItem::insertRow(int row, QList<CameraItem *> items)
+{
+    if(row > _childrens.count())
+        return false;
+
+    for(int i=0; i<items.count(); i++)
+        _childrens.insert(row, items[i]);
+    for(int i=row; i<_childrens.count(); i++)
+    {
+        _childrens[i]->_parent = this;
+        _childrens[i]->_row = i;
+    }
+    return true;
+}
+
+bool CameraItem::removeRows(int row, int count)
+{
+    if(row + count >= _childrens.count())
+        return false;
+
+    for(int i=row; i<row+count; i++)
+    {
+        delete _childrens[i];
+        _childrens.removeAt(row);
+    }
+    for(int i=row; i<_childrens.count(); i++)
+        _childrens[i]->_row = i;
+    return true;
 }
 
 void CameraItem::clear()

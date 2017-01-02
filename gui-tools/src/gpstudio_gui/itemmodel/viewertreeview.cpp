@@ -23,14 +23,40 @@
 #include <QDebug>
 #include <QMimeData>
 
+#include "camera/camera.h"
+#include "model/model_viewerflow.h"
+
 ViewerTreeView::ViewerTreeView()
 {
-
+    _model = new CameraItemModel(this);
+    _modelSorted = new QSortFilterProxyModel(this);
+    _modelSorted->setSourceModel(_model);
+    setModel(_modelSorted);
 }
 
 void ViewerTreeView::attachProject(GPNodeProject *project)
 {
+    _project = project;
+    _model->setViewer(_project->node()->gpViewer());
 
+    connect(_project, SIGNAL(viewerAdded(ModelViewer*)), _model, SLOT(addViewer(ModelViewer*)));
+    connect(_project, SIGNAL(viewerRemoved(QString)), _model, SLOT(removeViewer(QString)));
+}
+
+GPNodeProject *ViewerTreeView::project() const
+{
+    return _project;
+}
+
+void ViewerTreeView::setCamera(Camera *camera)
+{
+    _camera = camera;
+    _model->setViewer(_camera->node()->gpViewer());
+}
+
+Camera *ViewerTreeView::camera() const
+{
+    return _camera;
 }
 
 void ViewerTreeView::dragEnterEvent(QDragEnterEvent *event)
@@ -54,11 +80,51 @@ void ViewerTreeView::dropEvent(QDropEvent *event)
     QTreeView::dropEvent(event);
 
     QString flow = event->mimeData()->data("flow/flowid");
-    //QPoint pos = mapToScene(event->pos()).toPoint();
-
-    //emit blockAdded(driver, pos);
     qDebug()<<Q_FUNC_INFO<<flow<<selectedIndexes();
 
     // viewerAdded
     // viewerFlowAdded
 }
+
+void ViewerTreeView::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
+    {
+        if(!currentIndex().isValid())
+            return;
+        const ModelViewer *viewer = _model->viewer(_modelSorted->mapToSource(currentIndex()));
+        if(viewer)
+        {
+            emit viewerDeleted(viewer->name());
+            return;
+        }
+        const ModelViewerFlow *viewerFlow = _model->viewerFlow(_modelSorted->mapToSource(currentIndex()));
+        if(viewerFlow)
+        {
+            emit viewerDeleted(viewerFlow->flowName());
+            return;
+        }
+    }
+    QTreeView::keyPressEvent(event);
+}
+
+#ifndef QT_NO_CONTEXTMENU
+void ViewerTreeView::contextMenuEvent(QContextMenuEvent *event)
+{
+    /*QModelIndex index = indexAt(event->pos());
+    if(!index.isValid())
+        return;
+    const BlockLib *proc = _model->blockLib(index);
+    if(!proc)
+        return;*/
+
+    /*QMenu menu;
+    QAction *infosIPAction = menu.addAction("View implementation files");
+    QAction *docIPAction = menu.addAction("View pdf documentation");
+    if(docFile.isEmpty())
+        docIPAction->setEnabled(false);
+    QAction *trigered = menu.exec(event->globalPos());
+    if(trigered == docIPAction)
+        PdfViewer::showDocument(docFile.first());*/
+}
+#endif // QT_NO_CONTEXTMENU

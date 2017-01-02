@@ -44,8 +44,10 @@ public:
     Camera *camera() const;
 
 signals:
+    void viewerDeleted(ModelViewer*);
 
-public slots:
+private slots:
+    void removeViewer(QString viewerName);
 
 private:
     void setupWidgets();
@@ -54,7 +56,6 @@ private:
     CameraItemModel *_flowItemModel;
 
     ViewerTreeView *_viewerTreeView;
-    CameraItemModel *_viewerItemModel;
 
     GPNodeProject *_project;
     Camera *_camera;

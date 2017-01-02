@@ -24,6 +24,8 @@
 #include <QGroupBox>
 #include <QDebug>
 
+#include "model/model_gpviewer.h"
+
 ViewerExplorerWidget::ViewerExplorerWidget(QWidget *parent) : QWidget(parent)
 {
     _project = NULL;
@@ -38,7 +40,11 @@ void ViewerExplorerWidget::attachProject(GPNodeProject *project)
     if(_project->camera())
     {
         setCamera(_project->camera());
+        _viewerTreeView->attachProject(project);
     }
+
+    connect(_viewerTreeView, SIGNAL(viewerDeleted(QString)), this, SLOT(removeViewer(QString)));
+    connect(this, SIGNAL(viewerDeleted(ModelViewer*)), _project, SLOT(removeViewer(ModelViewer*)));
 }
 
 GPNodeProject *ViewerExplorerWidget::project() const
@@ -55,13 +61,20 @@ void ViewerExplorerWidget::setCamera(Camera *camera)
     _flowTreeView->expandAll();
 
     if(_camera->node()->gpViewer())
-        _viewerItemModel->setViewer(_camera->node()->gpViewer());
+        _viewerTreeView->setCamera(_camera);
     _viewerTreeView->expandAll();
 }
 
 Camera *ViewerExplorerWidget::camera() const
 {
     return _camera;
+}
+
+void ViewerExplorerWidget::removeViewer(QString viewerName)
+{
+    ModelViewer *viewer = _camera->node()->gpViewer()->getViewer(viewerName);
+    if(viewer)
+        emit viewerDeleted(viewer);
 }
 
 void ViewerExplorerWidget::setupWidgets()
@@ -91,13 +104,11 @@ void ViewerExplorerWidget::setupWidgets()
     QGroupBox *groupBox2 = new QGroupBox("Viewers");
     QLayout *layoutBox2 = new QVBoxLayout();
     layoutBox2->setContentsMargins(0,10,0,0);
-    _viewerItemModel = new CameraItemModel();
     _viewerTreeView = new ViewerTreeView();
     _viewerTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     _viewerTreeView->setAcceptDrops(true);
     _viewerTreeView->viewport()->setAcceptDrops(true);
     _viewerTreeView->setDropIndicatorShown(true);
-    _viewerTreeView->setModel(_viewerItemModel);
     _viewerTreeView->setSortingEnabled(true);
     _viewerTreeView->sortByColumn(0, Qt::DescendingOrder);
     layoutBox2->addWidget(_viewerTreeView);

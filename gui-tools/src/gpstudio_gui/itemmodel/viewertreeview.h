@@ -29,6 +29,8 @@
 #include "cameraitemmodel.h"
 #include "nodeeditor/gpnodeproject.h"
 
+#include <QSortFilterProxyModel>
+
 class GPSTUDIO_GUI_EXPORT ViewerTreeView : public QTreeView
 {
     Q_OBJECT
@@ -36,18 +38,34 @@ public:
     ViewerTreeView();
 
     void attachProject(GPNodeProject *project);
+    GPNodeProject *project() const;
+
+    void setCamera(Camera *camera);
+    Camera *camera() const;
 
 signals:
-    void viewerAdded(const QString viewerName);
-    void viewerFlowAdded(const QString viewerName);
+    void viewerAdded(QString viewerName);
+    void viewerFlowAdded(QString viewerName);
+
+    void viewerDeleted(QString viewerName);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    void keyPressEvent(QKeyEvent *event);
+
+#ifndef QT_NO_CONTEXTMENU
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+#endif // QT_NO_CONTEXTMENU
+
 private:
     CameraItemModel *_model;
+    QSortFilterProxyModel *_modelSorted;
+
+    GPNodeProject *_project;
+    Camera *_camera;
 };
 
 #endif // VIEWERTREEVIEW_H

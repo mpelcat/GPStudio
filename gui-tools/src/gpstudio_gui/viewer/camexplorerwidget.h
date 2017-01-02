@@ -1,6 +1,6 @@
 /****************************************************************************
 ** Copyright (C) 2016 Dream IP
-** 
+**
 ** This file is part of GPStudio.
 **
 ** GPStudio is a free software: you can redistribute it and/or modify
@@ -35,7 +35,6 @@
 #include <QScrollArea>
 
 #include <nodeeditor/gpnodeproject.h>
-#include <QSortFilterProxyModel>
 
 class PropertyWidget;
 

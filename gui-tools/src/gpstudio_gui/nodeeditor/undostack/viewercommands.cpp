@@ -21,6 +21,8 @@
 #include "viewercommands.h"
 
 #include "model/model_gpviewer.h"
+#include "model/model_viewer.h"
+#include "model/model_viewerflow.h"
 
 ViewerCommand::ViewerCommand(GPNodeProject *project, const QString &viewer_name)
     : _project(project), _viewer_name(viewer_name)
@@ -101,4 +103,34 @@ void ViewerCmdRemove::redo()
         _backupViewer = new ModelViewer(*viewer);
     }
     _project->cmdRemoveViewer(_viewer_name);
+}
+
+// Add viewerFlow
+ViewerFlowCmdAdd::ViewerFlowCmdAdd(GPNodeProject *project, ModelViewerFlow *viewerFlow)
+    : ViewerCommand(project, viewerFlow->flowName()), _viewerFlow(viewerFlow)
+{
+    _backupViewerFlow = viewerFlow;
+    setText(QString("add viewer '%1'").arg(viewerFlow->flowName()));
+}
+
+ViewerFlowCmdAdd::~ViewerFlowCmdAdd()
+{
+    delete _backupViewerFlow;
+}
+
+void ViewerFlowCmdAdd::undo()
+{
+    ModelViewerFlow *viewerFlow = _project->node()->gpViewer()->getViewerFlow(_viewer_name, _flowName);
+    if(viewerFlow)
+    {
+        _backupViewerFlow = new ModelViewerFlow(*viewerFlow);
+        //_project->cmdRemoveViewer(_viewer_name);
+    }
+}
+
+void ViewerFlowCmdAdd::redo()
+{
+    _viewerFlow = _backupViewerFlow;
+    _backupViewerFlow = NULL;
+    //_project->cmdAddViewerFlow(_viewerFlow);
 }

@@ -79,4 +79,20 @@ protected:
     ModelViewer *_backupViewer;
 };
 
+class GPSTUDIO_GUI_EXPORT ViewerFlowCmdAdd : public ViewerCommand
+{
+public:
+    enum { Id = 0x0304 };
+    ViewerFlowCmdAdd(GPNodeProject *project, ModelViewerFlow *viewerFlow);
+    ~ViewerFlowCmdAdd();
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
+    QString _flowName;
+    ModelViewerFlow *_viewerFlow;
+    ModelViewerFlow *_backupViewerFlow;
+};
+
 #endif // VIEWERCOMMANDS_H

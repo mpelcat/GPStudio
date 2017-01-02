@@ -77,6 +77,8 @@ public slots:
     void renameViewer(const QString &viewer_name, const QString &newName);
     void addViewer(ModelViewer *viewer);
     void removeViewer(ModelViewer *viewer);
+    void addFlowViewer(ModelViewer *viewer);
+    void removeFlowViewer(ModelViewer *viewer);
 
     // macro commands
     void beginMacro(const QString &text);
@@ -89,9 +91,14 @@ signals:
 
     void blockUpdated(ModelBlock *block);
     void blockAdded(ModelBlock *block);
-    void blockRemoved(const QString &block_name);
-    void blockConnected(const ModelFlowConnect flowConnect);
-    void blockDisconected(const ModelFlowConnect flowConnect);
+    void blockRemoved(QString blockName);
+    void blockConnected(ModelFlowConnect flowConnect);
+    void blockDisconected(ModelFlowConnect flowConnect);
+
+    void viewerAdded(ModelViewer *viewer);
+    void viewerRemoved(QString viewerName);
+    void viewerFlowAdded(ModelViewerFlow *viewerFlow);
+    void viewerFlowRemoved(QString viewerName, QString viewerFlowName);
 
 private:
     void setPath(const QString &path);
@@ -144,6 +151,11 @@ protected:
     friend class ViewerCmdRemove;
     void cmdAddViewer(ModelViewer *viewer);
     void cmdRemoveViewer(const QString &viewer_name);
+
+    friend class ViewerFlowCmdAdd;
+    friend class ViewerFlowCmdRemove;
+    void cmdAddViewerFlow(ModelViewerFlow *viewerFlow);
+    void cmdRemoveViewerFlow(const QString &viewer_name);
 };
 
 #endif // GPNODEPROJECT_H

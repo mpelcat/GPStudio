@@ -437,17 +437,37 @@ void GPNodeProject::cmdRenameViewer(const QString &viewer_name, QString newName)
     if(viewer)
     {
         viewer->setName(newName);
+        setModified(true);
     }
 }
 
 void GPNodeProject::cmdAddViewer(ModelViewer *viewer)
 {
-
+    _node->gpViewer()->addViewer(viewer);
+    setModified(true);
+    emit viewerAdded(viewer);
 }
 
 void GPNodeProject::cmdRemoveViewer(const QString &viewer_name)
 {
+    ModelViewer *viewer = _node->gpViewer()->getViewer(viewer_name);
+    if(viewer)
+    {
+        _node->gpViewer()->removeViewer(viewer);
+        emit viewerRemoved(viewer->name());
+        setModified(true);
+        delete viewer;
+    }
+}
 
+void GPNodeProject::cmdAddViewerFlow(ModelViewerFlow *viewerFlow)
+{
+    // TODO
+}
+
+void GPNodeProject::cmdRemoveViewerFlow(const QString &viewer_name)
+{
+    // TODO
 }
 
 QUndoStack *GPNodeProject::undoStack() const
@@ -600,6 +620,16 @@ void GPNodeProject::addViewer(ModelViewer *viewer)
 void GPNodeProject::removeViewer(ModelViewer *viewer)
 {
     _undoStack->push(new ViewerCmdRemove(this, viewer));
+}
+
+void GPNodeProject::addFlowViewer(ModelViewer *viewer)
+{
+    // TODO
+}
+
+void GPNodeProject::removeFlowViewer(ModelViewer *viewer)
+{
+    // TODO
 }
 
 void GPNodeProject::beginMacro(const QString &text)

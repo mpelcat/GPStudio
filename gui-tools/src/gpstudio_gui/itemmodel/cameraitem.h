@@ -40,15 +40,15 @@ class GPSTUDIO_GUI_EXPORT CameraItem
 {
 public:
     CameraItem();
-    CameraItem(const Camera *camera);
-    CameraItem(const Block *block);
-    CameraItem(const Flow *flow);
-    CameraItem(const ModelNode *node);
-    CameraItem(const ModelBlock *block);
-    CameraItem(const ModelFlow *flow);
-    CameraItem(const ModelGPViewer *gpViewer);
-    CameraItem(const ModelViewer *viewer);
-    CameraItem(const ModelViewerFlow *viewerFlow);
+    CameraItem(const Camera *camera, uint filter=FAll);
+    CameraItem(const Block *block, uint filter=FAll);
+    CameraItem(const Flow *flow, uint filter=FAll);
+    CameraItem(const ModelNode *node, uint filter=FAll);
+    CameraItem(const ModelBlock *block, uint filter=FAll);
+    CameraItem(const ModelFlow *flow, uint filter=FAll);
+    CameraItem(const ModelGPViewer *gpViewer, uint filter=FAll);
+    CameraItem(const ModelViewer *viewer, uint filter=FAll);
+    CameraItem(const ModelViewerFlow *viewerFlow, uint filter=FAll);
     ~CameraItem();
 
     enum Type {
@@ -68,6 +68,7 @@ public:
     };
 
     Type type() const;
+    void setType(const Type &type);
 
     const Camera *camera() const;
     const Block *block() const;
@@ -105,6 +106,10 @@ public:
     CameraItem *append(const ModelGPViewer *gpViewer, uint filter=FAll);
     CameraItem *append(const ModelViewer *viewer, uint filter=FAll);
     CameraItem *append(const ModelViewerFlow *viewerFlow, uint filter=FAll);
+
+    bool insertRow(int row, CameraItem *item);
+    bool insertRow(int row, QList<CameraItem *> items);
+    bool removeRows(int row, int count);
 
     int row();
     void *ptr() const;

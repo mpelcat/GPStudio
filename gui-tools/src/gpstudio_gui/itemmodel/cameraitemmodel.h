@@ -51,6 +51,10 @@ public:
     void setViewer(const ModelGPViewer *gpViewer, uint filter=CameraItem::FAll);
     void clearAll();
 
+    const ModelGPViewer *gpViewer(const QModelIndex &index) const;
+    const ModelViewer *viewer(const QModelIndex &index) const;
+    const ModelViewerFlow *viewerFlow(const QModelIndex &index) const;
+
     // QAbstractItemModel interface
 public:
     // Header:
@@ -74,12 +78,21 @@ public:
     bool canDropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) const;
     bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
+    // add remove
+    //bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent);
+
 private:
     CameraItem *_rootItem;
+    void setRootItem(CameraItem *rootItem);
 
 signals:
     void viewerAdded(const QString &name);
     void viewerFlowAdded(const QString &viewerName, const QString &name);
+
+public slots:
+    void addViewer(ModelViewer *viewer);
+    void removeViewer(QString viewerName);
 };
 
 #endif // CAMERAITEMMODEL_H
