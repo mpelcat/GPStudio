@@ -503,14 +503,19 @@ void BlockView::keyPressEvent(QKeyEvent *event)
         if(event->key()==Qt::Key_Right)
             move.setX(dec);
 
+        QList<BlockItem*> movedBlocks;
         foreach (QGraphicsItem *item, _scene->selectedItems())
         {
             BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
             if(blockItem)
-            {
-                emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), blockItem->modelPart()->pos()+move);
-            }
+                movedBlocks.append(blockItem);
         }
+        if(movedBlocks.size()>1)
+            emit beginMacroAsked("multiple blocks moved");
+        foreach (BlockItem *blockItem, movedBlocks)
+            emit blockMoved(blockItem->name(), blockItem->modelPart()->name(), blockItem->modelPart()->pos(), blockItem->modelPart()->pos()+move);
+        if(movedBlocks.size()>1)
+            emit endMacroAsked();
     }
 
     QGraphicsView::keyPressEvent(event);
