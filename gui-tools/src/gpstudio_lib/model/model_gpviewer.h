@@ -9,6 +9,7 @@
 #include <QDomElement>
 
 class ModelViewer;
+class ModelViewerFlow;
 
 class GPSTUDIO_LIB_EXPORT ModelGPViewer
 {
@@ -23,7 +24,10 @@ public:
     const QList<ModelViewer *> &viewers() const;
     void addViewer(ModelViewer *viewer);
     void addViewer(QList<ModelViewer *> viewers);
+    void removeViewer(ModelViewer *viewer);
     ModelViewer *getViewer(const QString &name) const;
+
+    ModelViewerFlow *getViewerFlow(const QString &viewerName, const QString &flowName) const;
 
 public:
     static ModelGPViewer *fromNodeGenerated(const QDomElement &domElement);

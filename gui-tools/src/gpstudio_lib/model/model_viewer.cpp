@@ -10,7 +10,8 @@ ModelViewer::ModelViewer(const QString &name)
 ModelViewer::ModelViewer(const ModelViewer &modelViewer)
 {
     _name = modelViewer._name;
-    addViewerFlow(modelViewer.viewerFlows());
+    for(int i=0; i<modelViewer._viewerFlows.size(); i++)
+        addViewerFlow(new ModelViewerFlow(*modelViewer._viewerFlows[i]));
 }
 
 ModelViewer::~ModelViewer()
@@ -29,6 +30,11 @@ void ModelViewer::setName(const QString &name)
     _name = name;
 }
 
+QList<ModelViewerFlow *> &ModelViewer::viewerFlows()
+{
+    return _viewerFlows;
+}
+
 const QList<ModelViewerFlow *> &ModelViewer::viewerFlows() const
 {
     return _viewerFlows;
@@ -37,12 +43,27 @@ const QList<ModelViewerFlow *> &ModelViewer::viewerFlows() const
 void ModelViewer::addViewerFlow(ModelViewerFlow *viewerFlow)
 {
     _viewerFlows.append(viewerFlow);
+    _viewerFlowsMap.insert(viewerFlow->flowName(), viewerFlow);
 }
 
 void ModelViewer::addViewerFlow(QList<ModelViewerFlow *> viewerFlows)
 {
     foreach (ModelViewerFlow *viewerFlow, viewerFlows)
         addViewerFlow(viewerFlow);
+}
+
+void ModelViewer::removeViewerFlow(ModelViewerFlow *viewerFlow)
+{
+    _viewerFlows.removeOne(viewerFlow);
+    _viewerFlowsMap.remove(viewerFlow->flowName());
+}
+
+ModelViewerFlow *ModelViewer::getViewerFlow(const QString &name) const
+{
+    QMap<QString, ModelViewerFlow*>::const_iterator localConstFind = _viewerFlowsMap.constFind(name);
+    if(localConstFind!=_viewerFlowsMap.constEnd())
+        return *localConstFind;
+    return NULL;
 }
 
 ModelViewer *ModelViewer::fromNodeGenerated(const QDomElement &domElement)

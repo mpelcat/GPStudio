@@ -44,12 +44,27 @@ void ModelGPViewer::addViewer(QList<ModelViewer *> viewers)
         addViewer(viewer);
 }
 
+void ModelGPViewer::removeViewer(ModelViewer *viewer)
+{
+    _viewers.removeOne(viewer);
+    _viewersMap.remove(viewer->name());
+}
+
 ModelViewer *ModelGPViewer::getViewer(const QString &name) const
 {
     QMap<QString, ModelViewer*>::const_iterator localConstFind = _viewersMap.constFind(name);
     if(localConstFind!=_viewersMap.constEnd())
         return *localConstFind;
     return NULL;
+}
+
+ModelViewerFlow *ModelGPViewer::getViewerFlow(const QString &viewerName, const QString &flowName) const
+{
+    ModelViewer *viewer = getViewer(viewerName);
+    if(!viewer)
+        return NULL;
+    ModelViewerFlow *viewerFlow = viewer->getViewerFlow(viewerName);
+    return viewerFlow;
 }
 
 ModelGPViewer *ModelGPViewer::fromNodeGenerated(const QDomElement &domElement)

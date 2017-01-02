@@ -6,6 +6,11 @@ ModelViewerFlow::ModelViewerFlow()
 {
 }
 
+ModelViewerFlow::ModelViewerFlow(const ModelViewerFlow &modelViewerFlow)
+{
+    _flowname = modelViewerFlow._flowname;
+}
+
 ModelViewerFlow::~ModelViewerFlow()
 {
 }

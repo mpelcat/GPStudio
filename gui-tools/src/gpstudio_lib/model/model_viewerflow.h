@@ -11,6 +11,7 @@ class GPSTUDIO_LIB_EXPORT ModelViewerFlow
 {
 public:
     ModelViewerFlow();
+    ModelViewerFlow(const ModelViewerFlow &modelViewerFlow);
     ~ModelViewerFlow();
 
     QString flowName() const;
