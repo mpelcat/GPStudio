@@ -92,6 +92,8 @@ protected:
 
     QList<ModelBlock *> _blocks;
     QMap<QString, ModelBlock*> _blocksMap;
+    friend class ModelBlock;
+    void updateKeyBlock(ModelBlock *block, const QString &oldKey);
 };
 
 #endif // MODEL_NODE_H

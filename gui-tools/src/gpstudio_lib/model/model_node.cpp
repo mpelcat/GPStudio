@@ -304,6 +304,12 @@ QDomElement ModelNode::toXMLElement(QDomDocument &doc)
     return element;
 }
 
+void ModelNode::updateKeyBlock(ModelBlock *block, const QString &oldKey)
+{
+    _blocksMap.remove(oldKey);
+    _blocksMap.insert(block->name(), block);
+}
+
 bool ModelNode::isGeneratedFile() const
 {
     return _generatedFile;

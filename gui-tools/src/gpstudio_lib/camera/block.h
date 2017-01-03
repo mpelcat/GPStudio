@@ -41,6 +41,7 @@ public:
     Block();
 
     QString name() const;
+    void setName(const QString &name);
 
     const QList<Flow *> &flows() const;
     Flow *flow(int i) const;
@@ -52,9 +53,6 @@ public:
 
     Camera *parentCamera() const;
     void setParentCamera(Camera *parentCamera);
-
-protected:
-    void setName(const QString &name);
 
 public:
     static Block *fromModelBlock(ModelBlock *modelBlock);

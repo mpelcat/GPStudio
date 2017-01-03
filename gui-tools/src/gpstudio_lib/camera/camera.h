@@ -100,6 +100,8 @@ protected:
     // blocks conntainers
     QList<Block*> _blocks;
     QMap<QString, Block*> _blocksMap;
+    friend class Block;
+    void updateKeyBlock(Block *block, const QString &oldKey);
 
     // special blocks
     Block *_comBlock;

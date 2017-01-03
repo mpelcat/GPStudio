@@ -150,6 +150,12 @@ void Camera::setRegister(uint addr, uint value)
     emit registerDataChanged();
 }
 
+void Camera::updateKeyBlock(Block *block, const QString &oldKey)
+{
+    _blocksMap.remove(oldKey);
+    _blocksMap.insert(block->name(), block);
+}
+
 const QList<Block*> &Camera::blocks() const
 {
     return _blocks;

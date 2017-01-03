@@ -24,6 +24,8 @@
 #include <QFile>
 #include <QStringList>
 
+#include "model_node.h"
+
 #include "model_io.h"
 #include "model_iocom.h"
 #include "model_process.h"
@@ -98,7 +100,13 @@ const QString &ModelBlock::name() const
 
 void ModelBlock::setName(const QString &name)
 {
-    _name = name;
+    if(_name != name)
+    {
+        QString oldName = _name;
+        _name = name;
+        if(_node)
+            _node->updateKeyBlock(this, oldName);
+    }
 }
 
 bool ModelBlock::inLib() const

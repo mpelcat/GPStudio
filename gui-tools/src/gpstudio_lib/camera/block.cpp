@@ -22,6 +22,7 @@
 
 #include "model/model_block.h"
 
+#include "camera.h"
 #include "flow.h"
 #include "register.h"
 
@@ -84,7 +85,13 @@ Block *Block::fromModelBlock(ModelBlock *modelBlock)
 
 void Block::setName(const QString &name)
 {
-    _name = name;
+    if(_name != name)
+    {
+        QString oldName = _name;
+        _name = name;
+        if(_parentCamera)
+            _parentCamera->updateKeyBlock(this, oldName);
+    }
 }
 
 const QList<Flow *> &Block::flows() const
