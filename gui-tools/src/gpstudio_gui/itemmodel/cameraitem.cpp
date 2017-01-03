@@ -335,12 +335,13 @@ bool CameraItem::insertRow(int row, QList<CameraItem *> items)
         _childrens[i]->_parent = this;
         _childrens[i]->_row = i;
     }
+
     return true;
 }
 
 bool CameraItem::removeRows(int row, int count)
 {
-    if(row + count >= _childrens.count())
+    if(row + count > _childrens.count())
         return false;
 
     for(int i=row; i<row+count; i++)
@@ -350,6 +351,7 @@ bool CameraItem::removeRows(int row, int count)
     }
     for(int i=row; i<_childrens.count(); i++)
         _childrens[i]->_row = i;
+
     return true;
 }
 

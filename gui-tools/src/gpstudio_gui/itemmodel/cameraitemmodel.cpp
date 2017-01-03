@@ -318,7 +318,7 @@ bool CameraItemModel::removeRows(int row, int count, const QModelIndex &parent)
     else
         parentItem = static_cast<CameraItem*>(parent.internalPointer());
 
-    if(row + count >= parentItem->count())
+    if(row + count > parentItem->count())
         return false;
 
     beginRemoveRows(parent, row, row + count - 1);
@@ -352,7 +352,5 @@ void CameraItemModel::removeViewer(QString viewerName)
                 QVariant::fromValue(viewerName),
                 Qt::MatchExactly || Qt::MatchRecursive);
     if(items.size()>0)
-    {
         removeRow(items[0].row(), items[0].parent());
-    }
 }
