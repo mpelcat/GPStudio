@@ -8,6 +8,7 @@
 #include <QString>
 #include <QDomElement>
 
+class ModelGPViewer;
 class ModelViewerFlow;
 
 class GPSTUDIO_LIB_EXPORT ModelViewer
@@ -27,6 +28,9 @@ public:
     void removeViewerFlow(ModelViewerFlow *viewerFlow);
     ModelViewerFlow *getViewerFlow(const QString &name) const;
 
+    ModelGPViewer *getParent() const;
+    void setParent(ModelGPViewer *parent);
+
 public:
     static ModelViewer *fromNodeGenerated(const QDomElement &domElement);
     static QList<ModelViewer *> listFromNodeGenerated(const QDomElement &domElement);
@@ -37,6 +41,8 @@ protected:
 
     QList<ModelViewerFlow *> _viewerFlows;
     QMap<QString, ModelViewerFlow*> _viewerFlowsMap;
+
+    ModelGPViewer *_parent;
 };
 
 #endif // MODEL_VIEWER_H

@@ -36,6 +36,7 @@ void ModelGPViewer::addViewer(ModelViewer *viewer)
 {
     _viewers.append(viewer);
     _viewersMap.insert(viewer->name(), viewer);
+    viewer->setParent(this);
 }
 
 void ModelGPViewer::addViewer(QList<ModelViewer *> viewers)
@@ -98,4 +99,10 @@ QDomElement ModelGPViewer::toXMLElement(QDomDocument &doc)
     element.appendChild(viewersList);
 
     return element;
+}
+
+void ModelGPViewer::updateKeyViewer(ModelViewer *viewer, const QString &oldKey)
+{
+    _viewersMap.remove(oldKey);
+    _viewersMap.insert(viewer->name(), viewer);
 }

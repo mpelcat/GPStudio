@@ -1,10 +1,12 @@
 #include "model_viewer.h"
 
 #include "model_viewerflow.h"
+#include "model_gpviewer.h"
 
 ModelViewer::ModelViewer(const QString &name)
     : _name(name)
 {
+    _parent = NULL;
 }
 
 ModelViewer::ModelViewer(const ModelViewer &modelViewer)
@@ -12,6 +14,7 @@ ModelViewer::ModelViewer(const ModelViewer &modelViewer)
     _name = modelViewer._name;
     for(int i=0; i<modelViewer._viewerFlows.size(); i++)
         addViewerFlow(new ModelViewerFlow(*modelViewer._viewerFlows[i]));
+    _parent = NULL;
 }
 
 ModelViewer::~ModelViewer()
@@ -27,7 +30,13 @@ QString ModelViewer::name() const
 
 void ModelViewer::setName(const QString &name)
 {
-    _name = name;
+    if(_name != name)
+    {
+        QString oldName = _name;
+        _name = name;
+        if(_parent)
+            _parent->updateKeyViewer(this, oldName);
+    }
 }
 
 QList<ModelViewerFlow *> &ModelViewer::viewerFlows()
@@ -64,6 +73,16 @@ ModelViewerFlow *ModelViewer::getViewerFlow(const QString &name) const
     if(localConstFind!=_viewerFlowsMap.constEnd())
         return *localConstFind;
     return NULL;
+}
+
+ModelGPViewer *ModelViewer::getParent() const
+{
+    return _parent;
+}
+
+void ModelViewer::setParent(ModelGPViewer *parent)
+{
+    _parent = parent;
 }
 
 ModelViewer *ModelViewer::fromNodeGenerated(const QDomElement &domElement)

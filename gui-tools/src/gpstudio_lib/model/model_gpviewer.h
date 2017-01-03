@@ -38,6 +38,9 @@ protected:
 
     QList<ModelViewer *> _viewers;
     QMap<QString, ModelViewer*> _viewersMap;
+
+    friend class ModelViewer;
+    void updateKeyViewer(ModelViewer *viewer, const QString &oldKey);
 };
 
 #endif // MODEL_GPVIEWER_H
