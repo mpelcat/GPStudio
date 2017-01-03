@@ -230,7 +230,7 @@ QPointF BlockPortItem::connectorPos(BlockConnectorItem *connectorItem) const
     if(_direction==Input)
         return scenePos()+QPointF(-7,0);
     else
-        return scenePos()+QPointF(7,0);
+        return scenePos()+QPointF(4,0);
 }
 
 int BlockPortItem::connectorId(BlockConnectorItem *connectorItem) const
