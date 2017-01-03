@@ -39,8 +39,11 @@ void ViewerTreeView::attachProject(GPNodeProject *project)
     _project = project;
     _model->setViewer(_project->node()->gpViewer());
 
+    connect(_project, SIGNAL(viewerUpdated(ModelViewer*)), _model, SLOT(updateViewer(ModelViewer*)));
     connect(_project, SIGNAL(viewerAdded(ModelViewer*)), _model, SLOT(addViewer(ModelViewer*)));
     connect(_project, SIGNAL(viewerRemoved(QString)), _model, SLOT(removeViewer(QString)));
+
+    connect(_model, SIGNAL(viewerRenamed(QString,QString)), _project, SLOT(renameViewer(QString,QString)));
 }
 
 GPNodeProject *ViewerTreeView::project() const

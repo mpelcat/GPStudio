@@ -201,11 +201,16 @@ void GPNodeProject::configBoard()
     }
 }
 
+void GPNodeProject::renameNode(const QString &oldName, const QString &newName)
+{
+    _undoStack->push(new NodeCmdRename(this, oldName, newName));
+}
+
 void GPNodeProject::setPath(const QString &path)
 {
     _path = path;
-    if(_node)
-        _node->setName(name());
+    /*if(_node)
+        _node->setName(name());*/
     emit nodePathChanged(_path);
 }
 
@@ -227,8 +232,8 @@ void GPNodeProject::setNodeEditorWindow(QWidget *nodeEditorWindow)
 
 void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &newName)
 {
-    ModelBlock *block = _node->getBlock(block_name);
-    if(!block)
+    ModelBlock *modelBlock = _node->getBlock(block_name);
+    if(!modelBlock)
         return;
 
     // rename connection to this block
@@ -246,21 +251,24 @@ void GPNodeProject::cmdRenameBlock(const QString &block_name, const QString &new
             flowConnect->setToblock(newName);
     }
 
-    block->setName(newName);
-    emit blockUpdated(block);
+    modelBlock->setName(newName);
+    Block *block = _camera->block(block_name);
+    if(block)
+        block->setName(newName);
+    emit blockUpdated(modelBlock);
     setModified(true);
 }
 
 void GPNodeProject::cmdMoveBlockTo(const QString &block_name, const QString &part_name, QPoint pos)
 {
-    ModelBlock *block = _node->getBlock(block_name);
-    if(block)
+    ModelBlock *modelBlock = _node->getBlock(block_name);
+    if(modelBlock)
     {
-        ModelComponentPart *part = block->getPart(part_name);
+        ModelComponentPart *part = modelBlock->getPart(part_name);
         if(part)
         {
             part->setPos(pos);
-            emit blockUpdated(block);
+            emit blockUpdated(modelBlock);
             setModified(true);
         }
     }
@@ -336,7 +344,12 @@ void GPNodeProject::cmdDisconnectFlow(const ModelFlowConnect &flowConnect)
 
 void GPNodeProject::cmdRenameNode(QString nodeName)
 {
-    _node->setName(nodeName);
+    if(_node->name() != nodeName)
+    {
+        _node->setName(nodeName);
+        qDebug()<<nodeName<<_node->name()<<_camera->node()->name();
+        setModified(true);
+    }
 }
 
 void GPNodeProject::cmdConfigBoard(QString boardName, QStringList iosName)
@@ -438,6 +451,7 @@ void GPNodeProject::cmdRenameViewer(const QString &viewer_name, QString newName)
     {
         viewer->setName(newName);
         setModified(true);
+        emit viewerUpdated(viewer);
     }
 }
 
@@ -508,22 +522,22 @@ void GPNodeProject::renameBlock(const QString &block_name, const QString &newNam
     QRegExp nameChecker("^[a-zA-Z][a-zA-Z0-9_]*$");
 
     if(name.isEmpty())
-        name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
+        name = QInputDialog::getText(NULL, "Enter a new name for this block", "New name", QLineEdit::Normal, block_name);
 
-    if(block_name == name)
+    if(block_name == name || name.isEmpty())
         return;
     ModelBlock *block = _node->getBlock(name);
     while(block != NULL || nameChecker.indexIn(name)==-1)
     {
         if(block != NULL)
         {
-            name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "This name already exists, try another name", QLineEdit::Normal, name + "_1");
+            name = QInputDialog::getText(NULL, "Enter a new name for this block", "This name already exists, try another name", QLineEdit::Normal, name + "_1");
             if(name.isEmpty())
                 return;
         }
         else
         {
-            name = QInputDialog::getText(_nodeEditorWindow, "Enter a new name for this block", "Invalid name, try another name", QLineEdit::Normal, name.replace(QRegExp("\\W"),""));
+            name = QInputDialog::getText(NULL, "Enter a new name for this block", "Invalid name, try another name", QLineEdit::Normal, name.replace(QRegExp("\\W"),""));
             if(name.isEmpty())
                 return;
         }
@@ -607,9 +621,9 @@ void GPNodeProject::blockSetParam(const QString &blockName, const QString &param
         _undoStack->push(new BlockCmdParamSet(this, blockName, paramName, oldValue, value));
 }
 
-void GPNodeProject::renameViewer(const QString &viewer_name, const QString &newName)
+void GPNodeProject::renameViewer(const QString &viewerName, const QString &newName)
 {
-    _undoStack->push(new ViewerCmdRename(this, viewer_name, newName));
+    _undoStack->push(new ViewerCmdRename(this, viewerName, newName));
 }
 
 void GPNodeProject::addViewer(ModelViewer *viewer)

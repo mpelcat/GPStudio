@@ -33,6 +33,7 @@
 #include <QGraphicsProxyWidget>
 #include <QCheckBox>
 #include <QSlider>
+#include <QStyleOptionGraphicsItem>
 
 #include <model/model_block.h>
 #include <camera/block.h>
@@ -72,7 +73,7 @@ QRectF BlockItem::boundingRect() const
 
 void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option); Q_UNUSED(widget);
+    Q_UNUSED(widget);
 
     if(isSelected())
     {
@@ -89,14 +90,15 @@ void BlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
             painter->setPen(QPen(Qt::black, 1));
     }
 
-    if(_svgRenderer.isValid())
+    const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
+    if(_svgRenderer.isValid() && lod>0.3)
     {
         _svgRenderer.render(painter, _boundingRect);
         painter->drawRoundedRect(_boundingRect,2,2);
     }
     else
     {
-        painter->setBrush(Qt::white);
+        painter->setBrush(Qt::lightGray);
         painter->drawRect(_boundingRect);
     }
 

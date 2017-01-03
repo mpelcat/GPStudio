@@ -68,6 +68,7 @@ public:
     int columnCount(const QModelIndex &parent) const;
 
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     // drag and drop funtionnality
     Qt::DropActions supportedDropActions() const;
@@ -87,10 +88,16 @@ private:
     void setRootItem(CameraItem *rootItem);
 
 signals:
+    void nodeRenamed(const QString &blockName, const QString &newName);
+
+    void blockRenamed(const QString &blockName, const QString &newName);
+
     void viewerAdded(const QString &name);
     void viewerFlowAdded(const QString &viewerName, const QString &name);
+    void viewerRenamed(const QString &viewerName, const QString &newName);
 
 public slots:
+    void updateViewer(ModelViewer *viewer);
     void addViewer(ModelViewer *viewer);
     void removeViewer(QString viewerName);
 };

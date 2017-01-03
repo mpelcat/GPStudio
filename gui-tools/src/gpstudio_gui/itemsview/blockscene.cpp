@@ -103,8 +103,8 @@ void BlockScene::addBlock(Block *block)
 
 void BlockScene::removeBlock(ModelBlock *blockModel)
 {
-    BlockItem *blockItem = block(blockModel);
-    if(blockItem)
+    QList<BlockItem *> blockItems = block(blockModel);
+    foreach (BlockItem *blockItem, blockItems)
     {
         removeItem(blockItem);
         _blocksName.remove(blockModel->name());
@@ -122,7 +122,7 @@ void BlockScene::removeBlock(const QString &block_name)
     }
 }
 
-QList<BlockItem *>BlockScene::block(const QString &name) const
+QList<BlockItem *> BlockScene::block(const QString &name) const
 {
     return _blocksName.values(name);
 }
@@ -138,12 +138,9 @@ BlockPortItem *BlockScene::port(const QString &blockName, const QString &portNam
     return NULL;
 }
 
-BlockItem *BlockScene::block(ModelBlock *modelBlock) const
+QList<BlockItem *> BlockScene::block(ModelBlock *modelBlock) const
 {
-    QMap<ModelBlock*, BlockItem* >::const_iterator it = _blocksModel.find(modelBlock);
-    if(it != _blocksModel.end())
-        return it.value();
-    return NULL;
+    return _blocksModel.values(modelBlock);
 }
 
 void BlockScene::connectBlockPort(const ModelFlowConnect &flowConnect)
@@ -225,4 +222,10 @@ void BlockScene::connectBlockPorts(const QList<ModelFlowConnect *> &connections)
         BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
         addItem(connectorItem);
     }
+}
+
+void BlockScene::updateKeyBlock(BlockItem *block, const QString &oldKey, const QString &newKey)
+{
+    _blocksName.remove(oldKey);
+    _blocksName.insert(newKey, block);
 }

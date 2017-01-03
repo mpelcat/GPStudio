@@ -57,7 +57,7 @@ NodeEditorWindows::NodeEditorWindows(QWidget *parent, GPNodeProject *nodeProject
         _project->newProject();
 
     _blockEditor = NULL;
-    //showCamExplorer();
+    showCamExplorer();
 }
 
 NodeEditorWindows::~NodeEditorWindows()

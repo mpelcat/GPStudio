@@ -214,10 +214,8 @@ Qt::ItemFlags CameraItemModel::flags(const QModelIndex &index) const
 
     if (index.isValid())
     {
-        if(index.column() == 0)
-            return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
-        else
-            return defaultFlags;
+        CameraItem *item = static_cast<CameraItem*>(index.internalPointer());
+        return item->flags(index);
     }
     else
         return Qt::ItemIsDropEnabled | defaultFlags;
@@ -334,6 +332,20 @@ void CameraItemModel::setRootItem(CameraItem *rootItem)
     _rootItem = rootItem;
 }
 
+void CameraItemModel::updateViewer(ModelViewer *viewer)
+{
+    if(_rootItem->type() != CameraItem::ModelGPViewerType)
+        return;
+
+    QModelIndexList items = match(
+                index(0,0,QModelIndex()),
+                Qt::DisplayRole,
+                QVariant::fromValue(viewer->name()),
+                Qt::MatchExactly || Qt::MatchRecursive);
+    if(items.size()>0)
+        emit dataChanged(items[0],items[0]);
+}
+
 void CameraItemModel::addViewer(ModelViewer *viewer)
 {
     if(_rootItem->type() != CameraItem::ModelGPViewerType)
@@ -353,4 +365,56 @@ void CameraItemModel::removeViewer(QString viewerName)
                 Qt::MatchExactly || Qt::MatchRecursive);
     if(items.size()>0)
         removeRow(items[0].row(), items[0].parent());
+}
+
+bool CameraItemModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    Q_UNUSED(role)
+
+    bool changed = false;
+    CameraItem *item = static_cast<CameraItem*>(index.internalPointer());
+    switch (item->type())
+    {
+    case CameraItem::ModelNodeType:
+        if(item->modelNode()->name() != value.toString())
+        {
+            emit nodeRenamed(item->modelNode()->name(), value.toString());
+            changed = true;
+        }
+        break;
+    case CameraItem::CameraType:
+        if(item->camera()->node()->name() != value.toString())
+        {
+            emit nodeRenamed(item->camera()->node()->name(), value.toString());
+            changed = true;
+        }
+        break;
+    case CameraItem::ModelBlockType:
+        if(item->modelBlock()->name() != value.toString())
+        {
+            emit blockRenamed(item->modelBlock()->name(), value.toString());
+            changed = true;
+        }
+        break;
+    case CameraItem::BlockType:
+        if(item->block()->name() != value.toString())
+        {
+            emit blockRenamed(item->block()->name(), value.toString());
+            changed = true;
+        }
+        break;
+    case CameraItem::ModelViewerType:
+        if(item->modelViewer()->name() != value.toString())
+        {
+            emit viewerRenamed(item->modelViewer()->name(), value.toString());
+            changed = true;
+        }
+        break;
+    default:
+        break;
+    }
+
+    if(changed)
+        emit dataChanged(index, index);
+    return changed;
 }

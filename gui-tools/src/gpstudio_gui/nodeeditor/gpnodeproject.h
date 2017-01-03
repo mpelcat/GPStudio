@@ -63,6 +63,8 @@ public slots:
 
     void configBoard();
 
+    void renameNode(const QString &oldName, const QString &newName);
+
     // block commands
     void moveBlock(const QString &block_name, const QString &part_name, const QPoint &oldPos, const QPoint &newPos);
     void renameBlock(const QString &block_name, const QString &newName);
@@ -74,7 +76,7 @@ public slots:
     void blockSetParam(const QString &blockName, const QString &paramName, const QVariant &value);
 
     // viewer commands
-    void renameViewer(const QString &viewer_name, const QString &newName);
+    void renameViewer(const QString &viewerName, const QString &newName);
     void addViewer(ModelViewer *viewer);
     void removeViewer(ModelViewer *viewer);
     void addFlowViewer(ModelViewer *viewer);
@@ -95,6 +97,7 @@ signals:
     void blockConnected(ModelFlowConnect flowConnect);
     void blockDisconected(ModelFlowConnect flowConnect);
 
+    void viewerUpdated(ModelViewer *viewer);
     void viewerAdded(ModelViewer *viewer);
     void viewerRemoved(QString viewerName);
     void viewerFlowAdded(ModelViewerFlow *viewerFlow);

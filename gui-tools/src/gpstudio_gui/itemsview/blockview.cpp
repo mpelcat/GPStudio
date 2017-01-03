@@ -317,11 +317,14 @@ void BlockView::selectBlock(QString blocksName)
 
 void BlockView::updateBlock(ModelBlock *block)
 {
-    foreach(BlockItem *blockItem, _scene->block(block->name()))
+    foreach(BlockItem *blockItem, _scene->block(block))
     {
         blockItem->updatePos();
         if(blockItem->name() != block->name())
+        {
+            _scene->updateKeyBlock(blockItem, blockItem->name(), block->name());
             blockItem->setName(block->name());
+        }
     }
 }
 
@@ -443,7 +446,10 @@ void BlockView::keyPressEvent(QKeyEvent *event)
             QGraphicsItem *item = _scene->selectedItems().at(0);
             BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
             if(blockItem)
-                emit blockRenamed(blockItem->name(), "");
+            {
+                if(!blockItem->modelBlock()->isIO())
+                    emit blockRenamed(blockItem->name(), "");
+            }
         }
     }
     if(event->key()==Qt::Key_Delete || event->key()==Qt::Key_Backspace)
@@ -528,8 +534,11 @@ void BlockView::contextMenuEvent(QContextMenuEvent *event)
     item = _scene->itemAt(mapToScene(event->pos()), QTransform());
     if(item)
     {
-        scene()->clearSelection();
-        item->setSelected(true);
+        if(!scene()->selectedItems().count()==1 || !item->isSelected())
+        {
+            scene()->clearSelection();
+            item->setSelected(true);
+        }
 
         BlockItem *blockItem = qgraphicsitem_cast<BlockItem *>(item);
         if(blockItem)

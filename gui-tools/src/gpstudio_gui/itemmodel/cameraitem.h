@@ -117,6 +117,7 @@ public:
 
     // std interface
     QVariant value(int column, int role) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
 protected:
     Type _type;

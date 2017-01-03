@@ -398,6 +398,17 @@ QVariant CameraItem::value(int column, int role) const
             default:
                 return QVariant();
             }
+        case Qt::EditRole:
+            switch (column)
+            {
+            case CameraItemModel::Name:
+                if(camera()->node())
+                    return QVariant(camera()->node()->name());
+                else
+                    return QVariant();
+            default:
+                return QVariant();
+            }
         case Qt::DecorationRole:
             if(column==0)
             {
@@ -415,6 +426,14 @@ QVariant CameraItem::value(int column, int role) const
                 return QVariant(modelNode()->name());
             case CameraItemModel::Value:
                 return QVariant("");
+            default:
+                return QVariant();
+            }
+        case Qt::EditRole:
+            switch (column)
+            {
+            case CameraItemModel::Name:
+                return QVariant(modelNode()->name());
             default:
                 return QVariant();
             }
@@ -436,6 +455,14 @@ QVariant CameraItem::value(int column, int role) const
             default:
                 return QVariant(block()->modelBlock()->driver());
             }
+        case Qt::EditRole:
+            switch (column)
+            {
+            case CameraItemModel::Name:
+                return QVariant(block()->name());
+            default:
+                return QVariant();
+            }
         }
         return QVariant();
     case CameraItem::ModelBlockType:
@@ -448,6 +475,14 @@ QVariant CameraItem::value(int column, int role) const
                 return QVariant(modelBlock()->name());
             default:
                 return QVariant(modelBlock()->driver());
+            }
+        case Qt::EditRole:
+            switch (column)
+            {
+            case CameraItemModel::Name:
+                return QVariant(modelBlock()->name());
+            default:
+                return QVariant();
             }
         }
         return QVariant();
@@ -521,6 +556,14 @@ QVariant CameraItem::value(int column, int role) const
             default:
                 return QVariant();
             }
+        case Qt::EditRole:
+            switch (column)
+            {
+            case CameraItemModel::Name:
+                return QVariant(modelViewer()->name());
+            default:
+                return QVariant();
+            }
         }
         return QVariant();
     case CameraItem::ModelViewerFlowType:
@@ -539,4 +582,38 @@ QVariant CameraItem::value(int column, int role) const
     default:
         return QVariant();
     }
+}
+
+Qt::ItemFlags CameraItem::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags defaultFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+
+    if(index.column() == 0)
+    {
+        switch (type())
+        {
+        case CameraItem::ModelViewerType:
+            return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | defaultFlags;
+
+        case CameraItem::ModelNodeType:
+        case CameraItem::CameraType:
+            return Qt::ItemIsEditable | defaultFlags;
+
+        case CameraItem::ModelBlockType:
+            if(modelBlock()->isIO())
+                return defaultFlags;
+            else
+                return Qt::ItemIsEditable | defaultFlags;
+
+        case CameraItem::BlockType:
+            if(block()->modelBlock()->isIO())
+                return defaultFlags;
+            else
+                return Qt::ItemIsEditable | defaultFlags;
+        default:
+            return defaultFlags;
+        }
+    }
+    else
+        return defaultFlags;
 }

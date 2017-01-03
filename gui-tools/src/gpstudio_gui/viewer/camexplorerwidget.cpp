@@ -62,6 +62,9 @@ void CamExplorerWidget::attachProject(GPNodeProject *project)
     connect(_project, SIGNAL(blockRemoved(QString)), this, SLOT(update()));
     connect(_project, SIGNAL(blockUpdated(ModelBlock*)), this, SLOT(update()));
 
+    connect(_camItemModel, SIGNAL(nodeRenamed(QString,QString)), _project, SLOT(renameNode(QString,QString)));
+    connect(_camItemModel, SIGNAL(blockRenamed(QString,QString)), _project, SLOT(renameBlock(QString,QString)));
+
     connect(this, SIGNAL(propertyChanged(QString,QString,QVariant)), _project, SLOT(blockSetParam(QString,QString,QVariant)));
 
     if(_project->camera())

@@ -51,7 +51,7 @@ public:
 
     QList<BlockItem *> block(const QString &name) const;
     BlockPortItem *port(const QString &blockName, const QString &portName) const;
-    BlockItem *block(ModelBlock *modelBlock) const;
+    QList<BlockItem *> block(ModelBlock *modelBlock) const;
 
     void connectBlockPort(const ModelFlowConnect &flowConnect);
     void connectBlockPort(ModelFlow *fromflow, ModelFlow *toflow);
@@ -65,6 +65,8 @@ public:
 
 protected:
     QMap<QString, BlockItem* > _blocksName;
+    friend class BlockView;
+    void updateKeyBlock(BlockItem *block, const QString &oldKey, const QString &newKey);
     QMap<ModelBlock*, BlockItem* > _blocksModel;
 
     void connectBlockPort(BlockPortItem *fromflowItem, BlockPortItem *toflowItem);
