@@ -303,7 +303,11 @@ QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change
         if(isSelected())
             setZValue(-1);
         else
+        {
+            if(!_portItem1->parentItem()->isSelected() && !_portItem2->parentItem()->isSelected())
+                _highlight = false;
             setZValue(-2);
+        }
     }
     return QGraphicsItem::itemChange(change, value);
 }
