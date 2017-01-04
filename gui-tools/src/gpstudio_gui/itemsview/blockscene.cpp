@@ -219,8 +219,7 @@ void BlockScene::connectBlockPorts(const QList<ModelFlowConnect *> &connections)
         if(!toflowItem)
             continue;
 
-        BlockConnectorItem *connectorItem = new BlockConnectorItem(fromflowItem, toflowItem);
-        addItem(connectorItem);
+        connectBlockPort(fromflowItem, toflowItem);
     }
 }
 
