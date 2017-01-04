@@ -25,6 +25,7 @@
 
 #include <QList>
 #include <QVariant>
+#include <QModelIndex>
 
 class Camera;
 class Block;
