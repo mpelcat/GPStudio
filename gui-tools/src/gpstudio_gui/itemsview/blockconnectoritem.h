@@ -68,7 +68,9 @@ private:
     QPoint _endPos;
 
     QPointF _inPos;
+    QPointF _inSizePoint;
     QPointF _outPos;
+    QPointF _outSizePoint;
     QPainterPath _shape;
 
     DrawStyle _style;

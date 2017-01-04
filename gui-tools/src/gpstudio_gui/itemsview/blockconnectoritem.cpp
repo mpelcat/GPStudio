@@ -26,6 +26,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QCursor>
+#include "model/model_flow.h"
 
 BlockConnectorItem::BlockConnectorItem(BlockPortItem *portItemOut, BlockPortItem *portItemIn)
     : _portItem1(portItemOut), _portItem2(portItemIn)
@@ -67,7 +68,7 @@ void BlockConnectorItem::setStyle(const BlockConnectorItem::DrawStyle &style)
 
 QRectF BlockConnectorItem::boundingRect() const
 {
-    return QRectF(_inPos, _outPos).normalized().adjusted(-5, -5, 5, 5);
+    return QRectF(_inPos, _outPos).normalized().adjusted(-5, -15, 5, 5);
 }
 
 QPainterPath BlockConnectorItem::shape() const
@@ -80,6 +81,13 @@ QPainterPath BlockConnectorItem::shape() const
     ps.setMiterLimit(pen.miterLimit());
     QPainterPath p = ps.createStroke(_shape);
     p.addPath(_shape);
+
+    if(_highlight || isSelected())
+    {
+        QPainterPath in;
+        in.addRect(QRectF(_inSizePoint + QPointF(0,-5), QSize(20,-10)));
+        p.addPath(in);
+    }
     return p;
 }
 
@@ -95,22 +103,29 @@ void BlockConnectorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
 
     // front draw
     if(_highlight || isSelected())
-        painter->setPen(QPen(QColor("orange"), 4));
-    else
-        painter->setPen(QPen(Qt::black, 3));
-    painter->drawPath(_shape);
+    {
+        QFont font = painter->font();
+        font.setBold(true);
+        painter->setFont(font);
 
-    /*painter->setPen(QPen(Qt::red, 1));
-    painter->setBrush(QBrush(QColor(255, 0, 0, 100)));
-    QPen pen(Qt::black, 10);
-    QPainterPathStroker ps;
-    ps.setWidth(pen.width());
-    ps.setCapStyle(pen.capStyle());
-    ps.setJoinStyle(pen.joinStyle());
-    ps.setMiterLimit(pen.miterLimit());
-    QPainterPath p = ps.createStroke(_shape);
-    p.addPath(_shape);
-    painter->drawPath(p);*/
+        painter->setPen(QPen(QColor(255,165,0), 4));
+        painter->drawPath(_shape);
+
+        // flow size draw
+        painter->setPen(QPen(QColor(255,145,0), 2));
+
+        painter->drawText(_inSizePoint + QPointF(0,-5), QString("%1").arg(_portItem1->modelFlow()->size()));
+        painter->drawLine(_inSizePoint + QPointF(-2,-5), _inSizePoint + QPointF(2,5));
+
+        painter->drawText(_outSizePoint + QPointF(0,-5), QString("%1").arg(_portItem2->modelFlow()->size()));
+        painter->drawLine(_outSizePoint + QPointF(-2,-5), _outSizePoint + QPointF(2,5));
+    }
+    else
+    {
+        painter->setPen(QPen(Qt::black, 3));
+        painter->drawPath(_shape);
+    }
+
 }
 
 void BlockConnectorItem::updateShape(BlockPortItem *caller)
@@ -192,6 +207,8 @@ void BlockConnectorItem::updateShape(BlockPortItem *caller)
     }
 
     _shape = path;
+    _inSizePoint = _shape.pointAtPercent(_shape.percentAtLength(20));
+    _outSizePoint = _shape.pointAtPercent(_shape.percentAtLength(_shape.length()/2-20));
 
     if(!_portItem1 && caller==NULL)
         _portItem2->updateShape();
@@ -264,15 +281,9 @@ QVariant BlockConnectorItem::itemChange(QGraphicsItem::GraphicsItemChange change
     if (change == ItemSelectedHasChanged && scene())
     {
         if(isSelected())
-        {
             setZValue(-1);
-        }
         else
-        {
             setZValue(-2);
-        }
     }
     return QGraphicsItem::itemChange(change, value);
 }
-
-
