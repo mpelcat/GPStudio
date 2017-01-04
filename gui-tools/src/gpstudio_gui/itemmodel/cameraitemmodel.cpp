@@ -26,6 +26,7 @@
 #include "model/model_node.h"
 #include "model/model_gpviewer.h"
 #include "model/model_viewer.h"
+#include "model/model_viewerflow.h"
 
 #include <QDebug>
 #include <QIcon>
@@ -265,6 +266,7 @@ bool CameraItemModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction act
 {
     Q_UNUSED(row)
     Q_UNUSED(column)
+    ModelViewer *viewer;
     QString viewerName;
     if(action == Qt::IgnoreAction)
         return true;
@@ -273,40 +275,33 @@ bool CameraItemModel::dropMimeData(const QMimeData *mimeData, Qt::DropAction act
 
     if(!parent.isValid())
     {
-        viewerName = "newViewer";
-        emit viewerAdded(viewerName);
-        qDebug()<<"Added viewer";
+        // add viewerFlow to a new viewer
+        viewer = new ModelViewer();
+        QStringList flowsName = QString(mimeData->data("flow/flowid")).split(':');
+        foreach (QString flowName, flowsName)
+        {
+            if(!flowName.isEmpty())
+                viewer->addViewerFlow(new ModelViewerFlow(flowName));
+        }
+        emit viewerAdded(viewer);
     }
     else
-        viewerName = data(parent).toString();
-
-    QStringList flowsName = QString(mimeData->data("flow/flowid")).split(':');
-    foreach (QString flowName, flowsName)
     {
-        if(!flowName.isEmpty())
+        // add viewerFlow to an existing viewer
+        viewerName = data(parent).toString();
+        QStringList flowsName = QString(mimeData->data("flow/flowid")).split(':');
+        foreach (QString flowName, flowsName)
         {
-            qDebug()<<"Added viewer"<<flowName<<"flow to"<<viewerName;
-            emit viewerFlowAdded(viewerName, flowName);
+            if(!flowName.isEmpty())
+            {
+                ModelViewerFlow *viewerFlow = new ModelViewerFlow(flowName);
+                emit viewerFlowAdded(viewerName, viewerFlow);
+            }
         }
     }
 
     return true;
 }
-
-/*bool CameraItemModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    CameraItem *parentItem;
-    if(!parent.isValid())
-        parentItem = _rootItem;
-    else
-        parentItem = static_cast<CameraItem*>(parent.internalPointer());
-
-    beginInsertRows(parent, row, row + count - 1);
-    parentItem->insertRow(row, count);
-    endInsertRows();
-
-    return true;
-}*/
 
 bool CameraItemModel::removeRows(int row, int count, const QModelIndex &parent)
 {
@@ -365,6 +360,27 @@ void CameraItemModel::removeViewer(QString viewerName)
                 Qt::MatchExactly || Qt::MatchRecursive);
     if(items.size()>0)
         removeRow(items[0].row(), items[0].parent());
+}
+
+void CameraItemModel::addViewerFlow(ModelViewerFlow *viewerFlow)
+{
+    if(_rootItem->type() != CameraItem::ModelGPViewerType)
+        return;
+
+    QModelIndexList items = match(
+                index(0,0,QModelIndex()),
+                Qt::DisplayRole,
+                viewerFlow->viewer()->name(),
+                Qt::MatchExactly || Qt::MatchRecursive);
+    if(items.size()>0)
+    {
+        CameraItem *item = static_cast<CameraItem*>(items[0].internalPointer());
+        beginInsertRows(items[0], 0, 0);
+        item->insertRow(0, new CameraItem(viewerFlow));
+        endInsertRows();
+    }
+    //CameraItem *item = _rootItem->children(viewerFlow->viewer()->name());
+    //if(item)
 }
 
 bool CameraItemModel::setData(const QModelIndex &index, const QVariant &value, int role)

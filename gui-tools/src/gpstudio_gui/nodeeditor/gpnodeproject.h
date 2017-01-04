@@ -79,8 +79,8 @@ public slots:
     void renameViewer(const QString &viewerName, const QString &newName);
     void addViewer(ModelViewer *viewer);
     void removeViewer(ModelViewer *viewer);
-    void addFlowViewer(ModelViewer *viewer);
-    void removeFlowViewer(ModelViewer *viewer);
+    void addViewerFlow(const QString &viewerName, ModelViewerFlow *viewerFlow);
+    void removeViewerFlow(ModelViewerFlow *viewerFlow);
 
     // macro commands
     void beginMacro(const QString &text);
@@ -100,6 +100,8 @@ signals:
     void viewerUpdated(ModelViewer *viewer);
     void viewerAdded(ModelViewer *viewer);
     void viewerRemoved(QString viewerName);
+
+    void viewerFlowUpdated(ModelViewerFlow *viewerFlow);
     void viewerFlowAdded(ModelViewerFlow *viewerFlow);
     void viewerFlowRemoved(QString viewerName, QString viewerFlowName);
 
@@ -148,17 +150,17 @@ protected:
 
     // viewer commands
     friend class ViewerCmdRename;
-    void cmdRenameViewer(const QString &viewer_name, QString newName);
+    void cmdRenameViewer(const QString &viewerName, QString newName);
 
     friend class ViewerCmdAdd;
     friend class ViewerCmdRemove;
     void cmdAddViewer(ModelViewer *viewer);
-    void cmdRemoveViewer(const QString &viewer_name);
+    void cmdRemoveViewer(const QString &viewerName);
 
     friend class ViewerFlowCmdAdd;
     friend class ViewerFlowCmdRemove;
-    void cmdAddViewerFlow(ModelViewerFlow *viewerFlow);
-    void cmdRemoveViewerFlow(const QString &viewer_name);
+    void cmdAddViewerFlow(const QString &viewerName, ModelViewerFlow *viewerFlow);
+    void cmdRemoveViewerFlow(const QString &viewerFlowName, const QString &viewerName);
 };
 
 #endif // GPNODEPROJECT_H

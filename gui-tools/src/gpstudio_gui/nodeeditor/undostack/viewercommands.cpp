@@ -24,8 +24,8 @@
 #include "model/model_viewer.h"
 #include "model/model_viewerflow.h"
 
-ViewerCommand::ViewerCommand(GPNodeProject *project, const QString &viewer_name)
-    : _project(project), _viewer_name(viewer_name)
+ViewerCommand::ViewerCommand(GPNodeProject *project, const QString &viewerName)
+    : _project(project), _viewerName(viewerName)
 {
 }
 
@@ -38,12 +38,12 @@ ViewerCmdRename::ViewerCmdRename(GPNodeProject *project, const QString &oldName,
 
 void ViewerCmdRename::undo()
 {
-    _project->cmdRenameViewer(_newName, _viewer_name);
+    _project->cmdRenameViewer(_newName, _viewerName);
 }
 
 void ViewerCmdRename::redo()
 {
-    _project->cmdRenameViewer(_viewer_name, _newName);
+    _project->cmdRenameViewer(_viewerName, _newName);
 }
 
 // Add viewer
@@ -61,12 +61,12 @@ ViewerCmdAdd::~ViewerCmdAdd()
 
 void ViewerCmdAdd::undo()
 {
-    ModelViewer *viewer = _project->node()->gpViewer()->getViewer(_viewer_name);
+    ModelViewer *viewer = _project->node()->gpViewer()->getViewer(_viewerName);
     if(viewer)
     {
         _backupViewer = new ModelViewer(*viewer);
     }
-    _project->cmdRemoveViewer(_viewer_name);
+    _project->cmdRemoveViewer(_viewerName);
 }
 
 void ViewerCmdAdd::redo()
@@ -97,20 +97,20 @@ void ViewerCmdRemove::undo()
 
 void ViewerCmdRemove::redo()
 {
-    ModelViewer *viewer = _project->node()->gpViewer()->getViewer(_viewer_name);
+    ModelViewer *viewer = _project->node()->gpViewer()->getViewer(_viewerName);
     if(viewer)
     {
         _backupViewer = new ModelViewer(*viewer);
     }
-    _project->cmdRemoveViewer(_viewer_name);
+    _project->cmdRemoveViewer(_viewerName);
 }
 
 // Add viewerFlow
-ViewerFlowCmdAdd::ViewerFlowCmdAdd(GPNodeProject *project, ModelViewerFlow *viewerFlow)
-    : ViewerCommand(project, viewerFlow->flowName()), _viewerFlow(viewerFlow)
+ViewerFlowCmdAdd::ViewerFlowCmdAdd(GPNodeProject *project, const QString &viewerName, ModelViewerFlow *viewerFlow)
+    : ViewerCommand(project, viewerName), _viewerFlowName(viewerFlow->flowName()), _viewerFlow(viewerFlow)
 {
     _backupViewerFlow = viewerFlow;
-    setText(QString("add viewer '%1'").arg(viewerFlow->flowName()));
+    setText(QString("add viewer flow '%1' to viewer '%2'").arg(viewerFlow->flowName()).arg(_viewerName));
 }
 
 ViewerFlowCmdAdd::~ViewerFlowCmdAdd()
@@ -120,11 +120,11 @@ ViewerFlowCmdAdd::~ViewerFlowCmdAdd()
 
 void ViewerFlowCmdAdd::undo()
 {
-    ModelViewerFlow *viewerFlow = _project->node()->gpViewer()->getViewerFlow(_viewer_name, _flowName);
+    ModelViewerFlow *viewerFlow = _project->node()->gpViewer()->getViewerFlow(_viewerName, _viewerFlowName);
     if(viewerFlow)
     {
         _backupViewerFlow = new ModelViewerFlow(*viewerFlow);
-        //_project->cmdRemoveViewer(_viewer_name);
+        _project->cmdRemoveViewerFlow(_viewerName, _viewerFlowName);
     }
 }
 
@@ -132,5 +132,36 @@ void ViewerFlowCmdAdd::redo()
 {
     _viewerFlow = _backupViewerFlow;
     _backupViewerFlow = NULL;
-    //_project->cmdAddViewerFlow(_viewerFlow);
+    _project->cmdAddViewerFlow(_viewerName, _viewerFlow);
+}
+
+// Remove viewerFlow
+ViewerFlowCmdRemove::ViewerFlowCmdRemove(GPNodeProject *project, ModelViewerFlow *viewerFlow)
+    : ViewerCommand(project, ""), _viewerFlow(viewerFlow)
+{
+    if(viewerFlow->viewer())
+        _viewerName = viewerFlow->viewer()->name();
+    setText(QString("remove viewer '%1'").arg(viewerFlow->flowName()));
+}
+
+ViewerFlowCmdRemove::~ViewerFlowCmdRemove()
+{
+    delete _backupViewerFlow;
+}
+
+void ViewerFlowCmdRemove::undo()
+{
+    _viewerFlow = _backupViewerFlow;
+    _backupViewerFlow = NULL;
+    _project->cmdAddViewerFlow(_viewerName, _viewerFlow);
+}
+
+void ViewerFlowCmdRemove::redo()
+{
+    ModelViewerFlow *viewerFlow = _project->node()->gpViewer()->getViewerFlow(_viewerName, _viewerFlow->flowName());
+    if(viewerFlow)
+    {
+        _backupViewerFlow = new ModelViewerFlow(*viewerFlow);
+    }
+    _project->cmdRemoveViewerFlow(_viewerName, _viewerFlow->flowName());
 }

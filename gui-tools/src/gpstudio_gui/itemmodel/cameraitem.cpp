@@ -228,6 +228,17 @@ const CameraItem *CameraItem::children(int i) const
     return _childrens[i];
 }
 
+CameraItem *CameraItem::children(const QString &name)
+{
+    for(int i=0; i<_childrens.size(); i++)
+    {
+        CameraItem *item = _childrens.at(i);
+        if(item->value(0)==name)
+            return item;
+    }
+    return NULL;
+}
+
 int CameraItem::count() const
 {
     return _childrens.count();
@@ -593,6 +604,8 @@ Qt::ItemFlags CameraItem::flags(const QModelIndex &index) const
         switch (type())
         {
         case CameraItem::ModelViewerType:
+        case CameraItem::ModelFlowType:
+        case CameraItem::FlowType:
             return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | defaultFlags;
 
         case CameraItem::ModelNodeType:

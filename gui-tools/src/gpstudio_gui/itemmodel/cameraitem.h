@@ -85,6 +85,7 @@ public:
 
     const QList<CameraItem*> &childrens() const;
     const CameraItem *children(int i) const;
+    CameraItem *children(const QString &name);
     int count() const;
     void clear();
 
@@ -117,7 +118,7 @@ public:
     CameraItem *parent() const;
 
     // std interface
-    QVariant value(int column, int role) const;
+    QVariant value(int column, int role=Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
 protected:

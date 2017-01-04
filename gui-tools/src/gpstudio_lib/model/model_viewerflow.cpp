@@ -1,8 +1,10 @@
 #include "model_viewerflow.h"
+#include "model_viewer.h"
 
 #include <QDebug>
 
-ModelViewerFlow::ModelViewerFlow()
+ModelViewerFlow::ModelViewerFlow(const QString &flowName)
+    :_flowname(flowName), _viewer(NULL)
 {
 }
 
@@ -22,7 +24,23 @@ QString ModelViewerFlow::flowName() const
 
 void ModelViewerFlow::setFlowName(const QString &flowName)
 {
-    _flowname = flowName;
+    if(_flowname != flowName)
+    {
+        QString oldflowName = _flowname;
+        _flowname = flowName;
+        if(_viewer)
+            _viewer->updateKeyViewerFlow(this, oldflowName);
+    }
+}
+
+ModelViewer *ModelViewerFlow::viewer() const
+{
+    return _viewer;
+}
+
+void ModelViewerFlow::setViewer(ModelViewer *viewer)
+{
+    _viewer = viewer;
 }
 
 ModelViewerFlow *ModelViewerFlow::fromNodeGenerated(const QDomElement &domElement)

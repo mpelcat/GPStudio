@@ -7,15 +7,20 @@
 #include <QString>
 #include <QDomElement>
 
+class ModelViewer;
+
 class GPSTUDIO_LIB_EXPORT ModelViewerFlow
 {
 public:
-    ModelViewerFlow();
+    ModelViewerFlow(const QString &flowName=QString());
     ModelViewerFlow(const ModelViewerFlow &modelViewerFlow);
     ~ModelViewerFlow();
 
     QString flowName() const;
-    void setFlowName(const QString &name);
+    void setFlowName(const QString &flowName);
+
+    ModelViewer *viewer() const;
+    void setViewer(ModelViewer *viewer);
 
 public:
     static ModelViewerFlow *fromNodeGenerated(const QDomElement &domElement);
@@ -24,6 +29,8 @@ public:
 
 protected:
     QString _flowname;
+
+    ModelViewer *_viewer;
 };
 
 #endif // MODEL_VIEWERFLOW_H

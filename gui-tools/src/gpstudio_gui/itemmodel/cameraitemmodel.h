@@ -92,14 +92,17 @@ signals:
 
     void blockRenamed(const QString &blockName, const QString &newName);
 
-    void viewerAdded(const QString &name);
-    void viewerFlowAdded(const QString &viewerName, const QString &name);
+    void viewerAdded(ModelViewer *viewer);
     void viewerRenamed(const QString &viewerName, const QString &newName);
+
+    void viewerFlowAdded(const QString &viewerName, ModelViewerFlow *viewerFlow);
 
 public slots:
     void updateViewer(ModelViewer *viewer);
     void addViewer(ModelViewer *viewer);
     void removeViewer(QString viewerName);
+
+    void addViewerFlow(ModelViewerFlow *viewerFlow);
 };
 
 #endif // CAMERAITEMMODEL_H

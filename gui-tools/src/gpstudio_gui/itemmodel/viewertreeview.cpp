@@ -41,9 +41,12 @@ void ViewerTreeView::attachProject(GPNodeProject *project)
 
     connect(_project, SIGNAL(viewerUpdated(ModelViewer*)), _model, SLOT(updateViewer(ModelViewer*)));
     connect(_project, SIGNAL(viewerAdded(ModelViewer*)), _model, SLOT(addViewer(ModelViewer*)));
+    connect(_project, SIGNAL(viewerFlowAdded(ModelViewerFlow*)), _model, SLOT(addViewerFlow(ModelViewerFlow*)));
     connect(_project, SIGNAL(viewerRemoved(QString)), _model, SLOT(removeViewer(QString)));
 
+    connect(_model, SIGNAL(viewerAdded(ModelViewer*)), _project, SLOT(addViewer(ModelViewer*)));
     connect(_model, SIGNAL(viewerRenamed(QString,QString)), _project, SLOT(renameViewer(QString,QString)));
+    connect(_model, SIGNAL(viewerFlowAdded(QString,ModelViewerFlow*)), _project, SLOT(addViewerFlow(QString,ModelViewerFlow*)));
 }
 
 GPNodeProject *ViewerTreeView::project() const
@@ -76,17 +79,6 @@ void ViewerTreeView::dragMoveEvent(QDragMoveEvent *event)
 
     if(event->mimeData()->hasFormat("flow/flowid"))
         event->accept();
-}
-
-void ViewerTreeView::dropEvent(QDropEvent *event)
-{
-    QTreeView::dropEvent(event);
-
-    QString flow = event->mimeData()->data("flow/flowid");
-    qDebug()<<Q_FUNC_INFO<<flow<<selectedIndexes();
-
-    // viewerAdded
-    // viewerFlowAdded
 }
 
 void ViewerTreeView::keyPressEvent(QKeyEvent *event)

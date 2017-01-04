@@ -26,7 +26,7 @@ public:
     void addViewerFlow(ModelViewerFlow *viewerFlow);
     void addViewerFlow(QList<ModelViewerFlow *> viewerFlows);
     void removeViewerFlow(ModelViewerFlow *viewerFlow);
-    ModelViewerFlow *getViewerFlow(const QString &name) const;
+    ModelViewerFlow *getViewerFlow(const QString &flowName) const;
 
     ModelGPViewer *getParent() const;
     void setParent(ModelGPViewer *parent);
@@ -41,6 +41,8 @@ protected:
 
     QList<ModelViewerFlow *> _viewerFlows;
     QMap<QString, ModelViewerFlow*> _viewerFlowsMap;
+    friend class ModelViewerFlow;
+    void updateKeyViewerFlow(ModelViewerFlow *viewerFlow, const QString &oldKey);
 
     ModelGPViewer *_parent;
 };

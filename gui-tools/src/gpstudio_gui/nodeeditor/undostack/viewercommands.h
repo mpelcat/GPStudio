@@ -30,10 +30,10 @@
 class GPSTUDIO_GUI_EXPORT ViewerCommand : public QUndoCommand
 {
 public:
-    ViewerCommand(GPNodeProject *project, const QString &viewer_name=QString());
+    ViewerCommand(GPNodeProject *project, const QString &viewerName=QString());
 protected:
     GPNodeProject *_project;
-    QString _viewer_name;
+    QString _viewerName;
 };
 
 class GPSTUDIO_GUI_EXPORT ViewerCmdRename : public ViewerCommand
@@ -83,14 +83,29 @@ class GPSTUDIO_GUI_EXPORT ViewerFlowCmdAdd : public ViewerCommand
 {
 public:
     enum { Id = 0x0304 };
-    ViewerFlowCmdAdd(GPNodeProject *project, ModelViewerFlow *viewerFlow);
+    ViewerFlowCmdAdd(GPNodeProject *project, const QString &viewerName, ModelViewerFlow *viewerFlow);
     ~ViewerFlowCmdAdd();
     void undo();
     void redo();
     int id() const { return Id; }
 
 protected:
-    QString _flowName;
+    QString _viewerFlowName;
+    ModelViewerFlow *_viewerFlow;
+    ModelViewerFlow *_backupViewerFlow;
+};
+
+class GPSTUDIO_GUI_EXPORT ViewerFlowCmdRemove : public ViewerCommand
+{
+public:
+    enum { Id = 0x0305 };
+    ViewerFlowCmdRemove(GPNodeProject *project, ModelViewerFlow *viewerFlow);
+    ~ViewerFlowCmdRemove();
+    void undo();
+    void redo();
+    int id() const { return Id; }
+
+protected:
     ModelViewerFlow *_viewerFlow;
     ModelViewerFlow *_backupViewerFlow;
 };

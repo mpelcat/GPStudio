@@ -53,6 +53,7 @@ void ModelViewer::addViewerFlow(ModelViewerFlow *viewerFlow)
 {
     _viewerFlows.append(viewerFlow);
     _viewerFlowsMap.insert(viewerFlow->flowName(), viewerFlow);
+    viewerFlow->setViewer(this);
 }
 
 void ModelViewer::addViewerFlow(QList<ModelViewerFlow *> viewerFlows)
@@ -67,9 +68,9 @@ void ModelViewer::removeViewerFlow(ModelViewerFlow *viewerFlow)
     _viewerFlowsMap.remove(viewerFlow->flowName());
 }
 
-ModelViewerFlow *ModelViewer::getViewerFlow(const QString &name) const
+ModelViewerFlow *ModelViewer::getViewerFlow(const QString &flowName) const
 {
-    QMap<QString, ModelViewerFlow*>::const_iterator localConstFind = _viewerFlowsMap.constFind(name);
+    QMap<QString, ModelViewerFlow*>::const_iterator localConstFind = _viewerFlowsMap.constFind(flowName);
     if(localConstFind!=_viewerFlowsMap.constEnd())
         return *localConstFind;
     return NULL;
@@ -137,4 +138,10 @@ QDomElement ModelViewer::toXMLElement(QDomDocument &doc)
     element.appendChild(flowsList);
 
     return element;
+}
+
+void ModelViewer::updateKeyViewerFlow(ModelViewerFlow *viewerFlow, const QString &oldKey)
+{
+    _viewerFlowsMap.remove(oldKey);
+    _viewerFlowsMap.insert(viewerFlow->flowName(), viewerFlow);
 }
