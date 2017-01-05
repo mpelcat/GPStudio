@@ -1,10 +1,10 @@
 # GPStudio installation
 
 Important, if you are using a zip or tar package, you need to add the
-bin directory to your PATH. On windows, add also thirdparts/ and 
+bin directory to your PATH. Under Windows, add also thirdparts/ and 
 thirdparts/php.
 
-You may need a distribution of quartus 13.1 for dreamcam.
+You may need a distribution of quartus 13.1 for the dreamcam.
 
 ## Dependencies
 
@@ -41,7 +41,7 @@ In case it does not work, check if you have a distribution of Qt:
 
 To install Qt5 with apt (linux Debian/Ubuntu):
 
-> sudo apt-get install g++ libusb-1.0-0-dev qtbase5-dev qtbase5-dev-tools
+> sudo apt-get install g++ libusb-1.0-0-dev qtbase5-dev qtbase5-dev-tools qt5-default 
 
 You may also need:
 
@@ -53,7 +53,7 @@ To install Qt4 with apt (old Debian/Ubuntu versions):
 
 You may also need:
 
-> sudo apt-get qt4-dev-tools libqtscript4-core libpoppler-qt4-dev
+> sudo apt-get install qt4-dev-tools libqtscript4-core libpoppler-qt4-dev
 
 You also can download it from <https://www.qt.io/download-open-source/>
 
